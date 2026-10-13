@@ -2,8 +2,23 @@ import React from 'react';
 import { 
   Car, CreditCard, ShieldCheck, Award, FileText, Zap, Sparkles, 
   Printer, ArrowRight, Wallet, History, Users, Clock, CheckCircle2, 
-  ExternalLink, Layers, Crop, ChevronRight, User
+  ExternalLink, Layers, Crop, ChevronRight, User, Download
 } from 'lucide-react';
+
+export const DIRECT_SERVICES_TILES = [
+  { id: 'rc', label: 'वाहन RC', sub: 'CR-80 PVC', icon: Car, color: 'from-blue-600 to-indigo-600', wholesale: '₹10', retail: '₹20' },
+  { id: 'pan', label: 'पैन कार्ड', sub: 'CR-80 PVC', icon: CreditCard, color: 'from-teal-600 to-emerald-600', wholesale: '₹10', retail: '₹25' },
+  { id: 'aadhaar', label: 'आधार PVC', sub: 'UIDAI Smart', icon: ShieldCheck, color: 'from-red-600 to-rose-600', wholesale: '₹15', retail: '₹30' },
+  { id: 'voter', label: 'वोटर कार्ड', sub: 'EPIC Smart', icon: Award, color: 'from-amber-600 to-orange-600', wholesale: '₹15', retail: '₹30' },
+  { id: 'ayushman', label: 'आयुष्मान', sub: 'PM-JAY कार्ड', icon: Sparkles, color: 'from-yellow-600 to-amber-600', wholesale: '₹10', retail: '₹25' },
+  { id: 'ration', label: 'राशन पर्ची', sub: 'NFSA स्लिप', icon: FileText, color: 'from-green-600 to-emerald-600', wholesale: '₹10', retail: '₹20' },
+  { id: 'electricity', label: 'बिजली बिल', sub: 'भुगतान रसीद', icon: Zap, color: 'from-cyan-600 to-blue-600', wholesale: '₹5', retail: '₹15' },
+  { id: 'edistrict', label: 'e-District', sub: 'सत्यापन पर्ची', icon: Award, color: 'from-violet-600 to-purple-600', wholesale: '₹15', retail: '₹30' },
+  { id: 'dl', label: 'DL सारथी', sub: 'स्मार्ट कार्ड', icon: Car, color: 'from-indigo-600 to-blue-700', wholesale: '₹15', retail: '₹30' },
+  { id: 'challan', label: 'ई-चालान', sub: 'जांच व रसीद', icon: FileText, color: 'from-rose-600 to-red-600', wholesale: '₹10', retail: '₹20' },
+  { id: 'epan', label: 'e-PAN', sub: 'डाउनलोड', icon: Download, color: 'from-teal-600 to-emerald-700', wholesale: '₹10', retail: '₹20' },
+  { id: 'receipt', label: 'कैफे रसीद', sub: 'टैक्स स्लिप', icon: FileText, color: 'from-purple-600 to-indigo-700', wholesale: '₹5', retail: '₹15' }
+];
 
 export const REKHA_CATEGORIES_CONFIG = [
   {
@@ -214,61 +229,110 @@ export default function RekhaDashboard({
       </div>
 
       {/* =================================================================== */}
-      {/* 2. REKHA PRINT STYLE CATEGORY BOXES GRID (7 CORE SUITES) */}
+      {/* 2. DIRECT 1-CLICK INSTANT SERVICES GRID (3 COLS ON MOBILE, 6 ON DESKTOP) */}
       {/* =================================================================== */}
-      <div className="space-y-4">
+      <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg sm:text-xl md:text-2xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+            <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" />
-              <span>सेवा श्रेणियां (Select Service Category)</span>
+              <span>त्वरित 1-क्लिक सेवाएं (Quick Direct Services)</span>
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              किसी भी सेवा पर क्लिक करें — नया स्वच्छ पृष्ठ खुलेगा जहाँ आप कार्ड जनरेट व 1-क्लिक प्रिंट कर सकेंगे।
+            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              मोबाइल व डेस्कटॉप पर सीधे 1-क्लिक में आधिकारिक कार्ड व PDF तुरंत तैयार करें।
             </p>
           </div>
         </div>
 
-        {/* 7 Category Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 w-full max-w-full">
+        {/* 3 Columns on Mobile (<640px), 4 on sm, 6 on md+ */}
+        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3 w-full max-w-full">
+          {DIRECT_SERVICES_TILES.map((t) => {
+            const Icon = t.icon;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => onSelectTool(t.id)}
+                className="group bg-white dark:bg-[#0c162c] rounded-2xl p-2 sm:p-3.5 border border-slate-200 dark:border-slate-800 hover:border-orange-500 dark:hover:border-orange-500 shadow-2xs hover:shadow-md transition-all flex flex-col items-center justify-between text-center relative overflow-hidden active:scale-95 cursor-pointer"
+              >
+                <span className="self-end text-[9px] sm:text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-300/40 px-1 sm:px-1.5 py-0.2 rounded-md">
+                  {isOperator ? t.wholesale : t.retail}
+                </span>
+
+                <div className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr ${t.color} text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition my-1 shrink-0`}>
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+
+                <div className="w-full">
+                  <span className="text-[11px] sm:text-xs font-black text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition block truncate leading-tight">
+                    {t.label}
+                  </span>
+                  <span className="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 block truncate font-medium mt-0.5">
+                    {t.sub}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* =================================================================== */}
+      {/* 3. REKHA PRINT STYLE CATEGORY BOXES GRID (2 COLS ON MOBILE, 4 ON DESKTOP) */}
+      {/* =================================================================== */}
+      <div className="space-y-3 sm:space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-amber-500" />
+              <span>विस्तृत सेवा श्रेणियां (Category Suites)</span>
+            </h2>
+            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              श्रेणी चुनें — सभी संबंधित टूल्स व विकल्पों के साथ पूर्ण पोर्टल खुलेगा।
+            </p>
+          </div>
+        </div>
+
+        {/* 2 Columns on Mobile, 2 on sm, 3 on lg, 4 on xl */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5 w-full max-w-full">
           {REKHA_CATEGORIES_CONFIG.map((cat) => {
             const Icon = cat.icon;
 
             return (
               <div
                 key={cat.id}
-                className={`bg-white dark:bg-[#0c162c] rounded-3xl p-5 border ${cat.borderColor} hover:border-orange-500 dark:hover:border-orange-500 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between group relative overflow-hidden`}
+                className={`bg-white dark:bg-[#0c162c] rounded-2xl sm:rounded-3xl p-3 sm:p-5 border ${cat.borderColor} hover:border-orange-500 dark:hover:border-orange-500 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group relative overflow-hidden`}
               >
                 {/* Top Header of Category Box */}
-                <div className="space-y-3.5">
+                <div className="space-y-2 sm:space-y-3.5">
                   
-                  <div className="flex items-start justify-between gap-3">
-                    <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center shadow-md shadow-slate-900/10 group-hover:scale-105 transition shrink-0`}>
-                      <Icon className="w-6 h-6" />
+                  <div className="flex items-start justify-between gap-2">
+                    <div className={`w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center shadow-md shadow-slate-900/10 group-hover:scale-105 transition shrink-0`}>
+                      <Icon className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
 
                     <div className="flex flex-col items-end gap-1">
-                      <span className="text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-300/40 px-2 py-0.5 rounded-md">
+                      <span className="text-[9px] sm:text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-300/40 px-1.5 sm:px-2 py-0.5 rounded-md truncate max-w-[90px] sm:max-w-none text-right">
                         {isOperator ? cat.wholesaleBadge : cat.retailBadge}
                       </span>
                     </div>
                   </div>
 
                   <div>
-                    <h3 className="font-black text-slate-900 dark:text-white text-base group-hover:text-orange-600 dark:group-hover:text-orange-400 transition leading-snug">
+                    <h3 className="font-black text-slate-900 dark:text-white text-xs sm:text-base group-hover:text-orange-600 dark:group-hover:text-orange-400 transition leading-snug truncate">
                       {cat.title}
                     </h3>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium leading-relaxed">
+                    <p className="hidden xs:block text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium leading-relaxed truncate">
                       {cat.englishTitle}
                     </p>
                   </div>
 
                   {/* Interactive Sub-service Pills */}
-                  <div className="space-y-1.5 pt-1">
-                    <span className="text-[10px] uppercase font-black tracking-wider text-slate-400 dark:text-slate-500 block">
-                      उपलब्ध टूल्स:
+                  <div className="space-y-1 pt-0.5">
+                    <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-wider text-slate-400 dark:text-slate-500 block">
+                      टूल्स:
                     </span>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-1 sm:gap-1.5">
                       {cat.services.map((srv) => (
                         <button
                           key={srv.id}
@@ -277,11 +341,11 @@ export default function RekhaDashboard({
                             e.stopPropagation();
                             onSelectTool(srv.id);
                           }}
-                          className="bg-slate-100 hover:bg-orange-50 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 hover:border-orange-400 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:text-orange-600 px-2.5 py-1 rounded-xl text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+                          className="bg-slate-100 hover:bg-orange-50 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 hover:border-orange-400 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:text-orange-600 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center justify-between sm:justify-start gap-1 cursor-pointer truncate"
                           title={srv.desc}
                         >
-                          <span>{srv.label}</span>
-                          <ChevronRight className="w-3 h-3 opacity-60" />
+                          <span className="truncate">{srv.label}</span>
+                          <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 opacity-60 shrink-0" />
                         </button>
                       ))}
                     </div>
@@ -290,14 +354,14 @@ export default function RekhaDashboard({
                 </div>
 
                 {/* Bottom 1-Click Launch Button */}
-                <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-800">
+                <div className="mt-3 sm:mt-5 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800">
                   <button
                     type="button"
                     onClick={() => onSelectTool(cat.defaultToolId)}
-                    className="w-full bg-slate-50 group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-amber-500 group-hover:text-white text-slate-700 dark:bg-slate-800/60 dark:text-slate-200 font-black py-2.5 px-3 rounded-2xl text-xs flex items-center justify-between transition cursor-pointer shadow-2xs group-hover:shadow-md"
+                    className="w-full bg-slate-50 group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-amber-500 group-hover:text-white text-slate-700 dark:bg-slate-800/60 dark:text-slate-200 font-black py-1.5 sm:py-2.5 px-2 sm:px-3 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs flex items-center justify-between transition cursor-pointer shadow-2xs group-hover:shadow-md"
                   >
-                    <span>⚡ सेवा शुरू करें</span>
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+                    <span>⚡ शुरू करें</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
                   </button>
                 </div>
 
@@ -374,64 +438,64 @@ export default function RekhaDashboard({
       </div>
 
       {/* =================================================================== */}
-      {/* 4. UTILITY SUITE (Print, Resizer, PDF) */}
+      {/* 4. UTILITY SUITE (Print, Resizer, PDF - 3 COLS ACROSS ALL SCREENS) */}
       {/* =================================================================== */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 w-full max-w-full">
         
         <div
           onClick={() => onNavigateTab('print')}
-          className="bg-gradient-to-br from-blue-900 to-indigo-900 text-white p-5 rounded-3xl shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between"
+          className="bg-gradient-to-br from-blue-900 to-indigo-900 text-white p-3 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xs hover:shadow-lg transition cursor-pointer flex flex-col justify-between active:scale-95"
         >
           <div>
-            <div className="w-10 h-10 rounded-2xl bg-white/20 text-white flex items-center justify-center mb-3">
-              <Printer className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/20 text-white flex items-center justify-center mb-2 sm:mb-3 shrink-0">
+              <Printer className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <h4 className="font-black text-base text-white">क्विक प्रिंट व ज़ेरॉक्स (A4 Xerox)</h4>
-            <p className="text-xs text-blue-200 mt-1">
+            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">क्विक प्रिंट (Xerox)</h4>
+            <p className="hidden sm:block text-xs text-blue-200 mt-1 leading-relaxed">
               फ़ाइल अपलोड करें, B&W या कलर चुनें और काउंटर से तत्काल प्रिंट निकालें।
             </p>
           </div>
-          <div className="mt-4 pt-2 border-t border-white/20 text-xs font-bold text-yellow-300 flex items-center justify-between">
-            <span>प्रिंट शुरू करें</span>
-            <ArrowRight className="w-4 h-4" />
+          <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-2 border-t border-white/20 text-[10px] sm:text-xs font-bold text-yellow-300 flex items-center justify-between">
+            <span>प्रिंट ➔</span>
+            <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
           </div>
         </div>
 
         <div
           onClick={() => onNavigateTab('resizer')}
-          className="bg-gradient-to-br from-purple-900 to-slate-900 text-white p-5 rounded-3xl shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between"
+          className="bg-gradient-to-br from-purple-900 to-slate-900 text-white p-3 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xs hover:shadow-lg transition cursor-pointer flex flex-col justify-between active:scale-95"
         >
           <div>
-            <div className="w-10 h-10 rounded-2xl bg-white/20 text-white flex items-center justify-center mb-3">
-              <Crop className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/20 text-white flex items-center justify-center mb-2 sm:mb-3 shrink-0">
+              <Crop className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <h4 className="font-black text-base text-white">फ़ोटो व सिग्नेचर रिसाइज़र</h4>
-            <p className="text-xs text-purple-200 mt-1">
+            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">फ़ोटो रिसाइज़र</h4>
+            <p className="hidden sm:block text-xs text-purple-200 mt-1 leading-relaxed">
               सरकारी फॉर्म हेतु फ़ोटो को 20KB-50KB व सिग्नेचर को 10KB-20KB में बदलें।
             </p>
           </div>
-          <div className="mt-4 pt-2 border-t border-white/20 text-xs font-bold text-yellow-300 flex items-center justify-between">
-            <span>रिसाइज़ टूल खोलें</span>
-            <ArrowRight className="w-4 h-4" />
+          <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-2 border-t border-white/20 text-[10px] sm:text-xs font-bold text-yellow-300 flex items-center justify-between">
+            <span>रिसाइज़ ➔</span>
+            <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
           </div>
         </div>
 
         <div
           onClick={() => onNavigateTab('pdf')}
-          className="bg-gradient-to-br from-teal-900 to-slate-900 text-white p-5 rounded-3xl shadow-sm hover:shadow-lg transition cursor-pointer flex flex-col justify-between"
+          className="bg-gradient-to-br from-teal-900 to-slate-900 text-white p-3 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xs hover:shadow-lg transition cursor-pointer flex flex-col justify-between active:scale-95"
         >
           <div>
-            <div className="w-10 h-10 rounded-2xl bg-white/20 text-white flex items-center justify-center mb-3">
-              <Layers className="w-5 h-5" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/20 text-white flex items-center justify-center mb-2 sm:mb-3 shrink-0">
+              <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <h4 className="font-black text-base text-white">PDF मर्जर व स्प्लिटर</h4>
-            <p className="text-xs text-teal-200 mt-1">
+            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">PDF टूल्स</h4>
+            <p className="hidden sm:block text-xs text-teal-200 mt-1 leading-relaxed">
               मार्कशीट, आधार व आय प्रमाण पत्र की कई PDF फाइलों को 1-क्लिक में जोड़ें।
             </p>
           </div>
-          <div className="mt-4 pt-2 border-t border-white/20 text-xs font-bold text-yellow-300 flex items-center justify-between">
-            <span>PDF टूल खोलें</span>
-            <ArrowRight className="w-4 h-4" />
+          <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-2 border-t border-white/20 text-[10px] sm:text-xs font-bold text-yellow-300 flex items-center justify-between">
+            <span>PDF ➔</span>
+            <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
           </div>
         </div>
 

@@ -312,46 +312,46 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
               </div>
             </div>
 
-            {/* Pages & Copies Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Pages & Copies Row (2 Columns on Mobile) */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider">
-                    पेज संख्या (Pages in Doc)
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider truncate">
+                    पेज संख्या
                   </label>
                   {minDetectedPages > 1 && (
-                    <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-full">
-                      🔒 PDF सत्यापित: {minDetectedPages}
+                    <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded-full truncate">
+                      🔒 {minDetectedPages}
                     </span>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
                   <input
                     type="number"
                     min={minDetectedPages}
                     max="500"
                     value={pagesCount}
                     onChange={(e) => setPagesCount(Math.max(minDetectedPages, parseInt(e.target.value) || minDetectedPages))}
-                    className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm font-semibold focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                    className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-orange-500 focus:outline-none"
                   />
                   <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0">पेज</span>
                 </div>
                 {minDetectedPages > 1 && (
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1">
-                    * धोखाधड़ी रोकने हेतु पेजों की संख्या PDF के असली पेजों ({minDetectedPages}) से कम नहीं हो सकती।
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 hidden xs:block">
+                    * असली पेजों ({minDetectedPages}) से कम नहीं हो सकता।
                   </p>
                 )}
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  प्रतियां / कॉपी (Copies)
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 truncate">
+                  प्रतियां (Copies)
                 </label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 sm:gap-2">
                   <button
                     type="button"
                     onClick={() => setCopies(Math.max(1, copies - 1))}
-                    className="w-10 h-10 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-lg flex items-center justify-center text-slate-700 dark:text-slate-200"
+                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-base sm:text-lg flex items-center justify-center text-slate-700 dark:text-slate-200 shrink-0 cursor-pointer"
                   >
                     -
                   </button>
@@ -361,12 +361,12 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                     max="100"
                     value={copies}
                     onChange={(e) => setCopies(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="w-full text-center bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-2 text-sm font-bold focus:ring-2 focus:ring-orange-500 focus:outline-none"
+                    className="w-full text-center bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl py-1.5 sm:py-2 text-xs sm:text-sm font-bold focus:ring-2 focus:ring-orange-500 focus:outline-none"
                   />
                   <button
                     type="button"
                     onClick={() => setCopies(copies + 1)}
-                    className="w-10 h-10 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-lg flex items-center justify-center text-slate-700 dark:text-slate-200"
+                    className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 font-bold text-base sm:text-lg flex items-center justify-center text-slate-700 dark:text-slate-200 shrink-0 cursor-pointer"
                   >
                     +
                   </button>
@@ -374,40 +374,40 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
               </div>
             </div>
 
-            {/* Sides & Paper Size */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Sides & Paper Size (2 Columns on Mobile) */}
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  प्रिंट साइड (Sides)
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 truncate">
+                  प्रिंट साइड
                 </label>
                 <select
                   value={sideType}
                   onChange={(e) => setSideType(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none cursor-pointer"
+                  className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-2 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none cursor-pointer"
                 >
-                  <option value="single">एक तरफ (Single Sided)</option>
-                  <option value="double">दोनों तरफ (Back to Back / Double Sided)</option>
+                  <option value="single">1 तरफ (Single)</option>
+                  <option value="double">2 तरफ (Double)</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  कागज़ का आकार (Paper Size)
+                <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 truncate">
+                  कागज़ आकार
                 </label>
                 <select
                   value={paperSize}
                   onChange={(e) => setPaperSize(e.target.value)}
-                  className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none cursor-pointer"
+                  className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-2 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none cursor-pointer"
                 >
-                  <option value="A4">A4 (मानक कागज़ - Standard)</option>
-                  <option value="Legal">Legal (कचहरी / शपथ पत्र कागज़)</option>
-                  <option value="Photo4x6">4×6 Glossy (फोटो पेपर)</option>
+                  <option value="A4">A4 मानक</option>
+                  <option value="Legal">Legal कचहरी</option>
+                  <option value="Photo4x6">4×6 फोटो</option>
                 </select>
               </div>
             </div>
 
             {/* Page Range & Notes */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">
                   पेज रेंज (Page Range)

@@ -126,94 +126,94 @@ export default function CustomerHome({
         <div className="absolute right-0 bottom-0 translate-x-12 translate-y-12 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
       </div>
 
-      {/* 4 Core Action Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* 4 Core Action Cards (2 Columns on Mobile, 4 on Desktop) */}
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         
         {/* Card 1: Print */}
         <div
           onClick={() => onNavigate('print')}
-          className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-xl transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between"
+          className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-3.5 sm:p-6 shadow-2xs border border-slate-200 dark:border-slate-800 hover:border-blue-500 dark:hover:border-blue-500 hover:shadow-xl transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between active:scale-95"
         >
           <div>
-            <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-              <Printer className="w-6 h-6" />
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-2.5 sm:mb-4 group-hover:scale-110 transition shrink-0">
+              <Printer className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
+            <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition truncate leading-tight">
               क्विक प्रिंट व ज़ेरॉक्स
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+            <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
               PDF, Word या फ़ोटो अपलोड करें। B&W या Color चुनें और सीधे काउंटर से प्रिंट लें।
             </p>
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-blue-400">
-            <span>शुरू करें</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+          <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-blue-600 dark:text-blue-400">
+            <span>प्रिंट शुरू करें</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
           </div>
         </div>
 
         {/* Card 2: Services / Forms */}
         <div
           onClick={() => onNavigate('apply')}
-          className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-xl transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between"
+          className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-3.5 sm:p-6 shadow-2xs border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-500 hover:shadow-xl transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between active:scale-95"
         >
           <div>
-            <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-              <FileText className="w-6 h-6" />
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2.5 sm:mb-4 group-hover:scale-110 transition shrink-0">
+              <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-lg group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
-              ऑनलाइन सरकारी फॉर्म
+            <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-lg group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition truncate leading-tight">
+              सरकारी फॉर्म
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+            <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
               नौकरी, स्कॉलरशिप, आय, जाति, निवास, पैन कार्ड घर से ही अप्लाई करें।
             </p>
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-emerald-600 dark:text-emerald-400">
+          <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400">
             <span>अप्लाई करें</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
           </div>
         </div>
 
         {/* Card 3: Track Status */}
         <div
           onClick={() => onNavigate('track')}
-          className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 hover:border-amber-500 dark:hover:border-amber-500 hover:shadow-xl transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between"
+          className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-3.5 sm:p-6 shadow-2xs border border-slate-200 dark:border-slate-800 hover:border-amber-500 dark:hover:border-amber-500 hover:shadow-xl transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between active:scale-95"
         >
           <div>
-            <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-              <Search className="w-6 h-6" />
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2.5 sm:mb-4 group-hover:scale-110 transition shrink-0">
+              <Search className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-lg group-hover:text-amber-600 dark:group-hover:text-amber-400 transition">
-              टोकन स्टेटस ट्रैकर
+            <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-lg group-hover:text-amber-600 dark:group-hover:text-amber-400 transition truncate leading-tight">
+              स्टेटस ट्रैकर
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+            <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
               टोकन या मोबाइल नंबर से जांचें कि आपका फॉर्म सबमिट हुआ या नहीं, और रसीद डाउनलोड करें।
             </p>
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-amber-600 dark:text-amber-400">
+          <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-amber-600 dark:text-amber-400">
             <span>स्टेटस देखें</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
           </div>
         </div>
 
         {/* Card 4: Jobs Bulletin */}
         <div
           onClick={() => onNavigate('jobs')}
-          className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-xl transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between"
+          className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-3.5 sm:p-6 shadow-2xs border border-slate-200 dark:border-slate-800 hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-xl transition-all cursor-pointer relative overflow-hidden flex flex-col justify-between active:scale-95"
         >
           <div>
-            <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-              <Bell className="w-6 h-6" />
+            <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-2.5 sm:mb-4 group-hover:scale-110 transition shrink-0">
+              <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
-            <h3 className="font-bold text-slate-900 dark:text-white text-lg group-hover:text-purple-600 dark:group-hover:text-purple-400 transition">
-              नौकरियां व योजनाएं
+            <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-lg group-hover:text-purple-600 dark:group-hover:text-purple-400 transition truncate leading-tight">
+              नौकरियां व अलर्ट
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+            <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
               लेटेस्ट सरकारी नौकरियों, प्रवेश पत्रों व योजनाओं की अंतिम तिथियां और विवरण।
             </p>
           </div>
-          <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-purple-600 dark:text-purple-400">
-            <span>अपडेट्स देखें</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+          <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-purple-600 dark:text-purple-400">
+            <span>अलर्ट देखें</span>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
           </div>
         </div>
 
@@ -233,85 +233,85 @@ export default function CustomerHome({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 w-full max-w-full">
           {/* Service 1: RC Download */}
           <div
             onClick={() => onNavigate('rc')}
-            className="group bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-5 shadow-md hover:shadow-xl transition-all cursor-pointer border border-indigo-700/50 flex flex-col justify-between relative overflow-hidden"
+            className="group bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-3 sm:p-5 shadow-2xs hover:shadow-xl transition-all cursor-pointer border border-indigo-700/50 flex flex-col justify-between relative overflow-hidden active:scale-95"
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center border border-indigo-400/30">
-                  <Car className="w-5 h-5 text-indigo-300" />
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center border border-indigo-400/30 shrink-0">
+                  <Car className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-300" />
                 </div>
-                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-black px-2.5 py-0.5 rounded-full">
-                  तत्काल लाइव
+                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
+                  लाइव
                 </span>
               </div>
-              <h3 className="font-bold text-base text-white group-hover:text-indigo-200 transition">
-                वाहन RC Parivahan Download
+              <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-indigo-200 transition truncate leading-tight">
+                वाहन RC
               </h3>
-              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+              <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
                 गाड़ी नंबर दर्ज करें और आधिकारिक डिजिटल सेवा केंद्र वाटरमार्क सहित RC तुरंत प्राप्त करें।
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-indigo-300">
-              <span>RC डाउनलोड करें ➔</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+            <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-indigo-300">
+              <span>डाउनलोड ➔</span>
+              <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
             </div>
           </div>
 
           {/* Service 2: PVC Card Maker */}
           <div
             onClick={() => onNavigate('printportal')}
-            className="group bg-gradient-to-br from-blue-900 to-slate-900 text-white rounded-2xl p-5 shadow-md hover:shadow-xl transition-all cursor-pointer border border-blue-700/50 flex flex-col justify-between relative overflow-hidden"
+            className="group bg-gradient-to-br from-blue-900 to-slate-900 text-white rounded-2xl p-3 sm:p-5 shadow-2xs hover:shadow-xl transition-all cursor-pointer border border-blue-700/50 flex flex-col justify-between relative overflow-hidden active:scale-95"
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center border border-blue-400/30">
-                  <CreditCard className="w-5 h-5 text-blue-300" />
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center border border-blue-400/30 shrink-0">
+                  <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-blue-300" />
                 </div>
-                <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[10px] font-black px-2.5 py-0.5 rounded-full">
-                  CR-80 ISO मानक
+                <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
+                  CR-80
                 </span>
               </div>
-              <h3 className="font-bold text-base text-white group-hover:text-blue-200 transition">
-                स्मार्ट PVC कार्ड प्रिंट पोर्टल
+              <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-blue-200 transition truncate leading-tight">
+                PVC कार्ड
               </h3>
-              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+              <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
                 आधार, पैन, आयुष्मान कार्ड को 85.6mm×54mm कटिंग बॉर्डर के साथ PVC शीट पर प्रिंट करें।
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-blue-300">
-              <span>PVC कार्ड बनाएं ➔</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+            <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-blue-300">
+              <span>प्रिंट ➔</span>
+              <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
             </div>
           </div>
 
           {/* Service 3: e-District Suite */}
           <div
             onClick={() => onNavigate('edistrict')}
-            className="group bg-gradient-to-br from-emerald-950 to-slate-900 text-white rounded-2xl p-5 shadow-md hover:shadow-xl transition-all cursor-pointer border border-emerald-700/50 flex flex-col justify-between relative overflow-hidden"
+            className="group bg-gradient-to-br from-emerald-950 to-slate-900 text-white rounded-2xl p-3 sm:p-5 shadow-2xs hover:shadow-xl transition-all cursor-pointer border border-emerald-700/50 flex flex-col justify-between relative overflow-hidden active:scale-95"
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center border border-emerald-400/30">
-                  <Landmark className="w-5 h-5 text-emerald-300" />
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center border border-emerald-400/30 shrink-0">
+                  <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-300" />
                 </div>
-                <span className="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[10px] font-black px-2.5 py-0.5 rounded-full">
-                  स्वप्रमाणित ऑटो
+                <span className="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
+                  सत्यापन
                 </span>
               </div>
-              <h3 className="font-bold text-base text-white group-hover:text-emerald-200 transition">
-                e-District सेवा सुइट
+              <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-emerald-200 transition truncate leading-tight">
+                e-District
               </h3>
-              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+              <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
                 स्वप्रमाणित घोषणा पत्र जनरेटर, 100KB दस्तावेज़ पैकर और 1-क्लिक ऑटो-फिलर बॉट।
               </p>
             </div>
-            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs font-bold text-emerald-300">
-              <span>e-District खोलें ➔</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+            <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-emerald-300">
+              <span>खोलें ➔</span>
+              <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
             </div>
           </div>
         </div>
@@ -370,8 +370,8 @@ export default function CustomerHome({
           ))}
         </div>
 
-        {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+        {/* Services Grid (2 Columns on Mobile, 3 on Desktop) */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3.5 w-full max-w-full">
           {JAN_SEVA_SERVICES
             .filter(s => {
               const matchCat = activeCategory === 'all' || s.category === activeCategory;
@@ -385,28 +385,28 @@ export default function CustomerHome({
                   setSelectedJanSevaId(s.id);
                   setJanSevaModalOpen(true);
                 }}
-                className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-4 border border-slate-200 dark:border-slate-800 hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between"
+                className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between active:scale-95"
               >
                 <div>
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md truncate max-w-[170px]">
+                  <div className="flex items-start justify-between gap-1.5 mb-1.5 sm:mb-2">
+                    <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-1.5 sm:px-2 py-0.5 rounded-md truncate max-w-[90px] sm:max-w-[170px]">
                       {s.dept}
                     </span>
-                    <span className="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 text-xs font-black px-2 py-0.5 rounded-md shrink-0">
-                      ₹{s.fee} मात्र
+                    <span className="bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/60 text-[10px] sm:text-xs font-black px-1.5 sm:px-2 py-0.5 rounded-md shrink-0">
+                      ₹{s.fee}
                     </span>
                   </div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-sm group-hover:text-blue-600 transition leading-snug">
+                  <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm group-hover:text-blue-600 transition leading-snug truncate">
                     {s.name}
                   </h3>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
+                  <p className="hidden xs:block text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
                     {s.desc}
                   </p>
                 </div>
 
-                <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs font-bold text-blue-600 dark:text-blue-400">
-                  <span>पर्ची / प्रिंट निकालें</span>
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
+                <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-blue-600 dark:text-blue-400">
+                  <span>प्रिंट ➔</span>
+                  <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
                 </div>
               </div>
             ))}

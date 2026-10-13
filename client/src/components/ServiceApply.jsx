@@ -391,7 +391,7 @@ export default function ServiceApply({
                     <span>{group.category}</span>
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="grid grid-cols-2 lg:grid-cols-1 gap-1.5">
                     {group.items.map((item, i) => {
                       const isSelected = selectedService?.name === item.name;
                       return (
@@ -399,16 +399,16 @@ export default function ServiceApply({
                           key={i}
                           type="button"
                           onClick={() => handleSelectService(item, group.category)}
-                          className={`w-full text-left p-2.5 rounded-xl border text-xs font-bold transition flex items-center justify-between cursor-pointer ${
+                          className={`w-full text-left p-2 sm:p-2.5 rounded-xl border text-[11px] sm:text-xs font-bold transition flex items-center justify-between cursor-pointer active:scale-95 ${
                             isSelected
                               ? 'border-emerald-600 bg-emerald-50 text-emerald-950 shadow-xs'
                               : 'border-transparent bg-slate-50/70 hover:bg-slate-100 text-slate-700'
                           }`}
                         >
-                          <span className="truncate max-w-[200px] leading-tight">{item.name}</span>
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <span className="text-slate-500 font-mono text-[11px]">₹{item.fee}</span>
-                            {isSelected && <CheckCircle2 className="w-4 h-4 text-emerald-600" />}
+                          <span className="truncate max-w-[110px] xs:max-w-[140px] sm:max-w-[200px] leading-tight">{item.name}</span>
+                          <div className="flex items-center gap-1 shrink-0">
+                            <span className="text-slate-500 font-mono text-[10px] sm:text-[11px]">₹{item.fee}</span>
+                            {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />}
                           </div>
                         </button>
                       );
