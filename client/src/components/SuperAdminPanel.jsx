@@ -2395,7 +2395,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                     required
                     value={newOwnerName}
                     onChange={(e) => setNewOwnerName(e.target.value)}
-                    placeholder="उदा. अमित कुमार"
+                    placeholder="दुकानदार / संचालक का नाम"
                     className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0b1528] text-slate-800 dark:text-slate-100 rounded-xl font-medium focus:outline-hidden focus:border-orange-500"
                   />
                 </div>

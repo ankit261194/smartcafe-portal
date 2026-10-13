@@ -454,7 +454,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
               </label>
               <input
                 type="text"
-                placeholder="उदा. राहुल शर्मा"
+                placeholder="आपका पूरा नाम दर्ज करें"
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"

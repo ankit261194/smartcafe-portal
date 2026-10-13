@@ -275,7 +275,7 @@ export default function UdharRegister({ settings, selectedCafe }) {
                 required
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
-                placeholder="उदा. रमेश कुमार"
+                placeholder="ग्राहक का नाम दर्ज करें"
                 className="w-full px-3 py-2 border border-slate-300 rounded-xl font-bold focus:ring-2 focus:ring-rose-500 focus:outline-none"
               />
             </div>

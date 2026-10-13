@@ -26,7 +26,7 @@ export const JAN_SEVA_SERVICES = [
     fields: [
       { id: 'idNumber', label: '12-अंकीय आधार संख्या (Aadhaar No)', type: 'text', placeholder: '4582 9102 3847', required: true },
       { id: 'holderName', label: 'पूरा नाम अंग्रेजी में (Full Name)', type: 'text', placeholder: 'RAMESH KUMAR', required: true },
-      { id: 'holderNameHindi', label: 'पूरा नाम हिंदी में (Name in Hindi)', type: 'text', placeholder: 'रमेश कुमार', required: true },
+      { id: 'holderNameHindi', label: 'पूरा नाम हिंदी में (Name in Hindi)', type: 'text', placeholder: 'पूरा नाम हिंदी में दर्ज करें', required: true },
       { id: 'dob', label: 'जन्मतिथि (DOB: DD/MM/YYYY)', type: 'text', placeholder: '15/08/1992', required: true },
       { id: 'gender', label: 'लिंग (Gender)', type: 'select', options: ['MALE / पुरुष', 'FEMALE / महिला', 'TRANSGENDER / तृतीय लिंग'] },
       { id: 'careOf', label: 'पिता / पति का नाम (C/O or S/O)', type: 'text', placeholder: 'S/O: Shri Babulal' },
@@ -47,7 +47,7 @@ export const JAN_SEVA_SERVICES = [
     desc: 'ई-आधार पीडीएफ विवरण से 85.6mm×54mm एटीएम साइज में कटिंग बॉर्डर सहित PVC शीट पर प्रिंट निकालें।',
     fields: [
       { id: 'idNumber', label: '12-अंकीय आधार संख्या', type: 'text', placeholder: 'XXXX XXXX 1234', required: true },
-      { id: 'holderName', label: 'कार्डधारक का नाम', type: 'text', placeholder: 'राहुल कुमार' },
+      { id: 'holderName', label: 'कार्डधारक का नाम', type: 'text', placeholder: 'कार्डधारक का नाम दर्ज करें' },
       { id: 'dob', label: 'जन्मतिथि (DOB)', type: 'text', placeholder: '15/08/1995' },
       { id: 'gender', label: 'लिंग', type: 'select', options: ['MALE / पुरुष', 'FEMALE / महिला'] },
       { id: 'address', label: 'स्थाई पता', type: 'text', placeholder: 'ग्राम व पोस्ट, तहसील, जिला हरदोई' }
@@ -68,8 +68,8 @@ export const JAN_SEVA_SERVICES = [
     desc: 'पैन नंबर, नाम व पिता के नाम से फोटो व सिग्नेचर सहित 1 सेकंड में ओरिजिनल फ्रंट व बैक एचडी पैन कार्ड प्रिंट।',
     fields: [
       { id: 'panNo', label: '10-अंकीय पैन नंबर (PAN Number)', type: 'text', placeholder: 'ABCDE1234F', required: true },
-      { id: 'holderName', label: 'कार्डधारक का नाम (Full Name)', type: 'text', placeholder: 'AMIT KUMAR', required: true },
-      { id: 'fatherName', label: 'पिता का नाम (Father\'s Name)', type: 'text', placeholder: 'SHRI BABULAL', required: true },
+      { id: 'holderName', label: 'कार्डधारक का नाम (Full Name)', type: 'text', placeholder: 'CARDHOLDER FULL NAME', required: true },
+      { id: 'fatherName', label: 'पिता का नाम (Father\'s Name)', type: 'text', placeholder: 'FATHER FULL NAME', required: true },
       { id: 'dob', label: 'जन्मतिथि (Date of Birth)', type: 'text', placeholder: '15/08/1992', required: true }
     ]
   },
@@ -86,8 +86,8 @@ export const JAN_SEVA_SERVICES = [
     desc: 'आधार नंबर से खोया हुआ पैन कार्ड ओरिजिनल NSDL लेआउट में तत्काल प्रिंट निकालें।',
     fields: [
       { id: 'panNo', label: '10-अंकीय पैन नंबर', type: 'text', placeholder: 'ABCDE1234F', required: true },
-      { id: 'holderName', label: 'पैन धारक का नाम', type: 'text', placeholder: 'राजेश कुमार' },
-      { id: 'fatherName', label: 'पिता का नाम', type: 'text', placeholder: 'श्री रामेश्वर दयाल' },
+      { id: 'holderName', label: 'पैन धारक का नाम', type: 'text', placeholder: 'पूरा नाम दर्ज करें' },
+      { id: 'fatherName', label: 'पिता का नाम', type: 'text', placeholder: 'पिता का नाम दर्ज करें' },
       { id: 'dob', label: 'जन्मतिथि', type: 'text', placeholder: '12/04/1993' }
     ]
   },
@@ -190,7 +190,7 @@ export const JAN_SEVA_SERVICES = [
     fields: [
       { id: 'discom', label: 'डिस्कॉम क्षेत्र (Discom)', type: 'select', options: ['मध्यांचल विद्युत वितरण निगम (MVVNL)', 'पूर्वांचल विद्युत वितरण निगम (PVVNL)', 'पश्चिमांचल विद्युत वितरण निगम (PVVNL)', 'दक्षिणांचल विद्युत वितरण निगम (DVVNL)', 'केस्को (KESCO कानपुर)'] },
       { id: 'consumerNo', label: '10-अंकीय उपभोक्ता संख्या (Account ID)', type: 'text', placeholder: '7418529630', required: true },
-      { id: 'consumerName', label: 'उपभोक्ता का नाम', type: 'text', placeholder: 'महेश चंद्र' },
+      { id: 'consumerName', label: 'उपभोक्ता का नाम', type: 'text', placeholder: 'उपभोक्ता का नाम दर्ज करें' },
       { id: 'loadKw', label: 'सप्लाई श्रेणी व भार', type: 'select', options: ['LMV-1 घरेलू (1.00 KW)', 'LMV-1 घरेलू (2.00 KW)', 'LMV-2 वाणिज्यिक / दुकान (2.00 KW)'] },
       { id: 'meterNo', label: 'मीटर संख्या', type: 'text', placeholder: 'UP-7410294' },
       { id: 'amount', label: 'वर्तमान कुल देय धनराशि', type: 'text', placeholder: '₹1,240' },
@@ -227,8 +227,8 @@ export const JAN_SEVA_SERVICES = [
     dept: 'राजस्व एवं सामान्य प्रशासन विभाग (e-District)',
     desc: 'आय, जाति, निवास व स्कॉलरशिप के लिए 1-क्लिक में आधिकारिक हिंदी घोषणा पत्र तुरंत जनरेट व प्रिंट करें।',
     fields: [
-      { id: 'applicantName', label: 'घोषणाकर्ता का नाम', type: 'text', placeholder: 'रामेश्वर सिंह', required: true },
-      { id: 'fatherHusband', label: 'पिता / पति का नाम', type: 'text', placeholder: 'श्री बाबूलाल', required: true },
+      { id: 'applicantName', label: 'घोषणाकर्ता का नाम', type: 'text', placeholder: 'घोषणाकर्ता का नाम दर्ज करें', required: true },
+      { id: 'fatherHusband', label: 'पिता / पति का नाम', type: 'text', placeholder: 'पिता / पति का नाम दर्ज करें', required: true },
       { id: 'purpose', label: 'घोषणा का उद्देश्य', type: 'select', options: ['आय प्रमाण पत्र हेतु', 'जाति प्रमाण पत्र हेतु', 'मूल निवास प्रमाण पत्र हेतु', 'राशन कार्ड संशोधन हेतु', 'छात्रवृत्ति आवेदन हेतु'] },
       { id: 'income', label: 'वार्षिक आय (यदि लागू हो)', type: 'text', placeholder: '₹48,000/- मात्र' },
       { id: 'address', label: 'स्थाई निवास पता', type: 'text', placeholder: 'मकान नं. 14, ग्राम रामपुर, तहसील सवायजपुर, हरदोई' }
@@ -246,7 +246,7 @@ export const JAN_SEVA_SERVICES = [
     desc: 'कोटेदार को दिखाने के लिए परिवार के सभी सदस्यों के नाम और कुल यूनिट वाली आधिकारिक राशन पर्ची प्रिंट करें।',
     fields: [
       { id: 'rationNo', label: '12-अंकीय राशन कार्ड संख्या', type: 'text', placeholder: '215487965412', required: true },
-      { id: 'headName', label: 'मुखिया का नाम', type: 'text', placeholder: 'शांति देवी', required: true },
+      { id: 'headName', label: 'मुखिया का नाम', type: 'text', placeholder: 'मुखिया का नाम दर्ज करें', required: true },
       { id: 'dealerName', label: 'कोटेदार (उचित दर विक्रेता)', type: 'text', placeholder: 'मेसर्स कन्हैया लाल' },
       { id: 'units', label: 'कुल यूनिट (सदस्य संख्या)', type: 'number', placeholder: '5' }
     ]
@@ -384,7 +384,7 @@ export const JAN_SEVA_SERVICES = [
     fields: [
       { id: 'regNo', label: 'पंजीकरण संख्या (Registration No.)', type: 'text', placeholder: 'B-2026-09-948201', required: true },
       { id: 'applicantName', label: 'बच्चे / मृतक का नाम', type: 'text', placeholder: 'आरव कुमार' },
-      { id: 'fatherHusband', label: 'पिता / पति का नाम', type: 'text', placeholder: 'राजेश कुमार' },
+      { id: 'fatherHusband', label: 'पिता / पति का नाम', type: 'text', placeholder: 'पूरा नाम दर्ज करें' },
       { id: 'address', label: 'घटना स्थल व पता', type: 'text', placeholder: 'सामुदायिक स्वास्थ्य केंद्र, हरदोई' }
     ]
   },
@@ -538,7 +538,7 @@ export const JAN_SEVA_SERVICES = [
     desc: 'घरेलू व वाणिज्यिक नए बिजली मीटर आवेदन की आधिकारिक पावती व डिमांड नोट पर्ची।',
     fields: [
       { id: 'consumerNo', label: 'आवेदन संख्या (Application ID)', type: 'text', placeholder: 'JP-2026-019284', required: true },
-      { id: 'consumerName', label: 'आवेदक का नाम', type: 'text', placeholder: 'राजेश शर्मा' },
+      { id: 'consumerName', label: 'आवेदक का नाम', type: 'text', placeholder: 'आवेदक का नाम दर्ज करें' },
       { id: 'loadKw', label: 'स्वीकृत भार', type: 'select', options: ['1 KW (घरेलू BPL/सामान्य)', '2 KW (घरेलू)', '3 KW (घरेलू/दुकान)'] },
       { id: 'substation', label: 'विद्युत उपकेंद्र व खंड', type: 'text', placeholder: '33/11 KV उपकेंद्र सांडी' }
     ]
@@ -964,21 +964,6 @@ export default function JanSevaModal({
               </div>
 
               <div className="pt-2 flex items-center justify-end gap-3 border-t border-slate-100">
-                <button
-                  type="button"
-                  onClick={() => {
-                    // Pre-fill realistic sample values for instant test
-                    const samples = {};
-                    selectedService.fields.forEach(f => {
-                      if (f.placeholder) samples[f.id] = f.placeholder.replace('उदा. ', '');
-                      else if (f.options) samples[f.id] = f.options[0];
-                    });
-                    setFormData(samples);
-                  }}
-                  className="px-3 py-2 text-xs font-bold text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition cursor-pointer"
-                >
-                  उदाहरण डेटा भरें
-                </button>
 
                 <button
                   type="submit"

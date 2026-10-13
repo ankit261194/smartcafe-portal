@@ -104,7 +104,7 @@ export default function CR80CardRenderer({
                     <div className="font-semibold text-slate-700">{data.holderName || 'Name'}</div>
                     <div className="text-[8px] pt-0.5">
                       <span className="text-slate-500 font-bold">जन्म तिथि / DOB: </span>
-                      <span className="font-bold">{data.dob || '01/01/1990'}</span>
+                      <span className="font-bold">{data.dob || '-'}</span>
                     </div>
                     <div className="text-[8px]">
                       <span className="text-slate-500 font-bold">लिंग / Gender: </span>
@@ -216,15 +216,15 @@ export default function CR80CardRenderer({
                     </div>
                     <div>
                       <span className="text-[7px] text-slate-500 uppercase font-bold block">नाम / Name</span>
-                      <span className="font-bold text-slate-900 uppercase block">{data.holderName || 'RAMESH KUMAR'}</span>
+                      <span className="font-bold text-slate-900 uppercase block">{data.holderName || '-'}</span>
                     </div>
                     <div>
                       <span className="text-[7px] text-slate-500 uppercase font-bold block">पिता का नाम / Father's Name</span>
-                      <span className="font-bold text-slate-800 uppercase block">{data.fatherName || 'SHRI BABULAL'}</span>
+                      <span className="font-bold text-slate-800 uppercase block">{data.fatherName || '-'}</span>
                     </div>
                     <div>
                       <span className="text-[7px] text-slate-500 uppercase font-bold block">जन्मतिथि / Date of Birth</span>
-                      <span className="font-bold text-slate-900 block">{data.dob || '15/08/1992'}</span>
+                      <span className="font-bold text-slate-900 block">{data.dob || '-'}</span>
                     </div>
                   </div>
 
@@ -305,15 +305,15 @@ export default function CR80CardRenderer({
                     </div>
                     <div>
                       <span className="text-[7px] text-slate-500 font-bold block">मतदाता का नाम / Name</span>
-                      <span className="font-bold text-slate-900 block">{data.voterNameHindi || data.voterName || 'राम कुमार'}</span>
+                      <span className="font-bold text-slate-900 block">{data.voterNameHindi || data.voterName || '-'}</span>
                     </div>
                     <div>
                       <span className="text-[7px] text-slate-500 font-bold block">पिता/पति का नाम / Relation Name</span>
-                      <span className="font-semibold text-slate-800 block">{data.relationName || 'श्री शिवबालक'}</span>
+                      <span className="font-semibold text-slate-800 block">{data.relationName || '-'}</span>
                     </div>
                     <div>
                       <span className="text-[7px] text-slate-500 font-bold block">लिंग / Gender • आयु / Age</span>
-                      <span className="font-bold text-slate-900 block">{data.gender || 'पुरुष / MALE'} • {data.age || '32 वर्ष'}</span>
+                      <span className="font-bold text-slate-900 block">{data.gender || 'पुरुष / MALE'} • {data.age || '-'}</span>
                     </div>
                   </div>
 
@@ -386,11 +386,11 @@ export default function CR80CardRenderer({
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">लाभार्थी का नाम</span>
-                  <span className="font-bold text-slate-900 text-xs block">{data.beneficiaryName || 'सुनीता देवी'}</span>
+                  <span className="font-bold text-slate-900 text-xs block">{data.beneficiaryName || '-'}</span>
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">मुखिया / पिता का नाम</span>
-                  <span className="font-semibold text-slate-800 block">{data.familyHead || 'प्रेम शंकर'}</span>
+                  <span className="font-semibold text-slate-800 block">{data.familyHead || '-'}</span>
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">जनपद व राज्य</span>
@@ -436,7 +436,7 @@ export default function CR80CardRenderer({
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">श्रमिक का नाम</span>
-                  <span className="font-bold text-slate-900 block">{data.workerName || 'संतोष कुमार'}</span>
+                  <span className="font-bold text-slate-900 block">{data.workerName || '-'}</span>
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">व्यवसाय (Occupation)</span>
@@ -487,7 +487,7 @@ export default function CR80CardRenderer({
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">दिव्यांगजन का नाम</span>
-                  <span className="font-bold text-slate-900 block">{data.personName || 'हरिनारायण'}</span>
+                  <span className="font-bold text-slate-900 block">{data.personName || '-'}</span>
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">दिव्यांगता प्रकार व प्रतिशत</span>

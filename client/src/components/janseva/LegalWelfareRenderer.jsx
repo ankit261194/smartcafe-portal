@@ -47,7 +47,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
               समक्ष, <strong>सक्षम अधिकारी / तहसीलदार महोदय</strong>,
             </p>
             <p>
-              मैं <strong>{data.applicantName || 'रामेश्वर सिंह'}</strong>, आत्मज/पत्नी श्री <strong>{data.fatherHusband || 'बाबूलाल'}</strong>, 
+              मैं <strong>{data.applicantName || '-'}</strong>, आत्मज/पत्नी श्री <strong>{data.fatherHusband || '-'}</strong>, 
               निवासी: <strong>{data.address || 'मकान नं. 14, ग्राम व पोस्ट, तहसील, जिला'}</strong> का/की स्थाई निवासी हूँ तथा सत्यनिष्ठापूर्वक निम्न घोषणा करता/करती हूँ:
             </p>
             <ol className="list-decimal pl-5 space-y-1.5 text-[11.5px]">
@@ -101,7 +101,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">मुखिया का नाम</span>
-              <span className="font-black text-slate-900">{data.headName || 'शांति देवी'}</span>
+              <span className="font-black text-slate-900">{data.headName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">कोटेदार का नाम</span>
@@ -124,7 +124,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             <div className="divide-y divide-slate-200">
               <div className="p-2 grid grid-cols-12">
                 <span className="col-span-1 text-center font-bold">1</span>
-                <span className="col-span-4 font-bold text-slate-900">{data.headName || 'शांति देवी'}</span>
+                <span className="col-span-4 font-bold text-slate-900">{data.headName || '-'}</span>
                 <span className="col-span-3 text-slate-600">स्वयं (मुखिया)</span>
                 <span className="col-span-2 text-center">48 / महिला</span>
                 <span className="col-span-2 text-right text-emerald-700 font-bold">सत्यापित ✓</span>
@@ -499,11 +499,11 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">बच्चे / व्यक्ति का नाम</span>
-              <span className="font-black text-slate-900">{data.applicantName || 'आरव कुमार'}</span>
+              <span className="font-black text-slate-900">{data.applicantName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पिता / पति का नाम</span>
-              <span className="font-bold text-slate-800">{data.fatherHusband || 'राजेश कुमार'}</span>
+              <span className="font-bold text-slate-800">{data.fatherHusband || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">सत्यापन स्थिति</span>
@@ -846,7 +846,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">परीक्षार्थी का नाम</span>
-              <span className="font-black text-slate-900">{data.studentName || 'अभिषेक पटेल'}</span>
+              <span className="font-black text-slate-900">{data.studentName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">परीक्षा केंद्र व शहर</span>
@@ -884,7 +884,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">वादी बनाम प्रतिवादी</span>
-              <span className="font-black text-slate-900">{data.applicantName || 'राम कुमार बनाम श्याम लाल'}</span>
+              <span className="font-black text-slate-900">{data.applicantName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">CNR संख्या (16 Digit)</span>
@@ -926,7 +926,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">लाभार्थी का नाम</span>
-              <span className="font-black text-slate-900">{data.applicantName || data.headName || 'आरुषि सिंह'}</span>
+              <span className="font-black text-slate-900">{data.applicantName || data.headName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदन क्रमांक</span>
@@ -972,7 +972,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदक का नाम</span>
-              <span className="font-black text-slate-900">{data.aadhaarNo || 'संजय कुमार'}</span>
+              <span className="font-black text-slate-900">{data.aadhaarNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पुलिस सत्यापन स्थिति</span>
@@ -1010,7 +1010,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">किसान / पशुपालक का नाम</span>
-              <span className="font-black text-slate-900">{data.farmerName || 'नत्थू लाल'}</span>
+              <span className="font-black text-slate-900">{data.farmerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">KCC ऋण खाता संख्या</span>
@@ -1098,7 +1098,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">परीक्षार्थी का नाम</span>
-              <span className="font-black text-slate-900">{data.studentName || 'मोहित कुमार'}</span>
+              <span className="font-black text-slate-900">{data.studentName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">माता / पिता का नाम</span>

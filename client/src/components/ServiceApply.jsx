@@ -163,35 +163,7 @@ export default function ServiceApply({
     setExtraFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Pre-fill realistic example data for instant testing
-  const handleFillSampleData = () => {
-    const samples = {};
-    if (activeSchema?.fields) {
-      activeSchema.fields.forEach(f => {
-        if (f.placeholder) {
-          samples[f.id] = f.placeholder.replace('उदा. ', '').split(' • ')[0];
-        } else if (f.options) {
-          samples[f.id] = f.options[0];
-        } else {
-          samples[f.id] = 'सत्यापित विवरण';
-        }
-      });
-    } else if (janSevaMatch?.fields) {
-      janSevaMatch.fields.forEach(f => {
-        if (f.placeholder) {
-          samples[f.id] = f.placeholder.replace('उदा. ', '');
-        } else if (f.options) {
-          samples[f.id] = f.options[0];
-        }
-      });
-    } else {
-      samples.applicantName = 'रमेश कुमार';
-      samples.phone = '9876543210';
-      samples.fatherName = 'श्री बाबूलाल';
-      samples.address = 'ग्राम रामपुर, तहसील सवायजपुर, हरदोई';
-    }
-    setFormFields(samples);
-  };
+
 
   // Fetch wallet for customer
   const checkWalletBalance = async (p) => {
@@ -495,20 +467,12 @@ export default function ServiceApply({
               )}
             </div>
 
-            {/* Quick Fill Sample Data Bar */}
+            {/* Fields Information Banner */}
             <div className="flex items-center justify-between bg-slate-50 p-3 rounded-2xl border border-slate-200 text-xs">
-              <div className="flex items-center gap-2 text-slate-600 font-semibold">
-                <HelpCircle className="w-4 h-4 text-blue-600" />
-                <span>इस सेवा के लिए आवश्यक सरकारी कॉलम नीचे दिए गए हैं:</span>
+              <div className="flex items-center gap-2 text-slate-700 font-bold">
+                <HelpCircle className="w-4 h-4 text-emerald-600" />
+                <span>इस सेवा के लिए आवश्यक सरकारी कॉलम नीचे दिए गए हैं (कृपया वास्तविक विवरण दर्ज करें):</span>
               </div>
-              <button
-                type="button"
-                onClick={handleFillSampleData}
-                className="px-3 py-1 bg-white hover:bg-slate-100 text-indigo-700 border border-indigo-200 rounded-xl font-bold text-xs flex items-center gap-1 transition cursor-pointer"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>उदाहरण डेटा भरें</span>
-              </button>
             </div>
 
             {/* DYNAMIC SCHEMA FIELDS */}

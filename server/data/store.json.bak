@@ -635,13 +635,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-13T10:04:44.857Z",
+      "lastRun": "2026-10-13T11:04:44.883Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-13T11:04:44.850Z"
+      "nextRun": "2026-10-13T12:04:44.871Z"
     }
   },
   "superAdminAuditLogs": [

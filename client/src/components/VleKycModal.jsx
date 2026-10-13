@@ -186,7 +186,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                     <input
                       type="text"
                       required
-                      placeholder="उदा. राहुल कुमार"
+                      placeholder="संचालक का पूरा नाम दर्ज करें"
                       value={ownerName}
                       onChange={(e) => setOwnerName(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 rounded-xl font-medium focus:outline-hidden focus:border-indigo-500"

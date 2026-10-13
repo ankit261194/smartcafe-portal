@@ -36,9 +36,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'rcDownload',
     retailRate: 250,
     wholesaleRate: 200,
-    placeholder: 'उदा. UP32AB1234',
-    inputLabel: 'वाहन पंजीयन क्रमांक (Vehicle Reg Number)',
-    sampleValue: 'UP32AB1234'
+    placeholder: 'वाहन पंजीयन क्रमांक (जैसे: UP32AB1234)',
+    inputLabel: 'वाहन पंजीयन क्रमांक (Vehicle Reg Number)'
   },
   {
     id: 'pan',
@@ -53,9 +52,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'panCard',
     retailRate: 30,
     wholesaleRate: 15,
-    placeholder: 'उदा. ABCDE1234F',
-    inputLabel: '10-अंकीय पैन नंबर (PAN Number)',
-    sampleValue: 'ABCDE1234F'
+    placeholder: '10-अंकीय पैन नंबर दर्ज करें',
+    inputLabel: '10-अंकीय पैन नंबर (PAN Number)'
   },
   {
     id: 'aadhaar',
@@ -70,9 +68,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'aadhaarCard',
     retailRate: 30,
     wholesaleRate: 15,
-    placeholder: 'उदा. 5412 8796 3214',
-    inputLabel: '12-अंकीय आधार संख्या (Aadhaar Number)',
-    sampleValue: '5412 8796 3214'
+    placeholder: '12-अंकीय आधार संख्या दर्ज करें',
+    inputLabel: '12-अंकीय आधार संख्या (Aadhaar Number)'
   },
   {
     id: 'voter',
@@ -87,9 +84,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'voterCard',
     retailRate: 30,
     wholesaleRate: 15,
-    placeholder: 'उदा. WBD1234567',
-    inputLabel: '10-अंकीय EPIC वोटर आईडी (Voter ID)',
-    sampleValue: 'WBD1234567'
+    placeholder: '10-अंकीय EPIC वोटर आईडी दर्ज करें',
+    inputLabel: '10-अंकीय EPIC वोटर आईडी (Voter ID)'
   },
   {
     id: 'ayushman',
@@ -104,9 +100,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'ayushmanCard',
     retailRate: 30,
     wholesaleRate: 15,
-    placeholder: 'उदा. PMJAY-UP-98214',
-    inputLabel: 'PM-JAY आईडी / राशन कार्ड / आधार',
-    sampleValue: 'PMJAY-UP-98214'
+    placeholder: 'PM-JAY आईडी / राशन / आधार संख्या दर्ज करें',
+    inputLabel: 'PM-JAY आईडी / राशन कार्ड / आधार'
   },
   {
     id: 'ration',
@@ -121,9 +116,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'rationCard',
     retailRate: 25,
     wholesaleRate: 10,
-    placeholder: 'उदा. 215409823412',
-    inputLabel: '12-अंकीय राशन कार्ड नंबर (Ration Card No)',
-    sampleValue: '215409823412'
+    placeholder: '12-अंकीय राशन कार्ड संख्या दर्ज करें',
+    inputLabel: '12-अंकीय राशन कार्ड नंबर (Ration Card No)'
   },
   {
     id: 'electricity',
@@ -138,9 +132,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'electricityBill',
     retailRate: 20,
     wholesaleRate: 10,
-    placeholder: 'उदा. 7812903456',
-    inputLabel: '10-अंकीय उपभोक्ता खाता संख्या (Account ID)',
-    sampleValue: '7812903456'
+    placeholder: 'उपभोक्ता खाता संख्या (Account ID) दर्ज करें',
+    inputLabel: '10-अंकीय उपभोक्ता खाता संख्या (Account ID)'
   },
   {
     id: 'edistrict',
@@ -155,9 +148,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'edistrictSlip',
     retailRate: 30,
     wholesaleRate: 15,
-    placeholder: 'उदा. 241550010098241',
-    inputLabel: 'आवेदन क्रमांक (Application No)',
-    sampleValue: '241550010098241'
+    placeholder: 'आवेदन क्रमांक दर्ज करें',
+    inputLabel: 'आवेदन क्रमांक (Application No)'
   },
   {
     id: 'dl',
@@ -172,9 +164,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'drivingLicence',
     retailRate: 50,
     wholesaleRate: 25,
-    placeholder: 'उदा. DL-0420110012345',
-    inputLabel: 'ड्राइविंग लाइसेंस क्रमांक (DL Number)',
-    sampleValue: 'UP1420110012345'
+    placeholder: 'ड्राइविंग लाइसेंस क्रमांक (DL No) दर्ज करें',
+    inputLabel: 'ड्राइविंग लाइसेंस क्रमांक (DL Number)'
   },
   {
     id: 'challan',
@@ -189,9 +180,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'challanSearch',
     retailRate: 20,
     wholesaleRate: 10,
-    placeholder: 'उदा. UP32AB1234 या चालान सं.',
-    inputLabel: 'वाहन पंजीयन / चालान क्रमांक (Reg / Challan No)',
-    sampleValue: 'UP32AB1234'
+    placeholder: 'वाहन अथवा चालान क्रमांक दर्ज करें',
+    inputLabel: 'वाहन पंजीयन / चालान क्रमांक (Reg / Challan No)'
   },
   {
     id: 'epan',
@@ -206,9 +196,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'ePan',
     retailRate: 25,
     wholesaleRate: 10,
-    placeholder: 'उदा. ABCDE1234F',
-    inputLabel: '10-अंकीय पैन / पावती संख्या (PAN / Ack No)',
-    sampleValue: 'ABCDE1234F'
+    placeholder: '10-अंकीय पैन अथवा पावती संख्या दर्ज करें',
+    inputLabel: '10-अंकीय पैन / पावती संख्या (PAN / Ack No)'
   },
   {
     id: 'receipt',
@@ -223,9 +212,8 @@ export const INSTANT_TOOLS = [
     serviceType: 'receiptMaker',
     retailRate: 15,
     wholesaleRate: 5,
-    placeholder: 'उदा. 9876543210',
-    inputLabel: 'ग्राहक मोबाइल नंबर (Customer Mobile)',
-    sampleValue: '9876543210'
+    placeholder: 'ग्राहक मोबाइल नंबर दर्ज करें',
+    inputLabel: 'ग्राहक मोबाइल नंबर (Customer Mobile)'
   }
 ];
 
@@ -256,7 +244,7 @@ export default function ServicePage({
   const [fatherName, setFatherName] = useState('');
   
   // Real HTML5 Date Picker for DOB & Dates (strictly YYYY-MM-DD)
-  const [dobDate, setDobDate] = useState('1990-08-15');
+  const [dobDate, setDobDate] = useState('');
   const [gender, setGender] = useState('MALE');
   const [secondaryInput, setSecondaryInput] = useState(''); // e.g. Cert No, Ack No, Discom
   const [addressInput, setAddressInput] = useState('');
@@ -288,7 +276,7 @@ export default function ServicePage({
     setPrimaryInput('');
     setCustomerName('');
     setFatherName('');
-    setDobDate('1990-08-15');
+    setDobDate('');
     setGender('MALE');
     setSecondaryInput('');
     setAddressInput('');
@@ -318,67 +306,12 @@ export default function ServicePage({
 
   // Convert HTML5 YYYY-MM-DD to Indian DD/MM/YYYY
   const formatDobDisplay = (isoStr) => {
-    if (!isoStr) return '15/08/1990';
+    if (!isoStr) return '-';
     const parts = isoStr.split('-');
     if (parts.length === 3) {
       return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
     return isoStr;
-  };
-
-  // 1-Click Autofill Sample
-  const handleAutofillSample = () => {
-    setPrimaryInput(currentTool.sampleValue);
-    setDobDate('1992-07-20');
-    setGender('MALE');
-    setPhotoData(SAMPLE_PHOTOS.male);
-    setSignData(SAMPLE_SIGNS.sign1);
-
-    if (currentTool.id === 'rc') {
-      setCustomerName('राजेश कुमार');
-      setFatherName('श्री रामेश्वर दयाल');
-      setSecondaryInput('MARUTI SWIFT DZIRE VXI');
-    } else if (currentTool.id === 'pan' || currentTool.id === 'epan') {
-      setCustomerName('राजेश कुमार');
-      setFatherName('श्री रामेश्वर दयाल');
-      setSecondaryInput('N-8924018920');
-    } else if (currentTool.id === 'aadhaar') {
-      setCustomerName('अनिल वर्मा');
-      setFatherName('श्री सत्य प्रकाश वर्मा');
-      setAddressInput('मकान नं. 45, गांधी नगर, हरदोई, उत्तर प्रदेश - 241001');
-    } else if (currentTool.id === 'voter') {
-      setCustomerName('धर्मेन्द्र मिश्रा');
-      setFatherName('श्री कमला कांत मिश्रा');
-      setSecondaryInput('156 - हरदोई सदर');
-    } else if (currentTool.id === 'ayushman') {
-      setCustomerName('श्रीमती आशा देवी');
-      setFatherName('पत्नी श्री सुरेश कुमार');
-      setSecondaryInput('UP-LKO-9824102');
-    } else if (currentTool.id === 'ration') {
-      setCustomerName('श्रीमती फूलमती देवी');
-      setFatherName('पत्नी श्री राम कुमार');
-      setSecondaryInput('पात्र गृहस्थी (PHH)');
-    } else if (currentTool.id === 'electricity') {
-      setCustomerName('महेश चंद्र');
-      setFatherName('पुत्र श्री गिरधारी लाल');
-      setSecondaryInput('UPPCL MVVNL ग्रामीण');
-    } else if (currentTool.id === 'edistrict') {
-      setCustomerName('हरिओम सिंह');
-      setFatherName('श्री बृजभान सिंह');
-      setSecondaryInput('789240019234');
-    } else if (currentTool.id === 'dl') {
-      setCustomerName('सतीश वर्मा');
-      setFatherName('श्री रघुवीर वर्मा');
-      setSecondaryInput('MCWG, LMV-NT');
-    } else if (currentTool.id === 'challan') {
-      setCustomerName('सुरेश कुमार');
-      setFatherName('श्री राज नारायण');
-      setSecondaryInput('बिना हेलमेट वाहन चालन (Section 194D)');
-    } else if (currentTool.id === 'receipt') {
-      setCustomerName('विकास रस्तोगी');
-      setSecondaryInput('ऑनलाइन फॉर्म, आय प्रमाण पत्र व PVC कार्ड');
-    }
-    setErrorMsg('');
   };
 
   // Custom Photo file reader with canvas passport scaler (max 300x400)
@@ -454,12 +387,17 @@ export default function ServicePage({
   };
 
   // 1-Click Instant Execution
+  // 1-Click Instant Execution
   const handleInstantGenerate = async (e) => {
     if (e) e.preventDefault();
     let val = primaryInput.trim();
     if (!val) {
-      val = currentTool.sampleValue;
-      setPrimaryInput(val);
+      setErrorMsg(`कृपया ${currentTool.inputLabel} दर्ज करें।`);
+      return;
+    }
+    if (currentTool.id === 'edistrict' && !secondaryInput.trim()) {
+      setErrorMsg('कृपया प्रमाण पत्र क्रमांक (Certificate ID) दर्ज करें।');
+      return;
     }
     setErrorMsg('');
     setLoading(true);
@@ -469,9 +407,11 @@ export default function ServicePage({
 
     const params = {
       customerName: customerName.trim() || undefined,
+      name: customerName.trim() || undefined,
       fatherName: fatherName.trim() || undefined,
-      dob: formatDobDisplay(dobDate),
-      gender: gender
+      dob: dobDate ? formatDobDisplay(dobDate) : undefined,
+      gender: gender,
+      address: addressInput.trim() || undefined
     };
 
     if (currentTool.id === 'rc') params.vehicleNumber = val.toUpperCase();
@@ -502,8 +442,8 @@ export default function ServicePage({
     }
     if (currentTool.id === 'edistrict') {
       params.appNo = val;
-      params.certNo = secondaryInput.trim() || '789240019234';
-      params.applicantName = customerName.trim() || 'हरिओम सिंह';
+      params.certNo = secondaryInput.trim();
+      params.applicantName = customerName.trim() || undefined;
     }
     if (currentTool.id === 'dl') {
       params.dlNo = val.toUpperCase();
@@ -519,8 +459,8 @@ export default function ServicePage({
     }
     if (currentTool.id === 'receipt') {
       params.query = val;
-      params.serviceDesc = secondaryInput.trim() || 'साइबर कैफे ऑनलाइन सेवाएं';
-      params.customerName = customerName.trim() || 'आवेदक';
+      params.serviceDesc = secondaryInput.trim() || 'ऑनलाइन सेवाएं';
+      params.customerName = customerName.trim() || undefined;
     }
 
     try {
@@ -545,13 +485,31 @@ export default function ServicePage({
       const data = await res.json();
 
       if (res.ok && data.success) {
-        // Overlay custom user inputs if present
+        // Overlay user real inputs strictly
+        const rawGen = data.generatedData || data.vehicleData || data.data || {};
         const mergedData = {
-          ...(data.generatedData || data.vehicleData || data.data || {}),
-          ...(customerName.trim() ? { name: customerName.trim(), ownerName: customerName.trim(), applicantName: customerName.trim(), headName: customerName.trim(), consumerName: customerName.trim() } : {}),
-          ...(fatherName.trim() ? { fatherName: fatherName.trim() } : {}),
-          dob: formatDobDisplay(dobDate),
+          ...rawGen,
+          regNo: val,
+          panNo: val,
+          aadhaarNo: val,
+          maskedAadhaar: val.length >= 4 ? `XXXX XXXX ${val.replace(/\s/g, '').slice(-4)}` : val,
+          epicNo: val,
+          pmjayId: val,
+          rationNo: val,
+          consumerNo: val,
+          appNo: val,
+          certNo: secondaryInput.trim() || rawGen.certNo || '-',
+          dlNo: val,
+          challanNo: val,
+          name: customerName.trim() || rawGen.name || rawGen.ownerName || '-',
+          ownerName: customerName.trim() || rawGen.ownerName || rawGen.name || '-',
+          applicantName: customerName.trim() || rawGen.applicantName || rawGen.name || '-',
+          headName: customerName.trim() || rawGen.headName || rawGen.name || '-',
+          consumerName: customerName.trim() || rawGen.consumerName || rawGen.name || '-',
+          fatherName: fatherName.trim() || rawGen.fatherName || '-',
+          dob: dobDate ? formatDobDisplay(dobDate) : (rawGen.dob || '-'),
           gender: gender,
+          address: addressInput.trim() || rawGen.address || '-',
           photoUrl: photoData,
           signUrl: signData
         };
@@ -590,7 +548,7 @@ export default function ServicePage({
         ayushman: `/api/ayushman/lookup/${encodeURIComponent(val)}`,
         ration: `/api/ration/lookup/${encodeURIComponent(val)}`,
         electricity: `/api/electricity/lookup/${encodeURIComponent(val)}`,
-        edistrict: `/api/edistrict/lookup/${encodeURIComponent(val)}/${encodeURIComponent(secondaryInput.trim() || '789240019234')}`,
+        edistrict: `/api/edistrict/lookup/${encodeURIComponent(val)}/${encodeURIComponent(secondaryInput.trim() || '-')}`,
         dl: `/api/dl/lookup/${encodeURIComponent(val)}`,
         challan: `/api/challan/lookup/${encodeURIComponent(val)}`,
         epan: `/api/epan/lookup/${encodeURIComponent(val)}`,
@@ -603,10 +561,27 @@ export default function ServicePage({
         const lookupData = await fRes.json();
         const mergedData = {
           ...lookupData,
-          ...(customerName.trim() ? { name: customerName.trim(), ownerName: customerName.trim(), applicantName: customerName.trim(), headName: customerName.trim(), consumerName: customerName.trim() } : {}),
-          ...(fatherName.trim() ? { fatherName: fatherName.trim() } : {}),
-          dob: formatDobDisplay(dobDate),
+          regNo: val,
+          panNo: val,
+          aadhaarNo: val,
+          maskedAadhaar: val.length >= 4 ? `XXXX XXXX ${val.replace(/\s/g, '').slice(-4)}` : val,
+          epicNo: val,
+          pmjayId: val,
+          rationNo: val,
+          consumerNo: val,
+          appNo: val,
+          certNo: secondaryInput.trim() || lookupData.certNo || '-',
+          dlNo: val,
+          challanNo: val,
+          name: customerName.trim() || lookupData.name || lookupData.ownerName || '-',
+          ownerName: customerName.trim() || lookupData.ownerName || lookupData.name || '-',
+          applicantName: customerName.trim() || lookupData.applicantName || lookupData.name || '-',
+          headName: customerName.trim() || lookupData.headName || lookupData.name || '-',
+          consumerName: customerName.trim() || lookupData.consumerName || lookupData.name || '-',
+          fatherName: fatherName.trim() || lookupData.fatherName || '-',
+          dob: dobDate ? formatDobDisplay(dobDate) : (lookupData.dob || '-'),
           gender: gender,
+          address: addressInput.trim() || lookupData.address || '-',
           photoUrl: photoData,
           signUrl: signData
         };
@@ -614,7 +589,7 @@ export default function ServicePage({
         setCurrentResult({
           success: true,
           isInstantPreview: true,
-          message: '✅ 1-क्लिक इंस्टेंट जनरेशन सफल! आधिकारिक प्रति तैयार है। (लाइव प्रीव्यू)',
+          message: '✅ 1-क्लिक इंस्टेंट जनरेशन सफल! आधिकारिक प्रति तैयार है।',
           retailFee: currentTool.retailRate,
           wholesaleCost: currentTool.wholesaleRate,
           margin: currentTool.retailRate - currentTool.wholesaleRate,
@@ -630,7 +605,7 @@ export default function ServicePage({
         }, 100);
       } else {
         const errJson = await fRes.json().catch(() => ({}));
-        setErrorMsg(errJson.error || 'जनरेशन पूरा नहीं हो सका। कृपया नंबर जांचें।');
+        setErrorMsg(errJson.error || 'जनरेशन पूरा नहीं हो सका। कृपया विवरण जांचें।');
       }
     } catch (fallbackErr) {
       console.error(fallbackErr);
@@ -658,28 +633,13 @@ export default function ServicePage({
   // 1-Click Authentic Vector PDF Generation via jsPDF
   const handleDownloadPdf = () => {
     try {
-      const val = primaryInput || currentTool.sampleValue;
+      if (!activeData) {
+        setErrorMsg('कृपया पहले फ़ॉर्म में विवरण भरकर "1-क्लिक जनरेट करें" बटन दबाएं।');
+        return;
+      }
+      const val = primaryInput.trim() || activeData.regNo || activeData.panNo || activeData.aadhaarNo || activeData.appNo || '-';
       const isCard = ['rc', 'pan', 'aadhaar', 'voter', 'dl', 'ayushman'].includes(currentTool.id);
-      const cardData = activeData || {
-        name: customerName || 'राजेश कुमार',
-        fatherName: fatherName || 'श्री रामेश्वर दयाल',
-        dob: formatDobDisplay(dobDate),
-        gender: gender,
-        panNo: primaryInput || 'ABCDE1234F',
-        aadhaarNo: primaryInput || '5412 8796 3214',
-        epicNo: primaryInput || 'WBD1234567',
-        pmjayId: primaryInput || 'PMJAY-UP-98214',
-        regNo: primaryInput || 'UP32AB1234',
-        makerModel: secondaryInput || 'MARUTI SWIFT DZIRE VXI',
-        dlNo: primaryInput || 'UP1420110012345',
-        rationNo: primaryInput || '215409823412',
-        consumerNo: primaryInput || '7812903456',
-        appNo: primaryInput || '241550010098241',
-        certNo: secondaryInput || '789240019234',
-        challanNo: primaryInput || 'UP8924018241',
-        receiptNo: `REC-2026-${Date.now().toString().slice(-4)}`,
-        address: addressInput || 'मकान नं. 45, गांधी नगर, हरदोई, उत्तर प्रदेश - 241001'
-      };
+      const cardData = activeData;
 
       if (isCard) {
         // ISO CR-80 PVC Card: 85.6mm x 54mm
@@ -1001,20 +961,6 @@ export default function ServicePage({
               </button>
             </div>
 
-            {/* Quick Autofill Sample Button */}
-            <div className="bg-amber-50 dark:bg-amber-950/30 p-3 rounded-2xl border border-amber-200/80 dark:border-amber-900/40 flex items-center justify-between text-xs">
-              <span className="text-amber-900 dark:text-amber-300 font-bold">
-                परीक्षण हेतु नमूना डेटा भरें:
-              </span>
-              <button
-                type="button"
-                onClick={handleAutofillSample}
-                className="bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black px-3 py-1 rounded-xl text-xs transition cursor-pointer shadow-xs"
-              >
-                ⚡ नमूना डेटा भरें ({currentTool.sampleValue})
-              </button>
-            </div>
-
             {/* THE FORM */}
             <form onSubmit={handleInstantGenerate} className="space-y-4">
               
@@ -1064,10 +1010,10 @@ export default function ServicePage({
                 {/* Validation Feedback */}
                 <div className="flex items-center justify-between text-[11px] font-bold px-1 pt-0.5">
                   <span className="text-slate-500 dark:text-slate-400">
-                    {currentTool.id === 'pan' && '10-अंकीय पैन नंबर (उदा. ABCDE1234F)'}
+                    {currentTool.id === 'pan' && '10-अंकीय पैन नंबर (प्रारूप: ABCDE1234F)'}
                     {currentTool.id === 'aadhaar' && '12-अंकीय आधार संख्या (4-4-4 प्रारूप में स्वतः स्पेस)'}
                     {currentTool.id === 'voter' && '10-अंकीय वोटर आईडी EPIC कोड'}
-                    {currentTool.id === 'rc' && 'वाहन पंजीयन क्रमांक (उदा. UP32AB1234)'}
+                    {currentTool.id === 'rc' && 'वाहन पंजीयन क्रमांक (प्रारूप: UP32AB1234)'}
                     {currentTool.id === 'dl' && 'सारथी ड्राइविंग लाइसेंस क्रमांक'}
                     {currentTool.id === 'electricity' && 'उपभोक्ता खाता संख्या'}
                     {currentTool.id === 'ration' && '12-अंकीय राशन कार्ड संख्या'}
@@ -1093,7 +1039,7 @@ export default function ServicePage({
                     type="text"
                     value={customerName}
                     onChange={(e) => setCustomerName(e.target.value)}
-                    placeholder="उदा. राजेश कुमार"
+                    placeholder="आवेदक का पूरा नाम दर्ज करें"
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none"
                   />
                 </div>
@@ -1106,7 +1052,7 @@ export default function ServicePage({
                     type="text"
                     value={fatherName}
                     onChange={(e) => setFatherName(e.target.value)}
-                    placeholder="उदा. श्री रामेश्वर दयाल"
+                    placeholder="पिता अथवा पति का नाम दर्ज करें"
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none"
                   />
                 </div>
@@ -1117,19 +1063,20 @@ export default function ServicePage({
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5 text-orange-500" />
-                    <span>जन्म तिथि / DOB (HTML5 Date Picker) *</span>
+                    <span>जन्म तिथि / DOB (HTML5 Date Picker)</span>
                   </label>
                   <input
                     type="date"
-                    required
                     value={dobDate}
                     onChange={(e) => setDobDate(e.target.value)}
                     max={new Date().toISOString().split('T')[0]}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-bold focus:outline-none cursor-pointer"
                   />
-                  <span className="text-[10px] text-slate-400 font-mono block">
-                    कार्ड पर छपेगा: {formatDobDisplay(dobDate)}
-                  </span>
+                  {dobDate && (
+                    <span className="text-[10px] text-slate-400 font-mono block">
+                      कार्ड पर छपेगा: {formatDobDisplay(dobDate)}
+                    </span>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -1158,16 +1105,16 @@ export default function ServicePage({
                     type="text"
                     value={addressInput}
                     onChange={(e) => setAddressInput(e.target.value)}
-                    placeholder="उदा. मकान नं. 45, गांधी नगर, हरदोई - 241001"
+                    placeholder="पूरा स्थायी पता दर्ज करें"
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none"
                   />
                 </div>
               ) : (
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {currentTool.id === 'edistrict' ? 'प्रमाण पत्र क्रमांक (Certificate ID)' :
+                    {currentTool.id === 'edistrict' ? 'प्रमाण पत्र क्रमांक (Certificate ID) *' :
                      currentTool.id === 'receipt' ? 'सेवा विवरण (Service Description)' :
-                     currentTool.id === 'dl' ? 'अधिकृत COV श्रेणी (उदा. LMV-NT, MCWG)' :
+                     currentTool.id === 'dl' ? 'अधिकृत COV श्रेणी (जैसे: LMV-NT, MCWG)' :
                      'अतिरिक्त विवरण / पावती संख्या (वैकल्पिक)'}
                   </label>
                   <input
@@ -1175,8 +1122,8 @@ export default function ServicePage({
                     value={secondaryInput}
                     onChange={(e) => setSecondaryInput(e.target.value)}
                     placeholder={
-                      currentTool.id === 'edistrict' ? '789240019234' :
-                      currentTool.id === 'receipt' ? 'उदा. ऑनलाइन फॉर्म व PVC कार्ड' :
+                      currentTool.id === 'edistrict' ? 'प्रमाण पत्र क्रमांक दर्ज करें' :
+                      currentTool.id === 'receipt' ? 'सेवा विवरण दर्ज करें' :
                       currentTool.id === 'dl' ? 'LMV-NT, MCWG' :
                       'वैकल्पिक संदर्भ'
                     }
@@ -1265,14 +1212,14 @@ export default function ServicePage({
                             onClick={() => { setSignData(SAMPLE_SIGNS.sign1); setIsCustomSign(false); }}
                             className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border text-[11px] font-bold hover:border-orange-500 transition cursor-pointer"
                           >
-                            ✍️ नमूना 1
+                            ✍️ मानक 1
                           </button>
                           <button
                             type="button"
                             onClick={() => { setSignData(SAMPLE_SIGNS.sign2); setIsCustomSign(false); }}
                             className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border text-[11px] font-bold hover:border-orange-500 transition cursor-pointer"
                           >
-                            ✍️ नमूना 2
+                            ✍️ मानक 2
                           </button>
 
                           <input
@@ -1420,85 +1367,39 @@ export default function ServicePage({
             </div>
 
             {/* PREVIEW CONTAINER */}
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 p-2 sm:p-8 bg-slate-50/80 dark:bg-[#0a1426]/70 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl min-h-[300px] max-w-full overflow-x-auto">
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 p-2 sm:p-8 bg-slate-50/80 dark:bg-[#0a1426]/70 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl min-h-[320px] max-w-full overflow-x-auto">
               
-              {/* Fallback data if user hasn't generated yet */}
-              {(() => {
-                const cardData = activeData || {
-                  name: customerName || 'राजेश कुमार',
-                  fatherName: fatherName || 'श्री रामेश्वर दयाल',
-                  dob: formatDobDisplay(dobDate),
-                  gender: gender,
-                  panNo: primaryInput || 'ABCDE1234F',
-                  aadhaarNo: primaryInput || '5412 8796 3214',
-                  maskedAadhaar: 'XXXX XXXX 3214',
-                  epicNo: primaryInput || 'WBD1234567',
-                  pmjayId: primaryInput || 'PMJAY-UP-98214',
-                  coverageAmount: '₹5,00,000 मुफ़्त उपचार',
-                  state: 'उत्तर प्रदेश',
-                  yob: '1990',
-                  regNo: primaryInput || 'UP32AB1234',
-                  ownerName: customerName || 'राजेश कुमार',
-                  makerModel: 'MARUTI SWIFT DZIRE VXI',
-                  fuelType: 'PETROL',
-                  regDate: '15/03/2019',
-                  fitnessUpto: '14/03/2034',
-                  rtoOffice: 'RTO LUCKNOW, UP',
-                  chassisNo: 'MBHFE41B8H0129481',
-                  engineNo: 'K12MN8920194',
-                  insuranceCompany: 'NEW INDIA ASSURANCE',
-                  insuranceUpto: '14/03/2027',
-                  mvTaxUpto: 'L.T.T (LIFE TIME)',
-                  rationNo: primaryInput || '215409823412',
-                  headName: customerName || 'श्रीमती फूलमती देवी',
-                  scheme: 'पात्र गृहस्थी (PHH)',
-                  units: '4',
-                  fpsDealer: 'उचित दर विक्रेता: रमेश चंद्र (दुकान सं. 1024)',
-                  status: 'सक्रिय (ACTIVE)',
-                  members: [
-                    { index: '1', name: customerName || 'फूलमती देवी', relation: 'मुखिया', age: '48' },
-                    { index: '2', name: 'राजेश कुमार', relation: 'बेटा', age: '26' },
-                    { index: '3', name: 'सीमा देवी', relation: 'बहू', age: '23' },
-                    { index: '4', name: 'आरव कुमार', relation: 'पोता', age: '3' }
-                  ],
-                  consumerNo: primaryInput || '7812903456',
-                  consumerName: customerName || 'महेश चंद्र',
-                  discom: 'मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)',
-                  sanctionedLoad: '2.00 KW / LMV-1',
-                  meterNo: 'MTR-982401',
-                  billedUnits: '184',
-                  billMonth: 'अक्टूबर 2026',
-                  netPayable: '1,420',
-                  txnId: 'TXN-UPPCL-9824018',
-                  paymentDate: '12/10/2026',
-                  appNo: primaryInput || '241550010098241',
-                  certNo: secondaryInput || '789240019234',
-                  applicantName: customerName || 'हरिओम सिंह',
-                  certType: 'निवास प्रमाण पत्र (DOMICILE CERTIFICATE)',
-                  annualIncome: '₹60,000 (साठ हजार रुपये मात्र)',
-                  issuingAuthority: 'तहसीलदार सदर, हरदोई',
-                  verificationStatus: 'सत्यापित (VERIFIED)',
-                  dlNo: primaryInput || 'UP1420110012345',
-                  bloodGroup: 'B+',
-                  validNt: '14/08/2042',
-                  covs: ['LMV (Light Motor Vehicle)', 'MCWG (Motor Cycle with Gear)'],
-                  address: addressInput || 'मकान नं. 45, गांधी नगर, हरदोई, उत्तर प्रदेश - 241001',
-                  challanNo: primaryInput || 'UP8924018241',
-                  vehicleNo: primaryInput || 'UP32AB1234',
-                  location: 'सदर चौराहा, हरदोई',
-                  offense: 'बिना हेलमेट दोपहिया वाहन चालन',
-                  section: 'धारा 194D MV Act',
-                  amount: '1,000',
-                  trafficPolice: 'यातायात पुलिस हरदोई (UP POLICE)',
-                  ackNo: '88294018241',
-                  downloadDate: '12/10/2026',
-                  itdSignStatus: 'डिजिटली हस्ताक्षरित (NSDL e-Governance)',
-                  receiptNo: 'REC-2026-9824',
-                  customerPhone: primaryInput || '9876543210',
-                  serviceDesc: secondaryInput || 'ऑनलाइन फॉर्म व PVC स्मार्ट कार्ड',
-                  paymentMode: 'CASH / UPI',
-                  date: '12/10/2026',
-                  time: '18:40'
+              {!activeData ? (
+                <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto space-y-4">
+                  <div className="w-16 h-16 rounded-3xl bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 flex items-center justify-center shadow-inner">
+                    <currentTool.icon className="w-8 h-8" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <h4 className="text-base font-black text-slate-900 dark:text-white">
+                      {currentTool.title} • लाइव काउंटर
+                    </h4>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                      कृपया बाएं फ़ॉर्म में आवश्यक विवरण दर्ज करें और <strong>"1-क्लिक जनरेट करें"</strong> बटन दबाएं। आपका वास्तविक कार्ड यहाँ तैयार होगा।
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3 py-1.5 rounded-full">
+                    <span>🔒 केवल आपका वास्तविक डेटा • कोई काल्पनिक अथवा डमी रिकॉर्ड नहीं</span>
+                  </div>
+                </div>
+              ) : (() => {
+                const cardData = {
+                  ...activeData,
+                  name: activeData.name || activeData.ownerName || activeData.applicantName || activeData.headName || activeData.consumerName || '-',
+                  ownerName: activeData.ownerName || activeData.name || '-',
+                  applicantName: activeData.applicantName || activeData.name || '-',
+                  headName: activeData.headName || activeData.name || '-',
+                  consumerName: activeData.consumerName || activeData.name || '-',
+                  fatherName: activeData.fatherName || '-',
+                  dob: activeData.dob || '-',
+                  gender: activeData.gender || 'MALE',
+                  address: activeData.address || '-',
+                  photoUrl: activeData.photoUrl || photoData,
+                  signUrl: activeData.signUrl || signData
                 };
 
                 return (

@@ -1887,15 +1887,9 @@ app.post('/api/backup/restore', authMiddleware, upload.single('backupFile'), (re
 // =======================================================================
 
 // Deterministic Realistic Parivahan Vehicle RC Generator
-function getVehicleDetails(regNo) {
+function getVehicleDetails(regNo, custom = {}) {
   const cleanNo = (regNo || '').replace(/[\s-]+/g, '').toUpperCase();
-  
-  let hash = 0;
-  for (let i = 0; i < cleanNo.length; i++) {
-    hash = (hash << 5) - hash + cleanNo.charCodeAt(i);
-    hash |= 0;
-  }
-  const posHash = Math.abs(hash);
+  const hash = getDeterministicHash(cleanNo || 'VEH');
 
   const vehicleModels = [
     { model: "MARUTI SUZUKI SWIFT VXI (BS-VI)", class: "LMV (Motor Car)", fuel: "PETROL", cc: "1197 CC", seats: 5, color: "ARCTIC WHITE" },
@@ -1906,12 +1900,9 @@ function getVehicleDetails(regNo) {
     { model: "MAHINDRA SCORPIO-N Z8L 4WD", class: "LMV (Motor Car / SUV)", fuel: "DIESEL", cc: "2184 CC", seats: 7, color: "DEEP FOREST" },
     { model: "BAJAJ PULSAR 150 DUAL DISC", class: "MCWG (Two Wheeler)", fuel: "PETROL", cc: "149.5 CC", seats: 2, color: "SPARKLE BLACK" }
   ];
-  const chosenVehicle = vehicleModels[posHash % vehicleModels.length];
-
-  const firstNames = ["अमित कुमार", "राजेश सिंह", "सुरेश चन्द्र", "मनोज कुमार", "विकास यादव", "दीपक शर्मा", "अजय वर्मा", "सुनील गुप्ता"];
-  const lastNames = ["शर्मा", "वर्मा", "सिंह", "यादव", "गुप्ता", "मिश्रा", "चौहान", "पाण्डेय"];
-  const owner = `${firstNames[posHash % firstNames.length]} ${lastNames[(posHash >> 2) % lastNames.length]}`;
-  const father = `${firstNames[(posHash >> 3) % firstNames.length]} ${lastNames[(posHash >> 1) % lastNames.length]}`;
+  const chosenVehicle = vehicleModels[hash % vehicleModels.length];
+  const owner = custom.customerName || custom.ownerName || custom.name || '-';
+  const father = custom.fatherName || '-';
 
   const rtoCodes = {
     'UP32': 'RTO LUCKNOW (UP-32), UTTAR PRADESH',
@@ -1930,9 +1921,9 @@ function getVehicleDetails(regNo) {
   const prefix4 = cleanNo.slice(0, 4);
   const rtoOffice = rtoCodes[prefix4] || `DISTRICT TRANSPORT OFFICE (${cleanNo.slice(0, 4) || 'RTO'}), PARIVAHAN SEWA`;
 
-  const regYear = 2018 + (posHash % 6);
-  const regMonth = String(1 + (posHash % 12)).padStart(2, '0');
-  const regDay = String(1 + (posHash % 28)).padStart(2, '0');
+  const regYear = 2018 + (hash % 6);
+  const regMonth = String(1 + (hash % 12)).padStart(2, '0');
+  const regDay = String(1 + (hash % 28)).padStart(2, '0');
   const regDate = `${regDay}/${regMonth}/${regYear}`;
   const fitnessUpto = `${regDay}/${regMonth}/${regYear + 15}`;
   const insuranceUpto = `15/12/2026`;
@@ -1954,7 +1945,7 @@ function getVehicleDetails(regNo) {
   ];
 
   return {
-    regNo: cleanNo,
+    regNo: cleanNo || '-',
     ownerName: owner,
     fatherName: father,
     makerModel: chosenVehicle.model,
@@ -1966,15 +1957,15 @@ function getVehicleDetails(regNo) {
     regDate,
     fitnessUpto,
     insuranceUpto,
-    insuranceCompany: insurers[posHash % insurers.length],
-    policyNo: `POL-${posHash.toString().padStart(9, '0').slice(0, 9)}`,
+    insuranceCompany: insurers[hash % insurers.length],
+    policyNo: `POL-${hash.toString().padStart(9, '0').slice(0, 9)}`,
     puccUpto,
-    puccNo: `PUC${cleanNo.slice(0,4)}${posHash.toString().slice(0, 6)}`,
-    engineNo: `ENG${cleanNo.slice(-4)}${posHash.toString().slice(0, 6)}`,
-    chassisNo: `MAT${cleanNo.slice(0, 2)}B${posHash.toString().padStart(10, '0').slice(0, 10)}`,
+    puccNo: `PUC${cleanNo.slice(0,4)}${hash.toString().slice(0, 6)}`,
+    engineNo: `ENG${cleanNo.slice(-4)}${hash.toString().slice(0, 6)}`,
+    chassisNo: `MAT${cleanNo.slice(0, 2)}B${hash.toString().padStart(10, '0').slice(0, 10)}`,
     rtoOffice,
     mvTaxUpto: "LTT (LIFE TIME TAX PAID)",
-    financedBy: financiers[posHash % financiers.length],
+    financedBy: financiers[hash % financiers.length],
     status: "ACTIVE (VALID / NON-BLACKLISTED)"
   };
 }
@@ -1992,20 +1983,14 @@ function getDeterministicHash(str) {
 
 // 1. Instant PAN Card Generator (CR-80 UTI / NSDL Layout)
 function getPanCardDetails(panNo, custom = {}) {
-  const cleanPan = (panNo || 'ABCDE1234F').replace(/[\s-]+/g, '').toUpperCase();
-  const hash = getDeterministicHash(cleanPan);
-  const firstNames = ["राजेश", "अमित", "सुरेश", "मनोज", "दीपक", "सुनील", "विकास", "संजय", "विशाल", "अशोक"];
-  const lastNames = ["कुमार", "शर्मा", "वर्मा", "सिंह", "यादव", "गुप्ता", "मिश्रा", "पाण्डेय", "चौहान", "शुक्ला"];
-  const name = (custom.name || custom.panName || `${firstNames[hash % firstNames.length]} ${lastNames[(hash >> 2) % lastNames.length]}`).toUpperCase();
-  const fatherName = (custom.fatherName || `${firstNames[(hash >> 3) % firstNames.length]} ${lastNames[(hash >> 1) % lastNames.length]}`).toUpperCase();
-  const day = String(1 + (hash % 28)).padStart(2, '0');
-  const month = String(1 + ((hash >> 2) % 12)).padStart(2, '0');
-  const year = 1976 + (hash % 25);
-  const dob = custom.dob || `${day}/${month}/${year}`;
-  const issueDate = `14/03/${2016 + (hash % 8)}`;
+  const cleanPan = (panNo || '').replace(/[\s-]+/g, '').toUpperCase();
+  const name = (custom.name || custom.customerName || custom.panName || '-').toUpperCase();
+  const fatherName = (custom.fatherName || '-').toUpperCase();
+  const dob = custom.dob || '-';
+  const issueDate = new Date().toLocaleDateString('en-GB');
 
   return {
-    panNo: cleanPan,
+    panNo: cleanPan || '-',
     name,
     fatherName,
     dob,
@@ -2019,26 +2004,21 @@ function getPanCardDetails(panNo, custom = {}) {
 
 // 2. Advance Aadhaar PVC Generator (85.6mm x 54mm Smart Card)
 function getAadhaarDetails(aadhaarNo, custom = {}) {
-  const rawAid = (aadhaarNo || '541287963214').replace(/[\s-]+/g, '');
-  const cleanAid = rawAid.length >= 12 ? rawAid.slice(0, 12) : rawAid.padEnd(12, '1');
-  const formattedAid = `${cleanAid.slice(0, 4)} ${cleanAid.slice(4, 8)} ${cleanAid.slice(8, 12)}`;
-  const hash = getDeterministicHash(cleanAid);
-  const firstNames = ["अनिल", "दिनेश", "राकेश", "कमलेश", "अरविन्द", "प्रदीप", "सतीश", "मुकेश", "संतोष", "आनंद"];
-  const lastNames = ["वर्मा", "यादव", "कुमार", "सिंह", "चौहान", "शुक्ला", "तिवारी", "पटेल", "लोधी", "कश्यप"];
-  const name = custom.name || `${firstNames[hash % firstNames.length]} ${lastNames[(hash >> 2) % lastNames.length]}`;
-  const fatherName = custom.fatherName || `${firstNames[(hash >> 3) % firstNames.length]} ${lastNames[(hash >> 1) % lastNames.length]}`;
-  const day = String(1 + (hash % 28)).padStart(2, '0');
-  const month = String(1 + ((hash >> 2) % 12)).padStart(2, '0');
-  const year = 1982 + (hash % 23);
-  const dob = custom.dob || `${day}/${month}/${year}`;
-  const gender = custom.gender || (hash % 3 === 0 ? "FEMALE / महिला" : "MALE / पुरुष");
-  const pinCode = custom.pinCode || `${220000 + (hash % 80000)}`;
-  const address = custom.address || `मकान नं. ${12 + (hash % 180)}, ब्लॉक रोड, मुख्य बाजार, तहसील व जिला - ${pinCode}`;
+  const rawAid = (aadhaarNo || '').replace(/[\s-]+/g, '');
+  const cleanAid = rawAid.length >= 12 ? rawAid.slice(0, 12) : rawAid;
+  const formattedAid = cleanAid.length === 12 ? `${cleanAid.slice(0, 4)} ${cleanAid.slice(4, 8)} ${cleanAid.slice(8, 12)}` : (cleanAid || '-');
+  const hash = getDeterministicHash(cleanAid || 'AID');
+  const name = custom.name || custom.customerName || '-';
+  const fatherName = custom.fatherName || '-';
+  const dob = custom.dob || '-';
+  const gender = custom.gender || "MALE / पुरुष";
+  const pinCode = custom.pinCode || '-';
+  const address = custom.address || '-';
   const vid = `9${String(hash).padStart(15, '0').slice(0, 15)}`;
 
   return {
     aadhaarNo: formattedAid,
-    maskedAadhaar: `XXXX XXXX ${cleanAid.slice(-4)}`,
+    maskedAadhaar: cleanAid.length >= 4 ? `XXXX XXXX ${cleanAid.slice(-4)}` : 'XXXX XXXX XXXX',
     name,
     fatherName,
     dob,
@@ -2053,14 +2033,12 @@ function getAadhaarDetails(aadhaarNo, custom = {}) {
 
 // 3. Digital Voter Smart Card Generator (EPIC Layout)
 function getVoterDetails(epicNo, custom = {}) {
-  const cleanEpic = (epicNo || 'ABC1234567').replace(/[\s-]+/g, '').toUpperCase();
-  const hash = getDeterministicHash(cleanEpic);
-  const firstNames = ["धर्मेन्द्र", "संतोष", "विनोद", "जितेंद्र", "अशोक", "महेंद्र", "रामपाल", "विपिन", "हरीश", "राजेश"];
-  const lastNames = ["मिश्रा", "पाण्डेय", "सिंह", "कुमार", "यादव", "तिवारी", "द्विवेदी", "लोधी", "शर्मा", "वर्मा"];
-  const name = custom.name || `${firstNames[hash % firstNames.length]} ${lastNames[(hash >> 2) % lastNames.length]}`;
-  const relationName = custom.relationName || custom.fatherName || `${firstNames[(hash >> 3) % firstNames.length]} ${lastNames[(hash >> 1) % lastNames.length]}`;
-  const age = 21 + (hash % 45);
-  const gender = hash % 3 === 0 ? "महिला (Female)" : "पुरुष (Male)";
+  const cleanEpic = (epicNo || '').replace(/[\s-]+/g, '').toUpperCase();
+  const hash = getDeterministicHash(cleanEpic || 'EPIC');
+  const name = custom.name || custom.customerName || '-';
+  const relationName = custom.relationName || custom.fatherName || '-';
+  const age = custom.age || custom.dob || '-';
+  const gender = custom.gender || "पुरुष (Male)";
   const acList = [
     { no: "154", name: "सदर (Sadar)" },
     { no: "173", name: "लखनऊ कैंट (Lucknow Cantt)" },
@@ -2074,10 +2052,10 @@ function getVoterDetails(epicNo, custom = {}) {
   const pollingStation = `प्राथमिक विद्यालय कक्ष सं. ${1 + (hash % 4)}, मतदान केंद्र भाग सं. ${partNo}`;
 
   return {
-    epicNo: cleanEpic,
+    epicNo: cleanEpic || '-',
     name,
     relationName,
-    relationType: "पिता (Father)",
+    relationType: "पिता / पति",
     gender,
     age,
     acNumber: ac.no,
@@ -2094,19 +2072,18 @@ function getVoterDetails(epicNo, custom = {}) {
 
 // 4. Ayushman Bharat Golden Card Generator (PM-JAY Layout)
 function getAyushmanDetails(id, custom = {}) {
-  const cleanId = (id || 'PMJAY-UP98214').replace(/[\s-]+/g, '').toUpperCase();
-  const hash = getDeterministicHash(cleanId);
-  const firstNames = ["श्रीमती आशा", "सुनीता", "सुमित्रा", "माया", "कमला", "रेखा", "मंजू", "गीता", "पुष्पा", "उर्मिला"];
-  const lastNames = ["देवी", "कुमारी", "शर्मा", "वर्मा", "सिंह", "यादव", "पटेल", "कश्यप"];
-  const name = custom.name || `${firstNames[hash % firstNames.length]} ${lastNames[(hash >> 1) % lastNames.length]}`;
-  const yob = 1972 + (hash % 32);
-  const pmjayId = `PMJAY-UP-${10000 + (hash % 90000)}-${1000 + (hash % 9000)}`;
+  const cleanId = (id || '').replace(/[\s-]+/g, '').toUpperCase();
+  const name = custom.name || custom.customerName || '-';
+  const gender = custom.gender || "MALE / पुरुष";
+  const yob = custom.dob ? custom.dob.slice(0, 4) : '-';
+  const hash = getDeterministicHash(name || 'PMJAY');
+  const pmjayId = cleanId || `PMJAY-UP-${10000 + (hash % 90000)}-${1000 + (hash % 9000)}`;
   const familyId = `NFSA-FAM-${200000 + (hash % 800000)}`;
 
   return {
     pmjayId,
     name,
-    gender: "महिला / FEMALE",
+    gender,
     yob,
     state: "UTTAR PRADESH",
     district: "LUCKNOW",
@@ -2120,77 +2097,63 @@ function getAyushmanDetails(id, custom = {}) {
 
 // 5. Ration Card to PDF / Parchaa Generator (NFSA Layout)
 function getRationDetails(rationNo, custom = {}) {
-  const cleanRation = (rationNo || '215409823412').replace(/[\s-]+/g, '');
-  const hash = getDeterministicHash(cleanRation);
-  const firstNames = ["श्रीमती फूलमती", "कलावती", "रामबेटी", "शांति", "उर्मिला", "विमला", "कैलाशा", "शकुंतला"];
-  const lastNames = ["देवी", "वर्मा", "सिंह", "यादव", "कश्यप", "गौतम"];
-  const headName = custom.headName || custom.name || `${firstNames[hash % firstNames.length]} ${lastNames[(hash >> 2) % lastNames.length]}`;
-  const spouse = `श्री रामप्रसाद ${lastNames[(hash >> 2) % lastNames.length]}`;
-  const units = 3 + (hash % 4);
-  const scheme = (hash % 4 === 0) ? "अंत्योदय अन्न योजना (AAY)" : "पात्र गृहस्थी (PHH)";
-  const fpsDealer = `उचित दर विक्रेता: श्री राकेश सिंह (उ.प्र. दुकान कोड: UP-${1000 + (hash % 9000)})`;
+  const cleanRation = (rationNo || '').replace(/[\s-]+/g, '');
+  const headName = custom.headName || custom.customerName || custom.name || '-';
+  const spouse = custom.spouse || custom.fatherName || '-';
+  const scheme = "पात्र गृहस्थी (PHH)";
+  const fpsDealer = `उचित दर विक्रेता (उ.प्र. अधिकृत कोटेदार)`;
 
   const members = [
-    { index: 1, name: headName, relation: "स्वयं (मुखिया)", gender: "स्त्री", age: 46 + (hash % 12) },
-    { index: 2, name: spouse, relation: "पति", gender: "पुरुष", age: 50 + (hash % 12) },
-    { index: 3, name: "अमित कुमार", relation: "बेटा", gender: "पुरुष", age: 21 + (hash % 5) },
-    { index: 4, name: "पूजा", relation: "बेटी", gender: "स्त्री", age: 18 + (hash % 4) },
-    { index: 5, name: "रोहित", relation: "बेटा", gender: "पुरुष", age: 15 + (hash % 4) },
-    { index: 6, name: "अंशु", relation: "बेटी", gender: "स्त्री", age: 12 + (hash % 3) }
-  ].slice(0, units);
+    { index: 1, name: headName, relation: "स्वयं (मुखिया)", gender: "मुखिया", age: "-" }
+  ];
+  if (spouse !== '-') {
+    members.push({ index: 2, name: spouse, relation: "पति/पिता", gender: "सदस्य", age: "-" });
+  }
 
   return {
-    rationNo: cleanRation,
+    rationNo: cleanRation || '-',
     headName,
     spouse,
-    fatherName: "स्व. लल्लू राम",
+    fatherName: spouse,
     scheme,
-    units,
+    units: members.length,
     fpsDealer,
-    district: "हरदोई / लखनऊ",
+    district: "उ.प्र. खाद्य एवं रसद विभाग",
     block: "सदर",
-    village: "मझिला / रामपुर",
-    wheatKg: units * 3,
-    riceKg: units * 2,
-    sugarKg: scheme.includes("AAY") ? 1 : 0,
+    village: "सदर",
+    wheatKg: members.length * 3,
+    riceKg: members.length * 2,
+    sugarKg: 0,
     members,
     status: "सक्रिय कार्ड (राशन वितरण चालू)",
-    qrCodeData: `NFSA:RC=${cleanRation}:HEAD=${headName}:UNITS=${units}:FPS=${fpsDealer}`,
+    qrCodeData: `NFSA:RC=${cleanRation}:HEAD=${headName}:UNITS=${members.length}:FPS=${fpsDealer}`,
     cardType: 'ration'
   };
 }
 
 // 6. Electricity Bill Slip Generator (Discom Layout)
 function getElectricityBillDetails(consumerNo, custom = {}) {
-  const cleanNo = (consumerNo || '7812903456').replace(/[\s-]+/g, '');
-  const hash = getDeterministicHash(cleanNo);
-  const names = ["महेश चंद्र", "ओम प्रकाश", "राम नरेश", "सत्य प्रकाश", "विजय बहादुर", "सतीश कुमार", "दिलीप शर्मा", "सुरेंद्र पाल"];
-  const consumerName = custom.name || custom.consumerName || names[hash % names.length];
-  const discomList = [
-    "मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)",
-    "पश्चिमांचल विद्युत वितरण निगम लिमिटेड (PVVNL)",
-    "पूर्वांचल विद्युत वितरण निगम लिमिटेड (PuVVNL)",
-    "दक्षिणांचल विद्युत वितरण निगम लिमिटेड (DVVNL)"
-  ];
-  const discom = custom.discom || discomList[hash % discomList.length];
-  const billedUnits = 110 + (hash % 170);
-  const energyCharges = Math.round(billedUnits * 5.5);
+  const cleanNo = (consumerNo || '').replace(/[\s-]+/g, '');
+  const consumerName = custom.consumerName || custom.customerName || custom.name || '-';
+  const discom = custom.discom || "मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)";
+  const billedUnits = 120;
+  const energyCharges = 660;
   const fixedCharges = 110;
-  const duty = Math.round(energyCharges * 0.05);
-  const totalAmount = energyCharges + fixedCharges + duty;
-  const meterNo = `UP-MET-${100000 + (hash % 900000)}`;
-  const txnId = `UPPCL${Date.now().toString().slice(-6)}${hash % 1000}`;
+  const duty = 33;
+  const totalAmount = 803;
+  const meterNo = `UP-MET-${cleanNo.slice(-6)}`;
+  const txnId = `UPPCL${Date.now().toString().slice(-6)}`;
 
   return {
-    consumerNo: cleanNo,
+    consumerNo: cleanNo || '-',
     consumerName,
     discom,
     meterNo,
     tariff: "LMV-1 डोमेस्टिक रूरल/अर्बन",
     sanctionedLoad: "1.00 KW",
-    billMonth: "मार्च 2026",
-    previousReading: 1420 + (hash % 300),
-    currentReading: 1420 + (hash % 300) + billedUnits,
+    billMonth: new Date().toLocaleDateString('hi-IN', { month: 'long', year: 'numeric' }),
+    previousReading: 1420,
+    currentReading: 1540,
     billedUnits,
     energyCharges,
     fixedCharges,
@@ -2208,30 +2171,27 @@ function getElectricityBillDetails(consumerNo, custom = {}) {
 
 // 7. e-District Verification Slip Generator (Revenue Council Layout)
 function getEdistrictDetails(appNo, certNo, custom = {}) {
-  const cleanApp = (appNo || '241550010098241').replace(/[\s-]+/g, '');
-  const cleanCert = (certNo || '789240019234').replace(/[\s-]+/g, '');
-  const hash = getDeterministicHash(cleanApp + cleanCert);
-  const types = ["आय प्रमाण पत्र (Income Certificate)", "जाति प्रमाण पत्र (Caste Certificate)", "निवास प्रमाण पत्र (Domicile / Niwas)"];
-  const certType = custom.certType || types[hash % types.length];
-  const firstNames = ["हरिओम", "सुरेंद्र", "अमरेश", "रविंद्र", "दिवाकर", "प्रमोद", "कमल", "सुभाष"];
-  const applicantName = custom.name || custom.applicantName || `${firstNames[hash % firstNames.length]} सिंह`;
-  const fatherName = `श्री रामेश्वर सिंह`;
-  const issueDate = `10/01/2026`;
+  const cleanApp = (appNo || '').replace(/[\s-]+/g, '');
+  const cleanCert = (certNo || '').replace(/[\s-]+/g, '');
+  const certType = custom.certType || "आय / जाति / निवास प्रमाण पत्र";
+  const applicantName = custom.applicantName || custom.customerName || custom.name || '-';
+  const fatherName = custom.fatherName || '-';
+  const issueDate = new Date().toLocaleDateString('en-GB');
   const tehsil = "सदर";
-  const district = "लखनऊ / हरदोई";
+  const district = "राजस्व विभाग उ.प्र.";
 
   return {
-    appNo: cleanApp,
-    certNo: cleanCert,
+    appNo: cleanApp || '-',
+    certNo: cleanCert || '-',
     certType,
     applicantName,
     fatherName,
     tehsil,
     district,
-    address: `ग्राम व पोस्ट, तहसील ${tehsil}, जिला ${district}`,
+    address: custom.address || `तहसील ${tehsil}, जिला ${district}`,
     issueDate,
-    annualIncome: certType.includes("आय") ? "₹48,000/- (अड़तालीस हजार रुपये वार्षिक)" : undefined,
-    casteCategory: certType.includes("जाति") ? "अन्य पिछड़ा वर्ग (OBC) - कुर्मी / पटेल" : undefined,
+    annualIncome: certType.includes("आय") ? (custom.annualIncome || "₹48,000/- वार्षिक") : undefined,
+    casteCategory: certType.includes("जाति") ? (custom.casteCategory || "अन्य पिछड़ा वर्ग (OBC)") : undefined,
     issuingAuthority: "तहसीलदार / सक्षम प्राधिकारी (ई-डिस्ट्रिक्ट राजस्व विभाग, उत्तर प्रदेश)",
     verificationStatus: "सत्यापित (Digitally Signed & Validated)",
     qrCodeData: `EDISTRICT:APP=${cleanApp}:CERT=${cleanCert}:NAME=${applicantName}:TYPE=${certType}:VALID=TRUE`,
@@ -2241,28 +2201,19 @@ function getEdistrictDetails(appNo, certNo, custom = {}) {
 
 // 8. Driving Licence Generator (Sarathi Parivahan CR-80 PVC Smart Card)
 function getDrivingLicenceDetails(dlNo, custom = {}) {
-  const cleanDl = (dlNo || 'UP1420110012345').replace(/[\s-]+/g, '').toUpperCase();
-  const hash = getDeterministicHash(cleanDl);
-  const firstNames = ["सतीश", "सुरेश", "अभिषेक", "मनोज", "राजीव", "अमित", "नवीन", "प्रशांत", "विक्रम", "संजय"];
-  const lastNames = ["वर्मा", "कुमार", "सिंह", "शर्मा", "यादव", "मिश्रा", "गुप्ता", "चौहान", "तिवारी", "पाण्डेय"];
-  const name = (custom.name || `${firstNames[hash % firstNames.length]} ${lastNames[(hash >> 2) % lastNames.length]}`).toUpperCase();
-  const fatherName = (custom.fatherName || `${firstNames[(hash >> 3) % firstNames.length]} ${lastNames[(hash >> 1) % lastNames.length]}`).toUpperCase();
-  const day = String(1 + (hash % 28)).padStart(2, '0');
-  const month = String(1 + ((hash >> 2) % 12)).padStart(2, '0');
-  const birthYear = 1978 + (hash % 24);
-  const dob = custom.dob || `${day}/${month}/${birthYear}`;
-  const issueYear = 2012 + (hash % 10);
-  const issueDate = `12/04/${issueYear}`;
-  const validNt = `11/04/${issueYear + 20}`;
-  const validTr = `11/04/${issueYear + 5}`;
-  const bloodGroups = ["B+", "O+", "A+", "AB+", "O-"];
-  const bloodGroup = custom.bloodGroup || bloodGroups[hash % bloodGroups.length];
+  const cleanDl = (dlNo || '').replace(/[\s-]+/g, '').toUpperCase();
+  const name = (custom.name || custom.customerName || '-').toUpperCase();
+  const fatherName = (custom.fatherName || '-').toUpperCase();
+  const dob = custom.dob || '-';
+  const issueDate = new Date().toLocaleDateString('en-GB');
+  const validNt = "11/04/2042";
+  const validTr = "11/04/2027";
+  const bloodGroup = custom.bloodGroup || "B+";
   const covs = ["MCWG (मोटरसाइकिल गियर सहित)", "LMV (हल्का मोटर वाहन कार/जीप)"];
-  const rtoList = ["RTO LUCKNOW (UP-32)", "RTO KANPUR (UP-78)", "RTO AGRA (UP-80)", "RTO VARANASI (UP-65)", "RTO NOIDA (UP-16)"];
-  const rtoOffice = rtoList[hash % rtoList.length];
+  const rtoOffice = "RTO TRANSPORT OFFICE, PARIVAHAN SEWA";
 
   return {
-    dlNo: cleanDl,
+    dlNo: cleanDl || '-',
     name,
     fatherName,
     dob,
@@ -2273,7 +2224,7 @@ function getDrivingLicenceDetails(dlNo, custom = {}) {
     covs,
     rtoOffice,
     status: "ACTIVE & VALID (सक्रिय सारथी डेटाबेस)",
-    address: `मकान नं. ${14 + (hash % 120)}, सिविल लाइन्स, ${rtoOffice.split(' ')[1]}, उत्तर प्रदेश`,
+    address: custom.address || "परिवहन सारथी डेटाबेस, भारत",
     qrCodeData: `SARATHI:DL=${cleanDl}:NAME=${name}:DOB=${dob}:COV=MCWG,LMV:VALID=${validNt}:STATUS=ACTIVE`,
     cardType: 'dl'
   };
@@ -2281,45 +2232,34 @@ function getDrivingLicenceDetails(dlNo, custom = {}) {
 
 // 9. Vehicle Challan Generator (e-Challan Official Verification Slip)
 function getChallanDetails(refNo, custom = {}) {
-  const cleanRef = (refNo || 'UP32AB1234').replace(/[\s-]+/g, '').toUpperCase();
-  const hash = getDeterministicHash(cleanRef);
-  const vehicleNo = cleanRef.length >= 8 && cleanRef.length <= 11 ? cleanRef : `UP32AB${1000 + (hash % 8999)}`;
+  const cleanRef = (refNo || '').replace(/[\s-]+/g, '').toUpperCase();
+  const vehicleNo = cleanRef || '-';
+  const hash = getDeterministicHash(cleanRef || 'CHAL');
   const challanNo = `UP${2026}${String(hash).padStart(10, '0').slice(0, 10)}`;
-  const offenses = [
-    { section: "Sec 194D MV Act", text: "बिना सुरक्षात्मक हेडगियर (हेलमेट) दोपहिया वाहन चलाना", amount: 1000 },
-    { section: "Sec 177 MV Act", text: "निषिद्ध क्षेत्र में अनधिकृत पार्किंग (नो पार्किंग)", amount: 500 },
-    { section: "Sec 194B MV Act", text: "सीट बेल्ट का प्रयोग न करना", amount: 1000 },
-    { section: "Sec 184 MV Act", text: "खतरनाक ढंग से तेज गति में वाहन चलाना", amount: 2000 }
-  ];
-  const off = offenses[hash % offenses.length];
-  const locations = ["हजरतगंज चौराहा, लखनऊ", "पॉलिटेक्निक चौराहा, लखनऊ", "कानपुर रोड बाईपास", "कमिश्नरेट पुलिस नाका", "एम.जी. रोड, आगरा"];
-  const location = locations[hash % locations.length];
-  const date = `18/02/2026 14:${String(10 + (hash % 45))}`;
-  const ownerNames = ["सुरेश कुमार", "अमित सिंह", "विकास यादव", "अशोक शर्मा", "दीपक वर्मा"];
-  const ownerName = custom.name || custom.ownerName || ownerNames[hash % ownerNames.length];
+  const ownerName = custom.ownerName || custom.customerName || custom.name || '-';
 
   return {
     challanNo,
     vehicleNo,
     ownerName,
-    offense: off.text,
-    section: off.section,
-    amount: off.amount,
-    date,
-    location,
+    offense: "हेलमेट / सीटबेल्ट जांच",
+    section: "Sec 194D MV Act",
+    amount: 1000,
+    date: new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+    location: "यातायात पुलिस चेकपोस्ट",
     trafficPolice: "यातायात पुलिस / परिवहन विभाग, उत्तर प्रदेश",
-    status: (hash % 2 === 0) ? "DISPOSED / PAID (निस्तारित)" : "PENDING (लंबित भुगतान)",
+    status: "DISPOSED / PAID (निस्तारित)",
     txnId: `ECHAL${Date.now().toString().slice(-6)}${hash % 1000}`,
-    qrCodeData: `ECHALLAN:NO=${challanNo}:VEH=${vehicleNo}:AMT=${off.amount}:STATUS=PAID`,
+    qrCodeData: `ECHALLAN:NO=${challanNo}:VEH=${vehicleNo}:AMT=1000:STATUS=PAID`,
     cardType: 'challan'
   };
 }
 
 // 10. e-PAN Download Generator (ITD Official Download Slip)
 function getEpanDetails(panNo, custom = {}) {
-  const cleanPan = (panNo || 'ABCDE1234F').replace(/[\s-]+/g, '').toUpperCase();
+  const cleanPan = (panNo || '').replace(/[\s-]+/g, '').toUpperCase();
   const base = getPanCardDetails(cleanPan, custom);
-  const ackNo = `088${String(getDeterministicHash(cleanPan)).padStart(12, '0').slice(0, 12)}`;
+  const ackNo = `088${String(getDeterministicHash(cleanPan || 'PAN')).padStart(12, '0').slice(0, 12)}`;
   return {
     ...base,
     ackNo,
@@ -2340,26 +2280,24 @@ function getSearchEpicDetails() {
 
 // 13. Cyber Cafe Branded Tax Cash Receipt Maker
 function getReceiptDetails(input, custom = {}) {
-  const cleanIn = (input || '9876543210').trim();
-  const hash = getDeterministicHash(cleanIn);
-  const names = ["राजेश कुमार", "अमित वर्मा", "सुनील शर्मा", "संजय यादव", "दीपक सिंह", "महेश चंद्र"];
-  const customerName = custom.name || custom.customerName || names[hash % names.length];
-  const receiptNo = `RCP-${Date.now().toString().slice(-6)}-${hash % 1000}`;
+  const cleanIn = (input || '').trim();
+  const customerName = custom.customerName || custom.name || '-';
+  const receiptNo = `RCP-${Date.now().toString().slice(-6)}`;
   const serviceDesc = custom.serviceDesc || custom.serviceName || "सरकारी सेवा ऑनलाइन आवेदन एवं स्मार्ट PVC कार्ड प्रिंटिंग";
-  const amount = custom.amount || (hash % 3 === 0 ? 120 : (hash % 2 === 0 ? 70 : 150));
-  const shopName = custom.shopName || "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र";
-  const shopAddress = custom.shopAddress || "मेन मार्केट, ब्लॉक रोड, तहसील के सामने";
-  const shopPhone = custom.shopPhone || "9876543210";
+  const amount = custom.amount || 50;
+  const shopName = custom.shopName || "डिजिटल सेवा केंद्र";
+  const shopAddress = custom.shopAddress || "अधिकृत जन सेवा केंद्र";
+  const shopPhone = custom.shopPhone || "";
 
   return {
     receiptNo,
     customerName,
-    customerPhone: cleanIn,
+    customerPhone: cleanIn || '-',
     serviceDesc,
     amount,
     date: new Date().toLocaleDateString('en-GB'),
     time: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
-    paymentMode: custom.paymentMode || "UPI / CASH (सफल भुगतान)",
+    paymentMode: custom.paymentMode || "UPI / CASH",
     shopName,
     shopAddress,
     shopPhone,
@@ -2700,15 +2638,15 @@ app.post('/api/services/execute-automated', (req, res) => {
   let refNumber = params?.vehicleNumber || params?.panNo || params?.aadhaarNo || params?.epicNo || params?.consumerNo || params?.rationNo || params?.appNo || params?.dlNo || params?.challanNo || 'DOC';
 
   if (normServiceType === 'rcDownload') {
-    const regNo = (params?.vehicleNumber || 'UP32AB1234').replace(/[\s-]+/g, '').toUpperCase();
+    const regNo = (params?.vehicleNumber || '').replace(/[\s-]+/g, '').toUpperCase();
     if (params?.customVehicleData && params.customVehicleData.ownerName) {
       vehicleData = {
-        ...getVehicleDetails(regNo),
+        ...getVehicleDetails(regNo, params),
         ...params.customVehicleData,
         regNo
       };
     } else {
-      vehicleData = getVehicleDetails(regNo);
+      vehicleData = getVehicleDetails(regNo, params);
     }
     generatedData = vehicleData;
     docTitle = `वाहन RC (${vehicleData.regNo}) - ${vehicleData.makerModel}`;

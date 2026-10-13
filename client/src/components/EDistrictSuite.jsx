@@ -242,7 +242,7 @@ export default function EDistrictSuite() {
                 <label className="block text-slate-600 font-bold mb-1">आवेदक का पूरा नाम *</label>
                 <input
                   type="text"
-                  placeholder="उदा. राहुल कुमार"
+                  placeholder="आवेदक का पूरा नाम दर्ज करें"
                   value={applicantName}
                   onChange={(e) => setApplicantName(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-bold"
@@ -267,7 +267,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-600 font-bold mb-1">पिता/पति का नाम *</label>
                   <input
                     type="text"
-                    placeholder="उदा. रमेश कुमार"
+                    placeholder="पिता/पति का नाम दर्ज करें"
                     value={fatherHusband}
                     onChange={(e) => setFatherHusband(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-semibold"
@@ -280,7 +280,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-600 font-bold mb-1">उम्र (वर्ष)</label>
                   <input
                     type="number"
-                    placeholder="उदा. 24"
+                    placeholder="उम्र दर्ज करें"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-semibold"
@@ -291,7 +291,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-600 font-bold mb-1">व्यवसाय / पेशा</label>
                   <input
                     type="text"
-                    placeholder="उदा. कृषि / मजदूरी / छात्र"
+                    placeholder="व्यवसाय दर्ज करें"
                     value={profession}
                     onChange={(e) => setProfession(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-semibold"
@@ -304,7 +304,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-600 font-bold mb-1">कुल वार्षिक आय (₹)</label>
                   <input
                     type="number"
-                    placeholder="उदा. 48000"
+                    placeholder="वार्षिक आय दर्ज करें"
                     value={annualIncome}
                     onChange={(e) => setAnnualIncome(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-bold text-orange-600"
@@ -317,7 +317,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-600 font-bold mb-1">जाति व उपजाति</label>
                   <input
                     type="text"
-                    placeholder="उदा. यादव / कुर्मी / मौर्य (OBC)"
+                    placeholder="जाति व उपजाति दर्ज करें"
                     value={casteName}
                     onChange={(e) => setCasteName(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-bold"
@@ -340,7 +340,7 @@ export default function EDistrictSuite() {
                 <label className="block text-slate-600 font-bold mb-1">स्थान (Place)</label>
                 <input
                   type="text"
-                  placeholder="उदा. हरदोई"
+                  placeholder="स्थान दर्ज करें"
                   value={place}
                   onChange={(e) => setPlace(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-semibold"
@@ -577,7 +577,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-700 font-bold mb-1">आवेदन क्रमांक (Application Number) *</label>
                   <input
                     type="text"
-                    placeholder="उदा. 241580010098231"
+                    placeholder="आवेदन क्रमांक दर्ज करें"
                     value={applicationNo}
                     onChange={(e) => setApplicationNo(e.target.value)}
                     className="w-full bg-white border border-slate-300 rounded-xl p-2.5 font-mono font-bold text-sm"
@@ -590,7 +590,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-700 font-bold mb-1">प्रमाण पत्र क्रमांक (Certificate ID) *</label>
                   <input
                     type="text"
-                    placeholder="उदा. 892019482012"
+                    placeholder="प्रमाण पत्र क्रमांक दर्ज करें"
                     value={certificateNo}
                     onChange={(e) => setCertificateNo(e.target.value)}
                     className="w-full bg-white border border-slate-300 rounded-xl p-2.5 font-mono font-bold text-sm"
@@ -601,7 +601,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-700 font-bold mb-1">प्रार्थी का नाम (Applicant Name) *</label>
                   <input
                     type="text"
-                    placeholder="उदा. अमित कुमार वर्मा"
+                    placeholder="प्रार्थी का नाम दर्ज करें"
                     value={verifyApplicantName}
                     onChange={(e) => setVerifyApplicantName(e.target.value)}
                     className="w-full bg-white border border-slate-300 rounded-xl p-2.5 font-bold"
@@ -614,7 +614,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-700 font-bold mb-1">पिता / पति का नाम *</label>
                   <input
                     type="text"
-                    placeholder="उदा. राजेश वर्मा"
+                    placeholder="पिता / पति का नाम दर्ज करें"
                     value={verifyFatherName}
                     onChange={(e) => setVerifyFatherName(e.target.value)}
                     className="w-full bg-white border border-slate-300 rounded-xl p-2.5 font-medium"
@@ -866,7 +866,7 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-700 font-bold mb-1">आवेदक का नाम (हिंदी व अंग्रेजी) *</label>
                   <input
                     type="text"
-                    placeholder="उदा. रमेश कुमार (Ramesh Kumar)"
+                    placeholder="आवेदक का पूरा नाम दर्ज करें"
                     value={applicantName}
                     onChange={(e) => setApplicantName(e.target.value)}
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-bold text-slate-900 focus:ring-2 focus:ring-orange-500 focus:outline-hidden"
@@ -879,7 +879,7 @@ export default function EDistrictSuite() {
                     <input
                       type="tel"
                       maxLength="10"
-                      placeholder="उदा. 9876543210"
+                      placeholder="मोबाइल नंबर दर्ज करें"
                       value={applicantPhone}
                       onChange={(e) => setApplicantPhone(e.target.value)}
                       className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-bold font-mono text-slate-900 focus:ring-2 focus:ring-orange-500 focus:outline-hidden"
@@ -889,7 +889,8 @@ export default function EDistrictSuite() {
                     <label className="block text-slate-700 font-bold mb-1">पिता/पति का नाम *</label>
                     <input
                       type="text"
-                      value={fatherHusband || 'राजेश वर्मा'}
+                      placeholder="पिता/पति का नाम दर्ज करें"
+                      value={fatherHusband}
                       onChange={(e) => setFatherHusband(e.target.value)}
                       className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-medium text-slate-900 focus:ring-2 focus:ring-orange-500 focus:outline-hidden"
                     />
@@ -898,7 +899,8 @@ export default function EDistrictSuite() {
                     <label className="block text-slate-700 font-bold mb-1">वार्षिक आय (₹) *</label>
                     <input
                       type="number"
-                      value={annualIncome || '48000'}
+                      placeholder="वार्षिक आय दर्ज करें"
+                      value={annualIncome}
                       onChange={(e) => setAnnualIncome(e.target.value)}
                       className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-bold font-mono text-slate-900 focus:ring-2 focus:ring-orange-500 focus:outline-hidden"
                     />
@@ -910,7 +912,8 @@ export default function EDistrictSuite() {
                     <label className="block text-slate-700 font-bold mb-1">जाति वर्ग (Caste) *</label>
                     <input
                       type="text"
-                      value={casteName || 'कुर्मी (OBC)'}
+                      placeholder="जाति वर्ग दर्ज करें"
+                      value={casteName}
                       onChange={(e) => setCasteName(e.target.value)}
                       className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-medium text-slate-900 focus:ring-2 focus:ring-orange-500 focus:outline-hidden"
                     />
@@ -919,7 +922,8 @@ export default function EDistrictSuite() {
                     <label className="block text-slate-700 font-bold mb-1">स्थान / तहसील *</label>
                     <input
                       type="text"
-                      value={place || 'हरदोई'}
+                      placeholder="स्थान / तहसील दर्ज करें"
+                      value={place}
                       onChange={(e) => setPlace(e.target.value)}
                       className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-medium text-slate-900 focus:ring-2 focus:ring-orange-500 focus:outline-hidden"
                     />
@@ -930,7 +934,8 @@ export default function EDistrictSuite() {
                   <label className="block text-slate-700 font-bold mb-1">स्थायी पता (Address) *</label>
                   <input
                     type="text"
-                    value={address || 'ग्राम - रामपुर, पोस्ट व तहसील - हरदोई'}
+                    placeholder="स्थायी पता दर्ज करें"
+                    value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl font-medium text-slate-900 focus:ring-2 focus:ring-orange-500 focus:outline-hidden"
                   />

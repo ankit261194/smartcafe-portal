@@ -324,7 +324,7 @@ export default function CustomerVault({ selectedCafe }) {
                   <input
                     type="text"
                     required
-                    placeholder="उदा. राहुल कुमार"
+                    placeholder="आवेदक का पूरा नाम"
                     value={formData.fullName}
                     onChange={(e) => setFormData(p => ({ ...p, fullName: e.target.value }))}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-bold"
@@ -336,7 +336,7 @@ export default function CustomerVault({ selectedCafe }) {
                   <input
                     type="text"
                     required
-                    placeholder="उदा. रामेश कुमार"
+                    placeholder="पिता का नाम दर्ज करें"
                     value={formData.fatherName}
                     onChange={(e) => setFormData(p => ({ ...p, fatherName: e.target.value }))}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-semibold"
@@ -348,7 +348,7 @@ export default function CustomerVault({ selectedCafe }) {
                   <input
                     type="text"
                     required
-                    placeholder="उदा. शांति देवी"
+                    placeholder="माता का नाम दर्ज करें"
                     value={formData.motherName}
                     onChange={(e) => setFormData(p => ({ ...p, motherName: e.target.value }))}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-semibold"
@@ -423,7 +423,7 @@ export default function CustomerVault({ selectedCafe }) {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <input
                     type="text"
-                    placeholder="बोर्ड (उदा. UP Board)"
+                    placeholder="बोर्ड (UP / CBSE / अन्य)"
                     value={formData.highSchool.board}
                     onChange={(e) => setFormData(p => ({ ...p, highSchool: { ...p.highSchool, board: e.target.value } }))}
                     className="bg-white border border-slate-300 rounded-lg p-2"
@@ -437,14 +437,14 @@ export default function CustomerVault({ selectedCafe }) {
                   />
                   <input
                     type="text"
-                    placeholder="पासिंग वर्ष (2020)"
+                    placeholder="पासिंग वर्ष"
                     value={formData.highSchool.passingYear}
                     onChange={(e) => setFormData(p => ({ ...p, highSchool: { ...p.highSchool, passingYear: e.target.value } }))}
                     className="bg-white border border-slate-300 rounded-lg p-2"
                   />
                   <input
                     type="text"
-                    placeholder="अंक (उदा. 450/600, 75%)"
+                    placeholder="अंक / प्रतिशत"
                     value={formData.highSchool.percentage}
                     onChange={(e) => setFormData(p => ({ ...p, highSchool: { ...p.highSchool, percentage: e.target.value } }))}
                     className="bg-white border border-slate-300 rounded-lg p-2"
@@ -479,7 +479,7 @@ export default function CustomerVault({ selectedCafe }) {
                   />
                   <input
                     type="text"
-                    placeholder="अंक (उदा. 380/500, 76%)"
+                    placeholder="अंक / प्रतिशत"
                     value={formData.intermediate.percentage}
                     onChange={(e) => setFormData(p => ({ ...p, intermediate: { ...p.intermediate, percentage: e.target.value } }))}
                     className="bg-white border border-slate-300 rounded-lg p-2"

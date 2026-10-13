@@ -48,7 +48,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">उपभोक्ता का नाम</span>
-              <span className="font-black text-slate-900">{data.consumerName || 'महेश चंद्र'}</span>
+              <span className="font-black text-slate-900">{data.consumerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">सप्लाई श्रेणी (Tariff)</span>
@@ -152,7 +152,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदक का नाम</span>
-              <span className="font-black text-slate-900">{data.consumerName || 'राजेश शर्मा'}</span>
+              <span className="font-black text-slate-900">{data.consumerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदित भार (Sanctioned Load)</span>
@@ -212,7 +212,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">वाहन स्वामी का नाम</span>
-              <span className="font-black text-slate-900 uppercase">{data.ownerName || 'VIKAS KUMAR'}</span>
+              <span className="font-black text-slate-900 uppercase">{data.ownerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">वाहन श्रेणी / ईंधन</span>
@@ -293,7 +293,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">वाहन स्वामी / अभियुक्त</span>
-              <span className="font-black text-slate-900">{data.ownerName || 'संजय यादव'}</span>
+              <span className="font-black text-slate-900">{data.ownerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">न्यायालय (Court)</span>
@@ -355,7 +355,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदक का नाम</span>
-              <span className="font-black text-slate-900">{data.ownerName || 'दीपक कुमार'}</span>
+              <span className="font-black text-slate-900">{data.ownerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">लाइसेंस श्रेणी</span>

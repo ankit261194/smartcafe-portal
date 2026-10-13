@@ -964,7 +964,7 @@ export default function AdminCashbook({ settings, selectedCafe }) {
                     <input
                       type="text"
                       required
-                      placeholder="उदा. रमेश कुमार"
+                      placeholder="ग्राहक का नाम दर्ज करें"
                       value={udharName}
                       onChange={(e) => setUdharName(e.target.value)}
                       className="w-full bg-white border border-slate-300 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500"
