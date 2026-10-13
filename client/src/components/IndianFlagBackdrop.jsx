@@ -50,15 +50,6 @@ export default function IndianFlagBackdrop({ theme = 'light' }) {
       >
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-[#046A38]/15 blur-2xl pointer-events-none" />
       </div>
-
-      {/* =================================================================== */}
-      {/* 4. TOP FIXED 3-STRIPE TIRANGA HEADER RIBBON */}
-      {/* =================================================================== */}
-      <div className="fixed top-0 left-0 right-0 h-1.5 z-50 flex shadow-sm no-print">
-        <div className="flex-1 bg-gradient-to-r from-[#FF671F] to-[#FF9933]" />
-        <div className="flex-1 bg-white" />
-        <div className="flex-1 bg-gradient-to-r from-[#138808] to-[#046A38]" />
-      </div>
     </div>
   );
 }

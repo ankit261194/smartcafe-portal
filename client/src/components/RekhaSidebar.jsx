@@ -201,32 +201,24 @@ export default function RekhaSidebar({
           </button>
         </div>
 
-        {/* Live Wallet Quick Card */}
-        <div className="p-3.5 mx-3 my-2 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-amber-500/5 to-orange-500/10 dark:bg-slate-800/60 border border-emerald-300 dark:border-slate-700 shadow-xs">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[10px] font-black uppercase text-slate-700 dark:text-slate-300 tracking-wider">
+        {/* Live Wallet Ultra-Compact 1-Line Pill */}
+        <div className="mx-3 my-1 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+            <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 truncate">
               {mode === 'admin' ? t('b2b_wallet_title') : t('customer_wallet_title')}
             </span>
-            <span className="inline-flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              {t('live_badge')}
+            <span className="font-mono font-black text-slate-950 dark:text-white shrink-0">
+              ₹{mode === 'admin' ? sanchalakB2bBalance : walletBalance}
             </span>
           </div>
-
-          <div className="flex items-center justify-between gap-2">
-            <div className="text-xl font-black text-slate-950 dark:text-white font-mono flex items-center gap-1">
-              <span className="text-amber-500">₹</span>
-              <span>{mode === 'admin' ? sanchalakB2bBalance : walletBalance}</span>
-            </div>
-
-            <button
-              type="button"
-              onClick={mode === 'admin' ? onOpenB2bWallet : onOpenWallet}
-              className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-95 text-white text-[11px] font-black px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer"
-            >
-              {t('add_funds')}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={mode === 'admin' ? onOpenB2bWallet : onOpenWallet}
+            className="shrink-0 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-[10px] font-bold px-2 py-0.5 rounded-lg transition cursor-pointer"
+          >
+            +{t('add_funds')}
+          </button>
         </div>
 
         {/* Quick Search */}

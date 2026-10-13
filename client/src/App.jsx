@@ -446,7 +446,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen flex relative max-w-full overflow-x-hidden ${theme === 'dark' ? 'dark bg-[#060c18] text-slate-100' : 'bg-slate-50/90 text-slate-900'} transition-colors duration-200`}>
+    <div className={`min-h-screen flex relative max-w-full overflow-x-clip ${theme === 'dark' ? 'dark bg-[#060c18] text-slate-100' : 'bg-slate-50/90 text-slate-900'} transition-colors duration-200`}>
       
       {/* Full-Screen Indian National Flag (Tiranga) Backdrop */}
       <IndianFlagBackdrop theme={theme} />
@@ -512,7 +512,7 @@ export default function App() {
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 min-w-0 flex flex-col relative z-10 max-w-full overflow-x-hidden">
+      <div className="flex-1 min-w-0 flex flex-col relative z-10 max-w-full overflow-x-clip">
         {/* Navigation Header */}
         <Navbar
           settings={settings}

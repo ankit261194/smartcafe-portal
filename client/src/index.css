@@ -5,11 +5,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
   body {
     font-family: 'Plus Jakarta Sans', 'Yantramanav', sans-serif;
-    overflow-x: hidden;
+    overflow-x: clip;
     min-height: 100vh;
     -webkit-tap-highlight-color: transparent;
   }

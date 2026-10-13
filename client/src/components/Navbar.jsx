@@ -80,16 +80,9 @@ export default function Navbar({
   const isOperator = mode === 'admin';
 
   return (
-    <header className="sticky top-0 z-40 bg-gradient-to-r from-orange-600 via-amber-600 to-orange-700 text-white shadow-lg border-b-2 border-orange-500/80 no-print transition-all duration-200">
+    <header className="sticky top-0 z-50 bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#065f46] text-white shadow-md border-b border-emerald-600/40 no-print transition-all duration-200">
       
-      {/* 1. Indian National Flag (Tiranga) Patriotic Top Ribbon */}
-      <div className="h-1.5 w-full flex select-none no-print">
-        <div className="flex-1 bg-gradient-to-r from-[#f97316] via-[#ea580c] to-[#ff9933]"></div>
-        <div className="flex-1 bg-white border-x border-slate-200/50"></div>
-        <div className="flex-1 bg-gradient-to-r from-[#16a34a] via-[#15803d] to-[#138808]"></div>
-      </div>
-
-      {/* 2. SINGLE UNIFIED MODERN NAVBAR */}
+      {/* SINGLE UNIFIED MODERN NAVBAR */}
       <div className="max-w-7xl mx-auto px-2 sm:px-4 h-15 flex items-center justify-between gap-1.5 sm:gap-3 max-w-full">
         
         {/* Left: Sleek Standard Menu Toggle (☰) & Brand Logo */}
@@ -98,7 +91,7 @@ export default function Navbar({
             <button
               type="button"
               onClick={onToggleSidebar}
-              className="p-1.5 sm:p-2 text-white hover:bg-white/20 active:scale-95 rounded-xl transition cursor-pointer flex items-center gap-1.5 border border-white/30"
+              className="p-1.5 sm:p-2 text-white hover:bg-white/15 active:scale-95 rounded-xl transition cursor-pointer flex items-center gap-1.5 border border-white/20"
               title={language === 'hi' ? 'साइड मेन्यू' : 'Side Menu'}
               aria-label="Toggle Side Menu"
             >
@@ -115,7 +108,7 @@ export default function Navbar({
             className="flex items-center gap-2 cursor-pointer select-none"
           >
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white p-0.5 shadow-md shrink-0">
-              <div className="w-full h-full bg-orange-600 rounded-[14px] flex items-center justify-center">
+              <div className="w-full h-full bg-[#064e3b] rounded-[14px] flex items-center justify-center">
                 <span className="font-black text-white text-xs sm:text-sm tracking-tight">
                   SC
                 </span>
@@ -124,7 +117,7 @@ export default function Navbar({
             <div className="truncate max-w-[120px] xs:max-w-[160px] sm:max-w-none">
               <h1 className="font-black text-white text-xs sm:text-base leading-tight tracking-tight truncate flex items-center gap-1">
                 <span>Smart Cafe</span>
-                <span className="bg-white text-orange-700 text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">
+                <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">
                   B2B
                 </span>
                 {mode === 'admin' && (
@@ -138,7 +131,7 @@ export default function Navbar({
                   </span>
                 )}
               </h1>
-              <p className="text-[9px] sm:text-[11px] text-amber-100 font-extrabold truncate">
+              <p className="text-[9px] sm:text-[11px] text-emerald-100 font-extrabold truncate">
                 {selectedCafe?.shopName || t('brand_tagline')}
               </p>
             </div>
@@ -148,7 +141,7 @@ export default function Navbar({
         {/* Center: Fast Tool Search Bar */}
         <div ref={searchContainerRef} className="relative flex-1 max-w-[190px] sm:max-w-xs lg:max-w-sm mx-1 sm:mx-3">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-amber-100 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <Search className="w-3.5 h-3.5 text-emerald-200 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
               value={toolSearchQuery}
@@ -166,7 +159,7 @@ export default function Navbar({
                 }
               }}
               placeholder={t('search_placeholder')}
-              className="w-full bg-white/20 hover:bg-white/25 focus:bg-white text-white focus:text-slate-900 placeholder:text-amber-100 pl-7 pr-6 py-1.5 rounded-xl text-xs font-semibold border border-white/30 focus:border-white focus:outline-none transition shadow-2xs"
+              className="w-full bg-white/15 hover:bg-white/20 focus:bg-white text-white focus:text-slate-900 placeholder:text-emerald-100 pl-7 pr-6 py-1.5 rounded-xl text-xs font-semibold border border-white/20 focus:border-white focus:outline-none transition shadow-2xs"
             />
             {toolSearchQuery && (
               <button
@@ -199,7 +192,7 @@ export default function Navbar({
                       setIsSearchOpen(false);
                       setToolSearchQuery('');
                     }}
-                    className="w-full text-left p-2.5 hover:bg-orange-50/70 dark:hover:bg-slate-800/80 transition flex items-center justify-between gap-2 cursor-pointer"
+                    className="w-full text-left p-2.5 hover:bg-emerald-50/70 dark:hover:bg-slate-800/80 transition flex items-center justify-between gap-2 cursor-pointer"
                   >
                     <div className="flex items-center gap-2 truncate">
                       <div className={`w-7 h-7 rounded-xl bg-gradient-to-tr ${t.color} text-white flex items-center justify-center shrink-0`}>
@@ -224,13 +217,13 @@ export default function Navbar({
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           
           {/* Dynamic Language Switcher (Hindi vs English - Pure Single Language Mode) */}
-          <div className="flex items-center bg-white/20 border border-white/30 rounded-xl overflow-hidden shadow-2xs backdrop-blur-xs p-0.5 shrink-0">
+          <div className="flex items-center bg-white/15 border border-white/20 rounded-xl overflow-hidden shadow-2xs backdrop-blur-xs p-0.5 shrink-0">
             <button
               type="button"
               onClick={() => setLanguage('hi')}
               className={`px-2 py-1 text-xs font-black rounded-lg transition cursor-pointer flex items-center gap-1 ${
                 language === 'hi' 
-                  ? 'bg-white text-orange-700 shadow-xs' 
+                  ? 'bg-white text-emerald-900 shadow-xs' 
                   : 'text-white/80 hover:text-white'
               }`}
               title="हिंदी भाषा सक्रिय करें"
@@ -243,7 +236,7 @@ export default function Navbar({
               onClick={() => setLanguage('en')}
               className={`px-2 py-1 text-xs font-black rounded-lg transition cursor-pointer flex items-center gap-1 ${
                 language === 'en' 
-                  ? 'bg-white text-orange-700 shadow-xs' 
+                  ? 'bg-white text-emerald-900 shadow-xs' 
                   : 'text-white/80 hover:text-white'
               }`}
               title="Switch to English"
@@ -348,7 +341,7 @@ export default function Navbar({
               <div className="hidden md:flex items-center gap-1.5 bg-white/20 border border-white/30 px-2.5 py-1 rounded-xl text-xs text-white font-bold">
                 <span>🏪</span>
                 <span className="truncate max-w-[140px] font-black">{selectedCafe?.shopName || (language === 'hi' ? 'दुकानदार काउंटर' : 'Shopkeeper Counter')}</span>
-                <span className="bg-white text-orange-700 text-[9px] font-black px-1.5 py-0.2 rounded">
+                <span className="bg-white text-emerald-900 text-[9px] font-black px-1.5 py-0.2 rounded">
                   {isStaffAuth ? t('staff') : t('operator')}
                 </span>
               </div>
@@ -400,10 +393,10 @@ export default function Navbar({
 
       </div>
 
-      {/* 3. MOBILE UPFRONT GATEWAY BAR (100% Mobile Friendly, Login First, Never Cut Off, Saffron/Amber Theme) */}
+      {/* 3. MOBILE UPFRONT GATEWAY BAR (100% Mobile Friendly, Login First, Never Cut Off, Dark Emerald Theme) */}
       {mode === 'customer' && (
-        <div className="sm:hidden w-full bg-orange-700/95 text-white border-t border-orange-500/60 px-2.5 py-1.5 flex items-center justify-between gap-1.5 shadow-inner">
-          <span className="text-[10px] font-black text-amber-200 uppercase tracking-tight flex items-center gap-1 shrink-0 pl-1">
+        <div className="sm:hidden w-full bg-[#064e3b]/95 text-white border-t border-emerald-600/40 px-2.5 py-1.5 flex items-center justify-between gap-1.5 shadow-inner">
+          <span className="text-[10px] font-black text-emerald-200 uppercase tracking-tight flex items-center gap-1 shrink-0 pl-1">
             <span>{t('quick_gateway')}</span>
           </span>
           <div className="flex items-center gap-1.5 flex-1 justify-end min-w-0">
@@ -437,7 +430,7 @@ export default function Navbar({
               className="bg-white/20 hover:bg-white/30 text-white border border-white/30 font-bold px-2 py-1.5 rounded-xl text-[11px] flex items-center gap-1 shrink-0 active:scale-95 cursor-pointer"
               title={language === 'hi' ? 'नागरिक प्रोफ़ाइल' : 'Citizen Profile'}
             >
-              <User className="w-3 h-3 text-amber-200" />
+              <User className="w-3 h-3 text-emerald-200" />
               <span>{t('citizen')}</span>
             </button>
           </div>
