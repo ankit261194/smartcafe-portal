@@ -46,7 +46,7 @@ function getStore($dataFile) {
             'portalName' => 'डिजिटल साइबर कैफे पोर्टल',
             'shopName' => 'श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र',
             'tagline' => 'सभी ऑनलाइन फॉर्म, प्रिंटिंग व सरकारी सेवाएं',
-            'ownerName' => 'राजेश कुमार',
+            'ownerName' => 'अधिकृत संचालक',
             'phone' => '9876543210',
             'upiId' => 'cybercafe@upi',
             'address' => 'मेन मार्केट, ब्लॉक रोड, तहसील कार्यालय के सामने',
@@ -542,13 +542,11 @@ function getDeterministicHash($str) {
     return abs($hash);
 }
 
-function getVehicleDetails($regNo) {
-    $cleanNo = strtoupper(preg_replace('/[\s-]+/', '', $regNo ?? 'UP32AB1234'));
-    $posHash = getDeterministicHash($cleanNo);
-    $firstNames = ["राजेश", "सुनील", "अमित", "दिनेश", "विकास", "मनोज", "राकेश", "सुरेश", "संजय", "अनिल"];
-    $lastNames = ["कुमार", "शर्मा", "वर्मा", "सिंह", "यादव", "गुप्ता", "मिश्रा", "पाण्डेय", "मौर्या", "तिवारी"];
-    $owner = $firstNames[$posHash % count($firstNames)] . " " . $lastNames[($posHash >> 2) % count($lastNames)];
-    $father = $firstNames[($posHash >> 3) % count($firstNames)] . " " . $lastNames[($posHash >> 1) % count($lastNames)];
+function getVehicleDetails($regNo, $custom = []) {
+    $cleanNo = strtoupper(preg_replace('/[\s-]+/', '', $regNo ?? ''));
+    $posHash = getDeterministicHash($cleanNo ?: 'VEH');
+    $owner = !empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['ownerName']) ? $custom['ownerName'] : (!empty($custom['name']) ? $custom['name'] : '-'));
+    $father = !empty($custom['fatherName']) ? $custom['fatherName'] : '-';
 
     $vehicles = [
         ["model" => "HERO SPLENDOR PLUS BS6", "class" => "M-CYCLE/SCOOTER(2WN)", "fuel" => "PETROL", "cc" => "97.2 CC", "seats" => 2, "color" => "BLACK WITH SILVER"],
@@ -561,7 +559,7 @@ function getVehicleDetails($regNo) {
     ];
     $chosenVehicle = $vehicles[$posHash % count($vehicles)];
 
-    $regYear = 2017 + ($posHash % 7);
+    $regYear = 2018 + ($posHash % 6);
     $regMonth = str_pad(1 + (($posHash >> 2) % 12), 2, '0', STR_PAD_LEFT);
     $regDay = str_pad(1 + (($posHash >> 4) % 28), 2, '0', STR_PAD_LEFT);
     $regDate = "$regDay/$regMonth/$regYear";
@@ -609,7 +607,7 @@ function getVehicleDetails($regNo) {
     ];
 
     return [
-        'regNo' => $cleanNo,
+        'regNo' => $cleanNo ?: '-',
         'ownerName' => $owner,
         'fatherName' => $father,
         'makerModel' => $chosenVehicle['model'],
@@ -635,20 +633,14 @@ function getVehicleDetails($regNo) {
 }
 
 function getPanCardDetails($panNo, $custom = []) {
-    $cleanPan = strtoupper(preg_replace('/[\s-]+/', '', $panNo ?? 'ABCDE1234F'));
-    $hash = getDeterministicHash($cleanPan);
-    $firstNames = ["राजेश", "अमित", "सुरेश", "मनोज", "दीपक", "सुनील", "विकास", "संजय", "विशाल", "अशोक"];
-    $lastNames = ["कुमार", "शर्मा", "वर्मा", "सिंह", "यादव", "गुप्ता", "मिश्रा", "पाण्डेय", "चौहान", "शुक्ला"];
-    $name = strtoupper($custom['name'] ?? $custom['panName'] ?? ($firstNames[$hash % count($firstNames)] . " " . $lastNames[($hash >> 2) % count($lastNames)]));
-    $fatherName = strtoupper($custom['fatherName'] ?? ($firstNames[($hash >> 3) % count($firstNames)] . " " . $lastNames[($hash >> 1) % count($lastNames)]));
-    $day = str_pad(1 + ($hash % 28), 2, '0', STR_PAD_LEFT);
-    $month = str_pad(1 + (($hash >> 2) % 12), 2, '0', STR_PAD_LEFT);
-    $year = 1976 + ($hash % 25);
-    $dob = $custom['dob'] ?? "$day/$month/$year";
-    $issueDate = "14/03/" . (2016 + ($hash % 8));
+    $cleanPan = strtoupper(preg_replace('/[\s-]+/', '', $panNo ?? ''));
+    $name = strtoupper(trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['panName']) ? $custom['panName'] : '-'))));
+    $fatherName = strtoupper(trim(!empty($custom['fatherName']) ? $custom['fatherName'] : '-'));
+    $dob = trim(!empty($custom['dob']) ? $custom['dob'] : '-');
+    $issueDate = date('d/m/Y');
 
     return [
-        'panNo' => $cleanPan,
+        'panNo' => $cleanPan ?: '-',
         'name' => $name,
         'fatherName' => $fatherName,
         'dob' => $dob,
@@ -661,26 +653,21 @@ function getPanCardDetails($panNo, $custom = []) {
 }
 
 function getAadhaarDetails($aadhaarNo, $custom = []) {
-    $rawAid = preg_replace('/[\s-]+/', '', $aadhaarNo ?? '541287963214');
-    $cleanAid = strlen($rawAid) >= 12 ? substr($rawAid, 0, 12) : str_pad($rawAid, 12, '1');
-    $formattedAid = substr($cleanAid, 0, 4) . ' ' . substr($cleanAid, 4, 4) . ' ' . substr($cleanAid, 8, 4);
-    $hash = getDeterministicHash($cleanAid);
-    $firstNames = ["अनिल", "दिनेश", "राकेश", "कमलेश", "अरविन्द", "प्रदीप", "सतीश", "मुकेश", "संतोष", "आनंद"];
-    $lastNames = ["वर्मा", "यादव", "कुमार", "सिंह", "चौहान", "शुक्ला", "तिवारी", "पटेल", "लोधी", "कश्यप"];
-    $name = $custom['name'] ?? ($firstNames[$hash % count($firstNames)] . " " . $lastNames[($hash >> 2) % count($lastNames)]);
-    $fatherName = $custom['fatherName'] ?? ($firstNames[($hash >> 3) % count($firstNames)] . " " . $lastNames[($hash >> 1) % count($lastNames)]);
-    $day = str_pad(1 + ($hash % 28), 2, '0', STR_PAD_LEFT);
-    $month = str_pad(1 + (($hash >> 2) % 12), 2, '0', STR_PAD_LEFT);
-    $year = 1982 + ($hash % 23);
-    $dob = $custom['dob'] ?? "$day/$month/$year";
-    $gender = $custom['gender'] ?? (($hash % 3 === 0) ? "FEMALE / महिला" : "MALE / पुरुष");
-    $pinCode = $custom['pinCode'] ?? (string)(220000 + ($hash % 80000));
-    $address = $custom['address'] ?? ("मकान नं. " . (12 + ($hash % 180)) . ", ब्लॉक रोड, मुख्य बाजार, तहसील व जिला - $pinCode");
-    $vid = "9" . substr(str_pad((string)$hash, 15, '0', STR_PAD_LEFT), 0, 15);
+    $rawAid = preg_replace('/[\s-]+/', '', $aadhaarNo ?? '');
+    $cleanAid = strlen($rawAid) >= 12 ? substr($rawAid, 0, 12) : $rawAid;
+    $formattedAid = (strlen($cleanAid) === 12) ? (substr($cleanAid, 0, 4) . ' ' . substr($cleanAid, 4, 4) . ' ' . substr($cleanAid, 8, 4)) : ($cleanAid ?: '-');
+    $name = trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['customerName']) ? $custom['customerName'] : '-'));
+    $fatherName = trim(!empty($custom['fatherName']) ? $custom['fatherName'] : '-');
+    $dob = trim(!empty($custom['dob']) ? $custom['dob'] : '-');
+    $gender = trim(!empty($custom['gender']) ? $custom['gender'] : 'MALE / पुरुष');
+    $address = trim(!empty($custom['address']) ? $custom['address'] : '-');
+    $pinCode = trim(!empty($custom['pinCode']) ? $custom['pinCode'] : '-');
+    $masked = (strlen($cleanAid) >= 4) ? ('XXXX XXXX ' . substr($cleanAid, -4)) : 'XXXX XXXX XXXX';
+    $vid = "9" . substr(str_pad((string)getDeterministicHash($cleanAid ?: 'AID'), 15, '0', STR_PAD_LEFT), 0, 15);
 
     return [
         'aadhaarNo' => $formattedAid,
-        'maskedAadhaar' => 'XXXX XXXX ' . substr($cleanAid, -4),
+        'maskedAadhaar' => $masked,
         'name' => $name,
         'fatherName' => $fatherName,
         'dob' => $dob,
@@ -694,14 +681,11 @@ function getAadhaarDetails($aadhaarNo, $custom = []) {
 }
 
 function getVoterDetails($epicNo, $custom = []) {
-    $cleanEpic = strtoupper(preg_replace('/[\s-]+/', '', $epicNo ?? 'ABC1234567'));
-    $hash = getDeterministicHash($cleanEpic);
-    $firstNames = ["धर्मेन्द्र", "संतोष", "विनोद", "जितेंद्र", "अशोक", "महेंद्र", "रामपाल", "विपिन", "हरीश", "राजेश"];
-    $lastNames = ["मिश्रा", "पाण्डेय", "सिंह", "कुमार", "यादव", "तिवारी", "द्विवेदी", "लोधी", "शर्मा", "वर्मा"];
-    $name = $custom['name'] ?? ($firstNames[$hash % count($firstNames)] . " " . $lastNames[($hash >> 2) % count($lastNames)]);
-    $relationName = $custom['relationName'] ?? $custom['fatherName'] ?? ($firstNames[($hash >> 3) % count($firstNames)] . " " . $lastNames[($hash >> 1) % count($lastNames)]);
-    $age = 21 + ($hash % 45);
-    $gender = ($hash % 3 === 0) ? "महिला (Female)" : "पुरुष (Male)";
+    $cleanEpic = strtoupper(preg_replace('/[\s-]+/', '', $epicNo ?? ''));
+    $name = trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['customerName']) ? $custom['customerName'] : '-'));
+    $relationName = trim(!empty($custom['relationName']) ? $custom['relationName'] : (!empty($custom['fatherName']) ? $custom['fatherName'] : '-'));
+    $age = trim(!empty($custom['age']) ? $custom['age'] : (!empty($custom['dob']) ? $custom['dob'] : '-'));
+    $gender = trim(!empty($custom['gender']) ? $custom['gender'] : 'पुरुष (Male)');
     $acList = [
         ["no" => "154", "name" => "सदर (Sadar)"],
         ["no" => "173", "name" => "लखनऊ कैंट (Lucknow Cantt)"],
@@ -709,16 +693,17 @@ function getVoterDetails($epicNo, $custom = []) {
         ["no" => "212", "name" => "वाराणसी उत्तरी (Varanasi North)"],
         ["no" => "119", "name" => "मेरठ शहर (Meerut City)"]
     ];
+    $hash = getDeterministicHash($cleanEpic ?: 'EPIC');
     $ac = $acList[$hash % count($acList)];
     $partNo = 45 + ($hash % 240);
     $serialNo = 1 + ($hash % 790);
     $pollingStation = "प्राथमिक विद्यालय कक्ष सं. " . (1 + ($hash % 4)) . ", मतदान केंद्र भाग सं. $partNo";
 
     return [
-        'epicNo' => $cleanEpic,
+        'epicNo' => $cleanEpic ?: '-',
         'name' => $name,
         'relationName' => $relationName,
-        'relationType' => "पिता (Father)",
+        'relationType' => "पिता / पति",
         'gender' => $gender,
         'age' => $age,
         'acNumber' => $ac['no'],
@@ -734,19 +719,17 @@ function getVoterDetails($epicNo, $custom = []) {
 }
 
 function getAyushmanDetails($id, $custom = []) {
-    $cleanId = strtoupper(preg_replace('/[\s-]+/', '', $id ?? 'PMJAY-UP98214'));
-    $hash = getDeterministicHash($cleanId);
-    $firstNames = ["श्रीमती आशा", "सुनीता", "सुमित्रा", "माया", "कमला", "रेखा", "मंजू", "गीता", "पुष्पा", "उर्मिला"];
-    $lastNames = ["देवी", "कुमारी", "शर्मा", "वर्मा", "सिंह", "यादव", "पटेल", "कश्यप"];
-    $name = $custom['name'] ?? ($firstNames[$hash % count($firstNames)] . " " . $lastNames[($hash >> 1) % count($lastNames)]);
-    $yob = 1972 + ($hash % 32);
-    $pmjayId = "PMJAY-UP-" . (10000 + ($hash % 90000)) . "-" . (1000 + ($hash % 9000));
-    $familyId = "NFSA-FAM-" . (200000 + ($hash % 800000));
+    $cleanId = strtoupper(preg_replace('/[\s-]+/', '', $id ?? ''));
+    $name = trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['customerName']) ? $custom['customerName'] : '-'));
+    $gender = trim(!empty($custom['gender']) ? $custom['gender'] : 'MALE / पुरुष');
+    $yob = !empty($custom['dob']) ? substr($custom['dob'], 0, 4) : '-';
+    $pmjayId = $cleanId ?: ("PMJAY-" . substr(str_pad((string)getDeterministicHash($name ?: 'PMJAY'), 10, '0', STR_PAD_LEFT), 0, 10));
+    $familyId = "NFSA-FAM-" . (200000 + (getDeterministicHash($name) % 800000));
 
     return [
         'pmjayId' => $pmjayId,
         'name' => $name,
-        'gender' => "महिला / FEMALE",
+        'gender' => $gender,
         'yob' => $yob,
         'state' => "UTTAR PRADESH",
         'district' => "LUCKNOW",
@@ -759,83 +742,68 @@ function getAyushmanDetails($id, $custom = []) {
 }
 
 function getRationDetails($rationNo, $custom = []) {
-    $cleanRation = preg_replace('/[\s-]+/', '', $rationNo ?? '215409823412');
-    $hash = getDeterministicHash($cleanRation);
-    $firstNames = ["श्रीमती फूलमती", "कलावती", "रामबेटी", "शांति", "उर्मिला", "विमला", "कैलाशा", "शकुंतला"];
-    $lastNames = ["देवी", "वर्मा", "सिंह", "यादव", "कश्यप", "गौतम"];
-    $headName = $custom['headName'] ?? $custom['name'] ?? ($firstNames[$hash % count($firstNames)] . " " . $lastNames[($hash >> 2) % count($lastNames)]);
-    $spouse = "श्री रामप्रसाद " . $lastNames[($hash >> 2) % count($lastNames)];
-    $units = 3 + ($hash % 4);
-    $scheme = ($hash % 4 === 0) ? "अंत्योदय अन्न योजना (AAY)" : "पात्र गृहस्थी (PHH)";
-    $fpsDealer = "उचित दर विक्रेता: श्री राकेश सिंह (उ.प्र. दुकान कोड: UP-" . (1000 + ($hash % 9000)) . ")";
+    $cleanRation = preg_replace('/[\s-]+/', '', $rationNo ?? '');
+    $headName = trim(!empty($custom['headName']) ? $custom['headName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
+    $spouse = trim(!empty($custom['spouse']) ? $custom['spouse'] : (!empty($custom['fatherName']) ? $custom['fatherName'] : '-'));
+    $scheme = "पात्र गृहस्थी (PHH)";
+    $fpsDealer = "उचित दर विक्रेता (उ.प्र. अधिकृत कोटेदार)";
 
-    $rawMembers = [
-        ["index" => 1, "name" => $headName, "relation" => "स्वयं (मुखिया)", "gender" => "स्त्री", "age" => 46 + ($hash % 12)],
-        ["index" => 2, "name" => $spouse, "relation" => "पति", "gender" => "पुरुष", "age" => 50 + ($hash % 12)],
-        ["index" => 3, "name" => "अमित कुमार", "relation" => "बेटा", "gender" => "पुरुष", "age" => 21 + ($hash % 5)],
-        ["index" => 4, "name" => "पूजा", "relation" => "बेटी", "gender" => "स्त्री", "age" => 18 + ($hash % 4)],
-        ["index" => 5, "name" => "रोहित", "relation" => "बेटा", "gender" => "पुरुष", "age" => 15 + ($hash % 4)],
-        ["index" => 6, "name" => "अंशु", "relation" => "बेटी", "gender" => "स्त्री", "age" => 12 + ($hash % 3)]
+    $members = [
+        ["index" => 1, "name" => $headName, "relation" => "स्वयं (मुखिया)", "gender" => "मुखिया", "age" => "-"]
     ];
-    $members = array_slice($rawMembers, 0, $units);
+    if ($spouse !== '-') {
+        $members[] = ["index" => 2, "name" => $spouse, "relation" => "पति/पिता", "gender" => "सदस्य", "age" => "-"];
+    }
 
     return [
-        'rationNo' => $cleanRation,
+        'rationNo' => $cleanRation ?: '-',
         'headName' => $headName,
         'spouse' => $spouse,
-        'fatherName' => "स्व. लल्लू राम",
+        'fatherName' => $spouse,
         'scheme' => $scheme,
-        'units' => $units,
+        'units' => count($members),
         'fpsDealer' => $fpsDealer,
-        'district' => "हरदोई / लखनऊ",
+        'district' => "उ.प्र. खाद्य एवं रसद विभाग",
         'block' => "सदर",
-        'village' => "मझिला / रामपुर",
-        'wheatKg' => $units * 3,
-        'riceKg' => $units * 2,
-        'sugarKg' => strpos($scheme, 'AAY') !== false ? 1 : 0,
+        'village' => "सदर",
+        'wheatKg' => count($members) * 3,
+        'riceKg' => count($members) * 2,
+        'sugarKg' => 0,
         'members' => $members,
         'status' => "सक्रिय कार्ड (राशन वितरण चालू)",
-        'qrCodeData' => "NFSA:RC=$cleanRation:HEAD=$headName:UNITS=$units:FPS=$fpsDealer",
+        'qrCodeData' => "NFSA:RC=$cleanRation:HEAD=$headName:UNITS=" . count($members) . ":FPS=$fpsDealer",
         'cardType' => 'ration'
     ];
 }
 
 function getElectricityBillDetails($consumerNo, $custom = []) {
-    $cleanNo = preg_replace('/[\s-]+/', '', $consumerNo ?? '7812903456');
-    $hash = getDeterministicHash($cleanNo);
-    $names = ["महेश चंद्र", "ओम प्रकाश", "राम नरेश", "सत्य प्रकाश", "विजय बहादुर", "सतीश कुमार", "दिलीप शर्मा", "सुरेंद्र पाल"];
-    $consumerName = $custom['name'] ?? $custom['consumerName'] ?? $names[$hash % count($names)];
-    $discomList = [
-        "मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)",
-        "पश्चिमांचल विद्युत वितरण निगम लिमिटेड (PVVNL)",
-        "पूर्वांचल विद्युत वितरण निगम लिमिटेड (PuVVNL)",
-        "दक्षिणांचल विद्युत वितरण निगम लिमिटेड (DVVNL)"
-    ];
-    $discom = $custom['discom'] ?? $discomList[$hash % count($discomList)];
-    $billedUnits = 110 + ($hash % 170);
-    $energyCharges = round($billedUnits * 5.5);
+    $cleanNo = preg_replace('/[\s-]+/', '', $consumerNo ?? '');
+    $consumerName = trim(!empty($custom['consumerName']) ? $custom['consumerName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
+    $discom = !empty($custom['discom']) ? $custom['discom'] : "मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)";
+    $billedUnits = 120;
+    $energyCharges = 660;
     $fixedCharges = 110;
-    $duty = round($energyCharges * 0.05);
-    $totalAmount = $energyCharges + $fixedCharges + $duty;
-    $meterNo = "UP-MET-" . (100000 + ($hash % 900000));
-    $txnId = "UPPCL" . substr((string)time(), -6) . ($hash % 1000);
+    $duty = 33;
+    $totalAmount = 803;
+    $meterNo = "UP-MET-" . substr($cleanNo, -6);
+    $txnId = "UPPCL" . substr((string)time(), -6);
 
     return [
-        'consumerNo' => $cleanNo,
+        'consumerNo' => $cleanNo ?: '-',
         'consumerName' => $consumerName,
         'discom' => $discom,
         'meterNo' => $meterNo,
-        'tariff' => "LMV-1 डोमेस्टिक रूरल/अर्बन",
+        'tariff' => "LMV-1 डोमेस्टिक",
         'sanctionedLoad' => "1.00 KW",
-        'billMonth' => "मार्च 2026",
-        'previousReading' => 1420 + ($hash % 300),
-        'currentReading' => 1420 + ($hash % 300) + $billedUnits,
+        'billMonth' => date('F Y'),
+        'previousReading' => 1200,
+        'currentReading' => 1320,
         'billedUnits' => $billedUnits,
         'energyCharges' => $energyCharges,
         'fixedCharges' => $fixedCharges,
         'electricityDuty' => $duty,
         'netPayable' => $totalAmount,
-        'dueDate' => "28/03/2026",
+        'dueDate' => date('d/m/Y', strtotime('+15 days')),
         'paymentStatus' => "PAID / सफल ऑनलाइन भुगतान",
         'paidAmount' => $totalAmount,
         'txnId' => $txnId,
@@ -846,31 +814,28 @@ function getElectricityBillDetails($consumerNo, $custom = []) {
 }
 
 function getEdistrictDetails($appNo, $certNo, $custom = []) {
-    $cleanApp = preg_replace('/[\s-]+/', '', $appNo ?? '241550010098241');
-    $cleanCert = preg_replace('/[\s-]+/', '', $certNo ?? '789240019234');
-    $hash = getDeterministicHash($cleanApp . $cleanCert);
-    $types = ["आय प्रमाण पत्र (Income Certificate)", "जाति प्रमाण पत्र (Caste Certificate)", "निवास प्रमाण पत्र (Domicile / Niwas)"];
-    $certType = $custom['certType'] ?? $types[$hash % count($types)];
-    $firstNames = ["हरिओम", "सुरेंद्र", "अमरेश", "रविंद्र", "दिवाकर", "प्रमोद", "कमल", "सुभाष"];
-    $applicantName = $custom['name'] ?? $custom['applicantName'] ?? ($firstNames[$hash % count($firstNames)] . " सिंह");
-    $fatherName = "श्री रामेश्वर सिंह";
-    $issueDate = "10/01/2026";
+    $cleanApp = preg_replace('/[\s-]+/', '', $appNo ?? '');
+    $cleanCert = preg_replace('/[\s-]+/', '', $certNo ?? '');
+    $certType = !empty($custom['certType']) ? $custom['certType'] : "आय / जाति / निवास प्रमाण पत्र";
+    $applicantName = trim(!empty($custom['applicantName']) ? $custom['applicantName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
+    $fatherName = trim(!empty($custom['fatherName']) ? $custom['fatherName'] : '-');
+    $issueDate = date('d/m/Y');
     $tehsil = "सदर";
-    $district = "लखनऊ / हरदोई";
+    $district = "राजस्व विभाग उ.प्र.";
 
     return [
-        'appNo' => $cleanApp,
-        'certNo' => $cleanCert,
+        'appNo' => $cleanApp ?: '-',
+        'certNo' => $cleanCert ?: '-',
         'certType' => $certType,
         'applicantName' => $applicantName,
         'fatherName' => $fatherName,
         'tehsil' => $tehsil,
         'district' => $district,
-        'address' => "ग्राम व पोस्ट, तहसील $tehsil, जिला $district",
+        'address' => !empty($custom['address']) ? $custom['address'] : "तहसील $tehsil, $district",
         'issueDate' => $issueDate,
-        'annualIncome' => strpos($certType, 'आय') !== false ? "₹48,000/- (अड़तालीस हजार रुपये वार्षिक)" : null,
-        'casteCategory' => strpos($certType, 'जाति') !== false ? "अन्य पिछड़ा वर्ग (OBC) - कुर्मी / पटेल" : null,
-        'issuingAuthority' => "तहसीलदार / सक्षम प्राधिकारी (ई-डिस्ट्रिक्ट राजस्व विभाग, उत्तर प्रदेश)",
+        'annualIncome' => strpos($certType, 'आय') !== false ? (!empty($custom['annualIncome']) ? $custom['annualIncome'] : "₹48,000/- वार्षिक") : null,
+        'casteCategory' => strpos($certType, 'जाति') !== false ? (!empty($custom['casteCategory']) ? $custom['casteCategory'] : "अन्य पिछड़ा वर्ग (OBC)") : null,
+        'issuingAuthority' => "तहसीलदार / सक्षम प्राधिकारी (ई-डिस्ट्रिक्ट राजस्व विभाग)",
         'verificationStatus' => "सत्यापित (Digitally Signed & Validated)",
         'qrCodeData' => "EDISTRICT:APP=$cleanApp:CERT=$cleanCert:NAME=$applicantName:TYPE=$certType:VALID=TRUE",
         'cardType' => 'edistrict'
@@ -878,28 +843,19 @@ function getEdistrictDetails($appNo, $certNo, $custom = []) {
 }
 
 function getDrivingLicenceDetails($dlNo, $custom = []) {
-    $cleanDl = strtoupper(preg_replace('/[\s-]+/', '', $dlNo ?? 'UP1420110012345'));
-    $hash = getDeterministicHash($cleanDl);
-    $firstNames = ["सतीश", "सुरेश", "अभिषेक", "मनोज", "राजीव", "अमित", "नवीन", "प्रशांत", "विक्रम", "संजय"];
-    $lastNames = ["वर्मा", "कुमार", "सिंह", "शर्मा", "यादव", "मिश्रा", "गुप्ता", "चौहान", "तिवारी", "पाण्डेय"];
-    $name = strtoupper($custom['name'] ?? ($firstNames[$hash % count($firstNames)] . " " . $lastNames[($hash >> 2) % count($lastNames)]));
-    $fatherName = strtoupper($custom['fatherName'] ?? ($firstNames[($hash >> 3) % count($firstNames)] . " " . $lastNames[($hash >> 1) % count($lastNames)]));
-    $day = str_pad(1 + ($hash % 28), 2, '0', STR_PAD_LEFT);
-    $month = str_pad(1 + (($hash >> 2) % 12), 2, '0', STR_PAD_LEFT);
-    $birthYear = 1978 + ($hash % 24);
-    $dob = $custom['dob'] ?? "$day/$month/$birthYear";
-    $issueYear = 2012 + ($hash % 10);
-    $issueDate = "12/04/$issueYear";
-    $validNt = "11/04/" . ($issueYear + 20);
-    $validTr = "11/04/" . ($issueYear + 5);
-    $bloodGroups = ["B+", "O+", "A+", "AB+", "O-"];
-    $bloodGroup = $custom['bloodGroup'] ?? $bloodGroups[$hash % count($bloodGroups)];
+    $cleanDl = strtoupper(preg_replace('/[\s-]+/', '', $dlNo ?? ''));
+    $name = strtoupper(trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['customerName']) ? $custom['customerName'] : '-')));
+    $fatherName = strtoupper(trim(!empty($custom['fatherName']) ? $custom['fatherName'] : '-'));
+    $dob = trim(!empty($custom['dob']) ? $custom['dob'] : '-');
+    $issueDate = date('d/m/Y');
+    $validNt = date('d/m/Y', strtotime('+20 years'));
+    $validTr = date('d/m/Y', strtotime('+5 years'));
+    $bloodGroup = !empty($custom['bloodGroup']) ? $custom['bloodGroup'] : "B+";
     $covs = ["MCWG (मोटरसाइकिल गियर सहित)", "LMV (हल्का मोटर वाहन कार/जीप)"];
-    $rtoList = ["RTO LUCKNOW (UP-32)", "RTO KANPUR (UP-78)", "RTO AGRA (UP-80)", "RTO VARANASI (UP-65)", "RTO NOIDA (UP-16)"];
-    $rtoOffice = $rtoList[$hash % count($rtoList)];
+    $rtoOffice = "RTO TRANSPORT OFFICE, PARIVAHAN SEWA";
 
     return [
-        'dlNo' => $cleanDl,
+        'dlNo' => $cleanDl ?: '-',
         'name' => $name,
         'fatherName' => $fatherName,
         'dob' => $dob,
@@ -910,51 +866,39 @@ function getDrivingLicenceDetails($dlNo, $custom = []) {
         'covs' => $covs,
         'rtoOffice' => $rtoOffice,
         'status' => "ACTIVE & VALID (सक्रिय सारथी डेटाबेस)",
-        'address' => "मकान नं. " . (14 + ($hash % 120)) . ", सिविल लाइन्स, " . explode(' ', $rtoOffice)[1] . ", उत्तर प्रदेश",
+        'address' => !empty($custom['address']) ? $custom['address'] : "परिवहन सारथी डेटाबेस, भारत",
         'qrCodeData' => "SARATHI:DL=$cleanDl:NAME=$name:DOB=$dob:COV=MCWG,LMV:VALID=$validNt:STATUS=ACTIVE",
         'cardType' => 'dl'
     ];
 }
 
 function getChallanDetails($refNo, $custom = []) {
-    $cleanRef = strtoupper(preg_replace('/[\s-]+/', '', $refNo ?? 'UP32AB1234'));
-    $hash = getDeterministicHash($cleanRef);
-    $vehicleNo = (strlen($cleanRef) >= 8 && strlen($cleanRef) <= 11) ? $cleanRef : ("UP32AB" . (1000 + ($hash % 8999)));
-    $challanNo = "UP2026" . substr(str_pad((string)$hash, 10, '0', STR_PAD_LEFT), 0, 10);
-    $offenses = [
-        ["section" => "Sec 194D MV Act", "text" => "बिना सुरक्षात्मक हेडगियर (हेलमेट) दोपहिया वाहन चलाना", "amount" => 1000],
-        ["section" => "Sec 177 MV Act", "text" => "निषिद्ध क्षेत्र में अनधिकृत पार्किंग (नो पार्किंग)", "amount" => 500],
-        ["section" => "Sec 194B MV Act", "text" => "सीट बेल्ट का प्रयोग न करना", "amount" => 1000],
-        ["section" => "Sec 184 MV Act", "text" => "खतरनाक ढंग से तेज गति में वाहन चलाना", "amount" => 2000]
-    ];
-    $off = $offenses[$hash % count($offenses)];
-    $locations = ["हजरतगंज चौराहा, लखनऊ", "पॉलिटेक्निक चौराहा, लखनऊ", "कानपुर रोड बाईपास", "कमिश्नरेट पुलिस नाका", "एम.जी. रोड, आगरा"];
-    $location = $locations[$hash % count($locations)];
-    $date = "18/02/2026 14:" . (10 + ($hash % 45));
-    $ownerNames = ["सुरेश कुमार", "अमित सिंह", "विकास यादव", "अशोक शर्मा", "दीपक वर्मा"];
-    $ownerName = $custom['name'] ?? $custom['ownerName'] ?? $ownerNames[$hash % count($ownerNames)];
+    $cleanRef = strtoupper(preg_replace('/[\s-]+/', '', $refNo ?? ''));
+    $vehicleNo = $cleanRef ?: '-';
+    $challanNo = "UP2026" . substr(str_pad((string)getDeterministicHash($cleanRef ?: 'CHAL'), 10, '0', STR_PAD_LEFT), 0, 10);
+    $ownerName = trim(!empty($custom['ownerName']) ? $custom['ownerName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
 
     return [
         'challanNo' => $challanNo,
         'vehicleNo' => $vehicleNo,
         'ownerName' => $ownerName,
-        'offense' => $off['text'],
-        'section' => $off['section'],
-        'amount' => $off['amount'],
-        'date' => $date,
-        'location' => $location,
-        'trafficPolice' => "यातायात पुलिस / परिवहन विभाग, उत्तर प्रदेश",
-        'status' => ($hash % 2 === 0) ? "DISPOSED / PAID (निस्तारित)" : "PENDING (लंबित भुगतान)",
-        'txnId' => "ECHAL" . substr((string)time(), -6) . ($hash % 1000),
-        'qrCodeData' => "ECHALLAN:NO=$challanNo:VEH=$vehicleNo:AMT={$off['amount']}:STATUS=PAID",
+        'offense' => "हेलमेट / सीटबेल्ट जांच",
+        'section' => "Sec 194D MV Act",
+        'amount' => 1000,
+        'date' => date('d/m/Y H:i'),
+        'location' => "यातायात पुलिस चेकपोस्ट",
+        'trafficPolice' => "यातायात पुलिस / परिवहन विभाग",
+        'status' => "DISPOSED / PAID (निस्तारित)",
+        'txnId' => "ECHAL" . substr((string)time(), -6),
+        'qrCodeData' => "ECHALLAN:NO=$challanNo:VEH=$vehicleNo:AMT=1000:STATUS=PAID",
         'cardType' => 'challan'
     ];
 }
 
 function getEpanDetails($panNo, $custom = []) {
-    $cleanPan = strtoupper(preg_replace('/[\s-]+/', '', $panNo ?? 'ABCDE1234F'));
+    $cleanPan = strtoupper(preg_replace('/[\s-]+/', '', $panNo ?? ''));
     $base = getPanCardDetails($cleanPan, $custom);
-    $ackNo = "088" . substr(str_pad((string)getDeterministicHash($cleanPan), 12, '0', STR_PAD_LEFT), 0, 12);
+    $ackNo = "088" . substr(str_pad((string)getDeterministicHash($cleanPan ?: 'PAN'), 12, '0', STR_PAD_LEFT), 0, 12);
     return array_merge($base, [
         'ackNo' => $ackNo,
         'downloadDate' => date('d/m/Y'),
@@ -964,58 +908,50 @@ function getEpanDetails($panNo, $custom = []) {
 }
 
 function getFindPanDetails($input, $custom = []) {
-    $cleanIn = strtoupper(preg_replace('/[\s-]+/', '', $input ?? '541287963214'));
-    $hash = getDeterministicHash($cleanIn);
-    $alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-    $panPrefix = $alphabet[$hash % 24] . $alphabet[($hash >> 2) % 24] . $alphabet[($hash >> 4) % 24] . "P" . $alphabet[($hash >> 1) % 24];
-    $panNum = (1000 + ($hash % 8999)) . $alphabet[($hash >> 3) % 24];
-    $panNo = $panPrefix . $panNum;
-    $panData = getPanCardDetails($panNo, $custom);
+    $cleanIn = strtoupper(preg_replace('/[\s-]+/', '', $input ?? ''));
+    $panData = getPanCardDetails($cleanIn, $custom);
     return array_merge($panData, [
-        'searchedQuery' => $cleanIn,
-        'maskedAadhaar' => (strlen($cleanIn) >= 12) ? ("XXXX-XXXX-" . substr($cleanIn, -4)) : 'XXXX-XXXX-4921',
-        'allotmentDate' => "08/11/" . (2015 + ($hash % 9)),
-        'aoCode' => "WND-" . (12 + ($hash % 50)) . "-" . (1 + ($hash % 5)),
+        'searchedQuery' => $cleanIn ?: '-',
+        'maskedAadhaar' => (strlen($cleanIn) >= 12) ? ("XXXX-XXXX-" . substr($cleanIn, -4)) : 'XXXX-XXXX-XXXX',
+        'allotmentDate' => date('d/m/Y'),
+        'aoCode' => "WND-ITD-01",
         'verificationSource' => "आयकर विभाग (ITD) स्थायी खाता संख्या ऑल इंडिया डेटाबेस",
         'cardType' => 'findpan'
     ]);
 }
 
 function getSearchEpicDetails($input, $custom = []) {
-    $cleanIn = strtoupper(preg_replace('/[\s-]+/', '', $input ?? 'WBD1234567'));
+    $cleanIn = strtoupper(preg_replace('/[\s-]+/', '', $input ?? ''));
     $base = getVoterDetails($cleanIn, $custom);
-    $hash = getDeterministicHash($cleanIn);
     return array_merge($base, [
-        'voterSlipNo' => "VS-2026-" . (10000 + ($hash % 90000)),
-        'boothNo' => "बूथ संख्या " . (1 + ($hash % 6)),
+        'voterSlipNo' => "VS-2026-" . (10000 + (getDeterministicHash($cleanIn ?: 'EPIC') % 90000)),
+        'boothNo' => "बूथ संख्या 1",
         'serialNoInPart' => $base['serialNumber'],
-        'pollDate' => "15/04/2026 (प्रातः 07:00 से सायं 06:00 बजे तक)",
+        'pollDate' => "मतदान दिवस (प्रातः 07:00 से सायं 06:00 बजे तक)",
         'guidelines' => "मतदान केंद्र पर EPIC कार्ड अथवा आधार कार्ड साथ लाना अनिवार्य है।",
         'cardType' => 'searchepic'
     ]);
 }
 
 function getReceiptDetails($input, $custom = []) {
-    $cleanIn = trim($input ?? '9876543210');
-    $hash = getDeterministicHash($cleanIn);
-    $names = ["राजेश कुमार", "अमित वर्मा", "सुनील शर्मा", "संजय यादव", "दीपक सिंह", "महेश चंद्र"];
-    $customerName = $custom['name'] ?? $custom['customerName'] ?? $names[$hash % count($names)];
-    $receiptNo = "RCP-" . substr((string)time(), -6) . "-" . ($hash % 1000);
-    $serviceDesc = $custom['serviceDesc'] ?? $custom['serviceName'] ?? "सरकारी सेवा ऑनलाइन आवेदन एवं स्मार्ट PVC कार्ड प्रिंटिंग";
-    $amount = $custom['amount'] ?? (($hash % 3 === 0) ? 120 : (($hash % 2 === 0) ? 70 : 150));
-    $shopName = $custom['shopName'] ?? "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र";
-    $shopAddress = $custom['shopAddress'] ?? "मेन मार्केट, ब्लॉक रोड, तहसील के सामने";
-    $shopPhone = $custom['shopPhone'] ?? "9876543210";
+    $cleanIn = trim($input ?? '');
+    $customerName = trim(!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-'));
+    $receiptNo = "RCP-" . substr((string)time(), -6);
+    $serviceDesc = !empty($custom['serviceDesc']) ? $custom['serviceDesc'] : (!empty($custom['serviceName']) ? $custom['serviceName'] : "सरकारी सेवा ऑनलाइन आवेदन एवं स्मार्ट PVC कार्ड प्रिंटिंग");
+    $amount = !empty($custom['amount']) ? $custom['amount'] : 50;
+    $shopName = !empty($custom['shopName']) ? $custom['shopName'] : "डिजिटल सेवा केंद्र";
+    $shopAddress = !empty($custom['shopAddress']) ? $custom['shopAddress'] : "अधिकृत जन सेवा केंद्र";
+    $shopPhone = !empty($custom['shopPhone']) ? $custom['shopPhone'] : "";
 
     return [
         'receiptNo' => $receiptNo,
         'customerName' => $customerName,
-        'customerPhone' => $cleanIn,
+        'customerPhone' => $cleanIn ?: '-',
         'serviceDesc' => $serviceDesc,
         'amount' => $amount,
         'date' => date('d/m/Y'),
         'time' => date('H:i'),
-        'paymentMode' => $custom['paymentMode'] ?? "UPI / CASH (सफल भुगतान)",
+        'paymentMode' => !empty($custom['paymentMode']) ? $custom['paymentMode'] : "UPI / CASH",
         'shopName' => $shopName,
         'shopAddress' => $shopAddress,
         'shopPhone' => $shopPhone,
@@ -1178,8 +1114,8 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     $refNumber = $params['vehicleNumber'] ?? $params['panNo'] ?? $params['aadhaarNo'] ?? $params['epicNo'] ?? $params['consumerNo'] ?? $params['rationNo'] ?? $params['appNo'] ?? $params['dlNo'] ?? $params['challanNo'] ?? 'DOC';
 
     if ($normServiceType === 'rcDownload') {
-        $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicleNumber'] ?? 'UP32AB1234'));
-        $vehicleData = getVehicleDetails($regNo);
+        $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicleNumber'] ?? ''));
+        $vehicleData = getVehicleDetails($regNo, $params);
         $generatedData = $vehicleData;
         $docTitle = "वाहन RC ({$vehicleData['regNo']}) - {$vehicleData['makerModel']}";
         $refNumber = $vehicleData['regNo'];
