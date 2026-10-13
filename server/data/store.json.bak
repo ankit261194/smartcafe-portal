@@ -49,11 +49,11 @@
       "documents": [],
       "acknowledgmentReceipt": null,
       "remarks": "आवेदन प्राप्त हुआ। कैफे ऑपरेटर द्वारा जांच की जा रही है।",
-      "otpStatus": "received",
-      "otpType": "aadhaar",
-      "liveOtp": "789123",
-      "otpRequestedAt": "2026-10-13T09:15:08.697Z",
-      "otpReceivedAt": "2026-10-13T09:15:08.707Z",
+      "otpStatus": "none",
+      "otpType": null,
+      "liveOtp": null,
+      "otpRequestedAt": null,
+      "otpReceivedAt": null,
       "createdAt": "2026-10-12T10:32:14.144Z"
     },
     {
@@ -80,28 +80,6 @@
     }
   ],
   "cashbook": [
-    {
-      "id": "CB-1791882908280",
-      "cafeId": "CAFE-101",
-      "title": "वाहन RC टू PDF / PVC स्मार्ट कार्ड नेट मार्जिन (+₹70)",
-      "category": "Automated Service",
-      "amount": 70,
-      "paymentMode": "wallet",
-      "type": "income",
-      "customer": "राहुल वर्मा",
-      "createdAt": "2026-10-13T09:15:08.280Z"
-    },
-    {
-      "id": "CB-1791882908164",
-      "cafeId": "CAFE-101",
-      "title": "ग्राहक वॉलेट UPI रिचार्ज (UTR: 791882908138)",
-      "category": "Wallet TopUp",
-      "amount": 500,
-      "paymentMode": "upi",
-      "type": "income",
-      "customer": "राहुल वर्मा",
-      "createdAt": "2026-10-13T09:15:08.164Z"
-    },
     {
       "id": "CB-1791801134144",
       "cafeId": "",
@@ -195,66 +173,8 @@
     }
   ],
   "customerVault": [],
-  "complaints": [
-    {
-      "id": "CMP-216",
-      "cafeId": "CAFE-101",
-      "cafeShopName": "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र",
-      "customerPhone": "9812345678",
-      "customerName": "राहुल वर्मा",
-      "category": "प्रिंट गुणवत्ता",
-      "subject": "RC प्रिंट में बैक साइड का बारकोड कट रहा था",
-      "description": "कृपया मुझे स्पष्ट प्रति दोबारा प्रिंट करके दें।",
-      "status": "resolved",
-      "cafeReplies": [
-        {
-          "sender": "cafe_owner",
-          "message": "नमस्ते राहुल जी, हमने CR-80 लेआउट सही कर दिया है, आप काउंटर से निःशुल्क नया प्रिंट प्राप्त कर सकते हैं।",
-          "repliedAt": "2026-10-13T09:15:08.313Z"
-        }
-      ],
-      "secretAuditNote": "गुप्त ऑडिट नोट: संचालक ने 15 मिनट के भीतर शिकायत का संतोषजनक समाधान कर दिया।",
-      "createdAt": "2026-10-13T09:15:08.296Z"
-    }
-  ],
+  "complaints": [],
   "rcOrders": [
-    {
-      "id": "RC-ORD-6718",
-      "cafeId": "CAFE-101",
-      "cafeShopName": "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र",
-      "customerPhone": "9812345678",
-      "customerName": "राहुल वर्मा",
-      "vehicleNumber": "UP32AB1234",
-      "retailFee": 270,
-      "wholesaleCost": 200,
-      "margin": 70,
-      "status": "completed",
-      "vehicleData": {
-        "regNo": "UP32AB1234",
-        "ownerName": "मनोज कुमार शर्मा",
-        "fatherName": "विकास यादव वर्मा",
-        "makerModel": "BAJAJ PULSAR 150 DUAL DISC",
-        "vehicleClass": "MCWG (Two Wheeler)",
-        "fuelType": "PETROL",
-        "engineCapacity": "149.5 CC",
-        "seatingCapacity": 2,
-        "color": "SPARKLE BLACK",
-        "regDate": "28/04/2021",
-        "fitnessUpto": "28/04/2036",
-        "insuranceUpto": "15/12/2026",
-        "insuranceCompany": "THE NEW INDIA ASSURANCE CO. LTD.",
-        "policyNo": "POL-348333411",
-        "puccUpto": "28/08/2026",
-        "puccNo": "PUCUP32348333",
-        "engineNo": "ENG1234348333",
-        "chassisNo": "MATUPB0348333411",
-        "rtoOffice": "RTO LUCKNOW (UP-32), UTTAR PRADESH",
-        "mvTaxUpto": "LTT (LIFE TIME TAX PAID)",
-        "financedBy": "NO (UNHYPOTHECATED / OWN CASH)",
-        "status": "ACTIVE (VALID / NON-BLACKLISTED)"
-      },
-      "createdAt": "2026-10-13T09:15:08.280Z"
-    },
     {
       "id": "RC-ORD-6473",
       "cafeId": "SMARTCAFE-HQ",
@@ -700,281 +620,10 @@
       "createdAt": "2026-10-12T04:57:29.428Z"
     }
   ],
-  "utrRequests": [
-    {
-      "id": "UTR-SANCH-1791882908194",
-      "tier": "sanchalak_to_superadmin",
-      "cafeId": "CAFE-101",
-      "cafeShopName": "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र",
-      "ownerName": "राजेश कुमार",
-      "phone": "9876543210",
-      "amount": 1000,
-      "utr": "791882908290",
-      "screenshotUrl": "/uploads/sample_payment_slip.png",
-      "upiTarget": "superadmin@upi",
-      "status": "approved",
-      "rejectReason": "",
-      "createdAt": "2026-10-13T09:15:08.194Z",
-      "approvedAt": "2026-10-13T09:15:08.219Z"
-    },
-    {
-      "id": "UTR-CUST-1791882908142",
-      "tier": "customer_to_sanchalak",
-      "cafeId": "CAFE-101",
-      "cafeShopName": "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र",
-      "customerPhone": "9812345678",
-      "customerName": "राहुल वर्मा",
-      "amount": 500,
-      "utr": "791882908138",
-      "screenshotUrl": "",
-      "upiTarget": "shop@upi",
-      "status": "approved",
-      "rejectReason": "",
-      "createdAt": "2026-10-13T09:15:08.142Z",
-      "approvedAt": "2026-10-13T09:15:08.164Z"
-    }
-  ],
-  "vleKycApplications": [
-    {
-      "id": "KYC-151",
-      "shopName": "अवध डिजिटल जन सेवा केंद्र",
-      "ownerName": "अमित कुमार अवस्थी",
-      "phone": "9450123456",
-      "email": "9450123456@csc.gov.in",
-      "vleId": "CSC-UP-241001-999",
-      "aadhaarNo": "123456789012",
-      "panNo": "ABCDE1234F",
-      "upiId": "9450123456@upi",
-      "address": "",
-      "city": "हरदोई",
-      "district": "हरदोई",
-      "state": "उत्तर प्रदेश",
-      "pincode": "241001",
-      "termsAccepted": true,
-      "subscriptionPlan": "₹299 वार्षिक प्रो प्लान (365 दिन)",
-      "utr": "791882908678",
-      "screenshotUrl": "/uploads/sample_payment_slip.png",
-      "status": "approved",
-      "rejectReason": "",
-      "licenseKey": "VLE-LIC-2026-उत103-1629",
-      "createdAt": "2026-10-13T09:15:08.380Z",
-      "approvedAt": "2026-10-13T09:15:08.396Z"
-    }
-  ],
-  "wallets": [
-    {
-      "phone": "9812345678",
-      "customerName": "राहुल वर्मा",
-      "pin": "$2b$10$K2Ixbwt.sfu1eia9bqeU8uh5FYxcxQCXsErKIGzQY0uOKZF86BjWO",
-      "balance": 230,
-      "transactions": [
-        {
-          "id": "TXN-1791882908280",
-          "type": "debit",
-          "amount": 270,
-          "note": "ऑनलाइन सेवा शुल्क: वाहन RC टू PDF / PVC स्मार्ट कार्ड",
-          "createdAt": "2026-10-13T09:15:08.280Z"
-        },
-        {
-          "id": "TXN-1791882908164",
-          "type": "credit",
-          "amount": 500,
-          "note": "दुकानदार द्वारा स्वीकृत UTR (791882908138) वॉलेट टॉप-अप",
-          "createdAt": "2026-10-13T09:15:08.164Z"
-        }
-      ]
-    }
-  ],
-  "cafes": [
-    {
-      "id": "CAFE-103",
-      "code": "103",
-      "slug": "cafe-103",
-      "shopName": "अवध डिजिटल जन सेवा केंद्र",
-      "ownerName": "अमित कुमार अवस्थी",
-      "phone": "9450123456",
-      "pin": "$2b$10$B3Ho0tOQ0PA1rHvmmFsmJOWvNs3vs48QW3t..iMDFa3AVnyEm5w5y",
-      "staffPin": "$2b$10$jYSzf9sUi/dRWmhYWLOyFedM.icvFs78bMRRyOhW5xw2zL6nNHrOa",
-      "staffEnabled": true,
-      "email": "9450123456@csc.gov.in",
-      "vleId": "CSC-UP-241001-999",
-      "aadhaarNo": "123456789012",
-      "panNo": "ABCDE1234F",
-      "upiId": "9450123456@upi",
-      "address": "",
-      "city": "हरदोई",
-      "district": "हरदोई",
-      "state": "उत्तर प्रदेश",
-      "pincode": "241001",
-      "licenseKey": "VLE-LIC-2026-उत103-1629",
-      "kycStatus": "verified",
-      "isFrozen": false,
-      "frozenReason": "",
-      "subscription": {
-        "plan": "₹299 वार्षिक प्रो प्लान",
-        "amount": 299,
-        "status": "active",
-        "validTill": "2027-10-13T09:15:08.599Z",
-        "activatedAt": "2026-10-13T09:15:08.599Z",
-        "utr": "791882908678"
-      },
-      "b2bWallet": {
-        "balance": 0,
-        "minThreshold": 200,
-        "transactions": []
-      },
-      "retailRates": {
-        "rcDownload": 250,
-        "panCard": 150,
-        "incomeCert": 80,
-        "casteCert": 80,
-        "niwasCert": 80,
-        "drivingLicence": 250,
-        "pvcCard": 70
-      },
-      "rates": {
-        "bwPage": 3,
-        "colorPage": 10,
-        "xerox": 2,
-        "lamination": 20,
-        "photoCopyBothSide": 3,
-        "passportPhoto": 50,
-        "formFeeNormal": 70,
-        "formFeeComplex": 120
-      },
-      "createdAt": "2026-10-13T09:15:08.599Z"
-    },
-    {
-      "id": "CAFE-102",
-      "code": "102",
-      "slug": "cafe-102",
-      "shopName": "शर्मा जन सेवा केंद्र व कंप्यूटर कैफे",
-      "ownerName": "अनिल शर्मा",
-      "phone": "9833445566",
-      "pin": "$2b$10$..rGi.Go2raNN/3I934eOub/FEhaN/vhmHcCk9lnNcF53oL0eHqmG",
-      "staffPin": "$2b$10$YpFljLA1KCiuaaz8//gfKeEFYSCGp.jnRNAsX6BnUt1FDCVKG.4Pi",
-      "staffEnabled": true,
-      "email": "9833445566@csc.gov.in",
-      "vleId": "CSC-UP-241001-102",
-      "aadhaarNo": "4589 1234 5678",
-      "panNo": "ABCDE1234F",
-      "upiId": "shop@upi",
-      "address": "",
-      "city": "लखनऊ",
-      "district": "",
-      "state": "उत्तर प्रदेश",
-      "pincode": "",
-      "licenseKey": "VLE-LIC-2026-UP24-102",
-      "kycStatus": "verified",
-      "isFrozen": false,
-      "frozenReason": "",
-      "subscription": {
-        "plan": "₹299 वार्षिक प्रो प्लान",
-        "amount": 299,
-        "status": "active",
-        "validTill": "2027-10-13T09:15:07.480Z",
-        "activatedAt": "2026-10-13T09:15:07.480Z"
-      },
-      "b2bWallet": {
-        "balance": 100,
-        "minThreshold": 200,
-        "transactions": []
-      },
-      "retailRates": {
-        "rcDownload": 250,
-        "panCard": 150,
-        "incomeCert": 80,
-        "casteCert": 80,
-        "niwasCert": 80,
-        "drivingLicence": 250,
-        "pvcCard": 70
-      },
-      "rates": {
-        "bwPage": 3,
-        "colorPage": 10,
-        "xerox": 2,
-        "lamination": 20,
-        "photoCopyBothSide": 3,
-        "passportPhoto": 50,
-        "formFeeNormal": 70,
-        "formFeeComplex": 120
-      },
-      "createdAt": "2026-10-13T09:15:07.480Z"
-    },
-    {
-      "id": "CAFE-101",
-      "code": "101",
-      "slug": "cafe-101",
-      "shopName": "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र",
-      "ownerName": "राजेश कुमार",
-      "phone": "9876543210",
-      "pin": "$2b$10$QoAEwurbarQg9DSEZlSri.sxizLhgNStQYRPvXT7pb.SDu8TIe4Hu",
-      "staffPin": "$2b$10$0jb9dHrpipsvUVQ/2i3vPuN5uTRBvp86hVjraldAyZq2C1BOSsCke",
-      "staffEnabled": true,
-      "email": "9876543210@csc.gov.in",
-      "vleId": "CSC-UP-241001-101",
-      "aadhaarNo": "4589 1234 5678",
-      "panNo": "ABCDE1234F",
-      "upiId": "shop@upi",
-      "address": "",
-      "city": "हरदोई",
-      "district": "",
-      "state": "उत्तर प्रदेश",
-      "pincode": "",
-      "licenseKey": "VLE-LIC-2026-UP24-101",
-      "kycStatus": "verified",
-      "isFrozen": false,
-      "frozenReason": "",
-      "subscription": {
-        "plan": "₹299 वार्षिक प्रो प्लान",
-        "amount": 299,
-        "status": "active",
-        "validTill": "2027-10-13T09:15:07.238Z",
-        "activatedAt": "2026-10-13T09:15:07.238Z"
-      },
-      "b2bWallet": {
-        "balance": 1350,
-        "minThreshold": 200,
-        "transactions": [
-          {
-            "id": "B2B-TXN-1791882908280",
-            "type": "debit",
-            "amount": 200,
-            "note": "थोक एडमिन सेवा कटौती: वाहन RC टू PDF / PVC स्मार्ट कार्ड",
-            "createdAt": "2026-10-13T09:15:08.280Z"
-          },
-          {
-            "id": "B2B-TXN-1791882908219",
-            "type": "credit",
-            "amount": 1000,
-            "utr": "791882908290",
-            "note": "सुपर एडमिन द्वारा स्वीकृत UTR (791882908290) B2B वॉलेट टॉप-अप",
-            "createdAt": "2026-10-13T09:15:08.219Z"
-          }
-        ]
-      },
-      "retailRates": {
-        "rcDownload": 270,
-        "panCard": 160,
-        "incomeCert": 80,
-        "casteCert": 80,
-        "niwasCert": 80,
-        "drivingLicence": 250,
-        "pvcCard": 70
-      },
-      "rates": {
-        "bwPage": 3,
-        "colorPage": 10,
-        "xerox": 2,
-        "lamination": 20,
-        "photoCopyBothSide": 3,
-        "passportPhoto": 50,
-        "formFeeNormal": 70,
-        "formFeeComplex": 120
-      },
-      "createdAt": "2026-10-13T09:15:07.238Z"
-    }
-  ],
+  "utrRequests": [],
+  "vleKycApplications": [],
+  "wallets": [],
+  "cafes": [],
   "superAdminRates": {
     "rcDownload": 200,
     "panCard": 107,
@@ -986,37 +635,16 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-13T09:04:44.719Z",
+      "lastRun": "2026-10-13T10:04:44.857Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-13T10:04:44.719Z"
+      "nextRun": "2026-10-13T11:04:44.850Z"
     }
   },
   "superAdminAuditLogs": [
-    {
-      "id": "AUDIT-1791882908599",
-      "action": "VLE_KYC_APPROVED",
-      "details": "नया कैफे स्वीकृत: अवध डिजिटल जन सेवा केंद्र (CAFE-103) - लाइसेंस कुंजी: VLE-LIC-2026-उत103-1629",
-      "performedBy": "Super Admin Master",
-      "timestamp": "2026-10-13T09:15:08.599Z"
-    },
-    {
-      "id": "AUDIT-1791882908371",
-      "action": "CAFE_UNFROZEN",
-      "details": "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र (CAFE-101) को अनफ्रीज किया गया।",
-      "performedBy": "Super Admin Master",
-      "timestamp": "2026-10-13T09:15:08.371Z"
-    },
-    {
-      "id": "AUDIT-1791882908346",
-      "action": "CAFE_FROZEN",
-      "details": "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र (CAFE-101) को फ्रीज किया गया।",
-      "performedBy": "Super Admin Master",
-      "timestamp": "2026-10-13T09:15:08.347Z"
-    },
     {
       "id": "AUDIT-1791882905447",
       "action": "VLE_KYC_APPROVED",
@@ -1379,95 +1007,6 @@
     "tool-rc": true
   },
   "orderHistory": [
-    {
-      "id": "ORD-1791882908280-7307",
-      "orderId": "ORD-1791882908280-4971",
-      "cafeId": "CAFE-101",
-      "cafeShopName": "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र",
-      "customerPhone": "9812345678",
-      "customerName": "राहुल वर्मा",
-      "serviceType": "rcDownload",
-      "serviceTitle": "वाहन RC टू PDF / PVC स्मार्ट कार्ड",
-      "docTitle": "वाहन RC (UP32AB1234) - BAJAJ PULSAR 150 DUAL DISC",
-      "refNumber": "UP32AB1234",
-      "retailFee": 270,
-      "wholesaleCost": 200,
-      "margin": 70,
-      "status": "completed",
-      "data": {
-        "regNo": "UP32AB1234",
-        "ownerName": "मनोज कुमार शर्मा",
-        "fatherName": "विकास यादव वर्मा",
-        "makerModel": "BAJAJ PULSAR 150 DUAL DISC",
-        "vehicleClass": "MCWG (Two Wheeler)",
-        "fuelType": "PETROL",
-        "engineCapacity": "149.5 CC",
-        "seatingCapacity": 2,
-        "color": "SPARKLE BLACK",
-        "regDate": "28/04/2021",
-        "fitnessUpto": "28/04/2036",
-        "insuranceUpto": "15/12/2026",
-        "insuranceCompany": "THE NEW INDIA ASSURANCE CO. LTD.",
-        "policyNo": "POL-348333411",
-        "puccUpto": "28/08/2026",
-        "puccNo": "PUCUP32348333",
-        "engineNo": "ENG1234348333",
-        "chassisNo": "MATUPB0348333411",
-        "rtoOffice": "RTO LUCKNOW (UP-32), UTTAR PRADESH",
-        "mvTaxUpto": "LTT (LIFE TIME TAX PAID)",
-        "financedBy": "NO (UNHYPOTHECATED / OWN CASH)",
-        "status": "ACTIVE (VALID / NON-BLACKLISTED)"
-      },
-      "generatedData": {
-        "regNo": "UP32AB1234",
-        "ownerName": "मनोज कुमार शर्मा",
-        "fatherName": "विकास यादव वर्मा",
-        "makerModel": "BAJAJ PULSAR 150 DUAL DISC",
-        "vehicleClass": "MCWG (Two Wheeler)",
-        "fuelType": "PETROL",
-        "engineCapacity": "149.5 CC",
-        "seatingCapacity": 2,
-        "color": "SPARKLE BLACK",
-        "regDate": "28/04/2021",
-        "fitnessUpto": "28/04/2036",
-        "insuranceUpto": "15/12/2026",
-        "insuranceCompany": "THE NEW INDIA ASSURANCE CO. LTD.",
-        "policyNo": "POL-348333411",
-        "puccUpto": "28/08/2026",
-        "puccNo": "PUCUP32348333",
-        "engineNo": "ENG1234348333",
-        "chassisNo": "MATUPB0348333411",
-        "rtoOffice": "RTO LUCKNOW (UP-32), UTTAR PRADESH",
-        "mvTaxUpto": "LTT (LIFE TIME TAX PAID)",
-        "financedBy": "NO (UNHYPOTHECATED / OWN CASH)",
-        "status": "ACTIVE (VALID / NON-BLACKLISTED)"
-      },
-      "vehicleData": {
-        "regNo": "UP32AB1234",
-        "ownerName": "मनोज कुमार शर्मा",
-        "fatherName": "विकास यादव वर्मा",
-        "makerModel": "BAJAJ PULSAR 150 DUAL DISC",
-        "vehicleClass": "MCWG (Two Wheeler)",
-        "fuelType": "PETROL",
-        "engineCapacity": "149.5 CC",
-        "seatingCapacity": 2,
-        "color": "SPARKLE BLACK",
-        "regDate": "28/04/2021",
-        "fitnessUpto": "28/04/2036",
-        "insuranceUpto": "15/12/2026",
-        "insuranceCompany": "THE NEW INDIA ASSURANCE CO. LTD.",
-        "policyNo": "POL-348333411",
-        "puccUpto": "28/08/2026",
-        "puccNo": "PUCUP32348333",
-        "engineNo": "ENG1234348333",
-        "chassisNo": "MATUPB0348333411",
-        "rtoOffice": "RTO LUCKNOW (UP-32), UTTAR PRADESH",
-        "mvTaxUpto": "LTT (LIFE TIME TAX PAID)",
-        "financedBy": "NO (UNHYPOTHECATED / OWN CASH)",
-        "status": "ACTIVE (VALID / NON-BLACKLISTED)"
-      },
-      "createdAt": "2026-10-13T09:15:08.280Z"
-    },
     {
       "id": "ORD-1791882891639-4249",
       "orderId": "ORD-1791882891639-3373",

@@ -9,75 +9,75 @@ export const REKHA_NAV_CATEGORIES = [
   {
     category: '1. मुख्य डैशबोर्ड',
     items: [
-      { id: 'dashboard', label: 'डैशबोर्ड (All Categories)', icon: Home, badge: 'Overview' }
+      { id: 'dashboard', label: 'डैशबोर्ड (सभी सेवाएं)', icon: Home }
     ]
   },
   {
     category: '2. वाहन / RTO सेवाएं',
     items: [
-      { id: 'tool-rc', label: 'वाहन RC टू PDF / PVC', icon: Car, badge: 'RC Card' },
-      { id: 'tool-dl', label: 'ड्राइविंग लाइसेंस (DL) PVC', icon: Award, badge: 'Sarathi' },
-      { id: 'tool-challan', label: 'वाहन ई-चालान जांच एवं रसीद', icon: FileText, badge: 'Challan' }
+      { id: 'tool-rc', label: 'वाहन RC टू PDF / PVC', icon: Car },
+      { id: 'tool-dl', label: 'ड्राइविंग लाइसेंस (DL) PVC', icon: Award },
+      { id: 'tool-challan', label: 'वाहन ई-चालान जांच एवं रसीद', icon: FileText }
     ]
   },
   {
     category: '3. PAN कार्ड सेवाएं',
     items: [
-      { id: 'tool-pan', label: 'इंस्टेंट पैन कार्ड CR-80 PVC', icon: CreditCard, badge: 'CR-80 PVC' },
-      { id: 'tool-epan', label: 'ई-पैन कार्ड डिजिटल डाउनलोड', icon: Download, badge: 'e-PAN' }
+      { id: 'tool-pan', label: 'इंस्टेंट पैन कार्ड CR-80 PVC', icon: CreditCard },
+      { id: 'tool-epan', label: 'ई-पैन कार्ड डिजिटल डाउनलोड', icon: Download }
     ]
   },
   {
     category: '4. आधार कार्ड सेवाएं',
     items: [
-      { id: 'tool-aadhaar', label: 'एडवांस आधार CR-80 PVC कार्ड', icon: ShieldCheck, badge: 'UIDAI PVC' }
+      { id: 'tool-aadhaar', label: 'एडवांस आधार CR-80 PVC कार्ड', icon: ShieldCheck }
     ]
   },
   {
     category: '5. वोटर कार्ड सेवाएं',
     items: [
-      { id: 'tool-voter', label: 'डिजिटल वोटर स्मार्ट कार्ड', icon: Award, badge: 'EPIC Card' }
+      { id: 'tool-voter', label: 'डिजिटल वोटर स्मार्ट कार्ड', icon: Award }
     ]
   },
   {
     category: '6. राशन व आयुष्मान सेवाएं',
     items: [
-      { id: 'tool-ayushman', label: 'आयुष्मान भारत गोल्डन कार्ड', icon: Sparkles, badge: 'PM-JAY' },
-      { id: 'tool-ration', label: 'राशन कार्ड पर्चा / NFSA स्लिप', icon: FileText, badge: 'NFSA' }
+      { id: 'tool-ayushman', label: 'आयुष्मान भारत गोल्डन कार्ड', icon: Sparkles },
+      { id: 'tool-ration', label: 'राशन कार्ड पर्चा / NFSA स्लिप', icon: FileText }
     ]
   },
   {
     category: '7. बिजली बिल व रसीद सेवाएं',
     items: [
-      { id: 'tool-electricity', label: 'बिजली बिल भुगतान रसीद', icon: Zap, badge: 'UPPCL' },
-      { id: 'tool-receipt', label: 'जन सेवा केंद्र बिल रसीद मेकर', icon: FileText, badge: 'Receipt' }
+      { id: 'tool-electricity', label: 'बिजली बिल भुगतान रसीद', icon: Zap },
+      { id: 'tool-receipt', label: 'जन सेवा केंद्र बिल रसीद मेकर', icon: FileText }
     ]
   },
   {
     category: '8. e-District सत्यापन',
     items: [
-      { id: 'tool-edistrict', label: 'e-District आय/जाति/निवास सत्यापन', icon: Award, badge: 'Revenue' }
+      { id: 'tool-edistrict', label: 'e-District सत्यापन प्रमाण पत्र', icon: Award }
     ]
   },
   {
     category: '9. वॉलेट एवं पासबुक',
     items: [
-      { id: 'wallet', label: 'वॉलेट एवं पासबुक (Passbook)', icon: Wallet, badge: 'UPI' }
+      { id: 'wallet', label: 'वॉलेट एवं पासबुक विवरण', icon: Wallet }
     ]
   },
   {
     category: '10. प्रिंट एवं ऑर्डर हिस्ट्री',
     items: [
-      { id: 'orders', label: 'प्रिंट एवं ऑर्डर हिस्ट्री (Free Reprint)', icon: History, badge: 'Free' }
+      { id: 'orders', label: 'प्रिंट एवं ऑर्डर हिस्ट्री (रिप्रिंट)', icon: History }
     ]
   }
 ];
 
 export const OPERATOR_EXCLUSIVE_ITEMS = [
-  { id: 'queue', label: 'लाइव ग्राहक प्रिंट कतार', icon: Printer, badge: 'Queue' },
+  { id: 'queue', label: 'लाइव ग्राहक प्रिंट कतार', icon: Printer },
   { id: 'cashbook', label: 'दैनिक रोकड़ बही (Cashbook)', icon: BookOpen },
   { id: 'udhar', label: 'उधार खाता (Udhar Register)', icon: Users },
-  { id: 'standee', label: 'दुकान QR स्टैन्डी', icon: QrCode },
+  { id: 'standee', label: 'दुकान QR स्टैन्डी पोस्टर', icon: QrCode },
   { id: 'settings', label: 'कैफे सेटिंग्स एवं रेट कार्ड', icon: Settings }
 ];
 
@@ -121,7 +121,7 @@ export default function RekhaSidebar({
         border-r border-slate-200 dark:border-slate-800/80 flex flex-col 
         transition-all duration-300 ease-in-out select-none shadow-sm backdrop-blur-md no-print
         ${isOpen 
-          ? 'w-72 translate-x-0 opacity-100' 
+          ? 'w-76 sm:w-80 translate-x-0 opacity-100' 
           : '-translate-x-full lg:w-0 lg:translate-x-0 lg:overflow-hidden lg:opacity-0 lg:pointer-events-none lg:border-r-0'
         }
       `}>
@@ -195,44 +195,8 @@ export default function RekhaSidebar({
           </div>
         </div>
 
-        {/* Upfront Role Access Box in Sidebar (Visible when in citizen mode) */}
-        {mode === 'customer' && (
-          <div className="mx-3 my-1.5 p-3 rounded-2xl bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white border-2 border-amber-400/50 shadow-md space-y-2">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-black uppercase tracking-wider text-amber-300 flex items-center gap-1">
-                <span>👑</span>
-                <span>प्रवेश द्वार (Dedicated Role Gate)</span>
-              </span>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  if (onOpenShopkeeperLogin) onOpenShopkeeperLogin();
-                  if (window.innerWidth < 1024) onClose();
-                }}
-                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 text-white font-black p-2 rounded-xl text-[11px] flex items-center justify-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
-                title="दुकानदार B2B काउंटर लॉगिन"
-              >
-                <span>🏪 दुकानदार</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (onOpenSuperAdminLogin) onOpenSuperAdminLogin();
-                  if (window.innerWidth < 1024) onClose();
-                }}
-                className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 text-slate-950 font-black p-2 rounded-xl text-[11px] flex items-center justify-center gap-1 shadow-sm transition active:scale-95 cursor-pointer"
-                title="मास्टर सुपर एडमिन लॉगिन"
-              >
-                <span>👑 एडमिन</span>
-              </button>
-            </div>
-          </div>
-        )}
-
         {/* Quick Search */}
-        <div className="px-3 pb-2">
+        <div className="px-3 py-2">
           <div className="relative">
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
             <input
@@ -278,24 +242,14 @@ export default function RekhaSidebar({
                           onSelectTab(item.id);
                           if (window.innerWidth < 1024) onClose();
                         }}
-                        className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer shadow-xs ${
+                        className={`w-full flex items-center justify-start gap-2.5 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer shadow-xs text-left ${
                           isActive 
                             ? 'bg-gradient-to-r from-orange-600 via-amber-600 to-orange-700 text-white font-black shadow-md shadow-orange-500/30 border border-orange-500' 
                             : 'text-slate-950 dark:text-white hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-100/70 dark:hover:bg-slate-800 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-orange-300'
                         }`}
                       >
-                        <div className="flex items-center gap-2.5 truncate">
-                          <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-orange-600 dark:text-orange-400'}`} />
-                          <span className="truncate font-black">{item.label}</span>
-                        </div>
-
-                        {item.badge && (
-                          <span className={`text-[10px] font-black px-2 py-0.5 rounded-md shadow-2xs ${
-                            isActive ? 'bg-black/30 text-white' : 'bg-amber-100 dark:bg-amber-950 text-amber-900 dark:text-amber-200 border border-amber-300 dark:border-amber-700'
-                          }`}>
-                            {item.badge}
-                          </span>
-                        )}
+                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-orange-600 dark:text-orange-400'}`} />
+                        <span className="font-black text-xs sm:text-sm leading-snug">{item.label}</span>
                       </button>
                     );
                   })}
@@ -329,19 +283,19 @@ export default function RekhaSidebar({
                         onSelectTab(item.id);
                         if (window.innerWidth < 1024) onClose();
                       }}
-                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer shadow-xs ${
+                      className={`w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer shadow-xs text-left ${
                         isActive 
                           ? 'bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 text-white font-black shadow-md shadow-indigo-600/30 border border-indigo-500' 
                           : 'text-slate-950 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-indigo-300'
                       }`}
                     >
-                      <div className="flex items-center gap-2.5 truncate">
+                      <div className="flex items-center gap-2.5 min-w-0">
                         <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-indigo-600 dark:text-indigo-400'}`} />
-                        <span className="truncate font-black">{item.label}</span>
+                        <span className="font-black text-xs sm:text-sm leading-snug">{item.label}</span>
                       </div>
 
                       {item.id === 'queue' && pendingPrintsCount > 0 && (
-                        <span className="bg-amber-400 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-full animate-pulse shadow-xs">
+                        <span className="bg-amber-400 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-full animate-pulse shadow-xs shrink-0">
                           {pendingPrintsCount}
                         </span>
                       )}

@@ -151,153 +151,64 @@ export default function RekhaDashboard({
     <div className="space-y-6 sm:space-y-8 w-full max-w-full overflow-x-hidden">
       
       {/* =================================================================== */}
-      {/* 1. TIER-1 COMMERCIAL B2B SAAS HERO BANNER (HIGH CONVERTING & CLEAN) */}
+      {/* 1. COMPACT SLIM TICKER STRIP (REKHA PRINT STYLE — ZERO SCREEN BLOAT) */}
       {/* =================================================================== */}
-      <div className="bg-white/95 dark:bg-[#0c162c]/95 rounded-3xl p-5 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-xl backdrop-blur-md relative overflow-hidden transition-all">
+      <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-emerald-50 dark:bg-slate-900/90 border border-orange-300/80 dark:border-slate-800 rounded-2xl px-3.5 py-2 shadow-xs flex flex-col md:flex-row items-center justify-between gap-2.5">
         
-        {/* Tricolor Ribbon on Top of Card */}
-        <div className="absolute top-0 left-0 right-0 h-1.5 flex z-10">
-          <div className="flex-1 bg-gradient-to-r from-[#f97316] via-[#ea580c] to-[#ff9933]"></div>
-          <div className="flex-1 bg-white border-x border-slate-200/80"></div>
-          <div className="flex-1 bg-gradient-to-r from-[#16a34a] via-[#15803d] to-[#138808]"></div>
+        {/* Left: 1-Line Live Ticker Announcement */}
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <span className="p-1 bg-orange-600 text-white rounded-lg shrink-0 shadow-xs">
+            <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+          </span>
+          <div className="text-xs text-slate-800 dark:text-slate-200 truncate font-semibold">
+            <span className="text-orange-700 dark:text-orange-400 font-black mr-1">📢 लाइव:</span>
+            <span>वाहन RC, एडवांस CR-80 PVC आधार, पैन कार्ड व आय-जाति प्रमाण पत्र — <strong className="text-emerald-700 dark:text-emerald-400">0.2s स्पीड में HD प्रिंट तैयार!</strong> (थोक मार्जिन: ₹15-₹50)</span>
+          </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pt-2">
-          
-          {/* Left: Brand Identity & Value Proposition */}
-          <div className="space-y-3 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-orange-500/15 via-amber-500/15 to-emerald-500/15 dark:from-orange-950/50 dark:to-emerald-950/50 border border-orange-400/40 dark:border-orange-700/60 px-3 py-1 rounded-full text-xs font-black text-orange-700 dark:text-orange-300 shadow-2xs">
-                <Sparkles className="w-3.5 h-3.5 text-orange-500 animate-pulse" />
-                <span>Smart Cafe B2B • डिजिटल सेवा केंद्र पोर्टल</span>
-              </span>
-
-              <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800/80 px-2.5 py-0.5 rounded-full text-[11px] font-black text-emerald-700 dark:text-emerald-300">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-                <span>सर्वर स्थिति: 100% लाइव (110ms)</span>
-              </span>
-            </div>
-
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-snug">
-              {isOperator ? (selectedCafe?.shopName || 'स्मार्ट कैफे B2B ऑपरेटर डेस्क') : '1-क्लिक CR-80 PVC स्मार्ट कार्ड एवं सरकारी सेवाएं'}
-            </h1>
-
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed font-medium">
-              {isOperator ? (
-                <span>
-                  🏪 <strong>VLE संचालक काउंटर:</strong> नीचे दी गई किसी भी श्रेणी से 1-क्लिक में आधिकारिक CR-80 PVC स्मार्ट कार्ड व सरकारी रसीद जनरेट करें। थोक मार्जिन आपके B2B वॉलेट में स्वतः क्रेडिट होगा।
-                </span>
-              ) : (
-                <span>
-                  वाहन RC (Parivahan), एडवांस PVC आधार, NSDL पैन कार्ड, डिजिटल वोटर आईडी व आय-जाति सत्यापन पर्ची — <strong>मात्र 0.2 सेकंड में HD ओरिजिनल कलर्स के साथ प्रिंट तैयार!</strong>
-                </span>
-              )}
-            </p>
-
-            {/* Live Financial & Performance Highlights */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
-              <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 px-2.5 py-1.5 rounded-xl text-center">
-                <span className="text-[10px] uppercase font-black text-slate-400 dark:text-slate-400 block">स्पीड</span>
-                <span className="text-xs font-black text-emerald-600 dark:text-emerald-400 font-mono">⚡ 0.2s इंस्टेंट</span>
-              </div>
-              <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 px-2.5 py-1.5 rounded-xl text-center">
-                <span className="text-[10px] uppercase font-black text-slate-400 dark:text-slate-400 block">थोक बचत</span>
-                <span className="text-xs font-black text-amber-600 dark:text-amber-400 font-mono">💰 ₹15-₹50 मार्जिन</span>
-              </div>
-              <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 px-2.5 py-1.5 rounded-xl text-center">
-                <span className="text-[10px] uppercase font-black text-slate-400 dark:text-slate-400 block">फॉर्मेट</span>
-                <span className="text-xs font-black text-indigo-600 dark:text-indigo-400 font-mono">🖨️ CR-80 PVC</span>
-              </div>
-              <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 px-2.5 py-1.5 rounded-xl text-center">
-                <span className="text-[10px] uppercase font-black text-slate-400 dark:text-slate-400 block">सुरक्षा</span>
-                <span className="text-xs font-black text-orange-600 dark:text-orange-400 font-mono">🔒 24h श्रेडर</span>
-              </div>
-            </div>
-
-            {/* Non-Operator Upfront Action Buttons (High Converting & Sleek) */}
-            {!isOperator && (
-              <div className="flex flex-wrap items-center gap-2.5 pt-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onOpenShopkeeperLogin) onOpenShopkeeperLogin();
-                    else if (onNavigateTab) onNavigateTab('operator');
-                  }}
-                  className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white font-black px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-emerald-700/25 transition cursor-pointer"
-                  title="साइबर कैफे दुकानदार व CSC VLE लॉगिन"
-                >
-                  <span className="text-base leading-none">🏪</span>
-                  <span>दुकानदार B2B लॉगिन ➔</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onOpenSuperAdminLogin) onOpenSuperAdminLogin();
-                  }}
-                  className="bg-gradient-to-r from-amber-500 via-amber-400 to-orange-500 hover:from-amber-400 hover:to-orange-400 active:scale-95 text-slate-950 font-black px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-amber-500/25 transition cursor-pointer"
-                  title="मास्टर सुपर एडमिन कंट्रोल रूम लॉगिन"
-                >
-                  <span className="text-base leading-none">👑</span>
-                  <span>मास्टर एडमिन लॉगिन ➔</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onOpenCustomerProfile) onOpenCustomerProfile();
-                  }}
-                  className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-yellow-300 border border-slate-300 dark:border-slate-700 font-bold px-3.5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer"
-                  title="नागरिक प्रोफ़ाइल व लॉगिन"
-                >
-                  <User className="w-3.5 h-3.5 text-yellow-500" />
-                  <span>नागरिक प्रोफ़ाइल</span>
-                </button>
-              </div>
-            )}
-
-          </div>
-
-          {/* Right: Live Wallet Card & Instant Reprint Strip */}
-          <div className="flex flex-col sm:flex-row lg:flex-col items-stretch gap-3 shrink-0 lg:min-w-[220px]">
-            
-            {/* Live Wallet Pill */}
-            <div className="bg-gradient-to-br from-slate-50 to-orange-50/40 dark:from-slate-800/90 dark:to-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-sm">
-              <div>
-                <span className="text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 block tracking-wider">
-                  {isOperator ? 'संचालक B2B वॉलेट' : 'वॉलेट बैलेंस'}
-                </span>
-                <div className="text-xl sm:text-2xl font-black font-mono text-slate-900 dark:text-white flex items-center gap-0.5 mt-0.5">
-                  <span className="text-amber-500">₹</span>
-                  <span>{displayBalance}</span>
-                </div>
-              </div>
+        {/* Right: Quick Action Controls */}
+        <div className="flex items-center gap-2 shrink-0">
+          {!isOperator ? (
+            <>
+              <button
+                type="button"
+                onClick={() => {
+                  if (onOpenShopkeeperLogin) onOpenShopkeeperLogin();
+                  else if (onNavigateTab) onNavigateTab('operator');
+                }}
+                className="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-xs transition cursor-pointer"
+                title="दुकानदार B2B लॉगिन"
+              >
+                <span>🏪 दुकानदार B2B ➔</span>
+              </button>
 
               <button
                 type="button"
-                onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
-                className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-95 text-white font-black px-3.5 py-2 rounded-xl text-xs shadow-md shadow-orange-500/20 transition cursor-pointer"
+                onClick={() => {
+                  if (onOpenSuperAdminLogin) onOpenSuperAdminLogin();
+                }}
+                className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-xs transition cursor-pointer"
+                title="मास्टर एडमिन लॉगिन"
               >
-                + रिचार्ज
+                <span>👑 एडमिन ➔</span>
               </button>
+            </>
+          ) : (
+            <div className="bg-white/80 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1 flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
+              <span>🏪 {selectedCafe?.shopName || 'B2B काउंटर'}</span>
+              <span className="font-mono font-black text-amber-600">₹{displayBalance}</span>
             </div>
+          )}
 
-            {/* Reprint History Action */}
-            <button
-              type="button"
-              onClick={() => onNavigateTab('orders')}
-              className="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-bold p-3 rounded-2xl text-xs flex items-center justify-between gap-2 transition shadow-sm cursor-pointer"
-              title="निःशुल्क रिप्रिंट हिस्ट्री"
-            >
-              <div className="flex items-center gap-2">
-                <History className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-                <span className="font-black">निःशुल्क रिप्रिंट हिस्ट्री</span>
-              </div>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-400" />
-            </button>
-
-          </div>
-
+          <button
+            type="button"
+            onClick={() => onNavigateTab('orders')}
+            className="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition shadow-2xs cursor-pointer"
+            title="निःशुल्क रिप्रिंट हिस्ट्री"
+          >
+            <History className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span className="hidden sm:inline">रिप्रिंट</span>
+          </button>
         </div>
 
       </div>
