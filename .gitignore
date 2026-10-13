@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Local build artifacts
+client/dist/
+dist/
+build/
+
+# Local databases & uploads
+server/data/*.sqlite
+server/data/*.sqlite-journal
+server/uploads/*
+client/public/uploads/*
+!server/uploads/.gitkeep
+!client/public/uploads/.gitkeep
+
+# Environment & logs
+.env
+.env.local
+*.log
+npm-debug.log*
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Zip packages
+*.zip

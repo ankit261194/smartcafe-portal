@@ -1,0 +1,10 @@
+{
+  "appId": "com.cybercafe.portal",
+  "appName": "Smart Cyber Cafe",
+  "webDir": "dist",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "http",
+    "cleartext": true
+  }
+}

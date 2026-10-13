@@ -1,0 +1,164 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+  body {
+    font-family: 'Plus Jakarta Sans', 'Yantramanav', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  html.dark body {
+    background-color: #060c18;
+    color: #f1f5f9;
+  }
+}
+
+/* ========================================================================== */
+/* HIGH-VISIBILITY PRO CUSTOM SCROLLBARS (TIRANGA PATRIOTIC THEME) */
+/* ========================================================================== */
+html {
+  scrollbar-width: auto;
+  scrollbar-color: #f97316 #f1f5f9;
+}
+
+html.dark {
+  scrollbar-color: #f97316 #070e1b;
+}
+
+/* Webkit (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-left: 1px solid #e2e8f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF671F 0%, #FF9933 50%, #138808 100%);
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ea580c 0%, #f97316 50%, #046A38 100%);
+}
+
+/* Dark Mode Scrollbars */
+html.dark ::-webkit-scrollbar-track {
+  background: #070e1b;
+  border-left: 1px solid #1e293b;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF671F 0%, #FF9933 50%, #138808 100%);
+  border-radius: 8px;
+  border: 2px solid #0b1528;
+  box-shadow: 0 0 8px rgba(255, 103, 31, 0.3);
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #fb923c 0%, #f97316 50%, #16a34a 100%);
+}
+
+/* Sidebar Specific Scrollbar */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #f97316 #0a1329;
+}
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: #0a1329;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: #f97316;
+}
+
+/* Hide scrollbar for compact horizontal category chips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Print Styles */
+@media print {
+  html, body {
+    background: white !important;
+    color: black !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .print-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+  }
+  .cr80-card-print {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    box-shadow: none !important;
+  }
+}
+
+.print-only {
+  display: none;
+}
+
+/* Responsive CR-80 card preview container on mobile */
+@media screen and (max-width: 420px) {
+  .cr80-card-scaler {
+    transform: scale(0.88);
+    transform-origin: center center;
+    margin: -8px -12px;
+  }
+}
+@media screen and (max-width: 360px) {
+  .cr80-card-scaler {
+    transform: scale(0.80);
+    transform-origin: center center;
+    margin: -16px -22px;
+  }
+}
+@media print {
+  .cr80-card-scaler {
+    transform: none !important;
+    margin: 0 !important;
+  }
+}
