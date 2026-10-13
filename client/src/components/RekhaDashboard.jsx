@@ -2,141 +2,123 @@ import React from 'react';
 import { 
   Car, CreditCard, ShieldCheck, Award, FileText, Zap, Sparkles, 
   Printer, ArrowRight, Wallet, History, Users, Clock, CheckCircle2, 
-  ExternalLink, Layers, Crop, ChevronRight, User, Download
+  Layers, Crop, ChevronRight, User, Download
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const DIRECT_SERVICES_TILES = [
-  { id: 'rc', label: 'वाहन RC', sub: 'CR-80 PVC', icon: Car, color: 'from-blue-600 to-indigo-600', wholesale: '₹10', retail: '₹20' },
-  { id: 'pan', label: 'पैन कार्ड', sub: 'CR-80 PVC', icon: CreditCard, color: 'from-teal-600 to-emerald-600', wholesale: '₹10', retail: '₹25' },
-  { id: 'aadhaar', label: 'आधार PVC', sub: 'UIDAI Smart', icon: ShieldCheck, color: 'from-red-600 to-rose-600', wholesale: '₹15', retail: '₹30' },
-  { id: 'voter', label: 'वोटर कार्ड', sub: 'EPIC Smart', icon: Award, color: 'from-amber-600 to-orange-600', wholesale: '₹15', retail: '₹30' },
-  { id: 'ayushman', label: 'आयुष्मान', sub: 'PM-JAY कार्ड', icon: Sparkles, color: 'from-yellow-600 to-amber-600', wholesale: '₹10', retail: '₹25' },
-  { id: 'ration', label: 'राशन पर्ची', sub: 'NFSA स्लिप', icon: FileText, color: 'from-green-600 to-emerald-600', wholesale: '₹10', retail: '₹20' },
-  { id: 'electricity', label: 'बिजली बिल', sub: 'भुगतान रसीद', icon: Zap, color: 'from-cyan-600 to-blue-600', wholesale: '₹5', retail: '₹15' },
-  { id: 'edistrict', label: 'e-District', sub: 'सत्यापन पर्ची', icon: Award, color: 'from-violet-600 to-purple-600', wholesale: '₹15', retail: '₹30' },
-  { id: 'dl', label: 'DL सारथी', sub: 'स्मार्ट कार्ड', icon: Car, color: 'from-indigo-600 to-blue-700', wholesale: '₹15', retail: '₹30' },
-  { id: 'challan', label: 'ई-चालान', sub: 'जांच व रसीद', icon: FileText, color: 'from-rose-600 to-red-600', wholesale: '₹10', retail: '₹20' },
-  { id: 'epan', label: 'e-PAN', sub: 'डाउनलोड', icon: Download, color: 'from-teal-600 to-emerald-700', wholesale: '₹10', retail: '₹20' },
-  { id: 'receipt', label: 'कैफे रसीद', sub: 'टैक्स स्लिप', icon: FileText, color: 'from-purple-600 to-indigo-700', wholesale: '₹5', retail: '₹15' }
+  { id: 'rc', label: { hi: 'वाहन RC', en: 'Vehicle RC' }, sub: { hi: 'CR-80 PVC', en: 'CR-80 PVC' }, icon: Car, color: 'from-blue-600 to-indigo-600', wholesale: '₹10', retail: '₹20' },
+  { id: 'pan', label: { hi: 'पैन कार्ड', en: 'PAN Card' }, sub: { hi: 'CR-80 PVC', en: 'CR-80 PVC' }, icon: CreditCard, color: 'from-teal-600 to-emerald-600', wholesale: '₹10', retail: '₹25' },
+  { id: 'aadhaar', label: { hi: 'आधार PVC', en: 'Aadhaar PVC' }, sub: { hi: 'UIDAI Smart', en: 'UIDAI Smart' }, icon: ShieldCheck, color: 'from-red-600 to-rose-600', wholesale: '₹15', retail: '₹30' },
+  { id: 'voter', label: { hi: 'वोटर कार्ड', en: 'Voter ID' }, sub: { hi: 'EPIC Smart', en: 'EPIC Smart' }, icon: Award, color: 'from-amber-600 to-orange-600', wholesale: '₹15', retail: '₹30' },
+  { id: 'ayushman', label: { hi: 'आयुष्मान', en: 'Ayushman' }, sub: { hi: 'PM-JAY कार्ड', en: 'PM-JAY Card' }, icon: Sparkles, color: 'from-yellow-600 to-amber-600', wholesale: '₹10', retail: '₹25' },
+  { id: 'ration', label: { hi: 'राशन पर्ची', en: 'Ration Slip' }, sub: { hi: 'NFSA स्लिप', en: 'NFSA Slip' }, icon: FileText, color: 'from-green-600 to-emerald-600', wholesale: '₹10', retail: '₹20' },
+  { id: 'electricity', label: { hi: 'बिजली बिल', en: 'Electricity Bill' }, sub: { hi: 'भुगतान रसीद', en: 'Payment Slip' }, icon: Zap, color: 'from-cyan-600 to-blue-600', wholesale: '₹5', retail: '₹15' },
+  { id: 'edistrict', label: { hi: 'e-District', en: 'e-District' }, sub: { hi: 'सत्यापन पर्ची', en: 'Verification Slip' }, icon: Award, color: 'from-violet-600 to-purple-600', wholesale: '₹15', retail: '₹30' },
+  { id: 'dl', label: { hi: 'DL सारथी', en: 'DL Sarathi' }, sub: { hi: 'स्मार्ट कार्ड', en: 'Smart Card' }, icon: Car, color: 'from-indigo-600 to-blue-700', wholesale: '₹15', retail: '₹30' },
+  { id: 'challan', label: { hi: 'ई-चालान', en: 'e-Challan' }, sub: { hi: 'जांच व रसीद', en: 'Check & Slip' }, icon: FileText, color: 'from-rose-600 to-red-600', wholesale: '₹10', retail: '₹20' },
+  { id: 'epan', label: { hi: 'e-PAN', en: 'e-PAN' }, sub: { hi: 'डाउनलोड', en: 'Download' }, icon: Download, color: 'from-teal-600 to-emerald-700', wholesale: '₹10', retail: '₹20' },
+  { id: 'receipt', label: { hi: 'कैफे रसीद', en: 'Cafe Receipt' }, sub: { hi: 'टैक्स स्लिप', en: 'Tax Slip' }, icon: FileText, color: 'from-purple-600 to-indigo-700', wholesale: '₹5', retail: '₹15' }
 ];
 
 export const REKHA_CATEGORIES_CONFIG = [
   {
     id: 'vehicle',
-    title: 'वाहन व RTO सेवाएं',
-    englishTitle: 'Vehicle & RTO Smart Services',
+    title: { hi: 'वाहन व RTO सेवाएं', en: 'Vehicle & RTO Services' },
+    desc: { hi: 'RC, ड्राइविंग लाइसेंस एवं ई-चालान रसीद सेवा', en: 'Parivahan RC, Driving Licence & e-Challan Receipts' },
+    toolsCount: 3,
     icon: Car,
     color: 'from-blue-600 via-indigo-600 to-blue-700',
     lightBg: 'bg-blue-50/70 dark:bg-blue-950/30',
     borderColor: 'border-blue-200 dark:border-blue-900/60',
     accentText: 'text-blue-600 dark:text-blue-400',
-    wholesaleBadge: 'थोक: ₹10 - ₹200',
-    retailBadge: 'खुदरा: ₹20 - ₹250',
-    defaultToolId: 'rc',
-    services: [
-      { id: 'rc', label: 'RC स्मार्ट कार्ड (CR-80)', desc: 'Parivahan RC to PVC / PDF' },
-      { id: 'dl', label: 'DL स्मार्ट कार्ड (Sarathi)', desc: 'Driving Licence CR-80 PVC' },
-      { id: 'challan', label: 'ई-चालान जांच एवं रसीद', desc: 'MoRTH Official Challan Slip' }
-    ]
+    wholesaleBadge: { hi: 'थोक: ₹10 - ₹200', en: 'Wholesale: ₹10 - ₹200' },
+    retailBadge: { hi: 'खुदरा: ₹20 - ₹250', en: 'Retail: ₹20 - ₹250' },
+    defaultToolId: 'rc'
   },
   {
     id: 'pan',
-    title: 'पैन कार्ड सेवाएं',
-    englishTitle: 'PAN Card PVC & Digital Suite',
+    title: { hi: 'पैन कार्ड सेवाएं', en: 'PAN Card Services' },
+    desc: { hi: 'CR-80 PVC पैन कार्ड एवं ई-पैन डिजिटल डाउनलोड', en: 'CR-80 PVC PAN Card & e-PAN Digital Download' },
+    toolsCount: 2,
     icon: CreditCard,
     color: 'from-teal-600 via-emerald-600 to-teal-700',
     lightBg: 'bg-teal-50/70 dark:bg-teal-950/30',
     borderColor: 'border-teal-200 dark:border-teal-900/60',
     accentText: 'text-teal-600 dark:text-teal-400',
-    wholesaleBadge: 'थोक: ₹10 - ₹15',
-    retailBadge: 'खुदरा: ₹25 - ₹30',
-    defaultToolId: 'pan',
-    services: [
-      { id: 'pan', label: 'CR-80 PVC पैन कार्ड', desc: 'NSDL / UTI Verified Layout' },
-      { id: 'epan', label: 'ई-पैन कार्ड डिजिटल डाउनलोड', desc: 'Instant e-PAN Letter Slip' }
-    ]
+    wholesaleBadge: { hi: 'थोक: ₹10 - ₹15', en: 'Wholesale: ₹10 - ₹15' },
+    retailBadge: { hi: 'खुदरा: ₹25 - ₹30', en: 'Retail: ₹25 - ₹30' },
+    defaultToolId: 'pan'
   },
   {
     id: 'aadhaar',
-    title: 'आधार कार्ड सेवाएं',
-    englishTitle: 'Aadhaar Smart Card Suite',
+    title: { hi: 'आधार कार्ड सेवाएं', en: 'Aadhaar Card Services' },
+    desc: { hi: 'एडवांस CR-80 PVC आधार कार्ड व QR लेआउट', en: 'Advance CR-80 PVC Aadhaar Card with QR' },
+    toolsCount: 1,
     icon: ShieldCheck,
     color: 'from-rose-600 via-red-600 to-rose-700',
     lightBg: 'bg-rose-50/70 dark:bg-rose-950/30',
     borderColor: 'border-rose-200 dark:border-rose-900/60',
     accentText: 'text-rose-600 dark:text-rose-400',
-    wholesaleBadge: 'थोक: ₹15',
-    retailBadge: 'खुदरा: ₹30',
-    defaultToolId: 'aadhaar',
-    services: [
-      { id: 'aadhaar', label: 'एडवांस CR-80 PVC आधार कार्ड', desc: 'UIDAI ISO Dimensions with QR' }
-    ]
+    wholesaleBadge: { hi: 'थोक: ₹15', en: 'Wholesale: ₹15' },
+    retailBadge: { hi: 'खुदरा: ₹30', en: 'Retail: ₹30' },
+    defaultToolId: 'aadhaar'
   },
   {
     id: 'voter',
-    title: 'वोटर कार्ड सेवाएं',
-    englishTitle: 'Voter ID EPIC Smart Card Suite',
+    title: { hi: 'वोटर कार्ड सेवाएं', en: 'Voter ID Services' },
+    desc: { hi: 'डिजिटल वोटर स्मार्ट कार्ड (EPIC लेआउट)', en: 'Digital Voter Smart Card (EPIC Layout)' },
+    toolsCount: 1,
     icon: Award,
     color: 'from-amber-600 via-orange-600 to-amber-700',
     lightBg: 'bg-amber-50/70 dark:bg-amber-950/30',
     borderColor: 'border-amber-200 dark:border-amber-900/60',
     accentText: 'text-amber-600 dark:text-amber-400',
-    wholesaleBadge: 'थोक: ₹15',
-    retailBadge: 'खुदरा: ₹30',
-    defaultToolId: 'voter',
-    services: [
-      { id: 'voter', label: 'डिजिटल वोटर स्मार्ट कार्ड', desc: 'Election Commission EPIC Layout' }
-    ]
+    wholesaleBadge: { hi: 'थोक: ₹15', en: 'Wholesale: ₹15' },
+    retailBadge: { hi: 'खुदरा: ₹30', en: 'Retail: ₹30' },
+    defaultToolId: 'voter'
   },
   {
     id: 'welfare',
-    title: 'राशन व आयुष्मान सेवाएं',
-    englishTitle: 'Food & Health Welfare Suite',
+    title: { hi: 'राशन व आयुष्मान सेवाएं', en: 'Food & Health Welfare' },
+    desc: { hi: 'PM-JAY गोल्डन कार्ड व NFSA राशन पर्ची', en: 'PM-JAY Golden Card & NFSA Ration Slips' },
+    toolsCount: 2,
     icon: Sparkles,
     color: 'from-emerald-600 via-green-600 to-emerald-700',
     lightBg: 'bg-emerald-50/70 dark:bg-emerald-950/30',
     borderColor: 'border-emerald-200 dark:border-emerald-900/60',
     accentText: 'text-emerald-600 dark:text-emerald-400',
-    wholesaleBadge: 'थोक: ₹10 - ₹15',
-    retailBadge: 'खुदरा: ₹25 - ₹30',
-    defaultToolId: 'ayushman',
-    services: [
-      { id: 'ayushman', label: 'PM-JAY गोल्डन कार्ड', desc: '₹5 लाख मुफ़्त उपचार गारंटी कार्ड' },
-      { id: 'ration', label: 'NFSA राशन पर्ची', desc: 'कोटेदार वितरण पात्रता पर्चा' }
-    ]
+    wholesaleBadge: { hi: 'थोक: ₹10 - ₹15', en: 'Wholesale: ₹10 - ₹15' },
+    retailBadge: { hi: 'खुदरा: ₹25 - ₹30', en: 'Retail: ₹25 - ₹30' },
+    defaultToolId: 'ayushman'
   },
   {
     id: 'utility',
-    title: 'बिल व रसीद सेवाएं',
-    englishTitle: 'Discom Electricity & Cash Receipts',
+    title: { hi: 'बिल व रसीद सेवाएं', en: 'Electricity & Receipts' },
+    desc: { hi: 'बिजली बिल भुगतान रसीद व काउंटर कैश स्लिप', en: 'Electricity Bill Receipt & Counter Cash Slips' },
+    toolsCount: 2,
     icon: Zap,
     color: 'from-cyan-600 via-blue-600 to-cyan-700',
     lightBg: 'bg-cyan-50/70 dark:bg-cyan-950/30',
     borderColor: 'border-cyan-200 dark:border-cyan-900/60',
     accentText: 'text-cyan-600 dark:text-cyan-400',
-    wholesaleBadge: 'थोक: ₹5 - ₹10',
-    retailBadge: 'खुदरा: ₹15 - ₹20',
-    defaultToolId: 'electricity',
-    services: [
-      { id: 'electricity', label: 'बिजली बिल भुगतान रसीद', desc: 'UPPCL / State Discom Consumer Bill' },
-      { id: 'receipt', label: 'साइबर कैफे बिल / कैश रसीद', desc: 'Instant Official Counter Tax Slip' }
-    ]
+    wholesaleBadge: { hi: 'थोक: ₹5 - ₹10', en: 'Wholesale: ₹5 - ₹10' },
+    retailBadge: { hi: 'खुदरा: ₹15 - ₹20', en: 'Retail: ₹15 - ₹20' },
+    defaultToolId: 'electricity'
   },
   {
     id: 'edistrict',
-    title: 'e-District सेवाएं',
-    englishTitle: 'Revenue Council e-District Suite',
+    title: { hi: 'e-District सेवाएं', en: 'e-District Verification' },
+    desc: { hi: 'आय/जाति/निवास डिजिटल सत्यापन प्रमाण पत्र', en: 'Income/Caste/Domicile Digital Verification Slips' },
+    toolsCount: 1,
     icon: FileText,
     color: 'from-violet-600 via-purple-600 to-violet-700',
     lightBg: 'bg-violet-50/70 dark:bg-violet-950/30',
     borderColor: 'border-violet-200 dark:border-violet-900/60',
     accentText: 'text-violet-600 dark:text-violet-400',
-    wholesaleBadge: 'थोक: ₹15',
-    retailBadge: 'खुदरा: ₹30',
-    defaultToolId: 'edistrict',
-    services: [
-      { id: 'edistrict', label: 'आय/जाति/निवास सत्यापन पर्ची', desc: 'तहसीलदार डिजिटल सत्यापन प्रमाण पत्र' }
-    ]
+    wholesaleBadge: { hi: 'थोक: ₹15', en: 'Wholesale: ₹15' },
+    retailBadge: { hi: 'खुदरा: ₹30', en: 'Retail: ₹30' },
+    defaultToolId: 'edistrict'
   }
 ];
 
@@ -160,13 +142,14 @@ export default function RekhaDashboard({
   toolStatus = {},
   theme = 'light'
 }) {
+  const { language, t, localize } = useLanguage();
   const displayBalance = isOperator ? sanchalakB2bBalance : walletBalance;
 
   return (
     <div className="space-y-6 sm:space-y-8 w-full max-w-full overflow-x-hidden">
       
       {/* =================================================================== */}
-      {/* 1. COMPACT SLIM TICKER STRIP (REKHA PRINT STYLE — ZERO SCREEN BLOAT) */}
+      {/* 1. COMPACT SLIM TICKER STRIP (PURE SINGLE LANGUAGE) */}
       {/* =================================================================== */}
       <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-emerald-50 dark:bg-slate-900/90 border border-orange-300/80 dark:border-slate-800 rounded-2xl px-3.5 py-2 shadow-xs flex flex-col md:flex-row items-center justify-between gap-2.5">
         
@@ -176,8 +159,15 @@ export default function RekhaDashboard({
             <Sparkles className="w-3.5 h-3.5 animate-pulse" />
           </span>
           <div className="text-xs text-slate-800 dark:text-slate-200 truncate font-semibold">
-            <span className="text-orange-700 dark:text-orange-400 font-black mr-1">📢 लाइव:</span>
-            <span>वाहन RC, एडवांस CR-80 PVC आधार, पैन कार्ड व आय-जाति प्रमाण पत्र — <strong className="text-emerald-700 dark:text-emerald-400">0.2s स्पीड में HD प्रिंट तैयार!</strong> (थोक मार्जिन: ₹15-₹50)</span>
+            <span className="text-orange-700 dark:text-orange-400 font-black mr-1">
+              {language === 'hi' ? '📢 लाइव:' : '📢 Live:'}
+            </span>
+            <span>
+              {language === 'hi' 
+                ? 'वाहन RC, एडवांस CR-80 PVC आधार, पैन कार्ड व आय-जाति प्रमाण पत्र — HD प्रिंट तैयार! (थोक मार्जिन: ₹15-₹50)'
+                : 'Vehicle RC, Advance CR-80 PVC Aadhaar, PAN Card & e-District Certificates — HD Prints Ready! (Wholesale Margin: ₹15-₹50)'
+              }
+            </span>
           </div>
         </div>
 
@@ -192,9 +182,9 @@ export default function RekhaDashboard({
                   else if (onNavigateTab) onNavigateTab('operator');
                 }}
                 className="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-xs transition cursor-pointer"
-                title="दुकानदार B2B लॉगिन"
+                title={language === 'hi' ? 'दुकानदार B2B लॉगिन' : 'Shopkeeper B2B Login'}
               >
-                <span>🏪 दुकानदार B2B ➔</span>
+                <span>{language === 'hi' ? '🏪 दुकानदार B2B ➔' : '🏪 Shopkeeper B2B ➔'}</span>
               </button>
 
               <button
@@ -203,14 +193,14 @@ export default function RekhaDashboard({
                   if (onOpenSuperAdminLogin) onOpenSuperAdminLogin();
                 }}
                 className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-xs transition cursor-pointer"
-                title="मास्टर एडमिन लॉगिन"
+                title={language === 'hi' ? 'मास्टर एडमिन लॉगिन' : 'Master Admin Login'}
               >
-                <span>👑 एडमिन ➔</span>
+                <span>{language === 'hi' ? '👑 एडमिन ➔' : '👑 Admin ➔'}</span>
               </button>
             </>
           ) : (
             <div className="bg-white/80 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1 flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
-              <span>🏪 {selectedCafe?.shopName || 'B2B काउंटर'}</span>
+              <span>🏪 {selectedCafe?.shopName || (language === 'hi' ? 'B2B काउंटर' : 'B2B Counter')}</span>
               <span className="font-mono font-black text-amber-600">₹{displayBalance}</span>
             </div>
           )}
@@ -219,10 +209,10 @@ export default function RekhaDashboard({
             type="button"
             onClick={() => onNavigateTab('orders')}
             className="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition shadow-2xs cursor-pointer"
-            title="निःशुल्क रिप्रिंट हिस्ट्री"
+            title={language === 'hi' ? 'निःशुल्क रिप्रिंट हिस्ट्री' : 'Free Reprint History'}
           >
             <History className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span className="hidden sm:inline">रिप्रिंट</span>
+            <span className="hidden sm:inline">{t('reprint')}</span>
           </button>
         </div>
 
@@ -236,39 +226,42 @@ export default function RekhaDashboard({
           <div>
             <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" />
-              <span>त्वरित 1-क्लिक सेवाएं (Quick Direct Services)</span>
+              <span>{t('instant_tools_heading')}</span>
             </h2>
             <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              मोबाइल व डेस्कटॉप पर सीधे 1-क्लिक में आधिकारिक कार्ड व PDF तुरंत तैयार करें।
+              {t('instant_tools_sub')}
             </p>
           </div>
         </div>
 
-        {/* 3 Columns on Mobile (<640px), 4 on sm, 6 on md+ */}
+        {/* Responsive Grid: 3 Columns on Mobile (<640px), 4 on sm, 6 on md+ */}
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3 w-full max-w-full">
-          {DIRECT_SERVICES_TILES.map((t) => {
-            const Icon = t.icon;
+          {DIRECT_SERVICES_TILES.map((tItem) => {
+            const Icon = tItem.icon;
+            const labelStr = localize(tItem.label);
+            const subStr = localize(tItem.sub);
+
             return (
               <button
-                key={t.id}
+                key={tItem.id}
                 type="button"
-                onClick={() => onSelectTool(t.id)}
+                onClick={() => onSelectTool(tItem.id)}
                 className="group bg-white dark:bg-[#0c162c] rounded-2xl p-2 sm:p-3.5 border border-slate-200 dark:border-slate-800 hover:border-orange-500 dark:hover:border-orange-500 shadow-2xs hover:shadow-md transition-all flex flex-col items-center justify-between text-center relative overflow-hidden active:scale-95 cursor-pointer"
               >
                 <span className="self-end text-[9px] sm:text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-300/40 px-1 sm:px-1.5 py-0.2 rounded-md">
-                  {isOperator ? t.wholesale : t.retail}
+                  {isOperator ? tItem.wholesale : tItem.retail}
                 </span>
 
-                <div className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr ${t.color} text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition my-1 shrink-0`}>
+                <div className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr ${tItem.color} text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition my-1 shrink-0`}>
                   <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
 
                 <div className="w-full">
                   <span className="text-[11px] sm:text-xs font-black text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition block truncate leading-tight">
-                    {t.label}
+                    {labelStr}
                   </span>
                   <span className="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 block truncate font-medium mt-0.5">
-                    {t.sub}
+                    {subStr}
                   </span>
                 </div>
               </button>
@@ -278,91 +271,65 @@ export default function RekhaDashboard({
       </div>
 
       {/* =================================================================== */}
-      {/* 3. REKHA PRINT STYLE CATEGORY BOXES GRID (2 COLS ON MOBILE, 4 ON DESKTOP) */}
+      {/* 3. CLEAN CATEGORY BOXES GRID (2 COLS ON MOBILE, 4 ON DESKTOP - NO SUB-SERVICE PILL CLUTTER) */}
       {/* =================================================================== */}
       <div className="space-y-3 sm:space-y-4">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" />
-              <span>विस्तृत सेवा श्रेणियां (Category Suites)</span>
+              <span>{t('category_suites_heading')}</span>
             </h2>
             <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              श्रेणी चुनें — सभी संबंधित टूल्स व विकल्पों के साथ पूर्ण पोर्टल खुलेगा।
+              {t('category_suites_sub')}
             </p>
           </div>
         </div>
 
-        {/* 2 Columns on Mobile, 2 on sm, 3 on lg, 4 on xl */}
+        {/* Clean Responsive Category Grid: 2 Columns on Mobile, 2 on sm, 3 on lg, 4 on xl */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5 w-full max-w-full">
           {REKHA_CATEGORIES_CONFIG.map((cat) => {
             const Icon = cat.icon;
+            const titleStr = localize(cat.title);
+            const descStr = localize(cat.desc);
+            const badgeStr = isOperator ? localize(cat.wholesaleBadge) : localize(cat.retailBadge);
 
             return (
               <div
                 key={cat.id}
-                className={`bg-white dark:bg-[#0c162c] rounded-2xl sm:rounded-3xl p-3 sm:p-5 border ${cat.borderColor} hover:border-orange-500 dark:hover:border-orange-500 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group relative overflow-hidden`}
+                onClick={() => onSelectTool(cat.defaultToolId)}
+                className={`bg-white dark:bg-[#0c162c] rounded-2xl sm:rounded-3xl p-3 sm:p-5 border ${cat.borderColor} hover:border-orange-500 dark:hover:border-orange-500 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group relative overflow-hidden cursor-pointer`}
               >
                 {/* Top Header of Category Box */}
-                <div className="space-y-2 sm:space-y-3.5">
-                  
+                <div className="space-y-2 sm:space-y-3">
                   <div className="flex items-start justify-between gap-2">
                     <div className={`w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center shadow-md shadow-slate-900/10 group-hover:scale-105 transition shrink-0`}>
                       <Icon className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
 
-                    <div className="flex flex-col items-end gap-1">
-                      <span className="text-[9px] sm:text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-300/40 px-1.5 sm:px-2 py-0.5 rounded-md truncate max-w-[90px] sm:max-w-none text-right">
-                        {isOperator ? cat.wholesaleBadge : cat.retailBadge}
-                      </span>
-                    </div>
+                    <span className="text-[9px] sm:text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-300/40 px-1.5 sm:px-2 py-0.5 rounded-md truncate max-w-[95px] sm:max-w-none text-right">
+                      {badgeStr}
+                    </span>
                   </div>
 
                   <div>
                     <h3 className="font-black text-slate-900 dark:text-white text-xs sm:text-base group-hover:text-orange-600 dark:group-hover:text-orange-400 transition leading-snug truncate">
-                      {cat.title}
+                      {titleStr}
                     </h3>
-                    <p className="hidden xs:block text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 font-medium leading-relaxed truncate">
-                      {cat.englishTitle}
+                    <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-relaxed line-clamp-2">
+                      {descStr}
                     </p>
                   </div>
-
-                  {/* Interactive Sub-service Pills */}
-                  <div className="space-y-1 pt-0.5">
-                    <span className="text-[9px] sm:text-[10px] uppercase font-black tracking-wider text-slate-400 dark:text-slate-500 block">
-                      टूल्स:
-                    </span>
-                    <div className="flex flex-col sm:flex-row flex-wrap gap-1 sm:gap-1.5">
-                      {cat.services.map((srv) => (
-                        <button
-                          key={srv.id}
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onSelectTool(srv.id);
-                          }}
-                          className="bg-slate-100 hover:bg-orange-50 dark:bg-slate-800/80 dark:hover:bg-slate-700/80 hover:border-orange-400 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:text-orange-600 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg sm:rounded-xl text-[10px] sm:text-xs font-bold transition flex items-center justify-between sm:justify-start gap-1 cursor-pointer truncate"
-                          title={srv.desc}
-                        >
-                          <span className="truncate">{srv.label}</span>
-                          <ChevronRight className="w-2.5 h-2.5 sm:w-3 sm:h-3 opacity-60 shrink-0" />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
                 </div>
 
-                {/* Bottom 1-Click Launch Button */}
-                <div className="mt-3 sm:mt-5 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800">
-                  <button
-                    type="button"
-                    onClick={() => onSelectTool(cat.defaultToolId)}
-                    className="w-full bg-slate-50 group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-amber-500 group-hover:text-white text-slate-700 dark:bg-slate-800/60 dark:text-slate-200 font-black py-1.5 sm:py-2.5 px-2 sm:px-3 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs flex items-center justify-between transition cursor-pointer shadow-2xs group-hover:shadow-md"
+                {/* Bottom 1-Click Launch Action (Clean, un-cluttered card footer) */}
+                <div className="mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800">
+                  <div
+                    className="w-full bg-slate-50 group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-amber-500 group-hover:text-white text-slate-700 dark:bg-slate-800/60 dark:text-slate-200 font-black py-1.5 sm:py-2 px-2 sm:px-3 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs flex items-center justify-between transition shadow-2xs group-hover:shadow-md"
                   >
-                    <span>⚡ शुरू करें</span>
+                    <span>{t('launch_service')}</span>
                     <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
-                  </button>
+                  </div>
                 </div>
 
               </div>
@@ -372,7 +339,7 @@ export default function RekhaDashboard({
       </div>
 
       {/* =================================================================== */}
-      {/* 3. RECENT ORDERS & FREE REPRINT STRIP */}
+      {/* 4. RECENT ORDERS & FREE REPRINT STRIP */}
       {/* =================================================================== */}
       <div className="bg-white dark:bg-[#0c162c] rounded-3xl p-5 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -382,10 +349,10 @@ export default function RekhaDashboard({
             </span>
             <div>
               <h3 className="font-black text-slate-900 dark:text-white text-base">
-                हालिया प्रिंट एवं दस्तावेज़ (Recent Print History)
+                {t('recent_orders_title')}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                पहले जनरेट किए गए सभी कार्ड व PDF कभी भी <strong className="text-emerald-600 dark:text-emerald-400">1-क्लिक में निःशुल्क रिप्रिंट</strong> करें।
+                {t('recent_orders_sub')}
               </p>
             </div>
           </div>
@@ -395,14 +362,14 @@ export default function RekhaDashboard({
             onClick={() => onNavigateTab('orders')}
             className="text-xs font-bold text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-1 cursor-pointer"
           >
-            <span>सभी ऑर्डर्स देखें ➔</span>
+            <span>{t('view_all_history')} ➔</span>
           </button>
         </div>
 
         {orderHistory.length === 0 ? (
           <div className="py-6 text-center text-slate-400 text-xs space-y-1.5">
             <Clock className="w-6 h-6 mx-auto text-slate-300 dark:text-slate-600" />
-            <p>वर्तमान में कोई हालिया प्रिंट नहीं है। ऊपर दी गई किसी भी श्रेणी से कार्ड जनरेट करें।</p>
+            <p>{t('no_orders_yet')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -413,10 +380,10 @@ export default function RekhaDashboard({
               >
                 <div className="space-y-0.5 truncate">
                   <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono block">
-                    {new Date(item.createdAt).toLocaleDateString('hi-IN')}
+                    {new Date(item.createdAt).toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-US')}
                   </span>
                   <strong className="text-xs text-slate-900 dark:text-white font-bold block truncate">
-                    {item.docTitle || item.serviceTitle || 'डिजिटल सेवा'}
+                    {item.docTitle || item.serviceTitle || (language === 'hi' ? 'डिजिटल सेवा' : 'Digital Service')}
                   </strong>
                   <span className="text-xs font-mono font-black text-indigo-700 dark:text-indigo-400 block">
                     {item.refNumber || item.vehicleNumber || '-'}
@@ -429,7 +396,7 @@ export default function RekhaDashboard({
                   className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shrink-0 cursor-pointer shadow-xs"
                 >
                   <Printer className="w-3.5 h-3.5" />
-                  <span>रिप्रिंट</span>
+                  <span>{t('reprint')}</span>
                 </button>
               </div>
             ))}
@@ -438,7 +405,7 @@ export default function RekhaDashboard({
       </div>
 
       {/* =================================================================== */}
-      {/* 4. UTILITY SUITE (Print, Resizer, PDF - 3 COLS ACROSS ALL SCREENS) */}
+      {/* 5. UTILITY SUITE (Print, Resizer, PDF - 3 COLS ACROSS ALL SCREENS) */}
       {/* =================================================================== */}
       <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 w-full max-w-full">
         
@@ -450,13 +417,17 @@ export default function RekhaDashboard({
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/20 text-white flex items-center justify-center mb-2 sm:mb-3 shrink-0">
               <Printer className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">क्विक प्रिंट (Xerox)</h4>
+            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">
+              {language === 'hi' ? 'क्विक प्रिंट' : 'Quick Print'}
+            </h4>
             <p className="hidden sm:block text-xs text-blue-200 mt-1 leading-relaxed">
-              फ़ाइल अपलोड करें, B&W या कलर चुनें और काउंटर से तत्काल प्रिंट निकालें।
+              {language === 'hi' 
+                ? 'फ़ाइल अपलोड करें, B&W या कलर चुनें और तत्काल प्रिंट निकालें।' 
+                : 'Upload files, choose B&W or color, and print instantly.'}
             </p>
           </div>
           <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-2 border-t border-white/20 text-[10px] sm:text-xs font-bold text-yellow-300 flex items-center justify-between">
-            <span>प्रिंट ➔</span>
+            <span>{language === 'hi' ? 'प्रिंट ➔' : 'Print ➔'}</span>
             <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
           </div>
         </div>
@@ -469,13 +440,17 @@ export default function RekhaDashboard({
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/20 text-white flex items-center justify-center mb-2 sm:mb-3 shrink-0">
               <Crop className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">फ़ोटो रिसाइज़र</h4>
+            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">
+              {language === 'hi' ? 'फ़ोटो रिसाइज़र' : 'Photo Resizer'}
+            </h4>
             <p className="hidden sm:block text-xs text-purple-200 mt-1 leading-relaxed">
-              सरकारी फॉर्म हेतु फ़ोटो को 20KB-50KB व सिग्नेचर को 10KB-20KB में बदलें।
+              {language === 'hi' 
+                ? 'सरकारी फॉर्म हेतु फ़ोटो को 20KB-50KB व सिग्नेचर को 10KB-20KB में बदलें।' 
+                : 'Resize photos to 20KB-50KB and signatures to 10KB-20KB for govt forms.'}
             </p>
           </div>
           <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-2 border-t border-white/20 text-[10px] sm:text-xs font-bold text-yellow-300 flex items-center justify-between">
-            <span>रिसाइज़ ➔</span>
+            <span>{language === 'hi' ? 'रिसाइज़ ➔' : 'Resize ➔'}</span>
             <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
           </div>
         </div>
@@ -488,13 +463,17 @@ export default function RekhaDashboard({
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/20 text-white flex items-center justify-center mb-2 sm:mb-3 shrink-0">
               <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">PDF टूल्स</h4>
+            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">
+              {language === 'hi' ? 'PDF टूल्स' : 'PDF Tools'}
+            </h4>
             <p className="hidden sm:block text-xs text-teal-200 mt-1 leading-relaxed">
-              मार्कशीट, आधार व आय प्रमाण पत्र की कई PDF फाइलों को 1-क्लिक में जोड़ें।
+              {language === 'hi' 
+                ? 'मार्कशीट, आधार व प्रमाण पत्र की कई PDF फाइलों को 1-क्लिक में जोड़ें।' 
+                : 'Merge multiple PDF files like marksheets, Aadhaar, and slips in 1 click.'}
             </p>
           </div>
           <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-2 border-t border-white/20 text-[10px] sm:text-xs font-bold text-yellow-300 flex items-center justify-between">
-            <span>PDF ➔</span>
+            <span>{language === 'hi' ? 'PDF ➔' : 'PDF ➔'}</span>
             <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
           </div>
         </div>

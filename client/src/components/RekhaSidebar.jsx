@@ -2,83 +2,114 @@ import React from 'react';
 import { 
   Home, Car, CreditCard, ShieldCheck, Award, FileText, Zap, 
   Wallet, History, Printer, BookOpen, Users, QrCode, Settings, 
-  Sparkles, X, Search, Download, Sun, Moon, MoreVertical
+  Sparkles, X, Search, Download, Sun, Moon
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const REKHA_NAV_CATEGORIES = [
   {
-    category: '1. मुख्य डैशबोर्ड',
+    category: {
+      hi: '1. मुख्य डैशबोर्ड',
+      en: '1. Main Dashboard'
+    },
     items: [
-      { id: 'dashboard', label: 'डैशबोर्ड (सभी सेवाएं)', icon: Home }
+      { id: 'dashboard', label: { hi: 'डैशबोर्ड (सभी सेवाएं)', en: 'Dashboard (All Services)' }, icon: Home }
     ]
   },
   {
-    category: '2. वाहन / RTO सेवाएं',
+    category: {
+      hi: '2. वाहन / RTO सेवाएं',
+      en: '2. Vehicle / RTO Services'
+    },
     items: [
-      { id: 'tool-rc', label: 'वाहन RC टू PDF / PVC', icon: Car },
-      { id: 'tool-dl', label: 'ड्राइविंग लाइसेंस (DL) PVC', icon: Award },
-      { id: 'tool-challan', label: 'वाहन ई-चालान जांच एवं रसीद', icon: FileText }
+      { id: 'tool-rc', label: { hi: 'वाहन RC टू PDF / PVC', en: 'Vehicle RC to PDF / PVC' }, icon: Car },
+      { id: 'tool-dl', label: { hi: 'ड्राइविंग लाइसेंस (DL) PVC', en: 'Driving Licence (DL) PVC' }, icon: Award },
+      { id: 'tool-challan', label: { hi: 'वाहन ई-चालान जांच एवं रसीद', en: 'Vehicle e-Challan & Receipt' }, icon: FileText }
     ]
   },
   {
-    category: '3. PAN कार्ड सेवाएं',
+    category: {
+      hi: '3. PAN कार्ड सेवाएं',
+      en: '3. PAN Card Services'
+    },
     items: [
-      { id: 'tool-pan', label: 'इंस्टेंट पैन कार्ड CR-80 PVC', icon: CreditCard },
-      { id: 'tool-epan', label: 'ई-पैन कार्ड डिजिटल डाउनलोड', icon: Download }
+      { id: 'tool-pan', label: { hi: 'इंस्टेंट पैन कार्ड CR-80 PVC', en: 'Instant PAN Card CR-80 PVC' }, icon: CreditCard },
+      { id: 'tool-epan', label: { hi: 'ई-पैन कार्ड डिजिटल डाउनलोड', en: 'e-PAN Card Digital Download' }, icon: Download }
     ]
   },
   {
-    category: '4. आधार कार्ड सेवाएं',
+    category: {
+      hi: '4. आधार कार्ड सेवाएं',
+      en: '4. Aadhaar Card Services'
+    },
     items: [
-      { id: 'tool-aadhaar', label: 'एडवांस आधार CR-80 PVC कार्ड', icon: ShieldCheck }
+      { id: 'tool-aadhaar', label: { hi: 'एडवांस आधार CR-80 PVC कार्ड', en: 'Advance Aadhaar CR-80 PVC' }, icon: ShieldCheck }
     ]
   },
   {
-    category: '5. वोटर कार्ड सेवाएं',
+    category: {
+      hi: '5. वोटर कार्ड सेवाएं',
+      en: '5. Voter Card Services'
+    },
     items: [
-      { id: 'tool-voter', label: 'डिजिटल वोटर स्मार्ट कार्ड', icon: Award }
+      { id: 'tool-voter', label: { hi: 'डिजिटल वोटर स्मार्ट कार्ड', en: 'Digital Voter Smart Card' }, icon: Award }
     ]
   },
   {
-    category: '6. राशन व आयुष्मान सेवाएं',
+    category: {
+      hi: '6. राशन व आयुष्मान सेवाएं',
+      en: '6. Food & Health Welfare'
+    },
     items: [
-      { id: 'tool-ayushman', label: 'आयुष्मान भारत गोल्डन कार्ड', icon: Sparkles },
-      { id: 'tool-ration', label: 'राशन कार्ड पर्चा / NFSA स्लिप', icon: FileText }
+      { id: 'tool-ayushman', label: { hi: 'आयुष्मान भारत गोल्डन कार्ड', en: 'Ayushman Bharat Golden Card' }, icon: Sparkles },
+      { id: 'tool-ration', label: { hi: 'राशन कार्ड पर्चा / NFSA स्लिप', en: 'Ration Card / NFSA Slip' }, icon: FileText }
     ]
   },
   {
-    category: '7. बिजली बिल व रसीद सेवाएं',
+    category: {
+      hi: '7. बिजली बिल व रसीद सेवाएं',
+      en: '7. Electricity & Receipts'
+    },
     items: [
-      { id: 'tool-electricity', label: 'बिजली बिल भुगतान रसीद', icon: Zap },
-      { id: 'tool-receipt', label: 'जन सेवा केंद्र बिल रसीद मेकर', icon: FileText }
+      { id: 'tool-electricity', label: { hi: 'बिजली बिल भुगतान रसीद', en: 'Electricity Bill Receipt' }, icon: Zap },
+      { id: 'tool-receipt', label: { hi: 'जन सेवा केंद्र बिल रसीद', en: 'Cyber Cafe Cash Receipt' }, icon: FileText }
     ]
   },
   {
-    category: '8. e-District सत्यापन',
+    category: {
+      hi: '8. e-District सत्यापन',
+      en: '8. e-District Verification'
+    },
     items: [
-      { id: 'tool-edistrict', label: 'e-District सत्यापन प्रमाण पत्र', icon: Award }
+      { id: 'tool-edistrict', label: { hi: 'e-District सत्यापन प्रमाण पत्र', en: 'e-District Verification Slip' }, icon: Award }
     ]
   },
   {
-    category: '9. वॉलेट एवं पासबुक',
+    category: {
+      hi: '9. वॉलेट एवं पासबुक',
+      en: '9. Wallet & Passbook'
+    },
     items: [
-      { id: 'wallet', label: 'वॉलेट एवं पासबुक विवरण', icon: Wallet }
+      { id: 'wallet', label: { hi: 'वॉलेट एवं पासबुक विवरण', en: 'Wallet & Passbook Details' }, icon: Wallet }
     ]
   },
   {
-    category: '10. प्रिंट एवं ऑर्डर हिस्ट्री',
+    category: {
+      hi: '10. प्रिंट एवं ऑर्डर हिस्ट्री',
+      en: '10. Print & Order History'
+    },
     items: [
-      { id: 'orders', label: 'प्रिंट एवं ऑर्डर हिस्ट्री (रिप्रिंट)', icon: History }
+      { id: 'orders', label: { hi: 'प्रिंट एवं ऑर्डर हिस्ट्री (रीप्रिंट)', en: 'Print & Order History (Reprint)' }, icon: History }
     ]
   }
 ];
 
 export const OPERATOR_EXCLUSIVE_ITEMS = [
-  { id: 'queue', label: 'लाइव ग्राहक प्रिंट कतार', icon: Printer },
-  { id: 'cashbook', label: 'दैनिक रोकड़ बही (Cashbook)', icon: BookOpen },
-  { id: 'udhar', label: 'उधार खाता (Udhar Register)', icon: Users },
-  { id: 'standee', label: 'दुकान QR स्टैन्डी पोस्टर', icon: QrCode },
-  { id: 'settings', label: 'कैफे सेटिंग्स एवं रेट कार्ड', icon: Settings }
+  { id: 'queue', label: { hi: 'लाइव ग्राहक प्रिंट कतार', en: 'Live Customer Print Queue' }, icon: Printer },
+  { id: 'cashbook', label: { hi: 'दैनिक रोकड़ बही', en: 'Daily Cashbook' }, icon: BookOpen },
+  { id: 'udhar', label: { hi: 'उधार खाता', en: 'Udhar Register' }, icon: Users },
+  { id: 'standee', label: { hi: 'दुकान QR स्टैन्डी पोस्टर', en: 'Shop QR Standee Poster' }, icon: QrCode },
+  { id: 'settings', label: { hi: 'कैफे सेटिंग्स एवं रेट कार्ड', en: 'Cafe Settings & Rate Card' }, icon: Settings }
 ];
 
 export default function RekhaSidebar({
@@ -104,6 +135,8 @@ export default function RekhaSidebar({
   disabledTools = [],
   toolStatus = {}
 }) {
+  const { language, t, localize } = useLanguage();
+
   return (
     <>
       {/* Mobile Backdrop Overlay */}
@@ -114,7 +147,7 @@ export default function RekhaSidebar({
         />
       )}
 
-      {/* Sidebar Aside — Modern Clean Rekha Print Style */}
+      {/* Sidebar Aside — Modern Clean Standard Layout */}
       <aside className={`
         fixed lg:sticky top-0 left-0 z-50 h-screen
         bg-white/95 dark:bg-[#0c162c] text-slate-800 dark:text-slate-100 
@@ -133,7 +166,7 @@ export default function RekhaSidebar({
           <div className="flex-1 bg-gradient-to-r from-[#16a34a] to-[#138808]"></div>
         </div>
 
-        {/* Brand Header & Toggle Button (3-Dot / Collapse) */}
+        {/* Brand Header & Clean Close (✕) Button */}
         <div className="p-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-400 to-emerald-600 p-0.5 shadow-md shadow-orange-500/20 shrink-0">
@@ -151,19 +184,20 @@ export default function RekhaSidebar({
                 </span>
               </div>
               <p className="text-[10px] text-orange-600 dark:text-orange-400 font-extrabold leading-tight truncate">
-                {selectedCafe?.shopName || 'स्मार्ट कैफे B2B पोर्टल • डिजिटल भारत'}
+                {selectedCafe?.shopName || t('brand_tagline')}
               </p>
             </div>
           </div>
 
-          {/* 3-Dot / Collapse toggle button */}
+          {/* Clean Standard Close Button (✕) */}
           <button 
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-700 dark:text-slate-200 hover:text-orange-600 dark:hover:text-orange-400 rounded-xl hover:bg-orange-50 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 transition cursor-pointer flex items-center justify-center shrink-0"
-            title="साइड मेन्यू छिपाएं (3-Dots Side Toggle - Hide Sidebar)"
+            className="p-1.5 text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center shrink-0"
+            title={t('close_menu')}
+            aria-label="Close sidebar"
           >
-            <MoreVertical className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -171,11 +205,11 @@ export default function RekhaSidebar({
         <div className="p-3.5 mx-3 my-2 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-amber-500/5 to-orange-500/10 dark:bg-slate-800/60 border border-emerald-300 dark:border-slate-700 shadow-xs">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[10px] font-black uppercase text-slate-700 dark:text-slate-300 tracking-wider">
-              {mode === 'admin' ? 'संचालक B2B वॉलेट' : 'ग्राहक वॉलेट बैलेंस'}
+              {mode === 'admin' ? t('b2b_wallet_title') : t('customer_wallet_title')}
             </span>
             <span className="inline-flex items-center gap-1 text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              लाइव
+              {t('live_badge')}
             </span>
           </div>
 
@@ -190,7 +224,7 @@ export default function RekhaSidebar({
               onClick={mode === 'admin' ? onOpenB2bWallet : onOpenWallet}
               className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-95 text-white text-[11px] font-black px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer"
             >
-              + Add Money
+              {t('add_funds')}
             </button>
           </div>
         </div>
@@ -203,7 +237,7 @@ export default function RekhaSidebar({
               type="text"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="टूल खोजें: RC, PAN, Aadhaar..."
+              placeholder={t('search_tools_sidebar')}
               className="w-full bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:border-orange-500 transition font-bold"
             />
           </div>
@@ -213,12 +247,14 @@ export default function RekhaSidebar({
         <div className="flex-1 overflow-y-auto px-3 py-2 space-y-4 sidebar-scroll">
           
           {REKHA_NAV_CATEGORIES.map((cat, idx) => {
+            const catTitle = localize(cat.category);
             const filteredItems = cat.items.filter(item => {
               const rawToolKey = item.id.replace('tool-', '');
               const isHidden = (disabledTools && (disabledTools.includes(rawToolKey) || disabledTools.includes(item.id))) ||
                 (toolStatus && (toolStatus[rawToolKey] === false || toolStatus[item.id] === false));
               if (isHidden) return false;
-              return !searchTerm || item.label.toLowerCase().includes(searchTerm.toLowerCase());
+              const labelStr = localize(item.label);
+              return !searchTerm || labelStr.toLowerCase().includes(searchTerm.toLowerCase());
             });
 
             if (filteredItems.length === 0) return null;
@@ -226,13 +262,14 @@ export default function RekhaSidebar({
             return (
               <div key={idx} className="space-y-1.5">
                 <div className="px-3 py-1.5 text-xs font-black uppercase tracking-wider text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/50 rounded-xl border-l-4 border-orange-600 flex items-center justify-between shadow-2xs">
-                  <span>{cat.category}</span>
+                  <span>{catTitle}</span>
                 </div>
 
                 <div className="space-y-1">
                   {filteredItems.map((item) => {
                     const isActive = activeTab === item.id;
                     const Icon = item.icon;
+                    const itemLabel = localize(item.label);
 
                     return (
                       <button
@@ -249,7 +286,7 @@ export default function RekhaSidebar({
                         }`}
                       >
                         <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-orange-600 dark:text-orange-400'}`} />
-                        <span className="font-black text-xs sm:text-sm leading-snug">{item.label}</span>
+                        <span className="font-black text-xs sm:text-sm leading-snug">{itemLabel}</span>
                       </button>
                     );
                   })}
@@ -262,7 +299,7 @@ export default function RekhaSidebar({
           {mode === 'admin' && (
             <div className="space-y-1.5 pt-3 border-t-2 border-slate-200 dark:border-slate-800">
               <div className="px-3 py-1.5 text-xs font-black uppercase tracking-wider text-indigo-800 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 rounded-xl border-l-4 border-indigo-600 flex items-center justify-between shadow-2xs">
-                <span>ऑपरेटर कंट्रोल (VLE Counter)</span>
+                <span>{t('cat_operator_ctrl')}</span>
                 <span className="bg-indigo-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">VLE</span>
               </div>
 
@@ -274,6 +311,7 @@ export default function RekhaSidebar({
 
                   const isActive = activeTab === item.id;
                   const Icon = item.icon;
+                  const itemLabel = localize(item.label);
 
                   return (
                     <button
@@ -291,7 +329,7 @@ export default function RekhaSidebar({
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-indigo-600 dark:text-indigo-400'}`} />
-                        <span className="font-black text-xs sm:text-sm leading-snug">{item.label}</span>
+                        <span className="font-black text-xs sm:text-sm leading-snug">{itemLabel}</span>
                       </div>
 
                       {item.id === 'queue' && pendingPrintsCount > 0 && (
@@ -316,17 +354,17 @@ export default function RekhaSidebar({
             type="button"
             onClick={toggleTheme}
             className="w-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-extrabold p-2 rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-2xs"
-            title={theme === 'dark' ? 'दिन मोड में बदलें' : 'रात मोड में बदलें'}
+            title={theme === 'dark' ? t('day_mode_full') : t('night_mode_full')}
           >
             {theme === 'dark' ? (
               <>
                 <Sun className="w-4 h-4 text-amber-400" />
-                <span className="text-amber-300 font-black">☀️ Day Mode (दिन मोड)</span>
+                <span className="text-amber-300 font-black">{t('day_mode_full')}</span>
               </>
             ) : (
               <>
                 <Moon className="w-4 h-4 text-indigo-600" />
-                <span className="text-slate-700 font-black">🌙 Night Mode (रात मोड)</span>
+                <span className="text-slate-700 font-black">{t('night_mode_full')}</span>
               </>
             )}
           </button>
@@ -338,13 +376,13 @@ export default function RekhaSidebar({
               className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-bold p-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
-              <span>नया साइबर कैफ़े जोड़ें (₹299 VLE)</span>
+              <span>{t('register_vle')}</span>
             </button>
           )}
 
           <div className="flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 px-1 font-mono">
             <span>Smart Cafe B2B v2026.5</span>
-            <span className="text-emerald-500 font-bold">● लाइव तैयार</span>
+            <span className="text-emerald-500 font-bold">{t('live_ready')}</span>
           </div>
         </div>
 

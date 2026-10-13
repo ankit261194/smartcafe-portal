@@ -5,6 +5,7 @@ import {
   Car, CreditCard, Landmark, Trash2, AlertCircle, ShieldAlert, Award
 } from 'lucide-react';
 import JanSevaModal, { JAN_SEVA_SERVICES } from './JanSevaModal';
+import { useLanguage } from '../context/LanguageContext';
 
 // =======================================================================
 // TIER 1: CITIZEN / CUSTOMER PUBLIC PORTAL
@@ -23,6 +24,7 @@ export default function CustomerHome({
   cafesCount = 0,
   onOpenKyc 
 }) {
+  const { language, t } = useLanguage();
   const [shredTokenInput, setShredTokenInput] = useState('');
   const [shredStatus, setShredStatus] = useState(null); // { type: 'success' | 'error', message: '' }
   const [isShredding, setIsShredding] = useState(false);
@@ -82,16 +84,18 @@ export default function CustomerHome({
         <div className="relative z-10 max-w-2xl space-y-4 pt-1">
           <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-400/30 px-3.5 py-1.5 rounded-full text-xs font-semibold text-orange-200">
             <Sparkles className="w-4 h-4 text-yellow-400" />
-            <span>डिजिटल भारत • आपका स्मार्ट डिजिटल सेवा केंद्र</span>
+            <span>{t('welcome_banner_tag')}</span>
           </div>
 
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-black tracking-tight leading-tight">
-            {selectedCafe?.shopName || settings?.shopName || 'श्री डिजिटल साइबर कैफे'}
+            {selectedCafe?.shopName || settings?.shopName || (language === 'hi' ? 'श्री डिजिटल साइबर कैफे' : 'Shree Digital Cyber Cafe')}
           </h1>
 
           <p className="text-slate-300 text-xs sm:text-sm md:text-base leading-relaxed">
             {selectedCafe?.address ? `📍 ${selectedCafe.address} • ` : ''}
-            {settings?.tagline || 'सभी ऑनलाइन फॉर्म, प्रिंटिंग, लेमिनेशन, छात्रवृत्ति व सरकारी सेवाएं अब एक क्लिक पर उपलब्ध।'}
+            {settings?.tagline || (language === 'hi' 
+              ? 'सभी ऑनलाइन फॉर्म, प्रिंटिंग, लेमिनेशन, छात्रवृत्ति व सरकारी सेवाएं अब एक क्लिक पर उपलब्ध।' 
+              : 'All online forms, printing, lamination, scholarship, and public services available in 1 click.')}
           </p>
 
           <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -100,7 +104,7 @@ export default function CustomerHome({
               className="bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 active:scale-95 text-white font-black px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-orange-500/30 transition cursor-pointer"
             >
               <Printer className="w-4 h-4" />
-              <span>तुरंत प्रिंट निकालें (Quick Print)</span>
+              <span>{t('quick_print_btn')}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
 
@@ -109,7 +113,7 @@ export default function CustomerHome({
               className="bg-white/10 hover:bg-white/20 active:scale-95 text-white font-semibold px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm border border-white/20 backdrop-blur-md transition flex items-center gap-2 cursor-pointer"
             >
               <FileText className="w-4 h-4" />
-              <span>सरकारी फॉर्म भरवाएं</span>
+              <span>{t('govt_forms_btn')}</span>
             </button>
 
             <button
@@ -117,7 +121,7 @@ export default function CustomerHome({
               className="bg-yellow-400/20 hover:bg-yellow-400/30 text-yellow-300 font-semibold px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl text-xs border border-yellow-400/30 transition flex items-center gap-1.5 cursor-pointer"
             >
               <QrCode className="w-4 h-4" />
-              <span>काउंटर QR कोड</span>
+              <span>{t('counter_qr_btn')}</span>
             </button>
           </div>
         </div>
@@ -139,14 +143,14 @@ export default function CustomerHome({
               <Printer className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-lg group-hover:text-blue-600 dark:group-hover:text-blue-400 transition truncate leading-tight">
-              क्विक प्रिंट व ज़ेरॉक्स
+              {t('card_print_title')}
             </h3>
             <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-              PDF, Word या फ़ोटो अपलोड करें। B&W या Color चुनें और सीधे काउंटर से प्रिंट लें।
+              {t('card_print_desc')}
             </p>
           </div>
           <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-blue-600 dark:text-blue-400">
-            <span>प्रिंट शुरू करें</span>
+            <span>{t('card_print_action')}</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
           </div>
         </div>
@@ -161,14 +165,14 @@ export default function CustomerHome({
               <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-lg group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition truncate leading-tight">
-              सरकारी फॉर्म
+              {t('card_apply_title')}
             </h3>
             <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-              नौकरी, स्कॉलरशिप, आय, जाति, निवास, पैन कार्ड घर से ही अप्लाई करें।
+              {t('card_apply_desc')}
             </p>
           </div>
           <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400">
-            <span>अप्लाई करें</span>
+            <span>{t('card_apply_action')}</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
           </div>
         </div>
@@ -183,14 +187,14 @@ export default function CustomerHome({
               <Search className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-lg group-hover:text-amber-600 dark:group-hover:text-amber-400 transition truncate leading-tight">
-              स्टेटस ट्रैकर
+              {t('card_track_title')}
             </h3>
             <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-              टोकन या मोबाइल नंबर से जांचें कि आपका फॉर्म सबमिट हुआ या नहीं, और रसीद डाउनलोड करें।
+              {t('card_track_desc')}
             </p>
           </div>
           <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-amber-600 dark:text-amber-400">
-            <span>स्टेटस देखें</span>
+            <span>{t('card_track_action')}</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
           </div>
         </div>
@@ -205,14 +209,16 @@ export default function CustomerHome({
               <Bell className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-lg group-hover:text-purple-600 dark:group-hover:text-purple-400 transition truncate leading-tight">
-              नौकरियां व अलर्ट
+              {language === 'hi' ? 'नौकरियां व अलर्ट' : 'Jobs & Bulletins'}
             </h3>
             <p className="hidden sm:block text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
-              लेटेस्ट सरकारी नौकरियों, प्रवेश पत्रों व योजनाओं की अंतिम तिथियां और विवरण।
+              {language === 'hi' 
+                ? 'लेटेस्ट सरकारी नौकरियों, प्रवेश पत्रों व योजनाओं की अंतिम तिथियां और विवरण।' 
+                : 'Latest government job notifications, admit cards, and schemes.'}
             </p>
           </div>
           <div className="mt-2.5 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-purple-600 dark:text-purple-400">
-            <span>अलर्ट देखें</span>
+            <span>{language === 'hi' ? 'अलर्ट देखें' : 'View Alerts'}</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
           </div>
         </div>
@@ -225,10 +231,12 @@ export default function CustomerHome({
           <div>
             <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" />
-              <span>लोकप्रिय डिजिटल सेवाएं (Popular Direct Services)</span>
+              <span>{language === 'hi' ? 'लोकप्रिय डिजिटल सेवाएं' : 'Popular Digital Services'}</span>
             </h2>
             <p className="text-xs text-slate-500 mt-0.5">
-              1-क्लिक वाहन RC डाउनलोड, CR-80 PVC कार्ड प्रिंटर एवं e-District स्वप्रमाणित सुइट
+              {language === 'hi' 
+                ? '1-क्लिक वाहन RC डाउनलोड, CR-80 PVC कार्ड प्रिंटर एवं e-District स्वप्रमाणित सुइट' 
+                : '1-click vehicle RC download, CR-80 PVC card maker, and e-District verification suite'}
             </p>
           </div>
         </div>
@@ -245,18 +253,20 @@ export default function CustomerHome({
                   <Car className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-300" />
                 </div>
                 <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
-                  लाइव
+                  {language === 'hi' ? 'लाइव' : 'Live'}
                 </span>
               </div>
               <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-indigo-200 transition truncate leading-tight">
-                वाहन RC
+                {language === 'hi' ? 'वाहन RC' : 'Vehicle RC'}
               </h3>
               <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
-                गाड़ी नंबर दर्ज करें और आधिकारिक डिजिटल सेवा केंद्र वाटरमार्क सहित RC तुरंत प्राप्त करें।
+                {language === 'hi' 
+                  ? 'गाड़ी नंबर दर्ज करें और आधिकारिक डिजिटल सेवा केंद्र वाटरमार्क सहित RC तुरंत प्राप्त करें।' 
+                  : 'Enter vehicle number and download official verified RC card with watermark.'}
               </p>
             </div>
             <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-indigo-300">
-              <span>डाउनलोड ➔</span>
+              <span>{language === 'hi' ? 'डाउनलोड ➔' : 'Download ➔'}</span>
               <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
             </div>
           </div>
@@ -276,14 +286,16 @@ export default function CustomerHome({
                 </span>
               </div>
               <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-blue-200 transition truncate leading-tight">
-                PVC कार्ड
+                {language === 'hi' ? 'PVC कार्ड' : 'PVC Card'}
               </h3>
               <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
-                आधार, पैन, आयुष्मान कार्ड को 85.6mm×54mm कटिंग बॉर्डर के साथ PVC शीट पर प्रिंट करें।
+                {language === 'hi' 
+                  ? 'आधार, पैन, आयुष्मान कार्ड को 85.6mm×54mm कटिंग बॉर्डर के साथ PVC शीट पर प्रिंट करें।' 
+                  : 'Print Aadhaar, PAN, and Ayushman cards on PVC sheets with CR-80 border.'}
               </p>
             </div>
             <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-blue-300">
-              <span>प्रिंट ➔</span>
+              <span>{language === 'hi' ? 'प्रिंट ➔' : 'Print ➔'}</span>
               <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
             </div>
           </div>
@@ -299,18 +311,20 @@ export default function CustomerHome({
                   <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-300" />
                 </div>
                 <span className="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
-                  सत्यापन
+                  {language === 'hi' ? 'सत्यापन' : 'Verified'}
                 </span>
               </div>
               <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-emerald-200 transition truncate leading-tight">
-                e-District
+                {language === 'hi' ? 'e-District' : 'e-District'}
               </h3>
               <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
-                स्वप्रमाणित घोषणा पत्र जनरेटर, 100KB दस्तावेज़ पैकर और 1-क्लिक ऑटो-फिलर बॉट।
+                {language === 'hi' 
+                  ? 'स्वप्रमाणित घोषणा पत्र जनरेटर, 100KB दस्तावेज़ पैकर और 1-क्लिक ऑटो-फिलर बॉट।' 
+                  : 'Self declaration generator, 100KB document packer and auto-filler.'}
               </p>
             </div>
             <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-emerald-300">
-              <span>खोलें ➔</span>
+              <span>{language === 'hi' ? 'खोलें ➔' : 'Open ➔'}</span>
               <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
             </div>
           </div>
@@ -323,13 +337,15 @@ export default function CustomerHome({
           <div>
             <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold mb-1 border border-blue-200">
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>100% निःशुल्क सरकारी पोर्टल • सीधी पर्ची व कार्ड सुविधा</span>
+              <span>{language === 'hi' ? '100% प्रामाणिक पोर्टल • सीधी पर्ची व कार्ड सुविधा' : '100% Authentic Portals • Direct Slips & Smart Cards'}</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-              जनसेवा तत्काल पर्ची व कार्ड सेवाएं (Jan Seva Instant Slips)
+              {language === 'hi' ? 'जनसेवा तत्काल पर्ची व कार्ड सेवाएं' : 'Jan Seva Instant Slips & Cards'}
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              राशन पर्ची, पेंशन, ई-पैन, UDID, एडवांस आधार, स्कॉलरशिप व भू-नक्शा — मात्र ₹6 से ₹30 में तत्काल प्रिंट पाएं!
+              {language === 'hi' 
+                ? 'राशन पर्ची, पेंशन, ई-पैन, UDID, एडवांस आधार, स्कॉलरशिप व भू-नक्शा — तत्काल प्रिंट पाएं!' 
+                : 'Ration slips, pensions, e-PAN, UDID, advance Aadhaar, scholarships & map slips.'}
             </p>
           </div>
 
@@ -337,7 +353,7 @@ export default function CustomerHome({
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="सेवा का नाम खोजें..."
+              placeholder={language === 'hi' ? 'सेवा का नाम खोजें...' : 'Search service name...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-9 pr-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl text-xs focus:outline-none focus:border-blue-500 shadow-xs"
@@ -348,13 +364,13 @@ export default function CustomerHome({
         {/* Filter Chips */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
           {[
-            { id: 'all', label: 'सभी (40 सेवाएं)' },
-            { id: 'card', label: '🪪 कार्ड व पहचान' },
-            { id: 'legal', label: '📜 प्रमाण पत्र व घोषणा' },
-            { id: 'farmer', label: '🌾 किसान व नक्शा' },
-            { id: 'utility', label: '⚡ बिजली व वाहन' },
-            { id: 'student', label: '🎓 छात्र व रोज़गार' },
-            { id: 'welfare', label: '🤝 पेंशन व राशन' }
+            { id: 'all', label: language === 'hi' ? 'सभी सेवाएं' : 'All Services' },
+            { id: 'card', label: language === 'hi' ? '🪪 कार्ड व पहचान' : '🪪 Cards & ID' },
+            { id: 'legal', label: language === 'hi' ? '📜 प्रमाण पत्र' : '📜 Certificates' },
+            { id: 'farmer', label: language === 'hi' ? '🌾 किसान व नक्शा' : '🌾 Farmer & Land' },
+            { id: 'utility', label: language === 'hi' ? '⚡ बिजली व वाहन' : '⚡ Utility & Vehicle' },
+            { id: 'student', label: language === 'hi' ? '🎓 छात्र व रोज़गार' : '🎓 Student & Jobs' },
+            { id: 'welfare', label: language === 'hi' ? '🤝 पेंशन व राशन' : '🤝 Welfare & Pension' }
           ].map(cat => (
             <button
               key={cat.id}

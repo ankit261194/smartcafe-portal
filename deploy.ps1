@@ -25,7 +25,7 @@ if (Test-Path "$PSScriptRoot\client\public\CyberCafe_Portal.apk") {
 $nowStr = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
 Write-Host "[3/5] Pushing Live Build to GitHub (branch: deploy)..." -ForegroundColor Cyan
-git -C "$PSScriptRoot\client\dist" add .
+git -C "$PSScriptRoot\client\dist" add -A
 $distStatus = git -C "$PSScriptRoot\client\dist" status --porcelain
 if ($distStatus) {
     git -C "$PSScriptRoot\client\dist" commit -m "deploy: live build $nowStr"

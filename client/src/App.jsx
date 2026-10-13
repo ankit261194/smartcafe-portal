@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { MoreVertical } from 'lucide-react';
 import Navbar from './components/Navbar';
 import CustomerHome from './components/CustomerHome';
 import QuickPrint from './components/QuickPrint';
@@ -40,8 +39,10 @@ import RekhaOrders from './components/RekhaOrders';
 import IndianFlagBackdrop from './components/IndianFlagBackdrop';
 import ScrollToTopWidget from './components/ScrollToTopWidget';
 import { authFetch, getServerBaseUrl, setServerBaseUrl } from './utils/api';
+import { useLanguage } from './context/LanguageContext';
 
 export default function App() {
+  const { language, t } = useLanguage();
   // 3-Tier Isolated Routing Architecture
   // Tier 1: 'customer' (default public citizen portal)
   // Tier 2: 'admin' (dedicated cyber cafe operator / VLE gateway & dashboard)
@@ -510,19 +511,6 @@ export default function App() {
         />
       )}
 
-      {/* Floating 3-Dot Side Toggle to Show/Unhide Sidebar */}
-      {!sidebarOpen && mode !== 'superadmin' && (
-        <button
-          type="button"
-          onClick={() => setSidebarOpen(true)}
-          className="fixed left-0 top-20 sm:top-24 z-30 bg-white/95 dark:bg-[#0c162c]/95 border border-l-0 border-slate-300 dark:border-slate-700 shadow-xl rounded-r-2xl px-2 sm:px-2.5 py-3 flex items-center gap-1 text-slate-800 dark:text-slate-100 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50/90 dark:hover:bg-slate-800 transition-all cursor-pointer group no-print backdrop-blur-md"
-          title="साइड मेन्यू खोलें (3-Dots Side Toggle - Show Sidebar)"
-        >
-          <MoreVertical className="w-5 h-5 text-orange-600 dark:text-orange-400 group-hover:scale-110 transition-transform shrink-0" />
-          <span className="text-[11px] font-black text-slate-800 dark:text-slate-200 hidden sm:inline">मेन्यू खोलें</span>
-        </button>
-      )}
-
       {/* Main Content Area */}
       <div className="flex-1 min-w-0 flex flex-col relative z-10 max-w-full overflow-x-hidden">
         {/* Navigation Header */}
@@ -577,10 +565,12 @@ export default function App() {
               <span className="text-xl">⚠️</span>
               <div>
                 <span className="font-extrabold uppercase tracking-wider block text-[10px]">
-                  इंटरनेट कनेक्शन बाधित (Offline Alert):
+                  {t('offline_alert')}
                 </span>
                 <p className="text-sm font-bold mt-0.5">
-                  आपका इंटरनेट कनेक्शन कट गया है। कृपया नेटवर्क जांचें। ऑनलाइन होने के बाद ही फॉर्म व प्रिंट सबमिट करें।
+                  {language === 'hi' 
+                    ? 'आपका इंटरनेट कनेक्शन कट गया है। कृपया नेटवर्क जांचें। ऑनलाइन होने के बाद ही फॉर्म व प्रिंट सबमिट करें।'
+                    : 'Your internet connection was interrupted. Please check network. Submit forms & prints once online.'}
                 </p>
               </div>
             </div>
@@ -588,7 +578,7 @@ export default function App() {
               onClick={() => setIsOnline(navigator.onLine)}
               className="bg-white text-rose-700 font-black px-3 py-1.5 rounded-xl text-xs hover:bg-rose-50 transition shrink-0"
             >
-              पुनः जांचें
+              {language === 'hi' ? 'पुनः जांचें' : 'Retry'}
             </button>
           </div>
         )}
@@ -1061,7 +1051,7 @@ export default function App() {
             }`}
           >
             <span className="text-base leading-none">🏠</span>
-            <span>होम</span>
+            <span>{t('bottom_home')}</span>
           </button>
 
           <button
@@ -1071,7 +1061,7 @@ export default function App() {
             }`}
           >
             <span className="text-base leading-none">🖨️</span>
-            <span>प्रिंट</span>
+            <span>{t('bottom_print')}</span>
           </button>
 
           <button
@@ -1081,7 +1071,7 @@ export default function App() {
             }`}
           >
             <span className="text-base leading-none">📄</span>
-            <span>फॉर्म</span>
+            <span>{t('bottom_apply')}</span>
           </button>
 
           <button
@@ -1091,7 +1081,7 @@ export default function App() {
             }`}
           >
             <span className="text-base leading-none">🔍</span>
-            <span>ट्रैकर</span>
+            <span>{t('bottom_track')}</span>
           </button>
 
           <button
@@ -1101,7 +1091,7 @@ export default function App() {
             }`}
           >
             <span className="text-base leading-none">🚗</span>
-            <span>वाहन RC</span>
+            <span>{t('bottom_rc')}</span>
           </button>
         </nav>
       )}
@@ -1111,12 +1101,12 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
             <span className="font-bold text-slate-800 dark:text-slate-200">
-              {selectedCafe?.shopName || settings?.shopName || 'डिजिटल सेवा केंद्र'}
+              {selectedCafe?.shopName || settings?.shopName || (language === 'hi' ? 'डिजिटल सेवा केंद्र' : 'Digital Service Hub')}
             </span>
             <span className="hidden sm:inline text-slate-400 dark:text-slate-600">•</span>
-            <span className="text-slate-600 dark:text-slate-400">{selectedCafe?.address || settings?.address || 'ऑनलाइन नागरिक सेवा केंद्र'}</span>
+            <span className="text-slate-600 dark:text-slate-400">{selectedCafe?.address || settings?.address || (language === 'hi' ? 'ऑनलाइन नागरिक सेवा केंद्र' : 'Citizen Online Service Center')}</span>
             <span className="hidden sm:inline text-slate-400 dark:text-slate-600">•</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">🔒 24 घंटे में दस्तावेज़ स्वतः नष्ट</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">{language === 'hi' ? '🔒 24 घंटे में दस्तावेज़ स्वतः नष्ट' : '🔒 Documents auto-deleted in 24 hrs'}</span>
           </div>
 
           {/* Discreet 3-Tier Navigation Links */}
@@ -1127,7 +1117,7 @@ export default function App() {
                 onClick={() => navigateToTier('customer')}
                 className="text-orange-600 dark:text-orange-400 hover:text-orange-700 font-bold transition flex items-center gap-1 cursor-pointer"
               >
-                <span>← नागरिक पोर्टल (Citizen Portal)</span>
+                <span>{language === 'hi' ? '← नागरिक पोर्टल' : '← Citizen Portal'}</span>
               </button>
             )}
 
@@ -1137,9 +1127,9 @@ export default function App() {
               className={`hover:text-orange-600 dark:hover:text-orange-400 font-semibold transition flex items-center gap-1 cursor-pointer ${
                 mode === 'admin' ? 'text-orange-600 dark:text-orange-400 font-bold' : 'text-slate-500 dark:text-slate-400'
               }`}
-              title="दुकानदार व CSC VLE काउंटर डेस्क लॉगिन"
+              title={language === 'hi' ? 'दुकानदार व CSC VLE काउंटर डेस्क लॉगिन' : 'Shopkeeper & VLE Counter Login'}
             >
-              <span>🏪 दुकानदार काउंटर प्रवेश</span>
+              <span>{language === 'hi' ? '🏪 दुकानदार काउंटर प्रवेश' : '🏪 Shopkeeper Counter'}</span>
             </button>
 
             <span className="text-slate-300 dark:text-slate-700">|</span>
@@ -1150,9 +1140,9 @@ export default function App() {
               className={`hover:text-amber-500 font-semibold transition flex items-center gap-1 cursor-pointer ${
                 mode === 'superadmin' ? 'text-amber-500 font-bold' : 'text-slate-500 dark:text-slate-400'
               }`}
-              title="केंद्रीय सुपर एडमिन रूट लॉगिन"
+              title={language === 'hi' ? 'केंद्रीय सुपर एडमिन रूट लॉगिन' : 'Super Admin Root Login'}
             >
-              <span>🛡️ व्यवस्थापक लॉगिन</span>
+              <span>{language === 'hi' ? '🛡️ सुपर एडमिन' : '🛡️ Super Admin'}</span>
             </button>
 
             <span className="text-slate-300 dark:text-slate-700">|</span>

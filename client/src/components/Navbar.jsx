@@ -3,9 +3,10 @@ import {
   Printer, FileText, Search, Settings, 
   IndianRupee, QrCode, ShieldCheck,
   Award, CreditCard, Sparkles, Building2, Wallet, Crown,
-  Car, MessageSquare, Lock, User, LogOut, Menu, Sun, Moon, ArrowRight, MoreVertical
+  Car, MessageSquare, Lock, User, LogOut, Menu, Sun, Moon, ArrowRight
 } from 'lucide-react';
 import { INSTANT_TOOLS } from './InstantToolsEngine';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Navbar({
   settings,
@@ -43,6 +44,7 @@ export default function Navbar({
   disabledTools = [],
   toolStatus = {}
 }) {
+  const { language, setLanguage, toggleLanguage, t, localize } = useLanguage();
   const [toolSearchQuery, setToolSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const searchContainerRef = useRef(null);
@@ -64,12 +66,15 @@ export default function Navbar({
       const isHidden = (disabledTools && (disabledTools.includes(t.id) || disabledTools.includes(t.serviceType))) ||
         (toolStatus && (toolStatus[t.id] === false || toolStatus[t.serviceType] === false));
       if (isHidden) return false;
-      return t.title.toLowerCase().includes(q) ||
-        t.subtitle.toLowerCase().includes(q) ||
+      const titleStr = typeof t.title === 'object' ? (t.title[language] || t.title.hi) : (t.title || '');
+      const subStr = typeof t.subtitle === 'object' ? (t.subtitle[language] || t.subtitle.hi) : (t.subtitle || '');
+      const badgeStr = typeof t.badge === 'object' ? (t.badge[language] || t.badge.hi) : (t.badge || '');
+      return titleStr.toLowerCase().includes(q) ||
+        subStr.toLowerCase().includes(q) ||
         t.id.toLowerCase().includes(q) ||
-        t.badge.toLowerCase().includes(q);
+        badgeStr.toLowerCase().includes(q);
     });
-  }, [toolSearchQuery, disabledTools, toolStatus]);
+  }, [toolSearchQuery, disabledTools, toolStatus, language]);
 
   const displayBalance = mode === 'admin' ? sanchalakB2bBalance : walletBalance;
   const isOperator = mode === 'admin';
@@ -87,18 +92,18 @@ export default function Navbar({
       {/* 2. SINGLE UNIFIED MODERN NAVBAR */}
       <div className="max-w-7xl mx-auto px-2 sm:px-4 h-15 flex items-center justify-between gap-1.5 sm:gap-3 max-w-full">
         
-        {/* Left: 3-Dot Side Toggle & Brand Logo */}
+        {/* Left: Sleek Standard Menu Toggle (☰) & Brand Logo */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {onToggleSidebar && (
             <button
               type="button"
               onClick={onToggleSidebar}
-              className="p-1.5 sm:p-2 text-white hover:bg-white/20 rounded-xl transition cursor-pointer flex items-center gap-0.5 border border-white/30"
-              title="साइड मेन्यू खोलें / छिपाएं (3-Dots Side Toggle)"
+              className="p-1.5 sm:p-2 text-white hover:bg-white/20 active:scale-95 rounded-xl transition cursor-pointer flex items-center gap-1.5 border border-white/30"
+              title={language === 'hi' ? 'साइड मेन्यू' : 'Side Menu'}
+              aria-label="Toggle Side Menu"
             >
-              <MoreVertical className="w-5 h-5 text-white shrink-0" />
-              <Menu className="w-4 h-4 text-amber-200 hidden xs:inline shrink-0" />
-              <span className="text-[11px] font-black text-white hidden md:inline">मेन्यू</span>
+              <Menu className="w-5 h-5 text-white shrink-0" />
+              <span className="text-[11px] font-black text-white hidden md:inline">{t('menu')}</span>
             </button>
           )}
 
@@ -124,17 +129,17 @@ export default function Navbar({
                 </span>
                 {mode === 'admin' && (
                   <span className="hidden sm:inline bg-indigo-900 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">
-                    {isStaffAuth ? 'स्टाफ' : 'संचालक'}
+                    {isStaffAuth ? t('staff') : t('operator')}
                   </span>
                 )}
                 {mode === 'superadmin' && (
                   <span className="hidden sm:inline bg-amber-300 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">
-                    SUPER ADMIN
+                    {t('root_admin')}
                   </span>
                 )}
               </h1>
               <p className="text-[9px] sm:text-[11px] text-amber-100 font-extrabold truncate">
-                {selectedCafe?.shopName || 'स्मार्ट कैफे B2B पोर्टल • डिजिटल सेवा केंद्र'}
+                {selectedCafe?.shopName || t('brand_tagline')}
               </p>
             </div>
           </div>
@@ -160,7 +165,7 @@ export default function Navbar({
                   setToolSearchQuery('');
                 }
               }}
-              placeholder="1-क्लिक टूल खोजें (RC, पैन, DL, बिल)..."
+              placeholder={t('search_placeholder')}
               className="w-full bg-white/20 hover:bg-white/25 focus:bg-white text-white focus:text-slate-900 placeholder:text-amber-100 pl-7 pr-6 py-1.5 rounded-xl text-xs font-semibold border border-white/30 focus:border-white focus:outline-none transition shadow-2xs"
             />
             {toolSearchQuery && (
@@ -182,7 +187,7 @@ export default function Navbar({
             <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-[#0f1d36] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl z-50 overflow-hidden divide-y divide-slate-100 dark:divide-slate-800 max-h-72 overflow-y-auto">
               {matchedTools.length === 0 ? (
                 <div className="p-3 text-xs text-slate-500 dark:text-slate-400 text-center">
-                  कोई टूल नहीं मिला।
+                  {t('search_no_results')}
                 </div>
               ) : (
                 matchedTools.map(t => (
@@ -201,8 +206,8 @@ export default function Navbar({
                         <t.icon className="w-3.5 h-3.5" />
                       </div>
                       <div className="truncate">
-                        <div className="text-xs font-bold text-slate-900 dark:text-white truncate">{t.title}</div>
-                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{t.subtitle}</div>
+                        <div className="text-xs font-bold text-slate-900 dark:text-white truncate">{localize(t.title)}</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{localize(t.subtitle)}</div>
                       </div>
                     </div>
                     <span className="text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/60 border border-amber-300/40 px-2 py-0.5 rounded-md shrink-0">
@@ -215,16 +220,46 @@ export default function Navbar({
           )}
         </div>
 
-        {/* Right: Integrated Actions (Wallet, Standee, Day/Night, Role Switch) */}
-        <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        {/* Right: Integrated Actions (Language, Wallet, Day/Night, Role Switch) */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           
+          {/* Dynamic Language Switcher (Hindi vs English - Pure Single Language Mode) */}
+          <div className="flex items-center bg-white/20 border border-white/30 rounded-xl overflow-hidden shadow-2xs backdrop-blur-xs p-0.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => setLanguage('hi')}
+              className={`px-2 py-1 text-xs font-black rounded-lg transition cursor-pointer flex items-center gap-1 ${
+                language === 'hi' 
+                  ? 'bg-white text-orange-700 shadow-xs' 
+                  : 'text-white/80 hover:text-white'
+              }`}
+              title="हिंदी भाषा सक्रिय करें"
+            >
+              <span>🇮🇳</span>
+              <span className="hidden sm:inline">हिंदी</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage('en')}
+              className={`px-2 py-1 text-xs font-black rounded-lg transition cursor-pointer flex items-center gap-1 ${
+                language === 'en' 
+                  ? 'bg-white text-orange-700 shadow-xs' 
+                  : 'text-white/80 hover:text-white'
+              }`}
+              title="Switch to English"
+            >
+              <span className="hidden sm:inline">English</span>
+              <span className="sm:hidden">EN</span>
+            </button>
+          </div>
+
           {/* Live Wallet Pill with [+ Add Money] (Strictly Starts at ₹0) */}
           <div className="flex items-center bg-white/20 border border-white/30 rounded-xl overflow-hidden shadow-2xs backdrop-blur-xs">
             <button
               type="button"
               onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
               className="px-2 sm:px-2.5 py-1.5 text-white font-bold text-xs flex items-center gap-1.5 hover:bg-white/10 transition cursor-pointer"
-              title={isOperator ? "B2B वॉलेट देखें" : "डिजिटल वॉलेट देखें"}
+              title={isOperator ? t('b2b_wallet_title') : t('customer_wallet_title')}
             >
               <Wallet className="w-3.5 h-3.5 text-amber-200 shrink-0" />
               <span className="font-mono font-black text-xs sm:text-sm text-white">
@@ -235,9 +270,9 @@ export default function Navbar({
               type="button"
               onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
               className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-2 py-1.5 text-[11px] transition cursor-pointer hidden xs:flex items-center gap-0.5"
-              title="वॉलेट रिचार्ज करें"
+              title={t('add_funds')}
             >
-              <span>+ Add</span>
+              <span>{t('add_money')}</span>
             </button>
           </div>
 
@@ -246,17 +281,17 @@ export default function Navbar({
             type="button"
             onClick={toggleTheme}
             className="bg-white/20 hover:bg-white/30 text-white border border-white/30 font-black px-2 py-1.5 rounded-xl text-xs flex items-center gap-1 transition shadow-2xs cursor-pointer shrink-0"
-            title={theme === 'dark' ? 'दिन मोड में बदलें' : 'रात मोड में बदलें'}
+            title={theme === 'dark' ? t('day_mode_full') : t('night_mode_full')}
           >
             {theme === 'dark' ? (
               <>
                 <Sun className="w-4 h-4 text-amber-300" />
-                <span className="hidden md:inline text-amber-200">☀️ Day</span>
+                <span className="hidden md:inline text-amber-200">{t('day_mode')}</span>
               </>
             ) : (
               <>
                 <Moon className="w-4 h-4 text-amber-200" />
-                <span className="hidden md:inline text-white">🌙 Night</span>
+                <span className="hidden md:inline text-white">{t('night_mode')}</span>
               </>
             )}
           </button>
@@ -272,10 +307,10 @@ export default function Navbar({
                   else if (onModeToggle) onModeToggle('admin');
                 }}
                 className="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-md shadow-emerald-950/20 transition cursor-pointer shrink-0"
-                title="साइबर कैफे दुकानदार व CSC VLE लॉगिन (Shopkeeper Login)"
+                title={language === 'hi' ? 'दुकानदार लॉगिन' : 'Shopkeeper Login'}
               >
                 <span className="text-sm leading-none">🏪</span>
-                <span>दुकानदार</span>
+                <span>{t('shopkeeper')}</span>
               </button>
 
               {/* 2. 👑 एडमिन लॉगिन */}
@@ -286,10 +321,10 @@ export default function Navbar({
                   else if (onModeToggle) onModeToggle('superadmin');
                 }}
                 className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-md shadow-amber-950/20 transition cursor-pointer shrink-0"
-                title="मास्टर सुपर एडमिन लॉगिन (Super Admin Login)"
+                title={language === 'hi' ? 'मास्टर सुपर एडमिन लॉगिन' : 'Super Admin Login'}
               >
                 <Crown className="w-3.5 h-3.5 text-slate-950 shrink-0" />
-                <span>एडमिन</span>
+                <span>{t('admin')}</span>
               </button>
 
               {/* 3. 👤 नागरिक प्रोफाइल */}
@@ -297,11 +332,11 @@ export default function Navbar({
                 type="button"
                 onClick={onOpenCustomerProfile}
                 className="bg-white/20 hover:bg-white/30 text-white border border-white/30 px-2.5 py-1.5 rounded-xl font-bold text-xs flex items-center gap-1 transition cursor-pointer shrink-0"
-                title="नागरिक प्रोफ़ाइल व लॉगिन"
+                title={language === 'hi' ? 'नागरिक प्रोफ़ाइल' : 'Citizen Profile'}
               >
                 <User className="w-3.5 h-3.5 text-amber-200 shrink-0" />
                 <span className="hidden lg:inline truncate max-w-[90px]">
-                  {customerSession?.phone ? (customerSession.name || customerSession.phone.slice(-4)) : 'नागरिक'}
+                  {customerSession?.phone ? (customerSession.name || customerSession.phone.slice(-4)) : t('citizen')}
                 </span>
               </button>
             </div>
@@ -312,9 +347,9 @@ export default function Navbar({
               {/* Operator Badge & Shop Indicator */}
               <div className="hidden md:flex items-center gap-1.5 bg-white/20 border border-white/30 px-2.5 py-1 rounded-xl text-xs text-white font-bold">
                 <span>🏪</span>
-                <span className="truncate max-w-[140px] font-black">{selectedCafe?.shopName || 'दुकानदार काउंटर'}</span>
+                <span className="truncate max-w-[140px] font-black">{selectedCafe?.shopName || (language === 'hi' ? 'दुकानदार काउंटर' : 'Shopkeeper Counter')}</span>
                 <span className="bg-white text-orange-700 text-[9px] font-black px-1.5 py-0.2 rounded">
-                  {isStaffAuth ? 'स्टाफ' : 'संचालक'}
+                  {isStaffAuth ? t('staff') : t('operator')}
                 </span>
               </div>
 
@@ -335,10 +370,10 @@ export default function Navbar({
                 type="button"
                 onClick={onLogout}
                 className="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black px-2.5 sm:px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition cursor-pointer shrink-0"
-                title="काउंटर सुरक्षित लॉक करें और बाहर निकलें"
+                title={t('logout')}
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>लॉगआउट</span>
+                <span>{t('logout')}</span>
               </button>
             </div>
           )}
@@ -347,16 +382,16 @@ export default function Navbar({
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               <span className="bg-amber-500 text-slate-950 border border-amber-300 px-2 py-1 rounded-xl text-[10px] sm:text-[11px] font-mono font-black flex items-center gap-1">
                 <Crown className="w-3 h-3" />
-                <span>ROOT ADMIN</span>
+                <span>{t('root_admin')}</span>
               </span>
               <button
                 type="button"
                 onClick={onLogout}
                 className="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black px-2.5 sm:px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition cursor-pointer shrink-0"
-                title="सुपर एडमिन कंसोल से बाहर निकलें"
+                title={t('logout')}
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>लॉगआउट</span>
+                <span>{t('logout')}</span>
               </button>
             </div>
           )}
@@ -369,7 +404,7 @@ export default function Navbar({
       {mode === 'customer' && (
         <div className="sm:hidden w-full bg-orange-700/95 text-white border-t border-orange-500/60 px-2.5 py-1.5 flex items-center justify-between gap-1.5 shadow-inner">
           <span className="text-[10px] font-black text-amber-200 uppercase tracking-tight flex items-center gap-1 shrink-0 pl-1">
-            <span>⚡ प्रवेश द्वार:</span>
+            <span>{t('quick_gateway')}</span>
           </span>
           <div className="flex items-center gap-1.5 flex-1 justify-end min-w-0">
             <button
@@ -379,10 +414,10 @@ export default function Navbar({
                 else if (onModeToggle) onModeToggle('admin');
               }}
               className="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-2.5 py-1.5 rounded-xl text-[11px] flex items-center gap-1 shadow-sm shrink-0 active:scale-95 cursor-pointer"
-              title="दुकानदार B2B काउंटर लॉगिन (Shopkeeper Login)"
+              title={language === 'hi' ? 'दुकानदार काउंटर लॉगिन' : 'Shopkeeper Login'}
             >
               <span className="text-xs">🏪</span>
-              <span>दुकानदार</span>
+              <span>{t('shopkeeper')}</span>
             </button>
             <button
               type="button"
@@ -391,19 +426,19 @@ export default function Navbar({
                 else if (onModeToggle) onModeToggle('superadmin');
               }}
               className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-2.5 py-1.5 rounded-xl text-[11px] flex items-center gap-1 shadow-sm shrink-0 active:scale-95 cursor-pointer"
-              title="मास्टर सुपर एडमिन लॉगिन (Super Admin Login)"
+              title={language === 'hi' ? 'सुपर एडमिन लॉगिन' : 'Super Admin Login'}
             >
               <Crown className="w-3 h-3 text-slate-950" />
-              <span>एडमिन</span>
+              <span>{t('admin')}</span>
             </button>
             <button
               type="button"
               onClick={onOpenCustomerProfile}
               className="bg-white/20 hover:bg-white/30 text-white border border-white/30 font-bold px-2 py-1.5 rounded-xl text-[11px] flex items-center gap-1 shrink-0 active:scale-95 cursor-pointer"
-              title="नागरिक प्रोफ़ाइल"
+              title={language === 'hi' ? 'नागरिक प्रोफ़ाइल' : 'Citizen Profile'}
             >
               <User className="w-3 h-3 text-amber-200" />
-              <span>नागरिक</span>
+              <span>{t('citizen')}</span>
             </button>
           </div>
         </div>

@@ -8,8 +8,10 @@ import { QRCodeSVG } from 'qrcode.react';
 import confetti from 'canvas-confetti';
 import { PDFDocument } from 'pdf-lib';
 import PrintTokenModal from './PrintTokenModal';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted }) {
+  const { language, t } = useLanguage();
   const [file, setFile] = useState(null);
   const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
@@ -148,21 +150,21 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
           <div>
             <div className="inline-flex items-center gap-2 bg-blue-500/30 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-blue-100 mb-2">
               <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
-              सुपरफास्ट सेल्फ सर्विस
+              {t('qp_superfast_badge')}
             </div>
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-              क्विक प्रिंट व ज़ेरॉक्स (Instant Print)
+              {t('quick_print_title')}
             </h2>
             <p className="text-blue-100 text-sm mt-1 max-w-xl">
-              फ़ाइल अपलोड करें, प्रिंट सेटिंग्स चुनें, और काउंटर पर टोकन दिखाकर 1 मिनट में प्रिंट पाएं।
+              {t('quick_print_sub')}
             </p>
           </div>
           <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 rounded-xl text-center shrink-0">
-            <span className="text-xs text-blue-200 block">वर्तमान दरें (Rates)</span>
+            <span className="text-xs text-blue-200 block">{t('qp_current_rates')}</span>
             <div className="text-sm font-bold mt-1 text-white flex gap-3">
-              <span>B&W: ₹{rates.bwPage}/पेज</span>
+              <span>{language === 'hi' ? 'ब्लैक एंड व्हाइट' : 'B&W'}: ₹{rates.bwPage}{language === 'hi' ? '/पेज' : '/page'}</span>
               <span className="text-blue-300">|</span>
-              <span className="text-yellow-300">Color: ₹{rates.colorPage}/पेज</span>
+              <span className="text-yellow-300">{language === 'hi' ? 'रंगीन' : 'Color'}: ₹{rates.colorPage}{language === 'hi' ? '/पेज' : '/page'}</span>
             </div>
           </div>
         </div>
@@ -185,7 +187,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
           <div className="bg-white dark:bg-[#0f1d36] rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800">
             <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2 mb-4">
               <Upload className="w-5 h-5 text-orange-500" />
-              1. फ़ाइल चुनें (PDF, Word या Photo)
+              {t('qp_upload_step')}
             </h3>
 
             <div
@@ -213,7 +215,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                   </div>
                   <p className="font-bold text-slate-800 dark:text-slate-100 text-sm truncate max-w-xs">{file.name}</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    {(file.size / (1024 * 1024)).toFixed(2)} MB • फ़ाइल चुनी गई
+                    {(file.size / (1024 * 1024)).toFixed(2)} MB • {t('qp_file_selected')}
                   </p>
                   {detectingPages && (
                     <div className="mt-2.5 px-3 py-1 bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-lg flex items-center gap-2">
@@ -227,7 +229,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                     </div>
                   )}
                   <span className="text-xs text-orange-600 dark:text-orange-400 font-semibold mt-2 underline">
-                    दूसरी फ़ाइल बदलना चाहते हैं? क्लिक करें
+                    {t('qp_change_file')}
                   </span>
                 </div>
               ) : (
@@ -236,10 +238,10 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                     <Upload className="w-6 h-6" />
                   </div>
                   <p className="font-semibold text-slate-800 dark:text-slate-100 text-sm">
-                    यहाँ क्लिक करके फ़ाइल चुनें या ड्रैग करें
+                    {t('qp_upload_drag')}
                   </p>
                   <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                    PDF, Word Documents, Aadhaar Scan, Photos (Max 25MB)
+                    {t('qp_upload_hint')}
                   </p>
                 </div>
               )}
@@ -252,7 +254,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                 className="w-full bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 border border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-300 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer transition shadow-xs active:scale-95"
               >
                 <Camera className="w-4 h-4 text-amber-700 dark:text-amber-400" />
-                <span>📸 फोन कैमरे से सीधा फोटो खींचें (Live Document Photo)</span>
+                <span>{t('qp_live_photo_btn')}</span>
                 <input
                   id="mobile-cam-capture"
                   type="file"
@@ -269,13 +271,13 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
           <div className="bg-white dark:bg-[#0f1d36] rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 space-y-5">
             <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
               <SlidersHorizontal className="w-5 h-5 text-orange-500" />
-              2. प्रिंट विकल्प (Print Options)
+              {t('qp_print_options_step')}
             </h3>
 
             {/* Color vs B&W */}
             <div>
               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-2">
-                रंग चयन (Color Type)
+                {t('qp_color_type_label')}
               </label>
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -288,8 +290,8 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                   }`}
                 >
                   <div>
-                    <span className="font-bold text-sm block">ब्लैक एंड व्हाइट (B&W)</span>
-                    <span className="text-xs opacity-80">सामान्य प्रिंट (₹{rates.bwPage}/पेज)</span>
+                    <span className="font-bold text-sm block">{t('qp_bw_option')}</span>
+                    <span className="text-xs opacity-80">{t('qp_bw_sub')} (₹{rates.bwPage}{language === 'hi' ? '/पेज' : '/page'})</span>
                   </div>
                   {colorType === 'bw' && <CheckCircle2 className="w-5 h-5 text-emerald-400" />}
                 </button>
@@ -304,8 +306,8 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                   }`}
                 >
                   <div>
-                    <span className="font-bold text-sm block">रंगीन (Color Print)</span>
-                    <span className="text-xs opacity-80">फोटो/आईडी/कलर (₹{rates.colorPage}/पेज)</span>
+                    <span className="font-bold text-sm block">{t('qp_color_option')}</span>
+                    <span className="text-xs opacity-80">{t('qp_color_sub')} (₹{rates.colorPage}{language === 'hi' ? '/पेज' : '/page'})</span>
                   </div>
                   {colorType === 'color' && <CheckCircle2 className="w-5 h-5 text-yellow-300" />}
                 </button>
@@ -317,7 +319,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
               <div>
                 <div className="flex items-center justify-between mb-1.5">
                   <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider truncate">
-                    पेज संख्या
+                    {t('qp_pages_count_label')}
                   </label>
                   {minDetectedPages > 1 && (
                     <span className="text-[10px] bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded-full truncate">
@@ -334,18 +336,18 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                     onChange={(e) => setPagesCount(Math.max(minDetectedPages, parseInt(e.target.value) || minDetectedPages))}
                     className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-orange-500 focus:outline-none"
                   />
-                  <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0">पेज</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0">{t('pages')}</span>
                 </div>
                 {minDetectedPages > 1 && (
                   <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 hidden xs:block">
-                    * असली पेजों ({minDetectedPages}) से कम नहीं हो सकता।
+                    {language === 'hi' ? `* असली पेजों (${minDetectedPages}) से कम नहीं हो सकता।` : `* Cannot be less than detected pages (${minDetectedPages}).`}
                   </p>
                 )}
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 truncate">
-                  प्रतियां (Copies)
+                  {t('qp_copies_label')}
                 </label>
                 <div className="flex items-center gap-1.5 sm:gap-2">
                   <button
@@ -378,30 +380,30 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 truncate">
-                  प्रिंट साइड
+                  {t('qp_sides_label')}
                 </label>
                 <select
                   value={sideType}
                   onChange={(e) => setSideType(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-2 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none cursor-pointer"
                 >
-                  <option value="single">1 तरफ (Single)</option>
-                  <option value="double">2 तरफ (Double)</option>
+                  <option value="single">{t('qp_single_side')}</option>
+                  <option value="double">{t('qp_double_side')}</option>
                 </select>
               </div>
 
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5 truncate">
-                  कागज़ आकार
+                  {t('qp_paper_size_label')}
                 </label>
                 <select
                   value={paperSize}
                   onChange={(e) => setPaperSize(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-2 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-orange-500 focus:outline-none cursor-pointer"
                 >
-                  <option value="A4">A4 मानक</option>
-                  <option value="Legal">Legal कचहरी</option>
-                  <option value="Photo4x6">4×6 फोटो</option>
+                  <option value="A4">{t('qp_size_a4')}</option>
+                  <option value="Legal">{t('qp_size_legal')}</option>
+                  <option value="Photo4x6">{t('qp_size_photo')}</option>
                 </select>
               </div>
             </div>
@@ -410,11 +412,11 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  पेज रेंज (Page Range)
+                  {t('qp_page_range_label')}
                 </label>
                 <input
                   type="text"
-                  placeholder="पेज संख्या दर्ज करें (All या 1-5)"
+                  placeholder={t('qp_page_range_hint')}
                   value={pageRange}
                   onChange={(e) => setPageRange(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
@@ -423,11 +425,11 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
 
               <div>
                 <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase tracking-wider mb-1.5">
-                  विशेष निर्देश (यदि कोई हो)
+                  {t('qp_notes_label')}
                 </label>
                 <input
                   type="text"
-                  placeholder="विशेष निर्देश (वैकल्पिक)"
+                  placeholder={t('qp_notes_hint')}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
@@ -445,16 +447,16 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
           <div className="bg-white dark:bg-[#0f1d36] rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 space-y-5">
             <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">
               <Smartphone className="w-5 h-5 text-orange-500" />
-              3. आपकी जानकारी (Customer Info)
+              {t('qp_customer_step')}
             </h3>
 
             <div>
               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
-                आपका नाम (Name)
+                {t('qp_name_label')}
               </label>
               <input
                 type="text"
-                placeholder="आपका पूरा नाम दर्ज करें"
+                placeholder={t('qp_name_hint')}
                 value={customerName}
                 onChange={(e) => setCustomerName(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
@@ -463,11 +465,11 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
 
             <div>
               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
-                मोबाइल नंबर (WhatsApp Updates हेतु)
+                {t('qp_phone_label')}
               </label>
               <input
                 type="tel"
-                placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
+                placeholder={t('qp_phone_hint')}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"
@@ -477,15 +479,15 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
             {/* Bill Summary */}
             <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-2 text-xs">
               <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                <span>रेट प्रति पेज:</span>
+                <span>{t('qp_rate_label')}</span>
                 <span>₹{currentRate}</span>
               </div>
               <div className="flex justify-between text-slate-600 dark:text-slate-400">
-                <span>कुल पेज × प्रतियां:</span>
-                <span>{pagesCount} पेज × {copies} कॉपी</span>
+                <span>{t('qp_total_pages_copies')}</span>
+                <span>{pagesCount} {language === 'hi' ? 'पेज' : 'pages'} × {copies} {language === 'hi' ? 'कॉपी' : 'copies'}</span>
               </div>
               <div className="flex justify-between font-bold text-base text-slate-900 dark:text-white pt-2 border-t border-slate-200 dark:border-slate-800">
-                <span>कुल देय राशि:</span>
+                <span>{t('qp_total_amount_label')}</span>
                 <span className="text-emerald-600 dark:text-emerald-400 text-xl font-black">₹{totalAmount}</span>
               </div>
             </div>
@@ -493,7 +495,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
             {/* Payment Mode Selection */}
             <div>
               <label className="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-2">
-                भुगतान का तरीका (Payment Mode)
+                {t('qp_pay_mode_label')}
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
@@ -505,7 +507,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                       : 'border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
-                  काउंटर पर नकद
+                  {t('qp_pay_counter')}
                 </button>
                 <button
                   type="button"
@@ -517,7 +519,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                   }`}
                 >
                   <QrCode className="w-3.5 h-3.5" />
-                  ऑनलाइन UPI
+                  {t('qp_pay_upi')}
                 </button>
               </div>
             </div>
@@ -526,7 +528,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
             {paymentMode === 'upi' && (
               <div className="bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-xl p-3 text-center">
                 <p className="text-xs font-bold text-emerald-900 dark:text-emerald-200 mb-2">
-                  स्कैन करके ₹{totalAmount} का भुगतान करें
+                  {t('qp_scan_pay')} (₹{totalAmount})
                 </p>
                 <div className="bg-white p-2.5 rounded-lg inline-block shadow-sm">
                   <QRCodeSVG value={upiPayUrl} size={130} level="M" />
@@ -546,12 +548,12 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
               {loading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>प्रिंट रिक्वेस्ट जा रही है...</span>
+                  <span>{t('qp_submitting')}</span>
                 </>
               ) : (
                 <>
                   <Printer className="w-4 h-4" />
-                  <span>प्रिंट रिक्वेस्ट भेजें (Submit)</span>
+                  <span>{t('qp_submit_btn')}</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -559,7 +561,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
 
             <div className="flex items-center justify-center gap-2 text-[11px] text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/60 py-2.5 px-3 rounded-xl border border-slate-200 dark:border-slate-800">
               <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
-              <span>🔒 100% डेटा प्राइवेसी: आपके दस्तावेज़ प्रिंट के बाद 24 घंटे में स्वतः नष्ट हो जाते हैं। प्रिंट के तुरंत बाद आप 'अभी फ़ाइल डिलीट करें' बटन दबाकर तुरंत फ़ाइल नष्ट कर सकते हैं।</span>
+              <span>{t('qp_privacy_banner')}</span>
             </div>
 
           </div>
