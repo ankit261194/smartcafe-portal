@@ -1,0 +1,36 @@
+# Robots.txt for Smart Cafe B2B Portal (https://smartcafe.sbs)
+# Optimized for Google, Bing, Yahoo, DuckDuckGo, and Social Crawlers
+
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /CyberCafe_Portal.apk
+Disallow: /api/
+Disallow: /superadmin
+
+# Allow Googlebot and Search Spiders Full Crawl
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /assets/
+Allow: /og-image.png
+Allow: /favicon.svg
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: WhatsApp
+Allow: /
+
+User-agent: TelegramBot
+Allow: /
+
+# Canonical XML Sitemap
+Sitemap: https://smartcafe.sbs/sitemap.xml
