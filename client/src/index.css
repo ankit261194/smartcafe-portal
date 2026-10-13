@@ -6,6 +6,8 @@
   html {
     scroll-behavior: smooth;
     overflow-x: clip;
+    overflow-y: scroll; /* ALWAYS force vertical scrollbar on every page */
+    scrollbar-gutter: stable;
   }
   body {
     font-family: 'Plus Jakarta Sans', 'Yantramanav', sans-serif;
@@ -23,37 +25,38 @@
 }
 
 /* ========================================================================== */
-/* HIGH-VISIBILITY PRO CUSTOM SCROLLBARS (TIRANGA PATRIOTIC THEME) */
+/* PERMANENT HIGH-VISIBILITY SCROLLBAR (MATCHES CSC OFFICIAL THEME) */
 /* ========================================================================== */
 html {
   scrollbar-width: auto;
-  scrollbar-color: #f97316 #f1f5f9;
+  scrollbar-color: #059669 #f1f5f9;
 }
 
 html.dark {
-  scrollbar-color: #f97316 #070e1b;
+  scrollbar-color: #059669 #070e1b;
 }
 
-/* Webkit (Chrome, Edge, Safari, Opera) */
+/* Universal Webkit Scrollbars (Chrome, Edge, Safari, Opera) */
 ::-webkit-scrollbar {
-  width: 11px;
-  height: 11px;
+  width: 12px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-left: 1px solid #e2e8f0;
+  border-left: 1px solid #cbd5e1;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #FF671F 0%, #FF9933 50%, #138808 100%);
+  background: linear-gradient(180deg, #059669 0%, #10b981 50%, #047857 100%);
   border-radius: 8px;
   border: 2px solid #ffffff;
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.15);
+  min-height: 36px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #ea580c 0%, #f97316 50%, #046A38 100%);
+  background: linear-gradient(180deg, #047857 0%, #059669 50%, #064e3b 100%);
 }
 
 /* Dark Mode Scrollbars */
@@ -63,14 +66,15 @@ html.dark ::-webkit-scrollbar-track {
 }
 
 html.dark ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #FF671F 0%, #FF9933 50%, #138808 100%);
+  background: linear-gradient(180deg, #059669 0%, #10b981 50%, #047857 100%);
   border-radius: 8px;
   border: 2px solid #0b1528;
-  box-shadow: 0 0 8px rgba(255, 103, 31, 0.3);
+  box-shadow: 0 0 8px rgba(5, 150, 105, 0.3);
+  min-height: 36px;
 }
 
 html.dark ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #fb923c 0%, #f97316 50%, #16a34a 100%);
+  background: linear-gradient(180deg, #10b981 0%, #059669 50%, #047857 100%);
 }
 
 /* Sidebar Specific Scrollbar */
