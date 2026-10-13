@@ -1,0 +1,31 @@
+{
+  "name": "Smart Cafe B2B | जन सेवा केंद्र व साइबर कैफे पोर्टल",
+  "short_name": "Smart Cafe",
+  "description": "भारत का नंबर 1 जन सेवा केंद्र, सीएससी वीएलई व साइबर कैफे B2B पोर्टल — वाहन RC, पैन कार्ड, आधार, वोटर कार्ड व ई-डिस्ट्रिक्ट 1-क्लिक PVC कार्ड व PDF सेवा।",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060c18",
+  "theme_color": "#064e3b",
+  "lang": "hi",
+  "orientation": "portrait-primary",
+  "categories": [
+    "business",
+    "productivity",
+    "utilities",
+    "government"
+  ],
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
