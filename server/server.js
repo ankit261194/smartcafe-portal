@@ -1901,8 +1901,17 @@ function getVehicleDetails(regNo, custom = {}) {
     { model: "BAJAJ PULSAR 150 DUAL DISC", class: "MCWG (Two Wheeler)", fuel: "PETROL", cc: "149.5 CC", seats: 2, color: "SPARKLE BLACK" }
   ];
   const chosenVehicle = vehicleModels[hash % vehicleModels.length];
-  const owner = custom.customerName || custom.ownerName || custom.name || '-';
-  const father = custom.fatherName || '-';
+  const sampleOwners = [
+    { owner: "VIKRAM PRASAD", father: "HARI PRASAD" },
+    { owner: "ANIL GUPTA", father: "DINESH GUPTA" },
+    { owner: "PRADEEP MISHRA", father: "RADHEY SHYAM MISHRA" },
+    { owner: "SUNIL TIWARI", father: "OM PRAKASH TIWARI" },
+    { owner: "RAVI KANT DUBEY", father: "BHAGWAN DAS DUBEY" },
+    { owner: "AMIT KASHYAP", father: "SURESH KASHYAP" }
+  ];
+  const chosenOwner = sampleOwners[hash % sampleOwners.length];
+  const owner = custom.customerName || custom.ownerName || custom.name || chosenOwner.owner;
+  const father = custom.fatherName || chosenOwner.father;
 
   const rtoCodes = {
     'UP32': 'RTO LUCKNOW (UP-32), UTTAR PRADESH',
@@ -2098,17 +2107,26 @@ function getAyushmanDetails(id, custom = {}) {
 // 5. Ration Card to PDF / Parchaa Generator (NFSA Layout)
 function getRationDetails(rationNo, custom = {}) {
   const cleanRation = (rationNo || '').replace(/[\s-]+/g, '');
-  const headName = custom.headName || custom.customerName || custom.name || '-';
-  const spouse = custom.spouse || custom.fatherName || '-';
+  const hash = getDeterministicHash(cleanRation || 'RATION');
+  const sampleHeads = [
+    { head: "SUNITA DEVI", spouse: "RAM PRAKASH" },
+    { head: "KUSUM LATA", spouse: "ANAND MOHAN" },
+    { head: "SHANTI DEVI", spouse: "BHAGWATI PRASAD" },
+    { head: "MEENA DEVI", spouse: "SURENDRA NATH" },
+    { head: "KAMLESH DEVI", spouse: "JAGDISH PRASAD" }
+  ];
+  const chosenHead = sampleHeads[hash % sampleHeads.length];
+  const headName = custom.headName || custom.customerName || custom.name || chosenHead.head;
+  const spouse = custom.spouse || custom.fatherName || chosenHead.spouse;
   const scheme = "पात्र गृहस्थी (PHH)";
   const fpsDealer = `उचित दर विक्रेता (उ.प्र. अधिकृत कोटेदार)`;
 
   const members = [
-    { index: 1, name: headName, relation: "स्वयं (मुखिया)", gender: "मुखिया", age: "-" }
+    { index: 1, name: headName, relation: "स्वयं (मुखिया)", gender: "मुखिया", age: "42" },
+    { index: 2, name: spouse, relation: "पति/पिता", gender: "सदस्य", age: "46" },
+    { index: 3, name: "विकास", relation: "पुत्र", gender: "सदस्य", age: "18" },
+    { index: 4, name: "पूजा", relation: "पुत्री", gender: "सदस्य", age: "15" }
   ];
-  if (spouse !== '-') {
-    members.push({ index: 2, name: spouse, relation: "पति/पिता", gender: "सदस्य", age: "-" });
-  }
 
   return {
     rationNo: cleanRation || '-',
@@ -2134,7 +2152,10 @@ function getRationDetails(rationNo, custom = {}) {
 // 6. Electricity Bill Slip Generator (Discom Layout)
 function getElectricityBillDetails(consumerNo, custom = {}) {
   const cleanNo = (consumerNo || '').replace(/[\s-]+/g, '');
-  const consumerName = custom.consumerName || custom.customerName || custom.name || '-';
+  const hash = getDeterministicHash(cleanNo || 'ELEC');
+  const sampleConsumers = ["VINOD CHANDRA", "ASHOK PATEL", "DEEPAK AGRAWAL", "SUDHIR PANDEY", "MANOJ AWASTHI"];
+  const chosenConsumer = sampleConsumers[hash % sampleConsumers.length];
+  const consumerName = custom.consumerName || custom.customerName || custom.name || chosenConsumer;
   const discom = custom.discom || "मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)";
   const billedUnits = 120;
   const energyCharges = 660;
@@ -2173,9 +2194,17 @@ function getElectricityBillDetails(consumerNo, custom = {}) {
 function getEdistrictDetails(appNo, certNo, custom = {}) {
   const cleanApp = (appNo || '').replace(/[\s-]+/g, '');
   const cleanCert = (certNo || '').replace(/[\s-]+/g, '');
+  const hash = getDeterministicHash((cleanApp + cleanCert) || 'EDIST');
+  const sampleApplicants = [
+    { name: "ROHIT TRIPATHI", father: "BRAHMADUTT TRIPATHI" },
+    { name: "NEERAJ DIWAKAR", father: "RAM SWAROOP DIWAKAR" },
+    { name: "PANKAJ JAISWAL", father: "DAYA RAM JAISWAL" },
+    { name: "ALOK CHATURVEDI", father: "KRISHNA MOHAN CHATURVEDI" }
+  ];
+  const chosenApp = sampleApplicants[hash % sampleApplicants.length];
   const certType = custom.certType || "आय / जाति / निवास प्रमाण पत्र";
-  const applicantName = custom.applicantName || custom.customerName || custom.name || '-';
-  const fatherName = custom.fatherName || '-';
+  const applicantName = custom.applicantName || custom.customerName || custom.name || chosenApp.name;
+  const fatherName = custom.fatherName || chosenApp.father;
   const issueDate = new Date().toLocaleDateString('en-GB');
   const tehsil = "सदर";
   const district = "राजस्व विभाग उ.प्र.";

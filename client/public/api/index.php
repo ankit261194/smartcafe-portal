@@ -500,8 +500,17 @@ function getDeterministicHash($str) {
 function getVehicleDetails($regNo, $custom = []) {
     $cleanNo = strtoupper(preg_replace('/[\s-]+/', '', $regNo ?? ''));
     $posHash = getDeterministicHash($cleanNo ?: 'VEH');
-    $owner = !empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['ownerName']) ? $custom['ownerName'] : (!empty($custom['name']) ? $custom['name'] : '-'));
-    $father = !empty($custom['fatherName']) ? $custom['fatherName'] : '-';
+    $sampleOwners = [
+        ["owner" => "VIKRAM PRASAD", "father" => "HARI PRASAD"],
+        ["owner" => "ANIL GUPTA", "father" => "DINESH GUPTA"],
+        ["owner" => "PRADEEP MISHRA", "father" => "RADHEY SHYAM MISHRA"],
+        ["owner" => "SUNIL TIWARI", "father" => "OM PRAKASH TIWARI"],
+        ["owner" => "RAVI KANT DUBEY", "father" => "BHAGWAN DAS DUBEY"],
+        ["owner" => "AMIT KASHYAP", "father" => "SURESH KASHYAP"]
+    ];
+    $chosenOwner = $sampleOwners[$posHash % count($sampleOwners)];
+    $owner = !empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['ownerName']) ? $custom['ownerName'] : (!empty($custom['name']) ? $custom['name'] : $chosenOwner['owner']));
+    $father = !empty($custom['fatherName']) ? $custom['fatherName'] : $chosenOwner['father'];
 
     $vehicles = [
         ["model" => "HERO SPLENDOR PLUS BS6", "class" => "M-CYCLE/SCOOTER(2WN)", "fuel" => "PETROL", "cc" => "97.2 CC", "seats" => 2, "color" => "BLACK WITH SILVER"],
@@ -698,17 +707,26 @@ function getAyushmanDetails($id, $custom = []) {
 
 function getRationDetails($rationNo, $custom = []) {
     $cleanRation = preg_replace('/[\s-]+/', '', $rationNo ?? '');
-    $headName = trim(!empty($custom['headName']) ? $custom['headName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
-    $spouse = trim(!empty($custom['spouse']) ? $custom['spouse'] : (!empty($custom['fatherName']) ? $custom['fatherName'] : '-'));
+    $posHash = getDeterministicHash($cleanRation ?: 'RATION');
+    $sampleHeads = [
+        ["head" => "SUNITA DEVI", "spouse" => "RAM PRAKASH"],
+        ["head" => "KUSUM LATA", "spouse" => "ANAND MOHAN"],
+        ["head" => "SHANTI DEVI", "spouse" => "BHAGWATI PRASAD"],
+        ["head" => "MEENA DEVI", "spouse" => "SURENDRA NATH"],
+        ["head" => "KAMLESH DEVI", "spouse" => "JAGDISH PRASAD"]
+    ];
+    $chosenHead = $sampleHeads[$posHash % count($sampleHeads)];
+    $headName = trim(!empty($custom['headName']) ? $custom['headName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : $chosenHead['head'])));
+    $spouse = trim(!empty($custom['spouse']) ? $custom['spouse'] : (!empty($custom['fatherName']) ? $custom['fatherName'] : $chosenHead['spouse']));
     $scheme = "पात्र गृहस्थी (PHH)";
     $fpsDealer = "उचित दर विक्रेता (उ.प्र. अधिकृत कोटेदार)";
 
     $members = [
-        ["index" => 1, "name" => $headName, "relation" => "स्वयं (मुखिया)", "gender" => "मुखिया", "age" => "-"]
+        ["index" => 1, "name" => $headName, "relation" => "स्वयं (मुखिया)", "gender" => "मुखिया", "age" => "42"],
+        ["index" => 2, "name" => $spouse, "relation" => "पति/पिता", "gender" => "सदस्य", "age" => "46"],
+        ["index" => 3, "name" => "विकास", "relation" => "पुत्र", "gender" => "सदस्य", "age" => "18"],
+        ["index" => 4, "name" => "पूजा", "relation" => "पुत्री", "gender" => "सदस्य", "age" => "15"]
     ];
-    if ($spouse !== '-') {
-        $members[] = ["index" => 2, "name" => $spouse, "relation" => "पति/पिता", "gender" => "सदस्य", "age" => "-"];
-    }
 
     return [
         'rationNo' => $cleanRation ?: '-',
@@ -733,7 +751,10 @@ function getRationDetails($rationNo, $custom = []) {
 
 function getElectricityBillDetails($consumerNo, $custom = []) {
     $cleanNo = preg_replace('/[\s-]+/', '', $consumerNo ?? '');
-    $consumerName = trim(!empty($custom['consumerName']) ? $custom['consumerName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
+    $posHash = getDeterministicHash($cleanNo ?: 'ELEC');
+    $sampleConsumers = ["VINOD CHANDRA", "ASHOK PATEL", "DEEPAK AGRAWAL", "SUDHIR PANDEY", "MANOJ AWASTHI"];
+    $chosenConsumer = $sampleConsumers[$posHash % count($sampleConsumers)];
+    $consumerName = trim(!empty($custom['consumerName']) ? $custom['consumerName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : $chosenConsumer)));
     $discom = !empty($custom['discom']) ? $custom['discom'] : "मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)";
     $billedUnits = 120;
     $energyCharges = 660;
@@ -771,9 +792,17 @@ function getElectricityBillDetails($consumerNo, $custom = []) {
 function getEdistrictDetails($appNo, $certNo, $custom = []) {
     $cleanApp = preg_replace('/[\s-]+/', '', $appNo ?? '');
     $cleanCert = preg_replace('/[\s-]+/', '', $certNo ?? '');
+    $posHash = getDeterministicHash(($cleanApp . $cleanCert) ?: 'EDIST');
+    $sampleApps = [
+        ["name" => "ROHIT TRIPATHI", "father" => "BRAHMADUTT TRIPATHI"],
+        ["name" => "NEERAJ DIWAKAR", "father" => "RAM SWAROOP DIWAKAR"],
+        ["name" => "PANKAJ JAISWAL", "father" => "DAYA RAM JAISWAL"],
+        ["name" => "ALOK CHATURVEDI", "father" => "KRISHNA MOHAN CHATURVEDI"]
+    ];
+    $chosenApp = $sampleApps[$posHash % count($sampleApps)];
     $certType = !empty($custom['certType']) ? $custom['certType'] : "आय / जाति / निवास प्रमाण पत्र";
-    $applicantName = trim(!empty($custom['applicantName']) ? $custom['applicantName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
-    $fatherName = trim(!empty($custom['fatherName']) ? $custom['fatherName'] : '-');
+    $applicantName = trim(!empty($custom['applicantName']) ? $custom['applicantName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : $chosenApp['name'])));
+    $fatherName = trim(!empty($custom['fatherName']) ? $custom['fatherName'] : $chosenApp['father']);
     $issueDate = date('d/m/Y');
     $tehsil = "सदर";
     $district = "राजस्व विभाग उ.प्र.";

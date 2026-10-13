@@ -1015,27 +1015,31 @@ export default function ServicePage({
                     {language === 'hi' ? (
                       <>
                         {currentTool.id === 'pan' && '10-अंकीय पैन नंबर'}
+                        {currentTool.id === 'epan' && '10-अंकीय पैन अथवा पावती संख्या'}
                         {currentTool.id === 'aadhaar' && '12-अंकीय आधार संख्या (स्वतः 4-अंकीय स्पेस)'}
                         {currentTool.id === 'voter' && '10-अंकीय वोटर आईडी EPIC कोड'}
-                        {currentTool.id === 'rc' && 'वाहन पंजीयन क्रमांक'}
+                        {currentTool.id === 'rc' && 'वाहन पंजीयन क्रमांक (जैसे UP32AB1234)'}
                         {currentTool.id === 'dl' && 'सारथी ड्राइविंग लाइसेंस क्रमांक'}
                         {currentTool.id === 'electricity' && 'उपभोक्ता खाता संख्या'}
                         {currentTool.id === 'ration' && '12-अंकीय राशन कार्ड संख्या'}
                         {currentTool.id === 'edistrict' && 'आवेदन क्रमांक संख्या'}
                         {currentTool.id === 'challan' && 'चालान / वाहन क्रमांक'}
+                        {currentTool.id === 'ayushman' && 'PM-JAY आईडी / राशन अथवा आधार संख्या'}
                         {currentTool.id === 'receipt' && '10-अंकीय ग्राहक मोबाइल नंबर'}
                       </>
                     ) : (
                       <>
                         {currentTool.id === 'pan' && '10-Digit PAN Number'}
+                        {currentTool.id === 'epan' && '10-Digit PAN or Ack Number'}
                         {currentTool.id === 'aadhaar' && '12-Digit Aadhaar (Auto 4-Digit Spacing)'}
                         {currentTool.id === 'voter' && '10-Digit EPIC Voter ID'}
-                        {currentTool.id === 'rc' && 'Vehicle Registration Number'}
+                        {currentTool.id === 'rc' && 'Vehicle Registration Number (e.g. UP32AB1234)'}
                         {currentTool.id === 'dl' && 'Sarathi Driving Licence Number'}
                         {currentTool.id === 'electricity' && 'Consumer Account Number'}
                         {currentTool.id === 'ration' && '12-Digit Ration Card Number'}
                         {currentTool.id === 'edistrict' && 'Application Number'}
                         {currentTool.id === 'challan' && 'Challan / Vehicle Reg Number'}
+                        {currentTool.id === 'ayushman' && 'PM-JAY ID or Ration/Aadhaar'}
                         {currentTool.id === 'receipt' && '10-Digit Customer Mobile Number'}
                       </>
                     )}
@@ -1048,77 +1052,99 @@ export default function ServicePage({
                 </div>
               </div>
 
-              {/* Personal Details: Name & Father's Name */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {t('sp_applicant_name')}
-                  </label>
-                  <input
-                    type="text"
-                    value={customerName}
-                    onChange={(e) => setCustomerName(e.target.value)}
-                    placeholder={language === 'hi' ? 'आवेदक का पूरा नाम दर्ज करें' : 'Enter applicant full name'}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none"
-                  />
-                </div>
+              {/* 1. PERSONAL DETAILS (NAME & FATHER'S NAME) - ONLY FOR SERVICES THAT REQUIRE THEM */}
+              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'receipt'].includes(currentTool.id) && (
+                <div className={`grid gap-3 ${['pan', 'voter', 'dl', 'ayushman'].includes(currentTool.id) ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      {currentTool.id === 'voter' ? (language === 'hi' ? 'मतदाता का पूरा नाम *' : 'Voter Full Name *') :
+                       currentTool.id === 'dl' ? (language === 'hi' ? 'लाइसेंस धारक का नाम *' : 'Licence Holder Name *') :
+                       currentTool.id === 'ayushman' ? (language === 'hi' ? 'लाभार्थी का पूरा नाम *' : 'Beneficiary Full Name *') :
+                       currentTool.id === 'receipt' ? (language === 'hi' ? 'ग्राहक का नाम' : 'Customer Name') :
+                       t('sp_applicant_name')}
+                    </label>
+                    <input
+                      type="text"
+                      value={customerName}
+                      onChange={(e) => setCustomerName(e.target.value)}
+                      placeholder={
+                        currentTool.id === 'receipt'
+                          ? (language === 'hi' ? 'ग्राहक का नाम दर्ज करें' : 'Enter customer name')
+                          : (language === 'hi' ? 'आवेदक का पूरा नाम दर्ज करें' : 'Enter applicant full name')
+                      }
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none"
+                    />
+                  </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {t('sp_father_husband_name')}
-                  </label>
-                  <input
-                    type="text"
-                    value={fatherName}
-                    onChange={(e) => setFatherName(e.target.value)}
-                    placeholder={language === 'hi' ? 'पिता अथवा पति का नाम दर्ज करें' : 'Enter father or husband name'}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* REAL HTML5 DATE PICKER FOR DOB & DATES (STRICT REQUIREMENT) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                    <Calendar className="w-3.5 h-3.5 text-orange-500" />
-                    <span>{t('sp_dob_label')}</span>
-                  </label>
-                  <input
-                    type="date"
-                    value={dobDate}
-                    onChange={(e) => setDobDate(e.target.value)}
-                    max={new Date().toISOString().split('T')[0]}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-bold focus:outline-none cursor-pointer"
-                  />
-                  {dobDate && (
-                    <span className="text-[10px] text-slate-400 font-mono block">
-                      {language === 'hi' ? `कार्ड पर छपेगा: ${formatDobDisplay(dobDate)}` : `Printed on card: ${formatDobDisplay(dobDate)}`}
-                    </span>
+                  {['pan', 'voter', 'dl', 'ayushman'].includes(currentTool.id) && (
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        {currentTool.id === 'pan' ? (language === 'hi' ? 'पिता का पूरा नाम *' : "Father's Full Name *") :
+                         t('sp_father_husband_name')}
+                      </label>
+                      <input
+                        type="text"
+                        value={fatherName}
+                        onChange={(e) => setFatherName(e.target.value)}
+                        placeholder={
+                          currentTool.id === 'pan'
+                            ? (language === 'hi' ? 'पिता का नाम दर्ज करें' : "Enter father's name")
+                            : (language === 'hi' ? 'पिता अथवा पति का नाम दर्ज करें' : 'Enter father or husband name')
+                        }
+                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none"
+                      />
+                    </div>
                   )}
                 </div>
+              )}
 
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {t('sp_gender_label')}
-                  </label>
-                  <select
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-bold focus:outline-none cursor-pointer"
-                  >
-                    <option value="MALE">{t('sp_gender_male')}</option>
-                    <option value="FEMALE">{t('sp_gender_female')}</option>
-                    <option value="OTHER">{t('sp_gender_other')}</option>
-                  </select>
+              {/* 2. REAL HTML5 DATE PICKER FOR DOB & GENDER - ONLY FOR SERVICES THAT REQUIRE THEM */}
+              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'epan'].includes(currentTool.id) && (
+                <div className={`grid gap-3 ${['aadhaar', 'voter', 'ayushman'].includes(currentTool.id) ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-orange-500" />
+                      <span>{t('sp_dob_label')} *</span>
+                    </label>
+                    <input
+                      type="date"
+                      value={dobDate}
+                      onChange={(e) => setDobDate(e.target.value)}
+                      max={new Date().toISOString().split('T')[0]}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-bold focus:outline-none cursor-pointer"
+                    />
+                    {dobDate && (
+                      <span className="text-[10px] text-slate-400 font-mono block">
+                        {language === 'hi' ? `कार्ड पर छपेगा: ${formatDobDisplay(dobDate)}` : `Printed on card: ${formatDobDisplay(dobDate)}`}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Gender: STRICTLY only on Aadhaar, Voter, and Ayushman (PAN has no gender) */}
+                  {['aadhaar', 'voter', 'ayushman'].includes(currentTool.id) && (
+                    <div className="space-y-1.5">
+                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        {t('sp_gender_label')} *
+                      </label>
+                      <select
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-bold focus:outline-none cursor-pointer"
+                      >
+                        <option value="MALE">{t('sp_gender_male')}</option>
+                        <option value="FEMALE">{t('sp_gender_female')}</option>
+                        <option value="OTHER">{t('sp_gender_other')}</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
-              </div>
+              )}
 
-              {/* Optional Secondary Field: Cert No, Ack No, Discom, or Address */}
-              {currentTool.id === 'aadhaar' ? (
+              {/* 3. PERMANENT ADDRESS - STRICTLY ONLY FOR AADHAAR CARD */}
+              {currentTool.id === 'aadhaar' && (
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {t('sp_address_label')}
+                    {t('sp_address_label')} *
                   </label>
                   <input
                     type="text"
@@ -1128,26 +1154,48 @@ export default function ServicePage({
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none"
                   />
                 </div>
-              ) : (
+              )}
+
+              {/* 4. SECONDARY FIELD - ONLY FOR EDISTRICT, ELECTRICITY, DL, RECEIPT */}
+              {['edistrict', 'electricity', 'dl', 'receipt'].includes(currentTool.id) && (
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     {currentTool.id === 'edistrict' ? (language === 'hi' ? 'प्रमाण पत्र क्रमांक *' : 'Certificate ID *') :
-                     currentTool.id === 'receipt' ? (language === 'hi' ? 'सेवा विवरण' : 'Service Description') :
-                     currentTool.id === 'dl' ? (language === 'hi' ? 'अधिकृत COV श्रेणी' : 'Authorized COV Category') :
-                     (language === 'hi' ? 'अतिरिक्त विवरण / संदर्भ' : 'Additional Reference')}
+                     currentTool.id === 'electricity' ? (language === 'hi' ? 'विद्युत वितरण निगम (Discom Board)' : 'Discom Board') :
+                     currentTool.id === 'dl' ? (language === 'hi' ? 'अधिकृत COV श्रेणी (जैसे LMV, MCWG)' : 'Authorized COV Category') :
+                     (language === 'hi' ? 'सेवा विवरण' : 'Service Description')}
                   </label>
-                  <input
-                    type="text"
-                    value={secondaryInput}
-                    onChange={(e) => setSecondaryInput(e.target.value)}
-                    placeholder={
-                      currentTool.id === 'edistrict' ? (language === 'hi' ? 'प्रमाण पत्र क्रमांक दर्ज करें' : 'Enter Certificate ID') :
-                      currentTool.id === 'receipt' ? (language === 'hi' ? 'सेवा विवरण दर्ज करें' : 'Enter Service Description') :
-                      currentTool.id === 'dl' ? 'LMV-NT, MCWG' :
-                      (language === 'hi' ? 'वैकल्पिक संदर्भ' : 'Optional Reference')
-                    }
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none"
-                  />
+                  {currentTool.id === 'electricity' ? (
+                    <select
+                      value={secondaryInput}
+                      onChange={(e) => setSecondaryInput(e.target.value)}
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer"
+                    >
+                      <option value="">{language === 'hi' ? '-- विद्युत निगम चुनें (डिफ़ॉल्ट UPPCL) --' : '-- Select Discom (Default UPPCL) --'}</option>
+                      <option value="UPPCL">UPPCL (उत्तर प्रदेश पावर कारपोरेशन)</option>
+                      <option value="PVVNL">PVVNL (पश्चिमांचल विद्युत वितरण निगम)</option>
+                      <option value="DVVNL">DVVNL (दक्षिणांचल विद्युत वितरण निगम)</option>
+                      <option value="MVVNL">MVVNL (मध्यांचल विद्युत वितरण निगम)</option>
+                      <option value="PuVVNL">PuVVNL (पूर्वांचल विद्युत वितरण निगम)</option>
+                      <option value="DHBVN">DHBVN (दक्षिण हरियाणा बिजली वितरण निगम)</option>
+                      <option value="BSES">BSES (दिल्ली राजधानी/यमुना पावर)</option>
+                      <option value="PSPCL">PSPCL (पंजाब स्टेट पावर कॉर्पोरेशन)</option>
+                      <option value="JVVNL">JVVNL (जयपुर विद्युत वितरण निगम)</option>
+                      <option value="SBPDCL">SBPDCL (साउथ बिहार पावर डिस्ट्रीब्यूशन)</option>
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      value={secondaryInput}
+                      onChange={(e) => setSecondaryInput(e.target.value)}
+                      placeholder={
+                        currentTool.id === 'edistrict' ? (language === 'hi' ? 'प्रमाण पत्र क्रमांक दर्ज करें' : 'Enter Certificate ID') :
+                        currentTool.id === 'dl' ? (language === 'hi' ? 'LMV-NT, MCWG दर्ज करें' : 'LMV-NT, MCWG') :
+                        (language === 'hi' ? 'सेवा विवरण दर्ज करें' : 'Enter Service Description')
+                      }
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none"
+                    />
+                  )}
                 </div>
               )}
 
@@ -1286,7 +1334,21 @@ export default function ServicePage({
                 ) : (
                   <>
                     <Sparkles className="w-5 h-5" />
-                    <span>{t('sp_btn_generate')}</span>
+                    <span>
+                      {currentTool.id === 'rc' ? (language === 'hi' ? '⚡ 1-क्लिक वाहन RC जनरेट करें' : '⚡ 1-Click Generate RC') :
+                       currentTool.id === 'ration' ? (language === 'hi' ? '⚡ 1-क्लिक राशन पर्ची जनरेट करें' : '⚡ 1-Click Generate Ration Slip') :
+                       currentTool.id === 'challan' ? (language === 'hi' ? '⚡ 1-क्लिक ई-चालान जांचें' : '⚡ 1-Click Verify Challan') :
+                       currentTool.id === 'electricity' ? (language === 'hi' ? '⚡ 1-क्लिक बिल रसीद जनरेट करें' : '⚡ 1-Click Generate Bill Receipt') :
+                       currentTool.id === 'edistrict' ? (language === 'hi' ? '⚡ 1-क्लिक सत्यापन पर्ची जनरेट करें' : '⚡ 1-Click Generate Verification Slip') :
+                       currentTool.id === 'epan' ? (language === 'hi' ? '⚡ 1-क्लिक ई-पैन डाउनलोड करें' : '⚡ 1-Click Download e-PAN') :
+                       currentTool.id === 'pan' ? (language === 'hi' ? '⚡ 1-क्लिक PVC पैन कार्ड जनरेट करें' : '⚡ 1-Click Generate PVC PAN') :
+                       currentTool.id === 'aadhaar' ? (language === 'hi' ? '⚡ 1-क्लिक PVC आधार कार्ड जनरेट करें' : '⚡ 1-Click Generate PVC Aadhaar') :
+                       currentTool.id === 'voter' ? (language === 'hi' ? '⚡ 1-क्लिक वोटर कार्ड जनरेट करें' : '⚡ 1-Click Generate Voter Card') :
+                       currentTool.id === 'dl' ? (language === 'hi' ? '⚡ 1-क्लिक DL कार्ड जनरेट करें' : '⚡ 1-Click Generate DL Card') :
+                       currentTool.id === 'ayushman' ? (language === 'hi' ? '⚡ 1-क्लिक गोल्डन कार्ड जनरेट करें' : '⚡ 1-Click Generate Golden Card') :
+                       currentTool.id === 'receipt' ? (language === 'hi' ? '⚡ 1-क्लिक रसीद जनरेट करें' : '⚡ 1-Click Generate Receipt') :
+                       t('sp_btn_generate')}
+                    </span>
                   </>
                 )}
               </button>
