@@ -208,9 +208,9 @@ export default function ServiceApply({
       (() => {
         try {
           const sess = JSON.parse(localStorage.getItem('cybercafe_customer') || '{}');
-          return sess.phone || '9876543210';
+          return sess.phone || '';
         } catch {
-          return '9876543210';
+          return '';
         }
       })();
 

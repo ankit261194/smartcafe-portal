@@ -34,7 +34,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             <div>
               <span className="text-[10px] text-slate-500 font-bold block">घोषणा का उद्देश्य</span>
               <span className="font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded inline-block">
-                {data.purpose || 'आय प्रमाण पत्र / छात्रवृत्ति आवेदन हेतु'}
+                {data.purpose || '-'}
               </span>
             </div>
             <div className="w-16 h-20 border border-slate-400 rounded bg-slate-50 overflow-hidden shrink-0 shadow-xs">
@@ -48,18 +48,18 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </p>
             <p>
               मैं <strong>{data.applicantName || '-'}</strong>, आत्मज/पत्नी श्री <strong>{data.fatherHusband || '-'}</strong>, 
-              निवासी: <strong>{data.address || 'मकान नं. 14, ग्राम व पोस्ट, तहसील, जिला'}</strong> का/की स्थाई निवासी हूँ तथा सत्यनिष्ठापूर्वक निम्न घोषणा करता/करती हूँ:
+              निवासी: <strong>{data.address || '-'}</strong> का/की स्थाई निवासी हूँ तथा सत्यनिष्ठापूर्वक निम्न घोषणा करता/करती हूँ:
             </p>
             <ol className="list-decimal pl-5 space-y-1.5 text-[11.5px]">
               <li>यह कि मैं उपरोक्त पते का स्थाई निवासी हूँ एवं समस्त विवरण मेरे निजी ज्ञान में पूर्णतः सत्य व सही हैं।</li>
-              <li>यह कि मेरे परिवार की समस्त स्रोतों से कुल वार्षिक आय लगभग <strong>{data.income || '₹48,000/- (अड़तालीस हजार रुपये)'}</strong> मात्र है।</li>
+              <li>यह कि मेरे परिवार की समस्त स्रोतों से कुल वार्षिक आय लगभग <strong>{data.income || '-'}</strong> मात्र है।</li>
               <li>यह कि मेरे द्वारा दी गई जानकारी असत्य पाए जाने पर किसी भी विधिक कार्यवाही का उत्तरदायित्व मेरा स्वयं का होगा।</li>
             </ol>
           </div>
 
           <div className="pt-6 border-t border-slate-200 grid grid-cols-2 gap-4 items-end text-xs">
             <div className="space-y-1 text-[11px] text-slate-600">
-              <div>स्थान: {cafe?.address || 'तहसील केंद्र'}</div>
+              <div>स्थान: {cafe?.address || '-'}</div>
               <div>दिनांक: {generatedAt}</div>
               <div className="font-mono text-[9px] text-slate-400">टोकन: {token}</div>
             </div>
@@ -67,7 +67,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             <div className="text-right space-y-1">
               <div className="w-32 border-b border-slate-800 ml-auto pb-1" />
               <div className="font-bold text-slate-900">हस्ताक्षर / अंगूठा निशानी</div>
-              <div className="text-[10px] text-slate-600">({data.applicantName || 'घोषणाकर्ता'})</div>
+              <div className="text-[10px] text-slate-600">({data.applicantName || '-'})</div>
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`NFSA:RC:${data.rationNo||'215487965412'}|UNITS:${data.units||'5'}`} size={64} />
+                <QRCodeSVG value={data.rationNo ? `NFSA:RC:${data.rationNo}|UNITS:${data.units || '-'}` : ''} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -97,7 +97,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">राशन कार्ड संख्या</span>
-              <span className="font-mono font-black text-sm text-emerald-800">{data.rationNo || '215487965412'}</span>
+              <span className="font-mono font-black text-sm text-emerald-800">{data.rationNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">मुखिया का नाम</span>
@@ -105,11 +105,11 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">कोटेदार का नाम</span>
-              <span className="font-bold text-slate-800">{data.dealerName || 'मेसर्स कन्हैया लाल'}</span>
+              <span className="font-bold text-slate-800">{data.dealerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">कार्ड का प्रकार / कुल यूनिट</span>
-              <span className="font-black text-blue-900">पात्र गृहस्थी • {data.units || '5'} यूनिट</span>
+              <span className="font-black text-blue-900">{data.units ? `पात्र गृहस्थी • ${data.units} यूनिट` : '-'}</span>
             </div>
           </div>
 
@@ -122,41 +122,25 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
               <span className="col-span-2 text-right">आधार सीडिंग</span>
             </div>
             <div className="divide-y divide-slate-200">
-              <div className="p-2 grid grid-cols-12">
-                <span className="col-span-1 text-center font-bold">1</span>
-                <span className="col-span-4 font-bold text-slate-900">{data.headName || '-'}</span>
-                <span className="col-span-3 text-slate-600">स्वयं (मुखिया)</span>
-                <span className="col-span-2 text-center">48 / महिला</span>
-                <span className="col-span-2 text-right text-emerald-700 font-bold">सत्यापित ✓</span>
-              </div>
-              <div className="p-2 grid grid-cols-12 bg-slate-50/50">
-                <span className="col-span-1 text-center font-bold">2</span>
-                <span className="col-span-4 font-bold text-slate-900">सुरेश चंद्र</span>
-                <span className="col-span-3 text-slate-600">पति</span>
-                <span className="col-span-2 text-center">52 / पुरुष</span>
-                <span className="col-span-2 text-right text-emerald-700 font-bold">सत्यापित ✓</span>
-              </div>
-              <div className="p-2 grid grid-cols-12">
-                <span className="col-span-1 text-center font-bold">3</span>
-                <span className="col-span-4 font-bold text-slate-900">अमित कुमार</span>
-                <span className="col-span-3 text-slate-600">बेटा</span>
-                <span className="col-span-2 text-center">22 / पुरुष</span>
-                <span className="col-span-2 text-right text-emerald-700 font-bold">सत्यापित ✓</span>
-              </div>
-              <div className="p-2 grid grid-cols-12 bg-slate-50/50">
-                <span className="col-span-1 text-center font-bold">4</span>
-                <span className="col-span-4 font-bold text-slate-900">पूजा वर्मा</span>
-                <span className="col-span-3 text-slate-600">बेटी</span>
-                <span className="col-span-2 text-center">19 / महिला</span>
-                <span className="col-span-2 text-right text-emerald-700 font-bold">सत्यापित ✓</span>
-              </div>
-              <div className="p-2 grid grid-cols-12">
-                <span className="col-span-1 text-center font-bold">5</span>
-                <span className="col-span-4 font-bold text-slate-900">रोहित कुमार</span>
-                <span className="col-span-3 text-slate-600">बेटा</span>
-                <span className="col-span-2 text-center">16 / पुरुष</span>
-                <span className="col-span-2 text-right text-emerald-700 font-bold">सत्यापित ✓</span>
-              </div>
+              {Array.isArray(data.members) && data.members.length > 0 ? (
+                data.members.map((m, idx) => (
+                  <div key={idx} className={`p-2 grid grid-cols-12 ${idx % 2 === 1 ? 'bg-slate-50/50' : ''}`}>
+                    <span className="col-span-1 text-center font-bold">{m.index || idx + 1}</span>
+                    <span className="col-span-4 font-bold text-slate-900">{m.name || '-'}</span>
+                    <span className="col-span-3 text-slate-600">{m.relation || '-'}</span>
+                    <span className="col-span-2 text-center">{m.age ? `${m.age} / ${m.gender || ''}` : (m.gender || '-')}</span>
+                    <span className="col-span-2 text-right text-emerald-700 font-bold">सत्यापित ✓</span>
+                  </div>
+                ))
+              ) : (
+                <div className="p-2 grid grid-cols-12">
+                  <span className="col-span-1 text-center font-bold">1</span>
+                  <span className="col-span-4 font-bold text-slate-900">{data.headName || '-'}</span>
+                  <span className="col-span-3 text-slate-600">स्वयं (मुखिया)</span>
+                  <span className="col-span-2 text-center">-</span>
+                  <span className="col-span-2 text-right text-emerald-700 font-bold">सत्यापित ✓</span>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -177,7 +161,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`PMKISAN:NAME:${data.farmerName||'FARMER'}|STATUS:ACTIVE|FTO:PROCESSED`} size={64} />
+                <QRCodeSVG value={`PMKISAN:NAME:${data.farmerName||'-'}|STATUS:ACTIVE|FTO:PROCESSED`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -186,15 +170,15 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">किसान का नाम</span>
-              <span className="font-black text-slate-900">{data.farmerName || 'बलदेव सिंह'}</span>
+              <span className="font-black text-slate-900">{data.farmerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">मोबाइल / आधार नंबर</span>
-              <span className="font-mono font-bold text-blue-800">{data.mobileReg || '9839XXXX10'}</span>
+              <span className="font-mono font-bold text-blue-800">{data.mobileReg || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">गाँव व जनपद</span>
-              <span className="font-bold text-slate-800">{data.village || 'कछौना, हरदोई'}</span>
+              <span className="font-bold text-slate-800">{data.village || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">e-KYC स्थिति</span>
@@ -257,7 +241,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`SCHOLARSHIP:REG:${data.regNo||'260194857201'}|AMT:5400`} size={64} />
+                <QRCodeSVG value={`SCHOLARSHIP:REG:${data.regNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -266,15 +250,15 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">रजिस्ट्रेशन संख्या</span>
-              <span className="font-mono font-black text-sm text-blue-900">{data.regNo || '260194857201'}</span>
+              <span className="font-mono font-black text-sm text-blue-900">{data.regNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">छात्र / छात्रा का नाम</span>
-              <span className="font-black text-slate-900">{data.studentName || 'अंशिका वर्मा'}</span>
+              <span className="font-black text-slate-900">{data.studentName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पाठ्यक्रम / वर्ग</span>
-              <span className="font-bold text-slate-800">{data.course || 'B.A. द्वितीय वर्ष'}</span>
+              <span className="font-bold text-slate-800">{data.course || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">PFMS स्थिति</span>
@@ -286,9 +270,9 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             <div className="flex items-center justify-between">
               <span className="font-bold text-emerald-950 flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                PFMS ट्रांजेक्शन सफल: ₹5,400.00 बैंक खाते में अंतरित
+                PFMS ट्रांजेक्शन सफल: छात्रवृत्ति व शुल्क प्रतिपूर्ति बैंक खाते में अंतरित
               </span>
-              <span className="font-mono text-[10px] text-emerald-800 font-bold">UTR: PFMS26019482910</span>
+              <span className="font-mono text-[10px] text-emerald-800 font-bold">स्थिति: सफल ✓</span>
             </div>
             <p className="text-slate-700 text-[11px]">
               शिक्षण संस्थान स्तर से सत्यापित, जिला समाज कल्याण अधिकारी (DWO) द्वारा अनुमोदित तथा छात्रवृत्ति व शुल्क प्रतिपूर्ति की धनराशि आधार सीडेड बैंक खाते में सफलतापूर्वक क्रेडिट की जा चुकी है।
@@ -307,12 +291,12 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
                 वृद्धावस्था / विधवा / दिव्यांग पेंशन लाभार्थी स्थिति पर्ची
               </h3>
               <p className="text-xs text-slate-600 font-bold">
-                त्रैमासिक ₹3,000 पेंशन क़िस्त एवं आधार-सीडेड बैंक अंतरण प्रमाण
+                त्रैमासिक पेंशन क़िस्त एवं आधार-सीडेड बैंक अंतरण प्रमाण
               </p>
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`SSPY:REG:${data.regNo||'1029384756'}|AMT:3000`} size={64} />
+                <QRCodeSVG value={`SSPY:REG:${data.regNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -321,28 +305,28 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पंजीकरण संख्या</span>
-              <span className="font-mono font-black text-sm text-purple-900">{data.regNo || '1029384756'}</span>
+              <span className="font-mono font-black text-sm text-purple-900">{data.regNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पेंशनर का नाम</span>
-              <span className="font-black text-slate-900">{data.pensionerName || 'मंगली प्रसाद'}</span>
+              <span className="font-black text-slate-900">{data.pensionerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">योजना का प्रकार</span>
-              <span className="font-bold text-slate-800">{data.pensionType || 'वृद्धावस्था पेंशन (Old Age)'}</span>
+              <span className="font-bold text-slate-800">{data.pensionType || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">नवीनतम क़िस्त</span>
-              <span className="font-black text-emerald-700">₹3,000 अंतरित ✓</span>
+              <span className="font-black text-emerald-700">सफलतापूर्वक अंतरित ✓</span>
             </div>
           </div>
 
           <div className="p-3.5 bg-purple-50 border border-purple-200 rounded-xl flex items-center justify-between text-xs">
             <div>
               <span className="text-slate-600 block">भुगतान विवरण:</span>
-              <span className="font-bold text-purple-950">द्वितीय त्रैमासिक क़िस्त (जुलाई-सितंबर) ₹3,000/- अंतरित</span>
+              <span className="font-bold text-purple-950">त्रैमासिक पेंशन क़िस्त आधार लिंक्ड बैंक खाते में अंतरित</span>
             </div>
-            <div className="font-mono text-xs font-bold text-slate-700">खाता: XXXX-4912</div>
+            <div className="font-mono text-xs font-bold text-slate-700">स्थिति: सक्रिय ✓</div>
           </div>
         </div>
       )}
@@ -357,12 +341,12 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
                 उद्धरण खतौनी एवं सजरा नक्शा प्रमाणित नकल (Khatauni Nakal)
               </h3>
               <p className="text-xs text-slate-600 font-bold">
-                फसली वर्ष 1431-1436 • खाता व गाटा संख्या अभिलेख
+                फसली वर्ष • खाता व गाटा संख्या अभिलेख
               </p>
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`BHULEKH:GATA:${data.rationNo||'412/1'}|AREA:${data.units||'0.4120'}`} size={64} />
+                <QRCodeSVG value={`BHULEKH:GATA:${data.rationNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -371,19 +355,19 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">खसरा / गाटा संख्या</span>
-              <span className="font-mono font-black text-sm text-amber-900">{data.rationNo || 'गाटा संख्या 412/1'}</span>
+              <span className="font-mono font-black text-sm text-amber-900">{data.rationNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">खातेदार का नाम</span>
-              <span className="font-black text-slate-900">{data.headName || 'हरिशंकर पुत्र राम दयाल'}</span>
+              <span className="font-black text-slate-900">{data.headName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">क्षेत्रफल (रकबा)</span>
-              <span className="font-mono font-bold text-blue-900">{data.units || '0.4120 हेक्टेयर'}</span>
+              <span className="font-mono font-bold text-blue-900">{data.units || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">ग्राम व तहसील</span>
-              <span className="font-bold text-slate-800">{data.dealerName || 'ग्राम रामपुर, तहसील सवायजपुर'}</span>
+              <span className="font-bold text-slate-800">{data.dealerName || '-'}</span>
             </div>
           </div>
 
@@ -411,7 +395,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`PARIWAR:HEAD:${data.headName||'MUKHIYA'}|UNITS:${data.units||'5'}`} size={64} />
+                <QRCodeSVG value={`PARIWAR:HEAD:${data.headName||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -420,19 +404,19 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">मुखिया का नाम</span>
-              <span className="font-black text-slate-900">{data.headName || 'राम सनेही'}</span>
+              <span className="font-black text-slate-900">{data.headName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">मकान / रजिस्टर क्रमांक</span>
-              <span className="font-mono font-bold text-slate-800">{data.rationNo || 'मकान नं. 42 / खाता 19'}</span>
+              <span className="font-mono font-bold text-slate-800">{data.rationNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">ग्राम पंचायत व ब्लॉक</span>
-              <span className="font-bold text-slate-800">{data.dealerName || 'ग्राम सुरसा, ब्लॉक हरदोई'}</span>
+              <span className="font-bold text-slate-800">{data.dealerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">कुल दर्ज सदस्य</span>
-              <span className="font-black text-blue-900">{data.units || '5'} सदस्य</span>
+              <span className="font-black text-blue-900">{data.units || '-'}</span>
             </div>
           </div>
 
@@ -447,24 +431,10 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             <div className="divide-y divide-slate-200">
               <div className="p-2 grid grid-cols-12">
                 <span className="col-span-1 text-center font-bold">1</span>
-                <span className="col-span-4 font-bold text-slate-900">{data.headName || 'राम सनेही'}</span>
+                <span className="col-span-4 font-bold text-slate-900">{data.headName || '-'}</span>
                 <span className="col-span-3 text-slate-600">स्वयं (मुखिया)</span>
-                <span className="col-span-2 text-center">54 / पुरुष</span>
+                <span className="col-span-2 text-center">-</span>
                 <span className="col-span-2 text-right font-bold text-slate-700">साक्षर</span>
-              </div>
-              <div className="p-2 grid grid-cols-12 bg-slate-50/50">
-                <span className="col-span-1 text-center font-bold">2</span>
-                <span className="col-span-4 font-bold text-slate-900">कलावती</span>
-                <span className="col-span-3 text-slate-600">पत्नी</span>
-                <span className="col-span-2 text-center">50 / महिला</span>
-                <span className="col-span-2 text-right font-bold text-slate-700">साक्षर</span>
-              </div>
-              <div className="p-2 grid grid-cols-12">
-                <span className="col-span-1 text-center font-bold">3</span>
-                <span className="col-span-4 font-bold text-slate-900">सर्वेश कुमार</span>
-                <span className="col-span-3 text-slate-600">पुत्र</span>
-                <span className="col-span-2 text-center">24 / पुरुष</span>
-                <span className="col-span-2 text-right font-bold text-slate-700">स्नातक</span>
               </div>
             </div>
           </div>
@@ -486,7 +456,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`CRS:REG:${data.regNo||'B-2026-09-948201'}|NAME:${data.applicantName||'NAME'}`} size={64} />
+                <QRCodeSVG value={`CRS:REG:${data.regNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -495,7 +465,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पंजीकरण संख्या (Reg No)</span>
-              <span className="font-mono font-black text-sm text-blue-900">{data.regNo || 'B-2026-09-948201'}</span>
+              <span className="font-mono font-black text-sm text-blue-900">{data.regNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">बच्चे / व्यक्ति का नाम</span>
@@ -535,7 +505,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`EDISTRICT:VERIFY:${data.applicantName||'CITIZEN'}`} size={64} />
+                <QRCodeSVG value={`EDISTRICT:VERIFY:${data.applicantName||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -544,15 +514,15 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदक का नाम</span>
-              <span className="font-black text-slate-900">{data.applicantName || 'सुशील कुमार'}</span>
+              <span className="font-black text-slate-900">{data.applicantName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पिता का नाम</span>
-              <span className="font-bold text-slate-800">{data.fatherHusband || 'श्री राम चरण'}</span>
+              <span className="font-bold text-slate-800">{data.fatherHusband || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">प्रमाण पत्र प्रकार</span>
-              <span className="font-bold text-blue-900">{data.purpose || 'जाति प्रमाण पत्र (Caste Certificate)'}</span>
+              <span className="font-bold text-blue-900">{data.purpose || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">सत्यापन परिणाम</span>
@@ -577,7 +547,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`NPCI:STATUS:ACTIVE|AADHAAR:${data.aadhaarNo||'4921'}`} size={64} />
+                <QRCodeSVG value={data.aadhaarNo ? `NPCI:STATUS:ACTIVE|AADHAAR:${data.aadhaarNo}` : ''} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -598,11 +568,11 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 font-bold block">आधार संख्या (अंतिम 4 अंक)</span>
-              <span className="font-mono font-black text-sm text-slate-900">{data.aadhaarNo || 'XXXX XXXX 4921'}</span>
+              <span className="font-mono font-black text-sm text-slate-900">{data.aadhaarNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 font-bold block">संबद्ध बैंक शाखा</span>
-              <span className="font-bold text-slate-900">{data.panNo || 'बैंक ऑफ बड़ौदा, शाखा सुरसा'}</span>
+              <span className="font-bold text-slate-900">{data.panNo || '-'}</span>
             </div>
           </div>
         </div>
@@ -623,7 +593,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`NREGA:JOB:${data.jobCardNo||'UP-04-002-019/52'}`} size={64} />
+                <QRCodeSVG value={`NREGA:JOB:${data.jobCardNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -632,19 +602,19 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">जॉब कार्ड संख्या</span>
-              <span className="font-mono font-black text-sm text-amber-900">{data.jobCardNo || 'UP-04-002-019/52'}</span>
+              <span className="font-mono font-black text-sm text-amber-900">{data.jobCardNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">श्रमिक का नाम</span>
-              <span className="font-black text-slate-900">{data.workerName || 'सियाराम'}</span>
+              <span className="font-black text-slate-900">{data.workerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">ग्राम पंचायत</span>
-              <span className="font-bold text-slate-800">{data.gramPanchayat || 'रामपुर, सवायजपुर'}</span>
+              <span className="font-bold text-slate-800">{data.gramPanchayat || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">कुल कार्य दिवस</span>
-              <span className="font-black text-emerald-700">32 दिन • ₹7,680 क्रेडिटेड ✓</span>
+              <span className="font-black text-emerald-700">सत्यापित व सक्रिय ✓</span>
             </div>
           </div>
         </div>
@@ -665,7 +635,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`LPG:ID:${data.lpgId||'12049182049182041'}`} size={64} />
+                <QRCodeSVG value={`LPG:ID:${data.lpgId||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -674,19 +644,19 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">17-अंकीय LPG ID</span>
-              <span className="font-mono font-black text-sm text-blue-900">{data.lpgId || '12049182049182041'}</span>
+              <span className="font-mono font-black text-sm text-blue-900">{data.lpgId || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">उपभोक्ता का नाम</span>
-              <span className="font-black text-slate-900">{data.consumerName || 'कमला देवी'}</span>
+              <span className="font-black text-slate-900">{data.consumerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">गैस एजेंसी</span>
-              <span className="font-bold text-slate-800">{data.agencyName || 'भारत गैस ग्रामीण वितरक'}</span>
+              <span className="font-bold text-slate-800">{data.agencyName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">नवीनतम सब्सिडी</span>
-              <span className="font-black text-emerald-700">₹312.50 खाते में क्रेडिटेड ✓</span>
+              <span className="font-black text-emerald-700">खाते में क्रेडिटेड ✓</span>
             </div>
           </div>
         </div>
@@ -702,12 +672,12 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
                 प्रधानमंत्री आवास योजना ग्रामीण (PMAY-G) स्वीकृति एवं क़िस्त पर्ची
               </h3>
               <p className="text-xs text-slate-600 font-bold">
-                ₹1,20,000 अनुदान सहायता एवं जियो-टैगिंग सत्यापन अभिलेख
+                अनुदान सहायता एवं जियो-टैगिंग सत्यापन अभिलेख
               </p>
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`PMAY:ID:${data.rationNo||'UP192840192'}`} size={64} />
+                <QRCodeSVG value={`PMAY:ID:${data.rationNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -716,19 +686,19 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">लाभार्थी का नाम</span>
-              <span className="font-black text-slate-900">{data.headName || 'आशा देवी'}</span>
+              <span className="font-black text-slate-900">{data.headName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">PMAY पंजीकरण संख्या</span>
-              <span className="font-mono font-bold text-blue-900">{data.rationNo || 'UP192840192'}</span>
+              <span className="font-mono font-bold text-blue-900">{data.rationNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">ग्राम पंचायत</span>
-              <span className="font-bold text-slate-800">{data.dealerName || 'ग्राम बेहटा, हरदोई'}</span>
+              <span className="font-bold text-slate-800">{data.dealerName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवास निर्माण स्थिति</span>
-              <span className="font-black text-emerald-700">द्वितीय क़िस्त अंतरित (छत स्तर) ✓</span>
+              <span className="font-black text-emerald-700">स्वीकृत एवं सक्रिय ✓</span>
             </div>
           </div>
         </div>
@@ -749,7 +719,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`SEWAYOJAN:${data.regNo||'UP20261948291'}`} size={64} />
+                <QRCodeSVG value={`SEWAYOJAN:${data.regNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -758,15 +728,15 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पंजीकरण संख्या</span>
-              <span className="font-mono font-black text-sm text-slate-900">{data.regNo || 'UP20261948291'}</span>
+              <span className="font-mono font-black text-sm text-slate-900">{data.regNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">अभ्यर्थी का नाम</span>
-              <span className="font-black text-slate-900">{data.studentName || 'अमनदीप'}</span>
+              <span className="font-black text-slate-900">{data.studentName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">दर्ज योग्यता</span>
-              <span className="font-bold text-slate-800">{data.course || 'स्नातक (B.Sc.) + CCC'}</span>
+              <span className="font-bold text-slate-800">{data.course || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पंजीकरण वैधता</span>
@@ -791,7 +761,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`UDYAM:${data.panNo||'UDYAM-UP-30-0012948'}`} size={64} />
+                <QRCodeSVG value={`UDYAM:${data.panNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -800,11 +770,11 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">उद्यम पंजीकरण संख्या</span>
-              <span className="font-mono font-black text-sm text-blue-900">{data.panNo || 'UDYAM-UP-30-0012948'}</span>
+              <span className="font-mono font-black text-sm text-blue-900">{data.panNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">इकाई का नाम (Enterprise)</span>
-              <span className="font-black text-slate-900">{data.aadhaarNo || 'मेसर्स शर्मा डिजिटल सेवा केंद्र'}</span>
+              <span className="font-black text-slate-900">{data.aadhaarNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">उद्यम श्रेणी (Category)</span>
@@ -812,7 +782,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">मुख्य गतिविधि</span>
-              <span className="font-bold text-slate-800">सेवा क्षेत्र (Services - Cyber Cafe)</span>
+              <span className="font-bold text-slate-800">सेवा क्षेत्र (Services)</span>
             </div>
           </div>
         </div>
@@ -828,12 +798,12 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
                 प्रतियोगी परीक्षा प्रवेश पत्र (E-Admit Card / Hall Ticket)
               </h3>
               <p className="text-xs text-slate-600 font-bold">
-                {data.course || 'SSC GD Exam 2026'}
+                {data.course || '-'}
               </p>
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`ADMIT:ROLL:${data.regNo||'2401829104'}`} size={64} />
+                <QRCodeSVG value={`ADMIT:ROLL:${data.regNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -842,7 +812,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">रोल नंबर / Roll No</span>
-              <span className="font-mono font-black text-sm text-blue-900">{data.regNo || '2401829104'}</span>
+              <span className="font-mono font-black text-sm text-blue-900">{data.regNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">परीक्षार्थी का नाम</span>
@@ -850,11 +820,11 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">परीक्षा केंद्र व शहर</span>
-              <span className="font-bold text-slate-800">राजकीय इंटर कॉलेज, हरदोई</span>
+              <span className="font-bold text-slate-800">{data.examCenter || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">रिपोर्टिंग समय</span>
-              <span className="font-bold text-red-700">प्रातः 08:30 AM (गेट बंद 09:15)</span>
+              <span className="font-bold text-red-700">{data.reportingTime || '-'}</span>
             </div>
           </div>
         </div>
@@ -870,12 +840,12 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
                 न्यायालय वाद स्थिति एवं अगली सुनवाई तिथि पर्ची (e-Court Case Status)
               </h3>
               <p className="text-xs text-slate-600 font-bold">
-                न्यायालय सिविल जज (जू.डि.), हरदोई • केस अभिलेख
+                {data.courtName || '-'}
               </p>
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`ECOURT:CNR:${data.rationNo||'UP04000192842025'}`} size={64} />
+                <QRCodeSVG value={`ECOURT:CNR:${data.rationNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -888,15 +858,15 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">CNR संख्या (16 Digit)</span>
-              <span className="font-mono font-bold text-blue-900">{data.rationNo || 'UP04000192842025'}</span>
+              <span className="font-mono font-bold text-blue-900">{data.rationNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">अगली सुनवाई की तारीख</span>
-              <span className="font-black text-red-700 text-sm">18 अप्रैल 2026 (साक्ष्य हेतु)</span>
+              <span className="font-black text-red-700 text-sm">{data.nextDate || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">केस की अवस्था (Stage)</span>
-              <span className="font-bold text-slate-800">वादी साक्ष्य (Evidence)</span>
+              <span className="font-bold text-slate-800">{data.stage || '-'}</span>
             </div>
           </div>
         </div>
@@ -917,7 +887,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`WELFARE:${data.applicantName||data.headName||'BENEFICIARY'}`} size={64} />
+                <QRCodeSVG value={`WELFARE:${data.applicantName||data.headName||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -930,11 +900,11 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदन क्रमांक</span>
-              <span className="font-mono font-bold text-slate-800">{data.rationNo || 'MKSY-2026-01928'}</span>
+              <span className="font-mono font-bold text-slate-800">{data.rationNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">स्वीकृत अनुदान राशि</span>
-              <span className="font-black text-emerald-700">{sId === 'vivah_anudan' ? '₹20,000/- स्वीकृत' : '₹3,000/- (तृतीय चरण)'}</span>
+              <span className="font-black text-emerald-700">{sId === 'vivah_anudan' ? 'स्वीकृत' : 'सक्रिय'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">स्वीकृति स्थिति</span>
@@ -959,7 +929,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`PASSPORT:FILE:${data.panNo||'LKO206194829104'}`} size={64} />
+                <QRCodeSVG value={`PASSPORT:FILE:${data.panNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -968,7 +938,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">फाइल संख्या (File No)</span>
-              <span className="font-mono font-black text-sm text-blue-900">{data.panNo || 'LKO206194829104'}</span>
+              <span className="font-mono font-black text-sm text-blue-900">{data.panNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदक का नाम</span>
@@ -980,7 +950,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">स्पीड पोस्ट ट्रैकिंग</span>
-              <span className="font-mono font-bold text-indigo-900">ED194820194IN (डिस्पैच)</span>
+              <span className="font-mono font-bold text-indigo-900">{data.dispatchNo || '-'}</span>
             </div>
           </div>
         </div>
@@ -1001,7 +971,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`KCC:${data.farmerName||'FARMER'}`} size={64} />
+                <QRCodeSVG value={`KCC:${data.farmerName||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -1014,11 +984,11 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">KCC ऋण खाता संख्या</span>
-              <span className="font-mono font-bold text-slate-800">{data.mobileReg || '301928475819'}</span>
+              <span className="font-mono font-bold text-slate-800">{data.mobileReg || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">बैंक शाखा</span>
-              <span className="font-bold text-slate-800">आर्यावर्त बैंक, शाखा बिलग्राम</span>
+              <span className="font-bold text-slate-800">{data.bankBranch || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">3% ब्याज अनुदान</span>
@@ -1043,7 +1013,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`ITRV:PAN:${data.panNo||'AAAPS1928K'}|ACK:${data.aadhaarNo||'240182910492810'}`} size={64} />
+                <QRCodeSVG value={`ITRV:PAN:${data.panNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -1052,11 +1022,11 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पैन नंबर (PAN)</span>
-              <span className="font-mono font-black text-sm text-blue-900">{data.panNo || 'AAAPS1928K'}</span>
+              <span className="font-mono font-black text-sm text-blue-900">{data.panNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पावती संख्या (Ack No)</span>
-              <span className="font-mono font-bold text-slate-800">{data.aadhaarNo || '240182910492810'}</span>
+              <span className="font-mono font-bold text-slate-800">{data.aadhaarNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">फाइलिंग स्थिति</span>
@@ -1064,7 +1034,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">फॉर्म प्रकार</span>
-              <span className="font-bold text-slate-800">ITR-1 (सहज - वेतनभोगी)</span>
+              <span className="font-bold text-slate-800">ITR अभिलेख</span>
             </div>
           </div>
         </div>
@@ -1080,12 +1050,12 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
                 अंकतालिका व परीक्षा फल सत्यापन पत्र (Certified Marksheet Verification)
               </h3>
               <p className="text-xs text-slate-600 font-bold">
-                {data.examClass || 'हाईस्कूल (Class 10th)'} परीक्षा वर्ष 2025-26
+                {data.examClass || '-'}
               </p>
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`BOARD:ROLL:${data.rollNo||'124019284'}|RES:PASSED|DIV:FIRST`} size={64} />
+                <QRCodeSVG value={`BOARD:ROLL:${data.rollNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -1094,7 +1064,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">अनुक्रमांक (Roll No.)</span>
-              <span className="font-mono font-black text-sm text-blue-800">{data.rollNo || '124019284'}</span>
+              <span className="font-mono font-black text-sm text-blue-800">{data.rollNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">परीक्षार्थी का नाम</span>
@@ -1102,53 +1072,25 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">माता / पिता का नाम</span>
-              <span className="font-bold text-slate-800">श्रीमती सरोज देवी / श्री बाबूराम</span>
+              <span className="font-bold text-slate-800">{data.parentsName || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">परीक्षा परिणाम</span>
-              <span className="font-black text-emerald-700">उत्तीर्ण (PASSED) ✓</span>
+              <span className="font-black text-emerald-700">सत्यापित (VERIFIED) ✓</span>
             </div>
           </div>
 
           <div className="border border-slate-300 rounded-xl overflow-hidden text-xs">
-            <div className="bg-slate-900 text-white font-bold p-2 grid grid-cols-12 text-[11px]">
-              <span className="col-span-5">विषय (Subject)</span>
-              <span className="col-span-3 text-center">पूर्णांक (Max)</span>
-              <span className="col-span-4 text-right">प्राप्तांक (Marks Obtained)</span>
+            <div className="bg-slate-900 text-white font-bold p-2 text-center text-[11px]">
+              बोर्ड परीक्षा परिणाम विवरणी (Result Verification Statement)
             </div>
-            <div className="divide-y divide-slate-200">
-              <div className="p-2 grid grid-cols-12">
-                <span className="col-span-5 font-semibold">हिंदी (Hindi)</span>
-                <span className="col-span-3 text-center font-mono">100</span>
-                <span className="col-span-4 text-right font-mono font-bold">84</span>
-              </div>
-              <div className="p-2 grid grid-cols-12 bg-slate-50/50">
-                <span className="col-span-5 font-semibold">अंग्रेजी (English)</span>
-                <span className="col-span-3 text-center font-mono">100</span>
-                <span className="col-span-4 text-right font-mono font-bold">78</span>
-              </div>
-              <div className="p-2 grid grid-cols-12">
-                <span className="col-span-5 font-semibold">गणित (Mathematics)</span>
-                <span className="col-span-3 text-center font-mono">100</span>
-                <span className="col-span-4 text-right font-mono font-bold">88</span>
-              </div>
-              <div className="p-2 grid grid-cols-12 bg-slate-50/50">
-                <span className="col-span-5 font-semibold">विज्ञान (Science Theory + Practical)</span>
-                <span className="col-span-3 text-center font-mono">100</span>
-                <span className="col-span-4 text-right font-mono font-bold">86</span>
-              </div>
-              <div className="p-2 grid grid-cols-12">
-                <span className="col-span-5 font-semibold">सामाजिक विज्ञान (Social Science)</span>
-                <span className="col-span-3 text-center font-mono">100</span>
-                <span className="col-span-4 text-right font-mono font-bold">76</span>
-              </div>
-              <div className="p-2.5 grid grid-cols-12 bg-blue-100/70 border-t-2 border-slate-900 font-black items-center">
-                <span className="col-span-5 text-slate-950 text-sm">कुल प्राप्तांक (Grand Total):</span>
-                <span className="col-span-3 text-center font-mono">500</span>
-                <span className="col-span-4 text-right font-mono text-base text-blue-950">
-                  412 / 500 (82.4% - प्रथम श्रेणी)
-                </span>
-              </div>
+            <div className="p-4 bg-slate-50 space-y-2 text-center">
+              <span className="font-bold text-slate-800 block text-xs">
+                अनुक्रमांक: {data.rollNo || '-'} • परीक्षार्थी: {data.studentName || '-'}
+              </span>
+              <span className="font-black text-emerald-700 block text-sm">
+                स्थिति: आधिकारिक अभिलेखानुसार सत्यापित (VERIFIED) ✓
+              </span>
             </div>
           </div>
         </div>
@@ -1169,7 +1111,7 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
             </div>
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`ITD:LINK:PAN:${data.panNo||'ABCDE1234F'}|STATUS:LINKED_OK`} size={64} />
+                <QRCodeSVG value={`ITD:LINK:PAN:${data.panNo||''}`} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -1190,11 +1132,11 @@ export default function LegalWelfareRenderer({ service, data, cafe, generatedAt,
           <div className="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 font-bold block">पैन नंबर (Permanent Account Number)</span>
-              <span className="font-mono font-black text-sm text-slate-900">{data.panNo || 'ABCDE1234F'}</span>
+              <span className="font-mono font-black text-sm text-slate-900">{data.panNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 font-bold block">आधार नंबर (Aadhaar Number)</span>
-              <span className="font-mono font-black text-sm text-slate-900">{data.aadhaarNo || 'XXXX XXXX 4921'}</span>
+              <span className="font-mono font-black text-sm text-slate-900">{data.aadhaarNo || '-'}</span>
             </div>
           </div>
         </div>

@@ -489,9 +489,9 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
           shopName: newShopName,
           ownerName: newOwnerName,
           phone: newPhone,
-          city: newCity || 'हरदोई',
-          district: newDistrict || newCity || 'हरदोई',
-          pincode: newPincode || '241001',
+          city: newCity || '',
+          district: newDistrict || newCity || '',
+          pincode: newPincode || '',
           upiId: newUpiId || `${newPhone}@upi`
         })
       });
@@ -843,7 +843,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
           <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-2xl p-4 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
             <div className="leading-relaxed">
-              <strong>1-क्लिक मास्टर सुरक्षा स्विच निर्देश:</strong> किसी भी सरकारी पोर्टल (उदा. Sarathi MoRTH या NSDL) का सर्वर मेंटेनेंस डाउनटाइम होने पर, आप यहाँ से उस टूल को 1-क्लिक में अक्षम (OFF) कर सकते हैं। इससे VLE/नागरिकों को कोई असुविधा या बैलेंस कटौती नहीं होगी। काम पूरा होने पर पुनः चालू (ON) कर दें।
+              <strong>1-क्लिक मास्टर सुरक्षा स्विच निर्देश:</strong> किसी भी सरकारी पोर्टल (जैसे Sarathi MoRTH या NSDL) का सर्वर मेंटेनेंस डाउनटाइम होने पर, आप यहाँ से उस टूल को 1-क्लिक में अक्षम (OFF) कर सकते हैं। इससे VLE/नागरिकों को कोई असुविधा या बैलेंस कटौती नहीं होगी। काम पूरा होने पर पुनः चालू (ON) कर दें।
             </div>
           </div>
 
@@ -1111,7 +1111,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                       type={showApiKey ? 'text' : 'password'}
                       value={apiGateway.apiKey}
                       onChange={(e) => setApiGateway(prev => ({ ...prev, apiKey: e.target.value }))}
-                      placeholder="उदा. sp_live_9a8b7c6d5e4f3a2b1c..."
+                      placeholder="API Key दर्ज करें"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white font-mono text-xs focus:border-emerald-500 focus:outline-none transition"
                     />
                   </div>
@@ -1299,7 +1299,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="कैफे नाम, कोड (उदा. 101) या शहर खोजें..."
+                placeholder="कैफे नाम, कोड या शहर खोजें..."
                 className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0b1528] text-slate-800 dark:text-slate-100 rounded-xl focus:outline-hidden focus:border-orange-500 font-medium"
               />
             </div>
@@ -1959,7 +1959,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                       <div className="flex gap-2">
                         <input
                           type="text"
-                          placeholder="इस कैफे के संबंध में गुप्त टिप्पणी लिखें (उदा. ओवरचार्जिंग की दूसरी शिकायत, निगरानी आवश्यक)..."
+                          placeholder="इस कैफे के संबंध में गुप्त टिप्पणी लिखें..."
                           value={auditNoteInputs[cmp.id] !== undefined ? auditNoteInputs[cmp.id] : (cmp.secretAuditNote || '')}
                           onChange={(e) => setAuditNoteInputs({ ...auditNoteInputs, [cmp.id]: e.target.value })}
                           className="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-hidden"
@@ -2051,7 +2051,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                 rows="3"
                 value={broadcastMessage}
                 onChange={(e) => setBroadcastMessage(e.target.value)}
-                placeholder="उदा. सूचना: आज सायं 5 बजे से ई-डिस्ट्रिक्ट पोर्टल पर सर्वर मेंटेनेंस रहेगा। सभी ऑपरेटर कृपया आवश्यक फॉर्म पहले भर लें।"
+                placeholder="पोर्टल पर प्रसारित की जाने वाली आवश्यक सूचना यहाँ लिखें..."
                 className="w-full p-3.5 bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 rounded-2xl text-xs font-semibold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-orange-500"
               ></textarea>
             </div>
@@ -2382,7 +2382,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                   required
                   value={newShopName}
                   onChange={(e) => setNewShopName(e.target.value)}
-                  placeholder="उदा. डिजिटल ऑनलाइन सेवा केंद्र"
+                  placeholder="दुकान / केंद्र का नाम दर्ज करें"
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0b1528] text-slate-800 dark:text-slate-100 rounded-xl font-medium focus:outline-hidden focus:border-orange-500"
                 />
               </div>
@@ -2420,7 +2420,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                     type="text"
                     value={newCity}
                     onChange={(e) => setNewCity(e.target.value)}
-                    placeholder="उदा. हरदोई"
+                    placeholder="शहर / कस्बा दर्ज करें"
                     className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0b1528] text-slate-800 dark:text-slate-100 rounded-xl font-medium focus:outline-hidden focus:border-orange-500"
                   />
                 </div>
@@ -2431,7 +2431,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                     maxLength="6"
                     value={newPincode}
                     onChange={(e) => setNewPincode(e.target.value)}
-                    placeholder="उदा. 241001"
+                    placeholder="6-अंकीय पिनकोड दर्ज करें"
                     className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0b1528] text-slate-800 dark:text-slate-100 rounded-xl font-medium focus:outline-hidden focus:border-orange-500"
                   />
                 </div>
@@ -2440,7 +2440,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
               <div className="bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/80 rounded-xl p-3 text-[11px] text-orange-900 dark:text-orange-200 flex items-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-orange-600 dark:text-orange-400 shrink-0 mt-0.5" />
                 <span>
-                  पंजीकरण होते ही कैफे को स्वतः <strong>365 दिन (₹299 प्रो प्लान)</strong>, ₹500 B2B वेलकम बैलेंस और एक डिजिटल लाइसेंस कुंजी मिल जाएगी।
+                  पंजीकरण होते ही कैफे को स्वतः <strong>365 दिन (₹299 प्रो प्लान)</strong>, ₹0 B2B बैलेंस और एक डिजिटल लाइसेंस कुंजी मिल जाएगी।
                 </span>
               </div>
 

@@ -1303,7 +1303,7 @@ export default function App() {
               </button>
             </div>
             <p className="text-xs text-slate-600 leading-relaxed">
-              कंप्यूटर पर चल रहे पोर्टल से जुड़ने के लिए सर्वर का IP पता व पोर्ट दर्ज करें (उदा. <code className="bg-slate-100 px-1 py-0.5 rounded text-indigo-700 font-mono">http://192.168.1.5:5000</code>)।
+              कंप्यूटर पर चल रहे पोर्टल से जुड़ने के लिए सर्वर का IP पता व पोर्ट दर्ज करें (जैसे <code className="bg-slate-100 px-1 py-0.5 rounded text-indigo-700 font-mono">http://192.168.1.5:5000</code>)।
             </p>
             <div className="space-y-2">
               <input

@@ -242,7 +242,7 @@ export default function AdminB2BWalletModal({
                   type="text"
                   required
                   maxLength="12"
-                  placeholder="उदा. 891029384756"
+                  placeholder="12-अंकीय UTR नंबर दर्ज करें"
                   value={utrNumber}
                   onChange={(e) => setUtrNumber(e.target.value.replace(/\D/g, ''))}
                   className="w-full px-3 py-2 border-2 border-indigo-400 rounded-xl font-mono font-black text-sm text-center tracking-widest text-slate-900"

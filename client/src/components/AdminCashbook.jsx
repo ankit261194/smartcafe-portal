@@ -791,7 +791,7 @@ export default function AdminCashbook({ settings, selectedCafe }) {
                     <input
                       type="text"
                       required
-                      placeholder="उदा. पेपर रिम, फोटोकॉपी, आधार प्रिंट"
+                      placeholder="खर्च / आय का विवरण दर्ज करें"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
                       className="w-full bg-white border border-slate-300 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -975,7 +975,7 @@ export default function AdminCashbook({ settings, selectedCafe }) {
                     <label className="block text-slate-600 font-semibold mb-1">मोबाइल नंबर</label>
                     <input
                       type="tel"
-                      placeholder="उदा. 98XXXXXXXX"
+                      placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
                       value={udharPhone}
                       onChange={(e) => setUdharPhone(e.target.value)}
                       className="w-full bg-white border border-slate-300 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -999,7 +999,7 @@ export default function AdminCashbook({ settings, selectedCafe }) {
                     <label className="block text-slate-600 font-semibold mb-1">विवरण / किस काम की उधारी</label>
                     <input
                       type="text"
-                      placeholder="उदा. 10 कलर प्रिंट बाकी"
+                      placeholder="उधार का कारण / विवरण दर्ज करें"
                       value={udharNote}
                       onChange={(e) => setUdharNote(e.target.value)}
                       className="w-full bg-white border border-slate-300 rounded-xl p-2.5 focus:outline-none focus:ring-2 focus:ring-amber-500"
@@ -1056,7 +1056,7 @@ export default function AdminCashbook({ settings, selectedCafe }) {
                   max={partialModal.udhar.remainingAmount !== undefined ? partialModal.udhar.remainingAmount : partialModal.udhar.amount}
                   value={partialModal.amount}
                   onChange={(e) => setPartialModal({ ...partialModal, amount: e.target.value })}
-                  placeholder="उदा. 50"
+                  placeholder="जमा राशि दर्ज करें"
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-bold text-slate-900"
                 />
               </div>
@@ -1067,7 +1067,7 @@ export default function AdminCashbook({ settings, selectedCafe }) {
                   type="text"
                   value={partialModal.note}
                   onChange={(e) => setPartialModal({ ...partialModal, note: e.target.value })}
-                  placeholder="उदा. नकद दिया, शेष बाद में"
+                  placeholder="भुगतान टिप्पणी (वैकल्पिक)"
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5"
                 />
               </div>

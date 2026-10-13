@@ -263,7 +263,7 @@ export default function AdminSettings({
       return;
     }
     if (staffPinInput && !/^\d{4}$/.test(staffPinInput.trim())) {
-      setStaffMessage({ type: 'error', text: 'कृपया ठीक 4 अंकों का पिन दर्ज करें (उदा. 0000)' });
+      setStaffMessage({ type: 'error', text: 'कृपया ठीक 4 अंकों का पिन दर्ज करें (जैसे 0000)' });
       return;
     }
     setStaffSaving(true);
@@ -404,7 +404,7 @@ export default function AdminSettings({
               <input
                 type="text"
                 required
-                placeholder="उदा. 98XXXXXXXX@upi"
+                placeholder="UPI ID दर्ज करें"
                 value={formData.upiId}
                 onChange={(e) => handleChange('upiId', e.target.value)}
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none"
@@ -544,7 +544,7 @@ export default function AdminSettings({
               required
               value={pinForm.oldPin}
               onChange={(e) => setPinForm(prev => ({ ...prev, oldPin: e.target.value }))}
-              placeholder="उदा. 1234"
+              placeholder="वर्तमान PIN"
               className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-mono font-bold text-center tracking-widest focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
             />
           </div>
@@ -646,7 +646,7 @@ export default function AdminSettings({
               maxLength="4"
               value={staffPinInput}
               onChange={(e) => setStaffPinInput(e.target.value)}
-              placeholder="नया स्टाफ पिन (उदा. 0000)"
+              placeholder="नया स्टाफ पिन (4-अंक)"
               className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-mono font-bold text-center tracking-widest focus:ring-2 focus:ring-purple-500 focus:outline-hidden"
             />
           </div>
@@ -938,7 +938,7 @@ export default function AdminSettings({
             <span>मोबाइल ऐप व रिमोट सर्वर सेटिंग्स (Configurable Server Endpoint)</span>
           </h3>
           <p className="text-xs text-slate-500 mt-0.5">
-            Android APK या रिमोट डिवाइस को अपने स्थानीय कंप्यूटर सर्वर से जोड़ने के लिए सर्वर IP या डोमेन सेट करें (उदा. http://192.168.1.5:5000)।
+            Android APK या रिमोट डिवाइस को सर्वर से जोड़ने के लिए सर्वर IP या डोमेन सेट करें (जैसे http://192.168.1.5:5000)।
           </p>
         </div>
 

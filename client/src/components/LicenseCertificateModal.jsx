@@ -111,7 +111,7 @@ export default function LicenseCertificateModal({
             <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs grid grid-cols-2 gap-3 text-left mb-6">
               <div>
                 <span className="text-slate-400 block text-[10px]">VLE / CSC पहचान आईडी:</span>
-                <span className="font-mono font-black text-slate-900">{certData?.vleId || 'CSC-UP-241001-098'}</span>
+                <span className="font-mono font-black text-slate-900">{certData?.vleId || '-'}</span>
               </div>
 
               <div>

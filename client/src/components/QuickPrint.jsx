@@ -414,7 +414,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                 </label>
                 <input
                   type="text"
-                  placeholder="उदा. All या 1, 3-5"
+                  placeholder="पेज संख्या दर्ज करें (All या 1-5)"
                   value={pageRange}
                   onChange={(e) => setPageRange(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
@@ -427,7 +427,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                 </label>
                 <input
                   type="text"
-                  placeholder="उदा. केवल पहला पेज चाहिए"
+                  placeholder="विशेष निर्देश (वैकल्पिक)"
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
@@ -467,7 +467,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
               </label>
               <input
                 type="tel"
-                placeholder="उदा. 98XXXXXXXX"
+                placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none"

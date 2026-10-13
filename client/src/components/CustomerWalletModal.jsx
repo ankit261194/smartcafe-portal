@@ -261,7 +261,7 @@ export default function CustomerWalletModal({
                   type="text"
                   required
                   maxLength="12"
-                  placeholder="उदा. 928374615243"
+                  placeholder="12-अंकीय UTR नंबर दर्ज करें"
                   value={utrNumber}
                   onChange={(e) => setUtrNumber(e.target.value.replace(/\D/g, ''))}
                   className="w-full px-3 py-2 border-2 border-emerald-400 rounded-xl font-mono font-black text-center text-sm tracking-widest text-slate-900 bg-white"

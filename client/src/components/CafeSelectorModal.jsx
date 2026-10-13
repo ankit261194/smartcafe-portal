@@ -116,7 +116,7 @@ export default function CafeSelectorModal({
                   required
                   value={codeQuery}
                   onChange={(e) => setCodeQuery(e.target.value)}
-                  placeholder="उदा. 101 या 102"
+                  placeholder="कैफे कोड दर्ज करें"
                   className="flex-1 px-4 py-2.5 border-2 border-indigo-200 rounded-xl font-mono text-center text-base font-black tracking-widest focus:outline-hidden focus:border-indigo-600 uppercase"
                 />
                 <button
@@ -138,7 +138,7 @@ export default function CafeSelectorModal({
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="पिनकोड (241001), शहर (हरदोई/लखनऊ) या दुकान नाम..."
+                placeholder="पिनकोड, शहर या दुकान का नाम खोजें..."
                 className="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-xl focus:outline-hidden focus:border-blue-500 text-xs"
               />
             </div>

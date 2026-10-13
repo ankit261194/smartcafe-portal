@@ -332,7 +332,7 @@ export default function RoleAuthModal({
                   required
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  placeholder="उदा. आपका पूरा नाम"
+                  placeholder="अपना पूरा नाम दर्ज करें"
                   className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl font-bold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-blue-500"
                 />
               </div>
@@ -347,7 +347,7 @@ export default function RoleAuthModal({
                   required
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value.replace(/\D/g, ''))}
-                  placeholder="उदा. 98XXXXXXXX"
+                  placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
                   className="w-full px-3 py-2.5 bg-slate-50 border border-slate-300 rounded-xl font-mono text-slate-900 font-bold focus:outline-hidden focus:ring-2 focus:ring-blue-500"
                 />
                 <span className="text-[10px] text-slate-400 mt-0.5 block">

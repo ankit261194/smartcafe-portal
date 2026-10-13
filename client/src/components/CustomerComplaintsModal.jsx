@@ -229,7 +229,7 @@ export default function CustomerComplaintsModal({
                 <input
                   type="text"
                   required
-                  placeholder="उदा. जाति प्रमाण पत्र हेतु निर्धारित से ज्यादा पैसे लिए"
+                  placeholder="शिकायत का संक्षिप्त विषय लिखें"
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   className="w-full px-3 py-2 border border-slate-300 rounded-xl font-bold focus:outline-hidden focus:border-rose-500"

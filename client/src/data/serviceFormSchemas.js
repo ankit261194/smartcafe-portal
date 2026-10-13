@@ -22,15 +22,15 @@ export const SERVICE_FORM_SCHEMAS = {
       { id: 'applicantName', label: 'आवेदक का नाम (अंग्रेजी में)', type: 'text', placeholder: 'APPLICANT FULL NAME', required: true },
       { id: 'fatherHusbandName', label: 'पिता / पति / संरक्षक का नाम', type: 'text', placeholder: 'पिता / पति / संरक्षक का नाम', required: true },
       { id: 'motherName', label: 'माता का नाम', type: 'text', placeholder: 'माता का नाम', required: true },
-      { id: 'villageMohalla', label: 'मकान नं. / ग्राम / मोहल्ला', type: 'text', placeholder: 'मकान नं. 45, ग्राम रामपुर', required: true },
-      { id: 'postOffice', label: 'डाकघर (Post Office)', type: 'text', placeholder: 'पोस्ट बिलग्राम', required: true },
-      { id: 'tehsil', label: 'तहसील (Tehsil)', type: 'text', placeholder: 'सवायजपुर', required: true },
-      { id: 'district', label: 'जनपद (District)', type: 'text', placeholder: 'हरदोई', required: true },
+      { id: 'villageMohalla', label: 'मकान नं. / ग्राम / मोहल्ला', type: 'text', placeholder: 'मकान नं. / ग्राम / मोहल्ला दर्ज करें', required: true },
+      { id: 'postOffice', label: 'डाकघर (Post Office)', type: 'text', placeholder: 'डाकघर का नाम दर्ज करें', required: true },
+      { id: 'tehsil', label: 'तहसील (Tehsil)', type: 'text', placeholder: 'तहसील का नाम दर्ज करें', required: true },
+      { id: 'district', label: 'जनपद (District)', type: 'text', placeholder: 'जनपद का नाम दर्ज करें', required: true },
       { id: 'occupation', label: 'परिवार का मुख्य व्यवसाय', type: 'select', options: ['कृषि (Agriculture)', 'मजदूरी (Daily Labour)', 'व्यापार / दुकान (Business)', 'प्राइवेट नौकरी (Private Job)', 'पेंशनर / अन्य'], required: true },
-      { id: 'familyMembers', label: 'परिवार में कुल सदस्य संख्या', type: 'number', placeholder: '5', required: true },
+      { id: 'familyMembers', label: 'परिवार में कुल सदस्य संख्या', type: 'number', placeholder: 'सदस्य संख्या दर्ज करें', required: true },
       { id: 'annualIncome', label: 'प्रत्याशित वार्षिक आय (₹ में)', type: 'select', options: ['₹42,000/- (बयालीस हजार रुपये)', '₹48,000/- (अड़तालीस हजार रुपये)', '₹60,000/- (साठ हजार रुपये)', '₹72,000/- (बहत्तर हजार रुपये)', '₹96,000/- (छियानबे हजार रुपये)'], required: true },
-      { id: 'aadhaarNo', label: '12-अंकीय आधार संख्या', type: 'text', placeholder: 'XXXX XXXX 4921', required: true },
-      { id: 'rationCardNo', label: 'राशन कार्ड संख्या (यदि हो)', type: 'text', placeholder: '215487965412', required: false },
+      { id: 'aadhaarNo', label: '12-अंकीय आधार संख्या', type: 'text', placeholder: 'XXXX XXXX XXXX', required: true },
+      { id: 'rationCardNo', label: 'राशन कार्ड संख्या (यदि हो)', type: 'text', placeholder: 'राशन कार्ड नंबर दर्ज करें', required: false },
       { id: 'reason', label: 'प्रमाण पत्र बनवाने का कारण', type: 'select', options: ['छात्रवृत्ति / स्कॉलरशिप आवेदन', 'कॉलेज / स्कूल एडमिशन', 'सरकारी योजना / राशन कार्ड', 'बैंक लोन / सरकारी कार्य'], required: true }
     ]
   },
@@ -51,11 +51,11 @@ export const SERVICE_FORM_SCHEMAS = {
       { id: 'fatherName', label: 'पिता का नाम', type: 'text', placeholder: 'पिता का नाम', required: true },
       { id: 'motherName', label: 'माता का नाम', type: 'text', placeholder: 'माता का नाम', required: true },
       { id: 'casteCategory', label: 'जाति वर्ग (Category)', type: 'select', options: ['अन्य पिछड़ा वर्ग (OBC)', 'अनुसूचित जाति (SC)', 'अनुसूचित जनजाति (ST)'], required: true },
-      { id: 'subCaste', label: 'उप-जाति (Sub-Caste / जाति का नाम)', type: 'text', placeholder: 'यादव / मौर्य / कुर्मी / जाटव / पासी / आदि', required: true },
-      { id: 'villageMohalla', label: 'मकान नं. / ग्राम / मोहल्ला', type: 'text', placeholder: 'ग्राम बेहटा, पोस्ट सांडी', required: true },
-      { id: 'tehsil', label: 'तहसील', type: 'text', placeholder: 'बिलग्राम', required: true },
-      { id: 'district', label: 'जनपद', type: 'text', placeholder: 'हरदोई', required: true },
-      { id: 'aadhaarNo', label: '12-अंकीय आधार संख्या', type: 'text', placeholder: 'XXXX XXXX 1029', required: true },
+      { id: 'subCaste', label: 'उप-जाति (Sub-Caste / जाति का नाम)', type: 'text', placeholder: 'उप-जाति दर्ज करें', required: true },
+      { id: 'villageMohalla', label: 'मकान नं. / ग्राम / मोहल्ला', type: 'text', placeholder: 'मकान नं. / ग्राम / मोहल्ला दर्ज करें', required: true },
+      { id: 'tehsil', label: 'तहसील', type: 'text', placeholder: 'तहसील दर्ज करें', required: true },
+      { id: 'district', label: 'जनपद', type: 'text', placeholder: 'जनपद दर्ज करें', required: true },
+      { id: 'aadhaarNo', label: '12-अंकीय आधार संख्या', type: 'text', placeholder: 'XXXX XXXX XXXX', required: true },
       { id: 'priorCertIssued', label: 'क्या परिवार में पूर्व में किसी का जाति प्रमाण पत्र जारी हुआ है?', type: 'select', options: ['हाँ (पूर्व में जाति प्रमाण पत्र जारी है)', 'नहीं (प्रथम बार आवेदन है)'], required: true }
     ]
   },
@@ -95,7 +95,7 @@ export const SERVICE_FORM_SCHEMAS = {
     fields: [
       { id: 'applicantName', label: 'आवेदक का पूरा नाम', type: 'text', placeholder: 'आवेदक का पूरा नाम', required: true },
       { id: 'fatherName', label: 'पिता का नाम', type: 'text', placeholder: 'पिता का पूरा नाम', required: true },
-      { id: 'generalCaste', label: 'सामान्य जाति (General Caste)', type: 'text', placeholder: 'ब्राह्मण / राजपूत (ठाकुर) / वैश्य / त्यागी', required: true },
+      { id: 'generalCaste', label: 'सामान्य जाति (General Caste)', type: 'text', placeholder: 'जाति / उप-जाति दर्ज करें', required: true },
       { id: 'familyAnnualIncome', label: 'कुल पारिवारिक वार्षिक आय', type: 'text', placeholder: 'पारिवारिक वार्षिक आय', required: true },
       { id: 'agriLand', label: 'कृषि भूमि (5 एकड़ से कम)', type: 'select', options: ['हाँ, 5 एकड़ से कम है', 'कोई कृषि भूमि नहीं है'], required: true },
       { id: 'resPlot', label: 'आवासीय भूखंड (1000 वर्ग फुट से कम)', type: 'select', options: ['हाँ, 1000 वर्ग फुट से कम है', 'कोई आवासीय प्लॉट नहीं है'], required: true },
@@ -180,11 +180,11 @@ export const SERVICE_FORM_SCHEMAS = {
       { id: 'aadhaar', label: 'आधार कार्ड (ओरिजिनल स्कैन)', required: true, accept: '.pdf,image/*' }
     ],
     fields: [
-      { id: 'beneficiaryName', label: 'लाभार्थी का नाम', type: 'text', placeholder: 'सुनीता देवी', required: true },
+      { id: 'beneficiaryName', label: 'लाभार्थी का नाम', type: 'text', placeholder: 'लाभार्थी का पूरा नाम दर्ज करें', required: true },
       { id: 'idType', label: 'पहचान का आधार', type: 'select', options: ['राशन कार्ड संख्या', 'PM-JAY HHID संख्या / लेटर', 'आधार संख्या (e-KYC)'], required: true },
-      { id: 'idNumber', label: 'पहचान संख्या दर्ज करें', type: 'text', placeholder: '215487965412 या AB-PMJAY-10492', required: true },
-      { id: 'familyHead', label: 'परिवार के मुखिया का नाम', type: 'text', placeholder: 'प्रेम शंकर', required: true },
-      { id: 'district', label: 'जनपद व राज्य', type: 'text', placeholder: 'हरदोई, उत्तर प्रदेश', required: true }
+      { id: 'idNumber', label: 'पहचान संख्या दर्ज करें', type: 'text', placeholder: 'पहचान संख्या दर्ज करें', required: true },
+      { id: 'familyHead', label: 'परिवार के मुखिया का नाम', type: 'text', placeholder: 'परिवार के मुखिया का नाम दर्ज करें', required: true },
+      { id: 'district', label: 'जनपद व राज्य', type: 'text', placeholder: 'जनपद व राज्य दर्ज करें', required: true }
     ]
   },
 
@@ -212,7 +212,7 @@ export const SERVICE_FORM_SCHEMAS = {
       { id: 'tenthBoard', label: '10वीं बोर्ड का नाम', type: 'text', placeholder: 'UP Board / CBSE / ICSE', required: true },
       { id: 'tenthYear', label: '10वीं उत्तीर्ण वर्ष', type: 'text', placeholder: 'उत्तीर्ण वर्ष', required: true },
       { id: 'tenthMarks', label: '10वीं प्राप्तांक व प्रतिशत', type: 'text', placeholder: 'प्राप्तांक / पूर्णांक व %', required: true },
-      { id: 'heightCm', label: 'शारीरिक ऊंचाई (सेमी में)', type: 'text', placeholder: 'ऊंचाई सेमी में (उदा. 168 cm)', required: true },
+      { id: 'heightCm', label: 'शारीरिक ऊंचाई (सेमी में)', type: 'text', placeholder: 'ऊंचाई (सेमी में) दर्ज करें', required: true },
       { id: 'examCenterPref', label: 'परीक्षा केंद्र 3 पसंदीदा शहर', type: 'text', placeholder: 'पसंदीदा शहर 1, 2, 3', required: true },
       { id: 'aadhaarNo', label: 'आधार संख्या', type: 'text', placeholder: 'XXXX XXXX XXXX', required: true }
     ]
@@ -332,7 +332,7 @@ export const SERVICE_FORM_SCHEMAS = {
       { id: 'studentName', label: 'छात्र / छात्रा का नाम', type: 'text', placeholder: 'छात्र / छात्रा का नाम', required: true },
       { id: 'fatherName', label: 'पिता का नाम', type: 'text', placeholder: 'पिता का नाम', required: true },
       { id: 'appliedCourse', label: 'प्रवेश हेतु इच्छित कोर्स', type: 'select', options: ['B.A. (कला संकाय)', 'B.Sc. (विज्ञान - PCM/ZBC)', 'B.Com. (वाणिज्य)', 'M.A. / M.Sc. / M.Com.', 'BBA / BCA / ITI'], required: true },
-      { id: 'prevMarks', label: 'पिछली परीक्षा के प्राप्तांक व प्रतिशत', type: 'text', placeholder: 'प्राप्तांक व प्रतिशत (उदा. 75%)', required: true },
+      { id: 'prevMarks', label: 'पिछली परीक्षा के प्राप्तांक व प्रतिशत', type: 'text', placeholder: 'प्राप्तांक व प्रतिशत दर्ज करें', required: true },
       { id: 'subjectPref', label: 'पसंदीदा मुख्य विषय', type: 'text', placeholder: 'पसंदीदा विषय दर्ज करें', required: true },
       { id: 'aadhaarNo', label: 'आधार संख्या', type: 'text', placeholder: 'XXXX XXXX XXXX', required: true }
     ]

@@ -868,11 +868,11 @@ app.post('/api/cafes', (req, res) => {
     pin: hashCredential(req.body.pin || '1234'),
     staffPin: hashCredential(req.body.staffPin || '0000'),
     staffEnabled: req.body.staffEnabled !== undefined ? req.body.staffEnabled : true,
-    email: req.body.email || `${req.body.phone || nextNum}@csc.gov.in`,
-    vleId: req.body.vleId || `CSC-UP-241001-${nextNum}`,
-    aadhaarNo: req.body.aadhaarNo || '4589 1234 5678',
-    panNo: req.body.panNo || 'ABCDE1234F',
-    upiId: req.body.upiId || 'shop@upi',
+    email: req.body.email || (req.body.phone ? `${req.body.phone}@csc.gov.in` : ''),
+    vleId: req.body.vleId || '',
+    aadhaarNo: req.body.aadhaarNo || '',
+    panNo: req.body.panNo || '',
+    upiId: req.body.upiId || '',
     address: req.body.address || '',
     city: req.body.city || '',
     district: req.body.district || '',
@@ -2451,7 +2451,7 @@ app.post('/api/services/execute-automated', (req, res) => {
     return res.status(400).json({ error: 'सेवा प्रकार अनिवार्य है।' });
   }
 
-  const effectiveCustomerPhone = customerPhone || '9876543210';
+  const effectiveCustomerPhone = customerPhone || '';
 
   let cafe = (store.cafes || []).find(c => c.id === cafeId || c.code === cafeId);
   if (!cafe) {
@@ -2460,7 +2460,7 @@ app.post('/api/services/execute-automated', (req, res) => {
       id: 'SMARTCAFE-HQ',
       code: 'SMARTCAFE',
       shopName: store.settings?.shopName || 'स्मार्ट कैफे B2B केंद्रीय डिजिटल सेवा केंद्र',
-      phone: store.settings?.helplinePhone || '9876543210',
+      phone: store.settings?.helplinePhone || store.settings?.phone || '',
       address: 'केंद्रीय जन सेवा केंद्र अधिकृत पोर्टल, भारत',
       b2bWallet: { balance: 0, minThreshold: 0, transactions: [] },
       retailRates: {},
@@ -2770,7 +2770,7 @@ app.get('/api/rc/lookup/:regNo', (req, res) => {
   }
   const regNo = req.params.regNo.trim().toUpperCase();
   if (regNo.length < 6) {
-    return res.status(400).json({ error: 'कृपया वैध गाड़ी नंबर (उदा. UP32AB1234) दर्ज करें।' });
+    return res.status(400).json({ error: 'कृपया वैध गाड़ी नंबर (जैसे UP32AB1234) दर्ज करें।' });
   }
   const details = getVehicleDetails(regNo);
   res.json(details);
@@ -3363,10 +3363,10 @@ app.post('/api/kyc/apply', upload.single('paymentSlip'), (req, res) => {
     panNo,
     upiId: upiId || `${phone}@upi`,
     address: address || '',
-    city: city || 'हरदोई',
-    district: district || city || 'हरदोई',
+    city: city || '',
+    district: district || city || '',
     state: state || 'उत्तर प्रदेश',
-    pincode: pincode || '241001',
+    pincode: pincode || '',
     termsAccepted: true,
     subscriptionPlan: '₹299 वार्षिक प्रो प्लान (365 दिन)',
     utr: cleanUtr,
@@ -3502,7 +3502,7 @@ app.get('/api/cafes/:id/license-certificate', (req, res) => {
     licenseKey: cafe.licenseKey || `VLE-LIC-2026-UP24-${cafe.code}`,
     shopName: cafe.shopName,
     ownerName: cafe.ownerName,
-    vleId: cafe.vleId || `CSC-UP-241001-${cafe.code}`,
+    vleId: cafe.vleId || '-',
     phone: cafe.phone,
     address: `${cafe.address || ''}, ${cafe.city || ''}, ${cafe.district || ''}, ${cafe.state || 'उत्तर प्रदेश'} - ${cafe.pincode || ''}`,
     validTill: cafe.subscription?.validTill || new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString(),
@@ -3528,10 +3528,10 @@ app.post('/api/edistrict/verify-certificate', (req, res) => {
     certType: certType || 'जाति प्रमाण पत्र (Caste Certificate)',
     applicationNo: cleanAppNo,
     certNo: cleanCertNo,
-    applicantName: applicantName || 'सत्यापित नागरिक',
-    fatherName: fatherName || 'पिता/पति का नाम',
-    district: district || 'हरदोई',
-    tehsil: tehsil || 'सदर तहसील',
+    applicantName: applicantName || '-',
+    fatherName: fatherName || '-',
+    district: district || '-',
+    tehsil: tehsil || '-',
     issueDate: issueDate || new Date().toISOString().slice(0, 10),
     status: 'सत्यापित एवं वैध (VERIFIED & AUTHENTIC)',
     issuingOfficer: 'सक्षम अधिकारी / तहसीलदार, राजस्व विभाग उत्तर प्रदेश',

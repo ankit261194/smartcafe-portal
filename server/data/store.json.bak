@@ -3,14 +3,14 @@
     "portalName": "à¤¡à¤¿à¤œà¤¿à¤Ÿà¤² à¤¸à¤¾à¤‡à¤¬à¤° à¤•à¥ˆà¤«à¥‡ à¤ªà¥‹à¤°à¥à¤Ÿà¤²",
     "shopName": "à¤¶à¥à¤°à¥€ à¤¡à¤¿à¤œà¤¿à¤Ÿà¤² à¤¸à¤¾à¤‡à¤¬à¤° à¤•à¥ˆà¤«à¥‡ à¤à¤µà¤‚ à¤œà¤¨ à¤¸à¥‡à¤µà¤¾ à¤•à¥‡à¤‚à¤¦à¥à¤°",
     "tagline": "à¤¸à¤­à¥€ à¤‘à¤¨à¤²à¤¾à¤‡à¤¨ à¤«à¥‰à¤°à¥à¤®, à¤ªà¥à¤°à¤¿à¤‚à¤Ÿà¤¿à¤‚à¤— à¤µ à¤¸à¤°à¤•à¤¾à¤°à¥€ à¤¸à¥‡à¤µà¤¾à¤à¤‚",
-    "ownerName": "à¤°à¤¾à¤œà¥‡à¤¶ à¤•à¥à¤®à¤¾à¤°",
-    "phone": "9876543210",
-    "upiId": "cybercafe@upi",
-    "address": "à¤®à¥‡à¤¨ à¤®à¤¾à¤°à¥à¤•à¥‡à¤Ÿ, à¤¬à¥à¤²à¥‰à¤• à¤°à¥‹à¤¡, à¤¤à¤¹à¤¸à¥€à¤² à¤•à¤¾à¤°à¥à¤¯à¤¾à¤²à¤¯ à¤•à¥‡ à¤¸à¤¾à¤®à¤¨à¥‡, à¤¹à¤°à¤¦à¥‹à¤ˆ",
+    "ownerName": "",
+    "phone": "",
+    "upiId": "",
+    "address": "",
     "superAdminPin": "$2b$10$qT12YS7MMPbApBUJzkbpTOLxp2l6JrkW8RClJ5mcWlfE/jAAQPLsi",
     "superAdminPassword": "$2b$10$B/o9iiC3lZ31DJw4tX6jfufEeYSogTPMcatDiuwRfW2xUFgUmqPq.",
-    "superAdminUpiId": "superadmin@upi",
-    "superAdminPhone": "9800000000",
+    "superAdminUpiId": "",
+    "superAdminPhone": "",
     "rates": {
       "bwPage": 3,
       "colorPage": 10,
@@ -635,13 +635,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-13T11:04:44.883Z",
+      "lastRun": "2026-10-13T13:04:46.893Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-13T12:04:44.871Z"
+      "nextRun": "2026-10-13T14:04:46.785Z"
     }
   },
   "superAdminAuditLogs": [

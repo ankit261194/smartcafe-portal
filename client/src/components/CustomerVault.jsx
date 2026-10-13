@@ -386,7 +386,7 @@ export default function CustomerVault({ selectedCafe }) {
                   <input
                     type="tel"
                     required
-                    placeholder="98XXXXXXXX"
+                    placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
                     value={formData.phone}
                     onChange={(e) => setFormData(p => ({ ...p, phone: e.target.value }))}
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 font-semibold"

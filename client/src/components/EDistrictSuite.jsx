@@ -14,12 +14,12 @@ export default function EDistrictSuite() {
   const [fatherHusband, setFatherHusband] = useState('');
   const [relation, setRelation] = useState('पुत्र'); // 'पुत्र' or 'पुत्री' or 'पत्नी'
   const [age, setAge] = useState('');
-  const [profession, setProfession] = useState('कृषि');
+  const [profession, setProfession] = useState('');
   const [address, setAddress] = useState('');
-  const [place, setPlace] = useState('हरदोई');
-  const [annualIncome, setAnnualIncome] = useState('48000');
-  const [casteName, setCasteName] = useState('यादव (OBC)');
-  const [applicantPhone, setApplicantPhone] = useState('9876543210');
+  const [place, setPlace] = useState('');
+  const [annualIncome, setAnnualIncome] = useState('');
+  const [casteName, setCasteName] = useState('');
+  const [applicantPhone, setApplicantPhone] = useState('');
 
   // Certificate Verification State
   const [applicationNo, setApplicationNo] = useState('');
@@ -1061,7 +1061,7 @@ export default function EDistrictSuite() {
                   <input
                     type="text"
                     readOnly
-                    value={address || 'ग्राम - रामपुर, पोस्ट - हरदोई, उत्तर प्रदेश'}
+                    value={address || '—'}
                     className="w-full bg-white border border-slate-300 rounded-lg p-2 font-medium text-slate-900"
                   />
                 </div>

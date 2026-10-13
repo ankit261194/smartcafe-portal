@@ -59,7 +59,7 @@ export default function VehicleRCDownload({
   const handleLookup = async (regNoToSearch) => {
     const reg = (regNoToSearch || vehicleNumber).trim().toUpperCase();
     if (reg.length < 6) {
-      setErrorMsg('कृपया वैध गाड़ी नंबर (उदा. UP32AB1234) दर्ज करें।');
+      setErrorMsg('कृपया वैध गाड़ी नंबर (जैसे UP32AB1234) दर्ज करें।');
       return;
     }
     setErrorMsg('');
@@ -239,7 +239,7 @@ export default function VehicleRCDownload({
                   maxLength="13"
                   value={vehicleNumber}
                   onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
-                  placeholder="उदा. UP32AB1234, DL01CA9999"
+                  placeholder="वाहन पंजीयन क्रमांक दर्ज करें"
                   className="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl font-mono font-black text-lg text-slate-900 tracking-wider uppercase focus:outline-hidden focus:border-indigo-600"
                 />
               </div>

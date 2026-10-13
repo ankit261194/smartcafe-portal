@@ -137,7 +137,7 @@ export default function JobBulletin({ onApplyJob, isOperator = false }) {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="🔍 फॉर्म नाम, योग्यता (उदा. 10वीं, 12वीं) या पद खोजें..."
+            placeholder="🔍 फॉर्म नाम, योग्यता या पद खोजें..."
             className="w-full pl-9 pr-8 py-2 text-xs border border-slate-300 rounded-xl font-medium focus:outline-hidden focus:border-blue-600"
           />
           {search && (
@@ -283,7 +283,7 @@ export default function JobBulletin({ onApplyJob, isOperator = false }) {
                   required
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  placeholder="उदा. उत्तर प्रदेश पुलिस कांस्टेबल 2026 भर्ती"
+                  placeholder="फॉर्म / भर्ती का पूरा नाम दर्ज करें"
                   className="w-full px-3 py-2 border border-slate-300 rounded-xl font-medium focus:outline-hidden focus:border-blue-600"
                 />
               </div>
@@ -324,7 +324,7 @@ export default function JobBulletin({ onApplyJob, isOperator = false }) {
                     type="text"
                     value={newLastDate}
                     onChange={(e) => setNewLastDate(e.target.value)}
-                    placeholder="उदा. 30 अप्रैल 2026"
+                    placeholder="अंतिम तिथि दर्ज करें"
                     className="w-full px-3 py-2 border border-slate-300 rounded-xl font-medium focus:outline-hidden focus:border-blue-600"
                   />
                 </div>
@@ -334,7 +334,7 @@ export default function JobBulletin({ onApplyJob, isOperator = false }) {
                     type="text"
                     value={newFee}
                     onChange={(e) => setNewFee(e.target.value)}
-                    placeholder="उदा. ₹100 या निःशुल्क"
+                    placeholder="सरकारी फीस विवरण दर्ज करें"
                     className="w-full px-3 py-2 border border-slate-300 rounded-xl font-medium focus:outline-hidden focus:border-blue-600"
                   />
                 </div>
@@ -346,7 +346,7 @@ export default function JobBulletin({ onApplyJob, isOperator = false }) {
                   type="text"
                   value={newQualification}
                   onChange={(e) => setNewQualification(e.target.value)}
-                  placeholder="उदा. 10वीं / 12वीं / स्नातक"
+                  placeholder="न्यूनतम योग्यता दर्ज करें"
                   className="w-full px-3 py-2 border border-slate-300 rounded-xl font-medium focus:outline-hidden focus:border-blue-600"
                 />
               </div>

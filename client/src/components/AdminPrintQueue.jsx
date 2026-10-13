@@ -261,7 +261,7 @@ export default function AdminPrintQueue({ onUpdateCounts, selectedCafe }) {
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="🔍 टोकन ID (उदा. PRNT-8192), मोबाइल नंबर, ग्राहक या फ़ाइल नाम खोजें या बारकोड स्कैन करें..."
+            placeholder="🔍 टोकन ID, मोबाइल नंबर, ग्राहक या फ़ाइल नाम खोजें या बारकोड स्कैन करें..."
             className="w-full pl-10 pr-9 py-2 text-xs border border-slate-300 rounded-xl focus:outline-hidden focus:border-blue-600 font-medium"
           />
           {searchTerm && (

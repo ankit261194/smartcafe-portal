@@ -22,7 +22,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
               </div>
               <div>
                 <h3 className="text-base sm:text-lg font-black text-slate-900 leading-tight">
-                  {data.discom || 'मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)'}
+                  {data.discom || 'विद्युत वितरण निगम लिमिटेड'}
                 </h3>
                 <p className="text-xs text-slate-600 font-bold">
                   उत्तर प्रदेश पावर कारपोरेशन लिमिटेड (U.P. Power Corporation Limited)
@@ -35,7 +35,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
 
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`UPPCL:CA:${data.consumerNo||'7418529630'}|AMT:${data.amount||'1240'}|DUE:${data.dueDate||'2026'}`} size={64} />
+                <QRCodeSVG value={data.consumerNo ? `UPPCL:CA:${data.consumerNo}|AMT:${data.amount||''}|DUE:${data.dueDate||''}` : ''} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">रसीद: {token}</div>
             </div>
@@ -44,7 +44,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">10-अंकीय खाता संख्या (Account ID)</span>
-              <span className="font-mono font-black text-sm text-blue-700">{data.consumerNo || '7418529630'}</span>
+              <span className="font-mono font-black text-sm text-blue-700">{data.consumerNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">उपभोक्ता का नाम</span>
@@ -52,11 +52,11 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">सप्लाई श्रेणी (Tariff)</span>
-              <span className="font-bold text-slate-800">{data.loadKw || 'LMV-1 घरेलू (1.00 KW)'}</span>
+              <span className="font-bold text-slate-800">{data.loadKw || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">मीटर संख्या (Meter No.)</span>
-              <span className="font-mono font-bold text-slate-800">{data.meterNo || 'UP-7410294'}</span>
+              <span className="font-mono font-bold text-slate-800">{data.meterNo || '-'}</span>
             </div>
           </div>
 
@@ -106,10 +106,10 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
                 <span className="block text-[10px] text-amber-900 font-normal">अंतिम तिथि तक भुगतान पर छूट मान्य</span>
               </div>
               <div className="col-span-3 text-center text-xs text-red-700">
-                अंतिम तिथि: {data.dueDate || '25/11/2026'}
+                अंतिम तिथि: {data.dueDate || '-'}
               </div>
               <div className="col-span-3 text-right text-lg sm:text-xl font-mono text-red-950 font-black">
-                {data.amount?.startsWith('₹') ? data.amount : `₹${data.amount || '1,240'}`}
+                {data.amount ? (data.amount.startsWith('₹') ? data.amount : `₹${data.amount}`) : '-'}
               </div>
             </div>
           </div>
@@ -139,7 +139,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
 
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`JHATPAT:APP:${data.consumerNo||'JP-2026-019284'}|LOAD:${data.loadKw||'1KW'}`} size={64} />
+                <QRCodeSVG value={data.consumerNo ? `JHATPAT:APP:${data.consumerNo}|LOAD:${data.loadKw||''}` : ''} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -148,7 +148,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदन संख्या (Application ID)</span>
-              <span className="font-mono font-black text-sm text-blue-700">{data.consumerNo || 'JP-2026-019284'}</span>
+              <span className="font-mono font-black text-sm text-blue-700">{data.consumerNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदक का नाम</span>
@@ -156,11 +156,11 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदित भार (Sanctioned Load)</span>
-              <span className="font-bold text-slate-800">{data.loadKw || '1 KW (घरेलू BPL/सामान्य)'}</span>
+              <span className="font-bold text-slate-800">{data.loadKw || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">विद्युत उपकेंद्र</span>
-              <span className="font-bold text-slate-800">{data.substation || '33/11 KV उपकेंद्र सांडी'}</span>
+              <span className="font-bold text-slate-800">{data.substation || '-'}</span>
             </div>
           </div>
 
@@ -170,7 +170,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
               तकनीकी संभाव्यता स्वीकृत (Feasibility Approved)
             </div>
             <p className="text-slate-700 text-[11px] leading-relaxed">
-              आपके परिसर पर नया मीटर लगाने हेतु अवर अभियंता (JE) स्तर से साइट सत्यापन पूर्ण हो चुका है। कुल संयोजन शुल्क ₹1,180 (मीटर सुरक्षा निधि + संयोजन प्रभार) ऑनलाइन पोर्टल पर जमा हो चुका है।
+              आपके परिसर पर नया मीटर लगाने हेतु अवर अभियंता (JE) स्तर से साइट सत्यापन पूर्ण हो चुका है। कुल संयोजन शुल्क ऑनलाइन पोर्टल पर जमा हो चुका है।
             </p>
           </div>
         </div>
@@ -199,7 +199,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
 
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`PARIVAHAN:RC:${data.vehicleNo||'UP30AB1234'}|PUC:PASS|EXP:${data.puccUpto||'2027'}`} size={64} />
+                <QRCodeSVG value={data.vehicleNo ? `PARIVAHAN:RC:${data.vehicleNo}|PUC:PASS|EXP:${data.puccUpto||''}` : ''} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -208,7 +208,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">पंजीकरण संख्या (Vehicle No.)</span>
-              <span className="font-mono font-black text-sm text-emerald-800 uppercase">{data.vehicleNo || 'UP30AB1234'}</span>
+              <span className="font-mono font-black text-sm text-emerald-800 uppercase">{data.vehicleNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">वाहन स्वामी का नाम</span>
@@ -216,7 +216,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">वाहन श्रेणी / ईंधन</span>
-              <span className="font-bold text-slate-800">{data.vehicleClass || 'LMV (कार / जीप) • पेट्रोल/CNG'}</span>
+              <span className="font-bold text-slate-800">{data.vehicleClass || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">उत्सर्जन मानक</span>
@@ -246,11 +246,11 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
               </div>
               <div>
                 <span className="text-[9px] text-slate-500 block font-sans">PUCC वैधता अवधि</span>
-                <span className="font-bold text-emerald-800">{data.puccUpto || '19/04/2027 तक वैध'}</span>
+                <span className="font-bold text-emerald-800">{data.puccUpto || '-'}</span>
               </div>
               <div>
                 <span className="text-[9px] text-slate-500 block font-sans">मोटर बीमा स्थिति</span>
-                <span className="font-bold text-blue-900">{data.insuranceUpto || 'वैध • न्यू इंडिया इंश्योरेंस'}</span>
+                <span className="font-bold text-blue-900">{data.insuranceUpto || '-'}</span>
               </div>
             </div>
           </div>
@@ -280,7 +280,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
 
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`VIRTUALCOURT:VEH:${data.vehicleNo||'UP32AB1234'}|STATUS:DISPOSED`} size={64} />
+                <QRCodeSVG value={data.vehicleNo ? `VIRTUALCOURT:VEH:${data.vehicleNo}|STATUS:DISPOSED` : ''} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -289,7 +289,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">गाड़ी नंबर / चालान संख्या</span>
-              <span className="font-mono font-black text-sm text-indigo-900 uppercase">{data.vehicleNo || 'UP32AB1234'}</span>
+              <span className="font-mono font-black text-sm text-indigo-900 uppercase">{data.vehicleNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">वाहन स्वामी / अभियुक्त</span>
@@ -342,7 +342,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
 
             <div className="text-right shrink-0">
               <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block">
-                <QRCodeSVG value={`SARATHI:APP:${data.vehicleNo||'DL-2026-019284'}`} size={64} />
+                <QRCodeSVG value={data.vehicleNo ? `SARATHI:APP:${data.vehicleNo}` : ''} size={64} />
               </div>
               <div className="text-[10px] font-mono font-bold text-slate-600 mt-1">{token}</div>
             </div>
@@ -351,7 +351,7 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदन संख्या (Application No)</span>
-              <span className="font-mono font-black text-sm text-sky-900">{data.vehicleNo || 'DL-2026-019284'}</span>
+              <span className="font-mono font-black text-sm text-sky-900">{data.vehicleNo || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">आवेदक का नाम</span>
@@ -359,11 +359,11 @@ export default function UtilityBillRenderer({ service, data, cafe, generatedAt, 
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">लाइसेंस श्रेणी</span>
-              <span className="font-bold text-slate-800">MCWG + LMV (मोटरसाइकिल व कार)</span>
+              <span className="font-bold text-slate-800">{data.licenseClass || data.vehicleClass || '-'}</span>
             </div>
             <div>
               <span className="text-[10px] text-slate-500 block uppercase font-bold">RTO स्लॉट तारीख</span>
-              <span className="font-bold text-emerald-700">{data.puccUpto || '12 मार्च 2026 (11:00 AM)'}</span>
+              <span className="font-bold text-emerald-700">{data.puccUpto || data.slotDate || '-'}</span>
             </div>
           </div>
 

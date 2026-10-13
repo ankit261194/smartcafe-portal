@@ -402,7 +402,7 @@ export default function ServicePage({
     setErrorMsg('');
     setLoading(true);
 
-    const effectivePhone = customerSession?.phone || (isOperator ? (selectedCafe?.phone || '9999999999') : '9876543210');
+    const effectivePhone = customerSession?.phone || (isOperator ? (selectedCafe?.phone || '') : '');
     const cafeId = selectedCafe?.id || (isOperator ? selectedCafe?.code : 'SMARTCAFE-HQ');
 
     const params = {
@@ -1627,7 +1627,7 @@ export default function ServicePage({
                               </div>
 
                               <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-600">
-                                <span>विधानसभा: 156 - हरदोई सदर</span>
+                                <span>विधानसभा: {cardData.acName ? `${cardData.acNumber ? cardData.acNumber + ' - ' : ''}${cardData.acName}` : (selectedCafe?.city || '-')}</span>
                                 <span className="font-mono font-bold text-amber-800">{cardData.epicNo}</span>
                               </div>
                             </div>
@@ -2160,11 +2160,13 @@ export default function ServicePage({
                             {selectedCafe?.shopName || 'डिजिटल जन सेवा केंद्र एवं साइबर कैफे'}
                           </h3>
                           <p className="text-[10px] text-slate-600">
-                            {selectedCafe?.address || 'मेन मार्केट, ब्लॉक रोड, तहसील कार्यालय के सामने'}
+                            {selectedCafe?.address || '-'}
                           </p>
-                          <p className="text-[10px] font-mono font-bold text-slate-700">
-                            मो. {selectedCafe?.phone || '9876543210'}
-                          </p>
+                          {selectedCafe?.phone && (
+                            <p className="text-[10px] font-mono font-bold text-slate-700">
+                              मो. {selectedCafe.phone}
+                            </p>
+                          )}
                         </div>
 
                         <div className="flex justify-between items-center text-xs bg-slate-50 p-2.5 rounded-xl border">

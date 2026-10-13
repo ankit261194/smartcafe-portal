@@ -52,60 +52,7 @@ export default function PrintPortalCards({ preloadedCard }) {
     window.print();
   };
 
-  const loadSampleCard = (type) => {
-    let frontTitle = 'भारत सरकार / GOVT OF INDIA';
-    let frontName = 'कार्डधारक का नाम (NAME)';
-    let frontSub = 'CARDHOLDER NAME';
-    let frontId = 'XXXX XXXX 1234';
-    let headerColor = '#1e3a8a';
 
-    if (type === 'pan') {
-      frontTitle = 'आयकर विभाग / INCOME TAX DEPT';
-      frontName = 'कार्डधारक का नाम (NAME)';
-      frontSub = 'PERMANENT ACCOUNT NUMBER';
-      frontId = 'XXXXX1234X';
-      headerColor = '#047857';
-    } else if (type === 'ayushman') {
-      frontTitle = 'आयुष्मान भारत / PM-JAY GOLDEN CARD';
-      frontName = 'लाभार्थी का नाम (NAME)';
-      frontSub = 'PRADHAN MANTRI JAN AROGYA YOJANA';
-      frontId = 'AB-PMJAY-XXXXXXX';
-      headerColor = '#d97706';
-    }
-
-    const frontSvg = encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="324" height="204" viewBox="0 0 324 204">
-        <rect width="324" height="204" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-        <rect width="324" height="42" fill="${headerColor}"/>
-        <text x="162" y="26" font-family="sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">${frontTitle}</text>
-        <rect x="16" y="55" width="70" height="90" rx="4" fill="#e2e8f0" stroke="#94a3b8"/>
-        <text x="51" y="105" font-family="sans-serif" font-size="11" fill="#64748b" text-anchor="middle">फोटो</text>
-        <text x="100" y="75" font-family="sans-serif" font-size="12" font-weight="bold" fill="#0f172a">${frontName}</text>
-        <text x="100" y="94" font-family="sans-serif" font-size="11" fill="#334155">${frontSub}</text>
-        <text x="100" y="112" font-family="sans-serif" font-size="10" fill="#64748b">DOB: 15/08/1990 | Govt Verified</text>
-        <rect x="16" y="160" width="292" height="28" rx="4" fill="#f8fafc" stroke="#e2e8f0"/>
-        <text x="162" y="179" font-family="monospace" font-size="13" font-weight="bold" fill="#dc2626" text-anchor="middle">${frontId}</text>
-      </svg>
-    `);
-
-    const backSvg = encodeURIComponent(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="324" height="204" viewBox="0 0 324 204">
-        <rect width="324" height="204" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-        <rect width="324" height="25" fill="#f1f5f9"/>
-        <text x="162" y="17" font-family="sans-serif" font-size="10" font-weight="bold" fill="#475569" text-anchor="middle">डिजिटल सेवा केंद्र अधिकृत प्रति (Official Smart Card)</text>
-        <text x="20" y="52" font-family="sans-serif" font-size="10" font-weight="bold" fill="#0f172a">स्थाई पता / Registered Address:</text>
-        <text x="20" y="70" font-family="sans-serif" font-size="9" fill="#334155">मकान नं. 104, तहसील मार्ग, मुख्य बाजार,</text>
-        <text x="20" y="86" font-family="sans-serif" font-size="9" fill="#334155">जिला हरदोई, उत्तर प्रदेश - 241001</text>
-        <rect x="220" y="45" width="80" height="80" fill="#f8fafc" stroke="#cbd5e1"/>
-        <text x="260" y="90" font-family="sans-serif" font-size="10" fill="#64748b" text-anchor="middle">QR CODE</text>
-        <line x1="20" y1="145" x2="304" y2="145" stroke="#e2e8f0" stroke-width="1"/>
-        <text x="162" y="172" font-family="sans-serif" font-size="10" font-weight="bold" fill="#1e293b" text-anchor="middle">CR-80 मानक 85.6mm × 54mm</text>
-      </svg>
-    `);
-
-    setFrontImage(`data:image/svg+xml;utf8,${frontSvg}`);
-    setBackImage(`data:image/svg+xml;utf8,${backSvg}`);
-  };
 
   return (
     <div className="space-y-6">
@@ -283,36 +230,7 @@ export default function PrintPortalCards({ preloadedCard }) {
 
             </div>
 
-            {/* Standard Card Templates */}
-            <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5 text-xs text-slate-600 font-semibold">
-                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-                <span>मानक कार्ड टेम्पलेट (Standard Card Formats):</span>
-              </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => loadSampleCard('aadhaar')}
-                  className="bg-blue-50 hover:bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-blue-200 transition active:scale-95"
-                >
-                  आधार कार्ड लेआउट
-                </button>
-                <button
-                  type="button"
-                  onClick={() => loadSampleCard('pan')}
-                  className="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-emerald-200 transition active:scale-95"
-                >
-                  पैन कार्ड लेआउट
-                </button>
-                <button
-                  type="button"
-                  onClick={() => loadSampleCard('ayushman')}
-                  className="bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-lg border border-amber-200 transition active:scale-95"
-                >
-                  आयुष्मान कार्ड लेआउट
-                </button>
-              </div>
-            </div>
+
 
             <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
               <span className="flex items-center gap-1.5">

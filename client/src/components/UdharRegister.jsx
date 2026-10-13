@@ -299,7 +299,7 @@ export default function UdharRegister({ settings, selectedCafe }) {
                 min="1"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                placeholder="उदा. 150"
+                placeholder="उधार राशि दर्ज करें (₹)"
                 className="w-full px-3 py-2 border border-slate-300 rounded-xl font-black text-sm text-rose-600 focus:ring-2 focus:ring-rose-500 focus:outline-none"
               />
             </div>
@@ -310,7 +310,7 @@ export default function UdharRegister({ settings, selectedCafe }) {
                 type="text"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="उदा. पैन कार्ड फॉर्म + प्रिंट"
+                placeholder="काम का विवरण दर्ज करें"
                 className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs focus:ring-2 focus:ring-rose-500 focus:outline-none"
               />
             </div>
@@ -468,7 +468,7 @@ export default function UdharRegister({ settings, selectedCafe }) {
                   type="text"
                   value={partialModal.note}
                   onChange={(e) => setPartialModal(prev => ({ ...prev, note: e.target.value }))}
-                  placeholder="उदा. आधा भुगतान किया"
+                  placeholder="भुगतान संबंधी विवरण/टिप्पणी"
                   className="w-full px-3 py-2 border border-slate-300 rounded-xl"
                 />
               </div>

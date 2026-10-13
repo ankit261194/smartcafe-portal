@@ -173,7 +173,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                   <input
                     type="text"
                     required
-                    placeholder="उदा. श्री बालाजी डिजिटल साइबर कैफे"
+                    placeholder="दुकान / साइबर कैफे का नाम दर्ज करें"
                     value={shopName}
                     onChange={(e) => setShopName(e.target.value)}
                     className="w-full px-3 py-2 border border-slate-300 rounded-xl font-bold focus:outline-hidden focus:border-indigo-500"
@@ -241,7 +241,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                   <input
                     type="text"
                     required
-                    placeholder="उदा. CSC-UP-241001-987 या VLE98765432"
+                    placeholder="CSC ID या VLE ID दर्ज करें"
                     value={vleId}
                     onChange={(e) => setVleId(e.target.value.toUpperCase())}
                     className="w-full px-3 py-2 border border-slate-300 rounded-xl font-mono font-bold focus:outline-hidden focus:border-indigo-500"
@@ -255,7 +255,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                       type="text"
                       required
                       maxLength="14"
-                      placeholder="4589 1234 5678"
+                      placeholder="XXXX XXXX XXXX"
                       value={aadhaarNo}
                       onChange={(e) => setAadhaarNo(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 rounded-xl font-mono font-medium focus:outline-hidden focus:border-indigo-500"
@@ -267,7 +267,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                       type="text"
                       required
                       maxLength="10"
-                      placeholder="ABCDE1234F"
+                      placeholder="10-अंकीय पैन नंबर दर्ज करें"
                       value={panNo}
                       onChange={(e) => setPanNo(e.target.value.toUpperCase())}
                       className="w-full px-3 py-2 border border-slate-300 rounded-xl font-mono font-bold uppercase focus:outline-hidden focus:border-indigo-500"
@@ -300,7 +300,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                     <input
                       type="text"
                       required
-                      placeholder="हरदोई"
+                      placeholder="शहर / कस्बा दर्ज करें"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium"
@@ -311,7 +311,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                     <input
                       type="text"
                       required
-                      placeholder="हरदोई"
+                      placeholder="जिला दर्ज करें"
                       value={district}
                       onChange={(e) => setDistrict(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-medium"
@@ -323,7 +323,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                       type="text"
                       required
                       maxLength="6"
-                      placeholder="241001"
+                      placeholder="6-अंकीय पिनकोड दर्ज करें"
                       value={pincode}
                       onChange={(e) => setPincode(e.target.value)}
                       className="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs font-mono font-bold"
@@ -352,7 +352,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                     type="text"
                     required
                     maxLength="12"
-                    placeholder="उदा. 982301928374"
+                    placeholder="12-अंकीय UTR नंबर दर्ज करें"
                     value={utr}
                     onChange={(e) => setUtr(e.target.value.replace(/\D/g, ''))}
                     className="w-full px-3 py-2 border-2 border-amber-400 rounded-xl font-mono font-black text-center text-sm tracking-widest text-slate-900 bg-white"

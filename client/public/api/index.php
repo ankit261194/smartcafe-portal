@@ -38,22 +38,44 @@ function getStore($dataFile) {
     if (file_exists($dataFile)) {
         $content = file_get_contents($dataFile);
         $data = json_decode($content, true);
-        if (is_array($data)) return $data;
+        if (is_array($data)) {
+            $changed = false;
+            // Purge dummy default values if present on Hostinger
+            if (!empty($data['bulletins'])) {
+                $filtered = array_values(array_filter($data['bulletins'], function($b) {
+                    return empty($b['id']) || strpos($b['id'], 'JOB-2026') === false;
+                }));
+                if (count($filtered) !== count($data['bulletins'])) {
+                    $data['bulletins'] = $filtered;
+                    $changed = true;
+                }
+            }
+            if (($data['settings']['phone'] ?? '') === '9876543210') { $data['settings']['phone'] = ''; $changed = true; }
+            if (in_array($data['settings']['ownerName'] ?? '', ['राजेश कुमार', 'अधिकृत संचालक'])) { $data['settings']['ownerName'] = ''; $changed = true; }
+            if (($data['settings']['upiId'] ?? '') === 'cybercafe@upi') { $data['settings']['upiId'] = ''; $changed = true; }
+            if (strpos($data['settings']['address'] ?? '', 'मेन मार्केट') !== false) { $data['settings']['address'] = ''; $changed = true; }
+            if (($data['settings']['superAdminPhone'] ?? '') === '9800000000') { $data['settings']['superAdminPhone'] = ''; $changed = true; }
+            if (($data['settings']['superAdminUpiId'] ?? '') === 'superadmin@upi') { $data['settings']['superAdminUpiId'] = ''; $changed = true; }
+            if ($changed) {
+                file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+            }
+            return $data;
+        }
     }
     // Baseline Seed (Strictly 0-Cafe baseline)
     $defaultStore = [
         'settings' => [
             'portalName' => 'डिजिटल साइबर कैफे पोर्टल',
-            'shopName' => 'श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र',
+            'shopName' => 'डिजिटल साइबर कैफे एवं जन सेवा केंद्र',
             'tagline' => 'सभी ऑनलाइन फॉर्म, प्रिंटिंग व सरकारी सेवाएं',
-            'ownerName' => 'अधिकृत संचालक',
-            'phone' => '9876543210',
-            'upiId' => 'cybercafe@upi',
-            'address' => 'मेन मार्केट, ब्लॉक रोड, तहसील कार्यालय के सामने',
+            'ownerName' => '',
+            'phone' => '',
+            'upiId' => '',
+            'address' => '',
             'superAdminPin' => password_hash(MASTER_PIN, PASSWORD_BCRYPT),
             'superAdminPassword' => password_hash(MASTER_KEY, PASSWORD_BCRYPT),
-            'superAdminUpiId' => 'superadmin@upi',
-            'superAdminPhone' => '9800000000',
+            'superAdminUpiId' => '',
+            'superAdminPhone' => '',
             'rates' => [
                 'bwPage' => 3, 'colorPage' => 10, 'xerox' => 2,
                 'lamination' => 20, 'photoCopyBothSide' => 3,
@@ -64,74 +86,7 @@ function getStore($dataFile) {
         'applications' => [],
         'cashbook' => [],
         'udhar' => [],
-        'bulletins' => [
-            [
-                'id' => 'JOB-2026-001',
-                'title' => 'SSC GD Constable 2026 भर्ती',
-                'serviceName' => 'SSC GD Constable 2026',
-                'category' => 'सरकारी नौकरी',
-                'lastDate' => '31 मार्च 2026',
-                'qualification' => '10वीं (हाईस्कूल) पास',
-                'fee' => '₹100 (Gen/OBC) • SC/ST निःशुल्क',
-                'badge' => 'Trending',
-                'description' => 'BSF, CISF, CRPF, SSB, ITBP, AR व SSF में बंपर कांस्टेबल भर्ती। 10वीं मार्कशीट व फोटो अनिवार्य।'
-            ],
-            [
-                'id' => 'JOB-2026-002',
-                'title' => 'UP / स्टेट पुलिस आरक्षी भर्ती 2026',
-                'serviceName' => 'UP / स्टेट पुलिस भर्ती',
-                'category' => 'सरकारी नौकरी',
-                'lastDate' => '15 अप्रैल 2026',
-                'qualification' => '12वीं (इंटरमीडिएट) उत्तीर्ण',
-                'fee' => '₹400 सभी वर्ग',
-                'badge' => 'High Demand',
-                'description' => 'उत्तर प्रदेश पुलिस आरक्षी (Constable) एवं उपनिरीक्षक (SI) सीधी भर्ती। निवास प्रमाण पत्र अनिवार्य।'
-            ],
-            [
-                'id' => 'JOB-2026-003',
-                'title' => 'रेलवे NTPC / Group D भर्ती',
-                'serviceName' => 'रेलवे NTPC / Group D Form',
-                'category' => 'सरकारी नौकरी',
-                'lastDate' => '25 अप्रैल 2026',
-                'qualification' => '10वीं / 12वीं / स्नातक पास',
-                'fee' => '₹500 (Gen/OBC) • ₹250 (SC/ST/महिला)',
-                'badge' => 'New',
-                'description' => 'रेलवे गैर-तकनीकी (NTPC) व लेवल-1 ग्रुप डी पदों हेतु राष्ट्रव्यापी भर्ती ऑनलाइन आवेदन।'
-            ],
-            [
-                'id' => 'JOB-2026-004',
-                'title' => 'UP / स्टेट स्कॉलरशिप 2025-26',
-                'serviceName' => 'UP / स्टेट स्कॉलरशिप फॉर्म',
-                'category' => 'छात्रवृत्ति',
-                'lastDate' => '30 अप्रैल 2026',
-                'qualification' => 'कक्षा 9वीं से पोस्ट ग्रेजुएशन (BA, BSc, B.Ed, ITI)',
-                'fee' => 'सरकारी पोर्टल निःशुल्क • कैफे शुल्क ₹120',
-                'badge' => 'Urgent',
-                'description' => 'दशमोत्तर एवं पूर्वदशम छात्रवृत्ति व शुल्क प्रतिपूर्ति ऑनलाइन आवेदन। आधार NPCI बैंक खाता अनिवार्य।'
-            ],
-            [
-                'id' => 'JOB-2026-005',
-                'title' => 'PM किसान सम्मान निधि e-KYC व नया पंजीकरण',
-                'serviceName' => 'PM किसान e-KYC / नया रजिस्ट्रेशन',
-                'category' => 'सरकारी योजना',
-                'lastDate' => 'सक्रिय (Active)',
-                'qualification' => 'भूमिधर किसान (खतौनी खाताधारक)',
-                'fee' => 'निःशुल्क',
-                'badge' => 'Essential',
-                'description' => 'सालाना ₹6,000 की किस्त पाने हेतु खतौनी, आधार बायोमेट्रिक e-KYC व NPCI DBT बैंक खाता अनिवार्य।'
-            ],
-            [
-                'id' => 'JOB-2026-006',
-                'title' => 'CTET 2026 केंद्रीय शिक्षक पात्रता परीक्षा',
-                'serviceName' => 'CTET / TET परीक्षा फॉर्म',
-                'category' => 'प्रवेश परीक्षा',
-                'lastDate' => '10 मई 2026',
-                'qualification' => 'D.El.Ed / BTC / B.Ed',
-                'fee' => '₹1,000 (एक पेपर) • ₹1,200 (दोनों पेपर)',
-                'badge' => 'Trending',
-                'description' => 'केंद्रीय माध्यमिक शिक्षा बोर्ड (CBSE) द्वारा प्राथमिक व उच्च प्राथमिक शिक्षक पात्रता परीक्षा ऑनलाइन आवेदन।'
-            ]
-        ],
+        'bulletins' => [],
         'customerVault' => [],
         'complaints' => [],
         'rcOrders' => [],
@@ -966,7 +921,7 @@ function getReceiptDetails($input, $custom = []) {
 // ---------------------------------------------------------------------------
 if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     $cafeId = $body['cafeId'] ?? '';
-    $customerPhone = $body['customerPhone'] ?? '9876543210';
+    $customerPhone = $body['customerPhone'] ?? '';
     $serviceType = $body['serviceType'] ?? '';
     $params = $body['params'] ?? [];
     $isOperatorB2bDirect = !empty($body['operatorB2bDirect']);
@@ -994,7 +949,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             'id' => 'SMARTCAFE-HQ',
             'code' => 'SMARTCAFE',
             'shopName' => $store['settings']['shopName'] ?? 'स्मार्ट कैफे B2B केंद्रीय डिजिटल सेवा केंद्र',
-            'phone' => '9876543210',
+            'phone' => $store['settings']['phone'] ?? '',
             'address' => 'केंद्रीय जन सेवा केंद्र अधिकृत पोर्टल, भारत',
             'b2bWallet' => ['balance' => 0, 'minThreshold' => 0, 'transactions' => []],
             'retailRates' => [],
@@ -1301,7 +1256,7 @@ if (preg_match('#^rc/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $regNo = strtoupper(trim($m[1]));
     if (strlen($regNo) < 6) {
         http_response_code(400);
-        echo json_encode(['error' => 'कृपया वैध गाड़ी नंबर (उदा. UP32AB1234) दर्ज करें।']);
+        echo json_encode(['error' => 'कृपया वैध गाड़ी नंबर (जैसे UP32AB1234) दर्ज करें।']);
         exit;
     }
     echo json_encode(getVehicleDetails($regNo));

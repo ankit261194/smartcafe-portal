@@ -502,7 +502,7 @@ export default function CustomerHome({
             </h4>
           </div>
           <p className="text-[11px] text-slate-400 leading-relaxed">
-            प्रिंट निकालने के बाद क्या आप अपनी फ़ाइल सर्वर से तुरंत मिटाना चाहते हैं? अपना टोकन नंबर (उदा. PRNT-...) दर्ज करें और नष्ट करें:
+            प्रिंट निकालने के बाद क्या आप अपनी फ़ाइल सर्वर से तुरंत मिटाना चाहते हैं? अपना टोकन नंबर दर्ज करें और नष्ट करें:
           </p>
 
           <form onSubmit={handleShredDocument} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
@@ -510,7 +510,7 @@ export default function CustomerHome({
               type="text"
               value={shredTokenInput}
               onChange={(e) => setShredTokenInput(e.target.value)}
-              placeholder="टोकन नंबर दर्ज करें (उदा. PRNT-101-1234)"
+              placeholder="टोकन नंबर दर्ज करें"
               className="flex-1 px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-xl font-mono text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500"
             />
             <button

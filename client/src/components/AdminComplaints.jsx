@@ -228,7 +228,7 @@ export default function AdminComplaints({ selectedCafe }) {
                 <textarea
                   rows="3"
                   required
-                  placeholder="उदा. नमस्ते जी, हमने आपके आवेदन की जांच कर सुधार कर दिया है / अतिरिक्त शुल्क वापस वॉलेट में जोड़ दिया है..."
+                  placeholder="शिकायत का आधिकारिक उत्तर यहाँ लिखें..."
                   value={replyMessage}
                   onChange={(e) => setReplyMessage(e.target.value)}
                   className="w-full p-3 border border-slate-300 rounded-2xl text-xs font-medium focus:outline-hidden focus:border-indigo-600"

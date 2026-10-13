@@ -24,14 +24,14 @@ export const JAN_SEVA_SERVICES = [
     dept: 'भारतीय विशिष्ट पहचान प्राधिकरण (UIDAI Studio)',
     desc: 'फिंगरप्रिंट या मोबाइल OTP न आने पर ग्राहक के विवरण, फोटो व पते से ओरिजिनल फ्रंट व बैक CR-80 PVC स्मार्ट कार्ड 1 सेकंड में तैयार।',
     fields: [
-      { id: 'idNumber', label: '12-अंकीय आधार संख्या (Aadhaar No)', type: 'text', placeholder: '4582 9102 3847', required: true },
-      { id: 'holderName', label: 'पूरा नाम अंग्रेजी में (Full Name)', type: 'text', placeholder: 'RAMESH KUMAR', required: true },
+      { id: 'idNumber', label: '12-अंकीय आधार संख्या (Aadhaar No)', type: 'text', placeholder: 'XXXX XXXX XXXX', required: true },
+      { id: 'holderName', label: 'पूरा नाम अंग्रेजी में (Full Name)', type: 'text', placeholder: 'आवेदक का पूरा नाम (अंग्रेजी में)', required: true },
       { id: 'holderNameHindi', label: 'पूरा नाम हिंदी में (Name in Hindi)', type: 'text', placeholder: 'पूरा नाम हिंदी में दर्ज करें', required: true },
-      { id: 'dob', label: 'जन्मतिथि (DOB: DD/MM/YYYY)', type: 'text', placeholder: '15/08/1992', required: true },
+      { id: 'dob', label: 'जन्मतिथि (DOB: DD/MM/YYYY)', type: 'text', placeholder: 'DD/MM/YYYY', required: true },
       { id: 'gender', label: 'लिंग (Gender)', type: 'select', options: ['MALE / पुरुष', 'FEMALE / महिला', 'TRANSGENDER / तृतीय लिंग'] },
-      { id: 'careOf', label: 'पिता / पति का नाम (C/O or S/O)', type: 'text', placeholder: 'S/O: Shri Babulal' },
-      { id: 'address', label: 'पूरा पता अंग्रेजी में (Address in English)', type: 'text', placeholder: 'H No. 102, Vill Rampur, Post Bilgram, Dist Hardoi - 241001', required: true },
-      { id: 'addressHindi', label: 'पूरा पता हिंदी में (Address in Hindi)', type: 'text', placeholder: 'मकान नं. 102, ग्राम रामपुर, पोस्ट बिलग्राम, जिला हरदोई - 241001' }
+      { id: 'careOf', label: 'पिता / पति का नाम (C/O or S/O)', type: 'text', placeholder: 'पिता / पति का नाम दर्ज करें' },
+      { id: 'address', label: 'पूरा पता अंग्रेजी में (Address in English)', type: 'text', placeholder: 'मकान नं., ग्राम/गली, पोस्ट, जिला, पिनकोड दर्ज करें', required: true },
+      { id: 'addressHindi', label: 'पूरा पता हिंदी में (Address in Hindi)', type: 'text', placeholder: 'मकान नं., ग्राम/मोहल्ला, पोस्ट, जनपद, पिनकोड दर्ज करें' }
     ]
   },
   {
@@ -50,7 +50,7 @@ export const JAN_SEVA_SERVICES = [
       { id: 'holderName', label: 'कार्डधारक का नाम', type: 'text', placeholder: 'कार्डधारक का नाम दर्ज करें' },
       { id: 'dob', label: 'जन्मतिथि (DOB)', type: 'text', placeholder: '15/08/1995' },
       { id: 'gender', label: 'लिंग', type: 'select', options: ['MALE / पुरुष', 'FEMALE / महिला'] },
-      { id: 'address', label: 'स्थाई पता', type: 'text', placeholder: 'ग्राम व पोस्ट, तहसील, जिला हरदोई' }
+      { id: 'address', label: 'स्थाई पता', type: 'text', placeholder: 'पूरा स्थाई पता दर्ज करें' }
     ]
   },
 
@@ -67,10 +67,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'आयकर विभाग (Income Tax NSDL/UTI Generator)',
     desc: 'पैन नंबर, नाम व पिता के नाम से फोटो व सिग्नेचर सहित 1 सेकंड में ओरिजिनल फ्रंट व बैक एचडी पैन कार्ड प्रिंट।',
     fields: [
-      { id: 'panNo', label: '10-अंकीय पैन नंबर (PAN Number)', type: 'text', placeholder: 'ABCDE1234F', required: true },
-      { id: 'holderName', label: 'कार्डधारक का नाम (Full Name)', type: 'text', placeholder: 'CARDHOLDER FULL NAME', required: true },
-      { id: 'fatherName', label: 'पिता का नाम (Father\'s Name)', type: 'text', placeholder: 'FATHER FULL NAME', required: true },
-      { id: 'dob', label: 'जन्मतिथि (Date of Birth)', type: 'text', placeholder: '15/08/1992', required: true }
+      { id: 'panNo', label: '10-अंकीय पैन नंबर (PAN Number)', type: 'text', placeholder: '10-अंकीय पैन नंबर दर्ज करें', required: true },
+      { id: 'holderName', label: 'कार्डधारक का नाम (Full Name)', type: 'text', placeholder: 'कार्डधारक का पूरा नाम दर्ज करें', required: true },
+      { id: 'fatherName', label: 'पिता का नाम (Father\'s Name)', type: 'text', placeholder: 'पिता का पूरा नाम दर्ज करें', required: true },
+      { id: 'dob', label: 'जन्मतिथि (Date of Birth)', type: 'text', placeholder: 'DD/MM/YYYY', required: true }
     ]
   },
   {
@@ -85,10 +85,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'आयकर विभाग (Income Tax e-Filing)',
     desc: 'आधार नंबर से खोया हुआ पैन कार्ड ओरिजिनल NSDL लेआउट में तत्काल प्रिंट निकालें।',
     fields: [
-      { id: 'panNo', label: '10-अंकीय पैन नंबर', type: 'text', placeholder: 'ABCDE1234F', required: true },
+      { id: 'panNo', label: '10-अंकीय पैन नंबर', type: 'text', placeholder: '10-अंकीय पैन नंबर दर्ज करें', required: true },
       { id: 'holderName', label: 'पैन धारक का नाम', type: 'text', placeholder: 'पूरा नाम दर्ज करें' },
       { id: 'fatherName', label: 'पिता का नाम', type: 'text', placeholder: 'पिता का नाम दर्ज करें' },
-      { id: 'dob', label: 'जन्मतिथि', type: 'text', placeholder: '12/04/1993' }
+      { id: 'dob', label: 'जन्मतिथि', type: 'text', placeholder: 'DD/MM/YYYY' }
     ]
   },
 
@@ -105,15 +105,15 @@ export const JAN_SEVA_SERVICES = [
     dept: 'भारत निर्वाचन आयोग (Election Commission of India)',
     desc: 'होलोग्राम व डिजिटल लेआउट सहित नया 85.6mm×54mm एटीएम साइज वोटर स्मार्ट कार्ड तैयार।',
     fields: [
-      { id: 'epicNo', label: 'EPIC / वोटर कार्ड नंबर', type: 'text', placeholder: 'UPL1049281', required: true },
-      { id: 'voterName', label: 'मतदाता का नाम अंग्रेजी में', type: 'text', placeholder: 'RAM KUMAR', required: true },
-      { id: 'voterNameHindi', label: 'मतदाता का नाम हिंदी में', type: 'text', placeholder: 'राम कुमार' },
-      { id: 'relationName', label: 'पिता / पति का नाम', type: 'text', placeholder: 'श्री शिवबालक' },
+      { id: 'epicNo', label: 'EPIC / वोटर कार्ड नंबर', type: 'text', placeholder: 'EPIC नंबर दर्ज करें', required: true },
+      { id: 'voterName', label: 'मतदाता का नाम अंग्रेजी में', type: 'text', placeholder: 'मतदाता का नाम दर्ज करें', required: true },
+      { id: 'voterNameHindi', label: 'मतदाता का नाम हिंदी में', type: 'text', placeholder: 'मतदाता का नाम (हिंदी में)' },
+      { id: 'relationName', label: 'पिता / पति का नाम', type: 'text', placeholder: 'पिता / पति का नाम दर्ज करें' },
       { id: 'gender', label: 'लिंग', type: 'select', options: ['पुरुष / MALE', 'महिला / FEMALE'] },
-      { id: 'age', label: 'आयु (Age)', type: 'text', placeholder: '32 वर्ष' },
-      { id: 'assembly', label: 'विधानसभा व भाग संख्या', type: 'text', placeholder: '156-सवायजपुर • भाग संख्या 142' },
-      { id: 'boothName', label: 'मतदान केंद्र (Polling Booth)', type: 'text', placeholder: 'प्राथमिक विद्यालय कक्ष संख्या 1' },
-      { id: 'address', label: 'स्थाई निवास पता', type: 'text', placeholder: 'मकान नं. 45, ग्राम व पोस्ट, तहसील सवायजपुर, हरदोई' }
+      { id: 'age', label: 'आयु (Age)', type: 'text', placeholder: 'आयु दर्ज करें' },
+      { id: 'assembly', label: 'विधानसभा व भाग संख्या', type: 'text', placeholder: 'विधानसभा व भाग संख्या दर्ज करें' },
+      { id: 'boothName', label: 'मतदान केंद्र (Polling Booth)', type: 'text', placeholder: 'मतदान केंद्र का नाम दर्ज करें' },
+      { id: 'address', label: 'स्थाई निवास पता', type: 'text', placeholder: 'स्थाई निवास पता दर्ज करें' }
     ]
   },
 
@@ -130,10 +130,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'राष्ट्रीय स्वास्थ्य प्राधिकरण (NHA - Ayushman Bharat)',
     desc: 'आधार या राशन कार्ड से ₹5 लाख तक के मुफ़्त इलाज वाला गोल्डन कार्ड डाउनलोड व लैमिनेशन प्रिंट करवाएं।',
     fields: [
-      { id: 'abhaId', label: 'PMJAY ID / ABHA संख्या', type: 'text', placeholder: 'AB-PMJAY-849204', required: true },
-      { id: 'beneficiaryName', label: 'लाभार्थी का नाम', type: 'text', placeholder: 'सुनीता देवी', required: true },
-      { id: 'familyHead', label: 'परिवार के मुखिया का नाम', type: 'text', placeholder: 'प्रेम शंकर' },
-      { id: 'district', label: 'जनपद व राज्य', type: 'text', placeholder: 'हरदोई, उत्तर प्रदेश' }
+      { id: 'abhaId', label: 'PMJAY ID / ABHA संख्या', type: 'text', placeholder: 'ABHA ID / PMJAY ID दर्ज करें', required: true },
+      { id: 'beneficiaryName', label: 'लाभार्थी का नाम', type: 'text', placeholder: 'लाभार्थी का नाम दर्ज करें', required: true },
+      { id: 'familyHead', label: 'परिवार के मुखिया का नाम', type: 'text', placeholder: 'मुखिया / पिता का नाम दर्ज करें' },
+      { id: 'district', label: 'जनपद व राज्य', type: 'text', placeholder: 'जनपद व राज्य दर्ज करें' }
     ]
   },
 
@@ -150,10 +150,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'श्रम एवं रोजगार मंत्रालय (Ministry of Labour)',
     desc: '12-अंकीय UAN नंबर से असंगठित कर्मकार ई-श्रम कार्ड डाउनलोड व लेमिनेशन प्रिंट।',
     fields: [
-      { id: 'uanNo', label: '12-अंकीय UAN नंबर', type: 'text', placeholder: '1234 5678 9821', required: true },
-      { id: 'workerName', label: 'श्रमिक का नाम', type: 'text', placeholder: 'संतोष कुमार', required: true },
-      { id: 'occupation', label: 'मुख्य व्यवसाय / कार्य', type: 'text', placeholder: 'कृषि मजदूर / निर्माण श्रमिक' },
-      { id: 'bloodGroup', label: 'ब्लड ग्रुप / जन्मतिथि', type: 'text', placeholder: 'O+ • 01/01/1992' }
+      { id: 'uanNo', label: '12-अंकीय UAN नंबर', type: 'text', placeholder: '12-अंकीय UAN नंबर दर्ज करें', required: true },
+      { id: 'workerName', label: 'श्रमिक का नाम', type: 'text', placeholder: 'श्रमिक का नाम दर्ज करें', required: true },
+      { id: 'occupation', label: 'मुख्य व्यवसाय / कार्य', type: 'text', placeholder: 'व्यवसाय दर्ज करें' },
+      { id: 'bloodGroup', label: 'ब्लड ग्रुप / जन्मतिथि', type: 'text', placeholder: 'ब्लड ग्रुप / जन्मतिथि दर्ज करें' }
     ]
   },
 
@@ -170,11 +170,11 @@ export const JAN_SEVA_SERVICES = [
     dept: 'दिव्यांगजन सशक्तिकरण विभाग (UDID Swavlamban)',
     desc: 'दिव्यांग (विकलांग) नागरिकों का डिजिटल यूडीआईडी कार्ड, प्रतिशत सत्यापन व लेमिनेशन प्रिंट।',
     fields: [
-      { id: 'udidNo', label: '18-अंकीय UDID कार्ड संख्या', type: 'text', placeholder: 'UP0410293847561029', required: true },
-      { id: 'personName', label: 'दिव्यांगजन का नाम', type: 'text', placeholder: 'हरिनारायण', required: true },
-      { id: 'disabilityType', label: 'दिव्यांगता का प्रकार व प्रतिशत', type: 'text', placeholder: 'लोकोमोटर दिव्यांगता (45%)' },
+      { id: 'udidNo', label: '18-अंकीय UDID कार्ड संख्या', type: 'text', placeholder: '18-अंकीय UDID संख्या दर्ज करें', required: true },
+      { id: 'personName', label: 'दिव्यांगजन का नाम', type: 'text', placeholder: 'दिव्यांगजन का नाम दर्ज करें', required: true },
+      { id: 'disabilityType', label: 'दिव्यांगता का प्रकार व प्रतिशत', type: 'text', placeholder: 'दिव्यांगता प्रकार व प्रतिशत दर्ज करें' },
       { id: 'validUpto', label: 'कार्ड वैधता (Validity)', type: 'select', options: ['स्थाई (Permanent)', 'अस्थाई (Temporary - 5 वर्ष)'] },
-      { id: 'hospital', label: 'मेडिकल बोर्ड / CMO कार्यालय', type: 'text', placeholder: 'मुख्य चिकित्सा अधिकारी (CMO), हरदोई' }
+      { id: 'hospital', label: 'मेडिकल बोर्ड / CMO कार्यालय', type: 'text', placeholder: 'मेडिकल बोर्ड / CMO कार्यालय दर्ज करें' }
     ]
   },
 
@@ -189,12 +189,12 @@ export const JAN_SEVA_SERVICES = [
     desc: '10-अंकीय खाता संख्या से कुल बकाया बिजली बिल की जांच करें और मुहर लगी आधिकारिक रसीद प्रिंट निकालें।',
     fields: [
       { id: 'discom', label: 'डिस्कॉम क्षेत्र (Discom)', type: 'select', options: ['मध्यांचल विद्युत वितरण निगम (MVVNL)', 'पूर्वांचल विद्युत वितरण निगम (PVVNL)', 'पश्चिमांचल विद्युत वितरण निगम (PVVNL)', 'दक्षिणांचल विद्युत वितरण निगम (DVVNL)', 'केस्को (KESCO कानपुर)'] },
-      { id: 'consumerNo', label: '10-अंकीय उपभोक्ता संख्या (Account ID)', type: 'text', placeholder: '7418529630', required: true },
+      { id: 'consumerNo', label: '10-अंकीय उपभोक्ता संख्या (Account ID)', type: 'text', placeholder: '10-अंकीय उपभोक्ता संख्या दर्ज करें', required: true },
       { id: 'consumerName', label: 'उपभोक्ता का नाम', type: 'text', placeholder: 'उपभोक्ता का नाम दर्ज करें' },
       { id: 'loadKw', label: 'सप्लाई श्रेणी व भार', type: 'select', options: ['LMV-1 घरेलू (1.00 KW)', 'LMV-1 घरेलू (2.00 KW)', 'LMV-2 वाणिज्यिक / दुकान (2.00 KW)'] },
-      { id: 'meterNo', label: 'मीटर संख्या', type: 'text', placeholder: 'UP-7410294' },
-      { id: 'amount', label: 'वर्तमान कुल देय धनराशि', type: 'text', placeholder: '₹1,240' },
-      { id: 'dueDate', label: 'भुगतान की अंतिम तिथि', type: 'text', placeholder: '25/11/2026' }
+      { id: 'meterNo', label: 'मीटर संख्या', type: 'text', placeholder: 'मीटर संख्या दर्ज करें' },
+      { id: 'amount', label: 'वर्तमान कुल देय धनराशि', type: 'text', placeholder: 'कुल देय धनराशि दर्ज करें' },
+      { id: 'dueDate', label: 'भुगतान की अंतिम तिथि', type: 'text', placeholder: 'अंतिम तिथि दर्ज करें' }
     ]
   },
 
@@ -208,11 +208,11 @@ export const JAN_SEVA_SERVICES = [
     dept: 'सड़क परिवहन एवं राजमार्ग मंत्रालय (mParivahan Vahan)',
     desc: 'गाड़ी नंबर से फिटनेस, प्रदूषण (PUCC), बीमा कंपनी व वैधता अवधि की प्रमाणित स्थिति पर्ची।',
     fields: [
-      { id: 'vehicleNo', label: 'गाड़ी नंबर (RC Number)', type: 'text', placeholder: 'UP30AB1234', required: true },
-      { id: 'ownerName', label: 'वाहन स्वामी का नाम', type: 'text', placeholder: 'विकास कुमार' },
+      { id: 'vehicleNo', label: 'गाड़ी नंबर (RC Number)', type: 'text', placeholder: 'गाड़ी नंबर दर्ज करें', required: true },
+      { id: 'ownerName', label: 'वाहन स्वामी का नाम', type: 'text', placeholder: 'वाहन स्वामी का नाम दर्ज करें' },
       { id: 'vehicleClass', label: 'वाहन श्रेणी व ईंधन', type: 'select', options: ['LMV (कार / जीप) • पेट्रोल/CNG', '2W (मोटरसाइकिल / स्कूटर)', 'HGV / LCV (कमर्शियल वाहन)'] },
-      { id: 'puccUpto', label: 'प्रदूषण (PUCC) वैधता तिथि', type: 'text', placeholder: '19/04/2027 तक वैध' },
-      { id: 'insuranceUpto', label: 'बीमा कंपनी व वैधता', type: 'text', placeholder: '12/08/2027 • न्यू इंडिया इंश्योरेंस' }
+      { id: 'puccUpto', label: 'प्रदूषण (PUCC) वैधता तिथि', type: 'text', placeholder: 'वैधता तिथि दर्ज करें' },
+      { id: 'insuranceUpto', label: 'बीमा कंपनी व वैधता', type: 'text', placeholder: 'बीमा कंपनी व वैधता दर्ज करें' }
     ]
   },
 
@@ -230,8 +230,8 @@ export const JAN_SEVA_SERVICES = [
       { id: 'applicantName', label: 'घोषणाकर्ता का नाम', type: 'text', placeholder: 'घोषणाकर्ता का नाम दर्ज करें', required: true },
       { id: 'fatherHusband', label: 'पिता / पति का नाम', type: 'text', placeholder: 'पिता / पति का नाम दर्ज करें', required: true },
       { id: 'purpose', label: 'घोषणा का उद्देश्य', type: 'select', options: ['आय प्रमाण पत्र हेतु', 'जाति प्रमाण पत्र हेतु', 'मूल निवास प्रमाण पत्र हेतु', 'राशन कार्ड संशोधन हेतु', 'छात्रवृत्ति आवेदन हेतु'] },
-      { id: 'income', label: 'वार्षिक आय (यदि लागू हो)', type: 'text', placeholder: '₹48,000/- मात्र' },
-      { id: 'address', label: 'स्थाई निवास पता', type: 'text', placeholder: 'मकान नं. 14, ग्राम रामपुर, तहसील सवायजपुर, हरदोई' }
+      { id: 'income', label: 'वार्षिक आय (यदि लागू हो)', type: 'text', placeholder: 'वार्षिक आय दर्ज करें' },
+      { id: 'address', label: 'स्थाई निवास पता', type: 'text', placeholder: 'स्थाई निवास पता दर्ज करें' }
     ]
   },
 
@@ -245,10 +245,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'खाद्य एवं रसद विभाग (NFSA / FCS Portal)',
     desc: 'कोटेदार को दिखाने के लिए परिवार के सभी सदस्यों के नाम और कुल यूनिट वाली आधिकारिक राशन पर्ची प्रिंट करें।',
     fields: [
-      { id: 'rationNo', label: '12-अंकीय राशन कार्ड संख्या', type: 'text', placeholder: '215487965412', required: true },
+      { id: 'rationNo', label: '12-अंकीय राशन कार्ड संख्या', type: 'text', placeholder: '12-अंकीय राशन कार्ड संख्या दर्ज करें', required: true },
       { id: 'headName', label: 'मुखिया का नाम', type: 'text', placeholder: 'मुखिया का नाम दर्ज करें', required: true },
-      { id: 'dealerName', label: 'कोटेदार (उचित दर विक्रेता)', type: 'text', placeholder: 'मेसर्स कन्हैया लाल' },
-      { id: 'units', label: 'कुल यूनिट (सदस्य संख्या)', type: 'number', placeholder: '5' }
+      { id: 'dealerName', label: 'कोटेदार (उचित दर विक्रेता)', type: 'text', placeholder: 'कोटेदार का नाम दर्ज करें' },
+      { id: 'units', label: 'कुल यूनिट (सदस्य संख्या)', type: 'number', placeholder: 'यूनिट संख्या दर्ज करें' }
     ]
   },
 
@@ -262,9 +262,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'कृषि एवं किसान कल्याण मंत्रालय (PM-KISAN Portal)',
     desc: 'किसान की 2000 रुपये वाली क़िस्त, e-KYC स्थिति, और भूलेख अंकन (Land Seeding) का आधिकारिक प्रिंट।',
     fields: [
-      { id: 'farmerName', label: 'किसान का नाम', type: 'text', placeholder: 'बलदेव सिंह', required: true },
-      { id: 'mobileReg', label: 'पंजीकृत मोबाइल या आधार नंबर', type: 'text', placeholder: '9839XXXX10' },
-      { id: 'village', label: 'गाँव व तहसील', type: 'text', placeholder: 'कछौना, हरदोई' }
+      { id: 'farmerName', label: 'किसान का नाम', type: 'text', placeholder: 'किसान का नाम दर्ज करें', required: true },
+      { id: 'mobileReg', label: 'पंजीकृत मोबाइल या आधार नंबर', type: 'text', placeholder: 'पंजीकृत मोबाइल नंबर दर्ज करें' },
+      { id: 'village', label: 'गाँव व तहसील', type: 'text', placeholder: 'गाँव व तहसील दर्ज करें' }
     ]
   },
 
@@ -278,8 +278,8 @@ export const JAN_SEVA_SERVICES = [
     dept: 'आयकर विभाग (Income Tax Department - NSDL/UTI)',
     desc: 'पैन और आधार नंबर की पारस्परिक लिंकिंग की आधिकारिक पुष्टि रसीद (सत्यापित व सक्रिय स्टेटस)।',
     fields: [
-      { id: 'panNo', label: '10-अंकीय पैन नंबर (PAN)', type: 'text', placeholder: 'ABCDE1234F', required: true },
-      { id: 'aadhaarNo', label: '12-अंकीय आधार नंबर (Aadhaar)', type: 'text', placeholder: 'XXXX XXXX 4921', required: true }
+      { id: 'panNo', label: '10-अंकीय पैन नंबर (PAN)', type: 'text', placeholder: '10-अंकीय पैन नंबर दर्ज करें', required: true },
+      { id: 'aadhaarNo', label: '12-अंकीय आधार नंबर (Aadhaar)', type: 'text', placeholder: '12-अंकीय आधार नंबर दर्ज करें', required: true }
     ]
   },
 
@@ -294,8 +294,8 @@ export const JAN_SEVA_SERVICES = [
     desc: 'हाईस्कूल व इंटरमीडिएट रोल नंबर से सभी विषयों के प्राप्तांक, श्रेणी व आधिकारिक पासिंग रिजल्ट प्रिंट।',
     fields: [
       { id: 'examClass', label: 'कक्षा (Class)', type: 'select', options: ['हाईस्कूल (Class 10th)', 'इंटरमीडिएट (Class 12th)'] },
-      { id: 'rollNo', label: 'रोल नंबर (Roll Number)', type: 'text', placeholder: '124019284', required: true },
-      { id: 'studentName', label: 'छात्र / छात्रा का नाम', type: 'text', placeholder: 'मोहित कुमार', required: true }
+      { id: 'rollNo', label: 'रोल नंबर (Roll Number)', type: 'text', placeholder: 'रोल नंबर दर्ज करें', required: true },
+      { id: 'studentName', label: 'छात्र / छात्रा का नाम', type: 'text', placeholder: 'छात्र / छात्रा का नाम दर्ज करें', required: true }
     ]
   },
 
@@ -309,9 +309,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'समाज कल्याण / पिछड़ा वर्ग कल्याण विभाग',
     desc: 'दशमोत्तर व पूर्वदशम छात्रवृत्ति का स्टेटस (समाज कल्याण से अग्रसारित व बैंक में ₹5400 अंतरित)।',
     fields: [
-      { id: 'regNo', label: 'छात्रवृत्ति रजिस्ट्रेशन संख्या', type: 'text', placeholder: '260194857201', required: true },
-      { id: 'studentName', label: 'छात्र / छात्रा का नाम', type: 'text', placeholder: 'अंशिका वर्मा', required: true },
-      { id: 'course', label: 'कक्षा / पाठ्यक्रम', type: 'text', placeholder: 'B.A. द्वितीय वर्ष' }
+      { id: 'regNo', label: 'छात्रवृत्ति रजिस्ट्रेशन संख्या', type: 'text', placeholder: 'रजिस्ट्रेशन संख्या दर्ज करें', required: true },
+      { id: 'studentName', label: 'छात्र / छात्रा का नाम', type: 'text', placeholder: 'छात्र / छात्रा का नाम दर्ज करें', required: true },
+      { id: 'course', label: 'कक्षा / पाठ्यक्रम', type: 'text', placeholder: 'कक्षा / पाठ्यक्रम दर्ज करें' }
     ]
   },
   {
@@ -323,9 +323,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'समाज कल्याण विभाग (Integrated Pension Portal)',
     desc: 'वृद्धावस्था, विधवा व दिव्यांग पेंशन की ₹3000 वाली क़िस्त का बैंक ट्रांसफर स्टेटस व आधिकारिक पर्ची प्रिंट।',
     fields: [
-      { id: 'pensionerName', label: 'पेंशनर का नाम', type: 'text', placeholder: 'मंगली प्रसाद', required: true },
+      { id: 'pensionerName', label: 'पेंशनर का नाम', type: 'text', placeholder: 'पेंशनर का नाम दर्ज करें', required: true },
       { id: 'pensionType', label: 'पेंशन योजना का प्रकार', type: 'select', options: ['वृद्धावस्था पेंशन (Old Age)', 'निराश्रित महिला पेंशन (Widow)', 'दिव्यांग पेंशन (Divyang)'] },
-      { id: 'regNo', label: 'पंजीकरण संख्या / खाता संख्या', type: 'text', placeholder: '1029384756' }
+      { id: 'regNo', label: 'पंजीकरण संख्या / खाता संख्या', type: 'text', placeholder: 'पंजीकरण संख्या / खाता संख्या दर्ज करें' }
     ]
   },
   {
@@ -339,10 +339,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'भारत निर्वाचन आयोग (Election Commission of India)',
     desc: 'वोटर कार्ड नंबर से पोलिंग बूथ, भाग संख्या, क्रम संख्या (सीरियल नंबर) व प्रमाणित वोटर पर्ची।',
     fields: [
-      { id: 'epicNo', label: 'EPIC / वोटर कार्ड नंबर', type: 'text', placeholder: 'UPL1948291', required: true },
-      { id: 'voterName', label: 'मतदाता का नाम', type: 'text', placeholder: 'शिवबालक', required: true },
-      { id: 'boothName', label: 'मतदान केंद्र (Polling Booth)', type: 'text', placeholder: 'प्राथमिक विद्यालय कक्ष संख्या 1' },
-      { id: 'assembly', label: 'भाग संख्या व क्रम संख्या', type: 'text', placeholder: 'भाग नं. 142 • क्रम संख्या 512' }
+      { id: 'epicNo', label: 'EPIC / वोटर कार्ड नंबर', type: 'text', placeholder: 'EPIC नंबर दर्ज करें', required: true },
+      { id: 'voterName', label: 'मतदाता का नाम', type: 'text', placeholder: 'मतदाता का नाम दर्ज करें', required: true },
+      { id: 'boothName', label: 'मतदान केंद्र (Polling Booth)', type: 'text', placeholder: 'मतदान केंद्र का नाम दर्ज करें' },
+      { id: 'assembly', label: 'भाग संख्या व क्रम संख्या', type: 'text', placeholder: 'भाग संख्या व क्रम संख्या दर्ज करें' }
     ]
   },
   {
@@ -354,9 +354,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'ग्रामीण विकास मंत्रालय (MGNREGA Portal)',
     desc: 'गाँव के अकुशल मजदूर का जॉब कार्ड नंबर, कुल कार्य दिवस और मजदूरी भुगतान का प्रमाणित प्रिंट।',
     fields: [
-      { id: 'jobCardNo', label: 'जॉब कार्ड संख्या', type: 'text', placeholder: 'UP-04-002-019/52', required: true },
-      { id: 'workerName', label: 'श्रमिक का नाम', type: 'text', placeholder: 'सियाराम' },
-      { id: 'gramPanchayat', label: 'ग्राम पंचायत व विकास खंड', type: 'text', placeholder: 'रामपुर, विकास खंड सवायजपुर' }
+      { id: 'jobCardNo', label: 'जॉब कार्ड संख्या', type: 'text', placeholder: 'जॉब कार्ड संख्या दर्ज करें', required: true },
+      { id: 'workerName', label: 'श्रमिक का नाम', type: 'text', placeholder: 'श्रमिक का नाम दर्ज करें' },
+      { id: 'gramPanchayat', label: 'ग्राम पंचायत व विकास खंड', type: 'text', placeholder: 'ग्राम पंचायत व विकास खंड दर्ज करें' }
     ]
   },
   {
@@ -368,9 +368,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'पेट्रोलियम एवं प्राकृतिक गैस मंत्रालय (MyLPG Portal)',
     desc: 'रसोई गैस सिलेंडर की सब्सिडी किस बैंक खाते में गई और पिछली सब्सिडी राशि का ब्यौरा।',
     fields: [
-      { id: 'lpgId', label: '17-अंकीय LPG ID या उपभोक्ता संख्या', type: 'text', placeholder: '12049182049182041', required: true },
-      { id: 'consumerName', label: 'उपभोक्ता का नाम', type: 'text', placeholder: 'कमला देवी' },
-      { id: 'agencyName', label: 'गैस एजेंसी व कंपनी', type: 'text', placeholder: 'भारत गैस / इंडेन ग्रामीण वितरक' }
+      { id: 'lpgId', label: '17-अंकीय LPG ID या उपभोक्ता संख्या', type: 'text', placeholder: 'LPG ID या उपभोक्ता संख्या दर्ज करें', required: true },
+      { id: 'consumerName', label: 'उपभोक्ता का नाम', type: 'text', placeholder: 'उपभोक्ता का नाम दर्ज करें' },
+      { id: 'agencyName', label: 'गैस एजेंसी व कंपनी', type: 'text', placeholder: 'गैस एजेंसी का नाम दर्ज करें' }
     ]
   },
   {
@@ -382,10 +382,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'भारत के महारजिस्ट्रार (Civil Registration System - CRS)',
     desc: 'अस्पताल व नगर पालिका/ग्राम पंचायत द्वारा जारी जन्म व मृत्यु प्रमाण पत्र का डिजिटल नेट सत्यापन प्रिंट।',
     fields: [
-      { id: 'regNo', label: 'पंजीकरण संख्या (Registration No.)', type: 'text', placeholder: 'B-2026-09-948201', required: true },
-      { id: 'applicantName', label: 'बच्चे / मृतक का नाम', type: 'text', placeholder: 'आरव कुमार' },
-      { id: 'fatherHusband', label: 'पिता / पति का नाम', type: 'text', placeholder: 'पूरा नाम दर्ज करें' },
-      { id: 'address', label: 'घटना स्थल व पता', type: 'text', placeholder: 'सामुदायिक स्वास्थ्य केंद्र, हरदोई' }
+      { id: 'regNo', label: 'पंजीकरण संख्या (Registration No.)', type: 'text', placeholder: 'पंजीकरण संख्या दर्ज करें', required: true },
+      { id: 'applicantName', label: 'बच्चे / मृतक का नाम', type: 'text', placeholder: 'नाम दर्ज करें' },
+      { id: 'fatherHusband', label: 'पिता / पति का नाम', type: 'text', placeholder: 'पिता / पति का नाम दर्ज करें' },
+      { id: 'address', label: 'घटना स्थल व पता', type: 'text', placeholder: 'घटना स्थल व पता दर्ज करें' }
     ]
   },
   {
@@ -397,10 +397,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'पंचायती राज विभाग (e-District / Panchayat Portal)',
     desc: 'राशन कार्ड संशोधन व पेंशन हेतु ग्राम पंचायत परिवार रजिस्टर की प्रमाणित नकल प्रिंट।',
     fields: [
-      { id: 'headName', label: 'परिवार के मुखिया का नाम', type: 'text', placeholder: 'राम सनेही', required: true },
-      { id: 'rationNo', label: 'मकान नंबर / रजिस्टर क्रमांक', type: 'text', placeholder: 'मकान नं. 42 / खाता 19' },
-      { id: 'dealerName', label: 'ग्राम पंचायत व विकास खंड', type: 'text', placeholder: 'ग्राम पंचायत सुरसा, ब्लॉक हरदोई' },
-      { id: 'units', label: 'कुल दर्ज सदस्य', type: 'number', placeholder: '5' }
+      { id: 'headName', label: 'परिवार के मुखिया का नाम', type: 'text', placeholder: 'परिवार के मुखिया का नाम दर्ज करें', required: true },
+      { id: 'rationNo', label: 'मकान नंबर / रजिस्टर क्रमांक', type: 'text', placeholder: 'मकान नंबर / रजिस्टर क्रमांक दर्ज करें' },
+      { id: 'dealerName', label: 'ग्राम पंचायत व विकास खंड', type: 'text', placeholder: 'ग्राम पंचायत व विकास खंड दर्ज करें' },
+      { id: 'units', label: 'कुल दर्ज सदस्य', type: 'number', placeholder: 'कुल सदस्य संख्या दर्ज करें' }
     ]
   },
   {
@@ -412,8 +412,8 @@ export const JAN_SEVA_SERVICES = [
     dept: 'नेशनल पेमेंट्स कारपोरेशन ऑफ इंडिया (NPCI Aadhar Seeding)',
     desc: 'सरकारी सब्सिडी, स्कॉलरशिप व पेंशन के लिए बैंक खाते में आधार NPCI मैपिंग जांच।',
     fields: [
-      { id: 'aadhaarNo', label: 'आधार नंबर (अंतिम 4 अंक)', type: 'text', placeholder: 'XXXX XXXX 4921', required: true },
-      { id: 'panNo', label: 'संबद्ध बैंक शाखा का नाम', type: 'text', placeholder: 'बैंक ऑफ बड़ौदा, शाखा सुरसा' }
+      { id: 'aadhaarNo', label: 'आधार नंबर (अंतिम 4 अंक)', type: 'text', placeholder: 'आधार नंबर दर्ज करें', required: true },
+      { id: 'panNo', label: 'संबद्ध बैंक शाखा का नाम', type: 'text', placeholder: 'बैंक शाखा का नाम दर्ज करें' }
     ]
   },
   {
@@ -425,10 +425,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'राजस्व परिषद (e-District Certificate Net Verification)',
     desc: 'तहसीलदार द्वारा जारी आय, जाति और निवास प्रमाण पत्र का ऑनलाइन डिजिटल सत्यापन प्रिंट।',
     fields: [
-      { id: 'applicantName', label: 'आवेदक का नाम', type: 'text', placeholder: 'सुशील कुमार', required: true },
-      { id: 'fatherHusband', label: 'पिता / पति का नाम', type: 'text', placeholder: 'श्री राम चरण' },
+      { id: 'applicantName', label: 'आवेदक का नाम', type: 'text', placeholder: 'आवेदक का नाम दर्ज करें', required: true },
+      { id: 'fatherHusband', label: 'पिता / पति का नाम', type: 'text', placeholder: 'पिता / पति का नाम दर्ज करें' },
       { id: 'purpose', label: 'प्रमाण पत्र का प्रकार', type: 'select', options: ['जाति प्रमाण पत्र (Caste)', 'आय प्रमाण पत्र (Income)', 'मूल निवास प्रमाण पत्र (Domicile)'] },
-      { id: 'address', label: 'आवेदन क्रमांक व प्रमाण पत्र क्रमांक', type: 'text', placeholder: 'आवेदन: 24192004 • प्रमाण पत्र: 241948291' }
+      { id: 'address', label: 'आवेदन क्रमांक व प्रमाण पत्र क्रमांक', type: 'text', placeholder: 'आवेदन क्रमांक व प्रमाण पत्र क्रमांक दर्ज करें' }
     ]
   },
   {
@@ -440,10 +440,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'राजस्व परिषद उत्तर प्रदेश (Bhulekh Bhu-Naksha Portal)',
     desc: 'खेत का गाटा नंबर डालकर खेत की मेढ़, दिशा और आकार का प्रमाणित नक्शा प्रिंट निकालें।',
     fields: [
-      { id: 'rationNo', label: 'खसरा / गाटा संख्या (Gata No.)', type: 'text', placeholder: 'गाटा संख्या 412/1', required: true },
-      { id: 'headName', label: 'खातेदार / किसान का नाम', type: 'text', placeholder: 'हरिशंकर पुत्र राम दयाल' },
-      { id: 'dealerName', label: 'ग्राम, परगना व तहसील', type: 'text', placeholder: 'ग्राम रामपुर, तहसील सवायजपुर, हरदोई' },
-      { id: 'units', label: 'कुल रकबा (क्षेत्रफल हेक्टेयर में)', type: 'text', placeholder: '0.4120 हेक्टेयर' }
+      { id: 'rationNo', label: 'खसरा / गाटा संख्या (Gata No.)', type: 'text', placeholder: 'खसरा / गाटा संख्या दर्ज करें', required: true },
+      { id: 'headName', label: 'खातेदार / किसान का नाम', type: 'text', placeholder: 'खातेदार / किसान का नाम दर्ज करें' },
+      { id: 'dealerName', label: 'ग्राम, परगना व तहसील', type: 'text', placeholder: 'ग्राम, परगना व तहसील दर्ज करें' },
+      { id: 'units', label: 'कुल रकबा (क्षेत्रफल हेक्टेयर में)', type: 'text', placeholder: 'क्षेत्रफल (हेक्टेयर में) दर्ज करें' }
     ]
   },
   {
@@ -455,9 +455,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'ग्रामीण विकास मंत्रालय (PMAY-G / AwaasSoft)',
     desc: 'ग्रामीण व शहरी आवास योजना में ₹1.20 लाख सहायता सूची में नाम व क़िस्त की स्थिति प्रिंट।',
     fields: [
-      { id: 'headName', label: 'लाभार्थी का नाम', type: 'text', placeholder: 'आशा देवी', required: true },
-      { id: 'rationNo', label: 'PMAY पंजीकरण संख्या (PMAY ID)', type: 'text', placeholder: 'UP192840192' },
-      { id: 'dealerName', label: 'ग्राम पंचायत व जनपद', type: 'text', placeholder: 'ग्राम बेहटा, हरदोई' }
+      { id: 'headName', label: 'लाभार्थी का नाम', type: 'text', placeholder: 'लाभार्थी का नाम दर्ज करें', required: true },
+      { id: 'rationNo', label: 'PMAY पंजीकरण संख्या (PMAY ID)', type: 'text', placeholder: 'PMAY पंजीकरण संख्या दर्ज करें' },
+      { id: 'dealerName', label: 'ग्राम पंचायत व जनपद', type: 'text', placeholder: 'ग्राम पंचायत व जनपद दर्ज करें' }
     ]
   },
   {
@@ -469,9 +469,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'श्रम एवं रोजगार विभाग (Sewayojan Portal UP)',
     desc: 'आउटसोर्सिंग व संविदा सरकारी भर्तियों के लिए अनिवार्य रोजगार संगम X-10 पावती पर्ची।',
     fields: [
-      { id: 'regNo', label: 'सेवायोजन पंजीकरण संख्या', type: 'text', placeholder: 'UP20261948291', required: true },
-      { id: 'studentName', label: 'अभ्यर्थी का नाम', type: 'text', placeholder: 'अमनदीप' },
-      { id: 'course', label: 'योग्यता (Qualification)', type: 'text', placeholder: 'स्नातक (B.Sc.) + CCC' }
+      { id: 'regNo', label: 'सेवायोजन पंजीकरण संख्या', type: 'text', placeholder: 'सेवायोजन पंजीकरण संख्या दर्ज करें', required: true },
+      { id: 'studentName', label: 'अभ्यर्थी का नाम', type: 'text', placeholder: 'अभ्यर्थी का नाम दर्ज करें' },
+      { id: 'course', label: 'योग्यता (Qualification)', type: 'text', placeholder: 'शैक्षणिक योग्यता दर्ज करें' }
     ]
   },
   {
@@ -483,8 +483,8 @@ export const JAN_SEVA_SERVICES = [
     dept: 'सूक्ष्म, लघु एवं मध्यम उद्यम मंत्रालय (Udyam Portal)',
     desc: 'दुकानदार व व्यापारिक फर्म का सरकारी उद्यम आधार प्रमाणपत्र व पंजीकरण सत्यापन प्रिंट।',
     fields: [
-      { id: 'panNo', label: 'उद्यम पंजीकरण संख्या (Udyam No)', type: 'text', placeholder: 'UDYAM-UP-30-0012948', required: true },
-      { id: 'aadhaarNo', label: 'इकाई का नाम (Enterprise Name)', type: 'text', placeholder: 'मेसर्स शर्मा डिजिटल सेवा केंद्र' }
+      { id: 'panNo', label: 'उद्यम पंजीकरण संख्या (Udyam No)', type: 'text', placeholder: 'उद्यम पंजीकरण संख्या दर्ज करें', required: true },
+      { id: 'aadhaarNo', label: 'इकाई का नाम (Enterprise Name)', type: 'text', placeholder: 'इकाई का नाम दर्ज करें' }
     ]
   },
   {
@@ -496,9 +496,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'सड़क परिवहन एवं राजमार्ग मंत्रालय (Sarathi Parivahan)',
     desc: 'लर्निंग व परमानेंट ड्राइविंग लाइसेंस का आवेदन स्टेटस व RTO टेस्ट स्लॉट बुकिंग पर्ची।',
     fields: [
-      { id: 'vehicleNo', label: 'आवेदन संख्या (Application No)', type: 'text', placeholder: 'DL-2026-019284', required: true },
-      { id: 'ownerName', label: 'आवेदक का नाम', type: 'text', placeholder: 'दीपक कुमार' },
-      { id: 'puccUpto', label: 'RTO कार्यालय व स्लॉट तिथि', type: 'text', placeholder: 'RTO हरदोई • 12 मार्च 2026 (11:00 AM)' }
+      { id: 'vehicleNo', label: 'आवेदन संख्या (Application No)', type: 'text', placeholder: 'आवेदन संख्या दर्ज करें', required: true },
+      { id: 'ownerName', label: 'आवेदक का नाम', type: 'text', placeholder: 'आवेदक का नाम दर्ज करें' },
+      { id: 'puccUpto', label: 'RTO कार्यालय व स्लॉट तिथि', type: 'text', placeholder: 'RTO कार्यालय व स्लॉट तिथि दर्ज करें' }
     ]
   },
   {
@@ -510,8 +510,8 @@ export const JAN_SEVA_SERVICES = [
     dept: 'महिला कल्याण एवं बाल विकास विभाग',
     desc: 'निराश्रित महिला पेंशन एवं मातृत्व वंदना योजना की क़िस्त व बैंक ट्रांसफर स्थिति प्रिंट।',
     fields: [
-      { id: 'pensionerName', label: 'लाभार्थी महिला का नाम', type: 'text', placeholder: 'कमलेश कुमारी', required: true },
-      { id: 'regNo', label: 'आवेदन / खाता संख्या', type: 'text', placeholder: '1048291048' }
+      { id: 'pensionerName', label: 'लाभार्थी महिला का नाम', type: 'text', placeholder: 'लाभार्थी का नाम दर्ज करें', required: true },
+      { id: 'regNo', label: 'आवेदन / खाता संख्या', type: 'text', placeholder: 'आवेदन / खाता संख्या दर्ज करें' }
     ]
   },
   {
@@ -523,9 +523,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'विधि एवं न्याय मंत्रालय (Virtual Courts Portal)',
     desc: 'ट्रैफिक पुलिस चालान का केस नंबर, जुर्माना राशि व वर्चुअल कोर्ट निस्तारण रसीद।',
     fields: [
-      { id: 'vehicleNo', label: 'गाड़ी नंबर या चालान संख्या', type: 'text', placeholder: 'UP32AB1234 / CH-19284', required: true },
-      { id: 'ownerName', label: 'वाहन स्वामी / अभियुक्त', type: 'text', placeholder: 'संजय यादव' },
-      { id: 'puccUpto', label: 'जुर्माना राशि व स्थिति', type: 'text', placeholder: '₹1,000 (निस्तारित / Disposed in Virtual Court)' }
+      { id: 'vehicleNo', label: 'गाड़ी नंबर या चालान संख्या', type: 'text', placeholder: 'गाड़ी नंबर या चालान संख्या दर्ज करें', required: true },
+      { id: 'ownerName', label: 'वाहन स्वामी / अभियुक्त', type: 'text', placeholder: 'वाहन स्वामी / नाम दर्ज करें' },
+      { id: 'puccUpto', label: 'जुर्माना राशि व स्थिति', type: 'text', placeholder: 'जुर्माना राशि व स्थिति दर्ज करें' }
     ]
   },
   {
@@ -537,10 +537,10 @@ export const JAN_SEVA_SERVICES = [
     dept: 'उत्तर प्रदेश पावर कारपोरेशन (झटपट कनेक्शन पोर्टल)',
     desc: 'घरेलू व वाणिज्यिक नए बिजली मीटर आवेदन की आधिकारिक पावती व डिमांड नोट पर्ची।',
     fields: [
-      { id: 'consumerNo', label: 'आवेदन संख्या (Application ID)', type: 'text', placeholder: 'JP-2026-019284', required: true },
+      { id: 'consumerNo', label: 'आवेदन संख्या (Application ID)', type: 'text', placeholder: 'आवेदन संख्या दर्ज करें', required: true },
       { id: 'consumerName', label: 'आवेदक का नाम', type: 'text', placeholder: 'आवेदक का नाम दर्ज करें' },
       { id: 'loadKw', label: 'स्वीकृत भार', type: 'select', options: ['1 KW (घरेलू BPL/सामान्य)', '2 KW (घरेलू)', '3 KW (घरेलू/दुकान)'] },
-      { id: 'substation', label: 'विद्युत उपकेंद्र व खंड', type: 'text', placeholder: '33/11 KV उपकेंद्र सांडी' }
+      { id: 'substation', label: 'विद्युत उपकेंद्र व खंड', type: 'text', placeholder: 'विद्युत उपकेंद्र दर्ज करें' }
     ]
   },
   {
@@ -552,9 +552,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'कर्मचारी चयन आयोग / भर्ती बोर्ड (Admit Card Portal)',
     desc: 'प्रतियोगी परीक्षा या बोर्ड परीक्षा का आधिकारिक प्रवेश पत्र, परीक्षा तिथि व केंद्र पर्ची।',
     fields: [
-      { id: 'studentName', label: 'परीक्षार्थी का नाम', type: 'text', placeholder: 'अभिषेक पटेल', required: true },
-      { id: 'regNo', label: 'रोल नंबर / रजिस्ट्रेशन संख्या', type: 'text', placeholder: '2401829104', required: true },
-      { id: 'course', label: 'परीक्षा का नाम व केंद्र', type: 'text', placeholder: 'SSC GD Exam 2026 • राजकीय इंटर कॉलेज, हरदोई' }
+      { id: 'studentName', label: 'परीक्षार्थी का नाम', type: 'text', placeholder: 'परीक्षार्थी का नाम दर्ज करें', required: true },
+      { id: 'regNo', label: 'रोल नंबर / रजिस्ट्रेशन संख्या', type: 'text', placeholder: 'रोल नंबर / रजिस्ट्रेशन संख्या दर्ज करें', required: true },
+      { id: 'course', label: 'परीक्षा का नाम व केंद्र', type: 'text', placeholder: 'परीक्षा का नाम व केंद्र दर्ज करें' }
     ]
   },
   {
@@ -566,9 +566,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'विधि एवं न्याय मंत्रालय (National e-Courts Portal)',
     desc: 'कचहरी व न्यायालय के मुकदमे का केस नंबर, अगली सुनवाई तारीख (Next Date) व जज आदेश पर्ची।',
     fields: [
-      { id: 'applicantName', label: 'वादी / प्रतिवादी का नाम', type: 'text', placeholder: 'राम कुमार बनाम श्याम लाल', required: true },
-      { id: 'rationNo', label: 'CNR नंबर / केस संख्या', type: 'text', placeholder: 'UP04000192842025' },
-      { id: 'dealerName', label: 'न्यायालय व अगली सुनवाई तारीख', type: 'text', placeholder: 'सिविल जज (जू.डि.), हरदोई • 18 अप्रैल 2026' }
+      { id: 'applicantName', label: 'वादी / प्रतिवादी का नाम', type: 'text', placeholder: 'वादी / प्रतिवादी का नाम दर्ज करें', required: true },
+      { id: 'rationNo', label: 'CNR नंबर / केस संख्या', type: 'text', placeholder: 'CNR / केस संख्या दर्ज करें' },
+      { id: 'dealerName', label: 'न्यायालय व अगली सुनवाई तारीख', type: 'text', placeholder: 'न्यायालय व अगली तारीख दर्ज करें' }
     ]
   },
   {
@@ -580,9 +580,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'महिला कल्याण विभाग (MKSY Portal)',
     desc: 'बेटियों को मिलने वाली ₹25,000 की 6 चरणों वाली सहायता राशि का आवेदन व बैंक अंतरण स्टेटस प्रिंट।',
     fields: [
-      { id: 'headName', label: 'बालिका का नाम', type: 'text', placeholder: 'आरुषि सिंह', required: true },
-      { id: 'rationNo', label: 'MKSY आवेदन संख्या', type: 'text', placeholder: 'MKSY26019284' },
-      { id: 'dealerName', label: 'योजना चरण व धनराशि', type: 'text', placeholder: 'तृतीय चरण: कक्षा 1 में प्रवेश (₹3,000 अंतरित)' }
+      { id: 'headName', label: 'बालिका का नाम', type: 'text', placeholder: 'बालिका का नाम दर्ज करें', required: true },
+      { id: 'rationNo', label: 'MKSY आवेदन संख्या', type: 'text', placeholder: 'MKSY आवेदन संख्या दर्ज करें' },
+      { id: 'dealerName', label: 'योजना चरण व धनराशि', type: 'text', placeholder: 'योजना चरण विवरण दर्ज करें' }
     ]
   },
   {
@@ -594,9 +594,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'समाज कल्याण / पिछड़ा वर्ग कल्याण विभाग',
     desc: 'पुत्री विवाह हेतु ₹20,000 / ₹51,000 सरकारी अनुदान की ऑनलाइन स्वीकृति व भुगतान स्टेटस पर्ची।',
     fields: [
-      { id: 'applicantName', label: 'आवेदक (माता/पिता) का नाम', type: 'text', placeholder: 'भगवान दास', required: true },
-      { id: 'fatherHusband', label: 'विवाहिता पुत्री का नाम', type: 'text', placeholder: 'पूजा देवी' },
-      { id: 'address', label: 'आवेदन क्रमांक व स्वीकृति स्थिति', type: 'text', placeholder: '241920048192 • कोषागार से ₹20,000 भुगतान स्वीकृत' }
+      { id: 'applicantName', label: 'आवेदक (माता/पिता) का नाम', type: 'text', placeholder: 'आवेदक का नाम दर्ज करें', required: true },
+      { id: 'fatherHusband', label: 'विवाहिता पुत्री का नाम', type: 'text', placeholder: 'पुत्री का नाम दर्ज करें' },
+      { id: 'address', label: 'आवेदन क्रमांक व स्वीकृति स्थिति', type: 'text', placeholder: 'आवेदन क्रमांक व स्थिति दर्ज करें' }
     ]
   },
   {
@@ -608,8 +608,8 @@ export const JAN_SEVA_SERVICES = [
     dept: 'विदेश मंत्रालय (Consular, Passport & Visa Division)',
     desc: 'पासपोर्ट आवेदन की फाइल संख्या से पुलिस वेरिफिकेशन, प्रिंटिंग व स्पीड पोस्ट ट्रैकिंग पर्ची।',
     fields: [
-      { id: 'panNo', label: '15-अंकीय फाइल संख्या (File Number)', type: 'text', placeholder: 'LKO206194829104', required: true },
-      { id: 'aadhaarNo', label: 'आवेदक का नाम व जन्मतिथि', type: 'text', placeholder: 'संजय कुमार • 12/04/1994' }
+      { id: 'panNo', label: '15-अंकीय फाइल संख्या (File Number)', type: 'text', placeholder: 'फाइल संख्या दर्ज करें', required: true },
+      { id: 'aadhaarNo', label: 'आवेदक का नाम व जन्मतिथि', type: 'text', placeholder: 'आवेदक का नाम व जन्मतिथि दर्ज करें' }
     ]
   },
   {
@@ -621,9 +621,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'नाबार्ड एवं कृषि मंत्रालय (KCC Subsidy)',
     desc: 'फसली ऋण पर 3% सरकारी ब्याज छूट (Interest Subvention) व KCC सीमा नवीनीकरण पर्ची।',
     fields: [
-      { id: 'farmerName', label: 'किसान का नाम', type: 'text', placeholder: 'नत्थू लाल', required: true },
-      { id: 'mobileReg', label: 'KCC ऋण खाता संख्या', type: 'text', placeholder: '301928475819' },
-      { id: 'village', label: 'बैंक शाखा व छूट स्थिति', type: 'text', placeholder: 'आर्यावर्त बैंक, बिलग्राम • 3% छूट क्रेडिटेड' }
+      { id: 'farmerName', label: 'किसान का नाम', type: 'text', placeholder: 'किसान का नाम दर्ज करें', required: true },
+      { id: 'mobileReg', label: 'KCC ऋण खाता संख्या', type: 'text', placeholder: 'KCC ऋण खाता संख्या दर्ज करें' },
+      { id: 'village', label: 'बैंक शाखा व छूट स्थिति', type: 'text', placeholder: 'बैंक शाखा विवरण दर्ज करें' }
     ]
   },
   {
@@ -635,9 +635,9 @@ export const JAN_SEVA_SERVICES = [
     dept: 'पशुपालन एवं मत्स्य विभाग (Pashupalan KCC)',
     desc: 'दुधारू पशुओं के लिए ₹2 लाख बिना गारंटी लोन की आधिकारिक आवेदन पावती व चिकित्सा पर्ची।',
     fields: [
-      { id: 'farmerName', label: 'पशुपालक का नाम', type: 'text', placeholder: 'सुंदर लाल', required: true },
-      { id: 'mobileReg', label: 'पशुओं की संख्या व टैग', type: 'text', placeholder: '4 गाय • टैग संख्या 104829' },
-      { id: 'village', label: 'आवेदित ऋण राशि व अस्पताल', type: 'text', placeholder: '₹1,60,000 • पशु चिकित्सालय हरदोई' }
+      { id: 'farmerName', label: 'पशुपालक का नाम', type: 'text', placeholder: 'पशुपालक का नाम दर्ज करें', required: true },
+      { id: 'mobileReg', label: 'पशुओं की संख्या व टैग', type: 'text', placeholder: 'पशुओं की संख्या व टैग दर्ज करें' },
+      { id: 'village', label: 'आवेदित ऋण राशि व अस्पताल', type: 'text', placeholder: 'ऋण राशि व अस्पताल दर्ज करें' }
     ]
   },
   {
@@ -649,8 +649,8 @@ export const JAN_SEVA_SERVICES = [
     dept: 'आयकर विभाग (Income Tax Department)',
     desc: 'बैंक लोन व वीज़ा हेतु आयकर रिटर्न भरने के बाद की आधिकारिक 1-पेज ITR-V रसीद।',
     fields: [
-      { id: 'panNo', label: '10-अंकीय पैन नंबर (PAN)', type: 'text', placeholder: 'AAAPS1928K', required: true },
-      { id: 'aadhaarNo', label: '15-अंकीय पावती संख्या (Ack No.)', type: 'text', placeholder: '240182910492810' }
+      { id: 'panNo', label: '10-अंकीय पैन नंबर (PAN)', type: 'text', placeholder: '10-अंकीय पैन नंबर दर्ज करें', required: true },
+      { id: 'aadhaarNo', label: '15-अंकीय पावती संख्या (Ack No.)', type: 'text', placeholder: '15-अंकीय पावती संख्या दर्ज करें' }
     ]
   }
 ];
@@ -724,7 +724,7 @@ export default function JanSevaModal({
       const cafeId = selectedCafe?.id || 'GLOBAL';
       const payload = {
         customerName: formData.holderName || formData.applicantName || formData.beneficiaryName || formData.headName || formData.workerName || formData.studentName || 'नागरिक',
-        phone: formData.mobileReg || '9876543210',
+        phone: formData.mobileReg || formData.phone || '',
         cafeId,
         serviceName: selectedService.name,
         fee: selectedService.fee,

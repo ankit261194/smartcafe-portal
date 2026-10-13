@@ -55,89 +55,22 @@ const MASTER_KEY_HASH = hashCredential('Aa@910010025123343');
 const DEFAULT_CAFE_PIN_HASH = hashCredential('1234');
 const DEFAULT_STAFF_PIN_HASH = hashCredential('0000');
 
-export const DEFAULT_BULLETINS = [
-  {
-    id: "JOB-2026-001",
-    title: "SSC GD Constable 2026 भर्ती",
-    serviceName: "SSC GD Constable 2026",
-    category: "सरकारी नौकरी",
-    lastDate: "31 मार्च 2026",
-    qualification: "10वीं (हाईस्कूल) पास",
-    fee: "₹100 (Gen/OBC) • SC/ST निःशुल्क",
-    badge: "Trending",
-    description: "BSF, CISF, CRPF, SSB, ITBP, AR व SSF में बंपर कांस्टेबल भर्ती। न्यूनतम आयु 18 वर्ष। 10वीं मार्कशीट व फोटो अनिवार्य।"
-  },
-  {
-    id: "JOB-2026-002",
-    title: "UP / स्टेट पुलिस आरक्षी भर्ती 2026",
-    serviceName: "UP / स्टेट पुलिस भर्ती",
-    category: "सरकारी नौकरी",
-    lastDate: "15 अप्रैल 2026",
-    qualification: "12वीं (इंटरमीडिएट) उत्तीर्ण",
-    fee: "₹400 सभी वर्ग",
-    badge: "High Demand",
-    description: "उत्तर प्रदेश पुलिस आरक्षी (Constable) एवं उपनिरीक्षक (SI) सीधी भर्ती। निवास प्रमाण पत्र अनिवार्य।"
-  },
-  {
-    id: "JOB-2026-003",
-    title: "रेलवे NTPC / Group D भर्ती",
-    serviceName: "रेलवे NTPC / Group D Form",
-    category: "सरकारी नौकरी",
-    lastDate: "25 अप्रैल 2026",
-    qualification: "10वीं / 12वीं / स्नातक पास",
-    fee: "₹500 (Gen/OBC) • ₹250 (SC/ST/महिला)",
-    badge: "New",
-    description: "रेलवे गैर-तकनीकी (NTPC) व लेवल-1 ग्रुप डी पदों हेतु राष्ट्रव्यापी भर्ती ऑनलाइन आवेदन।"
-  },
-  {
-    id: "JOB-2026-004",
-    title: "UP / स्टेट स्कॉलरशिप 2025-26",
-    serviceName: "UP / स्टेट स्कॉलरशिप फॉर्म",
-    category: "छात्रवृत्ति",
-    lastDate: "30 अप्रैल 2026",
-    qualification: "कक्षा 9वीं से पोस्ट ग्रेजुएशन (BA, BSc, B.Ed, ITI)",
-    fee: "सरकारी पोर्टल निःशुल्क • कैफे शुल्क ₹120",
-    badge: "Urgent",
-    description: "दशमोत्तर एवं पूर्वदशम छात्रवृत्ति व शुल्क प्रतिपूर्ति ऑनलाइन आवेदन। आधार NPCI बैंक खाता व आय प्रमाण पत्र अनिवार्य।"
-  },
-  {
-    id: "JOB-2026-005",
-    title: "PM किसान सम्मान निधि e-KYC व नया पंजीकरण",
-    serviceName: "PM किसान e-KYC / नया रजिस्ट्रेशन",
-    category: "सरकारी योजना",
-    lastDate: "सक्रिय (Active)",
-    qualification: "भूमिधर किसान (खतौनी खाताधारक)",
-    fee: "निःशुल्क",
-    badge: "Essential",
-    description: "सालाना ₹6,000 की किस्त पाने हेतु खतौनी, आधार बायोमेट्रिक e-KYC व NPCI DBT बैंक खाता अनिवार्य।"
-  },
-  {
-    id: "JOB-2026-006",
-    title: "CTET 2026 केंद्रीय शिक्षक पात्रता परीक्षा",
-    serviceName: "CTET / TET परीक्षा फॉर्म",
-    category: "प्रवेश परीक्षा",
-    lastDate: "10 मई 2026",
-    qualification: "D.El.Ed / BTC / B.Ed",
-    fee: "₹1,000 (एक पेपर) • ₹1,200 (दोनों पेपर)",
-    badge: "Trending",
-    description: "केंद्रीय माध्यमिक शिक्षा बोर्ड (CBSE) द्वारा प्राथमिक व उच्च प्राथमिक शिक्षक पात्रता परीक्षा ऑनलाइन आवेदन।"
-  }
-];
+export const DEFAULT_BULLETINS = [];
 
 // Clean Schema Helper & Baseline Seed (Strictly 0-Cafe, 0-Wallet Baseline)
 const defaultStore = {
   settings: {
     portalName: "डिजिटल साइबर कैफे पोर्टल",
-    shopName: "श्री डिजिटल साइबर कैफे एवं जन सेवा केंद्र",
+    shopName: "डिजिटल साइबर कैफे एवं जन सेवा केंद्र",
     tagline: "सभी ऑनलाइन फॉर्म, प्रिंटिंग व सरकारी सेवाएं",
-    ownerName: "अधिकृत संचालक",
-    phone: "9876543210",
-    upiId: "cybercafe@upi",
-    address: "मेन मार्केट, ब्लॉक रोड, तहसील कार्यालय के सामने",
+    ownerName: "",
+    phone: "",
+    upiId: "",
+    address: "",
     superAdminPin: DEFAULT_SUPERADMIN_PIN_HASH,
     superAdminPassword: DEFAULT_SUPERADMIN_PASSWORD_HASH,
-    superAdminUpiId: "superadmin@upi",
-    superAdminPhone: "9800000000",
+    superAdminUpiId: "",
+    superAdminPhone: "",
     rates: {
       bwPage: 3,
       colorPage: 10,
@@ -457,9 +390,23 @@ export function getStore() {
     if (!loadedStore.applications) loadedStore.applications = [];
     if (!loadedStore.cashbook) loadedStore.cashbook = [];
     if (!loadedStore.udhar) loadedStore.udhar = [];
-    if (!Array.isArray(loadedStore.bulletins) || loadedStore.bulletins.length === 0) { loadedStore.bulletins = JSON.parse(JSON.stringify(DEFAULT_BULLETINS)); mutated = true; }
+    if (!Array.isArray(loadedStore.bulletins)) {
+      loadedStore.bulletins = [];
+      mutated = true;
+    } else if (loadedStore.bulletins.some(b => b.id && String(b.id).startsWith('JOB-2026'))) {
+      loadedStore.bulletins = loadedStore.bulletins.filter(b => !(b.id && String(b.id).startsWith('JOB-2026')));
+      mutated = true;
+    }
     if (!loadedStore.customerVault) loadedStore.customerVault = [];
     if (!loadedStore.systemHealth) loadedStore.systemHealth = defaultStore.systemHealth;
+
+    // Purge legacy dummy default values from settings
+    if (loadedStore.settings.phone === '9876543210') { loadedStore.settings.phone = ''; mutated = true; }
+    if (['राजेश कुमार', 'अधिकृत संचालक'].includes(loadedStore.settings.ownerName)) { loadedStore.settings.ownerName = ''; mutated = true; }
+    if (loadedStore.settings.upiId === 'cybercafe@upi') { loadedStore.settings.upiId = ''; mutated = true; }
+    if (loadedStore.settings.address && loadedStore.settings.address.includes('मेन मार्केट')) { loadedStore.settings.address = ''; mutated = true; }
+    if (loadedStore.settings.superAdminPhone === '9800000000') { loadedStore.settings.superAdminPhone = ''; mutated = true; }
+    if (loadedStore.settings.superAdminUpiId === 'superadmin@upi') { loadedStore.settings.superAdminUpiId = ''; mutated = true; }
 
     // Secure Super Admin credentials with bcrypt
     if (!loadedStore.settings.superAdminPin || !isBcryptHash(loadedStore.settings.superAdminPin) || !verifyCredential('9999', loadedStore.settings.superAdminPin)) {

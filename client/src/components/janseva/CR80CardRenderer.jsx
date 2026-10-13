@@ -100,22 +100,22 @@ export default function CR80CardRenderer({
 
                   {/* Details */}
                   <div className="flex-1 text-[9px] leading-tight space-y-0.5 text-slate-900">
-                    <div className="font-bold text-[10px] text-slate-950">{data.holderNameHindi || data.holderName || 'नाम'}</div>
-                    <div className="font-semibold text-slate-700">{data.holderName || 'Name'}</div>
+                    <div className="font-bold text-[10px] text-slate-950">{data.holderNameHindi || data.holderName || '-'}</div>
+                    <div className="font-semibold text-slate-700">{data.holderName || '-'}</div>
                     <div className="text-[8px] pt-0.5">
                       <span className="text-slate-500 font-bold">जन्म तिथि / DOB: </span>
                       <span className="font-bold">{data.dob || '-'}</span>
                     </div>
                     <div className="text-[8px]">
                       <span className="text-slate-500 font-bold">लिंग / Gender: </span>
-                      <span className="font-bold">{data.gender || 'MALE / पुरुष'}</span>
+                      <span className="font-bold">{data.gender || '-'}</span>
                     </div>
                   </div>
 
                   {/* QR Code */}
                   <div className="shrink-0 p-0.5 bg-white border border-slate-300 rounded">
                     <QRCodeSVG 
-                      value={`<?xml version="1.0"?><PrintLetterBarcodeData uid="${(data.idNumber||'123456789012').replace(/\s/g,'')}" name="${data.holderName||'Citizen'}" gender="${(data.gender||'M')[0]}" yob="${(data.dob||'1990').slice(-4)}" co="${data.careOf||'Father'}" vtc="${data.district||'City'}" pc="${data.pincode||'241001'}"/>`} 
+                      value={data.idNumber ? `<?xml version="1.0"?><PrintLetterBarcodeData uid="${data.idNumber.replace(/\s/g,'')}" name="${data.holderName||''}" gender="${(data.gender||'M')[0]}" yob="${(data.dob||'').slice(-4)}" co="${data.careOf||''}" vtc="${data.district||''}" pc="${data.pincode||''}"/>` : ''} 
                       size={54} 
                     />
                   </div>
@@ -124,7 +124,7 @@ export default function CR80CardRenderer({
                 {/* Bottom Number Bar */}
                 <div className="relative bg-red-600 text-white rounded py-1 px-2 text-center shadow-xs">
                   <div className="font-mono font-black text-sm tracking-widest leading-none">
-                    {formatAadhaar(data.idNumber || 'XXXX XXXX 1234')}
+                    {formatAadhaar(data.idNumber || 'XXXX XXXX XXXX')}
                   </div>
                 </div>
               </div>
@@ -145,17 +145,17 @@ export default function CR80CardRenderer({
                   <div className="flex-1 text-[8px] leading-tight space-y-1 text-slate-800">
                     <div>
                       <span className="font-black text-red-600 block">पता:</span>
-                      <span className="font-semibold block">{data.addressHindi || data.address || 'आत्मज: श्री पिता, मकान नं., ग्राम व पोस्ट, तहसील, जिला'}</span>
+                      <span className="font-semibold block">{data.addressHindi || data.address || '-'}</span>
                     </div>
                     <div className="pt-0.5 border-t border-slate-100">
                       <span className="font-black text-slate-700 block text-[7px]">Address:</span>
-                      <span className="font-medium text-[7.5px] block">{data.address || 'S/O: Father Name, House No, Village, Post, District, PIN'}</span>
+                      <span className="font-medium text-[7.5px] block">{data.address || '-'}</span>
                     </div>
                   </div>
 
                   <div className="shrink-0 p-0.5 bg-white border border-slate-300 rounded">
                     <QRCodeSVG 
-                      value={`UIDAI:BACK:${(data.idNumber||'123456789012').replace(/\s/g,'')}|ADDR:${data.address||'India'}|PIN:${data.pincode||'241001'}`} 
+                      value={data.idNumber ? `UIDAI:BACK:${data.idNumber.replace(/\s/g,'')}|ADDR:${data.address||''}|PIN:${data.pincode||''}` : ''} 
                       size={64} 
                     />
                   </div>
@@ -211,7 +211,7 @@ export default function CR80CardRenderer({
                     <div>
                       <span className="text-[7px] text-slate-500 uppercase font-bold block">स्थाई खाता संख्या / PAN</span>
                       <span className="font-mono font-black text-xs tracking-wider text-blue-950 bg-blue-100/60 px-1.5 py-0.5 rounded border border-blue-300 inline-block">
-                        {data.panNo || 'ABCDE1234F'}
+                        {data.panNo || '-'}
                       </span>
                     </div>
                     <div>
@@ -231,7 +231,7 @@ export default function CR80CardRenderer({
                   {/* QR Code */}
                   <div className="shrink-0 flex flex-col items-center gap-1">
                     <div className="p-0.5 bg-white border border-slate-300 rounded">
-                      <QRCodeSVG value={`PAN:${data.panNo||'ABCDE1234F'}|NAME:${data.holderName||'CARDHOLDER'}|DOB:${data.dob||'1992'}`} size={56} />
+                      <QRCodeSVG value={data.panNo ? `PAN:${data.panNo}|NAME:${data.holderName||''}|DOB:${data.dob||''}` : ''} size={56} />
                     </div>
                     {/* Signature Box */}
                     <div className="w-20 h-6 border border-slate-400 bg-white rounded flex items-center justify-center overflow-hidden">
@@ -257,7 +257,7 @@ export default function CR80CardRenderer({
                 </div>
                 <div className="p-2 bg-white border border-slate-200 rounded text-center my-2">
                   <div className="font-mono text-xs font-bold tracking-widest text-slate-900">
-                    *{data.panNo || 'ABCDE1234F'}*
+                    *{data.panNo || '-'}*
                   </div>
                   <div className="text-[7px] text-slate-500 mt-0.5">Machine Readable Line</div>
                 </div>
@@ -300,7 +300,7 @@ export default function CR80CardRenderer({
                     <div>
                       <span className="text-[7px] text-slate-500 font-bold block">EPIC संख्या / EPIC No.</span>
                       <span className="font-mono font-black text-xs text-emerald-900 bg-emerald-50 px-1 py-0.5 rounded border border-emerald-300 inline-block">
-                        {data.epicNo || 'UPL1948291'}
+                        {data.epicNo || '-'}
                       </span>
                     </div>
                     <div>
@@ -313,19 +313,19 @@ export default function CR80CardRenderer({
                     </div>
                     <div>
                       <span className="text-[7px] text-slate-500 font-bold block">लिंग / Gender • आयु / Age</span>
-                      <span className="font-bold text-slate-900 block">{data.gender || 'पुरुष / MALE'} • {data.age || '-'}</span>
+                      <span className="font-bold text-slate-900 block">{data.gender || '-'} • {data.age || '-'}</span>
                     </div>
                   </div>
 
                   {/* QR Code */}
                   <div className="shrink-0 p-0.5 bg-white border border-slate-300 rounded">
-                    <QRCodeSVG value={`ECI:EPIC:${data.epicNo||'UPL1948291'}|NAME:${data.voterName||'VOTER'}|AC:${data.assembly||'156'}`} size={56} />
+                    <QRCodeSVG value={data.epicNo ? `ECI:EPIC:${data.epicNo}|NAME:${data.voterName||''}|AC:${data.assembly||''}` : ''} size={56} />
                   </div>
                 </div>
 
                 {/* Footer */}
                 <div className="bg-emerald-700 text-white rounded py-0.5 px-2 text-center text-[8px] font-bold">
-                  विधानसभा: {data.assembly || '156-सवायजपुर • भाग संख्या: 142'}
+                  विधानसभा: {data.assembly || '-'}
                 </div>
               </div>
             )}
@@ -334,10 +334,10 @@ export default function CR80CardRenderer({
               <div className="cr80-card w-[340px] h-[215px] bg-slate-50 rounded-xl border border-slate-400 shadow-lg relative overflow-hidden flex flex-col justify-between p-3 font-sans select-none print:shadow-none print:border-slate-800">
                 <div className="text-[8px] space-y-1 text-slate-800">
                   <div className="font-black text-emerald-800">मतदान केंद्र (Polling Station):</div>
-                  <div className="font-semibold">{data.boothName || 'प्राथमिक विद्यालय कक्ष संख्या 1, कछौना'}</div>
+                  <div className="font-semibold">{data.boothName || '-'}</div>
                   <div className="pt-1">
                     <span className="font-bold text-slate-600">पता / Address: </span>
-                    <span>{data.address || 'मकान नं. 45, ग्राम व पोस्ट, तहसील सवायजपुर, हरदोई - 241001'}</span>
+                    <span>{data.address || '-'}</span>
                   </div>
                 </div>
 
@@ -381,7 +381,7 @@ export default function CR80CardRenderer({
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">PMJAY ID / ABHA संख्या</span>
                   <span className="font-mono font-black text-xs text-emerald-950 block">
-                    {data.abhaId || 'AB-PMJAY-849204'}
+                    {data.abhaId || '-'}
                   </span>
                 </div>
                 <div>
@@ -394,12 +394,12 @@ export default function CR80CardRenderer({
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">जनपद व राज्य</span>
-                  <span className="font-semibold text-slate-800 block">{data.district || 'हरदोई, उत्तर प्रदेश'}</span>
+                  <span className="font-semibold text-slate-800 block">{data.district || '-'}</span>
                 </div>
               </div>
 
               <div className="shrink-0 p-0.5 bg-white border border-slate-300 rounded">
-                <QRCodeSVG value={`PMJAY:${data.abhaId||'849204'}|NAME:${data.beneficiaryName||'BENEFICIARY'}|STATE:UP`} size={56} />
+                <QRCodeSVG value={data.abhaId ? `PMJAY:${data.abhaId}|NAME:${data.beneficiaryName||''}|STATE:${data.district||''}` : ''} size={56} />
               </div>
             </div>
 
@@ -431,7 +431,7 @@ export default function CR80CardRenderer({
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">सार्वभौमिक खाता संख्या (UAN)</span>
                   <span className="font-mono font-black text-xs text-orange-950 block">
-                    {data.uanNo || '1234 5678 9821'}
+                    {data.uanNo || '-'}
                   </span>
                 </div>
                 <div>
@@ -440,16 +440,16 @@ export default function CR80CardRenderer({
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">व्यवसाय (Occupation)</span>
-                  <span className="font-semibold text-slate-800 block">{data.occupation || 'कृषि मजदूर / निर्माण'}</span>
+                  <span className="font-semibold text-slate-800 block">{data.occupation || '-'}</span>
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">ब्लड ग्रुप / जन्मतिथि</span>
-                  <span className="font-semibold text-slate-800 block">{data.bloodGroup || 'O+ • 01/01/1992'}</span>
+                  <span className="font-semibold text-slate-800 block">{data.bloodGroup || '-'}</span>
                 </div>
               </div>
 
               <div className="shrink-0 p-0.5 bg-white border border-slate-300 rounded">
-                <QRCodeSVG value={`ESHRAM:${data.uanNo||'123456789821'}|NAME:${data.workerName||'WORKER'}`} size={56} />
+                <QRCodeSVG value={data.uanNo ? `ESHRAM:${data.uanNo}|NAME:${data.workerName||''}` : ''} size={56} />
               </div>
             </div>
 
@@ -482,7 +482,7 @@ export default function CR80CardRenderer({
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">18-अंकीय UDID संख्या</span>
                   <span className="font-mono font-black text-xs text-purple-950 block">
-                    {data.udidNo || 'UP0410293847561029'}
+                    {data.udidNo || '-'}
                   </span>
                 </div>
                 <div>
@@ -491,16 +491,16 @@ export default function CR80CardRenderer({
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">दिव्यांगता प्रकार व प्रतिशत</span>
-                  <span className="font-bold text-purple-900 block">{data.disabilityType || 'लोकोमोटर दिव्यांगता (45%)'}</span>
+                  <span className="font-bold text-purple-900 block">{data.disabilityType || '-'}</span>
                 </div>
                 <div>
                   <span className="text-[7px] text-slate-500 font-bold block">मेडिकल बोर्ड</span>
-                  <span className="font-semibold text-slate-700 block">{data.hospital || 'मुख्य चिकित्सा अधिकारी (CMO)'}</span>
+                  <span className="font-semibold text-slate-700 block">{data.hospital || '-'}</span>
                 </div>
               </div>
 
               <div className="shrink-0 p-0.5 bg-white border border-slate-300 rounded">
-                <QRCodeSVG value={`UDID:${data.udidNo||'1029384756'}|NAME:${data.personName||'NAME'}|PCT:${data.disabilityType||'45'}`} size={56} />
+                <QRCodeSVG value={data.udidNo ? `UDID:${data.udidNo}|NAME:${data.personName||''}|PCT:${data.disabilityType||''}` : ''} size={56} />
               </div>
             </div>
 
@@ -535,7 +535,7 @@ function AshokaEmblem({ className }) {
 }
 
 function formatAadhaar(str) {
-  if (!str) return 'XXXX XXXX 1234';
+  if (!str) return 'XXXX XXXX XXXX';
   const clean = str.replace(/\s+/g, '');
   if (clean.length === 12) {
     return `${clean.slice(0, 4)} ${clean.slice(4, 8)} ${clean.slice(8, 12)}`;
