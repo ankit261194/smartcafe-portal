@@ -787,6 +787,7 @@ export default function App() {
                   setActiveInstantToolId(toolKey);
                   setCustomerTab('tool');
                 }}
+                onBack={() => setCustomerTab('home')}
               />
             )}
 
@@ -932,6 +933,7 @@ export default function App() {
                     setActiveInstantToolId(toolKey);
                     setAdminTab('tool');
                   }}
+                  onBack={() => setAdminTab('dashboard')}
                 />
               )}
 
@@ -1005,7 +1007,7 @@ export default function App() {
               )}
 
               {!isStaffAuth && adminTab === 'portals' && (
-                <PortalsDirectory />
+                <PortalsDirectory onBack={() => setAdminTab('dashboard')} />
               )}
 
               {!isStaffAuth && adminTab === 'settings' && (

@@ -46,6 +46,8 @@ export default function ScrollToTopWidget() {
     });
   };
 
+  if (!isVisible || scrollProgress === 0) return null;
+
   return (
     <aside
       aria-label="पेज स्क्रॉल नियंत्रण"

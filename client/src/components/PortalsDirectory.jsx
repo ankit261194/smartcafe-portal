@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { 
   ExternalLink, Search, Globe, Landmark, Award, 
-  CreditCard, GraduationCap, ShieldCheck, Sparkles 
+  CreditCard, GraduationCap, ShieldCheck, Sparkles,
+  ArrowLeft
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const PORTALS = [
   {
@@ -105,7 +107,8 @@ const PORTALS = [
   }
 ];
 
-export default function PortalsDirectory() {
+export default function PortalsDirectory({ onBack }) {
+  const { language } = useLanguage();
   const [filter, setFilter] = useState('All');
   const [query, setQuery] = useState('');
 
@@ -118,20 +121,39 @@ export default function PortalsDirectory() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-7xl mx-auto w-full">
       
-      {/* Top Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-2xl p-6 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <div className="inline-flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full text-xs font-semibold text-yellow-300 mb-2">
-            <Globe className="w-3.5 h-3.5" />
-            1-क्लिक सरकारी वेबसाइट डायरेक्ट हब
+      {/* Top Breadcrumb & Back Button */}
+      {onBack && (
+        <div className="no-print bg-white dark:bg-[#0c162c] rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-xs border border-slate-200 dark:border-slate-700"
+          >
+            <ArrowLeft className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span>{language === 'hi' ? '← डैशबोर्ड पर वापस जाएं' : '← Back to Dashboard'}</span>
+          </button>
+          <div className="text-xs font-black text-emerald-700 dark:text-emerald-400">
+            {language === 'hi' ? 'सरकारी पोर्टल्स डायरेक्टरी' : 'Official Portals Directory'}
           </div>
-          <h2 className="text-2xl font-extrabold tracking-tight">
-            सरकारी व जन सेवा पोर्टल्स डायरेक्टरी (Official Portals Hub)
+        </div>
+      )}
+
+      {/* Top Banner (CSC Emerald Theme) */}
+      <div className="bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#065f46] text-white rounded-3xl p-6 sm:p-7 shadow-md border border-emerald-600/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <div className="inline-flex items-center gap-1.5 bg-emerald-800/80 text-emerald-100 border border-emerald-500/40 px-3 py-1 rounded-full text-xs font-bold mb-2">
+            <Globe className="w-3.5 h-3.5 text-amber-300" />
+            <span>{language === 'hi' ? '1-क्लिक सरकारी वेबसाइट डायरेक्ट हब' : '1-Click Official Portals Hub'}</span>
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+            {language === 'hi' ? 'सरकारी व जन सेवा पोर्टल्स डायरेक्टरी' : 'Government & CSC Portals Directory'}
           </h2>
-          <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-xl">
-            CSC, ई-डिस्ट्रिक्ट, SSC, पैन कार्ड, स्कॉलरशिप व आधार के आधिकारिक पोर्टल्स को सीधे एक क्लिक में खोलें।
+          <p className="text-emerald-100 text-xs sm:text-sm mt-1 max-w-xl leading-relaxed">
+            {language === 'hi'
+              ? 'CSC, ई-डिस्ट्रिक्ट, SSC, पैन कार्ड, स्कॉलरशिप व आधार के आधिकारिक पोर्टल्स को सीधे एक क्लिक में खोलें।'
+              : 'Direct 1-click access to official CSC, e-District, SSC, PAN, Scholarship, and Aadhaar portals.'}
           </p>
         </div>
       </div>
