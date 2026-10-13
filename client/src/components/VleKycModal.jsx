@@ -262,7 +262,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-700 font-bold mb-1">पैन नंबर (PAN No) *</label>
+                    <label className="block text-slate-700 font-bold mb-1">पैन नंबर *</label>
                     <input
                       type="text"
                       required
@@ -307,7 +307,7 @@ export default function VleKycModal({ isOpen, onClose, onKycSubmitted }) {
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-700 font-bold mb-1">जिला (District)</label>
+                    <label className="block text-slate-700 font-bold mb-1">जिला</label>
                     <input
                       type="text"
                       required

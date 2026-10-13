@@ -67,7 +67,7 @@ export const REKHA_CATEGORIES_CONFIG = [
   {
     id: 'voter',
     title: { hi: 'वोटर कार्ड सेवाएं', en: 'Voter ID Services' },
-    desc: { hi: 'डिजिटल वोटर स्मार्ट कार्ड (EPIC लेआउट)', en: 'Digital Voter Smart Card (EPIC Layout)' },
+    desc: { hi: 'डिजिटल वोटर स्मार्ट कार्ड', en: 'Digital Voter Smart Card' },
     toolsCount: 1,
     icon: Award,
     color: 'from-amber-600 via-orange-600 to-amber-700',

@@ -3,17 +3,19 @@ import {
   CreditCard, Printer, Upload, Download, Sparkles, 
   CheckCircle2, RefreshCw, Scissors, ShieldCheck, Layers, Image as ImageIcon 
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const CARD_TYPES = [
-  { id: 'aadhaar', name: 'आधार कार्ड (Aadhaar Card)', color: 'border-red-500', desc: 'Front & Back 85.6mm x 54mm' },
-  { id: 'pan', name: 'पैन कार्ड (PAN Card)', color: 'border-blue-600', desc: 'UTI / NSDL PVC Card Format' },
-  { id: 'ayushman', name: 'आयुष्मान भारत कार्ड (Golden Card)', color: 'border-emerald-600', desc: 'PMJAY गोल्डन कार्ड लेआउट' },
-  { id: 'voter', name: 'वोटर आईडी (EPIC Voter Card)', color: 'border-amber-600', desc: 'निर्वाचन आयोग मतदाता पहचान पत्र' },
-  { id: 'eshram', name: 'ई-श्रम कार्ड (E-Shram Card)', color: 'border-orange-500', desc: 'श्रम एवं रोजगार मंत्रालय UAN कार्ड' },
-  { id: 'dl', name: 'ड्राइविंग लाइसेंस (DL / RC)', color: 'border-indigo-600', desc: 'परिवहन स्मार्ट कार्ड लेआउट' }
+  { id: 'aadhaar', label: { hi: 'आधार कार्ड', en: 'Aadhaar Card' }, name: 'आधार कार्ड', color: 'border-red-500', desc: '85.6mm x 54mm' },
+  { id: 'pan', label: { hi: 'पैन कार्ड', en: 'PAN Card' }, name: 'पैन कार्ड', color: 'border-blue-600', desc: 'UTI / NSDL PVC Card' },
+  { id: 'ayushman', label: { hi: 'आयुष्मान भारत कार्ड', en: 'Ayushman Bharat Golden Card' }, name: 'आयुष्मान भारत कार्ड', color: 'border-emerald-600', desc: 'PMJAY Golden Card' },
+  { id: 'voter', label: { hi: 'वोटर आईडी कार्ड', en: 'Voter ID Card' }, name: 'वोटर आईडी', color: 'border-amber-600', desc: 'Election Commission Voter Card' },
+  { id: 'eshram', label: { hi: 'ई-श्रम कार्ड', en: 'E-Shram Card' }, name: 'ई-श्रम कार्ड', color: 'border-orange-500', desc: 'Labour Ministry UAN Card' },
+  { id: 'dl', label: { hi: 'ड्राइविंग लाइसेंस व आरसी', en: 'Driving Licence & RC' }, name: 'ड्राइविंग लाइसेंस', color: 'border-indigo-600', desc: 'Parivahan Smart Card' }
 ];
 
 export default function PrintPortalCards({ preloadedCard }) {
+  const { language } = useLanguage();
   const [selectedCardType, setSelectedCardType] = useState(() => {
     if (preloadedCard?.cardType) {
       const match = CARD_TYPES.find(c => c.id === preloadedCard.cardType);
@@ -52,8 +54,6 @@ export default function PrintPortalCards({ preloadedCard }) {
     window.print();
   };
 
-
-
   return (
     <div className="space-y-6">
       
@@ -62,13 +62,15 @@ export default function PrintPortalCards({ preloadedCard }) {
         <div>
           <div className="inline-flex items-center gap-1.5 bg-blue-500/30 px-3 py-1 rounded-full text-xs font-semibold text-blue-200 mb-2">
             <CreditCard className="w-3.5 h-3.5 text-yellow-300" />
-            स्मार्ट PVC कार्ड प्रिंट पोर्टल
+            {language === 'hi' ? 'स्मार्ट PVC कार्ड प्रिंट पोर्टल' : 'Smart PVC Card Print Portal'}
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-            प्रिंट पोर्टल: आधार, पैन, आयुष्मान PVC कार्ड (CR-80 Format)
+            {language === 'hi' ? 'प्रिंट पोर्टल: आधार, पैन, आयुष्मान PVC कार्ड' : 'Print Portal: Aadhaar, PAN, Ayushman PVC Cards'}
           </h2>
           <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-xl">
-            फ़्रंट और बैक फ़ोटो डालें — यह टूल ऑटोमैटिकली 85.6mm × 54mm के मानक PVC कार्ड लेआउट में कटिंग बॉर्डर के साथ A4 या 4×6 पेपर पर सेट कर देगा।
+            {language === 'hi'
+              ? 'फ़्रंट और बैक फ़ोटो डालें — यह टूल ऑटोमैटिकली 85.6mm × 54mm के मानक PVC कार्ड लेआउट में कटिंग बॉर्डर के साथ A4 या 4×6 पेपर पर सेट कर देगा।'
+              : 'Upload front and back photos — auto-aligned to standard 85.6mm x 54mm PVC layout with cut borders on A4 or 4x6 paper.'}
           </p>
         </div>
 
@@ -78,7 +80,7 @@ export default function PrintPortalCards({ preloadedCard }) {
           className="bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-bold px-6 py-3 rounded-xl text-sm flex items-center gap-2 shadow-lg shadow-blue-600/30 transition disabled:opacity-50 shrink-0"
         >
           <Printer className="w-4 h-4" />
-          <span>कार्ड प्रिंट निकालें (Print Sheet)</span>
+          <span>{language === 'hi' ? 'कार्ड प्रिंट निकालें' : 'Print Card Sheet'}</span>
         </button>
       </div>
 
@@ -89,7 +91,7 @@ export default function PrintPortalCards({ preloadedCard }) {
         <div className="md:col-span-4 space-y-4">
           <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-3">
             <h3 className="font-bold text-slate-900 text-xs uppercase tracking-wider">
-              1. कार्ड का प्रकार चुनें
+              {language === 'hi' ? '1. कार्ड का प्रकार चुनें' : '1. Select Card Type'}
             </h3>
 
             <div className="space-y-1.5">
@@ -106,7 +108,7 @@ export default function PrintPortalCards({ preloadedCard }) {
                         : 'border-slate-100 bg-slate-50 hover:bg-slate-100 text-slate-700'
                     }`}
                   >
-                    <span>{c.name}</span>
+                    <span>{language === 'hi' ? c.label.hi : c.label.en}</span>
                     {isSelected && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
                   </button>
                 );
@@ -116,16 +118,16 @@ export default function PrintPortalCards({ preloadedCard }) {
             {/* Paper Selection */}
             <div className="pt-3 border-t border-slate-100">
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                प्रिंट पेपर लेआउट (Paper Layout)
+                {language === 'hi' ? 'प्रिंट पेपर लेआउट' : 'Print Paper Layout'}
               </label>
               <select
                 value={printPaper}
                 onChange={(e) => setPrintPaper(e.target.value)}
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs font-semibold focus:ring-2 focus:ring-blue-500"
               >
-                <option value="a4_single">A4 शीट - सिंगल कार्ड (Front & Back)</option>
-                <option value="photo_4x6">4×6 फोटो पेपर (Borderless Glossy)</option>
-                <option value="a4_multi_5">A4 शीट - 5 कार्ड्स लेआउट (पेपर बचत)</option>
+                <option value="a4_single">{language === 'hi' ? 'A4 शीट - सिंगल कार्ड' : 'A4 Sheet - Single Card'}</option>
+                <option value="photo_4x6">{language === 'hi' ? '4×6 फोटो पेपर' : '4×6 Photo Paper'}</option>
+                <option value="a4_multi_5">{language === 'hi' ? 'A4 शीट - 5 कार्ड्स लेआउट' : 'A4 Sheet - 5 Cards Layout'}</option>
               </select>
             </div>
 
@@ -165,7 +167,7 @@ export default function PrintPortalCards({ preloadedCard }) {
         <div className="md:col-span-8 space-y-4">
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
             <h3 className="font-bold text-slate-900 text-sm mb-4">
-              2. कार्ड का अगला भाग (Front) और पिछला भाग (Back) अपलोड करें
+              {language === 'hi' ? '2. कार्ड का अगला भाग और पिछला भाग अपलोड करें' : '2. Upload Card Front and Back Photos'}
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -187,14 +189,22 @@ export default function PrintPortalCards({ preloadedCard }) {
                 {frontImage ? (
                   <div className="space-y-1">
                     <img src={frontImage} alt="Front" className="max-h-24 object-contain rounded border border-slate-200 mx-auto" />
-                    <span className="text-xs text-emerald-700 font-bold block">अगला भाग (Front) चुना गया ✓</span>
-                    <span className="text-[10px] text-blue-600 underline">बदलने के लिए क्लिक करें</span>
+                    <span className="text-xs text-emerald-700 font-bold block">
+                      {language === 'hi' ? 'अगला भाग चुना गया ✓' : 'Front side selected ✓'}
+                    </span>
+                    <span className="text-[10px] text-blue-600 underline">
+                      {language === 'hi' ? 'बदलने के लिए क्लिक करें' : 'Click to change'}
+                    </span>
                   </div>
                 ) : (
                   <div className="space-y-1">
                     <Upload className="w-8 h-8 text-blue-500 mx-auto mb-1" />
-                    <p className="text-xs font-bold text-slate-800">अगला भाग (Front) अपलोड करें</p>
-                    <p className="text-[10px] text-slate-400">आधार / पैन / आयुष्मान का फ्रंट फोटो</p>
+                    <p className="text-xs font-bold text-slate-800">
+                      {language === 'hi' ? 'अगला भाग अपलोड करें' : 'Upload Front Side'}
+                    </p>
+                    <p className="text-[10px] text-slate-400">
+                      {language === 'hi' ? 'आधार / पैन / आयुष्मान का फ्रंट फोटो' : 'Front photo of card'}
+                    </p>
                   </div>
                 )}
               </div>
@@ -216,14 +226,22 @@ export default function PrintPortalCards({ preloadedCard }) {
                 {backImage ? (
                   <div className="space-y-1">
                     <img src={backImage} alt="Back" className="max-h-24 object-contain rounded border border-slate-200 mx-auto" />
-                    <span className="text-xs text-emerald-700 font-bold block">पिछला भाग (Back) चुना गया ✓</span>
-                    <span className="text-[10px] text-blue-600 underline">बदलने के लिए क्लिक करें</span>
+                    <span className="text-xs text-emerald-700 font-bold block">
+                      {language === 'hi' ? 'पिछला भाग चुना गया ✓' : 'Back side selected ✓'}
+                    </span>
+                    <span className="text-[10px] text-blue-600 underline">
+                      {language === 'hi' ? 'बदलने के लिए क्लिक करें' : 'Click to change'}
+                    </span>
                   </div>
                 ) : (
                   <div className="space-y-1">
                     <Upload className="w-8 h-8 text-blue-500 mx-auto mb-1" />
-                    <p className="text-xs font-bold text-slate-800">पिछला भाग (Back) अपलोड करें</p>
-                    <p className="text-[10px] text-slate-400">आधार / पैन / आयुष्मान का बैक फोटो</p>
+                    <p className="text-xs font-bold text-slate-800">
+                      {language === 'hi' ? 'पिछला भाग अपलोड करें' : 'Upload Back Side'}
+                    </p>
+                    <p className="text-[10px] text-slate-400">
+                      {language === 'hi' ? 'आधार / पैन / आयुष्मान का बैक फोटो' : 'Back photo of card'}
+                    </p>
                   </div>
                 )}
               </div>

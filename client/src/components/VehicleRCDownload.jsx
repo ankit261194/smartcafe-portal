@@ -6,6 +6,7 @@ import {
   MapPin, Eye, FileText, Wallet, Fuel, Calendar, Award, Check
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function VehicleRCDownload({ 
   selectedCafe, 
@@ -18,6 +19,7 @@ export default function VehicleRCDownload({
   onB2bBalanceUpdated,
   onOpenB2bTopUp
 }) {
+  const { language } = useLanguage();
   const [vehicleNumber, setVehicleNumber] = useState('');
   const [serviceStatus, setServiceStatus] = useState(null);
   const [loadingStatus, setLoadingStatus] = useState(true);
@@ -165,21 +167,25 @@ export default function VehicleRCDownload({
           <div>
             <div className="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-400/30 px-3.5 py-1 rounded-full text-xs font-bold text-indigo-200 mb-2.5">
               <Car className="w-3.5 h-3.5 text-yellow-400" />
-              <span>स्तंभ 5 • केंद्रीय वाहन RC डाउनलोड एवं व्हाइट-लेबल डिलीवरी</span>
+              <span>{language === 'hi' ? 'स्तंभ 5 • केंद्रीय वाहन RC डाउनलोड एवं डिलीवरी' : 'Pillar 5 • Central Vehicle RC Download & Delivery'}</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-              वाहन आरसी (Vehicle RC) डाउनलोड व स्मार्ट PVC पोर्टल
+              {language === 'hi' ? 'वाहन आरसी डाउनलोड व स्मार्ट PVC पोर्टल' : 'Vehicle RC Download & Smart PVC Portal'}
             </h2>
             <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
-              किसी भी गाड़ी का नंबर डालें — तुरंत अधिकृत Parivahan RC Certificate और 85.6mm×54mm CR-80 PVC स्मार्ट कार्ड प्रिंट निकालें। आपके कैफे के वॉटरमार्क और नाम के साथ 100% व्हाइट-लेबल!
+              {language === 'hi'
+                ? 'किसी भी गाड़ी का नंबर डालें — तुरंत अधिकृत Parivahan RC Certificate और 85.6mm×54mm CR-80 PVC स्मार्ट कार्ड प्रिंट निकालें।'
+                : 'Enter any vehicle registration number to instantly generate Parivahan RC Certificate and 85.6mm×54mm CR-80 PVC Smart Card.'}
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
             <div className="bg-white/10 backdrop-blur-md rounded-2xl px-4 py-2 border border-white/10 text-xs">
-              <span className="text-slate-300 block text-[10px] font-semibold">खुदरा सेवा शुल्क (Retail Fee)</span>
+              <span className="text-slate-300 block text-[10px] font-semibold">{language === 'hi' ? 'खुदरा सेवा शुल्क' : 'Retail Service Fee'}</span>
               <span className="text-xl font-black text-amber-300">₹{retailFee}</span>
-              <span className="text-[10px] text-emerald-300 block font-bold">थोक ₹{wholesaleCost} • मार्जिन +₹{margin}</span>
+              <span className="text-[10px] text-emerald-300 block font-bold">
+                {language === 'hi' ? `थोक ₹${wholesaleCost} • मार्जिन +₹${margin}` : `Wholesale ₹${wholesaleCost} • Margin +₹${margin}`}
+              </span>
             </div>
           </div>
         </div>
@@ -215,10 +221,12 @@ export default function VehicleRCDownload({
             <AlertCircle className="w-5 h-5 text-yellow-300 shrink-0 mt-0.5" />
             <div>
               <h4 className="font-extrabold text-sm">
-                ⛔ कैफे लाइसेंस निलंबित (License Suspended by Super Admin)!
+                ⛔ {language === 'hi' ? 'कैफे लाइसेंस निलंबित!' : 'Cafe License Suspended!'}
               </h4>
               <p className="mt-0.5 text-red-100">
-                ऑडिट अनुपालन उल्लंघन के कारण इस कैफे की सभी स्वचालित सेवाएं फ्रीज कर दी गई हैं।
+                {language === 'hi' 
+                  ? 'ऑडिट अनुपालन उल्लंघन के कारण इस कैफे की सभी स्वचालित सेवाएं फ्रीज कर दी गई हैं।' 
+                  : 'All automated services for this cafe have been frozen due to audit compliance.'}
               </p>
             </div>
           </div>
@@ -230,7 +238,7 @@ export default function VehicleRCDownload({
         <div className="no-print bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-slate-200 space-y-6">
           <div>
             <label className="block text-slate-800 font-extrabold text-sm mb-1.5">
-              गाड़ी रजिस्ट्रेशन नंबर दर्ज करें (Enter Vehicle Reg No.) *
+              {language === 'hi' ? 'गाड़ी रजिस्ट्रेशन नंबर दर्ज करें *' : 'Enter Vehicle Registration Number *'}
             </label>
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="relative flex-1">
@@ -239,7 +247,7 @@ export default function VehicleRCDownload({
                   maxLength="13"
                   value={vehicleNumber}
                   onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
-                  placeholder="वाहन पंजीयन क्रमांक दर्ज करें"
+                  placeholder={language === 'hi' ? 'वाहन पंजीयन क्रमांक दर्ज करें' : 'Enter Vehicle Reg Number'}
                   className="w-full px-4 py-3 border-2 border-slate-300 rounded-2xl font-mono font-black text-lg text-slate-900 tracking-wider uppercase focus:outline-hidden focus:border-indigo-600"
                 />
               </div>
@@ -251,14 +259,14 @@ export default function VehicleRCDownload({
                 className="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-6 py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 transition disabled:opacity-50 shadow-md shadow-indigo-600/20"
               >
                 <RefreshCw className={`w-4 h-4 ${lookingUp ? 'animate-spin' : ''}`} />
-                <span>{lookingUp ? 'खोज रहे हैं...' : 'वाहन जांचें (Verify RC)'}</span>
+                <span>{lookingUp ? (language === 'hi' ? 'खोज रहे हैं...' : 'Verifying...') : (language === 'hi' ? 'वाहन जांचें' : 'Verify RC')}</span>
               </button>
             </div>
 
             {/* Authentic Lookup Helper */}
             <div className="flex items-center gap-2 mt-2.5 text-[11px] text-slate-500 font-medium">
               <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-              <span>अखिल भारतीय वाहन डेटाबेस: 2-व्हीलर, 4-व्हीलर, कमर्शियल वाहन का वास्तविक आरसी सर्टिफिकेट।</span>
+              <span>{language === 'hi' ? 'अखिल भारतीय वाहन डेटाबेस: 2-व्हीलर, 4-व्हीलर, कमर्शियल वाहन का वास्तविक आरसी सर्टिफिकेट।' : 'All-India Vehicle Database: 2-Wheeler, 4-Wheeler & Commercial RC Certificates.'}</span>
             </div>
 
             {errorMsg && (
@@ -276,7 +284,7 @@ export default function VehicleRCDownload({
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-5 h-5 text-emerald-600" />
                   <span className="font-black text-slate-900 text-sm">
-                    वाहन विवरण सत्यापित (Parivahan Vahan Verified)
+                    {language === 'hi' ? 'वाहन विवरण सत्यापित' : 'Vehicle Details Verified'}
                   </span>
                 </div>
                 <span className="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full text-xs">
@@ -286,22 +294,22 @@ export default function VehicleRCDownload({
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <div className="bg-white p-3 rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px]">गाड़ी नंबर</span>
+                  <span className="text-slate-400 block text-[10px]">{language === 'hi' ? 'गाड़ी नंबर' : 'Vehicle No'}</span>
                   <span className="font-mono font-black text-slate-900 text-sm">{vehicleData.regNo}</span>
                 </div>
 
                 <div className="bg-white p-3 rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px]">मालिक का नाम</span>
+                  <span className="text-slate-400 block text-[10px]">{language === 'hi' ? 'मालिक का नाम' : 'Owner Name'}</span>
                   <span className="font-bold text-slate-800">{vehicleData.ownerName}</span>
                 </div>
 
                 <div className="bg-white p-3 rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px]">मेकर व मॉडल</span>
+                  <span className="text-slate-400 block text-[10px]">{language === 'hi' ? 'मेकर व मॉडल' : 'Maker / Model'}</span>
                   <span className="font-bold text-slate-800">{vehicleData.makerModel}</span>
                 </div>
 
                 <div className="bg-white p-3 rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px]">ईंधन व क्लास</span>
+                  <span className="text-slate-400 block text-[10px]">{language === 'hi' ? 'ईंधन व क्लास' : 'Fuel & Class'}</span>
                   <span className="font-bold text-slate-800">{vehicleData.fuelType} • {vehicleData.vehicleClass.split(' ')[0]}</span>
                 </div>
               </div>
@@ -313,7 +321,7 @@ export default function VehicleRCDownload({
                   onClick={() => setIsEditingDetails(!isEditingDetails)}
                   className="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition border border-indigo-200"
                 >
-                  <span>{isEditingDetails ? '▲ विवरण संपादन छिपाएं (Hide Form)' : '✏️ वाहन विवरण अनुकूलित करें (Customize RC Details)'}</span>
+                  <span>{isEditingDetails ? (language === 'hi' ? '▲ विवरण संपादन छिपाएं' : '▲ Hide Edit Form') : (language === 'hi' ? '✏️ वाहन विवरण अनुकूलित करें' : '✏️ Customize RC Details')}</span>
                 </button>
               </div>
 
@@ -321,14 +329,14 @@ export default function VehicleRCDownload({
                 <div className="bg-white p-4 rounded-xl border border-indigo-200 space-y-3 text-xs">
                   <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                     <span className="font-extrabold text-slate-800 text-xs">
-                      आधिकारिक RC विवरण संपादन (Real-World Vehicle Metadata):
+                      {language === 'hi' ? 'आधिकारिक RC विवरण संपादन:' : 'Official RC Details Editor:'}
                     </span>
-                    <span className="text-[10px] text-slate-400">यह डेटा प्रमाण पत्र और PVC कार्ड पर हूबहू छपेगा।</span>
+                    <span className="text-[10px] text-slate-400">{language === 'hi' ? 'यह डेटा प्रमाण पत्र और PVC कार्ड पर हूबहू छपेगा।' : 'This data will print on the certificate and PVC card.'}</span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-slate-600 font-bold mb-1">मालिक का नाम (Owner Name)</label>
+                      <label className="block text-slate-600 font-bold mb-1">{language === 'hi' ? 'मालिक का नाम' : 'Owner Name'}</label>
                       <input
                         type="text"
                         value={vehicleData.ownerName || ''}
@@ -337,7 +345,7 @@ export default function VehicleRCDownload({
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-600 font-bold mb-1">मेकर व मॉडल (Maker / Model)</label>
+                      <label className="block text-slate-600 font-bold mb-1">{language === 'hi' ? 'मेकर व मॉडल' : 'Maker / Model'}</label>
                       <input
                         type="text"
                         value={vehicleData.makerModel || ''}
@@ -346,7 +354,7 @@ export default function VehicleRCDownload({
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-600 font-bold mb-1">चेसिस नंबर (Chassis Number)</label>
+                      <label className="block text-slate-600 font-bold mb-1">{language === 'hi' ? 'चेसिस नंबर' : 'Chassis Number'}</label>
                       <input
                         type="text"
                         value={vehicleData.chassisNo || ''}
@@ -355,7 +363,7 @@ export default function VehicleRCDownload({
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-600 font-bold mb-1">इंजन नंबर (Engine Number)</label>
+                      <label className="block text-slate-600 font-bold mb-1">{language === 'hi' ? 'इंजन नंबर' : 'Engine Number'}</label>
                       <input
                         type="text"
                         value={vehicleData.engineNo || ''}
@@ -364,7 +372,7 @@ export default function VehicleRCDownload({
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-600 font-bold mb-1">आरटीओ कार्यालय (RTO Authority)</label>
+                      <label className="block text-slate-600 font-bold mb-1">{language === 'hi' ? 'आरटीओ कार्यालय' : 'RTO Office'}</label>
                       <input
                         type="text"
                         value={vehicleData.rto || ''}
@@ -373,7 +381,7 @@ export default function VehicleRCDownload({
                       />
                     </div>
                     <div>
-                      <label className="block text-slate-600 font-bold mb-1">ईंधन का प्रकार (Fuel Type)</label>
+                      <label className="block text-slate-600 font-bold mb-1">{language === 'hi' ? 'ईंधन का प्रकार' : 'Fuel Type'}</label>
                       <input
                         type="text"
                         value={vehicleData.fuelType || ''}
@@ -391,14 +399,14 @@ export default function VehicleRCDownload({
                   <div className="flex items-center gap-2">
                     <Wallet className="w-4 h-4 text-emerald-400" />
                     <span className="text-xs font-bold text-slate-200">
-                      दोहरा लेजर वॉलेट कटौती (Zero-Bypass Double Ledger)
+                      {language === 'hi' ? 'दोहरा लेजर वॉलेट कटौती' : 'Zero-Bypass Double Ledger Deduction'}
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-300">
-                    ग्राहक वॉलेट: <strong className="text-amber-300">-₹{retailFee}</strong> | संचालक B2B वॉलेट: <strong className="text-blue-300">-₹{wholesaleCost}</strong> | संचालक शुद्ध लाभ: <strong className="text-emerald-300">+₹{margin}</strong>
+                    {language === 'hi' ? 'ग्राहक वॉलेट:' : 'Customer Wallet:'} <strong className="text-amber-300">-₹{retailFee}</strong> | {language === 'hi' ? 'संचालक B2B वॉलेट:' : 'Operator B2B Wallet:'} <strong className="text-blue-300">-₹{wholesaleCost}</strong> | {language === 'hi' ? 'संचालक शुद्ध लाभ:' : 'Operator Net Margin:'} <strong className="text-emerald-300">+₹{margin}</strong>
                   </p>
                   <p className="text-[10px] text-slate-400">
-                    वर्तमान ग्राहक बैलेंस: ₹{customerWalletBalance} {customerWalletBalance < retailFee && '(अपर्याप्त बैलेंस)'}
+                    {language === 'hi' ? 'वर्तमान ग्राहक बैलेंस:' : 'Current Customer Balance:'} ₹{customerWalletBalance} {customerWalletBalance < retailFee && (language === 'hi' ? '(अपर्याप्त बैलेंस)' : '(Insufficient Balance)')}
                   </p>
                 </div>
 
@@ -468,7 +476,7 @@ export default function VehicleRCDownload({
                 className="bg-slate-900 hover:bg-black text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition"
               >
                 <Printer className="w-3.5 h-3.5" />
-                <span>प्रिंट निकालें (Print)</span>
+                <span>{language === 'hi' ? 'प्रिंट निकालें' : 'Print'}</span>
               </button>
 
               {onOpenPvcPortal && (
@@ -557,10 +565,10 @@ export default function VehicleRCDownload({
               {/* Ministry Title */}
               <div className="text-center space-y-1 mb-6">
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-                  सड़क परिवहन एवं राजमार्ग मंत्रालय, भारत सरकार
+                  {language === 'hi' ? 'सड़क परिवहन एवं राजमार्ग मंत्रालय, भारत सरकार' : 'Ministry of Road Transport and Highways, Govt of India'}
                 </p>
                 <h3 className="text-lg sm:text-xl font-extrabold text-slate-900 uppercase tracking-tight">
-                  वाहन पंजीकरण प्रमाण पत्र (CERTIFICATE OF REGISTRATION)
+                  {language === 'hi' ? 'वाहन पंजीकरण प्रमाण पत्र' : 'Certificate of Registration'}
                 </h3>
                 <p className="text-xs text-indigo-800 font-mono font-bold">
                   {vehicleData.rtoOffice}
@@ -570,83 +578,83 @@ export default function VehicleRCDownload({
               {/* Core Specs Grid */}
               <div className="border border-slate-300 rounded-2xl overflow-hidden text-xs mb-6">
                 <div className="bg-slate-900 text-white font-bold p-3 flex justify-between items-center">
-                  <span className="tracking-wider">पंजीकरण संख्या (REGN NO): <strong className="text-yellow-300 font-mono text-base ml-1">{vehicleData.regNo}</strong></span>
-                  <span className="font-mono text-xs text-slate-300">स्थिति: {vehicleData.status}</span>
+                  <span className="tracking-wider">{language === 'hi' ? 'पंजीकरण संख्या:' : 'Regn No:'} <strong className="text-yellow-300 font-mono text-base ml-1">{vehicleData.regNo}</strong></span>
+                  <span className="font-mono text-xs text-slate-300">{language === 'hi' ? 'स्थिति:' : 'Status:'} {vehicleData.status}</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-slate-200">
                   {/* Left Column */}
                   <div className="p-4 space-y-2.5">
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">मालिक का नाम (Owner):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'मालिक का नाम:' : 'Owner Name:'}</span>
                       <span className="font-bold text-slate-900">{vehicleData.ownerName}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">पिता/पति का नाम (Father/Husband):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'पिता/पति का नाम:' : 'Father/Husband Name:'}</span>
                       <span className="font-semibold text-slate-800">{vehicleData.fatherName}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">वाहन का मॉडल (Maker Model):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'वाहन का मॉडल:' : 'Maker Model:'}</span>
                       <span className="font-bold text-indigo-900">{vehicleData.makerModel}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">वाहन श्रेणी (Class of Vehicle):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'वाहन श्रेणी:' : 'Class of Vehicle:'}</span>
                       <span className="font-semibold text-slate-800">{vehicleData.vehicleClass}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">ईंधन प्रकार (Fuel Type):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'ईंधन प्रकार:' : 'Fuel Type:'}</span>
                       <span className="font-black text-slate-900">{vehicleData.fuelType}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">इंजन क्षमता (Cubic Capacity):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'इंजन क्षमता:' : 'Cubic Capacity:'}</span>
                       <span className="font-semibold text-slate-800">{vehicleData.engineCapacity}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-slate-500">बैठक क्षमता (Seating):</span>
-                      <span className="font-semibold text-slate-800">{vehicleData.seatingCapacity} व्यक्ति</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'बैठक क्षमता:' : 'Seating Capacity:'}</span>
+                      <span className="font-semibold text-slate-800">{vehicleData.seatingCapacity} {language === 'hi' ? 'व्यक्ति' : 'Persons'}</span>
                     </div>
                   </div>
 
                   {/* Right Column */}
                   <div className="p-4 space-y-2.5">
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">पंजीकरण तिथि (Reg Date):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'पंजीकरण तिथि:' : 'Reg Date:'}</span>
                       <span className="font-mono font-bold text-slate-900">{vehicleData.regDate}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">फिटनेस वैधता (Fitness Upto):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'फिटनेस वैधता:' : 'Fitness Upto:'}</span>
                       <span className="font-mono font-bold text-emerald-700">{vehicleData.fitnessUpto}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">इंजन नंबर (Engine No):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'इंजन नंबर:' : 'Engine No:'}</span>
                       <span className="font-mono font-bold text-slate-800">{vehicleData.engineNo}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">चेसिस नंबर (Chassis No):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'चेसिस नंबर:' : 'Chassis No:'}</span>
                       <span className="font-mono font-bold text-slate-800">{vehicleData.chassisNo}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">बीमा कंपनी (Insurance):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'बीमा कंपनी:' : 'Insurance Company:'}</span>
                       <span className="font-semibold text-slate-800 truncate max-w-[180px]">{vehicleData.insuranceCompany}</span>
                     </div>
 
                     <div className="flex justify-between border-b border-dashed border-slate-200 pb-1.5">
-                      <span className="text-slate-500">बीमा वैधता (Ins Upto):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'बीमा वैधता:' : 'Insurance Upto:'}</span>
                       <span className="font-mono font-bold text-slate-900">{vehicleData.insuranceUpto}</span>
                     </div>
 
                     <div className="flex justify-between">
-                      <span className="text-slate-500">वित्तपोषित (Financed By):</span>
+                      <span className="text-slate-500">{language === 'hi' ? 'वित्तपोषित:' : 'Financed By:'}</span>
                       <span className="font-bold text-slate-800">{vehicleData.financedBy}</span>
                     </div>
                   </div>
@@ -685,10 +693,10 @@ export default function VehicleRCDownload({
                   CR-80 ISO मानक आकार (85.6mm × 54mm)
                 </span>
                 <h4 className="font-black text-slate-900 text-lg mt-2">
-                  स्मार्ट पीवीसी कार्ड (Front & Back Layout)
+                  {language === 'hi' ? 'स्मार्ट पीवीसी कार्ड' : 'Smart PVC Card'}
                 </h4>
                 <p className="text-xs text-slate-500 mt-1">
-                  नीचे दी गई कैंची कटिंग बॉर्डर्स के साथ सीधे PVC कार्ड प्रिंटर या लेमिनेशन पेपर पर निकालें।
+                  {language === 'hi' ? 'नीचे दी गई कैंची कटिंग बॉर्डर्स के साथ सीधे PVC कार्ड प्रिंटर या लेमिनेशन पेपर पर निकालें।' : 'Print directly on PVC card printer or lamination paper with cutting guidelines.'}
                 </p>
               </div>
 
@@ -696,7 +704,9 @@ export default function VehicleRCDownload({
                 
                 {/* FRONT CARD (CR-80) */}
                 <div className="cr80-card-scaler relative group max-w-full">
-                  <span className="text-xs font-bold text-slate-500 mb-1 block text-center">1. अगला भाग (Front Side)</span>
+                  <span className="text-xs font-bold text-slate-500 mb-1 block text-center">
+                    {language === 'hi' ? '1. अगला भाग' : '1. Front Side'}
+                  </span>
                   <div 
                     style={{ width: '324px', height: '204px' }} 
                     className="bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 rounded-2xl p-3.5 shadow-xl border-2 border-dashed border-slate-400 relative overflow-hidden flex flex-col justify-between"
@@ -751,15 +761,17 @@ export default function VehicleRCDownload({
 
                 {/* BACK CARD (CR-80) */}
                 <div className="cr80-card-scaler relative group max-w-full">
-                  <span className="text-xs font-bold text-slate-500 mb-1 block text-center">2. पिछला भाग (Back Side)</span>
+                  <span className="text-xs font-bold text-slate-500 mb-1 block text-center">
+                    {language === 'hi' ? '2. पिछला भाग' : '2. Back Side'}
+                  </span>
                   <div 
                     style={{ width: '324px', height: '204px' }} 
                     className="bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 rounded-2xl p-3.5 shadow-xl border-2 border-dashed border-slate-400 relative overflow-hidden flex flex-col justify-between"
                   >
                     {/* Header */}
                     <div className="border-b border-amber-300 pb-1 flex justify-between items-center text-[8px]">
-                      <span className="font-bold text-slate-800">वाहन तकनीकी विनिर्देश (TECHNICAL SPECS)</span>
-                      <span className="text-emerald-700 font-bold">✓ अधिकृत प्रति</span>
+                      <span className="font-bold text-slate-800">{language === 'hi' ? 'वाहन तकनीकी विनिर्देश' : 'Technical Specifications'}</span>
+                      <span className="text-emerald-700 font-bold">{language === 'hi' ? '✓ अधिकृत प्रति' : '✓ Authorized Copy'}</span>
                     </div>
 
                     {/* Body */}

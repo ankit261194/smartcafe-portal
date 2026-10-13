@@ -64,7 +64,7 @@ export default function SuperAdminGateway({
             <Crown className="w-6 h-6" />
           </div>
           <h2 className="text-xl sm:text-2xl font-black tracking-tight">
-            व्यवस्थापक लॉगिन (Super Admin)
+            केंद्रीय व्यवस्थापक लॉगिन
           </h2>
           <p className="text-xs sm:text-sm font-bold opacity-90 mt-1">
             केंद्रीय साइबर कैफे नेटवर्क • मास्टर रूट एक्सेस
@@ -87,7 +87,7 @@ export default function SuperAdminGateway({
 
           <div className="space-y-1.5">
             <label className="block text-xs font-bold text-slate-300">
-              मास्टर एडमिन पासवर्ड (Master Password) *
+              मास्टर एडमिन पासवर्ड *
             </label>
             <input
               type="password"

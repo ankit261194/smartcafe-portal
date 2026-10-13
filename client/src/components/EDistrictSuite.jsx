@@ -4,8 +4,10 @@ import {
   ExternalLink, Search, RefreshCw, Upload, ShieldCheck, 
   Sparkles, Layers, AlertCircle, Copy, QrCode
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function EDistrictSuite() {
+  const { language } = useLanguage();
   const [activeSubTab, setActiveSubTab] = useState('declaration'); // 'declaration', 'compressor', 'verify', 'bhulekh'
 
   // Self Declaration Form State
@@ -117,13 +119,15 @@ export default function EDistrictSuite() {
         <div>
           <div className="inline-flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full text-xs font-semibold text-yellow-200 mb-2">
             <Award className="w-3.5 h-3.5" />
-            ई-डिस्ट्रिक्ट एवं जन सेवा केंद्र स्पेशल
+            {language === 'hi' ? 'ई-डिस्ट्रिक्ट एवं जन सेवा केंद्र स्पेशल' : 'e-District & CSC Special'}
           </div>
           <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-            ई-डिस्ट्रिक्ट टूल्स सुइट (e-District Suite)
+            {language === 'hi' ? 'ई-डिस्ट्रिक्ट टूल्स सुइट' : 'e-District Tools Suite'}
           </h2>
           <p className="text-orange-100 text-xs sm:text-sm mt-1 max-w-xl">
-            स्वप्रमाणित घोषणा पत्र (Self-Declaration), 100KB डॉक्युमेंट पैकर, प्रमाण पत्र सत्यापन व भूलेख सेवाएं।
+            {language === 'hi'
+              ? 'स्वप्रमाणित घोषणा पत्र, 100KB डॉक्युमेंट पैकर, प्रमाण पत्र सत्यापन व भूलेख सेवाएं।'
+              : 'Self-Declaration Form, 100KB Document Packer, Certificate Verification & Bhulekh Services.'}
           </p>
         </div>
 
@@ -135,7 +139,7 @@ export default function EDistrictSuite() {
             rel="noreferrer"
             className="bg-white text-orange-800 hover:bg-orange-50 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition"
           >
-            <span>e-District UP लॉगिन</span>
+            <span>{language === 'hi' ? 'e-District UP लॉगिन' : 'e-District UP Login'}</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
           <a
@@ -144,7 +148,7 @@ export default function EDistrictSuite() {
             rel="noreferrer"
             className="bg-white/20 hover:bg-white/30 text-white font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 border border-white/20 transition"
           >
-            <span>RTPS बिहार</span>
+            <span>{language === 'hi' ? 'RTPS बिहार' : 'RTPS Bihar'}</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
         </div>
@@ -161,7 +165,7 @@ export default function EDistrictSuite() {
           }`}
         >
           <FileText className="w-4 h-4" />
-          <span>स्वप्रमाणित घोषणा पत्र (Self Declaration)</span>
+          <span>{language === 'hi' ? 'स्वप्रमाणित घोषणा पत्र' : 'Self Declaration Form'}</span>
         </button>
 
         <button
@@ -173,7 +177,7 @@ export default function EDistrictSuite() {
           }`}
         >
           <Layers className="w-4 h-4" />
-          <span>100KB डॉक्युमेंट पैकर (&lt;100KB / &lt;20KB)</span>
+          <span>{language === 'hi' ? '100KB डॉक्युमेंट पैकर (<100KB / <20KB)' : '100KB Document Packer (<100KB / <20KB)'}</span>
         </button>
 
         <button
@@ -185,7 +189,7 @@ export default function EDistrictSuite() {
           }`}
         >
           <CheckCircle2 className="w-4 h-4" />
-          <span>प्रमाण पत्र सत्यापन (Verification)</span>
+          <span>{language === 'hi' ? 'प्रमाण पत्र सत्यापन' : 'Certificate Verification'}</span>
         </button>
 
         <button
@@ -197,7 +201,7 @@ export default function EDistrictSuite() {
           }`}
         >
           <Sparkles className="w-4 h-4 text-yellow-300" />
-          <span>1-क्लिक ऑटो-फ़िलर बॉट (Auto-Filler Bot)</span>
+          <span>{language === 'hi' ? '1-क्लिक ऑटो-फ़िलर बॉट' : '1-Click Auto-Filler Bot'}</span>
         </button>
 
         <button
@@ -209,7 +213,7 @@ export default function EDistrictSuite() {
           }`}
         >
           <Award className="w-4 h-4" />
-          <span>भूलेख व खतौनी पोर्टल</span>
+          <span>{language === 'hi' ? 'भूलेख व खतौनी पोर्टल' : 'Bhulekh & Land Records'}</span>
         </button>
       </div>
 

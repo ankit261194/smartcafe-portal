@@ -74,7 +74,7 @@ export const INSTANT_TOOLS = [
   },
   {
     id: 'voter',
-    title: { hi: 'डिजिटल वोटर स्मार्ट कार्ड', en: 'Digital Voter Smart Card (EPIC)' },
+    title: { hi: 'डिजिटल वोटर स्मार्ट कार्ड', en: 'Digital Voter Smart Card' },
     subtitle: { hi: 'भारत निर्वाचन आयोग स्मार्ट कार्ड लेआउट', en: 'Election Commission of India Smart Card Layout' },
     category: 'voter',
     categoryName: { hi: 'वोटर कार्ड सेवाएं', en: 'Voter ID Services' },
@@ -398,7 +398,7 @@ export default function ServicePage({
       return;
     }
     if (currentTool.id === 'edistrict' && !secondaryInput.trim()) {
-      setErrorMsg('कृपया प्रमाण पत्र क्रमांक (Certificate ID) दर्ज करें।');
+      setErrorMsg(language === 'hi' ? 'कृपया प्रमाण पत्र क्रमांक दर्ज करें।' : 'Please enter Certificate ID.');
       return;
     }
     setErrorMsg('');
@@ -1809,7 +1809,7 @@ export default function ServicePage({
                               </div>
                             </div>
                             <span className="bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded shadow-xs">
-                              ₹5 लाख मुफ़्त
+                              {language === 'hi' ? '₹5 लाख मुफ़्त' : '₹5 Lakh Free'}
                             </span>
                           </div>
 
@@ -1824,8 +1824,8 @@ export default function ServicePage({
                                 <span className="font-black text-slate-950 text-[11px] block">{cardData.name}</span>
                               </div>
                               <div className="text-[9px] text-slate-800 space-y-0.5">
-                                <div>जन्म तिथि / DOB: <span className="font-mono font-bold">{cardData.dob}</span></div>
-                                <div>लिंग: <span className="font-bold">{cardData.gender}</span></div>
+                                <div>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <span className="font-mono font-bold">{cardData.dob}</span></div>
+                                <div>{language === 'hi' ? 'लिंग:' : 'Gender:'} <span className="font-bold">{cardData.gender}</span></div>
                                 <div>{language === 'hi' ? 'राज्य:' : 'State:'} <span className="font-bold">{cardData.state}</span></div>
                               </div>
                             </div>
@@ -1983,7 +1983,9 @@ export default function ServicePage({
                       <div className="w-full max-w-xl bg-white border-2 border-slate-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
                         <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
                           <div>
-                            <div className="text-[10px] font-black text-amber-700 uppercase">UPPCL • विद्युत वितरण निगम लि.</div>
+                            <div className="text-[10px] font-black text-amber-700 uppercase">
+                              {language === 'hi' ? 'UPPCL • विद्युत वितरण निगम लि.' : 'UPPCL • Power Distribution Corp. Ltd.'}
+                            </div>
                             <h3 className="text-base font-black text-slate-900">{cardData.discom}</h3>
                             <p className="text-[11px] text-slate-600">{language === 'hi' ? 'विद्युत बिल एवं सफल भुगतान रसीद' : 'Electricity Bill & Payment Receipt'}</p>
                           </div>
@@ -2148,7 +2150,7 @@ export default function ServicePage({
 
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border text-xs">
                           <div>
-                            <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'स्थायी खाता संख्या' : 'Permanent Account Number (PAN)'}</span>
+                            <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'स्थायी खाता संख्या' : 'Permanent Account Number'}</span>
                             <strong className="font-mono text-base font-black text-emerald-800">{cardData.panNo}</strong>
                           </div>
                           <div>

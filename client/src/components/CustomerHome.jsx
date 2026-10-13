@@ -421,7 +421,7 @@ export default function CustomerHome({
                 </div>
 
                 <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-blue-600 dark:text-blue-400">
-                  <span>प्रिंट ➔</span>
+                  <span>{language === 'hi' ? 'प्रिंट ➔' : 'Print ➔'}</span>
                   <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
                 </div>
               </div>
@@ -433,10 +433,10 @@ export default function CustomerHome({
       <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="text-center max-w-xl mx-auto mb-8">
           <span className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">
-            आसान और आधुनिक तरीका
+            {language === 'hi' ? 'आसान और आधुनिक तरीका' : 'Easy & Modern Method'}
           </span>
           <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white mt-1">
-            कैफे पर काम कैसे कराएं? (3 आसान चरण)
+            {language === 'hi' ? 'कैफे पर काम कराने के 3 आसान चरण' : 'How It Works (3 Easy Steps)'}
           </h2>
         </div>
 
@@ -445,9 +445,11 @@ export default function CustomerHome({
             <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-black text-lg flex items-center justify-center mx-auto mb-3">
               1
             </div>
-            <h4 className="font-bold text-slate-800 dark:text-slate-200 text-base">फ़ाइल या सेवा चुनें</h4>
+            <h4 className="font-bold text-slate-800 dark:text-slate-200 text-base">
+              {language === 'hi' ? 'फ़ाइल या सेवा चुनें' : 'Choose File or Service'}
+            </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              मोबाइल से PDF, फोटो या सरकारी फॉर्म का चयन करें।
+              {language === 'hi' ? 'मोबाइल से PDF, फोटो या सरकारी फॉर्म का चयन करें।' : 'Select PDF, photo or government form directly from your mobile.'}
             </p>
           </div>
 
@@ -455,9 +457,11 @@ export default function CustomerHome({
             <div className="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-black text-lg flex items-center justify-center mx-auto mb-3">
               2
             </div>
-            <h4 className="font-bold text-slate-800 dark:text-slate-200 text-base">टोकन प्राप्त करें</h4>
+            <h4 className="font-bold text-slate-800 dark:text-slate-200 text-base">
+              {language === 'hi' ? 'टोकन प्राप्त करें' : 'Get Digital Token'}
+            </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              आपको एक डिजिटल टोकन नंबर मिलेगा, जो काउंटर पर तुरंत पहचाना जाएगा।
+              {language === 'hi' ? 'आपको एक डिजिटल टोकन नंबर मिलेगा, जो काउंटर पर तुरंत पहचाना जाएगा।' : 'Receive a digital token number, recognized instantly at the counter.'}
             </p>
           </div>
 
@@ -465,9 +469,11 @@ export default function CustomerHome({
             <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 font-black text-lg flex items-center justify-center mx-auto mb-3">
               3
             </div>
-            <h4 className="font-bold text-slate-800 dark:text-slate-200 text-base">1 मिनट में काम पूरा</h4>
+            <h4 className="font-bold text-slate-800 dark:text-slate-200 text-base">
+              {language === 'hi' ? '1 मिनट में काम पूरा' : 'Job Done in 1 Minute'}
+            </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
-              प्रिंट तुरंत लें या फॉर्म भरने के बाद रसीद अपने फोन पर ही डाउनलोड करें।
+              {language === 'hi' ? 'प्रिंट तुरंत लें या फॉर्म भरने के बाद रसीद अपने फोन पर ही डाउनलोड करें।' : 'Collect instant printout or download final receipt directly on your phone.'}
             </p>
           </div>
         </div>
@@ -482,10 +488,10 @@ export default function CustomerHome({
             </div>
             <div>
               <h3 className="font-black text-base sm:text-lg text-white">
-                🔒 100% डेटा गोपनीयता व सुरक्षा गारंटी
+                {language === 'hi' ? '🔒 100% डेटा गोपनीयता व सुरक्षा गारंटी' : '🔒 100% Data Privacy & Security Guarantee'}
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                नागरिकों के दस्तावेज़ की पूर्ण सुरक्षा • कोई डेटा अनधिकृत रूप से सहेजा नहीं जाता
+                {language === 'hi' ? 'नागरिकों के दस्तावेज़ की पूर्ण सुरक्षा • कोई डेटा अनधिकृत रूप से सहेजा नहीं जाता' : 'Complete document security • No unauthorized data retention'}
               </p>
             </div>
           </div>
@@ -498,14 +504,16 @@ export default function CustomerHome({
               className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shrink-0 transition shadow-md"
             >
               <MessageSquare className="w-4 h-4" />
-              <span>WhatsApp पर सहायता लें</span>
+              <span>{language === 'hi' ? 'WhatsApp पर सहायता लें' : 'Get Support on WhatsApp'}</span>
             </a>
           )}
         </div>
 
         <div className="space-y-3 text-xs sm:text-sm text-slate-300 leading-relaxed">
           <p>
-            आपके दस्तावेज़ प्रिंट के बाद 24 घंटे में स्वतः नष्ट हो जाते हैं। आप प्रिंट के तुरंत बाद 'अभी फ़ाइल डिलीट करें' बटन दबाकर भी तुरंत फ़ाइल नष्ट कर सकते हैं।
+            {language === 'hi'
+              ? "आपके दस्तावेज़ प्रिंट के बाद 24 घंटे में स्वतः नष्ट हो जाते हैं। आप प्रिंट के तुरंत बाद 'अभी फ़ाइल डिलीट करें' बटन दबाकर भी तुरंत फ़ाइल नष्ट कर सकते हैं।"
+              : "Your documents are automatically shredded within 24 hours of printing. You can also click 'Delete File Now' to shred immediately."}
           </p>
         </div>
 
@@ -514,11 +522,13 @@ export default function CustomerHome({
           <div className="flex items-center gap-2">
             <Trash2 className="w-4 h-4 text-rose-400" />
             <h4 className="font-bold text-xs sm:text-sm text-white">
-              तत्काल 1-क्लिक दस्तावेज़ श्रेडर (Instant Document Shredder)
+              {language === 'hi' ? 'तत्काल 1-क्लिक दस्तावेज़ श्रेडर' : 'Instant 1-Click Document Shredder'}
             </h4>
           </div>
           <p className="text-[11px] text-slate-400 leading-relaxed">
-            प्रिंट निकालने के बाद क्या आप अपनी फ़ाइल सर्वर से तुरंत मिटाना चाहते हैं? अपना टोकन नंबर दर्ज करें और नष्ट करें:
+            {language === 'hi'
+              ? 'प्रिंट निकालने के बाद क्या आप अपनी फ़ाइल सर्वर से तुरंत मिटाना चाहते हैं? अपना टोकन नंबर दर्ज करें और नष्ट करें:'
+              : 'Want to immediately remove your files after printing? Enter your token number to shred:'}
           </p>
 
           <form onSubmit={handleShredDocument} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1">
@@ -526,7 +536,7 @@ export default function CustomerHome({
               type="text"
               value={shredTokenInput}
               onChange={(e) => setShredTokenInput(e.target.value)}
-              placeholder="टोकन नंबर दर्ज करें"
+              placeholder={language === 'hi' ? 'टोकन नंबर दर्ज करें' : 'Enter Token Number'}
               className="flex-1 px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-xl font-mono text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500"
             />
             <button
@@ -535,7 +545,7 @@ export default function CustomerHome({
               className="bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition active:scale-95 cursor-pointer shadow-lg shadow-rose-600/30"
             >
               <Trash2 className="w-4 h-4" />
-              <span>{isShredding ? 'नष्ट किया जा रहा है...' : 'अभी फ़ाइल डिलीट करें'}</span>
+              <span>{isShredding ? (language === 'hi' ? 'नष्ट किया जा रहा है...' : 'Shredding...') : (language === 'hi' ? 'अभी फ़ाइल डिलीट करें' : 'Delete File Now')}</span>
             </button>
           </form>
 

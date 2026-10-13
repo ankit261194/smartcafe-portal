@@ -5,8 +5,10 @@ import {
   Smartphone, Calendar, Download, Printer, ShieldCheck, Wifi, WifiOff
 } from 'lucide-react';
 import { authFetch } from '../utils/api';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function UdharRegister({ settings, selectedCafe }) {
+  const { language } = useLanguage();
   const [udharList, setUdharList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('unsettled'); // 'all', 'unsettled', 'settled'
@@ -215,11 +217,11 @@ export default function UdharRegister({ settings, selectedCafe }) {
         <div className="bg-amber-500/10 border-2 border-amber-500/30 rounded-2xl p-4 flex items-center justify-between gap-3 text-amber-900 text-xs font-bold">
           <div className="flex items-center gap-2">
             <WifiOff className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>इंटरनेट बंद है (Offline Mode) • आपकी नई उधारी प्रविष्टियां फ़ोन में सुरक्षित रहेंगी और नेटवर्क आते ही सिंक हो जाएंगी।</span>
+            <span>{language === 'hi' ? 'इंटरनेट बंद है • आपकी नई उधारी प्रविष्टियां फ़ोन में सुरक्षित रहेंगी और नेटवर्क आते ही सिंक हो जाएंगी।' : 'Offline Mode • New credit entries will be stored locally and synced when online.'}</span>
           </div>
           {offlinePendingCount > 0 && (
             <span className="bg-amber-500 text-white px-2.5 py-1 rounded-lg text-[10px] shrink-0">
-              {offlinePendingCount} ऑफ़लाइन कतार में
+              {offlinePendingCount} {language === 'hi' ? 'ऑफ़लाइन कतार में' : 'in offline queue'}
             </span>
           )}
         </div>
@@ -227,14 +229,14 @@ export default function UdharRegister({ settings, selectedCafe }) {
 
       {isOnline && offlinePendingCount > 0 && (
         <div className="bg-blue-50 border border-blue-200 rounded-2xl p-3 flex items-center justify-between gap-3 text-blue-900 text-xs font-bold">
-          <span>{offlinePendingCount} ऑफ़लाइन उधारी रिकॉर्ड सिंक हेतु तैयार हैं।</span>
+          <span>{offlinePendingCount} {language === 'hi' ? 'ऑफ़लाइन उधारी रिकॉर्ड सिंक हेतु तैयार हैं।' : 'offline entries ready to sync.'}</span>
           <button
             onClick={syncOfflineQueue}
             disabled={syncingOffline}
             className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-xs flex items-center gap-1 transition"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${syncingOffline ? 'animate-spin' : ''}`} />
-            <span>{syncingOffline ? 'सिंक हो रहा है...' : 'अभी सिंक करें'}</span>
+            <span>{syncingOffline ? (language === 'hi' ? 'सिंक हो रहा है...' : 'Syncing...') : (language === 'hi' ? 'अभी सिंक करें' : 'Sync Now')}</span>
           </button>
         </div>
       )}
@@ -244,16 +246,16 @@ export default function UdharRegister({ settings, selectedCafe }) {
         <div>
           <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full text-xs font-semibold text-rose-200 mb-2">
             <UserX className="w-3.5 h-3.5 text-yellow-300" />
-            <span>डिजिटल खाता • उधार बहीखाता रजिस्टर</span>
+            <span>{language === 'hi' ? 'डिजिटल खाता • उधार बहीखाता रजिस्टर' : 'Digital Khata • Credit Ledger'}</span>
           </div>
-          <h2 className="text-2xl font-black tracking-tight">उधार रजिस्टर (Udhar Register)</h2>
+          <h2 className="text-2xl font-black tracking-tight">{language === 'hi' ? 'उधार बहीखाता रजिस्टर' : 'Customer Credit Register'}</h2>
           <p className="text-xs text-rose-200 mt-0.5">
-            ग्राहकों की उधारी का हिसाब रखें, 1-क्लिक में WhatsApp तगादा भेजें व आंशिक भुगतान जमा करें।
+            {language === 'hi' ? 'ग्राहकों की उधारी का हिसाब रखें, 1-क्लिक में WhatsApp तगादा भेजें व आंशिक भुगतान जमा करें।' : 'Track customer credit, send WhatsApp reminders with 1-click and record payments.'}
           </p>
         </div>
 
         <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl text-right shrink-0">
-          <span className="text-[11px] text-rose-200 font-bold block">कुल बाकी उधारी (Pending)</span>
+          <span className="text-[11px] text-rose-200 font-bold block">{language === 'hi' ? 'कुल बाकी उधारी' : 'Total Outstanding'}</span>
           <span className="text-2xl font-black text-white">₹{totalOutstanding}</span>
         </div>
       </div>
