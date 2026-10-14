@@ -165,15 +165,9 @@ export default function RekhaOrders({ onSelectTool, onBack }) {
             onChange={(e) => setFilterType(e.target.value)}
             className="bg-slate-50 dark:bg-[#070e1b] border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer"
           >
-            <option value="all">{language === 'hi' ? 'सभी सेवाएं' : 'All Services'}</option>
-            <option value="rcDownload">{language === 'hi' ? 'वाहन RC' : 'Vehicle RC'}</option>
-            <option value="panCard">{language === 'hi' ? 'पैन कार्ड' : 'PAN Card'}</option>
-            <option value="aadhaarCard">{language === 'hi' ? 'आधार कार्ड' : 'Aadhaar Card'}</option>
-            <option value="voterCard">{language === 'hi' ? 'वोटर कार्ड' : 'Voter Card'}</option>
-            <option value="ayushmanCard">{language === 'hi' ? 'आयुष्मान कार्ड' : 'Ayushman Card'}</option>
-            <option value="rationCard">{language === 'hi' ? 'राशन पर्ची' : 'Ration Slip'}</option>
-            <option value="electricityBill">{language === 'hi' ? 'बिजली बिल' : 'Electricity Bill'}</option>
-            <option value="edistrictSlip">{language === 'hi' ? 'e-District सत्यापन' : 'e-District Verification'}</option>
+            <option value="all">{language === 'hi' ? 'सभी e-District सेवाएं' : 'All e-District Services'}</option>
+            <option value="edistrictSlip">{language === 'hi' ? 'e-District सत्यापन पर्ची' : 'e-District Verification'}</option>
+            <option value="declaration">{language === 'hi' ? 'स्वप्रमाणित घोषणा पत्र' : 'Self Declaration'}</option>
           </select>
         </div>
 

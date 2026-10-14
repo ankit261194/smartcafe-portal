@@ -14,77 +14,47 @@ import { useLanguage } from '../context/LanguageContext';
 
 export const SERVICES_CATALOG = [
   {
-    id: 'certificates',
-    category: { hi: "प्रमाण पत्र", en: "Certificates" },
+    id: 'edistrict_revenue',
+    category: { hi: "राजस्व प्रमाण पत्र (Revenue)", en: "Revenue Certificates" },
     icon: Award,
     color: "from-emerald-600 to-teal-600",
     items: [
-      { id: 'income_cert', label: { hi: "आय प्रमाण पत्र", en: "Income Certificate" }, name: "आय प्रमाण पत्र (Income Certificate)", fee: 80 },
-      { id: 'caste_cert', label: { hi: "जाति प्रमाण पत्र", en: "Caste Certificate" }, name: "जाति प्रमाण पत्र (Caste Certificate)", fee: 80 },
-      { id: 'niwas_cert', label: { hi: "निवास प्रमाण पत्र", en: "Domicile Certificate" }, name: "निवास प्रमाण पत्र (Domicile/Niwas)", fee: 80 },
-      { id: 'ews_cert', label: { hi: "EWS प्रमाण पत्र", en: "EWS Certificate" }, name: "EWS प्रमाण पत्र", fee: 120 }
+      { id: 'income_cert', label: { hi: "आय प्रमाण पत्र", en: "Income Certificate" }, name: "आय प्रमाण पत्र (Income Certificate)", fee: 80, dept: "राजस्व परिषद उत्तर प्रदेश (e-District)" },
+      { id: 'caste_cert', label: { hi: "जाति प्रमाण पत्र", en: "Caste Certificate" }, name: "जाति प्रमाण पत्र (Caste Certificate)", fee: 80, dept: "राजस्व परिषद उत्तर प्रदेश (e-District)" },
+      { id: 'niwas_cert', label: { hi: "निवास प्रमाण पत्र", en: "Domicile Certificate" }, name: "निवास प्रमाण पत्र (Domicile/Niwas)", fee: 80, dept: "राजस्व परिषद उत्तर प्रदेश (e-District)" },
+      { id: 'ews_cert', label: { hi: "EWS प्रमाण पत्र", en: "EWS Certificate" }, name: "EWS प्रमाण पत्र", fee: 120, dept: "राजस्व परिषद उत्तर प्रदेश (e-District)" }
     ]
   },
   {
-    id: 'id_pan',
-    category: { hi: "आईडी कार्ड व पैन", en: "ID & PAN Cards" },
-    icon: CreditCard,
+    id: 'edistrict_land',
+    category: { hi: "भूलेख एवं हैसियत सेवाएं", en: "Land Records & Solvency" },
+    icon: Landmark,
+    color: "from-cyan-600 to-blue-600",
+    items: [
+      { id: 'khatauni_copy', label: { hi: "खतौनी / भूलेख नकल", en: "Khatauni Land Record" }, name: "खतौनी नकल (Khatauni Land Record)", fee: 30, dept: "राजस्व परिषद (भूलेख)" },
+      { id: 'haisiyat_cert', label: { hi: "हैसियत प्रमाण पत्र", en: "Solvency Certificate" }, name: "हैसियत प्रमाण पत्र (Haisiyat Certificate)", fee: 250, dept: "राजस्व परिषद उत्तर प्रदेश (e-District)" }
+    ]
+  },
+  {
+    id: 'edistrict_panchayat',
+    category: { hi: "पंचायती राज व जन्म/मृत्यु", en: "Panchayati Raj & Vital" },
+    icon: FileText,
     color: "from-amber-600 to-orange-600",
     items: [
-      { id: 'new_pan', label: { hi: "नया पैन कार्ड", en: "New PAN Card" }, name: "नया पैन कार्ड (New PAN Card)", fee: 150 },
-      { id: 'pan_corr', label: { hi: "पैन कार्ड सुधार / रिप्रिंट", en: "PAN Card Correction / Reprint" }, name: "पैन कार्ड सुधार / रिप्रिंट", fee: 150 },
-      { id: 'voter_card', label: { hi: "वोटर आईडी कार्ड", en: "Voter ID Card" }, name: "वोटर आईडी कार्ड (Voter Card Form 6)", fee: 70 },
-      { id: 'ayushman_card', label: { hi: "आयुष्मान भारत कार्ड", en: "Ayushman Bharat Golden Card" }, name: "आयुष्मान भारत कार्ड (Golden Card)", fee: 20 }
+      { id: 'birth_cert_rec', label: { hi: "जन्म प्रमाण पत्र सिफारिश", en: "Birth Certificate Rec." }, name: "जन्म प्रमाण पत्र सिफारिश", fee: 100, dept: "पंचायती राज विभाग (e-District)" },
+      { id: 'death_cert_rec', label: { hi: "मृत्यु प्रमाण पत्र सिफारिश", en: "Death Certificate Rec." }, name: "मृत्यु प्रमाण पत्र सिफारिश", fee: 100, dept: "पंचायती राज विभाग (e-District)" },
+      { id: 'parivar_register', label: { hi: "परिवार रजिस्टर नकल", en: "Family Register (Kutumb Nakal)" }, name: "परिवार रजिस्टर नकल", fee: 50, dept: "पंचायती राज विभाग (e-District)" }
     ]
   },
   {
-    id: 'sarkari_jobs',
-    category: { hi: "सरकारी नौकरी", en: "Government Jobs" },
-    icon: Briefcase,
-    color: "from-blue-600 to-cyan-600",
-    items: [
-      { id: 'ssc_gd', label: { hi: "SSC GD कांस्टेबल 2026", en: "SSC GD Constable 2026" }, name: "SSC GD Constable 2026", fee: 150 },
-      { id: 'railway_ntpc', label: { hi: "रेलवे NTPC / ग्रुप D फॉर्म", en: "Railway NTPC / Group D Form" }, name: "रेलवे NTPC / Group D Form", fee: 150 },
-      { id: 'police_bharti', label: { hi: "UP / राज्य पुलिस भर्ती", en: "UP / State Police Bharti" }, name: "UP / स्टेट पुलिस भर्ती", fee: 120 },
-      { id: 'sarkari_job_other', label: { hi: "अन्य सरकारी नौकरी फॉर्म", en: "Other Sarkari Job Forms" }, name: "अन्य सरकारी नौकरी फॉर्म", fee: 100 }
-    ]
-  },
-  {
-    id: 'scholarship_edu',
-    category: { hi: "छात्रवृत्ति व शिक्षा", en: "Scholarship & Education" },
-    icon: GraduationCap,
+    id: 'edistrict_social',
+    category: { hi: "समाज कल्याण एवं पेंशन", en: "Social Welfare & Pension" },
+    icon: ShieldCheck,
     color: "from-purple-600 to-pink-600",
     items: [
-      { id: 'scholarship_up', label: { hi: "UP / राज्य स्कॉलरशिप फॉर्म", en: "UP / State Scholarship Form" }, name: "UP / स्टेट स्कॉलरशिप फॉर्म", fee: 120 },
-      { id: 'college_admission', label: { hi: "कॉलेज / यूनिवर्सिटी दाखिला", en: "College / University Admission" }, name: "यूनिवर्सिटी / कॉलेज एडमिशन फॉर्म", fee: 100 },
-      { id: 'ctet_tet', label: { hi: "CTET / TET परीक्षा फॉर्म", en: "CTET / TET Exam Form" }, name: "CTET / TET परीक्षा फॉर्म", fee: 150 }
+      { id: 'divyang_cert', label: { hi: "दिव्यांग प्रमाण पत्र", en: "Disability Certificate" }, name: "दिव्यांग प्रमाण पत्र आवेदन", fee: 100, dept: "समाज कल्याण विभाग (e-District)" },
+      { id: 'shadi_anudan', label: { hi: "शादी अनुदान योजना", en: "Marriage Financial Aid" }, name: "शादी अनुदान योजना", fee: 150, dept: "समाज कल्याण विभाग (e-District)" }
     ]
-  },
-  {
-    id: 'govt_schemes',
-    category: { hi: "सरकारी योजनाएं व PF", en: "Govt Schemes & PF" },
-    icon: Landmark,
-    color: "from-rose-600 to-red-600",
-    items: [
-      { id: 'pm_kisan_reg', label: { hi: "PM किसान e-KYC / पंजीकरण", en: "PM Kisan e-KYC / Registration" }, name: "PM किसान e-KYC / नया रजिस्ट्रेशन", fee: 60 },
-      { id: 'pf_claim', label: { hi: "PF / EPFO बैलेंस दावा", en: "PF / EPFO Withdrawal Claim" }, name: "PF / EPFO बैलेंस विड्रॉल (Claim)", fee: 200 },
-      { id: 'learning_dl', label: { hi: "लर्निंग ड्राइविंग लाइसेंस", en: "Learning Driving Licence" }, name: "ड्राइविंग लाइसेंस (Learning DL)", fee: 250 }
-    ]
-  },
-  {
-    id: 'jan_seva_instant',
-    category: { hi: "जनसेवा तत्काल सेवाएं", en: "Jan Seva Instant Services" },
-    icon: Sparkles,
-    color: "from-blue-600 via-indigo-600 to-purple-600",
-    items: JAN_SEVA_SERVICES.map(s => ({
-      id: s.id,
-      name: s.name,
-      label: { hi: s.name.replace(/\s*\([^)]*\)/g, '').trim(), en: s.name.replace(/^[^(]*\(([^)]*)\).*$/, '$1').trim() || s.name },
-      fee: s.fee,
-      isJanSeva: true,
-      dept: s.dept,
-      desc: s.desc
-    }))
   }
 ];
 
@@ -388,8 +358,8 @@ export default function ServiceApply({
             <h3 className="font-extrabold text-slate-800 text-xs uppercase tracking-wider">
               {language === 'hi' ? 'सेवा चुनें' : 'Select Service'}
             </h3>
-            <span className="text-[11px] font-bold text-slate-500">
-              {language === 'hi' ? 'कुल 50+ सेवाएं' : '50+ Services'}
+            <span className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+              {language === 'hi' ? 'e-District अधिकृत सेवाएं' : 'e-District Official Services'}
             </span>
           </div>
 

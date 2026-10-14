@@ -6,9 +6,15 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
-export default function EDistrictSuite() {
+export default function EDistrictSuite({ initialSubTab = 'verify', onBack }) {
   const { language } = useLanguage();
-  const [activeSubTab, setActiveSubTab] = useState('declaration'); // 'declaration', 'compressor', 'verify', 'bhulekh'
+  const [activeSubTab, setActiveSubTab] = useState(initialSubTab || 'verify');
+
+  React.useEffect(() => {
+    if (initialSubTab) {
+      setActiveSubTab(initialSubTab);
+    }
+  }, [initialSubTab]);
 
   // Self Declaration Form State
   const [declType, setDeclType] = useState('आय प्रमाण पत्र (Income)');
@@ -113,7 +119,16 @@ export default function EDistrictSuite() {
 
   return (
     <div className="space-y-6">
-      
+      {onBack && (
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 hover:text-orange-600 dark:hover:text-orange-400 hover:border-orange-400 transition cursor-pointer shadow-xs no-print"
+        >
+          <span>← {language === 'hi' ? 'डैशबोर्ड पर वापस जाएं' : 'Back to Dashboard'}</span>
+        </button>
+      )}
+
       {/* Top Banner */}
       <div className="bg-gradient-to-r from-orange-600 via-amber-600 to-orange-700 text-white rounded-2xl p-6 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>

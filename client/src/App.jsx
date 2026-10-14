@@ -97,7 +97,8 @@ export default function App() {
     return false;
   });
   const [sidebarSearchTerm, setSidebarSearchTerm] = useState('');
-  const [activeInstantToolId, setActiveInstantToolId] = useState('rc');
+  const [activeInstantToolId, setActiveInstantToolId] = useState('edistrict');
+  const [edistrictSubTab, setEdistrictSubTab] = useState('verify');
 
   const [broadcastNotice, setBroadcastNotice] = useState(null);
 
@@ -458,13 +459,45 @@ export default function App() {
           onClose={() => setSidebarOpen(false)}
           activeTab={
             mode === 'customer' 
-              ? (customerTab === 'tool' ? `tool-${activeInstantToolId}` : (customerTab === 'home' ? 'dashboard' : customerTab))
-              : (adminTab === 'tool' ? `tool-${activeInstantToolId}` : (adminTab === 'prints' ? 'queue' : adminTab))
+              ? (customerTab === 'tool' ? `tool-${activeInstantToolId}` : 
+                 customerTab === 'home' || customerTab === 'dashboard' ? 'dashboard' :
+                 customerTab === 'edistrict' ? (edistrictSubTab === 'verify' ? 'tool-edistrict' : edistrictSubTab === 'declaration' ? 'edistrict-decl' : edistrictSubTab === 'compressor' ? 'edistrict-packer' : edistrictSubTab === 'bhulekh' ? 'edistrict-bhulekh' : 'tool-edistrict') :
+                 customerTab === 'apply' ? 'edistrict-apply' :
+                 customerTab === 'print' ? 'print' :
+                 customerTab)
+              : (adminTab === 'tool' ? `tool-${activeInstantToolId}` : 
+                 adminTab === 'dashboard' ? 'dashboard' :
+                 adminTab === 'edistrict' ? (edistrictSubTab === 'verify' ? 'tool-edistrict' : edistrictSubTab === 'declaration' ? 'edistrict-decl' : edistrictSubTab === 'compressor' ? 'edistrict-packer' : edistrictSubTab === 'bhulekh' ? 'edistrict-bhulekh' : 'tool-edistrict') :
+                 adminTab === 'prints' ? 'queue' :
+                 adminTab === 'applications' ? 'edistrict-apply' :
+                 adminTab)
           }
           onSelectTab={(tabId) => {
             if (tabId === 'dashboard') {
               if (mode === 'customer') setCustomerTab('home');
               else setAdminTab('dashboard');
+            } else if (tabId === 'tool-edistrict' || tabId === 'edistrict-verify' || tabId === 'edistrict') {
+              setEdistrictSubTab('verify');
+              if (mode === 'customer') setCustomerTab('edistrict');
+              else setAdminTab('edistrict');
+            } else if (tabId === 'edistrict-decl') {
+              setEdistrictSubTab('declaration');
+              if (mode === 'customer') setCustomerTab('edistrict');
+              else setAdminTab('edistrict');
+            } else if (tabId === 'edistrict-packer') {
+              setEdistrictSubTab('compressor');
+              if (mode === 'customer') setCustomerTab('edistrict');
+              else setAdminTab('edistrict');
+            } else if (tabId === 'edistrict-bhulekh') {
+              setEdistrictSubTab('bhulekh');
+              if (mode === 'customer') setCustomerTab('edistrict');
+              else setAdminTab('edistrict');
+            } else if (tabId === 'edistrict-apply') {
+              if (mode === 'customer') setCustomerTab('apply');
+              else setAdminTab('applications');
+            } else if (tabId === 'print' || tabId === 'quick-print') {
+              if (mode === 'customer') setCustomerTab('print');
+              else setAdminTab('prints');
             } else if (tabId.startsWith('tool-')) {
               const toolKey = tabId.replace('tool-', '');
               setActiveInstantToolId(toolKey);
@@ -478,6 +511,8 @@ export default function App() {
               else setIsWalletOpen(true);
             } else if (tabId === 'queue') {
               setAdminTab('prints');
+            } else if (tabId === 'applications') {
+              setAdminTab('applications');
             } else if (tabId === 'cashbook') {
               setAdminTab('cashbook');
             } else if (tabId === 'udhar') {
@@ -724,10 +759,48 @@ export default function App() {
             {(customerTab === 'home' || customerTab === 'dashboard') && (
               <RekhaDashboard
                 onSelectTool={(toolKey) => {
-                  setActiveInstantToolId(toolKey);
-                  setCustomerTab('tool');
+                  if (toolKey === 'edistrict-verify') {
+                    setEdistrictSubTab('verify');
+                    setCustomerTab('edistrict');
+                  } else if (toolKey === 'edistrict-decl') {
+                    setEdistrictSubTab('declaration');
+                    setCustomerTab('edistrict');
+                  } else if (toolKey === 'edistrict-packer') {
+                    setEdistrictSubTab('compressor');
+                    setCustomerTab('edistrict');
+                  } else if (toolKey === 'edistrict-bhulekh') {
+                    setEdistrictSubTab('bhulekh');
+                    setCustomerTab('edistrict');
+                  } else if (toolKey === 'edistrict-apply') {
+                    setCustomerTab('apply');
+                  } else if (toolKey === 'quick-print' || toolKey === 'print') {
+                    setCustomerTab('print');
+                  } else {
+                    setActiveInstantToolId(toolKey);
+                    setCustomerTab('tool');
+                  }
                 }}
-                onNavigateTab={(tab) => setCustomerTab(tab)}
+                onNavigateTab={(tab) => {
+                  if (tab === 'edistrict-verify') {
+                    setEdistrictSubTab('verify');
+                    setCustomerTab('edistrict');
+                  } else if (tab === 'edistrict-decl') {
+                    setEdistrictSubTab('declaration');
+                    setCustomerTab('edistrict');
+                  } else if (tab === 'edistrict-packer') {
+                    setEdistrictSubTab('compressor');
+                    setCustomerTab('edistrict');
+                  } else if (tab === 'edistrict-bhulekh') {
+                    setEdistrictSubTab('bhulekh');
+                    setCustomerTab('edistrict');
+                  } else if (tab === 'edistrict-apply') {
+                    setCustomerTab('apply');
+                  } else if (tab === 'quick-print' || tab === 'print') {
+                    setCustomerTab('print');
+                  } else {
+                    setCustomerTab(tab);
+                  }
+                }}
                 selectedCafe={selectedCafe}
                 walletBalance={walletBalance}
                 sanchalakB2bBalance={sanchalakB2bBalance}
@@ -832,7 +905,11 @@ export default function App() {
             )}
 
             {customerTab === 'edistrict' && (
-              <EDistrictSuite />
+              <EDistrictSuite
+                initialSubTab={edistrictSubTab}
+                onBack={() => setCustomerTab('home')}
+                selectedCafe={selectedCafe}
+              />
             )}
 
             {customerTab === 'printportal' && (
@@ -882,10 +959,48 @@ export default function App() {
                 <RekhaDashboard
                   isOperator={true}
                   onSelectTool={(toolKey) => {
-                    setActiveInstantToolId(toolKey);
-                    setAdminTab('tool');
+                    if (toolKey === 'edistrict-verify') {
+                      setEdistrictSubTab('verify');
+                      setAdminTab('edistrict');
+                    } else if (toolKey === 'edistrict-decl') {
+                      setEdistrictSubTab('declaration');
+                      setAdminTab('edistrict');
+                    } else if (toolKey === 'edistrict-packer') {
+                      setEdistrictSubTab('compressor');
+                      setAdminTab('edistrict');
+                    } else if (toolKey === 'edistrict-bhulekh') {
+                      setEdistrictSubTab('bhulekh');
+                      setAdminTab('edistrict');
+                    } else if (toolKey === 'edistrict-apply') {
+                      setAdminTab('applications');
+                    } else if (toolKey === 'quick-print' || toolKey === 'print') {
+                      setAdminTab('prints');
+                    } else {
+                      setActiveInstantToolId(toolKey);
+                      setAdminTab('tool');
+                    }
                   }}
-                  onNavigateTab={(tab) => setAdminTab(tab)}
+                  onNavigateTab={(tab) => {
+                    if (tab === 'edistrict-verify') {
+                      setEdistrictSubTab('verify');
+                      setAdminTab('edistrict');
+                    } else if (tab === 'edistrict-decl') {
+                      setEdistrictSubTab('declaration');
+                      setAdminTab('edistrict');
+                    } else if (tab === 'edistrict-packer') {
+                      setEdistrictSubTab('compressor');
+                      setAdminTab('edistrict');
+                    } else if (tab === 'edistrict-bhulekh') {
+                      setEdistrictSubTab('bhulekh');
+                      setAdminTab('edistrict');
+                    } else if (tab === 'edistrict-apply') {
+                      setAdminTab('applications');
+                    } else if (tab === 'quick-print' || tab === 'print') {
+                      setAdminTab('prints');
+                    } else {
+                      setAdminTab(tab);
+                    }
+                  }}
                   selectedCafe={selectedCafe}
                   walletBalance={walletBalance}
                   sanchalakB2bBalance={sanchalakB2bBalance}
@@ -966,7 +1081,11 @@ export default function App() {
               )}
 
               {!isStaffAuth && adminTab === 'edistrict' && (
-                <EDistrictSuite />
+                <EDistrictSuite
+                  initialSubTab={edistrictSubTab}
+                  onBack={() => setAdminTab('dashboard')}
+                  selectedCafe={selectedCafe}
+                />
               )}
 
               {!isStaffAuth && adminTab === 'printportal' && (

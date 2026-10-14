@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { 
   Printer, FileText, Search, Bell, Sparkles, 
   ShieldCheck, Smartphone, Clock, ArrowRight, CheckCircle2, QrCode, MessageSquare,
-  Car, CreditCard, Landmark, Trash2, AlertCircle, ShieldAlert, Award
 } from 'lucide-react';
-import JanSevaModal, { JAN_SEVA_SERVICES } from './JanSevaModal';
 import { useLanguage } from '../context/LanguageContext';
 
 // =======================================================================
@@ -28,12 +26,7 @@ export default function CustomerHome({
   const [shredTokenInput, setShredTokenInput] = useState('');
   const [shredStatus, setShredStatus] = useState(null); // { type: 'success' | 'error', message: '' }
   const [isShredding, setIsShredding] = useState(false);
-  const [janSevaModalOpen, setJanSevaModalOpen] = useState(false);
-  const [selectedJanSevaId, setSelectedJanSevaId] = useState(null);
-  const [activeCategory, setActiveCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-
-  // 1-Click Immediate Document Shredder Handler
   const handleShredDocument = async (e) => {
     e.preventDefault();
     const token = shredTokenInput.trim();
@@ -225,127 +218,127 @@ export default function CustomerHome({
 
       </div>
 
-      {/* Featured Instant Services Section (RC, PVC Cards, e-District) */}
+      {/* Featured e-District Services Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 flex items-center gap-2">
+            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-amber-500" />
-              <span>{language === 'hi' ? 'लोकप्रिय डिजिटल सेवाएं' : 'Popular Digital Services'}</span>
+              <span>{language === 'hi' ? 'लोकप्रिय e-District सेवाएं' : 'Popular e-District Services'}</span>
             </h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {language === 'hi' 
-                ? '1-क्लिक वाहन RC डाउनलोड, CR-80 PVC कार्ड प्रिंटर एवं e-District स्वप्रमाणित सुइट' 
-                : '1-click vehicle RC download, CR-80 PVC card maker, and e-District verification suite'}
+                ? 'आय/जाति/निवास सत्यापन पर्ची, स्वप्रमाणित घोषणा पत्र और 100KB फाइल पैकर' 
+                : 'Income/Caste/Domicile verification, self-declaration forms and 100KB file packer'}
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 w-full max-w-full">
-          {/* Service 1: RC Download */}
+          {/* Service 1: e-District Verification */}
           <div
-            onClick={() => onNavigate('rc')}
-            className="group bg-gradient-to-br from-indigo-900 to-slate-900 text-white rounded-2xl p-3 sm:p-5 shadow-2xs hover:shadow-xl transition-all cursor-pointer border border-indigo-700/50 flex flex-col justify-between relative overflow-hidden active:scale-95"
+            onClick={() => onNavigate('edistrict')}
+            className="group bg-gradient-to-br from-violet-900 to-slate-900 text-white rounded-2xl p-3 sm:p-5 shadow-2xs hover:shadow-xl transition-all cursor-pointer border border-violet-700/50 flex flex-col justify-between relative overflow-hidden active:scale-95"
           >
             <div>
               <div className="flex items-center justify-between mb-2 sm:mb-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center border border-indigo-400/30 shrink-0">
-                  <Car className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-300" />
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-violet-500/20 text-violet-300 flex items-center justify-center border border-violet-400/30 shrink-0">
+                  <Award className="w-4 h-4 sm:w-5 sm:h-5 text-violet-300" />
                 </div>
                 <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
-                  {language === 'hi' ? 'लाइव' : 'Live'}
+                  {language === 'hi' ? 'सत्यापन' : 'Verify'}
                 </span>
               </div>
-              <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-indigo-200 transition truncate leading-tight">
-                {language === 'hi' ? 'वाहन RC' : 'Vehicle RC'}
+              <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-violet-200 transition truncate leading-tight">
+                {language === 'hi' ? 'सत्यापन पर्ची' : 'Verify Certificate'}
               </h3>
               <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
                 {language === 'hi' 
-                  ? 'गाड़ी नंबर दर्ज करें और आधिकारिक डिजिटल सेवा केंद्र वाटरमार्क सहित RC तुरंत प्राप्त करें।' 
-                  : 'Enter vehicle number and download official verified RC card with watermark.'}
+                  ? 'आय, जाति व निवास प्रमाण पत्र की प्रामाणिक डिजिटल सत्यापन पर्ची QR कोड सहित तुरंत निकालें।' 
+                  : 'Download authentic digital verification certificate slip with QR code.'}
               </p>
             </div>
-            <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-indigo-300">
-              <span>{language === 'hi' ? 'डाउनलोड ➔' : 'Download ➔'}</span>
+            <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-violet-300">
+              <span>{language === 'hi' ? 'खोलें ➔' : 'Open ➔'}</span>
               <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
             </div>
           </div>
 
-          {/* Service 2: PVC Card Maker */}
+          {/* Service 2: Self Declaration Form */}
           <div
-            onClick={() => onNavigate('printportal')}
+            onClick={() => onNavigate('edistrict')}
+            className="group bg-gradient-to-br from-emerald-900 to-slate-900 text-white rounded-2xl p-3 sm:p-5 shadow-2xs hover:shadow-xl transition-all cursor-pointer border border-emerald-700/50 flex flex-col justify-between relative overflow-hidden active:scale-95"
+          >
+            <div>
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center border border-emerald-400/30 shrink-0">
+                  <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-300" />
+                </div>
+                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
+                  {language === 'hi' ? 'घोषणा' : 'Form'}
+                </span>
+              </div>
+              <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-emerald-200 transition truncate leading-tight">
+                {language === 'hi' ? 'स्वप्रमाणित पत्र' : 'Declaration'}
+              </h3>
+              <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
+                {language === 'hi' 
+                  ? 'e-District फॉर्म हेतु अनिवार्य स्वप्रमाणित घोषणा पत्र 1-क्लिक में हिंदी पीडीएफ तैयार करें।' 
+                  : 'Generate mandatory self-declaration form in clean printable Hindi PDF.'}
+              </p>
+            </div>
+            <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-emerald-300">
+              <span>{language === 'hi' ? 'बनाएं ➔' : 'Create ➔'}</span>
+              <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
+            </div>
+          </div>
+
+          {/* Service 3: 100KB Document Packer */}
+          <div
+            onClick={() => onNavigate('edistrict')}
             className="group bg-gradient-to-br from-blue-900 to-slate-900 text-white rounded-2xl p-3 sm:p-5 shadow-2xs hover:shadow-xl transition-all cursor-pointer border border-blue-700/50 flex flex-col justify-between relative overflow-hidden active:scale-95"
           >
             <div>
               <div className="flex items-center justify-between mb-2 sm:mb-3">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center border border-blue-400/30 shrink-0">
-                  <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-blue-300" />
+                  <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-blue-300" />
                 </div>
-                <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
-                  CR-80
+                <span className="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
+                  &lt;100KB
                 </span>
               </div>
               <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-blue-200 transition truncate leading-tight">
-                {language === 'hi' ? 'PVC कार्ड' : 'PVC Card'}
+                {language === 'hi' ? '100KB पैकर' : '100KB Packer'}
               </h3>
               <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
                 {language === 'hi' 
-                  ? 'आधार, पैन, आयुष्मान कार्ड को 85.6mm×54mm कटिंग बॉर्डर के साथ PVC शीट पर प्रिंट करें।' 
-                  : 'Print Aadhaar, PAN, and Ayushman cards on PVC sheets with CR-80 border.'}
+                  ? 'फोटो < 20KB व दस्तावेज < 100KB में कंप्रेस करें ताकि e-District पर तुरंत अपलोड हो।' 
+                  : 'Auto-compress photo to <20KB and doc to <100KB for e-District portal upload.'}
               </p>
             </div>
             <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-blue-300">
-              <span>{language === 'hi' ? 'प्रिंट ➔' : 'Print ➔'}</span>
-              <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
-            </div>
-          </div>
-
-          {/* Service 3: e-District Suite */}
-          <div
-            onClick={() => onNavigate('edistrict')}
-            className="group bg-gradient-to-br from-emerald-950 to-slate-900 text-white rounded-2xl p-3 sm:p-5 shadow-2xs hover:shadow-xl transition-all cursor-pointer border border-emerald-700/50 flex flex-col justify-between relative overflow-hidden active:scale-95"
-          >
-            <div>
-              <div className="flex items-center justify-between mb-2 sm:mb-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center border border-emerald-400/30 shrink-0">
-                  <Landmark className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-300" />
-                </div>
-                <span className="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[9px] sm:text-[10px] font-black px-1.5 sm:px-2.5 py-0.5 rounded-full truncate">
-                  {language === 'hi' ? 'सत्यापन' : 'Verified'}
-                </span>
-              </div>
-              <h3 className="font-bold text-xs sm:text-base text-white group-hover:text-emerald-200 transition truncate leading-tight">
-                {language === 'hi' ? 'e-District' : 'e-District'}
-              </h3>
-              <p className="hidden sm:block text-xs text-slate-300 mt-1 leading-relaxed">
-                {language === 'hi' 
-                  ? 'स्वप्रमाणित घोषणा पत्र जनरेटर, 100KB दस्तावेज़ पैकर और 1-क्लिक ऑटो-फिलर बॉट।' 
-                  : 'Self declaration generator, 100KB document packer and auto-filler.'}
-              </p>
-            </div>
-            <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-bold text-emerald-300">
-              <span>{language === 'hi' ? 'खोलें ➔' : 'Open ➔'}</span>
+              <span>{language === 'hi' ? 'पैकर ➔' : 'Packer ➔'}</span>
               <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* 27 HIGH-DEMAND JAN SEVA DIRECT PRINT & SLIP SERVICES */}
+      {/* AUTHENTIC e-DISTRICT APPLICATION SERVICES */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div>
-            <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-xs font-bold mb-1 border border-blue-200">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>{language === 'hi' ? '100% प्रामाणिक पोर्टल • सीधी पर्ची व कार्ड सुविधा' : '100% Authentic Portals • Direct Slips & Smart Cards'}</span>
+            <div className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full text-xs font-bold mb-1 border border-emerald-200 dark:border-emerald-800">
+              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+              <span>{language === 'hi' ? '100% प्रामाणिक ई-डिस्ट्रिक्ट सेवाएं' : '100% Authentic e-District Services'}</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-              {language === 'hi' ? 'जनसेवा तत्काल पर्ची व कार्ड सेवाएं' : 'Jan Seva Instant Slips & Cards'}
+              {language === 'hi' ? 'e-District प्रमाण पत्र व राजस्व सेवाएं' : 'e-District Certificate & Revenue Services'}
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               {language === 'hi' 
-                ? 'राशन पर्ची, पेंशन, ई-पैन, UDID, एडवांस आधार, स्कॉलरशिप व भू-नक्शा — तत्काल प्रिंट पाएं!' 
-                : 'Ration slips, pensions, e-PAN, UDID, advance Aadhaar, scholarships & map slips.'}
+                ? 'आय, जाति, निवास, EWS, खतौनी नकल, हैसियत एवं दिव्यांग प्रमाण पत्र ऑनलाइन आवेदन करें।' 
+                : 'Apply online for Income, Caste, Domicile, EWS, Land Records, and Solvency certificates.'}
             </p>
           </div>
 
@@ -353,55 +346,33 @@ export default function CustomerHome({
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder={language === 'hi' ? 'सेवा का नाम खोजें...' : 'Search service name...'}
+              placeholder={language === 'hi' ? 'सेवा खोजें...' : 'Search e-District service...'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl text-xs focus:outline-none focus:border-blue-500 shadow-xs"
+              className="w-full pl-9 pr-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 rounded-xl text-xs focus:outline-none focus:border-emerald-500 shadow-xs"
             />
           </div>
         </div>
 
-        {/* Filter Chips */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs">
-          {[
-            { id: 'all', label: language === 'hi' ? 'सभी सेवाएं' : 'All Services' },
-            { id: 'card', label: language === 'hi' ? '🪪 कार्ड व पहचान' : '🪪 Cards & ID' },
-            { id: 'legal', label: language === 'hi' ? '📜 प्रमाण पत्र' : '📜 Certificates' },
-            { id: 'farmer', label: language === 'hi' ? '🌾 किसान व नक्शा' : '🌾 Farmer & Land' },
-            { id: 'utility', label: language === 'hi' ? '⚡ बिजली व वाहन' : '⚡ Utility & Vehicle' },
-            { id: 'student', label: language === 'hi' ? '🎓 छात्र व रोज़गार' : '🎓 Student & Jobs' },
-            { id: 'welfare', label: language === 'hi' ? '🤝 पेंशन व राशन' : '🤝 Welfare & Pension' }
-          ].map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              className={`px-3 py-1.5 rounded-xl font-bold whitespace-nowrap transition text-xs cursor-pointer ${
-                activeCategory === cat.id
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Services Grid (2 Columns on Mobile, 3 on Desktop) */}
+        {/* e-District Services Grid (2 Columns on Mobile, 3 on Desktop) */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3.5 w-full max-w-full">
-          {JAN_SEVA_SERVICES
-            .filter(s => {
-              const matchCat = activeCategory === 'all' || s.category === activeCategory;
-              const matchSearch = !searchTerm || s.name.toLowerCase().includes(searchTerm.toLowerCase()) || s.desc.toLowerCase().includes(searchTerm.toLowerCase());
-              return matchCat && matchSearch;
-            })
+          {[
+            { id: 'income_cert', name: language === 'hi' ? 'आय प्रमाण पत्र' : 'Income Certificate', dept: 'राजस्व परिषद (e-District)', fee: 80, desc: language === 'hi' ? 'तहसीलदार द्वारा जारी आधिकारिक आय प्रमाण पत्र (3 वर्ष वैधता)' : 'Official income certificate issued by Tehsildar' },
+            { id: 'caste_cert', name: language === 'hi' ? 'जाति प्रमाण पत्र' : 'Caste Certificate', dept: 'राजस्व परिषद (e-District)', fee: 80, desc: language === 'hi' ? 'OBC / SC / ST जाति प्रमाण पत्र सत्यापन एवं आवेदन' : 'OBC/SC/ST official caste certificate application' },
+            { id: 'niwas_cert', name: language === 'hi' ? 'निवास प्रमाण पत्र' : 'Domicile Certificate', dept: 'राजस्व परिषद (e-District)', fee: 80, desc: language === 'hi' ? 'मूल निवास / अधिवास प्रमाण पत्र (तहसीलदार द्वारा जारी)' : 'Permanent domicile certificate application' },
+            { id: 'ews_cert', name: language === 'hi' ? 'EWS प्रमाण पत्र' : 'EWS Certificate', dept: 'राजस्व परिषद (e-District)', fee: 120, desc: language === 'hi' ? 'सामान्य वर्ग 10% आर्थिक आरक्षण प्रमाण पत्र' : 'Economically Weaker Section certificate' },
+            { id: 'khatauni_copy', name: language === 'hi' ? 'खतौनी / भूलेख नकल' : 'Khatauni Land Record', dept: 'राजस्व परिषद (भूलेख)', fee: 30, desc: language === 'hi' ? 'खसरा-खतौनी प्रमाणित नकल एवं भूमि विवरण पर्ची' : 'Certified land records khatauni copy & slip' },
+            { id: 'haisiyat_cert', name: language === 'hi' ? 'हैसियत प्रमाण पत्र' : 'Solvency Certificate', dept: 'राजस्व परिषद (e-District)', fee: 250, desc: language === 'hi' ? 'ठेकेदारी व वित्तीय कार्यों हेतु हैसियत प्रमाण पत्र' : 'Solvency & net worth certificate for contracts' },
+            { id: 'birth_cert_rec', name: language === 'hi' ? 'जन्म प्रमाण पत्र सिफारिश' : 'Birth Certificate Rec.', dept: 'पंचायती राज विभाग', fee: 100, desc: language === 'hi' ? 'ग्राम पंचायत / नगर निकाय जन्म प्रमाण पत्र सिफारिश' : 'Gram panchayat birth certificate application' },
+            { id: 'death_cert_rec', name: language === 'hi' ? 'मृत्यु प्रमाण पत्र सिफारिश' : 'Death Certificate Rec.', dept: 'पंचायती राज विभाग', fee: 100, desc: language === 'hi' ? 'ग्राम पंचायत / नगर निकाय मृत्यु प्रमाण पत्र सिफारिश' : 'Gram panchayat death certificate application' },
+            { id: 'parivar_register', name: language === 'hi' ? 'परिवार रजिस्टर नकल' : 'Family Register Nakal', dept: 'पंचायती राज विभाग', fee: 50, desc: language === 'hi' ? 'कुटुम्ब / परिवार रजिस्टर की प्रमाणित नकल' : 'Certified family register (kutumb nakal) copy' }
+          ]
+            .filter(s => !searchTerm || s.name.toLowerCase().includes(searchTerm.toLowerCase()) || s.desc.toLowerCase().includes(searchTerm.toLowerCase()))
             .map((s) => (
               <div
                 key={s.id}
-                onClick={() => {
-                  setSelectedJanSevaId(s.id);
-                  setJanSevaModalOpen(true);
-                }}
-                className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between active:scale-95"
+                onClick={() => onNavigate('apply')}
+                className="group bg-white dark:bg-[#0f1d36] rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 hover:border-emerald-500 hover:shadow-lg transition-all cursor-pointer flex flex-col justify-between active:scale-95"
               >
                 <div>
                   <div className="flex items-start justify-between gap-1.5 mb-1.5 sm:mb-2">
@@ -412,7 +383,7 @@ export default function CustomerHome({
                       ₹{s.fee}
                     </span>
                   </div>
-                  <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm group-hover:text-blue-600 transition leading-snug truncate">
+                  <h3 className="font-bold text-slate-900 dark:text-white text-xs sm:text-sm group-hover:text-emerald-600 transition leading-snug truncate">
                     {s.name}
                   </h3>
                   <p className="hidden xs:block text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-relaxed">
@@ -420,8 +391,8 @@ export default function CustomerHome({
                   </p>
                 </div>
 
-                <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-blue-600 dark:text-blue-400">
-                  <span>{language === 'hi' ? 'प्रिंट ➔' : 'Print ➔'}</span>
+                <div className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                  <span>{language === 'hi' ? 'आवेदन करें ➔' : 'Apply Now ➔'}</span>
                   <ArrowRight className="w-3.5 h-3.5 hidden xs:inline group-hover:translate-x-1 transition" />
                 </div>
               </div>
@@ -565,15 +536,6 @@ export default function CustomerHome({
           )}
         </div>
       </div>
-
-      {/* Jan Seva Modal for 27 Services */}
-      <JanSevaModal
-        isOpen={janSevaModalOpen}
-        onClose={() => setJanSevaModalOpen(false)}
-        initialServiceId={selectedJanSevaId}
-        selectedCafe={selectedCafe}
-        settings={settings}
-      />
 
     </div>
   );

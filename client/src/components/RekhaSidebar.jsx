@@ -1,8 +1,7 @@
 import React from 'react';
 import { 
-  Home, Car, CreditCard, ShieldCheck, Award, FileText, Zap, 
-  Wallet, History, Printer, BookOpen, Users, QrCode, Settings, 
-  Sparkles, X, Search, Download, Sun, Moon
+  Home, Award, FileText, Wallet, History, Printer, BookOpen, 
+  Users, QrCode, Settings, Sparkles, Layers, X, Search, Sun, Moon
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -13,81 +12,35 @@ export const REKHA_NAV_CATEGORIES = [
       en: '1. Main Dashboard'
     },
     items: [
-      { id: 'dashboard', label: { hi: 'डैशबोर्ड (सभी सेवाएं)', en: 'Dashboard (All Services)' }, icon: Home }
+      { id: 'dashboard', label: { hi: 'डैशबोर्ड (होम)', en: 'Dashboard (Home)' }, icon: Home }
     ]
   },
   {
     category: {
-      hi: '2. वाहन / RTO सेवाएं',
-      en: '2. Vehicle / RTO Services'
+      hi: '2. e-District सेवाएं',
+      en: '2. e-District Services'
     },
     items: [
-      { id: 'tool-rc', label: { hi: 'वाहन RC टू PDF / PVC', en: 'Vehicle RC to PDF / PVC' }, icon: Car },
-      { id: 'tool-dl', label: { hi: 'ड्राइविंग लाइसेंस (DL) PVC', en: 'Driving Licence (DL) PVC' }, icon: Award },
-      { id: 'tool-challan', label: { hi: 'वाहन ई-चालान जांच एवं रसीद', en: 'Vehicle e-Challan & Receipt' }, icon: FileText }
+      { id: 'tool-edistrict', label: { hi: 'e-District सत्यापन प्रमाण पत्र', en: 'e-District Verification Slip' }, icon: Award },
+      { id: 'edistrict-decl', label: { hi: 'स्वप्रमाणित घोषणा पत्र जनरेटर', en: 'Self Declaration Form' }, icon: FileText },
+      { id: 'edistrict-packer', label: { hi: '100KB e-District फाइल पैकर', en: '100KB Document Packer' }, icon: Sparkles },
+      { id: 'edistrict-apply', label: { hi: 'e-District प्रमाण पत्र ऑनलाइन आवेदन', en: 'e-District Online Applications' }, icon: Layers },
+      { id: 'edistrict-bhulekh', label: { hi: 'भूलेख खसरा-खतौनी नकल', en: 'Bhulekh & Land Records' }, icon: Award }
     ]
   },
   {
     category: {
-      hi: '3. PAN कार्ड सेवाएं',
-      en: '3. PAN Card Services'
+      hi: '3. त्वरित दस्तावेज़ प्रिंट',
+      en: '3. Quick Document Print'
     },
     items: [
-      { id: 'tool-pan', label: { hi: 'इंस्टेंट पैन कार्ड CR-80 PVC', en: 'Instant PAN Card CR-80 PVC' }, icon: CreditCard },
-      { id: 'tool-epan', label: { hi: 'ई-पैन कार्ड डिजिटल डाउनलोड', en: 'e-PAN Card Digital Download' }, icon: Download }
+      { id: 'print', label: { hi: 'त्वरित प्रिंटिंग सेवा', en: 'Quick Document Print' }, icon: Printer }
     ]
   },
   {
     category: {
-      hi: '4. आधार कार्ड सेवाएं',
-      en: '4. Aadhaar Card Services'
-    },
-    items: [
-      { id: 'tool-aadhaar', label: { hi: 'एडवांस आधार CR-80 PVC कार्ड', en: 'Advance Aadhaar CR-80 PVC' }, icon: ShieldCheck }
-    ]
-  },
-  {
-    category: {
-      hi: '5. वोटर कार्ड सेवाएं',
-      en: '5. Voter Card Services'
-    },
-    items: [
-      { id: 'tool-voter', label: { hi: 'डिजिटल वोटर स्मार्ट कार्ड', en: 'Digital Voter Smart Card' }, icon: Award }
-    ]
-  },
-  {
-    category: {
-      hi: '6. राशन व आयुष्मान सेवाएं',
-      en: '6. Food & Health Welfare'
-    },
-    items: [
-      { id: 'tool-ayushman', label: { hi: 'आयुष्मान भारत गोल्डन कार्ड', en: 'Ayushman Bharat Golden Card' }, icon: Sparkles },
-      { id: 'tool-ration', label: { hi: 'राशन कार्ड पर्चा / NFSA स्लिप', en: 'Ration Card / NFSA Slip' }, icon: FileText }
-    ]
-  },
-  {
-    category: {
-      hi: '7. बिजली बिल व रसीद सेवाएं',
-      en: '7. Electricity & Receipts'
-    },
-    items: [
-      { id: 'tool-electricity', label: { hi: 'बिजली बिल भुगतान रसीद', en: 'Electricity Bill Receipt' }, icon: Zap },
-      { id: 'tool-receipt', label: { hi: 'जन सेवा केंद्र बिल रसीद', en: 'Cyber Cafe Cash Receipt' }, icon: FileText }
-    ]
-  },
-  {
-    category: {
-      hi: '8. e-District सत्यापन',
-      en: '8. e-District Verification'
-    },
-    items: [
-      { id: 'tool-edistrict', label: { hi: 'e-District सत्यापन प्रमाण पत्र', en: 'e-District Verification Slip' }, icon: Award }
-    ]
-  },
-  {
-    category: {
-      hi: '9. वॉलेट एवं पासबुक',
-      en: '9. Wallet & Passbook'
+      hi: '4. वॉलेट एवं पासबुक',
+      en: '4. Wallet & Passbook'
     },
     items: [
       { id: 'wallet', label: { hi: 'वॉलेट एवं पासबुक विवरण', en: 'Wallet & Passbook Details' }, icon: Wallet }
@@ -95,11 +48,11 @@ export const REKHA_NAV_CATEGORIES = [
   },
   {
     category: {
-      hi: '10. प्रिंट एवं ऑर्डर हिस्ट्री',
-      en: '10. Print & Order History'
+      hi: '5. आवेदन एवं प्रिंट हिस्ट्री',
+      en: '5. Applications & History'
     },
     items: [
-      { id: 'orders', label: { hi: 'प्रिंट एवं ऑर्डर हिस्ट्री (रीप्रिंट)', en: 'Print & Order History (Reprint)' }, icon: History }
+      { id: 'orders', label: { hi: 'आवेदन एवं प्रिंट हिस्ट्री', en: 'Applications & History' }, icon: History }
     ]
   }
 ];

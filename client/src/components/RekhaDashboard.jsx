@@ -7,118 +7,132 @@ import {
 import { useLanguage } from '../context/LanguageContext';
 
 export const DIRECT_SERVICES_TILES = [
-  { id: 'rc', label: { hi: 'वाहन RC', en: 'Vehicle RC' }, sub: { hi: 'CR-80 PVC', en: 'CR-80 PVC' }, icon: Car, color: 'from-blue-600 to-indigo-600', wholesale: '₹10', retail: '₹20' },
-  { id: 'pan', label: { hi: 'पैन कार्ड', en: 'PAN Card' }, sub: { hi: 'CR-80 PVC', en: 'CR-80 PVC' }, icon: CreditCard, color: 'from-teal-600 to-emerald-600', wholesale: '₹10', retail: '₹25' },
-  { id: 'aadhaar', label: { hi: 'आधार PVC', en: 'Aadhaar PVC' }, sub: { hi: 'UIDAI Smart', en: 'UIDAI Smart' }, icon: ShieldCheck, color: 'from-red-600 to-rose-600', wholesale: '₹15', retail: '₹30' },
-  { id: 'voter', label: { hi: 'वोटर कार्ड', en: 'Voter ID' }, sub: { hi: 'EPIC Smart', en: 'EPIC Smart' }, icon: Award, color: 'from-amber-600 to-orange-600', wholesale: '₹15', retail: '₹30' },
-  { id: 'ayushman', label: { hi: 'आयुष्मान', en: 'Ayushman' }, sub: { hi: 'PM-JAY कार्ड', en: 'PM-JAY Card' }, icon: Sparkles, color: 'from-yellow-600 to-amber-600', wholesale: '₹10', retail: '₹25' },
-  { id: 'ration', label: { hi: 'राशन पर्ची', en: 'Ration Slip' }, sub: { hi: 'NFSA स्लिप', en: 'NFSA Slip' }, icon: FileText, color: 'from-green-600 to-emerald-600', wholesale: '₹10', retail: '₹20' },
-  { id: 'electricity', label: { hi: 'बिजली बिल', en: 'Electricity Bill' }, sub: { hi: 'भुगतान रसीद', en: 'Payment Slip' }, icon: Zap, color: 'from-cyan-600 to-blue-600', wholesale: '₹5', retail: '₹15' },
-  { id: 'edistrict', label: { hi: 'e-District', en: 'e-District' }, sub: { hi: 'सत्यापन पर्ची', en: 'Verification Slip' }, icon: Award, color: 'from-violet-600 to-purple-600', wholesale: '₹15', retail: '₹30' },
-  { id: 'dl', label: { hi: 'DL सारथी', en: 'DL Sarathi' }, sub: { hi: 'स्मार्ट कार्ड', en: 'Smart Card' }, icon: Car, color: 'from-indigo-600 to-blue-700', wholesale: '₹15', retail: '₹30' },
-  { id: 'challan', label: { hi: 'ई-चालान', en: 'e-Challan' }, sub: { hi: 'जांच व रसीद', en: 'Check & Slip' }, icon: FileText, color: 'from-rose-600 to-red-600', wholesale: '₹10', retail: '₹20' },
-  { id: 'epan', label: { hi: 'e-PAN', en: 'e-PAN' }, sub: { hi: 'डाउनलोड', en: 'Download' }, icon: Download, color: 'from-teal-600 to-emerald-700', wholesale: '₹10', retail: '₹20' },
-  { id: 'receipt', label: { hi: 'कैफे रसीद', en: 'Cafe Receipt' }, sub: { hi: 'टैक्स स्लिप', en: 'Tax Slip' }, icon: FileText, color: 'from-purple-600 to-indigo-700', wholesale: '₹5', retail: '₹15' }
+  { 
+    id: 'edistrict-verify', 
+    label: { hi: 'प्रमाण पत्र सत्यापन', en: 'Certificate Verification' }, 
+    sub: { hi: 'आय / जाति / निवास', en: 'Income/Caste/Domicile' }, 
+    icon: Award, 
+    color: 'from-violet-600 to-purple-600', 
+    wholesale: '₹15', 
+    retail: '₹30' 
+  },
+  { 
+    id: 'edistrict-decl', 
+    label: { hi: 'स्वप्रमाणित घोषणा पत्र', en: 'Self Declaration Form' }, 
+    sub: { hi: '1-क्लिक जनरेटर', en: '1-Click Generator' }, 
+    icon: FileText, 
+    color: 'from-emerald-600 to-teal-600', 
+    wholesale: '₹10', 
+    retail: '₹20' 
+  },
+  { 
+    id: 'edistrict-packer', 
+    label: { hi: '100KB फाइल पैकर', en: '100KB Doc Packer' }, 
+    sub: { hi: 'फोटो <20KB, डॉक <100KB', en: 'Photo <20KB, Doc <100KB' }, 
+    icon: Sparkles, 
+    color: 'from-blue-600 to-indigo-600', 
+    wholesale: 'निःशुल्क', 
+    retail: 'निःशुल्क' 
+  },
+  { 
+    id: 'edistrict-apply', 
+    label: { hi: 'ऑनलाइन फॉर्म आवेदन', en: 'Online Apply Desk' }, 
+    sub: { hi: 'आय, जाति, निवास फॉर्म', en: 'Income, Caste, Domicile' }, 
+    icon: Layers, 
+    color: 'from-amber-600 to-orange-600', 
+    wholesale: '₹50', 
+    retail: '₹100' 
+  },
+  { 
+    id: 'edistrict-bhulekh', 
+    label: { hi: 'भूलेख खतौनी नकल', en: 'Bhulekh Land Records' }, 
+    sub: { hi: 'खसरा व खतौनी जांच', en: 'Khasra & Khatauni Slip' }, 
+    icon: Award, 
+    color: 'from-cyan-600 to-blue-700', 
+    wholesale: '₹10', 
+    retail: '₹20' 
+  },
+  { 
+    id: 'quick-print', 
+    label: { hi: 'त्वरित दस्तावेज़ प्रिंट', en: 'Quick Document Print' }, 
+    sub: { hi: 'लाइव प्रिंटिंग सेवा', en: 'Live Document Print' }, 
+    icon: Printer, 
+    color: 'from-slate-700 to-slate-900', 
+    wholesale: '₹2/पेज', 
+    retail: '₹5/पेज' 
+  }
 ];
 
 export const REKHA_CATEGORIES_CONFIG = [
   {
-    id: 'vehicle',
-    title: { hi: 'वाहन व RTO सेवाएं', en: 'Vehicle & RTO Services' },
-    desc: { hi: 'RC, ड्राइविंग लाइसेंस एवं ई-चालान रसीद सेवा', en: 'Parivahan RC, Driving Licence & e-Challan Receipts' },
+    id: 'edistrict-verify',
+    title: { hi: 'e-District प्रमाण पत्र सत्यापन', en: 'e-District Verification Slips' },
+    desc: { hi: 'आय, जाति एवं निवास प्रमाण पत्र डिजिटल सत्यापन पर्ची QR कोड सहित', en: 'Income, Caste & Domicile Digital Verification Certificate Slip with QR' },
     toolsCount: 3,
-    icon: Car,
-    color: 'from-blue-600 via-indigo-600 to-blue-700',
-    lightBg: 'bg-blue-50/70 dark:bg-blue-950/30',
-    borderColor: 'border-blue-200 dark:border-blue-900/60',
-    accentText: 'text-blue-600 dark:text-blue-400',
-    wholesaleBadge: { hi: 'थोक: ₹10 - ₹200', en: 'Wholesale: ₹10 - ₹200' },
-    retailBadge: { hi: 'खुदरा: ₹20 - ₹250', en: 'Retail: ₹20 - ₹250' },
-    defaultToolId: 'rc'
-  },
-  {
-    id: 'pan',
-    title: { hi: 'पैन कार्ड सेवाएं', en: 'PAN Card Services' },
-    desc: { hi: 'CR-80 PVC पैन कार्ड एवं ई-पैन डिजिटल डाउनलोड', en: 'CR-80 PVC PAN Card & e-PAN Digital Download' },
-    toolsCount: 2,
-    icon: CreditCard,
-    color: 'from-teal-600 via-emerald-600 to-teal-700',
-    lightBg: 'bg-teal-50/70 dark:bg-teal-950/30',
-    borderColor: 'border-teal-200 dark:border-teal-900/60',
-    accentText: 'text-teal-600 dark:text-teal-400',
-    wholesaleBadge: { hi: 'थोक: ₹10 - ₹15', en: 'Wholesale: ₹10 - ₹15' },
-    retailBadge: { hi: 'खुदरा: ₹25 - ₹30', en: 'Retail: ₹25 - ₹30' },
-    defaultToolId: 'pan'
-  },
-  {
-    id: 'aadhaar',
-    title: { hi: 'आधार कार्ड सेवाएं', en: 'Aadhaar Card Services' },
-    desc: { hi: 'एडवांस CR-80 PVC आधार कार्ड व QR लेआउट', en: 'Advance CR-80 PVC Aadhaar Card with QR' },
-    toolsCount: 1,
-    icon: ShieldCheck,
-    color: 'from-rose-600 via-red-600 to-rose-700',
-    lightBg: 'bg-rose-50/70 dark:bg-rose-950/30',
-    borderColor: 'border-rose-200 dark:border-rose-900/60',
-    accentText: 'text-rose-600 dark:text-rose-400',
-    wholesaleBadge: { hi: 'थोक: ₹15', en: 'Wholesale: ₹15' },
-    retailBadge: { hi: 'खुदरा: ₹30', en: 'Retail: ₹30' },
-    defaultToolId: 'aadhaar'
-  },
-  {
-    id: 'voter',
-    title: { hi: 'वोटर कार्ड सेवाएं', en: 'Voter ID Services' },
-    desc: { hi: 'डिजिटल वोटर स्मार्ट कार्ड', en: 'Digital Voter Smart Card' },
-    toolsCount: 1,
     icon: Award,
-    color: 'from-amber-600 via-orange-600 to-amber-700',
-    lightBg: 'bg-amber-50/70 dark:bg-amber-950/30',
-    borderColor: 'border-amber-200 dark:border-amber-900/60',
-    accentText: 'text-amber-600 dark:text-amber-400',
-    wholesaleBadge: { hi: 'थोक: ₹15', en: 'Wholesale: ₹15' },
-    retailBadge: { hi: 'खुदरा: ₹30', en: 'Retail: ₹30' },
-    defaultToolId: 'voter'
-  },
-  {
-    id: 'welfare',
-    title: { hi: 'राशन व आयुष्मान सेवाएं', en: 'Food & Health Welfare' },
-    desc: { hi: 'PM-JAY गोल्डन कार्ड व NFSA राशन पर्ची', en: 'PM-JAY Golden Card & NFSA Ration Slips' },
-    toolsCount: 2,
-    icon: Sparkles,
-    color: 'from-emerald-600 via-green-600 to-emerald-700',
-    lightBg: 'bg-emerald-50/70 dark:bg-emerald-950/30',
-    borderColor: 'border-emerald-200 dark:border-emerald-900/60',
-    accentText: 'text-emerald-600 dark:text-emerald-400',
-    wholesaleBadge: { hi: 'थोक: ₹10 - ₹15', en: 'Wholesale: ₹10 - ₹15' },
-    retailBadge: { hi: 'खुदरा: ₹25 - ₹30', en: 'Retail: ₹25 - ₹30' },
-    defaultToolId: 'ayushman'
-  },
-  {
-    id: 'utility',
-    title: { hi: 'बिल व रसीद सेवाएं', en: 'Electricity & Receipts' },
-    desc: { hi: 'बिजली बिल भुगतान रसीद व काउंटर कैश स्लिप', en: 'Electricity Bill Receipt & Counter Cash Slips' },
-    toolsCount: 2,
-    icon: Zap,
-    color: 'from-cyan-600 via-blue-600 to-cyan-700',
-    lightBg: 'bg-cyan-50/70 dark:bg-cyan-950/30',
-    borderColor: 'border-cyan-200 dark:border-cyan-900/60',
-    accentText: 'text-cyan-600 dark:text-cyan-400',
-    wholesaleBadge: { hi: 'थोक: ₹5 - ₹10', en: 'Wholesale: ₹5 - ₹10' },
-    retailBadge: { hi: 'खुदरा: ₹15 - ₹20', en: 'Retail: ₹15 - ₹20' },
-    defaultToolId: 'electricity'
-  },
-  {
-    id: 'edistrict',
-    title: { hi: 'e-District सेवाएं', en: 'e-District Verification' },
-    desc: { hi: 'आय/जाति/निवास डिजिटल सत्यापन प्रमाण पत्र', en: 'Income/Caste/Domicile Digital Verification Slips' },
-    toolsCount: 1,
-    icon: FileText,
     color: 'from-violet-600 via-purple-600 to-violet-700',
     lightBg: 'bg-violet-50/70 dark:bg-violet-950/30',
     borderColor: 'border-violet-200 dark:border-violet-900/60',
     accentText: 'text-violet-600 dark:text-violet-400',
     wholesaleBadge: { hi: 'थोक: ₹15', en: 'Wholesale: ₹15' },
     retailBadge: { hi: 'खुदरा: ₹30', en: 'Retail: ₹30' },
-    defaultToolId: 'edistrict'
+    defaultToolId: 'edistrict-verify'
+  },
+  {
+    id: 'edistrict-decl',
+    title: { hi: 'स्वप्रमाणित घोषणा पत्र जनरेटर', en: 'Self Declaration Form Generator' },
+    desc: { hi: 'e-District आय, जाति व निवास आवेदन हेतु आवश्यक स्वप्रमाणित घोषणा पत्र', en: 'Mandatory Self-Declaration Form PDF for e-District Certificate Applications' },
+    toolsCount: 3,
+    icon: FileText,
+    color: 'from-emerald-600 via-teal-600 to-emerald-700',
+    lightBg: 'bg-emerald-50/70 dark:bg-emerald-950/30',
+    borderColor: 'border-emerald-200 dark:border-emerald-900/60',
+    accentText: 'text-emerald-600 dark:text-emerald-400',
+    wholesaleBadge: { hi: 'थोक: ₹10', en: 'Wholesale: ₹10' },
+    retailBadge: { hi: 'खुदरा: ₹20', en: 'Retail: ₹20' },
+    defaultToolId: 'edistrict-decl'
+  },
+  {
+    id: 'edistrict-packer',
+    title: { hi: '100KB e-District फाइल पैकर', en: '100KB / 20KB Document Packer' },
+    desc: { hi: 'e-District पोर्टल नियमों अनुसार फोटो < 20KB व दस्तावेज < 100KB ऑटो कंप्रेसर', en: 'Instant Image & Document Compressor for e-District Upload Standards' },
+    toolsCount: 2,
+    icon: Sparkles,
+    color: 'from-blue-600 via-indigo-600 to-blue-700',
+    lightBg: 'bg-blue-50/70 dark:bg-blue-950/30',
+    borderColor: 'border-blue-200 dark:border-blue-900/60',
+    accentText: 'text-blue-600 dark:text-blue-400',
+    wholesaleBadge: { hi: 'निःशुल्क टूल', en: 'Free Tool' },
+    retailBadge: { hi: 'निःशुल्क सेवा', en: 'Free Service' },
+    defaultToolId: 'edistrict-packer'
+  },
+  {
+    id: 'edistrict-apply',
+    title: { hi: 'e-District प्रमाण पत्र ऑनलाइन आवेदन', en: 'e-District Online Certificate Applications' },
+    desc: { hi: 'आय प्रमाण पत्र, जाति प्रमाण पत्र, निवास प्रमाण पत्र, दिव्यांग व हैसियत प्रमाण पत्र', en: 'Official Online Application Desk for Income, Caste, Domicile Certificates' },
+    toolsCount: 6,
+    icon: Layers,
+    color: 'from-amber-600 via-orange-600 to-amber-700',
+    lightBg: 'bg-amber-50/70 dark:bg-amber-950/30',
+    borderColor: 'border-amber-200 dark:border-amber-900/60',
+    accentText: 'text-amber-600 dark:text-amber-400',
+    wholesaleBadge: { hi: 'थोक: ₹50', en: 'Wholesale: ₹50' },
+    retailBadge: { hi: 'खुदरा: ₹100', en: 'Retail: ₹100' },
+    defaultToolId: 'edistrict-apply'
+  },
+  {
+    id: 'edistrict-bhulekh',
+    title: { hi: 'भूलेख खसरा-खतौनी नकल', en: 'Bhulekh Land Records (Khatauni)' },
+    desc: { hi: 'राजस्व परिषद उत्तर प्रदेश / राज्य भूलेख खतौनी सत्यापन एवं मुद्रण पर्ची', en: 'UP & State Land Records Khatauni Verification and Print Slip' },
+    toolsCount: 1,
+    icon: Award,
+    color: 'from-cyan-600 via-teal-600 to-cyan-700',
+    lightBg: 'bg-cyan-50/70 dark:bg-cyan-950/30',
+    borderColor: 'border-cyan-200 dark:border-cyan-900/60',
+    accentText: 'text-cyan-600 dark:text-cyan-400',
+    wholesaleBadge: { hi: 'थोक: ₹10', en: 'Wholesale: ₹10' },
+    retailBadge: { hi: 'खुदरा: ₹20', en: 'Retail: ₹20' },
+    defaultToolId: 'edistrict-bhulekh'
   }
 ];
 
