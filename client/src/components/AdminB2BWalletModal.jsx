@@ -200,43 +200,68 @@ export default function AdminB2BWalletModal({
               </div>
 
               {/* Super Admin Payment target & Real Suman Devi QR Code */}
-              <div className="bg-white p-3 rounded-2xl border border-indigo-200 text-center space-y-2 flex flex-col items-center shadow-xs">
-                <div className="flex items-center gap-1.5 text-xs font-black text-slate-800">
-                  <span>खाताधारक:</span>
-                  <span className="text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">Suman Devi ✓</span>
+              <div className="bg-gradient-to-b from-white via-indigo-50/40 to-slate-50 dark:from-slate-800 dark:to-slate-900 p-4 rounded-3xl border border-indigo-300 dark:border-indigo-700 text-center space-y-3 flex flex-col items-center shadow-lg backdrop-blur-sm">
+                {/* Merchant Badge Header */}
+                <div className="flex items-center justify-between w-full px-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-indigo-600 text-white font-black flex items-center justify-center text-xs shadow-xs">
+                      SD
+                    </div>
+                    <div className="text-left">
+                      <div className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1">
+                        <span>Suman Devi</span>
+                        <span className="text-indigo-600 dark:text-indigo-400 text-xs font-bold">✓</span>
+                      </div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">केंद्रीय B2B मर्चेंट (HDFC Bank)</div>
+                    </div>
+                  </div>
+                  <span className="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-950/70 text-indigo-800 dark:text-indigo-300 rounded-lg text-[10px] font-black border border-indigo-200 dark:border-indigo-800">
+                    0% कमीशन B2B
+                  </span>
                 </div>
-                <div className="p-1.5 bg-white rounded-xl shadow-md border-2 border-indigo-400 inline-block">
-                  <img 
-                    src="/images/superadmin_qr.jpg" 
-                    alt="Suman Devi UPI QR" 
-                    className="w-48 h-auto rounded-lg object-contain"
+
+                {/* Clean Vector QR in Translucent Rounded Card */}
+                <div className="p-3 bg-white rounded-2xl shadow-md border border-slate-200/90 inline-flex flex-col items-center">
+                  <QRCodeSVG 
+                    value={`upi://pay?pa=8006518960@pthdfc&pn=Suman%20Devi&am=${amount || 500}&cu=INR&tn=B2B-Wallet-Topup`}
+                    size={175}
+                    level="H"
+                    includeMargin={false}
                   />
+                  <span className="text-[10px] font-mono font-bold text-slate-600 mt-2 tracking-wider">
+                    ₹{amount || 500} • स्कैन करें
+                  </span>
                 </div>
-                <div className="flex items-center justify-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl w-full">
-                  <span className="text-[10px] text-slate-500 font-bold">UPI ID:</span>
-                  <span className="font-mono font-black text-xs text-indigo-700 select-all">8006518960@pthdfc</span>
+
+                {/* UPI ID Pill & Copy */}
+                <div className="flex items-center justify-between gap-2 bg-white dark:bg-slate-800 border border-indigo-200 dark:border-slate-700 px-3 py-1.5 rounded-xl w-full">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">UPI ID:</span>
+                  <span className="font-mono font-black text-xs text-indigo-700 dark:text-indigo-400 select-all">8006518960@pthdfc</span>
                   <button
                     type="button"
                     onClick={() => {
                       navigator.clipboard.writeText('8006518960@pthdfc');
                       alert('UPI ID (8006518960@pthdfc) कॉपी हो गई है!');
                     }}
-                    className="text-[10px] bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded-md font-bold transition"
+                    className="text-[10px] bg-indigo-100 dark:bg-indigo-950 hover:bg-indigo-200 text-indigo-800 dark:text-indigo-300 px-2.5 py-0.5 rounded-md font-bold transition cursor-pointer"
                   >
                     कॉपी करें
                   </button>
                 </div>
+
+                {/* Official UPI Badges */}
                 <div className="flex items-center gap-1.5 flex-wrap justify-center">
-                  <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[10px] font-black border border-indigo-200">PhonePe</span>
-                  <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md text-[10px] font-black border border-blue-200">Google Pay</span>
-                  <span className="px-2 py-0.5 bg-sky-50 text-sky-700 rounded-md text-[10px] font-black border border-sky-200">Paytm</span>
-                  <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-md text-[10px] font-black border border-emerald-200">BHIM UPI</span>
+                  <span className="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 rounded-md text-[10px] font-black border border-indigo-200 dark:border-indigo-800">PhonePe</span>
+                  <span className="px-2 py-0.5 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 rounded-md text-[10px] font-black border border-blue-200 dark:border-blue-800">Google Pay</span>
+                  <span className="px-2 py-0.5 bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 rounded-md text-[10px] font-black border border-sky-200 dark:border-sky-800">Paytm</span>
+                  <span className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 rounded-md text-[10px] font-black border border-emerald-200 dark:border-emerald-800">BHIM UPI</span>
                 </div>
+
                 <a
                   href={`upi://pay?pa=8006518960@pthdfc&pn=Suman%20Devi&am=${amount || 500}&cu=INR&tn=B2B-Wallet-Topup`}
-                  className="inline-flex items-center gap-1 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-xs transition"
+                  className="inline-flex items-center justify-center gap-1 w-full py-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white rounded-xl text-xs font-black shadow-xs transition cursor-pointer"
                 >
-                  ⚡ मोबाइल UPI ऐप से ₹{amount || 500} भेजें
+                  ⚡ मोबाइल UPI ऐप से सीधे ₹{amount || 500} भेजें
                 </a>
               </div>
 

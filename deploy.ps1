@@ -18,6 +18,9 @@ if (-not (Test-Path "$PSScriptRoot\client\dist\api")) {
     New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\api" -Force
 }
 Copy-Item -Path "$PSScriptRoot\client\public\api\index.php" -Destination "$PSScriptRoot\client\dist\api\index.php" -Force
+if (Test-Path "$PSScriptRoot\client\public\api\data") {
+    Copy-Item -Path "$PSScriptRoot\client\public\api\data" -Destination "$PSScriptRoot\client\dist\api\data" -Recurse -Force
+}
 if (Test-Path "$PSScriptRoot\client\public\CyberCafe_Portal.apk") {
     Copy-Item -Path "$PSScriptRoot\client\public\CyberCafe_Portal.apk" -Destination "$PSScriptRoot\client\dist\CyberCafe_Portal.apk" -Force
 }

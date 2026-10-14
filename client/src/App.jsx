@@ -911,7 +911,7 @@ export default function App() {
                 onOpenCustomerProfile={() => setRoleAuthModalConfig({ isOpen: true, type: 'customer' })}
                 onOpenShopkeeperLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'cafe' })}
                 onOpenSuperAdminLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'superadmin' })}
-                onOpenCustomerLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'customer' })}
+                onOpenCustomerLogin={(toolId) => setRoleAuthModalConfig({ isOpen: true, type: 'customer', pendingTool: toolId || null })}
                 customerSession={customerSession}
                 disabledTools={toolSettings.disabledTools}
                 toolStatus={toolSettings.toolStatus}
