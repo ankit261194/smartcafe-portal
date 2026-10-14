@@ -8,6 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const DATA_FILE = path.join(__dirname, 'data', 'store.json');
+const USERS_MASTER_FILE = path.join(__dirname, 'data', 'users_master.json');
 const dataDir = path.join(__dirname, 'data');
 const backupsDir = path.join(dataDir, 'backups');
 const uploadsDir = path.join(__dirname, '..', 'uploads');
@@ -551,6 +552,30 @@ export function getStore() {
       loadedStore.users = [];
       mutated = true;
     }
+
+    // Immune Vault: Restore and merge all persistent users & passwords from users_master.json
+    if (fs.existsSync(USERS_MASTER_FILE)) {
+      try {
+        const masterUsers = JSON.parse(fs.readFileSync(USERS_MASTER_FILE, 'utf-8'));
+        if (Array.isArray(masterUsers)) {
+          masterUsers.forEach(mu => {
+            const idx = loadedStore.users.findIndex(u => u.phone === mu.phone || u.id === mu.id);
+            if (idx === -1) {
+              loadedStore.users.push(mu);
+              mutated = true;
+            } else {
+              // Ensure password is never lost or emptied
+              if (mu.password && (!loadedStore.users[idx].password || loadedStore.users[idx].password === '1234')) {
+                loadedStore.users[idx].password = mu.password;
+                mutated = true;
+              }
+            }
+          });
+        }
+      } catch (e) {
+        console.warn('[DB] Could not load users_master.json:', e.message);
+      }
+    }
     (loadedStore.cafes || []).forEach(c => {
       if (!loadedStore.users.some(u => u.phone === c.phone || u.id === c.id)) {
         loadedStore.users.push({
@@ -656,6 +681,15 @@ export function saveStore(store) {
     try {
       fs.copyFileSync(DATA_FILE, path.join(dataDir, 'store.json.bak'));
     } catch {}
+
+    // 4. Immune Vault: Sync persistent users & passwords to users_master.json
+    if (Array.isArray(store.users) && store.users.length > 0) {
+      try {
+        fs.writeFileSync(USERS_MASTER_FILE, JSON.stringify(store.users, null, 2), 'utf-8');
+      } catch (e) {
+        console.warn('[DB] Could not sync users_master.json:', e.message);
+      }
+    }
 
     // 4. Rate-limited timestamped snapshotting
     const now = Date.now();

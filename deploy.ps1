@@ -30,6 +30,8 @@ if (s1.users) s1.users = mergedUsers;
 if (s2.users) s2.users = mergedUsers;
 fs.writeFileSync(p1, JSON.stringify(s1, null, 2));
 fs.writeFileSync(p2, JSON.stringify(s2, null, 2));
+fs.writeFileSync('server/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
+fs.writeFileSync('client/public/api/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
 console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts.');
 "
 Copy-Item -Path "$PSScriptRoot\client\public\.htaccess" -Destination "$PSScriptRoot\client\dist\.htaccess" -Force
