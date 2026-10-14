@@ -228,9 +228,9 @@ export default function CustomerWalletModal({
                     <div className="text-left">
                       <div className="text-xs font-black text-slate-900 dark:text-white flex items-center gap-1">
                         <span>Suman Devi</span>
-                        <span className="text-emerald-600 dark:text-emerald-400 text-xs font-bold">✓</span>
+                        <span className="text-emerald-600 dark:text-emerald-400 text-xs font-bold">✓ Verified</span>
                       </div>
-                      <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">आधिकारिक मर्चेंट खाता (HDFC)</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">आधिकारिक मर्चेंट खाता (HDFC Bank / Paytm)</div>
                     </div>
                   </div>
                   <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 rounded-lg text-[10px] font-black border border-emerald-200 dark:border-emerald-800">
@@ -238,49 +238,111 @@ export default function CustomerWalletModal({
                   </span>
                 </div>
 
-                {/* Clean Vector QR in Translucent Rounded Card */}
-                <div className="p-3 bg-white rounded-2xl shadow-md border border-slate-200/90 inline-flex flex-col items-center">
-                  <QRCodeSVG 
-                    value={`upi://pay?pa=8006518960@pthdfc&pn=Suman%20Devi&am=${addAmount || 100}&cu=INR&tn=SmartCafe-Wallet-Recharge`}
-                    size={175}
-                    level="H"
-                    includeMargin={false}
+                {/* Official Paytm Standee QR Image */}
+                <div className="p-3 bg-white rounded-2xl shadow-md border border-slate-200/90 inline-flex flex-col items-center max-w-full">
+                  <img
+                    src="/images/superadmin_qr.jpg"
+                    alt="Official Paytm Standee QR - Suman Devi"
+                    className="w-48 sm:w-56 h-auto max-w-full rounded-xl shadow-xs border border-slate-200 object-contain mx-auto"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      const fallback = document.getElementById('cust-qr-fallback');
+                      if (fallback) fallback.style.display = 'block';
+                    }}
                   />
-                  <span className="text-[10px] font-mono font-bold text-slate-600 mt-2 tracking-wider">
-                    ₹{addAmount || 100} • स्कैन करें
+                  <div id="cust-qr-fallback" style={{ display: 'none' }}>
+                    <QRCodeSVG
+                      value="upi://pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR%20S/O%20HARENDRA%20SINGH"
+                      size={175}
+                      level="H"
+                      includeMargin={false}
+                    />
+                  </div>
+                  <span className="text-[11px] font-mono font-bold text-slate-700 mt-2 tracking-wide">
+                    ₹{addAmount || 100} • किसी भी UPI ऐप से स्कैन करें
                   </span>
                 </div>
 
-                {/* UPI ID Pill & Copy */}
-                <div className="flex items-center justify-between gap-2 bg-white dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 px-3 py-1.5 rounded-xl w-full">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">UPI ID:</span>
-                  <span className="font-mono font-black text-xs text-indigo-700 dark:text-indigo-400 select-all">8006518960@pthdfc</span>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText('8006518960@pthdfc');
-                      alert('UPI ID (8006518960@pthdfc) कॉपी हो गई है!');
-                    }}
-                    className="text-[10px] bg-indigo-100 dark:bg-indigo-950 hover:bg-indigo-200 text-indigo-800 dark:text-indigo-300 px-2.5 py-0.5 rounded-md font-bold transition cursor-pointer"
+                {/* 1-Click Copy Buttons (UPI ID & Phone Number) */}
+                <div className="space-y-1.5 w-full">
+                  <div className="flex items-center justify-between gap-2 bg-white dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 px-3 py-1.5 rounded-xl w-full">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">UPI ID:</span>
+                    <span className="font-mono font-black text-xs text-indigo-700 dark:text-indigo-400 select-all">8006518960@pthdfc</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText('8006518960@pthdfc');
+                        alert('UPI ID (8006518960@pthdfc) कॉपी हो गई है!');
+                      }}
+                      className="text-[10px] bg-indigo-100 dark:bg-indigo-950 hover:bg-indigo-200 text-indigo-800 dark:text-indigo-300 px-2.5 py-1 rounded-md font-bold transition cursor-pointer"
+                    >
+                      कॉपी UPI
+                    </button>
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2 bg-white dark:bg-slate-800 border border-emerald-200 dark:border-slate-700 px-3 py-1.5 rounded-xl w-full">
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">सीधे नंबर पर पे:</span>
+                    <span className="font-mono font-black text-xs text-emerald-700 dark:text-emerald-400 select-all">8006518960</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText('8006518960');
+                        alert('मोबाइल नंबर (8006518960) कॉपी हो गया है! PhonePe/GPay में To Mobile Number में पेस्ट करें।');
+                      }}
+                      className="text-[10px] bg-emerald-100 dark:bg-emerald-950 hover:bg-emerald-200 text-emerald-800 dark:text-emerald-300 px-2.5 py-1 rounded-md font-bold transition cursor-pointer"
+                    >
+                      कॉपी नंबर
+                    </button>
+                  </div>
+                </div>
+
+                {/* Mobile Direct Pay Buttons */}
+                <div className="w-full space-y-1.5">
+                  <a
+                    href={`upi://pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR&am=${addAmount || 100}&cu=INR`}
+                    className="inline-flex items-center justify-center gap-1 w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-black shadow-xs transition cursor-pointer"
                   >
-                    कॉपी करें
-                  </button>
+                    ⚡ मोबाइल UPI ऐप से सीधे ₹{addAmount || 100} भेजें
+                  </a>
+
+                  {/* App-specific links */}
+                  <div className="flex items-center gap-1.5 flex-wrap justify-center">
+                    <a
+                      href={`phonepe://pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR&am=${addAmount || 100}&cu=INR`}
+                      className="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded-lg text-[10px] font-black border border-indigo-200 transition"
+                    >
+                      PhonePe
+                    </a>
+                    <a
+                      href={`gpay://upi/pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR&am=${addAmount || 100}&cu=INR`}
+                      className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-lg text-[10px] font-black border border-blue-200 transition"
+                    >
+                      Google Pay
+                    </a>
+                    <a
+                      href={`paytmmp://pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR&am=${addAmount || 100}&cu=INR`}
+                      className="px-2.5 py-1 bg-sky-50 hover:bg-sky-100 text-sky-800 rounded-lg text-[10px] font-black border border-sky-200 transition"
+                    >
+                      Paytm
+                    </a>
+                    <a
+                      href={`upi://pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR&am=${addAmount || 100}&cu=INR`}
+                      className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg text-[10px] font-black border border-emerald-200 transition"
+                    >
+                      BHIM UPI
+                    </a>
+                  </div>
                 </div>
 
-                {/* Official UPI Badges */}
-                <div className="flex items-center gap-1.5 flex-wrap justify-center">
-                  <span className="px-2 py-0.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 rounded-md text-[10px] font-black border border-indigo-200 dark:border-indigo-800">PhonePe</span>
-                  <span className="px-2 py-0.5 bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 rounded-md text-[10px] font-black border border-blue-200 dark:border-blue-800">Google Pay</span>
-                  <span className="px-2 py-0.5 bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 rounded-md text-[10px] font-black border border-sky-200 dark:border-sky-800">Paytm</span>
-                  <span className="px-2 py-0.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 rounded-md text-[10px] font-black border border-emerald-200 dark:border-emerald-800">BHIM UPI</span>
+                {/* Important Bank Advisory Box */}
+                <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 rounded-xl p-2.5 text-left text-[11px] text-amber-900 dark:text-amber-200 space-y-1 w-full">
+                  <div className="font-bold flex items-center gap-1 text-amber-950 dark:text-amber-100">
+                    <span>💡 100% सफल पेमेंट गाइड:</span>
+                  </div>
+                  <p className="leading-snug">
+                    यदि QR कोड स्कैन करने पर आपके बैंक ऐप में 'Payment Failed / Transaction Declined' आए, तो सीधे अपने PhonePe / Google Pay / Paytm ऐप में जाकर <strong>'Pay to Mobile'</strong> में <strong>8006518960</strong> या <strong>'Pay to UPI ID'</strong> में <strong>8006518960@pthdfc</strong> सर्च करके ₹{addAmount || 100} भेजें, और नीचे 12-अंकों का UTR नंबर दर्ज करें।
+                  </p>
                 </div>
-
-                <a
-                  href={`upi://pay?pa=8006518960@pthdfc&pn=Suman%20Devi&am=${addAmount || 100}&cu=INR&tn=SmartCafe-Wallet-Recharge`}
-                  className="inline-flex items-center justify-center gap-1 w-full py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl text-xs font-black shadow-xs transition cursor-pointer"
-                >
-                  ⚡ मोबाइल UPI ऐप से सीधे ₹{addAmount || 100} भेजें
-                </a>
               </div>
 
               {/* Amount Quick Select */}

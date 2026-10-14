@@ -528,20 +528,32 @@ export default function VleKycModal({
                 </div>
 
                 {/* Scanable QR Code Card */}
-                <div className="bg-white p-3.5 rounded-2xl border border-amber-200 text-center space-y-2.5 flex flex-col items-center shadow-xs">
+                <div className="bg-white p-3.5 rounded-2xl border border-amber-200 text-center space-y-3 flex flex-col items-center shadow-xs">
                   <div className="flex items-center gap-1.5 text-slate-700 font-bold text-xs">
                     <QrCode className="w-4 h-4 text-indigo-600" />
-                    <span>PhonePe / Google Pay / Paytm से QR कोड स्कैन करें:</span>
+                    <span>PhonePe / Google Pay / Paytm से आधिकारिक QR कोड स्कैन करें:</span>
                   </div>
 
-                  {/* QR SVG */}
-                  <div className="p-2.5 bg-white rounded-2xl border-2 border-indigo-100 shadow-md inline-block">
-                    <QRCodeSVG
-                      value={upiPayUrl}
-                      size={150}
-                      level="H"
-                      includeMargin={true}
+                  {/* Official Paytm Standee QR Image */}
+                  <div className="p-2.5 bg-white rounded-2xl border-2 border-indigo-100 shadow-md inline-block max-w-full">
+                    <img
+                      src="/images/superadmin_qr.jpg"
+                      alt="Official Paytm Standee QR - Suman Devi"
+                      className="w-48 sm:w-56 h-auto max-w-full rounded-xl shadow-xs border border-slate-200 object-contain mx-auto"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        const fallback = document.getElementById('kyc-qr-fallback');
+                        if (fallback) fallback.style.display = 'block';
+                      }}
                     />
+                    <div id="kyc-qr-fallback" style={{ display: 'none' }}>
+                      <QRCodeSVG
+                        value="upi://pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR%20S/O%20HARENDRA%20SINGH"
+                        size={150}
+                        level="H"
+                        includeMargin={true}
+                      />
+                    </div>
                   </div>
 
                   {/* Amount Pill */}
@@ -549,17 +561,33 @@ export default function VleKycModal({
                     <span>नियत शुल्क: ₹299 (365 दिन असीमित पहुंच)</span>
                   </div>
 
-                  {/* UPI ID Copy row */}
-                  <div className="flex items-center justify-center gap-2 w-full max-w-xs">
-                    <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 flex-1 flex items-center justify-between font-mono text-xs font-bold text-indigo-700">
-                      <span>{superAdminUpi}</span>
+                  {/* 1-Click Copy Buttons (UPI ID & Phone Number) */}
+                  <div className="space-y-1.5 w-full max-w-xs">
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 flex items-center justify-between font-mono text-xs font-bold text-indigo-700">
+                      <span>8006518960@pthdfc</span>
                       <button
                         type="button"
-                        onClick={handleCopyUpi}
-                        className="ml-2 text-slate-500 hover:text-indigo-600 cursor-pointer p-0.5"
-                        title="UPI ID कॉपी करें"
+                        onClick={() => {
+                          navigator.clipboard.writeText('8006518960@pthdfc');
+                          alert('UPI ID (8006518960@pthdfc) कॉपी हो गई है!');
+                        }}
+                        className="ml-2 text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded-md font-bold transition cursor-pointer"
                       >
-                        {copiedUpi ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                        कॉपी UPI
+                      </button>
+                    </div>
+
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 flex items-center justify-between font-mono text-xs font-bold text-emerald-700">
+                      <span>8006518960</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText('8006518960');
+                          alert('मोबाइल नंबर (8006518960) कॉपी हो गया है! PhonePe/GPay में To Mobile Number में पेस्ट करें।');
+                        }}
+                        className="ml-2 text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-md font-bold transition cursor-pointer"
+                      >
+                        कॉपी नंबर
                       </button>
                     </div>
                   </div>
@@ -567,32 +595,42 @@ export default function VleKycModal({
                   {/* App quick launch buttons */}
                   <div className="flex items-center gap-1.5 flex-wrap justify-center pt-1">
                     <a
-                      href={upiPayUrl}
+                      href="phonepe://pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR&am=299&cu=INR"
                       className="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-800 rounded-lg text-[10px] font-black border border-indigo-200 transition"
                     >
                       PhonePe
                     </a>
                     <a
-                      href={upiPayUrl}
+                      href="gpay://upi/pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR&am=299&cu=INR"
                       className="px-2.5 py-1 bg-blue-50 hover:bg-blue-100 text-blue-800 rounded-lg text-[10px] font-black border border-blue-200 transition"
                     >
                       Google Pay
                     </a>
                     <a
-                      href={upiPayUrl}
+                      href="paytmmp://pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR&am=299&cu=INR"
                       className="px-2.5 py-1 bg-sky-50 hover:bg-sky-100 text-sky-800 rounded-lg text-[10px] font-black border border-sky-200 transition"
                     >
                       Paytm
                     </a>
                     <a
-                      href={upiPayUrl}
+                      href="upi://pay?pa=8006518960@pthdfc&pn=ANKIT%20KUMAR&am=299&cu=INR"
                       className="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg text-[10px] font-black border border-emerald-200 transition"
                     >
                       BHIM UPI
                     </a>
                   </div>
 
-                  {/* 1-Click Fast Instant Activation via QR Code */}
+                  {/* Helpful Advisory Box */}
+                  <div className="bg-amber-50 border border-amber-300 rounded-xl p-2.5 text-left text-[11px] text-amber-900 space-y-1 w-full max-w-xs">
+                    <div className="font-bold flex items-center gap-1 text-amber-950">
+                      <span>💡 100% सफल पेमेंट गाइड:</span>
+                    </div>
+                    <p className="leading-snug">
+                      यदि QR स्कैन करने पर बैंक एरर आए, तो सीधे अपने PhonePe / GPay ऐप में जाकर <strong>'Pay to Mobile'</strong> में <strong>8006518960</strong> या <strong>'Pay to UPI ID'</strong> में <strong>8006518960@pthdfc</strong> सर्च करके ₹299 भेजें, और नीचे 12-अंकों का UTR नंबर दर्ज करें।
+                    </p>
+                  </div>
+
+                {/* 1-Click Fast Instant Activation via QR Code */}
                   <div className="w-full pt-1">
                     <button
                       type="button"
