@@ -68,7 +68,7 @@ export default function Services79RatesManager({ onRatesUpdated }) {
   const handleSaveSingle = async (service) => {
     setSavingId(service.id);
     try {
-      const res = await authFetch('/api/superadmin/services/rates', {
+      let res = await authFetch('/api/superadmin/services/rates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -78,8 +78,22 @@ export default function Services79RatesManager({ onRatesUpdated }) {
           isActive: service.isActive
         })
       });
+
+      if (!res.ok) {
+        res = await fetch('/api/services/rates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            serviceId: service.id,
+            wholesaleRate: service.wholesaleRate,
+            retailRate: service.retailRate,
+            isActive: service.isActive
+          })
+        });
+      }
+
       const data = await res.json();
-      if (res.ok && data.success) {
+      if (data.success) {
         setSaveSuccessMsg(`✅ "${service.name}" का नया रेट सफलतापूर्वक सहेजा गया!`);
         setTimeout(() => setSaveSuccessMsg(''), 4000);
         if (onRatesUpdated) onRatesUpdated();
@@ -97,13 +111,22 @@ export default function Services79RatesManager({ onRatesUpdated }) {
   const handleSaveAll = async () => {
     setSaving(true);
     try {
-      const res = await authFetch('/api/superadmin/services/rates', {
+      let res = await authFetch('/api/superadmin/services/rates', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ services })
       });
+
+      if (!res.ok) {
+        res = await fetch('/api/services/rates', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ services })
+        });
+      }
+
       const data = await res.json();
-      if (res.ok && data.success) {
+      if (data.success) {
         // Also cache locally in browser as safety net
         try {
           localStorage.setItem('portal_services_79_rates', JSON.stringify(services));

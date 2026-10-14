@@ -761,7 +761,7 @@ app.get('/api/services/rates', (req, res) => {
   res.json({ success: true, services: store.services_79 || [] });
 });
 
-app.post('/api/superadmin/services/rates', (req, res) => {
+const handleSaveRates = (req, res) => {
   const store = getStore();
   const { services, service } = req.body;
   if (!store.services_79) store.services_79 = [];
@@ -813,7 +813,10 @@ app.post('/api/superadmin/services/rates', (req, res) => {
   }
 
   res.json({ success: true, services: store.services_79, message: '79-सर्विसेज रेट्स सफलतापूर्वक अपडेट और लाइव कर दिए गए।' });
-});
+};
+
+app.post('/api/superadmin/services/rates', handleSaveRates);
+app.post('/api/services/rates', handleSaveRates);
 
 // Prints API (Multi-Tenant Scoped)
 app.get('/api/prints', (req, res) => {
