@@ -1,0 +1,703 @@
+{
+  "aadhaar_to_pan": {
+    "name": "Aadhaar to PAN API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "uidNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/getPanNumber.php?apiKey=YOUR_API_KEY&uidNumber=123412341234",
+    "successResponse": {
+      "status": 100,
+      "panNumber": "ABCDE1234F"
+    }
+  },
+  "balance_info": {
+    "name": "Balance Info API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/Balance_info.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/Balance_info.php?apiKey=YOUR_API_KEY",
+    "billingLogic": "No balance deduction",
+    "successResponse": {
+      "status": "success",
+      "message": "Balance check successful",
+      "balance": "100.00"
+    }
+  },
+  "aadhaar_ekyc": {
+    "name": "Aadhaar eKYC Verification API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php",
+    "method": "POST",
+    "parameters": [
+      "apiKey",
+      "aadhar",
+      "bioenc"
+    ],
+    "successResponse": {
+      "status": true,
+      "code": 100,
+      "name": "RAHUL KUMAR",
+      "uid": "XXXXXXXX1234",
+      "gender": "M",
+      "dobadhar": "01/01/1995",
+      "address": "PATNA BIHAR",
+      "pincode": "800001",
+      "image": "BASE64_IMAGE_DATA"
+    }
+  },
+  "aadhaar_pdf_otp": {
+    "name": "Aadhaar PDF Download API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/aadhaar_pdf.php",
+    "method": "GET",
+    "actions": {
+      "sendOtp": {
+        "parameters": [
+          "apiKey",
+          "action=sendOtp",
+          "aadhaar"
+        ],
+        "sample": "https://authorized.p4points.co.in/api/v1/aadhaar_pdf.php?action=sendOtp&aadhaar=123412341234&apiKey=YOUR_API_KEY"
+      },
+      "verifyOtp": {
+        "parameters": [
+          "apiKey",
+          "action=verifyOtp",
+          "otp"
+        ],
+        "sample": "https://authorized.p4points.co.in/api/v1/aadhaar_pdf.php?action=verifyOtp&otp=123456&apiKey=YOUR_API_KEY",
+        "returns": [
+          "order_id",
+          "eid",
+          "vid",
+          "Aadhaar_Pdf (Base64)"
+        ]
+      }
+    }
+  },
+  "pan_verification_premium": {
+    "name": "PAN Verification Premium API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "panNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php?apiKey=YOUR_API_KEY&panNumber=ABCDE1234F",
+    "successResponse": {
+      "code": "100",
+      "status": "success",
+      "name": "RAHUL KUMAR",
+      "dob": "01-01-1995"
+    }
+  },
+  "ll_exam_apply": {
+    "name": "LL Exam Request API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/ll/ll_apply.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "application_number",
+      "date_of_birth",
+      "password",
+      "exam_pin",
+      "state_name"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/ll/ll_apply.php?apiKey=YOUR_API_KEY&application_number=CG0420260001234&date_of_birth=01-01-2000&password=123456&exam_pin=654321&state_name=Chhattisgarh",
+    "successResponse": {
+      "status": "success",
+      "message": "LL Exam request submitted successfully. Status is pending.",
+      "order_id": "LLEXAM1751456234567"
+    }
+  },
+  "ll_status": {
+    "name": "LL Exam Status API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/ll/cheak-status.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "application_number"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/ll/cheak-status.php?apiKey=YOUR_API_KEY&application_number=CG0420260001234",
+    "successResponse": {
+      "status": "success",
+      "data": {
+        "application_number": "CG0420260001234",
+        "request_status": "success",
+        "document_link": "https://yourdomain.com/document.pdf"
+      }
+    }
+  },
+  "npci_link_status": {
+    "name": "NPCI Aadhaar Link Status API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "aadhar"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php?apiKey=YOUR_API_KEY&aadhar=123412341234",
+    "successResponse": {
+      "status": true,
+      "StatusCode": 100,
+      "message": "NPCI Data fetched successfully",
+      "data": {
+        "aadhaar": "123412341234",
+        "bank": "STATE BANK OF INDIA",
+        "status": "ACTIVE",
+        "last_update": "2024-01-01"
+      }
+    }
+  },
+  "mobile_lookup": {
+    "name": "Mobile Lookup API (Multi-Type Search)",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "type",
+      "value"
+    ],
+    "supportedTypes": [
+      "phone",
+      "aadhaar",
+      "email",
+      "name",
+      "ip",
+      "domain",
+      "company",
+      "vin",
+      "passport"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/mobileLookup.php?apiKey=YOUR_API_KEY&type=phone&value=9876543210",
+    "successResponse": {
+      "STATUS": 100,
+      "MESSAGE": "Success",
+      "TYPE": "phone",
+      "DATA": {}
+    }
+  },
+  "aadhaar_to_ration_pdf": {
+    "name": "Aadhaar to Ration PDF API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "aadhar",
+      "rationtype"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php?apiKey=YOUR_API_KEY&aadhar=123412341234&rationtype=new",
+    "successResponse": {
+      "status": 100,
+      "statusMessage": "success",
+      "message": "PDF Generated Successfully",
+      "order_id": "RAT202604171234567890",
+      "api_response": {
+        "pdf": "BASE64_PDF_DATA",
+        "name": "RAHUL KUMAR",
+        "ration_no": "BR123456789"
+      }
+    }
+  },
+  "dl_pdf_secure": {
+    "name": "DL PDF Download API (Secure)",
+    "endpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "dlNo",
+      "dob",
+      "dltype"
+    ],
+    "sample": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php?apiKey=YOUR_API_KEY&dlNo=BR0120230001234&dob=01-01-1995&dltype=1",
+    "successResponse": {
+      "status": true,
+      "message": "PDF Generated Successfully",
+      "dl_number": "BR0120230001234"
+    }
+  },
+  "dl_pdf_v1": {
+    "name": "DL PDF API (v1)",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/dlpdf.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "dlNo",
+      "dob",
+      "dltype"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/dlpdf.php?apiKey=YOUR_API_KEY&dlNo=DL0123456789&dob=01-01-1990&dltype=1"
+  },
+  "rc_pdf_new": {
+    "name": "RC PDF Download API (New)",
+    "endpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php",
+    "method": "GET",
+    "parameters": [
+      "api_key",
+      "type=rcpdf",
+      "rcno",
+      "cardtype",
+      "chiptype"
+    ],
+    "sample": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?api_key=YOUR_API_KEY&type=rcpdf&rcno=JH01AB1234&cardtype=1&chiptype=1",
+    "successResponse": {
+      "status_code": 100,
+      "status": "success",
+      "message": "RC PDF fetched successfully",
+      "rcno": "JH01AB1234",
+      "Rc_Pdf": "data:application/pdf;base64,..."
+    }
+  },
+  "rc_fast_pdf": {
+    "name": "RC Fast PDF API",
+    "endpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "rcno",
+      "type",
+      "tpe"
+    ],
+    "sample": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php?apiKey=YOUR_API_KEY&rcno=BR01AB8088&type=non%20chip",
+    "successResponse": {
+      "status": "success",
+      "StatusCode": 100,
+      "message": "PDF generated successfully",
+      "data": {
+        "vrc": "BR01AB8088",
+        "owner_name": "SONU KUMAR",
+        "owner_father_name": "MOHAN RAM",
+        "chassis": "MBLJ440NGH09017",
+        "engine": "J17E3H10388",
+        "maker": "HERO MOTOCORP LTD",
+        "model": "DESTINI 125 (VX)"
+      },
+      "pdf": "data:application/pdf;base64,..."
+    }
+  },
+  "rc_to_mobile": {
+    "name": "RC to Mobile API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "vehicalNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php?apiKey=YOUR_API_KEY&vehicalNumber=BR01AB2254",
+    "successResponse": {
+      "StatusCode": 100,
+      "status": true,
+      "holder": {
+        "full_name": "Rahul Kumar",
+        "relation_name": "Ramesh Ram",
+        "contact": "9876543210"
+      }
+    }
+  },
+  "rc_to_father_name": {
+    "name": "RC to Father Name API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/RcToFatherName.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "vehicalNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/RcToFatherName.php?apiKey=YOUR_API_KEY&vehicalNumber=BR01AB8088",
+    "successResponse": {
+      "status": true,
+      "StatusCode": 100,
+      "holder": {
+        "full_name": "SONU KUMAR",
+        "relation_name": "MOHAN KHARE"
+      }
+    }
+  },
+  "chassis_to_rc": {
+    "name": "Chassis to RC Find API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "chassisNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php?apiKey=YOUR_API_KEY&chassisNumber=MBLJFW240NGH09017",
+    "successResponse": {
+      "StatusCode": 100,
+      "status": true,
+      "plate": "BR29BB8088",
+      "full_name": "Sonu KUMAR",
+      "relation_name": "MOHAN RAM"
+    }
+  },
+  "eshram_verification": {
+    "name": "E-Shram Verification API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "uidNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/eshramVerification.php?apiKey=YOUR_API_KEY&uidNumber=123456789012",
+    "successResponse": {
+      "success": true,
+      "message": "Verification successful",
+      "data": {
+        "name": {
+          "name_en": "Ravi Kumar"
+        },
+        "dob": "1995-08-15",
+        "gender": "Male",
+        "state": "Jharkhand"
+      }
+    }
+  },
+  "agristack_farmer_details": {
+    "name": "AgriStack Farmer Details API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/farmer-details.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "uidNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/AgriStak/farmer-details.php?apiKey=YOUR_API_KEY&uidNumber=123412341234",
+    "successResponse": {
+      "Message": "Success",
+      "data": {
+        "farmerDetails": {},
+        "farmerLandOwnerShips": []
+      }
+    }
+  },
+  "agristack_farmer_pdf": {
+    "name": "AgriStack Approved Farmer PDF API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf_old_formate_widhout_state.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "uidNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf_old_formate_widhout_state.php?apiKey=YOUR_API_KEY&uidNumber=123412341234",
+    "successResponse": {
+      "status": "success",
+      "farmerNameEn": "Rahul Kumar",
+      "farmerNameLocal": "राहुल कुमार",
+      "farmerMobileNumber": "9876543210",
+      "pdfBase64": "JVBERi0xLjQKJc..."
+    }
+  },
+  "agristack_print_pdf": {
+    "name": "AgriStack Print PDF API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "uidNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf.php?apiKey=YOUR_API_KEY&uidNumber=123412341234",
+    "successResponse": {
+      "status": "success",
+      "message": "PDF Generated Successfully",
+      "pdfBase64": "JVBERi0xLjQKJc..."
+    }
+  },
+  "agristack_check_status": {
+    "name": "AgriStack Status Check API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/checkStatus.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "uidNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/AgriStak/checkStatus.php?apiKey=YOUR_API_KEY&uidNumber=123412341234",
+    "successResponse": {
+      "status": true,
+      "api_response_data": {
+        "data": {
+          "autoState": "BIHAR",
+          "farmerApprovalStatus": "Approved",
+          "farmerNameEn": "Rahul Kumar",
+          "farmerNameLocal": "राहुल कुमार"
+        }
+      }
+    }
+  },
+  "pan_to_gst": {
+    "name": "PAN to GST Verification API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/pan_to_gst.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "pan"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/pan_to_gst.php?apiKey=YOUR_API_KEY&pan=ABCDE1234F",
+    "successResponse": {
+      "count": 1,
+      "items": [
+        {
+          "gstin": "10KABCDE1234F1ZQ",
+          "auth_status": "Active",
+          "state": "BIHAR"
+        }
+      ],
+      "pan": "ABCDE1234F"
+    }
+  },
+  "gst_to_pan": {
+    "name": "GST to PAN Verification API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/gst_to_pan.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "gst"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/gst_to_pan.php?apiKey=YOUR_API_KEY&gst=10KQBPK3104B1ZQ",
+    "successResponse": {
+      "status": true,
+      "gst": "10KQBPK3105B1ZQ",
+      "pan": "KQBPK3105B"
+    }
+  },
+  "voter_verification": {
+    "name": "Voter Verification API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "epicNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php?apiKey=YOUR_API_KEY&epicNumber=XRI0815480",
+    "successResponse": {
+      "Message": "Success",
+      "response": {
+        "docs": [
+          {
+            "FirstName": "KAILASH",
+            "LastName": "YADAV",
+            "name_v1": "कैलाश यादव",
+            "gender": "M",
+            "epic_no": "XRI0815480",
+            "age": "62",
+            "dob": "1964-01-02",
+            "district": "MADHEPURA",
+            "state": "BIHAR",
+            "ac_name": "ALAMNAGAR",
+            "part_name": "MIDDLE SCHOOL...",
+            "rln_name": "prabhu yadav"
+          }
+        ]
+      }
+    }
+  },
+  "electric_bill_pdf": {
+    "name": "Electric Bill PDF API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/elctricBillPDF.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "caNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/elctricBillPDF.php?apiKey=YOUR_API_KEY&caNumber=1263046893",
+    "successResponse": {
+      "status": 100,
+      "message": "Bill fetched successfully",
+      "caNumber": "1263046893",
+      "pdf_base64": "data:application/pdf;base64,..."
+    }
+  },
+  "ll_pdf_download": {
+    "name": "Learning Licence PDF API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/LL_application_pdf.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "idNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/LL_application_pdf.php?apiKey=YOUR_API_KEY&idNumber=1234567890",
+    "successResponse": {
+      "status": "100",
+      "statusMessage": "success",
+      "idNumber": "1234567890",
+      "pdf": "data:application/pdf;base64,..."
+    }
+  },
+  "voter_pdf_otp": {
+    "name": "Voter PDF Download API (OTP Based)",
+    "step1_sendOtp": "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?epic_number=...",
+    "step2_verifyOtp": "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify_api.php?epic_number=...&otp=...",
+    "method": "GET",
+    "parameters": [
+      "epic_number",
+      "otp"
+    ],
+    "successResponse": {
+      "status_code": 200,
+      "status": "success",
+      "data": {
+        "file": "data:application/pdf;base64,..."
+      }
+    }
+  },
+  "voter_mobile_link": {
+    "name": "Voter Mobile Link API",
+    "applyEndpoint": "https://authorized.p4points.co.in/api/v2/VoterMobile/Apply.php",
+    "statusEndpoint": "https://authorized.p4points.co.in/api/v2/VoterMobile/CheckStatus.php",
+    "method": "POST",
+    "parameters": [
+      "apiKey",
+      "voterNumber",
+      "mobileNumber"
+    ],
+    "statusParameters": [
+      "apiKey",
+      "order_id",
+      "voterNumber"
+    ]
+  },
+  "voter_mobile_instant_form8": {
+    "name": "Voter Mobile Link Instant (Form 8 Automation)",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php",
+    "method": "GET / POST",
+    "actions": [
+      "send",
+      "verify",
+      "viewmob",
+      "aadharotpsend",
+      "aadharotpverify"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?action=send&apiKey=YOUR_API_KEY&phone=9876543210&epic=ABC1234567",
+    "successResponse": {
+      "status": "done",
+      "response": {
+        "message": "form 8 is submitted successfully"
+      },
+      "signerName": "RAHUL KUMAR"
+    }
+  },
+  "instant_voter_mobile_no_otp": {
+    "name": "Instant Voter Mobile Link API (No OTP Required)",
+    "endpoint": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "epic",
+      "mobile"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php?apiKey=YOUR_API_KEY&epic=ABC1234567&mobile=9876543210",
+    "successResponse": {
+      "status": "success",
+      "message": "Voter Mobile Instant Link Successful",
+      "refId": "VCM240987654"
+    }
+  },
+  "voter_link_without_otp_esign": {
+    "name": "Voter Link Without OTP API (Form 8 eSign)",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/voter-link_widhout_otp/voter-link.php",
+    "method": "POST",
+    "actions": [
+      "status",
+      "submit",
+      "verify"
+    ],
+    "parameters": [
+      "apikey",
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_name",
+      "aadhar_no",
+      "otp",
+      "token"
+    ],
+    "successResponse": {
+      "status": "success",
+      "code": "ESIGN_COMPLETED",
+      "message": "Aadhaar eSign completed successfully."
+    }
+  },
+  "pan_find_name_mobile": {
+    "name": "PAN Find API (Name + Mobile)",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "name",
+      "mobile"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php?apiKey=YOUR_API_KEY&name=RAVI%20KUMAR&mobile=9876543210",
+    "successResponse": {
+      "code": "100",
+      "status": "success",
+      "panNumber": "ABCDE1234F",
+      "name": "RAVI KUMAR",
+      "mobile": "9876543210"
+    }
+  },
+  "pan_find_async": {
+    "name": "Aadhaar to PAN Find API (Async)",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/panfind.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "uidNumber"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/panfind.php?apiKey=YOUR_API_KEY&uidNumber=123456789012",
+    "successResponse": {
+      "status": 100,
+      "full_pan_number": "ABCDE1234F",
+      "aadhaar_status": "linked"
+    }
+  },
+  "rtps_certificate_bihar": {
+    "name": "RTPS Certificate PDF API (Bihar)",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/RtpsCertificate-Br.php",
+    "method": "GET",
+    "parameters": [
+      "apiKey",
+      "applicationNumber",
+      "name"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/RtpsCertificate-Br.php?apiKey=YOUR_API_KEY&applicationNumber=BR123456789&name=Rahul%20Kumar",
+    "successResponse": {
+      "sampleCode": 100,
+      "status": true,
+      "message": "Success",
+      "applicationNumber": "BR123456789",
+      "name": "Rahul Kumar",
+      "pdf": "BASE64_PDF_DATA"
+    }
+  },
+  "ration_to_pdf": {
+    "name": "Ration to PDF API",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "ration_no",
+      "rationtype"
+    ],
+    "sample": "https://authorized.p4points.co.in/api/v1/rationPdf.php?apiKey=YOUR_API_KEY&ration_no=RJ1234567890&rationtype=new"
+  },
+  "rc_details_and_pdf": {
+    "name": "RC Details & PDF Generate API",
+    "detailsEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
+    "pdfEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf.php",
+    "method": "GET / POST",
+    "parameters": [
+      "apiKey",
+      "rcno",
+      "rcData",
+      "rctype"
+    ],
+    "successResponse": {
+      "success": true,
+      "status": 200,
+      "data": {
+        "pdf_base64": "JVBERi0xLjQKJ...",
+        "owner_name": "ABC KUMAR"
+      }
+    }
+  }
+}

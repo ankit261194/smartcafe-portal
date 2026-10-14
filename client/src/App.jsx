@@ -257,6 +257,21 @@ export default function App() {
     navigateToTier('customer');
   };
 
+  const handleLaunchService = (toolKey) => {
+    const isAuthenticated = !!(customerSession?.phone || isCafeAuth || isSuperAdminAuth);
+    if (!isAuthenticated && mode === 'customer') {
+      setRoleAuthModalConfig({
+        isOpen: true,
+        type: 'customer',
+        pendingTool: toolKey
+      });
+      return;
+    }
+    setActiveInstantToolId(toolKey);
+    if (mode === 'customer') setCustomerTab('tool');
+    else setAdminTab('tool');
+  };
+
   // Fetch shop settings and cafes
   const fetchSettingsAndCafes = async () => {
     try {
@@ -500,9 +515,7 @@ export default function App() {
               else setAdminTab('prints');
             } else if (tabId.startsWith('tool-')) {
               const toolKey = tabId.replace('tool-', '');
-              setActiveInstantToolId(toolKey);
-              if (mode === 'customer') setCustomerTab('tool');
-              else setAdminTab('tool');
+              handleLaunchService(toolKey);
             } else if (tabId === 'orders') {
               if (mode === 'customer') setCustomerTab('orders');
               else setAdminTab('orders');
@@ -580,9 +593,7 @@ export default function App() {
           onLogout={handleLogout}
           onToggleSidebar={() => setSidebarOpen(prev => !prev)}
           onSelectTool={(toolKey) => {
-            setActiveInstantToolId(toolKey);
-            if (mode === 'customer') setCustomerTab('tool');
-            else setAdminTab('tool');
+            handleLaunchService(toolKey);
           }}
           theme={theme}
           toggleTheme={toggleTheme}
@@ -776,8 +787,7 @@ export default function App() {
                   } else if (toolKey === 'quick-print' || toolKey === 'print') {
                     setCustomerTab('print');
                   } else {
-                    setActiveInstantToolId(toolKey);
-                    setCustomerTab('tool');
+                    handleLaunchService(toolKey);
                   }
                 }}
                 onNavigateTab={(tab) => {
@@ -845,6 +855,7 @@ export default function App() {
                 isOperator={false}
                 onOpenWallet={() => setIsWalletOpen(true)}
                 onOpenB2bWallet={() => setIsB2bWalletOpen(true)}
+                onOpenAuthModal={() => setRoleAuthModalConfig({ isOpen: true, type: 'customer' })}
                 onBalanceUpdated={() => {
                   fetchWalletBalance();
                   fetchB2bWallet();
@@ -1400,10 +1411,22 @@ export default function App() {
             setAdminTab('prints');
           }
           setMode('admin');
+          if (roleAuthModalConfig.pendingTool) {
+            const pt = roleAuthModalConfig.pendingTool;
+            setRoleAuthModalConfig({ isOpen: false, type: 'cafe', pendingTool: null });
+            setActiveInstantToolId(pt);
+            setAdminTab('tool');
+          }
         }}
         onCustomerSuccess={(custData) => {
           setCustomerSession(custData);
           fetchWalletBalance();
+          if (roleAuthModalConfig.pendingTool) {
+            const pt = roleAuthModalConfig.pendingTool;
+            setRoleAuthModalConfig({ isOpen: false, type: 'customer', pendingTool: null });
+            setActiveInstantToolId(pt);
+            setCustomerTab('tool');
+          }
         }}
       />
 

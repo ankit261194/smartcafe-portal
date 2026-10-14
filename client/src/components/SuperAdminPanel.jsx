@@ -8,6 +8,8 @@ import {
   Power, Car, CreditCard, Zap, Download
 } from 'lucide-react';
 import { authFetch, getServerBaseUrl } from '../utils/api';
+import Services79RatesManager from './superadmin/Services79RatesManager';
+import UsersDirectoryManager from './superadmin/UsersDirectoryManager';
 
 export const MASTER_12_APIS = [
   { id: 'rc', serviceType: 'rcDownload', name: 'वाहन RC टू PDF / PVC', apiName: 'Parivahan MoRTH Gateway REST API v2.4', endpoint: '/api/rc/lookup/:regNo', defaultWholesale: 200, defaultRetail: 250, category: 'vehicle', latency: '180ms' },
@@ -652,6 +654,33 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
       {/* Super Admin Navigation Tabs */}
       <div className="bg-white dark:bg-slate-900 p-2 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap gap-2 text-xs font-black">
         <button
+          onClick={() => setActiveTab('services_79')}
+          className={`px-4 py-2.5 rounded-xl transition flex items-center gap-2 ${
+            activeTab === 'services_79' 
+              ? 'bg-gradient-to-r from-emerald-600 via-green-600 to-teal-700 text-white shadow-md' 
+              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          <Zap className="w-4 h-4 text-amber-400" />
+          <span>79 सर्विस रेट कार्ड व मार्जिन</span>
+          <span className="bg-emerald-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black">
+            79
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('users')}
+          className={`px-4 py-2.5 rounded-xl transition flex items-center gap-2 ${
+            activeTab === 'users' 
+              ? 'bg-gradient-to-r from-indigo-600 to-blue-700 text-white shadow-md' 
+              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          <Users className="w-4 h-4 text-indigo-300" />
+          <span>उपयोगकर्ता व पासवर्ड रजिस्टर</span>
+        </button>
+
+        <button
           onClick={() => setActiveTab('cafes')}
           className={`px-4 py-2.5 rounded-xl transition flex items-center gap-2 ${
             activeTab === 'cafes' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
@@ -774,6 +803,16 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
           <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block"></span>
         </button>
       </div>
+
+      {/* TAB: 79 SERVICES DYNAMIC RATE & MULTI-TIER MARGIN ENGINE */}
+      {activeTab === 'services_79' && (
+        <Services79RatesManager onRatesUpdated={fetchStats} />
+      )}
+
+      {/* TAB: USERS & PASSWORDS DIRECTORY CONTROL ROOM */}
+      {activeTab === 'users' && (
+        <UsersDirectoryManager />
+      )}
 
       {/* TAB: 14 CONNECTED APIS HUB & 1-CLICK MASTER TOGGLE SWITCHES */}
       {activeTab === 'api_hub' && (

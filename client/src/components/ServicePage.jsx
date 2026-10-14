@@ -53,6 +53,7 @@ export default function ServicePage({
   isOperator = false,
   onOpenWallet,
   onOpenB2bWallet,
+  onOpenAuthModal,
   onBalanceUpdated,
   disabledTools = [],
   theme = 'light'
@@ -86,6 +87,7 @@ export default function ServicePage({
   const [errorMsg, setErrorMsg] = useState('');
   const [currentResult, setCurrentResult] = useState(null);
   const [cardSide, setCardSide] = useState('both'); // 'both', 'front', 'back'
+  const [showBalanceGateModal, setShowBalanceGateModal] = useState(false);
   
   // Order History
   const [orderHistory, setOrderHistory] = useState([]);
@@ -225,6 +227,28 @@ export default function ServicePage({
       setErrorMsg(language === 'hi' ? 'कृपया प्रमाण पत्र क्रमांक दर्ज करें।' : 'Please enter Certificate ID.');
       return;
     }
+
+    // 1. Compulsory Auth Gate Check (Zero Guest Access)
+    const isAuthenticated = Boolean(customerSession?.phone || isOperator);
+    if (!isAuthenticated) {
+      if (onOpenAuthModal) {
+        onOpenAuthModal();
+      } else {
+        alert('कृपया सेवा का उपयोग करने से पहले लॉगिन या साइनअप करें!');
+      }
+      return;
+    }
+
+    // 2. Mandatory Zero-Credit Balance Gate Check
+    const requiredFee = isOperator ? (currentTool.wholesaleRate || 15) : (currentTool.retailRate || 30);
+    const currentBal = isOperator ? (sanchalakB2bBalance || 0) : (walletBalance || 0);
+
+    if (currentBal < requiredFee) {
+      setErrorMsg(`अपर्याप्त बैलेंस! इस सेवा के लिए ₹${requiredFee} आवश्यक है (आपका वर्तमान बैलेंस: ₹${currentBal})। कृपया पहले वॉलेट रिचार्ज करें।`);
+      setShowBalanceGateModal(true);
+      return;
+    }
+
     setErrorMsg('');
     setLoading(true);
 
@@ -309,6 +333,13 @@ export default function ServicePage({
       }
 
       const data = await res.json();
+
+      if (res.status === 403) {
+        setErrorMsg(data.error || `अपर्याप्त बैलेंस! इस सेवा के लिए ₹${requiredFee} आवश्यक है। कृपया पहले वॉलेट रिचार्ज करें।`);
+        setShowBalanceGateModal(true);
+        setLoading(false);
+        return;
+      }
 
       if (res.ok && data.success) {
         // Overlay user real inputs strictly
@@ -2219,6 +2250,67 @@ export default function ServicePage({
         </div>
 
       </div>
+
+      {/* Insufficient Balance Gate Modal (Zero Credit Policy) */}
+      {showBalanceGateModal && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-6 sm:p-7 max-w-md w-full border-2 border-amber-500 shadow-2xl space-y-4 animate-in zoom-in-95">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 flex items-center justify-center text-2xl shrink-0">
+                ⚠️
+              </div>
+              <div>
+                <h3 className="font-black text-slate-900 dark:text-white text-base">
+                  अपर्याप्त बैलेंस (Zero Credit Policy)
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                  इस सेवा को निष्पादित करने के लिए पर्याप्त बैलेंस आवश्यक है।
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-slate-50 dark:bg-[#0b1528] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+              <div className="flex justify-between">
+                <span className="text-slate-500">आवश्यक सेवा शुल्क:</span>
+                <span className="font-black text-indigo-600 dark:text-indigo-400 font-mono text-sm">
+                  ₹{isOperator ? currentTool.wholesaleRate : currentTool.retailRate}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">आपका वर्तमान बैलेंस:</span>
+                <span className="font-black text-rose-600 dark:text-rose-400 font-mono text-sm">
+                  ₹{isOperator ? sanchalakB2bBalance : walletBalance}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowBalanceGateModal(false)}
+                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+              >
+                रद्द करें
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowBalanceGateModal(false);
+                  if (isOperator) {
+                    if (onOpenB2bWallet) onOpenB2bWallet();
+                  } else {
+                    if (onOpenWallet) onOpenWallet();
+                  }
+                }}
+                className="flex-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-black px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30 cursor-pointer"
+              >
+                <IndianRupee className="w-3.5 h-3.5" />
+                <span>➕ अभी वॉलेट रिचार्ज करें</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

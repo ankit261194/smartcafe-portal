@@ -1,0 +1,1 @@
+Get-Process | Where-Object { .MainWindowTitle } | Select-Object Id, ProcessName, MainWindowTitle | Format-Table -AutoSize

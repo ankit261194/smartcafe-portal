@@ -202,6 +202,36 @@ export function initSqlite() {
           created_at TEXT NOT NULL
         )
       `);
+
+      sqliteDb.run(`
+        CREATE TABLE IF NOT EXISTS users (
+          id TEXT PRIMARY KEY,
+          name TEXT,
+          shop_name TEXT,
+          phone TEXT,
+          password TEXT,
+          role TEXT,
+          balance REAL,
+          is_blocked INTEGER,
+          data TEXT NOT NULL,
+          updated_at TEXT NOT NULL
+        )
+      `);
+
+      sqliteDb.run(`
+        CREATE TABLE IF NOT EXISTS services_79 (
+          id TEXT PRIMARY KEY,
+          num INTEGER,
+          name TEXT,
+          category TEXT,
+          provider_cost REAL,
+          wholesale_rate REAL,
+          retail_rate REAL,
+          is_active INTEGER,
+          data TEXT NOT NULL,
+          updated_at TEXT NOT NULL
+        )
+      `);
     });
     console.log('[DB] SQLite database initialized successfully at:', SQLITE_FILE);
   } catch (err) {
@@ -308,6 +338,36 @@ function processPersistenceQueue() {
               [c.id, c.shopName || '', c.phone || '', JSON.stringify(c), nowIso],
               (err) => {
                 if (err) console.warn('[DB] SQLite cafe insert warning:', err.message);
+              }
+            );
+          }
+        }
+
+        if (Array.isArray(store.users)) {
+          sqliteDb.run('DELETE FROM users;', (err) => {
+            if (err) console.warn('[DB] SQLite delete users warning:', err.message);
+          });
+          for (const u of store.users) {
+            sqliteDb.run(
+              'INSERT OR REPLACE INTO users (id, name, shop_name, phone, password, role, balance, is_blocked, data, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [u.id, u.name || '', u.shopName || '', u.phone || '', u.password || '', u.role || 'citizen', u.balance || 0, u.isBlocked ? 1 : 0, JSON.stringify(u), nowIso],
+              (err) => {
+                if (err) console.warn('[DB] SQLite user insert warning:', err.message);
+              }
+            );
+          }
+        }
+
+        if (Array.isArray(store.services_79)) {
+          sqliteDb.run('DELETE FROM services_79;', (err) => {
+            if (err) console.warn('[DB] SQLite delete services_79 warning:', err.message);
+          });
+          for (const s of store.services_79) {
+            sqliteDb.run(
+              'INSERT OR REPLACE INTO services_79 (id, num, name, category, provider_cost, wholesale_rate, retail_rate, is_active, data, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              [s.id, s.num || 0, s.name || '', s.category || '', s.providerCost || 0, s.wholesaleRate || 0, s.retailRate || 0, s.isActive ? 1 : 0, JSON.stringify(s), nowIso],
+              (err) => {
+                if (err) console.warn('[DB] SQLite service insert warning:', err.message);
               }
             );
           }
@@ -466,8 +526,47 @@ export function getStore() {
     if (['राजेश कुमार', 'अधिकृत संचालक'].includes(loadedStore.settings.ownerName)) { loadedStore.settings.ownerName = ''; mutated = true; }
     if (loadedStore.settings.upiId === 'cybercafe@upi') { loadedStore.settings.upiId = ''; mutated = true; }
     if (loadedStore.settings.address && loadedStore.settings.address.includes('मेन मार्केट')) { loadedStore.settings.address = ''; mutated = true; }
-    if (loadedStore.settings.superAdminPhone === '9800000000') { loadedStore.settings.superAdminPhone = ''; mutated = true; }
-    if (loadedStore.settings.superAdminUpiId === 'superadmin@upi') { loadedStore.settings.superAdminUpiId = ''; mutated = true; }
+    // Configure Super Admin Phone, WhatsApp, Suman Devi UPI & QR
+    loadedStore.settings.superAdminPhone = '8533955333';
+    loadedStore.settings.superAdminWhatsapp = '8533955333';
+    loadedStore.settings.superAdminUpiId = '8006518960@pthdfc';
+    loadedStore.settings.superAdminPayeeName = 'Suman Devi';
+    loadedStore.settings.superAdminQrImage = '/images/superadmin_qr.jpg';
+
+    // Load full 79-services master list if missing
+    const services79Path = path.join(dataDir, 'services_79.json');
+    if (!Array.isArray(loadedStore.services_79) || loadedStore.services_79.length < 79) {
+      if (fs.existsSync(services79Path)) {
+        try {
+          loadedStore.services_79 = JSON.parse(fs.readFileSync(services79Path, 'utf-8'));
+          mutated = true;
+        } catch (e) {
+          console.warn('[DB] Could not load services_79.json:', e.message);
+        }
+      }
+    }
+
+    // Initialize unified users collection
+    if (!Array.isArray(loadedStore.users)) {
+      loadedStore.users = [];
+      mutated = true;
+    }
+    (loadedStore.cafes || []).forEach(c => {
+      if (!loadedStore.users.some(u => u.phone === c.phone || u.id === c.id)) {
+        loadedStore.users.push({
+          id: c.id,
+          name: c.ownerName || 'संचालक',
+          shopName: c.shopName || 'डिजिटल सेवा केंद्र',
+          phone: c.phone || '9876543210',
+          password: '1234',
+          role: 'cafe',
+          balance: c.b2bWallet?.balance || 0,
+          isBlocked: !!c.isFrozen,
+          createdAt: c.createdAt || new Date().toISOString()
+        });
+        mutated = true;
+      }
+    });
 
     // Secure Super Admin credentials with bcrypt
     if (!loadedStore.settings.superAdminPin || !isBcryptHash(loadedStore.settings.superAdminPin) || !verifyCredential('9999', loadedStore.settings.superAdminPin)) {

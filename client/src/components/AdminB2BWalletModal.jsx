@@ -199,47 +199,42 @@ export default function AdminB2BWalletModal({
                 <button type="button" onClick={() => setIsQrOpen(false)} className="text-slate-400 font-bold">✕</button>
               </div>
 
-              {/* Super Admin Payment target & Real Scanable QR Code */}
+              {/* Super Admin Payment target & Real Suman Devi QR Code */}
               <div className="bg-white p-3 rounded-2xl border border-indigo-200 text-center space-y-2 flex flex-col items-center shadow-xs">
-                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">सुपर एडमिन भुगतान QR (0% कमीशन):</span>
-                <div className="p-2 bg-white rounded-xl shadow-xs border border-indigo-100 inline-block">
-                  <QRCodeSVG 
-                    value={`upi://pay?pa=superadmin@upi&pn=SmartCafe%20Admin&am=${amount || 500}&cu=INR&tn=B2B-Wallet-Topup`}
-                    size={140}
-                    level="H"
-                    includeMargin={true}
+                <div className="flex items-center gap-1.5 text-xs font-black text-slate-800">
+                  <span>खाताधारक:</span>
+                  <span className="text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">Suman Devi ✓</span>
+                </div>
+                <div className="p-1.5 bg-white rounded-xl shadow-md border-2 border-indigo-400 inline-block">
+                  <img 
+                    src="/images/superadmin_qr.jpg" 
+                    alt="Suman Devi UPI QR" 
+                    className="w-48 h-auto rounded-lg object-contain"
                   />
                 </div>
-                <div className="flex items-center gap-1.5 flex-wrap justify-center">
-                  <a
-                    href={`upi://pay?pa=superadmin@upi&pn=SmartCafe%20Admin&am=${amount || 500}&cu=INR&tn=B2B-Wallet-Topup`}
-                    className="px-2 py-0.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-md text-[10px] font-black border border-indigo-200"
+                <div className="flex items-center justify-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl w-full">
+                  <span className="text-[10px] text-slate-500 font-bold">UPI ID:</span>
+                  <span className="font-mono font-black text-xs text-indigo-700 select-all">8006518960@pthdfc</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText('8006518960@pthdfc');
+                      alert('UPI ID (8006518960@pthdfc) कॉपी हो गई है!');
+                    }}
+                    className="text-[10px] bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-0.5 rounded-md font-bold transition"
                   >
-                    PhonePe
-                  </a>
-                  <a
-                    href={`upi://pay?pa=superadmin@upi&pn=SmartCafe%20Admin&am=${amount || 500}&cu=INR&tn=B2B-Wallet-Topup`}
-                    className="px-2 py-0.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-md text-[10px] font-black border border-blue-200"
-                  >
-                    Google Pay
-                  </a>
-                  <a
-                    href={`upi://pay?pa=superadmin@upi&pn=SmartCafe%20Admin&am=${amount || 500}&cu=INR&tn=B2B-Wallet-Topup`}
-                    className="px-2 py-0.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-md text-[10px] font-black border border-sky-200"
-                  >
-                    Paytm
-                  </a>
-                  <a
-                    href={`upi://pay?pa=superadmin@upi&pn=SmartCafe%20Admin&am=${amount || 500}&cu=INR&tn=B2B-Wallet-Topup`}
-                    className="px-2 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-black border border-emerald-200"
-                  >
-                    BHIM UPI
-                  </a>
+                    कॉपी करें
+                  </button>
                 </div>
-                <p className="font-mono font-black text-xs text-indigo-700 select-all">superadmin@upi</p>
+                <div className="flex items-center gap-1.5 flex-wrap justify-center">
+                  <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-[10px] font-black border border-indigo-200">PhonePe</span>
+                  <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded-md text-[10px] font-black border border-blue-200">Google Pay</span>
+                  <span className="px-2 py-0.5 bg-sky-50 text-sky-700 rounded-md text-[10px] font-black border border-sky-200">Paytm</span>
+                  <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-md text-[10px] font-black border border-emerald-200">BHIM UPI</span>
+                </div>
                 <a
-                  href={`upi://pay?pa=superadmin@upi&pn=SmartCafe%20Admin&am=${amount || 500}&cu=INR&tn=B2B-Wallet-Topup`}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-[11px] font-bold shadow-xs transition"
+                  href={`upi://pay?pa=8006518960@pthdfc&pn=Suman%20Devi&am=${amount || 500}&cu=INR&tn=B2B-Wallet-Topup`}
+                  className="inline-flex items-center gap-1 px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-xs transition"
                 >
                   ⚡ मोबाइल UPI ऐप से ₹{amount || 500} भेजें
                 </a>
