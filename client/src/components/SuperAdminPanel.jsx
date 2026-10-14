@@ -5,7 +5,7 @@ import {
   MapPin, ExternalLink, AlertCircle, ArrowUpRight, Award, Sparkles,
   Lock, Unlock, Eye, EyeOff, Save, Check, X, FileText, QrCode,
   Megaphone, Trash2, Radio, Activity, HardDrive, Cpu, Server, KeyRound,
-  Power, Car, CreditCard, Zap, Download
+  Power, Car, CreditCard, Zap, Download, ArrowLeft
 } from 'lucide-react';
 import { authFetch, getServerBaseUrl } from '../utils/api';
 import Services79RatesManager from './superadmin/Services79RatesManager';
@@ -27,7 +27,7 @@ export const MASTER_12_APIS = [
 ];
 export const MASTER_14_APIS = MASTER_12_APIS;
 
-export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated = () => {} }) {
+export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated = () => {}, onBackToPortal = () => {} }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -569,9 +569,21 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            {onBackToPortal && (
+              <button
+                type="button"
+                onClick={onBackToPortal}
+                className="bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white font-bold px-4 py-2.5 rounded-2xl text-xs sm:text-sm flex items-center gap-2 transition border border-slate-700/80 shadow-md cursor-pointer active:scale-95"
+                title="मुख्य नागरिक व ऑपरेटर पोर्टल पर वापस जाएं"
+              >
+                <ArrowLeft className="w-4 h-4 text-orange-400" />
+                <span>← मुख्य पोर्टल पर वापस जाएं</span>
+              </button>
+            )}
+
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 rounded-2xl text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-indigo-600/30"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 rounded-2xl text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-indigo-600/30 cursor-pointer active:scale-95"
             >
               <Plus className="w-4 h-4" />
               <span>नया कैफे जोड़ें (Add Cafe)</span>

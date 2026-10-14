@@ -40,6 +40,7 @@ import IndianFlagBackdrop from './components/IndianFlagBackdrop';
 import ScrollToTopWidget from './components/ScrollToTopWidget';
 import { authFetch, getServerBaseUrl, setServerBaseUrl } from './utils/api';
 import { useLanguage } from './context/LanguageContext';
+import { ArrowLeft, Home, ChevronRight } from 'lucide-react';
 
 export default function App() {
   const { language, t } = useLanguage();
@@ -217,6 +218,81 @@ export default function App() {
     sessionStorage.setItem('active_mode', targetMode);
     setMode(targetMode);
   };
+
+  // Universal Back and Home Handlers (Requirement: Back button on every page)
+  const handleUniversalBack = () => {
+    if (mode === 'superadmin') {
+      navigateToTier('customer');
+    } else if (mode === 'admin') {
+      if (adminTab !== 'dashboard' && adminTab !== 'home') {
+        setAdminTab('dashboard');
+      } else {
+        navigateToTier('customer');
+      }
+    } else {
+      setCustomerTab('home');
+    }
+  };
+
+  const handleGoHome = () => {
+    if (mode === 'superadmin') {
+      navigateToTier('customer');
+    } else if (mode === 'admin') {
+      setAdminTab('dashboard');
+    } else {
+      setCustomerTab('home');
+    }
+  };
+
+  const getCurrentPageTitle = () => {
+    if (mode === 'superadmin') {
+      return language === 'hi' ? '🛡️ सुपर एडमिन SaaS कंट्रोल रूम' : '🛡️ Super Admin Control Room';
+    }
+    
+    if (mode === 'admin') {
+      const adminTitles = {
+        prints: { hi: '🖨️ लाइव प्रिंट कतार (Print Queue)', en: '🖨️ Live Print Queue' },
+        applications: { hi: '📄 फॉर्म आवेदन डेस्क (Application Desk)', en: '📄 Applications Desk' },
+        cashbook: { hi: '💰 दैनिक रोकड़ बही (Daily Cashbook)', en: '💰 Daily Cashbook' },
+        udhar: { hi: '📒 ग्राहक उधार व खाता रजिस्टर (Udhar Register)', en: '📒 Udhar Register' },
+        complaints: { hi: '💬 ग्राहक सहायता व शिकायत (Complaints)', en: '💬 Customer Complaints' },
+        settings: { hi: '⚙️ कैफे सेटिंग्स व रेट कार्ड (Cafe Settings)', en: '⚙️ Cafe Settings' },
+        customers: { hi: '👥 ग्राहक डायरेक्टरी (Customer Vault)', en: '👥 Customer Vault' },
+        portals: { hi: '🌐 सरकारी पोर्टल्स डायरेक्टरी (Govt Portals)', en: '🌐 Govt Portals Directory' },
+        resizer: { hi: '✂️ फोटो व सिग्नेचर रिसाइज़र (Photo & Sign Resizer)', en: '✂️ Photo & Sign Resizer' },
+        pdf: { hi: '📑 PDF मर्जर व टूल्स (PDF Tools)', en: '📑 PDF Merger & Tools' },
+        edistrict: { hi: '📜 ई-डिस्ट्रिक्ट टूल्स सुइट (e-District Suite)', en: '📜 e-District Tools Suite' },
+        printportal: { hi: '🪪 CR-80 PVC स्मार्ट कार्ड मेकर (PVC Card Portal)', en: '🪪 CR-80 PVC Smart Card Maker' },
+        rc: { hi: '🚗 वाहन RC टू PDF / PVC (Vehicle RC Tool)', en: '🚗 Vehicle RC Download & PVC' }
+      };
+      return adminTitles[adminTab]?.[language] || adminTab;
+    }
+
+    const customerTitles = {
+      print: { hi: '🖨️ त्वरित दस्तावेज़ प्रिंट (Quick Print)', en: '🖨️ Quick Print Documents' },
+      apply: { hi: '📄 सरकारी योजना व फॉर्म आवेदन (Apply for Services)', en: '📄 Apply for Govt Services' },
+      track: { hi: '🔍 आवेदन व प्रिंट स्थिति जांचें (Status Tracker)', en: '🔍 Track Application & Print' },
+      jobs: { hi: '📢 सरकारी नौकरी व भर्ती बुलेटिन (Job Alerts)', en: '📢 Govt Job & Exam Alerts' },
+      resizer: { hi: '✂️ फोटो व सिग्नेचर रिसाइज़र (Photo & Sign Resizer)', en: '✂️ Photo & Sign Resizer' },
+      pdf: { hi: '📑 PDF मर्जर व टूल्स (PDF Merger Tool)', en: '📑 PDF Merger & Tools' },
+      edistrict: { hi: '📜 ई-डिस्ट्रिक्ट टूल्स सुइट (e-District Suite)', en: '📜 e-District Suite' },
+      printportal: { hi: '🪪 CR-80 PVC स्मार्ट कार्ड मेकर (PVC Card Portal)', en: '🪪 CR-80 PVC Smart Card Maker' },
+      rc: { hi: '🚗 वाहन RC टू PDF / PVC (Vehicle RC Tool)', en: '🚗 Vehicle RC Download & PVC' },
+      portalhome: { hi: '🏠 नागरिक सेवा केंद्र पोर्टल (Citizen Portal Home)', en: '🏠 Citizen Portal Home' }
+    };
+    return customerTitles[customerTab]?.[language] || customerTab;
+  };
+
+  const hasCustomHeader = 
+    (customerTab === 'tool' || customerTab.startsWith('tool-') || customerTab === 'orders') ||
+    (adminTab === 'tool' || adminTab.startsWith('tool-') || adminTab === 'orders');
+
+  const isSubPage = 
+    !hasCustomHeader && (
+      (mode === 'customer' && customerTab !== 'home' && customerTab !== 'dashboard') ||
+      (mode === 'admin' && adminTab !== 'dashboard' && adminTab !== 'home') ||
+      (mode === 'superadmin')
+    );
 
   useEffect(() => {
     const handlePopState = () => {
@@ -763,6 +839,56 @@ export default function App() {
         )}
 
         {/* =================================================================== */}
+        {/* UNIVERSAL BACK & BREADCRUMB NAVIGATION BAR (Requirement: Back button on every page) */}
+        {/* =================================================================== */}
+        {isSubPage && (
+          <div className="no-print mb-4 sm:mb-6 bg-white/95 dark:bg-[#0c162c]/95 p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm backdrop-blur-md flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
+              <button
+                type="button"
+                onClick={handleUniversalBack}
+                className="inline-flex items-center gap-2 px-4 py-2 sm:px-4.5 sm:py-2.5 rounded-xl sm:rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-black text-xs sm:text-sm shadow-md shadow-orange-500/20 active:scale-95 transition cursor-pointer group"
+                title={language === 'hi' ? 'पिछले पेज पर वापस जाएं' : 'Go back to previous page'}
+              >
+                <ArrowLeft className="w-4 h-4 sm:w-4.5 sm:h-4.5 group-hover:-translate-x-1 transition-transform" />
+                <span>{language === 'hi' ? '← वापस जाएं' : '← Go Back'}</span>
+              </button>
+
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-semibold flex-wrap">
+                <button
+                  type="button"
+                  onClick={handleGoHome}
+                  className="hover:text-orange-600 dark:hover:text-orange-400 transition flex items-center gap-1 cursor-pointer"
+                >
+                  <Home className="w-3.5 h-3.5" />
+                  <span>
+                    {mode === 'superadmin' 
+                      ? (language === 'hi' ? 'नागरिक पोर्टल' : 'Citizen Portal')
+                      : mode === 'admin'
+                      ? (language === 'hi' ? 'दुकानदार डैशबोर्ड' : 'Operator Dashboard')
+                      : (language === 'hi' ? 'मुख्य पृष्ठ' : 'Home')}
+                  </span>
+                </button>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <span className="font-black text-orange-600 dark:text-orange-400">
+                  {getCurrentPageTitle()}
+                </span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleGoHome}
+              className="text-xs font-bold text-slate-700 dark:text-slate-200 hover:text-orange-600 dark:hover:text-orange-400 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 cursor-pointer ml-auto border border-slate-200 dark:border-slate-700 active:scale-95 shadow-2xs"
+              title={language === 'hi' ? 'मुख्य डैशबोर्ड पर जाएं' : 'Go to main dashboard'}
+            >
+              <Home className="w-3.5 h-3.5 text-orange-500" />
+              <span>{mode === 'admin' ? (language === 'hi' ? 'डैशबोर्ड' : 'Dashboard') : (language === 'hi' ? 'होम पेज' : 'Home')}</span>
+            </button>
+          </div>
+        )}
+
+        {/* =================================================================== */}
         {/* TIER 1: CUSTOMER / CITIZEN PUBLIC PORTAL */}
         {/* =================================================================== */}
         {mode === 'customer' && (
@@ -918,7 +1044,6 @@ export default function App() {
             {customerTab === 'edistrict' && (
               <EDistrictSuite
                 initialSubTab={edistrictSubTab}
-                onBack={() => setCustomerTab('home')}
                 selectedCafe={selectedCafe}
               />
             )}
@@ -1094,7 +1219,6 @@ export default function App() {
               {!isStaffAuth && adminTab === 'edistrict' && (
                 <EDistrictSuite
                   initialSubTab={edistrictSubTab}
-                  onBack={() => setAdminTab('dashboard')}
                   selectedCafe={selectedCafe}
                 />
               )}
@@ -1137,7 +1261,7 @@ export default function App() {
               )}
 
               {!isStaffAuth && adminTab === 'portals' && (
-                <PortalsDirectory onBack={() => setAdminTab('dashboard')} />
+                <PortalsDirectory />
               )}
 
               {!isStaffAuth && adminTab === 'settings' && (
@@ -1167,7 +1291,11 @@ export default function App() {
               onBackToCitizen={() => navigateToTier('customer')}
             />
           ) : (
-            <SuperAdminPanel theme={theme} onToolStatusUpdated={fetchToolSettings} />
+            <SuperAdminPanel 
+              theme={theme} 
+              onToolStatusUpdated={fetchToolSettings} 
+              onBackToPortal={() => navigateToTier('customer')}
+            />
           )
         )}
 
