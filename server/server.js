@@ -795,6 +795,23 @@ app.post('/api/superadmin/services/rates', (req, res) => {
   }
 
   saveStore(store);
+
+  // Sync to json files for full persistence across client and public API
+  try {
+    const jsonStr = JSON.stringify(store.services_79, null, 2);
+    fs.writeFileSync(path.join(__dirname, 'data', 'services_79.json'), jsonStr);
+    const clientPath = path.join(__dirname, '..', 'client', 'src', 'data', 'services_79.json');
+    if (fs.existsSync(path.dirname(clientPath))) {
+      fs.writeFileSync(clientPath, jsonStr);
+    }
+    const publicApiPath = path.join(__dirname, '..', 'client', 'public', 'api', 'data', 'services_79.json');
+    if (fs.existsSync(path.dirname(publicApiPath))) {
+      fs.writeFileSync(publicApiPath, jsonStr);
+    }
+  } catch (e) {
+    console.warn('Error syncing services_79.json files:', e.message);
+  }
+
   res.json({ success: true, services: store.services_79, message: '79-सर्विसेज रेट्स सफलतापूर्वक अपडेट और लाइव कर दिए गए।' });
 });
 

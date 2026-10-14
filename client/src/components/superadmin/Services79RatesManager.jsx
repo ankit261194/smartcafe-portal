@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Search, Save, RefreshCw, CheckCircle2, AlertCircle, ToggleLeft, 
-  ToggleRight, IndianRupee, Layers, ShieldCheck, Zap, Filter
+  ToggleRight, IndianRupee, Layers, ShieldCheck, Zap, Filter, ArrowUp
 } from 'lucide-react';
 import { authFetch } from '../../utils/api';
 
@@ -30,6 +30,7 @@ export default function Services79RatesManager({ onRatesUpdated }) {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
+  const [unsavedCount, setUnsavedCount] = useState(0);
 
   const fetchRates = async () => {
     setLoading(true);
@@ -39,6 +40,7 @@ export default function Services79RatesManager({ onRatesUpdated }) {
         const data = await res.json();
         if (data.services && Array.isArray(data.services)) {
           setServices(data.services);
+          setUnsavedCount(0);
         }
       }
     } catch (err) {
@@ -55,10 +57,12 @@ export default function Services79RatesManager({ onRatesUpdated }) {
   const handleRateChange = (id, field, value) => {
     const numVal = Math.max(0, parseFloat(value) || 0);
     setServices(prev => prev.map(s => s.id === id ? { ...s, [field]: numVal } : s));
+    setUnsavedCount(prev => prev + 1);
   };
 
   const handleToggleActive = (id) => {
     setServices(prev => prev.map(s => s.id === id ? { ...s, isActive: !s.isActive } : s));
+    setUnsavedCount(prev => prev + 1);
   };
 
   const handleSaveSingle = async (service) => {
@@ -76,7 +80,7 @@ export default function Services79RatesManager({ onRatesUpdated }) {
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        setSaveSuccessMsg(`✅ "${service.name}" के नए रेट सफलतापूर्वक सहेजे गए!`);
+        setSaveSuccessMsg(`✅ "${service.name}" का नया रेट सफलतापूर्वक सहेजा गया!`);
         setTimeout(() => setSaveSuccessMsg(''), 4000);
         if (onRatesUpdated) onRatesUpdated();
       } else {
@@ -89,6 +93,7 @@ export default function Services79RatesManager({ onRatesUpdated }) {
     }
   };
 
+  // MASTER 1-CLICK SAVE ALL 79 SERVICES
   const handleSaveAll = async () => {
     setSaving(true);
     try {
@@ -99,11 +104,17 @@ export default function Services79RatesManager({ onRatesUpdated }) {
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        setSaveSuccessMsg('🎉 सभी 79 सेवाओं के नए रेट व मार्जिन सफलतापूर्वक लाइव कर दिए गए हैं!');
-        setTimeout(() => setSaveSuccessMsg(''), 5000);
+        // Also cache locally in browser as safety net
+        try {
+          localStorage.setItem('portal_services_79_rates', JSON.stringify(services));
+        } catch (e) {}
+
+        setUnsavedCount(0);
+        setSaveSuccessMsg('🎉 बधाई! सभी 79 सेवाओं के नए रेट व मार्जिन सफलतापूर्वक डेटाबेस में लॉक और पूरे पोर्टल पर लाइव हो चुके हैं!');
+        setTimeout(() => setSaveSuccessMsg(''), 6000);
         if (onRatesUpdated) onRatesUpdated();
       } else {
-        alert(data.error || 'रेट सेव करने में त्रुटि।');
+        alert(data.error || 'रेट सेव करने में त्रुटि आई।');
       }
     } catch (err) {
       alert('सर्वर से कनेक्ट नहीं हो सका।');
@@ -122,7 +133,7 @@ export default function Services79RatesManager({ onRatesUpdated }) {
   });
 
   return (
-    <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-5 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
+    <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-5 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6 relative">
       
       {/* Header Banner */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
@@ -135,16 +146,17 @@ export default function Services79RatesManager({ onRatesUpdated }) {
             79 सर्विस रेट कार्ड व लाइव प्रॉफिट कंट्रोल
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-3xl">
-            API प्रोवाइडर की बेस लागत के आधार पर दुकानदारों (Wholesale) और आम जनता (Retail) के लिए अपनी इच्छानुसार रेट तय करें। मुनाफा तुरंत ऑटो-कैलकुलेट होगा और पूरे पोर्टल पर लाइव हो जाएगा।
+            नीचे टेबल में किसी भी सर्विस का थोक या ग्राहक रेट बदलें। बदलने के बाद ऊपर या नीचे दिया गया <strong>"मास्टर सेव"</strong> बटन दबाएं — सभी 79 रेट्स एक बार में सेव हो जाएंगे।
           </p>
         </div>
 
+        {/* TOP MASTER SAVE BUTTON */}
         <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={fetchRates}
             disabled={loading}
-            className="p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition cursor-pointer"
-            title="रिफ्रेश करें"
+            className="p-3 rounded-2xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 transition cursor-pointer"
+            title="डेटाबेस से पुनः लोड करें"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           </button>
@@ -152,17 +164,18 @@ export default function Services79RatesManager({ onRatesUpdated }) {
           <button
             onClick={handleSaveAll}
             disabled={saving || loading}
-            className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 active:scale-95 text-white font-black px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2 shadow-lg shadow-emerald-600/20 transition cursor-pointer disabled:opacity-50"
+            className="bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:from-emerald-500 hover:to-green-500 active:scale-95 text-white font-black px-6 py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2.5 shadow-xl shadow-emerald-600/30 transition cursor-pointer disabled:opacity-50 border-2 border-emerald-400/40"
           >
-            <Save className="w-4 h-4" />
-            <span>{saving ? 'लाइव हो रहा है...' : '💾 सभी 79 रेट्स एक साथ सेव करें'}</span>
+            <Save className="w-5 h-5 text-amber-300 animate-pulse" />
+            <span>{saving ? 'लाइव सेव हो रहा है...' : '💾 मास्टर सेव: सभी 79 रेट्स एक साथ सहेजें'}</span>
           </button>
         </div>
       </div>
 
+      {/* Success Notification Alert */}
       {saveSuccessMsg && (
-        <div className="p-3.5 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700 rounded-2xl flex items-center gap-3 text-xs font-black text-emerald-900 dark:text-emerald-200 animate-in fade-in">
-          <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+        <div className="p-4 bg-emerald-50 dark:bg-emerald-950/60 border-2 border-emerald-500 dark:border-emerald-600 rounded-2xl flex items-center gap-3 text-xs sm:text-sm font-black text-emerald-900 dark:text-emerald-100 shadow-md animate-in fade-in zoom-in-95">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
           <span>{saveSuccessMsg}</span>
         </div>
       )}
@@ -298,8 +311,8 @@ export default function Services79RatesManager({ onRatesUpdated }) {
                     <td className="py-3 px-3 text-center">
                       <span className={`inline-flex items-center gap-0.5 font-mono font-black text-xs px-2 py-0.5 rounded-full ${
                         wholesaleProfit >= 0 
-                          ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300' 
-                          : 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300'
+                          ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' 
+                          : 'bg-rose-50 text-rose-600 border border-rose-200'
                       }`}>
                         {wholesaleProfit >= 0 ? '+' : ''}₹{wholesaleProfit.toFixed(1)}
                       </span>
@@ -324,31 +337,26 @@ export default function Services79RatesManager({ onRatesUpdated }) {
                     <td className="py-3 px-3 text-center">
                       <span className={`inline-flex items-center gap-0.5 font-mono font-black text-xs px-2 py-0.5 rounded-full ${
                         retailProfit >= 0 
-                          ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300' 
-                          : 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300'
+                          ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' 
+                          : 'bg-rose-50 text-rose-600 border border-rose-200'
                       }`}>
                         {retailProfit >= 0 ? '+' : ''}₹{retailProfit.toFixed(1)}
                       </span>
                     </td>
 
-                    {/* Active Toggle Switch */}
+                    {/* Active/Inactive Toggle */}
                     <td className="py-3 px-3 text-center">
                       <button
                         type="button"
                         onClick={() => handleToggleActive(service.id)}
-                        className="inline-flex items-center gap-1 cursor-pointer transition"
-                        title={service.isActive ? 'सेवा चालू है (क्लिक करके बंद करें)' : 'सेवा बंद है (क्लिक करके चालू करें)'}
+                        className={`text-xs font-bold px-2.5 py-1 rounded-full border transition cursor-pointer flex items-center gap-1 mx-auto ${
+                          service.isActive 
+                            ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800' 
+                            : 'bg-slate-100 dark:bg-slate-800 text-slate-500 border-slate-300 dark:border-slate-700'
+                        }`}
                       >
-                        {service.isActive ? (
-                          <span className="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
-                            चालू
-                          </span>
-                        ) : (
-                          <span className="bg-slate-300 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-[10px] font-black px-2 py-0.5 rounded-full">
-                            बंद
-                          </span>
-                        )}
+                        <span className={`w-1.5 h-1.5 rounded-full ${service.isActive ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400'}`}></span>
+                        <span>{service.isActive ? 'ON' : 'OFF'}</span>
                       </button>
                     </td>
 
@@ -377,20 +385,51 @@ export default function Services79RatesManager({ onRatesUpdated }) {
         </table>
       </div>
 
-      {/* Summary Footer */}
-      <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-2 pt-2">
+      {/* BOTTOM MASTER SAVE BAR & Summary Footer */}
+      <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 dark:text-slate-400 gap-4 pt-4 border-t border-slate-100 dark:border-slate-800">
         <div>
           दर्शाई गई सेवाएं: <span className="font-bold text-slate-800 dark:text-slate-200">{filteredServices.length}</span> / कुल: <span className="font-bold text-slate-800 dark:text-slate-200">{services.length}</span>
+          {unsavedCount > 0 && (
+            <span className="ml-3 text-amber-600 dark:text-amber-400 font-bold bg-amber-50 dark:bg-amber-950/50 px-2.5 py-1 rounded-lg border border-amber-200">
+              ⚠️ {unsavedCount} बदलाव अभी सहेजे नहीं गए हैं
+            </span>
+          )}
         </div>
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-            सक्रिय: {services.filter(s => s.isActive).length}
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-slate-400"></span>
-            निष्क्रिय: {services.filter(s => !s.isActive).length}
-          </span>
+
+        {/* BOTTOM MASTER BUTTON */}
+        <button
+          onClick={handleSaveAll}
+          disabled={saving || loading}
+          className="bg-gradient-to-r from-emerald-600 via-green-600 to-emerald-700 hover:from-emerald-500 hover:to-green-500 active:scale-95 text-white font-black px-7 py-3 rounded-2xl text-xs sm:text-sm flex items-center gap-2.5 shadow-xl shadow-emerald-600/30 transition cursor-pointer disabled:opacity-50 border-2 border-emerald-400/40"
+        >
+          <Save className="w-5 h-5 text-amber-300" />
+          <span>{saving ? 'लाइव सेव हो रहा है...' : '💾 मास्टर सेव: सभी 79 रेट्स एक साथ सहेजें'}</span>
+        </button>
+      </div>
+
+      {/* FLOATING STICKY MASTER SAVE BAR (Fixed at viewport bottom when scrolling table) */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-xl px-4 no-print pointer-events-auto">
+        <div className="bg-slate-900/95 dark:bg-slate-950/95 border-2 border-emerald-500 text-white rounded-2xl p-3 shadow-2xl backdrop-blur-md flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <span className="text-xl">💾</span>
+            <div className="truncate">
+              <span className="font-black text-xs sm:text-sm text-emerald-400 block leading-tight">
+                मास्टर 1-क्लिक सेव
+              </span>
+              <span className="text-[10px] text-slate-300 truncate block">
+                {unsavedCount > 0 ? `${unsavedCount} बदलाव तैयार हैं` : 'सभी 79 रेट्स एक बार में सेव करें'}
+              </span>
+            </div>
+          </div>
+
+          <button
+            onClick={handleSaveAll}
+            disabled={saving || loading}
+            className="bg-gradient-to-r from-emerald-500 via-green-500 to-emerald-600 hover:from-emerald-400 hover:to-green-400 active:scale-95 text-white font-black px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg shadow-emerald-500/30 flex items-center gap-2 transition cursor-pointer shrink-0 disabled:opacity-50"
+          >
+            <Save className="w-4 h-4 text-amber-300" />
+            <span>{saving ? 'सहेजा जा रहा है...' : '💾 मास्टर सेव करें'}</span>
+          </button>
         </div>
       </div>
 
