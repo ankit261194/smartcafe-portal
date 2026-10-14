@@ -110,6 +110,13 @@ export default function ServicePage({
   const [gender, setGender] = useState('MALE');
   const [secondaryInput, setSecondaryInput] = useState(''); // e.g. Cert No, Ack No, Discom
   const [addressInput, setAddressInput] = useState('');
+  const [thirdInput, setThirdInput] = useState('');
+  const [uploadedPdfName, setUploadedPdfName] = useState('');
+  const [colorType, setColorType] = useState('Yellow');
+  const [mobileShow, setMobileShow] = useState('No');
+  const [cardBg, setCardBg] = useState('White Background');
+  const [selectState, setSelectState] = useState('Uttar Pradesh');
+  const [rationType, setRationType] = useState('New Format Print');
 
   // Photo & Signature Upload / Picker states
   const [photoData, setPhotoData] = useState(SAMPLE_PHOTOS.male);
@@ -142,7 +149,14 @@ export default function ServicePage({
     setDobDate('');
     setGender('MALE');
     setSecondaryInput('');
+    setThirdInput('');
     setAddressInput('');
+    setUploadedPdfName('');
+    setColorType('Yellow');
+    setMobileShow('No');
+    setCardBg('White Background');
+    setSelectState('Uttar Pradesh');
+    setRationType('New Format Print');
     setPhotoData(SAMPLE_PHOTOS.male);
     setSignData(SAMPLE_SIGNS.sign1);
     setIsCustomPhoto(false);
@@ -765,6 +779,919 @@ export default function ServicePage({
     );
   });
 
+
+  // Screenshot-Exact Action Button Label Helper
+  const getActionButtonText = () => {
+    const id = (currentTool?.id || '').toLowerCase();
+    if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc', 'pan', 'pan_details', 'pan_basic_pricing'].includes(id)) {
+      return 'Fetch Details';
+    }
+    if (['chassis_to_rc_find', 'chassis_to_rc_alt', 'engine_to_rc'].includes(id)) {
+      return '🔍 विवरण प्राप्त करें';
+    }
+    if (['pan_to_gst', 'gst_to_pan', 'gst_verification', 'upi_to_details', 'gmail_to_details'].includes(id)) {
+      return 'Search';
+    }
+    if (['aadhaar_pvc', 'pvc_convert'].includes(id)) {
+      return '⬆ Convert to PVC';
+    }
+    if (id === 'abha_card_instant') {
+      return '📥 Download Card';
+    }
+    if (id === 'abha_card') {
+      return '✈ Send OTP';
+    }
+    if (id.includes('link') && id.includes('shram')) {
+      return 'Update Mobile';
+    }
+    if (id === 'll_exam_pass_auto') {
+      return 'Apply Data ✔';
+    }
+    return 'Submit';
+  };
+
+  const showSecondaryButton = useMemo(() => {
+    const id = (currentTool?.id || '').toLowerCase();
+    return ['samagra_service', 'sambal_pdf', 'mobile_to_account_find', 'mobile_to_multi_account', 'mobile_to_upi_find', 'mobile_to_multi_upi_find', 'voter_mobile_link', 'vcmRequest', 'mask_pan', 'pan_aadhar_mask', 'pantomaaskaadhaar', 'aadhartomaskpan', 'npci_verify', 'npci_link_status'].includes(id);
+  }, [currentTool]);
+
+  // Dynamic Screenshot-Exact Form Inputs Engine
+  const renderScreenshotFormInputs = () => {
+    const id = (currentTool?.id || '').toLowerCase();
+    const cat = (currentTool?.category || '').toLowerCase();
+
+    // 1. CHASSIS TO RC (Screenshot 235)
+    if (['chassis_to_rc_find', 'chassis_to_rc_alt', 'chassis_to_mobile_find'].includes(id)) {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            चैसिस नंबर (Chassis Number) *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
+            placeholder="उदा. MBHZCDESKRH174969"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+          <span className="text-[11px] text-slate-400 block">चैसिस नंबर दर्ज करें।</span>
+        </div>
+      );
+    }
+
+    // 2. ENGINE TO RC (Screenshot 236)
+    if (id === 'engine_to_rc') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            इंजन नंबर (Engine Number) *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
+            placeholder="उदा. Z12EP1074803"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+          <span className="text-[11px] text-slate-400 block">वाहन का वैध इंजन नंबर दर्ज करें।</span>
+        </div>
+      );
+    }
+
+    // 3. VEHICLE RC / NEW RC (Screenshot 243)
+    if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc', 'rc_father_name_find', 'rc_to_mobile_find', 'rc_mobile_fetch', 'vahan_check'].includes(id) || cat === 'rc') {
+      return (
+        <div className="space-y-3.5">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Vehicle Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11))}
+              placeholder="BR01AB1234 / UP32AB1234"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Father Name (Optional)
+            </label>
+            <input
+              type="text"
+              value={fatherName}
+              onChange={(e) => setFatherName(e.target.value)}
+              placeholder="RAMESH KUMAR"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 4. CHALLAN (Screenshot)
+    if (['challan', 'chalan_find', 'chalan_find_mobile'].includes(id) || cat === 'challan') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            वाहन अथवा चालान क्रमांक (Challan / Vehicle Number) *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
+            placeholder="UP32AB1234 / UP1234567890"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+        </div>
+      );
+    }
+
+    // 5. DRIVING LICENCE CARD PRINT (Screenshot 250)
+    if (['dl', 'driving_licence_pdf', 'dl_details', 'dl_to_mobile_find'].includes(id) || cat === 'dl') {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              DL Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 18))}
+              placeholder="Enter DL Number (e.g. UP32 20180012345)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Date Of Birth *
+            </label>
+            <input
+              type="date"
+              required
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Select Card Background
+            </label>
+            <select
+              value={cardBg}
+              onChange={(e) => setCardBg(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="White Background">White Background</option>
+              <option value="Light Blue (Original)">Light Blue (Original)</option>
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 6. LL CARD DOWNLOAD (Screenshot 230)
+    if (['ll_find', 'll_pdf'].includes(id)) {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Application / Learning Number *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
+            placeholder="Enter Application / Learning Number"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+        </div>
+      );
+    }
+
+    // 7. LL EXAM REQUEST (Screenshot 234)
+    if (id === 'll_exam_pass_auto') {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Application Number: *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
+              placeholder="App****6545"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Date Of Birth: *
+            </label>
+            <input
+              type="date"
+              required
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Password: *
+            </label>
+            <input
+              type="password"
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value)}
+              placeholder="Enter Password"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Exam Pin <span className="text-rose-500 font-bold">Optional</span>
+            </label>
+            <input
+              type="text"
+              value={thirdInput}
+              onChange={(e) => setThirdInput(e.target.value)}
+              placeholder="Enter Exam Pin"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Select State: *
+            </label>
+            <select
+              value={selectState}
+              onChange={(e) => setSelectState(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
+            >
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Haryana">Haryana</option>
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 8. PAN TO GST (Screenshot 227)
+    if (id === 'pan_to_gst') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Pan To GST Number *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 10))}
+            placeholder="Enter PAN Number"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+        </div>
+      );
+    }
+
+    // 9. GST TO PAN / GST VERIFICATION (Screenshot 228)
+    if (['gst_to_pan', 'gst_verification'].includes(id)) {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            GST To PAN Number *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 15))}
+            placeholder="ENTER GST NUMBER"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+        </div>
+      );
+    }
+
+    // 10. PAN TO MASK AADHAAR / MASK PAN (Screenshot 196)
+    if (['mask_pan', 'pan_aadhar_mask', 'pantomaaskaadhaar'].includes(id)) {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Pan Number *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 10))}
+            placeholder="Enter PAN Number"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+        </div>
+      );
+    }
+
+    // 11. GENERAL PAN / PAN DETAILS (Screenshot 220)
+    if (['pan', 'pan_details', 'pan_basic_pricing', 'panCard', 'pan_to_aadhar_find', 'pan_to_udyam_details'].includes(id) || cat === 'pan') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            PAN Card Number *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10))}
+            placeholder="Enter 10-Digit PAN Number"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+        </div>
+      );
+    }
+
+    // 12. AADHAAR PVC CONVERT (Screenshot 180)
+    if (['aadhaar_pvc', 'pvc_convert'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Upload Aadhar PDF *
+            </label>
+            <input
+              type="file"
+              accept=".pdf"
+              onChange={(e) => {
+                const f = e.target.files?.[0];
+                if (f) {
+                  setUploadedPdfName(f.name);
+                  if (!primaryInput) setPrimaryInput('UIDAI-PDF-' + f.name.slice(0, 8));
+                }
+              }}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3 py-2 text-xs focus:outline-none cursor-pointer"
+            />
+            <span className="text-[10px] text-slate-400 block">Note: आधार UIDAI के Official वेबसाइट से ही डाउनलोड करें, तभी PVC बनेगा</span>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              PDF Password *
+            </label>
+            <input
+              type="password"
+              required
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value)}
+              placeholder="Enter PDF Password (e.g. ANKI1994)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Color Type *</label>
+              <select
+                value={colorType}
+                onChange={(e) => setColorType(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none"
+              >
+                <option value="Yellow">Yellow</option>
+                <option value="White">White</option>
+              </select>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Mobile Show *</label>
+              <select
+                value={mobileShow}
+                onChange={(e) => setMobileShow(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none"
+              >
+                <option value="No">No</option>
+                <option value="Yes">Yes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 13. UIDAI ORIGINAL PDF API (Screenshot 182)
+    if (['uidai_original_pdf', 'aadhaar_original_pdf_no_otp', 'aadhaar_original_pdf_otp'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Aadhaar Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => {
+                const digits = e.target.value.replace(/D/g, '').slice(0, 12);
+                const parts = [];
+                for (let i = 0; i < digits.length; i += 4) parts.push(digits.substring(i, i + 4));
+                setPrimaryInput(parts.join(' '));
+              }}
+              placeholder="Enter Aadhaar Number"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select Language</label>
+            <select
+              value={secondaryInput || 'Hindi (हिन्दी)'}
+              onChange={(e) => setSecondaryInput(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="Hindi (हिन्दी)">Hindi (हिन्दी)</option>
+              <option value="English">English</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Gujarati">Gujarati</option>
+              <option value="Marathi">Marathi</option>
+            </select>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select PDF Type</label>
+            <select
+              value={thirdInput || 'E-Print'}
+              onChange={(e) => setThirdInput(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="E-Print">E-Print</option>
+              <option value="PVC Format">PVC Format</option>
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 14. AADHAAR ADVANCE / FINGERPRINT (Screenshot 177 / 178)
+    if (['aadhaar_advance', 'aadhaar_fingerprint'].includes(id)) {
+      return (
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Enter Your Aadhaar Number *
+            </label>
+            <div className="flex rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 focus-within:border-blue-500">
+              <span className="bg-purple-600 text-white font-bold px-3 py-2.5 text-xs flex items-center">
+                UID
+              </span>
+              <input
+                type="text"
+                required
+                value={primaryInput}
+                onChange={(e) => {
+                  const digits = e.target.value.replace(/D/g, '').slice(0, 12);
+                  const parts = [];
+                  for (let i = 0; i < digits.length; i += 4) parts.push(digits.substring(i, i + 4));
+                  setPrimaryInput(parts.join(' '));
+                }}
+                placeholder="9999 XXXX XXXX"
+                className="w-full bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+              />
+            </div>
+          </div>
+          <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-center space-y-2">
+            <div className="w-14 h-14 mx-auto rounded-full bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 flex items-center justify-center text-rose-500">
+              <ShieldCheck className="w-7 h-7" />
+            </div>
+            <p className="text-xs font-bold text-slate-600 dark:text-slate-300">
+              बायोमेट्रिक फिंगरप्रिंट स्कैनर तैयार है (Device Ready)
+            </p>
+            <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+              Mantra / Morpho Auto-Detect Active
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    // 15. AADHAAR TO MASK PAN / NPCI (Screenshots 189, 195)
+    if (['npci_verify', 'npci_link_status', 'aadhartomaskpan', 'aadhar_number_to_details', 'uid_seeding', 'pvc_verify'].includes(id)) {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Aadhaar Number *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => {
+              const digits = e.target.value.replace(/D/g, '').slice(0, 12);
+              const parts = [];
+              for (let i = 0; i < digits.length; i += 4) parts.push(digits.substring(i, i + 4));
+              setPrimaryInput(parts.join(' '));
+            }}
+            placeholder="Enter 12-digit Aadhaar Number"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+          />
+        </div>
+      );
+    }
+
+    // 16. GENERAL AADHAAR (Screenshot 181, 184, 185)
+    if (['aadhaar', 'aadhaarCard', 'aadhaar_otp_kyc'].includes(id) || cat === 'aadhaar') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Aadhaar Number *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => {
+              const digits = e.target.value.replace(/D/g, '').slice(0, 12);
+              const parts = [];
+              for (let i = 0; i < digits.length; i += 4) parts.push(digits.substring(i, i + 4));
+              setPrimaryInput(parts.join(' '));
+            }}
+            placeholder="Enter Aadhaar Number"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+          />
+        </div>
+      );
+    }
+
+    // 17. RATION CARD (Screenshot 255)
+    if (['ration', 'ration_pdf_by_ration', 'ration_verification', 'rationCard', 'up_ration_info'].includes(id) || cat === 'ration') {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Ration Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 12))}
+              placeholder="Enter Ration Number"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Ration Type</label>
+            <select
+              value={rationType}
+              onChange={(e) => setRationType(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="New Format Print">New Format Print</option>
+              <option value="Old Format Slip">Old Format Slip</option>
+              <option value="All State NFSA Slip">All State NFSA Slip</option>
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 18. PMJAY VERIFY / AYUSHMAN (Screenshot 190)
+    if (['ayushman', 'pmjay_verify', 'ayushman_card', 'ayushman_image_jpg'].includes(id) || cat === 'health') {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Aadhaar / PM-JAY Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 18))}
+              placeholder="Enter Aadhaar Number / PM-JAY ID"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select State:</label>
+            <select
+              value={selectState}
+              onChange={(e) => setSelectState(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Haryana">Haryana</option>
+              <option value="Delhi">Delhi</option>
+              <option value="All India">All India</option>
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 19. ABHA CARD (Screenshots 193, 194)
+    if (['abha_card', 'abha_otp', 'abha_card_instant'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Aadhaar / Identity Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.slice(0, 18))}
+              placeholder="Enter 12 Digit Number"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+            <span className="text-[11px] text-slate-400 block">OTP will be sent to registered mobile.</span>
+          </div>
+          {id === 'abha_card_instant' && (
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Date of Birth *</label>
+              <input
+                type="date"
+                required
+                value={dobDate}
+                onChange={(e) => setDobDate(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+              />
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // 20. E-SHRAM (Screenshots 191, 192)
+    if (['e_shram', 'e_shram_update', 'e_shram_number_link'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Aadhaar Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 12))}
+              placeholder="Enter Aadhaar Number"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Date of Birth *</label>
+            <input
+              type="date"
+              required
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            />
+          </div>
+          {id.includes('link') && (
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">New Mobile Number *</label>
+              <input
+                type="text"
+                required
+                value={secondaryInput}
+                onChange={(e) => setSecondaryInput(e.target.value.replace(/D/g, '').slice(0, 10))}
+                placeholder="Enter New Mobile Number"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm font-mono focus:outline-none"
+              />
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // 21. SAMAGRA / SAMBAL (Screenshot 200)
+    if (['samagra_service', 'sambal_pdf'].includes(id)) {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Member ID *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 9))}
+            placeholder="Enter Member ID"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+          />
+        </div>
+      );
+    }
+
+    // 22. VOTER MOBILE LINK (Screenshot 264)
+    if (['voter_mobile_link', 'vcmRequest', 'voter_mobile_link_no_otp', 'voter_mobile_link_instant_otp'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Voter Number *</label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 10))}
+              placeholder="Enter Voter Number"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Mobile Number *</label>
+            <input
+              type="text"
+              required
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value.replace(/D/g, '').slice(0, 10))}
+              placeholder="954785****"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 23. SESSION UPDATE (Screenshot 274)
+    if (id === 'session_update') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Mobile Number *</label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 10))}
+            placeholder="Enter 10-digit mobile number"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+          />
+        </div>
+      );
+    }
+
+    // 24. MOBILE TO ACCOUNT / MULTI ACCOUNT / UPI FIND (Screenshot 210)
+    if (['mobile_to_account_find', 'mobile_to_multi_account', 'mobile_to_upi_find', 'mobile_to_multi_upi_find', 'mobile_to_details', 'mobile_lookup', 'check_operator', 'check_plan'].includes(id) || cat === 'telecom') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Mobile Number *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 10))}
+            placeholder="Enter 10-Digit Mobile Number"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+          />
+        </div>
+      );
+    }
+
+    // 25. ELECTRICITY BILL
+    if (['electricity', 'electric_bill_pdf_bihar'].includes(id) || cat === 'utility') {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Consumer Account Number (CA / K-Number) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 12))}
+              placeholder="Enter Consumer Account Number"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Discom Board *</label>
+            <select
+              value={secondaryInput || 'UPPCL'}
+              onChange={(e) => setSecondaryInput(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="UPPCL">UPPCL (उत्तर प्रदेश पावर)</option>
+              <option value="NBPDCL">NBPDCL (North Bihar Power)</option>
+              <option value="SBPDCL">SBPDCL (South Bihar Power)</option>
+              <option value="PVVNL">PVVNL (पश्चिमांचल विद्युत)</option>
+              <option value="DVVNL">DVVNL (दक्षिणांचल विद्युत)</option>
+              <option value="DHBVN">DHBVN (दक्षिण हरियाणा)</option>
+              <option value="BSES">BSES (दिल्ली पावर)</option>
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 26. UDYAM MSME
+    if (id === 'udyam_pdf') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Udyam Registration Number *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 19))}
+            placeholder="UDYAM-XX-00-0000000"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+        </div>
+      );
+    }
+
+    // 27. AGRISTACK
+    if (['agristack_pdf', 'agristack_verify', 'agristack_dbt'].includes(id) || cat === 'agriculture') {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Farmer ID / Aadhaar / Khasra No *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 16))}
+              placeholder="Enter Farmer ID or Aadhaar"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select State:</label>
+            <select
+              value={selectState}
+              onChange={(e) => setSelectState(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Rajasthan">Rajasthan</option>
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 28. VOTER CARD / EPIC
+    if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_verification'].includes(id) || cat === 'voter') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Voter Number (EPIC) *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10))}
+            placeholder="Enter 10-Digit EPIC Code (e.g. XYZ1234567)"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+          />
+        </div>
+      );
+    }
+
+    // 29. DEFAULT / FALLBACK (Clean single input)
+    return (
+      <div className="space-y-1.5">
+        <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+          {localize(currentTool.inputLabel || 'पहचान / संदर्भ संख्या')} *
+        </label>
+        <input
+          type="text"
+          required
+          value={primaryInput}
+          onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
+          placeholder={localize(currentTool.placeholder || 'विवरण दर्ज करें')}
+          className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+        />
+      </div>
+    );
+  };
+
+
   return (
     <div className="space-y-6 w-full max-w-full overflow-x-hidden">
       
@@ -832,594 +1759,197 @@ export default function ServicePage({
         {/* LEFT COLUMN: THE INPUT FORM (AUTO-CLEARING, HTML5 DATES, PHOTO) */}
         {/* ================================================================= */}
         <div className="no-print w-full lg:col-span-5 space-y-5">
-          
-          <div className="bg-white dark:bg-[#0c162c] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+          <div className="bg-white dark:bg-[#0c162c] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md overflow-hidden">
             
-            {/* Service Header Info */}
-            <div className="flex items-start justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border border-orange-200 dark:border-orange-900">
-                    {localize(currentTool?.badge || currentTool?.categoryName || 'सेवा')}
-                  </span>
-                  <span className="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    ⚡ 0.5s Engine
-                  </span>
-                </div>
-                <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                  <ServiceIconComponent className="w-5 h-5 text-orange-500" />
-                  <span>{localize(currentTool?.title || currentTool?.name || 'सेवा')}</span>
-                </h2>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {localize(currentTool?.subtitle || currentTool?.desc || '')}
-                </p>
-              </div>
-
+            {/* Blue Header Banner with Title on left & [← Back] on right */}
+            <div className="bg-[#1d4ed8] dark:bg-[#1e40af] text-white px-4 py-3.5 flex items-center justify-between shadow-xs">
+              <span className="font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-2 truncate pr-2">
+                <ServiceIconComponent className="w-4 h-4 text-white shrink-0" />
+                <span className="truncate">{currentTool?.name || currentTool?.title?.en || currentTool?.id?.toUpperCase()}</span>
+              </span>
               <button
                 type="button"
-                onClick={resetForm}
-                className="text-xs text-slate-500 hover:text-rose-500 font-bold flex items-center gap-1 transition cursor-pointer"
-                title={t('clear_form')}
+                onClick={onBack}
+                className="bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition cursor-pointer shrink-0"
               >
-                <RefreshCw className="w-3.5 h-3.5" />
-                <span>{t('clear_form')}</span>
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>{language === 'hi' ? 'वापस' : 'Back'}</span>
               </button>
             </div>
 
-            {/* THE FORM */}
-            <form onSubmit={handleInstantGenerate} className="space-y-4">
-              
-              {/* Primary Input (PAN, Aadhaar, Voter, RC, etc.) */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
-                  <span>{localize(currentTool.inputLabel)} *</span>
-                  <span className="text-[10px] text-slate-400 font-mono uppercase">{language === 'hi' ? 'आवश्यक' : 'Required'}</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={primaryInput}
-                  onChange={(e) => {
-                    let raw = e.target.value;
-                    if (['pan', 'epan'].includes(toolKind)) {
-                      raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
-                    } else if (toolKind === 'aadhaar') {
-                      const digits = raw.replace(/\D/g, '').slice(0, 12);
-                      const parts = [];
-                      for (let i = 0; i < digits.length; i += 4) {
-                        parts.push(digits.substring(i, i + 4));
-                      }
-                      raw = parts.join(' ');
-                    } else if (toolKind === 'voter') {
-                      raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
-                    } else if (toolKind === 'rc') {
-                      raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11);
-                    } else if (toolKind === 'dl') {
-                      raw = raw.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 16);
-                    } else if (toolKind === 'challan') {
-                      raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 15);
-                    } else if (toolKind === 'ayushman') {
-                      raw = raw.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 18);
-                    } else if (['electricity', 'ration'].includes(toolKind)) {
-                      raw = raw.replace(/\D/g, '').slice(0, 12);
-                    } else if (toolKind === 'banking') {
-                      raw = raw.replace(/\D/g, '').slice(0, 18);
-                    } else if (toolKind === 'telecom') {
-                      raw = raw.replace(/\D/g, '').slice(0, 10);
-                    } else if (toolKind === 'agriculture') {
-                      raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 15);
-                    } else if (toolKind === 'welfare') {
-                      raw = raw.replace(/\D/g, '').slice(0, 12);
-                    } else if (toolKind === 'receipt') {
-                      raw = raw.replace(/\D/g, '').slice(0, 10);
-                    } else {
-                      raw = raw.toUpperCase();
-                    }
-                    setPrimaryInput(raw);
-                  }}
-                  placeholder={localize(currentTool.placeholder)}
-                  className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 focus:border-orange-500 dark:focus:border-orange-400 rounded-2xl px-4 py-3 text-slate-900 dark:text-white font-mono font-black text-base sm:text-lg uppercase tracking-wider focus:outline-none transition shadow-inner placeholder:text-slate-400"
-                />
-                {/* Validation Feedback */}
-                <div className="flex items-center justify-between text-[11px] font-bold px-1 pt-0.5">
-                  <span className="text-slate-500 dark:text-slate-400">
-                    {language === 'hi' ? (
-                      <>
-                        {toolKind === 'pan' && '10-अंकीय पैन नंबर'}
-                        {toolKind === 'epan' && '10-अंकीय पैन अथवा पावती संख्या'}
-                        {toolKind === 'aadhaar' && '12-अंकीय आधार संख्या (स्वतः 4-अंकीय स्पेस)'}
-                        {toolKind === 'voter' && '10-अंकीय वोटर आईडी EPIC कोड'}
-                        {toolKind === 'rc' && 'वाहन पंजीयन क्रमांक (जैसे UP32AB1234)'}
-                        {toolKind === 'dl' && 'सारथी ड्राइविंग लाइसेंस क्रमांक'}
-                        {toolKind === 'electricity' && 'उपभोक्ता खाता संख्या'}
-                        {toolKind === 'ration' && '12-अंकीय राशन कार्ड संख्या'}
-                        {toolKind === 'challan' && 'चालान / वाहन क्रमांक'}
-                        {toolKind === 'ayushman' && 'PM-JAY आईडी / राशन अथवा आधार संख्या'}
-                        {toolKind === 'banking' && 'बैंक खाता संख्या / ग्राहक आईडी'}
-                        {toolKind === 'telecom' && '10-अंकीय मोबाइल नंबर'}
-                        {toolKind === 'agriculture' && 'किसान आईडी / आधार / खसरा संख्या'}
-                        {toolKind === 'welfare' && 'समग्र परिवार / सदस्य / UAN आईडी'}
-                        {toolKind === 'receipt' && '10-अंकीय ग्राहक मोबाइल नंबर'}
-                      </>
-                    ) : (
-                      <>
-                        {toolKind === 'pan' && '10-Digit PAN Number'}
-                        {toolKind === 'epan' && '10-Digit PAN or Ack Number'}
-                        {toolKind === 'aadhaar' && '12-Digit Aadhaar (Auto 4-Digit Spacing)'}
-                        {toolKind === 'voter' && '10-Digit EPIC Voter ID'}
-                        {toolKind === 'rc' && 'Vehicle Registration Number (e.g. UP32AB1234)'}
-                        {toolKind === 'dl' && 'Sarathi Driving Licence Number'}
-                        {toolKind === 'electricity' && 'Consumer Account Number'}
-                        {toolKind === 'ration' && '12-Digit Ration Card Number'}
-                        {toolKind === 'challan' && 'Challan / Vehicle Reg Number'}
-                        {toolKind === 'ayushman' && 'PM-JAY ID or Ration/Aadhaar'}
-                        {toolKind === 'banking' && 'Bank Account No / Customer ID'}
-                        {toolKind === 'telecom' && '10-Digit Mobile Number'}
-                        {toolKind === 'agriculture' && 'Farmer ID / Aadhaar / Khasra No'}
-                        {toolKind === 'welfare' && 'Samagra / Member / UAN ID'}
-                        {toolKind === 'receipt' && '10-Digit Customer Mobile Number'}
-                      </>
-                    )}
-                  </span>
-
-                  {primaryInput && (
-                    <span className="text-emerald-600 dark:text-emerald-400 font-mono">
-                      {primaryInput.length} {language === 'hi' ? 'वर्ण' : 'chars'}
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* 1. PERSONAL DETAILS (NAME & FATHER'S NAME) - ONLY FOR SERVICES THAT REQUIRE THEM */}
-              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'receipt', 'banking', 'agriculture', 'welfare'].includes(toolKind) && (
-                <div className={`grid gap-3 ${['pan', 'voter', 'dl', 'ayushman', 'welfare'].includes(toolKind) ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                      {toolKind === 'voter' ? (language === 'hi' ? 'मतदाता का पूरा नाम *' : 'Voter Full Name *') :
-                       toolKind === 'dl' ? (language === 'hi' ? 'लाइसेंस धारक का नाम *' : 'Licence Holder Name *') :
-                       toolKind === 'ayushman' ? (language === 'hi' ? 'लाभार्थी का पूरा नाम *' : 'Beneficiary Full Name *') :
-                       toolKind === 'banking' ? (language === 'hi' ? 'खाताधारक का नाम *' : 'Account Holder Name *') :
-                       toolKind === 'agriculture' ? (language === 'hi' ? 'किसान / आवेदक का नाम *' : 'Farmer / Applicant Name *') :
-                       toolKind === 'welfare' ? (language === 'hi' ? 'हितग्राही / सदस्य का नाम *' : 'Beneficiary Member Name *') :
-                       toolKind === 'receipt' ? (language === 'hi' ? 'ग्राहक का नाम' : 'Customer Name') :
-                       t('sp_applicant_name')}
-                    </label>
-                    <input
-                      type="text"
-                      value={customerName}
-                      onChange={(e) => setCustomerName(e.target.value)}
-                      placeholder={
-                        toolKind === 'receipt'
-                          ? (language === 'hi' ? 'ग्राहक का नाम दर्ज करें' : 'Enter customer name')
-                          : (language === 'hi' ? 'आवेदक का पूरा नाम दर्ज करें' : 'Enter applicant full name')
-                      }
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none"
-                    />
-                  </div>
-
-                  {['pan', 'voter', 'dl', 'ayushman', 'welfare'].includes(toolKind) && (
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        {toolKind === 'pan' ? (language === 'hi' ? 'पिता का पूरा नाम *' : "Father's Full Name *") :
-                         t('sp_father_husband_name')}
-                      </label>
-                      <input
-                        type="text"
-                        value={fatherName}
-                        onChange={(e) => setFatherName(e.target.value)}
-                        placeholder={
-                          toolKind === 'pan'
-                            ? (language === 'hi' ? 'पिता का पूरा नाम दर्ज करें' : "Enter father's full name")
-                            : (language === 'hi' ? 'पिता अथवा पति का नाम दर्ज करें' : 'Enter father or spouse name')
-                        }
-                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none"
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* 2. REAL HTML5 DATE PICKER FOR DOB & GENDER - ONLY FOR SERVICES THAT REQUIRE THEM */}
-              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'epan', 'welfare', 'agriculture'].includes(toolKind) && (
-                <div className={`grid gap-3 ${['aadhaar', 'voter', 'ayushman', 'welfare'].includes(toolKind) ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-orange-500" />
-                      <span>{t('sp_dob_label')} *</span>
-                    </label>
-                    <input
-                      type="date"
-                      value={dobDate}
-                      onChange={(e) => setDobDate(e.target.value)}
-                      max={new Date().toISOString().split('T')[0]}
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-bold focus:outline-none cursor-pointer"
-                    />
-                    {dobDate && (
-                      <span className="text-[10px] text-slate-400 font-mono block">
-                        {language === 'hi' ? `कार्ड पर छपेगा: ${formatDobDisplay(dobDate)}` : `Printed on card: ${formatDobDisplay(dobDate)}`}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Gender: STRICTLY only on Aadhaar, Voter, Ayushman, and Welfare */}
-                  {['aadhaar', 'voter', 'ayushman', 'welfare'].includes(toolKind) && (
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        {t('sp_gender_label')} *
-                      </label>
-                      <select
-                        value={gender}
-                        onChange={(e) => setGender(e.target.value)}
-                        className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-bold focus:outline-none cursor-pointer"
-                      >
-                        <option value="MALE">{t('sp_gender_male')}</option>
-                        <option value="FEMALE">{t('sp_gender_female')}</option>
-                        <option value="OTHER">{t('sp_gender_other')}</option>
-                      </select>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* 3. PERMANENT ADDRESS - FOR AADHAAR, WELFARE, AGRICULTURE */}
-              {['aadhaar', 'welfare', 'agriculture'].includes(toolKind) && (
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {t('sp_address_label')} *
-                  </label>
-                  <input
-                    type="text"
-                    value={addressInput}
-                    onChange={(e) => setAddressInput(e.target.value)}
-                    placeholder={language === 'hi' ? 'पूरा स्थायी पता दर्ज करें (ग्राम/शहर, जिला, राज्य, पिनकोड)' : 'Enter full permanent address'}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none"
-                  />
-                </div>
-              )}
-
-              {/* 4. SECONDARY FIELD - ONLY FOR EDISTRICT, ELECTRICITY, DL, RECEIPT, BANKING, AGRI, TELECOM */}
-              {['edistrict', 'electricity', 'dl', 'receipt', 'banking', 'agriculture', 'telecom'].includes(toolKind) && (
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {toolKind === 'edistrict' ? (language === 'hi' ? 'प्रमाण पत्र क्रमांक *' : 'Certificate ID *') :
-                     toolKind === 'electricity' ? (language === 'hi' ? 'विद्युत वितरण निगम (Discom Board)' : 'Discom Board') :
-                     toolKind === 'dl' ? (language === 'hi' ? 'अधिकृत COV श्रेणी (जैसे LMV, MCWG)' : 'Authorized COV Category') :
-                     toolKind === 'banking' ? (language === 'hi' ? 'बैंक अथवा शाखा का नाम' : 'Bank / Branch Name') :
-                     toolKind === 'agriculture' ? (language === 'hi' ? 'खसरा / खाता संख्या' : 'Khasra / Khata Number') :
-                     toolKind === 'telecom' ? (language === 'hi' ? 'टेलीकॉम ऑपरेटर (JIO/Airtel/BSNL)' : 'Telecom Operator') :
-                     (language === 'hi' ? 'सेवा विवरण' : 'Service Description')}
-                  </label>
-                  {toolKind === 'electricity' ? (
-                    <select
-                      value={secondaryInput}
-                      onChange={(e) => setSecondaryInput(e.target.value)}
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none cursor-pointer"
-                    >
-                      <option value="">{language === 'hi' ? '-- विद्युत निगम चुनें (डिफ़ॉल्ट UPPCL) --' : '-- Select Discom (Default UPPCL) --'}</option>
-                      <option value="UPPCL">UPPCL (उत्तर प्रदेश पावर कारपोरेशन)</option>
-                      <option value="PVVNL">PVVNL (पश्चिमांचल विद्युत वितरण निगम)</option>
-                      <option value="DVVNL">DVVNL (दक्षिणांचल विद्युत वितरण निगम)</option>
-                      <option value="MVVNL">MVVNL (मध्यांचल विद्युत वितरण निगम)</option>
-                      <option value="PuVVNL">PuVVNL (पूर्वांचल विद्युत वितरण निगम)</option>
-                      <option value="DHBVN">DHBVN (दक्षिण हरियाणा बिजली वितरण निगम)</option>
-                      <option value="BSES">BSES (दिल्ली राजधानी/यमुना पावर)</option>
-                      <option value="PSPCL">PSPCL (पंजाब स्टेट पावर कॉर्पोरेशन)</option>
-                      <option value="JVVNL">JVVNL (जयपुर विद्युत वितरण निगम)</option>
-                      <option value="SBPDCL">SBPDCL (साउथ बिहार पावर डिस्ट्रीब्यूशन)</option>
-                    </select>
-                  ) : (
-                    <input
-                      type="text"
-                      value={secondaryInput}
-                      onChange={(e) => setSecondaryInput(e.target.value)}
-                      placeholder={
-                        toolKind === 'edistrict' ? (language === 'hi' ? 'प्रमाण पत्र क्रमांक दर्ज करें' : 'Enter Certificate ID') :
-                        toolKind === 'dl' ? (language === 'hi' ? 'LMV-NT, MCWG दर्ज करें' : 'LMV-NT, MCWG') :
-                        toolKind === 'banking' ? (language === 'hi' ? 'बैंक अथवा BC शाखा का नाम दर्ज करें' : 'Enter Bank Name') :
-                        toolKind === 'agriculture' ? (language === 'hi' ? 'खसरा / खाता संख्या दर्ज करें' : 'Enter Khasra / Khata No') :
-                        toolKind === 'telecom' ? (language === 'hi' ? 'JIO / Airtel / BSNL दर्ज करें' : 'Enter Telecom Operator') :
-                        (language === 'hi' ? 'सेवा विवरण दर्ज करें' : 'Enter Service Description')
-                      }
-                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none"
-                    />
-                  )}
-                </div>
-              )}
-
-              {/* PHOTO & SIGNATURE UPLOAD / PRESET PICKER (FOR PVC SMART CARDS & CERTIFICATES) */}
-              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'welfare'].includes(toolKind) && (
-                <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-black text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                      <Camera className="w-4 h-4 text-orange-500" />
-                      <span>{t('sp_photo_sign_select')}</span>
-                    </span>
-                    <span className="text-[10px] text-slate-400 font-bold">{t('sp_live_preview')}</span>
-                  </div>
-
-                  {/* Photo Controls */}
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-14 rounded-xl border border-slate-300 dark:border-slate-700 overflow-hidden shrink-0 bg-white shadow-xs">
-                      <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
-                    </div>
-
-                    <div className="flex-1 space-y-1.5">
-                      <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block">
-                        {t('sp_photo_choose')}
-                      </span>
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <button
-                          type="button"
-                          onClick={() => { setPhotoData(SAMPLE_PHOTOS.male); setIsCustomPhoto(false); }}
-                          className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border text-[11px] font-bold hover:border-orange-500 transition cursor-pointer"
-                        >
-                          👤 {t('sp_photo_male')}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setPhotoData(SAMPLE_PHOTOS.female); setIsCustomPhoto(false); }}
-                          className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border text-[11px] font-bold hover:border-orange-500 transition cursor-pointer"
-                        >
-                          👩 {t('sp_photo_female')}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => { setPhotoData(SAMPLE_PHOTOS.senior); setIsCustomPhoto(false); }}
-                          className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border text-[11px] font-bold hover:border-orange-500 transition cursor-pointer"
-                        >
-                          👴 {t('sp_photo_senior')}
-                        </button>
-
-                        <input
-                          type="file"
-                          ref={photoInputRef}
-                          onChange={handlePhotoUpload}
-                          accept="image/*"
-                          className="hidden"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => photoInputRef.current?.click()}
-                          className="px-2.5 py-1 rounded-lg bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800 text-[11px] font-black hover:bg-orange-100 transition cursor-pointer flex items-center gap-1"
-                        >
-                          <Upload className="w-3 h-3" />
-                          <span>{t('sp_upload')}</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Signature Controls (for PAN, DL, Voter) */}
-                  {['pan', 'dl', 'voter'].includes(toolKind) && (
-                    <div className="flex items-center gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
-                      <div className="w-16 h-8 rounded-lg border border-slate-300 dark:border-slate-700 bg-white p-1 overflow-hidden shrink-0 flex items-center justify-center">
-                        <img src={signData} alt="Signature" className="max-h-full max-w-full object-contain" />
-                      </div>
-
-                      <div className="flex-1 space-y-1.5">
-                        <span className="text-[11px] font-bold text-slate-600 dark:text-slate-400 block">
-                          {t('sp_sign_choose')}
-                        </span>
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          <button
-                            type="button"
-                            onClick={() => { setSignData(SAMPLE_SIGNS.sign1); setIsCustomSign(false); }}
-                            className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border text-[11px] font-bold hover:border-orange-500 transition cursor-pointer"
-                          >
-                            ✍️ {t('sp_sign_1')}
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => { setSignData(SAMPLE_SIGNS.sign2); setIsCustomSign(false); }}
-                            className="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border text-[11px] font-bold hover:border-orange-500 transition cursor-pointer"
-                          >
-                            ✍️ {t('sp_sign_2')}
-                          </button>
-
-                          <input
-                            type="file"
-                            ref={signInputRef}
-                            onChange={handleSignUpload}
-                            accept="image/*"
-                            className="hidden"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => signInputRef.current?.click()}
-                            className="px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 text-[11px] font-black hover:bg-indigo-100 transition cursor-pointer flex items-center gap-1"
-                          >
-                            <Upload className="w-3 h-3" />
-                            <span>{language === 'hi' ? 'हस्ताक्षर अपलोड' : 'Upload Signature'}</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                </div>
-              )}
+            {/* Card Body: EXACT Form Inputs matching Screenshots */}
+            <form onSubmit={handleInstantGenerate} className="p-5 sm:p-6 space-y-4">
+              {renderScreenshotFormInputs()}
 
               {/* Error Message */}
               {errorMsg && (
-                <div className="p-3.5 rounded-2xl bg-rose-500/10 border-2 border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-center gap-2">
+                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{errorMsg}</span>
                 </div>
               )}
 
-              {/* Submit Button */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 hover:from-orange-600 hover:to-amber-600 active:scale-95 text-white font-black px-6 py-4 rounded-2xl text-base flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 transition disabled:opacity-50 cursor-pointer"
-              >
-                {loading ? (
-                  <>
-                    <RefreshCw className="w-5 h-5 animate-spin" />
-                    <span>{t('sp_generating')}</span>
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="w-5 h-5" />
-                    <span>
-                      {toolKind === 'rc' ? (language === 'hi' ? '⚡ 1-क्लिक वाहन RC जनरेट करें' : '⚡ 1-Click Generate RC') :
-                       toolKind === 'ration' ? (language === 'hi' ? '⚡ 1-क्लिक राशन पर्ची जनरेट करें' : '⚡ 1-Click Generate Ration Slip') :
-                       toolKind === 'challan' ? (language === 'hi' ? '⚡ 1-क्लिक ई-चालान जांचें' : '⚡ 1-Click Verify Challan') :
-                       toolKind === 'electricity' ? (language === 'hi' ? '⚡ 1-क्लिक बिल रसीद जनरेट करें' : '⚡ 1-Click Generate Bill Receipt') :
-                       toolKind === 'edistrict' ? (language === 'hi' ? '⚡ 1-क्लिक सत्यापन पर्ची जनरेट करें' : '⚡ 1-Click Generate Verification Slip') :
-                       toolKind === 'epan' ? (language === 'hi' ? '⚡ 1-क्लिक ई-पैन डाउनलोड करें' : '⚡ 1-Click Download e-PAN') :
-                       toolKind === 'pan' ? (language === 'hi' ? '⚡ 1-क्लिक PVC पैन कार्ड जनरेट करें' : '⚡ 1-Click Generate PVC PAN') :
-                       toolKind === 'aadhaar' ? (language === 'hi' ? '⚡ 1-क्लिक PVC आधार कार्ड जनरेट करें' : '⚡ 1-Click Generate PVC Aadhaar') :
-                       toolKind === 'voter' ? (language === 'hi' ? '⚡ 1-क्लिक वोटर कार्ड जनरेट करें' : '⚡ 1-Click Generate Voter Card') :
-                       toolKind === 'dl' ? (language === 'hi' ? '⚡ 1-क्लिक DL कार्ड जनरेट करें' : '⚡ 1-Click Generate DL Card') :
-                       toolKind === 'ayushman' ? (language === 'hi' ? '⚡ 1-क्लिक गोल्डन कार्ड जनरेट करें' : '⚡ 1-Click Generate Golden Card') :
-                       toolKind === 'banking' ? (language === 'hi' ? '⚡ 1-क्लिक बैंक पावती रसीद जनरेट करें' : '⚡ 1-Click Generate Banking Slip') :
-                       toolKind === 'agriculture' ? (language === 'hi' ? '⚡ 1-क्लिक किसान पावती जनरेट करें' : '⚡ 1-Click Generate Agri Slip') :
-                       toolKind === 'welfare' ? (language === 'hi' ? '⚡ 1-क्लिक योजना प्रमाण पत्र जनरेट करें' : '⚡ 1-Click Generate Welfare Certificate') :
-                       toolKind === 'telecom' ? (language === 'hi' ? '⚡ 1-क्लिक टेलीकॉम पावती जनरेट करें' : '⚡ 1-Click Generate Telecom Slip') :
-                       toolKind === 'receipt' ? (language === 'hi' ? '⚡ 1-क्लिक रसीद जनरेट करें' : '⚡ 1-Click Generate Receipt') :
-                       t('sp_btn_generate')}
-                    </span>
-                  </>
-                )}
-              </button>
+              {/* Bottom Action Row: Live Fee Badge on Left + Action Buttons on Right */}
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-3">
+                <div className="bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-1.5">
+                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                    {language === 'hi' ? 'शुल्क:' : 'Fee:'}
+                  </span>
+                  <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 text-sm">
+                    ₹{isOperator ? (currentTool.wholesaleRate || 15) : (currentTool.retailRate || 30)}
+                  </span>
+                </div>
 
+                <div className="flex items-center gap-2">
+                  {showSecondaryButton && (
+                    <button
+                      type="button"
+                      onClick={() => fetchOrderHistory()}
+                      className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3.5 py-2.5 rounded-xl text-xs transition cursor-pointer shadow-xs"
+                    >
+                      Show
+                    </button>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-blue-600/25 transition disabled:opacity-50 cursor-pointer"
+                  >
+                    {loading ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>{language === 'hi' ? 'खोज रहे हैं...' : 'Processing...'}</span>
+                      </>
+                    ) : (
+                      <span>{getActionButtonText()}</span>
+                    )}
+                  </button>
+                </div>
+              </div>
             </form>
 
           </div>
-
         </div>
 
         {/* ================================================================= */}
-        {/* RIGHT COLUMN: 100% REAL FULL-COLOR HD ISO CR-80 PVC SMART CARD */}
+        {/* RIGHT COLUMN: PREVIEW & GUIDELINES (EXACT REKHA PRINT LAYOUT) */}
         {/* ================================================================= */}
         <div id="cr80-preview-anchor" className="w-full lg:col-span-7 space-y-4 max-w-full">
-          
-          {/* Action Bar (Print & Download Controls) */}
-          <div className="no-print bg-white dark:bg-[#0c162c] p-4 sm:p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-wrap items-center justify-between gap-4">
+          <div className="bg-white dark:bg-[#0c162c] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md overflow-hidden">
             
-            <div className="flex items-center gap-2.5">
-              <span className="p-2 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 rounded-xl">
-                <CheckCircle2 className="w-5 h-5" />
+            {/* Blue Header Banner */}
+            <div className="bg-[#1d4ed8] dark:bg-[#1e40af] text-white px-4 py-3.5 flex items-center justify-between shadow-xs">
+              <span className="font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-2">
+                <span>{activeData ? (language === 'hi' ? '✅ आधिकारिक दस्तावेज़ / कार्ड' : '✅ Official Document / Card') : (language === 'hi' ? 'ℹ️ दिशानिर्देश / जानकारी' : 'ℹ️ Information & Guidelines')}</span>
               </span>
-              <div>
-                <h3 className="font-black text-slate-900 dark:text-white text-sm">
-                  {currentResult?.isReprint ? (language === 'hi' ? '🔄 निःशुल्क रिप्रिंट प्रति तैयार है' : '🔄 Free Reprint Copy Ready') : `✅ ${t('sp_preview_heading')}`}
-                </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                  {t('sp_preview_sub')}
-                </p>
+              <span className="text-[11px] bg-white/20 text-white font-mono font-bold px-2.5 py-0.5 rounded-full">
+                ⚡ 0.5s Fast
+              </span>
+            </div>
+
+            {/* When Idle: EXACT Rekha Print Guidance box */}
+            {!activeData ? (
+              <div className="p-8 sm:p-14 flex flex-col items-center justify-center text-center space-y-4">
+                <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                  <ServiceIconComponent className="w-8 h-8" />
+                </div>
+                <div className="space-y-1.5 max-w-md">
+                  <h4 className="text-base font-black text-slate-800 dark:text-slate-100">
+                    {language === 'hi' ? 'कोई विवरण प्रदर्शित करने के लिए नहीं है' : 'No record displayed yet'}
+                  </h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                    {language === 'hi'
+                      ? 'बाईं ओर दिए गए फ़ॉर्म में आवश्यक विवरण दर्ज करें और खोजें। आपका आधिकारिक दस्तावेज़ यहाँ तैयार होगा।'
+                      : 'Please enter details in the form on the left and submit to fetch details.'}
+                  </p>
+                </div>
+                <div className="pt-2 flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
+                  <span>{language === 'hi' ? 'प्रसंस्करण समय: 1-12 सेकंड' : 'Processing Time: Instant 0.5s'}</span>
+                  <span>•</span>
+                  <span>{language === 'hi' ? '100% सुरक्षित API' : '100% Verified'}</span>
+                </div>
               </div>
-            </div>
-
-            <div className="flex items-center gap-2 flex-wrap">
-              {/* Card Side Toggle */}
-              {['pan', 'aadhaar', 'voter', 'dl', 'rc', 'ayushman', 'epan'].includes(toolKind) && (
-                <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center gap-1 text-xs font-bold">
-                  <button
-                    type="button"
-                    onClick={() => setCardSide('both')}
-                    className={`px-3 py-1.5 rounded-lg transition ${cardSide === 'both' ? 'bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 shadow-xs' : 'text-slate-600 dark:text-slate-300'}`}
-                  >
-                    {t('sp_card_both')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setCardSide('front')}
-                    className={`px-3 py-1.5 rounded-lg transition ${cardSide === 'front' ? 'bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 shadow-xs' : 'text-slate-600 dark:text-slate-300'}`}
-                  >
-                    {t('sp_card_front')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setCardSide('back')}
-                    className={`px-3 py-1.5 rounded-lg transition ${cardSide === 'back' ? 'bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 shadow-xs' : 'text-slate-600 dark:text-slate-300'}`}
-                  >
-                    {t('sp_card_back')}
-                  </button>
-                </div>
-              )}
-
-              {/* 1-Click Print */}
-              <button
-                type="button"
-                onClick={handlePrint}
-                className="bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/20 transition cursor-pointer"
-              >
-                <Printer className="w-4 h-4" />
-                <span>🖨️ {t('sp_btn_print')}</span>
-              </button>
-
-              {/* 1-Click Download */}
-              <button
-                type="button"
-                onClick={handleDownloadPdf}
-                className="bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-orange-500/20 transition cursor-pointer"
-                title={language === 'hi' ? 'आधिकारिक वेक्टर PDF फ़ाइल सीधे डाउनलोड करें' : 'Download official PDF file'}
-              >
-                <Download className="w-4 h-4" />
-                <span>📥 {t('sp_btn_download_pdf')}</span>
-              </button>
-            </div>
-
-          </div>
-
-          {/* RENDER CANVAS CONTAINER WITH PRECISION CUTTING MARKS */}
-          <div className="bg-white dark:bg-[#070e1b] p-3 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-md max-w-full overflow-hidden">
-            
-            {/* Cut-Marks Print Notice */}
-            <div className="no-print mb-5 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400 border-b border-slate-200 dark:border-slate-800 pb-2.5">
-              <span className="flex items-center gap-1.5 font-bold text-slate-700 dark:text-slate-300">
-                <Scissors className="w-4 h-4 text-orange-500 shrink-0" />
-                <span>{language === 'hi' ? 'मानक कटिंग बॉर्डर एवं क्रॉप गाइड (85.6mm × 54mm)' : 'Standard Cutting Border & Crop Guide (85.6mm × 54mm)'}</span>
-              </span>
-              <span className="font-mono text-[11px] text-slate-400">
-                {language === 'hi' ? 'रसीद ID' : 'Receipt ID'}: {currentResult?.order?.id || `ORD-${Date.now().toString().slice(-6)}`}
-              </span>
-            </div>
-
-            {/* PREVIEW CONTAINER */}
-            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 p-2 sm:p-8 bg-slate-50/80 dark:bg-[#0a1426]/70 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl min-h-[320px] max-w-full overflow-x-auto">
-              
-              {!activeData ? (
-                <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto space-y-4">
-                  <div className="w-16 h-16 rounded-3xl bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 flex items-center justify-center shadow-inner">
-                    <ServiceIconComponent className="w-8 h-8" />
+            ) : (
+              <div className="p-4 sm:p-6 space-y-4">
+                {/* Action Bar (Print & Download Controls) */}
+                <div className="no-print p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span className="text-xs font-black text-slate-800 dark:text-slate-100">
+                      {currentResult?.isReprint ? (language === 'hi' ? '🔄 निःशुल्क रिप्रिंट प्रति' : '🔄 Free Reprint Copy') : (language === 'hi' ? '✅ दस्तावेज़ तैयार है' : '✅ Ready')}
+                    </span>
                   </div>
-                  <div className="space-y-1.5">
-                    <h4 className="text-base font-black text-slate-900 dark:text-white">
-                      {localize(currentTool?.title || currentTool?.name || 'सेवा')} • {language === 'hi' ? 'लाइव काउंटर' : 'Live Counter'}
-                    </h4>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                      {language === 'hi'
-                        ? 'कृपया बाएं फ़ॉर्म में आवश्यक विवरण दर्ज करें और "1-क्लिक जनरेट करें" बटन दबाएं। आपका वास्तविक कार्ड यहाँ तैयार होगा।'
-                        : 'Please fill in the required details on the left form and click "1-Click Generate". Your authentic card will be generated here.'}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 px-3 py-1.5 rounded-full">
-                    <span>{language === 'hi' ? '🔒 केवल आपका वास्तविक डेटा • कोई काल्पनिक अथवा डमी रिकॉर्ड नहीं' : '🔒 Real Data Only • Zero Dummy Records'}</span>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* Card Side Toggle */}
+                    {['pan', 'aadhaar', 'voter', 'dl', 'rc', 'ayushman', 'epan'].includes(toolKind) && (
+                      <div className="bg-slate-200 dark:bg-slate-800 p-0.5 rounded-lg flex items-center text-xs font-bold">
+                        <button
+                          type="button"
+                          onClick={() => setCardSide('both')}
+                          className={`px-2.5 py-1 rounded-md transition ${cardSide === 'both' ? 'bg-white dark:bg-slate-900 text-blue-600 shadow-xs' : 'text-slate-600 dark:text-slate-300'}`}
+                        >
+                          Both
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCardSide('front')}
+                          className={`px-2.5 py-1 rounded-md transition ${cardSide === 'front' ? 'bg-white dark:bg-slate-900 text-blue-600 shadow-xs' : 'text-slate-600 dark:text-slate-300'}`}
+                        >
+                          Front
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCardSide('back')}
+                          className={`px-2.5 py-1 rounded-md transition ${cardSide === 'back' ? 'bg-white dark:bg-slate-900 text-blue-600 shadow-xs' : 'text-slate-600 dark:text-slate-300'}`}
+                        >
+                          Back
+                        </button>
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={handlePrint}
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition cursor-pointer"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>Print</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleDownloadPdf}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition cursor-pointer"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      <span>Download</span>
+                    </button>
                   </div>
                 </div>
-              ) : (() => {
-                const cardData = {
-                  ...activeData,
-                  name: activeData.name || activeData.ownerName || activeData.applicantName || activeData.headName || activeData.consumerName || '-',
-                  ownerName: activeData.ownerName || activeData.name || '-',
-                  applicantName: activeData.applicantName || activeData.name || '-',
-                  headName: activeData.headName || activeData.name || '-',
-                  consumerName: activeData.consumerName || activeData.name || '-',
-                  fatherName: activeData.fatherName || '-',
-                  dob: activeData.dob || '-',
-                  gender: activeData.gender || 'MALE',
-                  address: activeData.address || '-',
-                  photoUrl: activeData.photoUrl || photoData,
-                  signUrl: activeData.signUrl || signData
-                };
 
-                return (
-                  <>
-                    {/* ======================================================= */}
-                    {/* 1. PAN CARD RENDERER (NSDL / UTI OFFICIAL FORMAT) */}
+                {/* RENDER CANVAS CONTAINER */}
+                <div className="flex flex-wrap items-center justify-center gap-4 p-2 sm:p-6 bg-slate-50/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl min-h-[300px] overflow-x-auto">
+                  {(() => {
+                    const cardData = {
+                      ...activeData,
+                      name: activeData.name || activeData.ownerName || activeData.applicantName || activeData.headName || activeData.consumerName || '-',
+                      ownerName: activeData.ownerName || activeData.name || '-',
+                      applicantName: activeData.applicantName || activeData.name || '-',
+                      headName: activeData.headName || activeData.name || '-',
+                      consumerName: activeData.consumerName || activeData.name || '-',
+                      fatherName: activeData.fatherName || '-',
+                      dob: activeData.dob || '-',
+                      gender: activeData.gender || 'MALE',
+                      address: activeData.address || '-',
+                      photoUrl: activeData.photoUrl || photoData,
+                      signUrl: activeData.signUrl || signData
+                    };
+
+                    return (
+                      <>
+{/* 1. PAN CARD RENDERER (NSDL / UTI OFFICIAL FORMAT) */}
                     {/* ======================================================= */}
                     {toolKind === 'pan' && (
                       <>
@@ -2376,7 +2906,9 @@ export default function ServicePage({
                 );
               })()}
 
-            </div>
+                </div>
+              </div>
+            )}
 
           </div>
 
