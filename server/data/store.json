@@ -601,8 +601,8 @@
       "shopName": "स्मार्ट डिजिटल सेवा केंद्र एवं साइबर कैफे",
       "ownerName": "संचालक",
       "phone": "9876543210",
-      "pin": "$2b$10$cm47EZaRCgxlzq38b1HJHuQ3ARqcTWeeydsoNRdlwQioNOkSGdhNK",
-      "staffPin": "$2b$10$aDQElqfO5X9cy6/ofWn7q.Rf1fhHrdkw.ykUnUo6jzJaJcJA36eKK",
+      "pin": "$2b$10$adEa0BF8TvVtzOEwPeqZeOMJDZx993LeuPK0fZiBSFQoNX3Lm8112",
+      "staffPin": "$2b$10$VhxTWO/.OKVbeALKj2PEpeNhOV.kpcyvhzrCd2nMtdsNCCPg60eVy",
       "staffEnabled": true,
       "email": "cafe101@smartcafe.sbs",
       "vleId": "VLE-UP-2026-101",
@@ -622,8 +622,8 @@
         "plan": "₹299 वार्षिक प्रो प्लान",
         "amount": 299,
         "status": "active",
-        "validTill": "2027-10-14T08:09:57.703Z",
-        "activatedAt": "2026-10-14T08:09:57.703Z",
+        "validTill": "2027-10-14T08:37:11.997Z",
+        "activatedAt": "2026-10-14T08:37:11.997Z",
         "utr": "987654321012"
       },
       "b2bWallet": {
@@ -650,7 +650,7 @@
         "formFeeNormal": 70,
         "formFeeComplex": 120
       },
-      "createdAt": "2026-10-14T08:09:57.703Z"
+      "createdAt": "2026-10-14T08:37:11.997Z"
     }
   ],
   "superAdminRates": {

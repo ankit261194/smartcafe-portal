@@ -582,13 +582,659 @@ if ($endpoint === 'udhar') {
 if (preg_match('#^wallet/([0-9]+)$#', $endpoint, $m)) {
     $phone = $m[1];
     $wallet = null;
+    if (!isset($store['wallets'])) $store['wallets'] = [];
     foreach ($store['wallets'] as $w) {
         if ($w['phone'] === $phone) { $wallet = $w; break; }
     }
     if (!$wallet) {
-        $wallet = ['phone' => $phone, 'balance' => 0, 'transactions' => []];
+        $wallet = ['phone' => $phone, 'customerName' => 'ग्राहक', 'balance' => 0, 'transactions' => []];
+        $store['wallets'][] = $wallet;
+        saveStore($dataFile, $store);
     }
     echo json_encode($wallet);
+    exit;
+}
+
+// Route: /api/wallet/add-money (Security guard: direct credit blocked)
+if ($endpoint === 'wallet/add-money' && $method === 'POST') {
+    http_response_code(403);
+    echo json_encode([
+        'error' => 'सुरक्षा प्रतिबंध: सीधे वॉलेट में पैसे जोड़ना वर्जित है। कृपया 12-अंकीय UPI UTR सबमिट करें और दुकानदार से सत्यापन करवाएं।'
+    ]);
+    exit;
+}
+
+// Route: /api/wallet/submit-utr (Customer submits 12-digit UPI UTR for wallet top-up)
+if ($endpoint === 'wallet/submit-utr' && $method === 'POST') {
+    $phone = trim($body['phone'] ?? '');
+    $customerName = trim($body['customerName'] ?? 'ग्राहक');
+    $cafeId = trim($body['cafeId'] ?? '');
+    $amount = floatval($body['amount'] ?? 0);
+    $utr = trim($body['utr'] ?? '');
+    $screenshotUrl = trim($body['screenshotUrl'] ?? '');
+
+    if (!$phone || !$amount || !$utr) {
+        http_response_code(400);
+        echo json_encode(['error' => 'मोबाइल नंबर, राशि और 12-अंकीय UTR नंबर आवश्यक हैं।']);
+        exit;
+    }
+
+    if (!preg_match('/^\d{12}$/', $utr)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'अमान्य UTR! कृपया ठीक 12 अंकों का UPI UTR (संदर्भ संख्या) दर्ज करें।']);
+        exit;
+    }
+
+    if (!isset($store['utrRequests'])) $store['utrRequests'] = [];
+    foreach ($store['utrRequests'] as $u) {
+        if (($u['utr'] ?? '') === $utr && in_array($u['status'] ?? '', ['approved', 'pending'])) {
+            http_response_code(400);
+            echo json_encode(['error' => "यह UTR संख्या ($utr) पहले से दर्ज है (स्थिति: " . (($u['status'] === 'approved') ? 'स्वीकृत' : 'सत्यापन लंबित') . ")। डुप्लिकेट UTR अमान्य है।"]);
+            exit;
+        }
+    }
+
+    if ($amount <= 0) {
+        http_response_code(400);
+        echo json_encode(['error' => 'कृपया वैध राशि दर्ज करें।']);
+        exit;
+    }
+
+    $targetCafe = null;
+    foreach ($store['cafes'] ?? [] as $c) {
+        if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId) {
+            $targetCafe = $c;
+            break;
+        }
+    }
+    if (!$targetCafe && !empty($store['cafes'])) {
+        $targetCafe = $store['cafes'][0];
+    }
+
+    if ($targetCafe && !empty($targetCafe['isFrozen'])) {
+        http_response_code(403);
+        echo json_encode(['error' => 'कैफे लाइसेंस निलंबित है। वॉलेट रिचार्ज स्वीकार नहीं किया जा सकता।']);
+        exit;
+    }
+
+    $newReq = [
+        'id' => 'UTR-CUST-' . time() . '-' . rand(100, 999),
+        'tier' => 'customer_to_sanchalak',
+        'cafeId' => $targetCafe['id'] ?? ($store['cafes'][0]['id'] ?? ''),
+        'cafeShopName' => $targetCafe['shopName'] ?? 'डिजिटल साइबर कैफे',
+        'customerPhone' => $phone,
+        'customerName' => $customerName ?: 'ग्राहक',
+        'amount' => $amount,
+        'utr' => $utr,
+        'screenshotUrl' => $screenshotUrl,
+        'upiTarget' => $targetCafe['upiId'] ?? 'shop@upi',
+        'status' => 'pending',
+        'rejectReason' => '',
+        'createdAt' => date('c')
+    ];
+
+    array_unshift($store['utrRequests'], $newReq);
+    saveStore($dataFile, $store);
+
+    http_response_code(201);
+    echo json_encode(['success' => true, 'utrRequest' => $newReq]);
+    exit;
+}
+
+// Route: /api/wallet/utr-status/:phone
+if (preg_match('#^wallet/utr-status/([0-9]+)$#', $endpoint, $m)) {
+    $phone = $m[1];
+    $list = [];
+    foreach ($store['utrRequests'] ?? [] as $u) {
+        if (($u['customerPhone'] ?? '') === $phone && ($u['tier'] ?? '') === 'customer_to_sanchalak') {
+            $list[] = $u;
+        }
+    }
+    echo json_encode($list);
+    exit;
+}
+
+// Route: /api/wallet/pay
+if ($endpoint === 'wallet/pay' && $method === 'POST') {
+    $phone = trim($body['phone'] ?? '');
+    $amount = floatval($body['amount'] ?? 0);
+    $note = trim($body['note'] ?? '');
+    $appId = trim($body['appId'] ?? '');
+
+    if (!$phone || $amount <= 0) {
+        http_response_code(400);
+        echo json_encode(['error' => 'मोबाइल नंबर और वैध राशि आवश्यक हैं।']);
+        exit;
+    }
+
+    if (!isset($store['wallets'])) $store['wallets'] = [];
+    $walletIdx = -1;
+    foreach ($store['wallets'] as $idx => $w) {
+        if ($w['phone'] === $phone) {
+            $walletIdx = $idx;
+            break;
+        }
+    }
+
+    if ($walletIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['error' => 'ग्राहक वॉलेट नहीं मिला।']);
+        exit;
+    }
+
+    if ($store['wallets'][$walletIdx]['balance'] < $amount) {
+        http_response_code(400);
+        echo json_encode(['error' => 'वॉलेट में पर्याप्त बैलेंस नहीं है। कृपया पहले पैसे जोड़ें।']);
+        exit;
+    }
+
+    $store['wallets'][$walletIdx]['balance'] -= $amount;
+    if (!isset($store['wallets'][$walletIdx]['transactions'])) {
+        $store['wallets'][$walletIdx]['transactions'] = [];
+    }
+    array_unshift($store['wallets'][$walletIdx]['transactions'], [
+        'id' => 'TXN-' . time() . '-' . rand(100, 999),
+        'type' => 'debit',
+        'amount' => $amount,
+        'note' => $note ?: "आवेदन शुल्क भुगतान {$appId}",
+        'createdAt' => date('c')
+    ]);
+
+    saveStore($dataFile, $store);
+    echo json_encode([
+        'success' => true,
+        'wallet' => $store['wallets'][$walletIdx]
+    ]);
+    exit;
+}
+
+// Route: /api/cafes/:id/b2b-wallet
+if (preg_match('#^cafes/([^/]+)/b2b-wallet$#', $endpoint, $m)) {
+    $cafeId = $m[1];
+    $cafe = null;
+    $cIdx = -1;
+    foreach ($store['cafes'] ?? [] as $idx => $c) {
+        if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId) {
+            $cafe = $c;
+            $cIdx = $idx;
+            break;
+        }
+    }
+    if (!$cafe) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Cafe not found']);
+        exit;
+    }
+    if (!isset($cafe['b2bWallet'])) {
+        $cafe['b2bWallet'] = ['balance' => 0, 'minThreshold' => 200, 'transactions' => []];
+        $store['cafes'][$cIdx]['b2bWallet'] = $cafe['b2bWallet'];
+        saveStore($dataFile, $store);
+    }
+    echo json_encode([
+        'cafeId' => $cafe['id'],
+        'shopName' => $cafe['shopName'] ?? '',
+        'b2bWallet' => $cafe['b2bWallet'],
+        'isFrozen' => !empty($cafe['isFrozen']),
+        'frozenReason' => $cafe['frozenReason'] ?? ''
+    ]);
+    exit;
+}
+
+// Route: /api/cafes/:id/b2b-wallet/submit-utr
+if (preg_match('#^cafes/([^/]+)/b2b-wallet/submit-utr$#', $endpoint, $m) && $method === 'POST') {
+    $cafeId = $m[1];
+    $cafe = null;
+    foreach ($store['cafes'] ?? [] as $c) {
+        if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId) {
+            $cafe = $c;
+            break;
+        }
+    }
+    if (!$cafe) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Cafe not found']);
+        exit;
+    }
+    if (!empty($cafe['isFrozen'])) {
+        http_response_code(403);
+        echo json_encode(['error' => 'कैफे लाइसेंस निलंबित है। B2B वॉलेट टॉप-अप ब्लॉक है।']);
+        exit;
+    }
+
+    $utr = trim($body['utr'] ?? ($_POST['utr'] ?? ''));
+    $amount = floatval($body['amount'] ?? ($_POST['amount'] ?? 0));
+    $screenshotUrl = trim($body['screenshotUrl'] ?? '');
+
+    if (!empty($_FILES['paymentSlip']['name'])) {
+        $ext = strtolower(pathinfo($_FILES['paymentSlip']['name'], PATHINFO_EXTENSION));
+        if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'pdf'])) {
+            $destName = 'b2b-slip-' . time() . '-' . rand(100, 999) . '.' . $ext;
+            if (move_uploaded_file($_FILES['paymentSlip']['tmp_name'], $uploadsDir . '/' . $destName)) {
+                $screenshotUrl = '/uploads/' . $destName;
+            }
+        }
+    }
+
+    if (!preg_match('/^\d{12}$/', $utr)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'अमान्य UTR! कृपया ठीक 12 अंकों का वैध UTR नंबर दर्ज करें।']);
+        exit;
+    }
+
+    if (!isset($store['utrRequests'])) $store['utrRequests'] = [];
+    foreach ($store['utrRequests'] as $u) {
+        if (($u['utr'] ?? '') === $utr && in_array($u['status'] ?? '', ['approved', 'pending'])) {
+            http_response_code(400);
+            echo json_encode(['error' => "यह B2B UTR संख्या ($utr) पहले से दर्ज है।"]);
+            exit;
+        }
+    }
+
+    if ($amount <= 0) {
+        http_response_code(400);
+        echo json_encode(['error' => 'कृपया वैध राशि दर्ज करें।']);
+        exit;
+    }
+
+    $newReq = [
+        'id' => 'UTR-SANCH-' . time() . '-' . rand(100, 999),
+        'tier' => 'sanchalak_to_superadmin',
+        'cafeId' => $cafe['id'],
+        'cafeShopName' => $cafe['shopName'] ?? '',
+        'ownerName' => $cafe['ownerName'] ?? '',
+        'phone' => $cafe['phone'] ?? '',
+        'amount' => $amount,
+        'utr' => $utr,
+        'screenshotUrl' => $screenshotUrl ?: '/uploads/sample_payment_slip.png',
+        'upiTarget' => 'superadmin@upi',
+        'status' => 'pending',
+        'rejectReason' => '',
+        'createdAt' => date('c')
+    ];
+
+    array_unshift($store['utrRequests'], $newReq);
+    saveStore($dataFile, $store);
+
+    http_response_code(201);
+    echo json_encode(['success' => true, 'utrRequest' => $newReq]);
+    exit;
+}
+
+// Route: /api/cafes/:id/utr-requests
+if (preg_match('#^cafes/([^/]+)/utr-requests$#', $endpoint, $m) && $method === 'GET') {
+    $cafeId = $m[1];
+    $list = [];
+    foreach ($store['utrRequests'] ?? [] as $u) {
+        if ((($u['cafeId'] ?? '') === $cafeId || ($u['cafeId'] ?? '') === "CAFE-$cafeId") && ($u['tier'] ?? '') === 'customer_to_sanchalak') {
+            $list[] = $u;
+        }
+    }
+    echo json_encode($list);
+    exit;
+}
+
+// Route: /api/cafes/:id/utr-requests/:utrId/action
+if (preg_match('#^cafes/([^/]+)/utr-requests/([^/]+)/action$#', $endpoint, $m) && $method === 'POST') {
+    $cafeId = $m[1];
+    $utrId = $m[2];
+    $action = $body['action'] ?? '';
+    $rejectReason = $body['rejectReason'] ?? '';
+
+    $targetReqIdx = -1;
+    foreach ($store['utrRequests'] ?? [] as $idx => $u) {
+        if (($u['id'] ?? '') === $utrId) {
+            $targetReqIdx = $idx;
+            break;
+        }
+    }
+
+    if ($targetReqIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['error' => 'UTR अनुरोध नहीं मिला।']);
+        exit;
+    }
+
+    $utrReq = &$store['utrRequests'][$targetReqIdx];
+    if (($utrReq['status'] ?? '') !== 'pending') {
+        http_response_code(400);
+        echo json_encode(['error' => 'यह UTR अनुरोध पहले ही संसाधित किया जा चुका है।']);
+        exit;
+    }
+
+    if ($action === 'approve') {
+        $utrReq['status'] = 'approved';
+        $utrReq['approvedAt'] = date('c');
+
+        // Credit Customer Wallet
+        if (!isset($store['wallets'])) $store['wallets'] = [];
+        $wIdx = -1;
+        foreach ($store['wallets'] as $idx => $w) {
+            if ($w['phone'] === $utrReq['customerPhone']) {
+                $wIdx = $idx;
+                break;
+            }
+        }
+        if ($wIdx === -1) {
+            $store['wallets'][] = [
+                'phone' => $utrReq['customerPhone'],
+                'customerName' => $utrReq['customerName'] ?? 'ग्राहक',
+                'balance' => $utrReq['amount'],
+                'transactions' => [[
+                    'id' => 'TXN-' . time() . '-' . rand(100, 999),
+                    'type' => 'credit',
+                    'amount' => $utrReq['amount'],
+                    'note' => "दुकानदार द्वारा स्वीकृत UTR ({$utrReq['utr']}) वॉलेट टॉप-अप",
+                    'createdAt' => date('c')
+                ]]
+            ];
+        } else {
+            $store['wallets'][$wIdx]['balance'] += $utrReq['amount'];
+            if (!isset($store['wallets'][$wIdx]['transactions'])) $store['wallets'][$wIdx]['transactions'] = [];
+            array_unshift($store['wallets'][$wIdx]['transactions'], [
+                'id' => 'TXN-' . time() . '-' . rand(100, 999),
+                'type' => 'credit',
+                'amount' => $utrReq['amount'],
+                'note' => "दुकानदार द्वारा स्वीकृत UTR ({$utrReq['utr']}) वॉलेट टॉप-अप",
+                'createdAt' => date('c')
+            ]);
+        }
+
+        // Log to Cashbook
+        if (!isset($store['cashbook'])) $store['cashbook'] = [];
+        array_unshift($store['cashbook'], [
+            'id' => 'CB-' . time() . '-' . rand(100, 999),
+            'cafeId' => $cafeId,
+            'title' => "ग्राहक वॉलेट UPI रिचार्ज (UTR: {$utrReq['utr']})",
+            'category' => 'Wallet TopUp',
+            'amount' => $utrReq['amount'],
+            'paymentMode' => 'upi',
+            'type' => 'income',
+            'customer' => $utrReq['customerName'] ?? 'ग्राहक',
+            'createdAt' => date('c')
+        ]);
+    } else if ($action === 'reject') {
+        $utrReq['status'] = 'rejected';
+        $utrReq['rejectReason'] = $rejectReason ?: 'दुकानदार के बैंक खाते में UTR क्रेडिट नहीं मिला।';
+        $utrReq['rejectedAt'] = date('c');
+    }
+
+    saveStore($dataFile, $store);
+    echo json_encode(['success' => true, 'utrRequest' => $utrReq]);
+    exit;
+}
+
+// Route: /api/superadmin/b2b-utr-requests
+if ($endpoint === 'superadmin/b2b-utr-requests' && $method === 'GET') {
+    $list = [];
+    foreach ($store['utrRequests'] ?? [] as $u) {
+        if (($u['tier'] ?? '') === 'sanchalak_to_superadmin') {
+            $list[] = $u;
+        }
+    }
+    echo json_encode($list);
+    exit;
+}
+
+// Route: /api/superadmin/b2b-utr-requests/:utrId/action
+if (preg_match('#^superadmin/b2b-utr-requests/([^/]+)/action$#', $endpoint, $m) && $method === 'POST') {
+    $utrId = $m[1];
+    $action = $body['action'] ?? '';
+    $rejectReason = $body['rejectReason'] ?? '';
+
+    $targetReqIdx = -1;
+    foreach ($store['utrRequests'] ?? [] as $idx => $u) {
+        if (($u['id'] ?? '') === $utrId) {
+            $targetReqIdx = $idx;
+            break;
+        }
+    }
+
+    if ($targetReqIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['error' => 'B2B UTR अनुरोध नहीं मिला।']);
+        exit;
+    }
+
+    $utrReq = &$store['utrRequests'][$targetReqIdx];
+    if (($utrReq['status'] ?? '') !== 'pending') {
+        http_response_code(400);
+        echo json_encode(['error' => 'यह B2B UTR अनुरोध पहले ही संसाधित किया जा चुका है।']);
+        exit;
+    }
+
+    if ($action === 'approve') {
+        $utrReq['status'] = 'approved';
+        $utrReq['approvedAt'] = date('c');
+
+        // Credit Cafe B2B Wallet
+        foreach ($store['cafes'] ?? [] as $idx => $c) {
+            if ($c['id'] === $utrReq['cafeId']) {
+                if (!isset($store['cafes'][$idx]['b2bWallet'])) {
+                    $store['cafes'][$idx]['b2bWallet'] = ['balance' => 0, 'minThreshold' => 200, 'transactions' => []];
+                }
+                $store['cafes'][$idx]['b2bWallet']['balance'] += $utrReq['amount'];
+                if (!isset($store['cafes'][$idx]['b2bWallet']['transactions'])) {
+                    $store['cafes'][$idx]['b2bWallet']['transactions'] = [];
+                }
+                array_unshift($store['cafes'][$idx]['b2bWallet']['transactions'], [
+                    'id' => 'B2B-TXN-' . time() . '-' . rand(100, 999),
+                    'type' => 'credit',
+                    'amount' => $utrReq['amount'],
+                    'utr' => $utrReq['utr'] ?? '',
+                    'note' => "सुपर एडमिन द्वारा स्वीकृत UTR ({$utrReq['utr']}) B2B वॉलेट टॉप-अप",
+                    'createdAt' => date('c')
+                ]);
+                break;
+            }
+        }
+    } else if ($action === 'reject') {
+        $utrReq['status'] = 'rejected';
+        $utrReq['rejectReason'] = $rejectReason ?: 'केंद्रीय बैंक खाते में UTR क्रेडिट नहीं मिला।';
+        $utrReq['rejectedAt'] = date('c');
+    }
+
+    saveStore($dataFile, $store);
+    echo json_encode(['success' => true, 'utrRequest' => $utrReq]);
+    exit;
+}
+
+// Route: /api/cafes/:id/service-status/:serviceType
+if (preg_match('#^cafes/([^/]+)/service-status/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
+    $cafeId = $m[1];
+    $serviceType = $m[2];
+
+    $cafe = null;
+    foreach ($store['cafes'] ?? [] as $c) {
+        if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId) {
+            $cafe = $c;
+            break;
+        }
+    }
+    if (!$cafe) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Cafe not found']);
+        exit;
+    }
+
+    if (!empty($cafe['isFrozen'])) {
+        echo json_encode([
+            'isAvailable' => false,
+            'isFrozen' => true,
+            'reason' => $cafe['frozenReason'] ?? 'कैफे लाइसेंस निलंबित है।'
+        ]);
+        exit;
+    }
+
+    $wholesaleCost = $store['superAdminRates'][$serviceType] ?? 200;
+    $currentBalance = $cafe['b2bWallet']['balance'] ?? 0;
+
+    if ($currentBalance < $wholesaleCost) {
+        echo json_encode([
+            'isAvailable' => false,
+            'reason' => 'कैफे संचालक का B2B वॉलेट बैलेंस न्यूनतम सीमा से कम है। सेवा अस्थायी रूप से बंद है।',
+            'currentBalance' => $currentBalance,
+            'requiredBalance' => $wholesaleCost
+        ]);
+        exit;
+    }
+
+    echo json_encode([
+        'isAvailable' => true,
+        'currentBalance' => $currentBalance,
+        'wholesaleCost' => $wholesaleCost
+    ]);
+    exit;
+}
+
+// Route: /api/superadmin/stats
+if ($endpoint === 'superadmin/stats' && $method === 'GET') {
+    $cafes = $store['cafes'] ?? [];
+    $activeCafes = array_filter($cafes, function($c) {
+        return ($c['subscription']['status'] ?? '') === 'active' && empty($c['isFrozen']);
+    });
+    $totalRevenue = array_reduce($cafes, function($sum, $c) {
+        return $sum + ($c['subscription']['amount'] ?? 299);
+    }, 0);
+    $pendingB2bUtrs = array_filter($store['utrRequests'] ?? [], function($u) {
+        return ($u['tier'] ?? '') === 'sanchalak_to_superadmin' && ($u['status'] ?? '') === 'pending';
+    });
+    $pendingKycs = array_filter($store['vleKycApplications'] ?? [], function($k) {
+        return ($k['status'] ?? '') === 'pending_approval';
+    });
+    $wholesaleServiceRevenue = array_reduce($store['rcOrders'] ?? [], function($sum, $r) {
+        return $sum + ($r['wholesaleCost'] ?? 200);
+    }, 0);
+
+    echo json_encode([
+        'totalCafes' => count($cafes),
+        'activeCafes' => count($activeCafes),
+        'totalRevenue' => $totalRevenue,
+        'wholesaleServiceRevenue' => $wholesaleServiceRevenue,
+        'totalPlatformEarnings' => $totalRevenue + $wholesaleServiceRevenue,
+        'totalAutomatedOrders' => count($store['rcOrders'] ?? []),
+        'subscriptionPrice' => 299,
+        'totalApplications' => count($store['applications'] ?? []),
+        'totalPrints' => count($store['prints'] ?? []),
+        'superAdminRates' => $store['superAdminRates'] ?? ['rcDownload' => 200, 'panCard' => 107],
+        'pendingB2bUtrsCount' => count($pendingB2bUtrs),
+        'pendingKycsCount' => count($pendingKycs),
+        'totalComplaintsCount' => count($store['complaints'] ?? []),
+        'broadcastNotice' => $store['broadcastNotice'] ?? null,
+        'cafes' => $cafes,
+        'utrRequests' => $store['utrRequests'] ?? [],
+        'kycApplications' => $store['vleKycApplications'] ?? [],
+        'complaints' => $store['complaints'] ?? [],
+        'rcOrders' => $store['rcOrders'] ?? [],
+        'auditLogs' => $store['superAdminAuditLogs'] ?? []
+    ]);
+    exit;
+}
+
+// Route: /api/superadmin/rates (PUT/POST)
+if ($endpoint === 'superadmin/rates' && in_array($method, ['PUT', 'POST'])) {
+    if (!isset($store['superAdminRates'])) $store['superAdminRates'] = [];
+    foreach ($body as $k => $v) {
+        $store['superAdminRates'][$k] = floatval($v);
+    }
+    saveStore($dataFile, $store);
+    echo json_encode(['success' => true, 'superAdminRates' => $store['superAdminRates']]);
+    exit;
+}
+
+// Route: /api/superadmin/kyc-applications (GET)
+if ($endpoint === 'superadmin/kyc-applications' && $method === 'GET') {
+    echo json_encode($store['vleKycApplications'] ?? []);
+    exit;
+}
+
+// Route: /api/superadmin/kyc-applications/:id/action (POST)
+if (preg_match('#^superadmin/kyc-applications/([^/]+)/action$#', $endpoint, $m) && $method === 'POST') {
+    $kycId = $m[1];
+    $action = $body['action'] ?? '';
+    $rejectReason = $body['rejectReason'] ?? '';
+
+    $targetIdx = -1;
+    foreach ($store['vleKycApplications'] ?? [] as $idx => $k) {
+        if (($k['id'] ?? '') === $kycId) {
+            $targetIdx = $idx;
+            break;
+        }
+    }
+
+    if ($targetIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['error' => 'KYC आवेदन नहीं मिला।']);
+        exit;
+    }
+
+    $kyc = &$store['vleKycApplications'][$targetIdx];
+    if (($kyc['status'] ?? '') !== 'pending_approval') {
+        http_response_code(400);
+        echo json_encode(['error' => 'यह KYC आवेदन पहले ही संसाधित किया जा चुका है।']);
+        exit;
+    }
+
+    if ($action === 'approve') {
+        $nextNum = count($store['cafes'] ?? []) + 101;
+        $licenseKey = 'VLE-LIC-2026-' . strtoupper(substr($kyc['state'] ?? 'UP', 0, 2)) . $nextNum . '-' . rand(1000, 9999);
+        $kyc['status'] = 'approved';
+        $kyc['licenseKey'] = $licenseKey;
+        $kyc['approvedAt'] = date('c');
+
+        $newCafe = [
+            'id' => "CAFE-$nextNum",
+            'code' => (string)$nextNum,
+            'slug' => "cafe-$nextNum",
+            'shopName' => $kyc['shopName'] ?? '',
+            'ownerName' => $kyc['ownerName'] ?? '',
+            'phone' => $kyc['phone'] ?? '',
+            'pin' => password_hash($kyc['pin'] ?? '1234', PASSWORD_BCRYPT),
+            'staffPin' => password_hash('0000', PASSWORD_BCRYPT),
+            'staffEnabled' => true,
+            'email' => $kyc['email'] ?? '',
+            'vleId' => $kyc['vleId'] ?? '',
+            'licenseKey' => $licenseKey,
+            'kycStatus' => 'verified',
+            'isFrozen' => false,
+            'subscription' => [
+                'plan' => '₹299 वार्षिक प्रो प्लान',
+                'amount' => 299,
+                'status' => 'active',
+                'validTill' => date('c', strtotime('+365 days')),
+                'activatedAt' => date('c'),
+                'utr' => $kyc['utr'] ?? ''
+            ],
+            'b2bWallet' => [
+                'balance' => 0,
+                'minThreshold' => 200,
+                'transactions' => []
+            ],
+            'retailRates' => [
+                'rcDownload' => ($store['superAdminRates']['rcDownload'] ?? 200) + 50,
+                'panCard' => ($store['superAdminRates']['panCard'] ?? 107) + 43,
+                'incomeCert' => 80,
+                'casteCert' => 80,
+                'niwasCert' => 80,
+                'drivingLicence' => 250,
+                'pvcCard' => 70
+            ],
+            'rates' => $store['settings']['rates'] ?? [
+                'bwPage' => 3, 'colorPage' => 10, 'xerox' => 2,
+                'lamination' => 20, 'photoCopyBothSide' => 3,
+                'passportPhoto' => 50, 'formFeeNormal' => 70, 'formFeeComplex' => 120
+            ],
+            'createdAt' => date('c')
+        ];
+
+        array_unshift($store['cafes'], $newCafe);
+    } else if ($action === 'reject') {
+        $kyc['status'] = 'rejected';
+        $kyc['rejectReason'] = $rejectReason ?: 'दस्तावेज या UTR सत्यापन असफल।';
+        $kyc['rejectedAt'] = date('c');
+    }
+
+    saveStore($dataFile, $store);
+    echo json_encode(['success' => true, 'application' => $kyc]);
     exit;
 }
 
