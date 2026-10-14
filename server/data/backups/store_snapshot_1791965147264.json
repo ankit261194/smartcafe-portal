@@ -3,14 +3,14 @@
     "portalName": "à¤¡à¤¿à¤œà¤¿à¤Ÿà¤² à¤¸à¤¾à¤‡à¤¬à¤° à¤•à¥ˆà¤«à¥‡ à¤ªà¥‹à¤°à¥à¤Ÿà¤²",
     "shopName": "à¤¶à¥à¤°à¥€ à¤¡à¤¿à¤œà¤¿à¤Ÿà¤² à¤¸à¤¾à¤‡à¤¬à¤° à¤•à¥ˆà¤«à¥‡ à¤à¤µà¤‚ à¤œà¤¨ à¤¸à¥‡à¤µà¤¾ à¤•à¥‡à¤‚à¤¦à¥à¤°",
     "tagline": "à¤¸à¤­à¥€ à¤‘à¤¨à¤²à¤¾à¤‡à¤¨ à¤«à¥‰à¤°à¥à¤®, à¤ªà¥à¤°à¤¿à¤‚à¤Ÿà¤¿à¤‚à¤— à¤µ à¤¸à¤°à¤•à¤¾à¤°à¥€ à¤¸à¥‡à¤µà¤¾à¤à¤‚",
-    "ownerName": "à¤°à¤¾à¤œà¥‡à¤¶ à¤•à¥à¤®à¤¾à¤°",
-    "phone": "9876543210",
-    "upiId": "cybercafe@upi",
-    "address": "à¤®à¥‡à¤¨ à¤®à¤¾à¤°à¥à¤•à¥‡à¤Ÿ, à¤¬à¥à¤²à¥‰à¤• à¤°à¥‹à¤¡, à¤¤à¤¹à¤¸à¥€à¤² à¤•à¤¾à¤°à¥à¤¯à¤¾à¤²à¤¯ à¤•à¥‡ à¤¸à¤¾à¤®à¤¨à¥‡, à¤¹à¤°à¤¦à¥‹à¤ˆ",
+    "ownerName": "",
+    "phone": "",
+    "upiId": "",
+    "address": "",
     "superAdminPin": "$2b$10$qT12YS7MMPbApBUJzkbpTOLxp2l6JrkW8RClJ5mcWlfE/jAAQPLsi",
     "superAdminPassword": "$2b$10$B/o9iiC3lZ31DJw4tX6jfufEeYSogTPMcatDiuwRfW2xUFgUmqPq.",
-    "superAdminUpiId": "superadmin@upi",
-    "superAdminPhone": "9800000000",
+    "superAdminUpiId": "",
+    "superAdminPhone": "",
     "rates": {
       "bwPage": 3,
       "colorPage": 10,
@@ -104,74 +104,7 @@
     }
   ],
   "udhar": [],
-  "bulletins": [
-    {
-      "id": "JOB-2026-001",
-      "title": "SSC GD Constable 2026 भर्ती",
-      "serviceName": "SSC GD Constable 2026",
-      "category": "सरकारी नौकरी",
-      "lastDate": "31 मार्च 2026",
-      "qualification": "10वीं (हाईस्कूल) पास",
-      "fee": "₹100 (Gen/OBC) • SC/ST निःशुल्क",
-      "badge": "Trending",
-      "description": "BSF, CISF, CRPF, SSB, ITBP, AR व SSF में बंपर कांस्टेबल भर्ती। न्यूनतम आयु 18 वर्ष। 10वीं मार्कशीट व फोटो अनिवार्य।"
-    },
-    {
-      "id": "JOB-2026-002",
-      "title": "UP / स्टेट पुलिस आरक्षी भर्ती 2026",
-      "serviceName": "UP / स्टेट पुलिस भर्ती",
-      "category": "सरकारी नौकरी",
-      "lastDate": "15 अप्रैल 2026",
-      "qualification": "12वीं (इंटरमीडिएट) उत्तीर्ण",
-      "fee": "₹400 सभी वर्ग",
-      "badge": "High Demand",
-      "description": "उत्तर प्रदेश पुलिस आरक्षी (Constable) एवं उपनिरीक्षक (SI) सीधी भर्ती। निवास प्रमाण पत्र अनिवार्य।"
-    },
-    {
-      "id": "JOB-2026-003",
-      "title": "रेलवे NTPC / Group D भर्ती",
-      "serviceName": "रेलवे NTPC / Group D Form",
-      "category": "सरकारी नौकरी",
-      "lastDate": "25 अप्रैल 2026",
-      "qualification": "10वीं / 12वीं / स्नातक पास",
-      "fee": "₹500 (Gen/OBC) • ₹250 (SC/ST/महिला)",
-      "badge": "New",
-      "description": "रेलवे गैर-तकनीकी (NTPC) व लेवल-1 ग्रुप डी पदों हेतु राष्ट्रव्यापी भर्ती ऑनलाइन आवेदन।"
-    },
-    {
-      "id": "JOB-2026-004",
-      "title": "UP / स्टेट स्कॉलरशिप 2025-26",
-      "serviceName": "UP / स्टेट स्कॉलरशिप फॉर्म",
-      "category": "छात्रवृत्ति",
-      "lastDate": "30 अप्रैल 2026",
-      "qualification": "कक्षा 9वीं से पोस्ट ग्रेजुएशन (BA, BSc, B.Ed, ITI)",
-      "fee": "सरकारी पोर्टल निःशुल्क • कैफे शुल्क ₹120",
-      "badge": "Urgent",
-      "description": "दशमोत्तर एवं पूर्वदशम छात्रवृत्ति व शुल्क प्रतिपूर्ति ऑनलाइन आवेदन। आधार NPCI बैंक खाता व आय प्रमाण पत्र अनिवार्य।"
-    },
-    {
-      "id": "JOB-2026-005",
-      "title": "PM किसान सम्मान निधि e-KYC व नया पंजीकरण",
-      "serviceName": "PM किसान e-KYC / नया रजिस्ट्रेशन",
-      "category": "सरकारी योजना",
-      "lastDate": "सक्रिय (Active)",
-      "qualification": "भूमिधर किसान (खतौनी खाताधारक)",
-      "fee": "निःशुल्क",
-      "badge": "Essential",
-      "description": "सालाना ₹6,000 की किस्त पाने हेतु खतौनी, आधार बायोमेट्रिक e-KYC व NPCI DBT बैंक खाता अनिवार्य।"
-    },
-    {
-      "id": "JOB-2026-006",
-      "title": "CTET 2026 केंद्रीय शिक्षक पात्रता परीक्षा",
-      "serviceName": "CTET / TET परीक्षा फॉर्म",
-      "category": "प्रवेश परीक्षा",
-      "lastDate": "10 मई 2026",
-      "qualification": "D.El.Ed / BTC / B.Ed",
-      "fee": "₹1,000 (एक पेपर) • ₹1,200 (दोनों पेपर)",
-      "badge": "Trending",
-      "description": "केंद्रीय माध्यमिक शिक्षा बोर्ड (CBSE) द्वारा प्राथमिक व उच्च प्राथमिक शिक्षक पात्रता परीक्षा ऑनलाइन आवेदन।"
-    }
-  ],
+  "bulletins": [],
   "customerVault": [],
   "complaints": [],
   "rcOrders": [
@@ -623,7 +556,66 @@
   "utrRequests": [],
   "vleKycApplications": [],
   "wallets": [],
-  "cafes": [],
+  "cafes": [
+    {
+      "id": "CAFE-101",
+      "code": "101",
+      "slug": "cafe-101",
+      "shopName": "स्मार्ट डिजिटल सेवा केंद्र एवं साइबर कैफे",
+      "ownerName": "संचालक",
+      "phone": "9876543210",
+      "pin": "$2b$10$q60Zucv0XTHqf5IIUAxkp.J5roN5vpcvnqazhfhQKS9GJig7mSD1C",
+      "staffPin": "$2b$10$5S9tbQA7yZgAtH2.wWmvpeM8cr5WSN2OI/6qxO0Uk5OaHzJ.qy.cC",
+      "staffEnabled": true,
+      "email": "cafe101@smartcafe.sbs",
+      "vleId": "VLE-UP-2026-101",
+      "aadhaarNo": "XXXXXXXX4921",
+      "panNo": "ABCDE1234F",
+      "upiId": "smartcafe@upi",
+      "address": "मुख्य बाजार, डिजिटल सेवा केंद्र",
+      "city": "लखनऊ",
+      "district": "लखनऊ",
+      "state": "उत्तर प्रदेश",
+      "pincode": "226001",
+      "licenseKey": "VLE-LIC-2026-UP101-9988",
+      "kycStatus": "verified",
+      "isFrozen": false,
+      "frozenReason": "",
+      "subscription": {
+        "plan": "₹299 वार्षिक प्रो प्लान",
+        "amount": 299,
+        "status": "active",
+        "validTill": "2027-10-14T08:01:03.605Z",
+        "activatedAt": "2026-10-14T08:01:03.605Z",
+        "utr": "987654321012"
+      },
+      "b2bWallet": {
+        "balance": 0,
+        "minThreshold": 200,
+        "transactions": []
+      },
+      "retailRates": {
+        "rcDownload": 250,
+        "panCard": 150,
+        "incomeCert": 80,
+        "casteCert": 80,
+        "niwasCert": 80,
+        "drivingLicence": 250,
+        "pvcCard": 70
+      },
+      "rates": {
+        "bwPage": 3,
+        "colorPage": 10,
+        "xerox": 2,
+        "lamination": 20,
+        "photoCopyBothSide": 3,
+        "passportPhoto": 50,
+        "formFeeNormal": 70,
+        "formFeeComplex": 120
+      },
+      "createdAt": "2026-10-14T08:01:03.605Z"
+    }
+  ],
   "superAdminRates": {
     "rcDownload": 200,
     "panCard": 107,
@@ -635,13 +627,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-13T13:04:46.893Z",
+      "lastRun": "2026-10-13T18:04:51.927Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-13T14:04:46.785Z"
+      "nextRun": "2026-10-13T19:04:51.926Z"
     }
   },
   "superAdminAuditLogs": [

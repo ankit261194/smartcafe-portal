@@ -1250,7 +1250,14 @@ export default function App() {
         isOpen={isKycModalOpen}
         onClose={() => setIsKycModalOpen(false)}
         selectedCafe={selectedCafe}
-        onKycSubmitted={() => {
+        settings={settings}
+        onKycSubmitted={(cafe) => {
+          fetchSettingsAndCafes();
+        }}
+        onActivationLogin={(cafe) => {
+          setIsCafeAuth(true);
+          setMode('cafe');
+          if (cafe) setSelectedCafe(cafe);
           fetchSettingsAndCafes();
         }}
       />

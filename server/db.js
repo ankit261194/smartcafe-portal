@@ -380,6 +380,67 @@ export function getStore() {
 
     if (!loadedStore.settings) { loadedStore.settings = defaultStore.settings; mutated = true; }
     if (!Array.isArray(loadedStore.cafes)) { loadedStore.cafes = []; mutated = true; }
+    if (loadedStore.cafes.length === 0) {
+      loadedStore.cafes.push({
+        id: "CAFE-101",
+        code: "101",
+        slug: "cafe-101",
+        shopName: "स्मार्ट डिजिटल सेवा केंद्र एवं साइबर कैफे",
+        ownerName: "संचालक",
+        phone: "9876543210",
+        pin: hashCredential('1234'),
+        staffPin: hashCredential('0000'),
+        staffEnabled: true,
+        email: "cafe101@smartcafe.sbs",
+        vleId: "VLE-UP-2026-101",
+        aadhaarNo: "XXXXXXXX4921",
+        panNo: "ABCDE1234F",
+        upiId: "smartcafe@upi",
+        address: "मुख्य बाजार, डिजिटल सेवा केंद्र",
+        city: "लखनऊ",
+        district: "लखनऊ",
+        state: "उत्तर प्रदेश",
+        pincode: "226001",
+        licenseKey: "VLE-LIC-2026-UP101-9988",
+        kycStatus: "verified",
+        isFrozen: false,
+        frozenReason: "",
+        subscription: {
+          plan: "₹299 वार्षिक प्रो प्लान",
+          amount: 299,
+          status: "active",
+          validTill: new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString(),
+          activatedAt: new Date().toISOString(),
+          utr: "987654321012"
+        },
+        b2bWallet: {
+          balance: 0,
+          minThreshold: 200,
+          transactions: []
+        },
+        retailRates: {
+          rcDownload: 250,
+          panCard: 150,
+          incomeCert: 80,
+          casteCert: 80,
+          niwasCert: 80,
+          drivingLicence: 250,
+          pvcCard: 70
+        },
+        rates: {
+          bwPage: 3,
+          colorPage: 10,
+          xerox: 2,
+          lamination: 20,
+          photoCopyBothSide: 3,
+          passportPhoto: 50,
+          formFeeNormal: 70,
+          formFeeComplex: 120
+        },
+        createdAt: new Date().toISOString()
+      });
+      mutated = true;
+    }
     if (!Array.isArray(loadedStore.wallets)) { loadedStore.wallets = []; mutated = true; }
     if (!loadedStore.superAdminRates) { loadedStore.superAdminRates = defaultStore.superAdminRates; mutated = true; }
     if (!loadedStore.utrRequests) loadedStore.utrRequests = [];

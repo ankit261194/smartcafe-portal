@@ -46,7 +46,7 @@ async function runTests() {
     // Check & seed test cafes CAFE-101 and CAFE-102 for 10-pillar validation
     const cafesRes = await fetch(`${BASE}/api/cafes`);
     const cafesList = await cafesRes.json();
-    if (!cafesList.find(c => c.id === 'CAFE-101')) {
+    if (!cafesList.find(c => c.id === 'CAFE-101' && (c.b2bWallet?.balance || 0) >= 200)) {
       await fetch(`${BASE}/api/cafes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${superAdminToken}` },
@@ -63,7 +63,7 @@ async function runTests() {
         })
       });
     }
-    if (!cafesList.find(c => c.id === 'CAFE-102')) {
+    if (!cafesList.find(c => c.id === 'CAFE-102' && (c.b2bWallet?.balance || 0) === 100)) {
       await fetch(`${BASE}/api/cafes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${superAdminToken}` },

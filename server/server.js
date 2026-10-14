@@ -3381,15 +3381,84 @@ app.post('/api/kyc/apply', upload.single('paymentSlip'), (req, res) => {
 
   const finalSlipUrl = screenshotUrl || '/uploads/sample_payment_slip.png';
 
+  const isAutoActivate = Boolean(req.body.autoActivate === true || req.body.autoActivate === 'true');
+  const nextNum = (store.cafes || []).length + 101;
+  const stateCode = (state || 'उत्तर प्रदेश').slice(0, 2).toUpperCase();
+  const licenseKey = `VLE-LIC-2026-${stateCode}${nextNum}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+  let newCafe = null;
+  if (isAutoActivate) {
+    newCafe = {
+      id: `CAFE-${nextNum}`,
+      code: String(nextNum),
+      slug: `cafe-${nextNum}`,
+      shopName: shopName.trim(),
+      ownerName: ownerName.trim(),
+      phone: phone.trim(),
+      pin: hashCredential(req.body.pin || '1234'),
+      staffPin: hashCredential('0000'),
+      staffEnabled: true,
+      email: email || `${phone}@csc.gov.in`,
+      vleId: vleId.trim().toUpperCase(),
+      aadhaarNo: aadhaarNo.trim(),
+      panNo: panNo.trim().toUpperCase(),
+      upiId: upiId || `${phone}@upi`,
+      address: address || '',
+      city: city || '',
+      district: district || city || '',
+      state: state || 'उत्तर प्रदेश',
+      pincode: pincode || '',
+      licenseKey,
+      kycStatus: 'verified',
+      isFrozen: false,
+      frozenReason: '',
+      subscription: {
+        plan: '₹299 वार्षिक प्रो प्लान',
+        amount: 299,
+        status: 'active',
+        validTill: new Date(Date.now() + 365 * 24 * 3600 * 1000).toISOString(),
+        activatedAt: new Date().toISOString(),
+        utr: cleanUtr
+      },
+      b2bWallet: {
+        balance: 0,
+        minThreshold: 200,
+        transactions: []
+      },
+      retailRates: {
+        rcDownload: (store.superAdminRates?.rcDownload || 200) + 50,
+        panCard: (store.superAdminRates?.panCard || 107) + 43,
+        incomeCert: (store.superAdminRates?.incomeCert || 50) + 30,
+        casteCert: (store.superAdminRates?.casteCert || 50) + 30,
+        niwasCert: (store.superAdminRates?.niwasCert || 50) + 30,
+        drivingLicence: (store.superAdminRates?.drivingLicence || 150) + 100,
+        pvcCard: (store.superAdminRates?.pvcCard || 40) + 30
+      },
+      rates: store.settings.rates || {
+        bwPage: 3,
+        colorPage: 10,
+        xerox: 2,
+        lamination: 20,
+        photoCopyBothSide: 3,
+        passportPhoto: 50,
+        formFeeNormal: 70,
+        formFeeComplex: 120
+      },
+      createdAt: new Date().toISOString()
+    };
+    if (!store.cafes) store.cafes = [];
+    store.cafes.unshift(newCafe);
+  }
+
   const newApp = {
     id: `KYC-${Math.floor(100 + Math.random() * 900)}`,
     shopName,
     ownerName,
     phone,
     email: email || `${phone}@csc.gov.in`,
-    vleId,
+    vleId: vleId.trim().toUpperCase(),
     aadhaarNo,
-    panNo,
+    panNo: panNo.trim().toUpperCase(),
     upiId: upiId || `${phone}@upi`,
     address: address || '',
     city: city || '',
@@ -3400,17 +3469,43 @@ app.post('/api/kyc/apply', upload.single('paymentSlip'), (req, res) => {
     subscriptionPlan: '₹299 वार्षिक प्रो प्लान (365 दिन)',
     utr: cleanUtr,
     screenshotUrl: finalSlipUrl,
-    status: 'pending_approval', // 'pending_approval', 'approved', 'rejected'
+    status: isAutoActivate ? 'approved' : 'pending_approval',
     rejectReason: '',
-    licenseKey: null,
+    licenseKey: isAutoActivate ? licenseKey : null,
+    approvedAt: isAutoActivate ? new Date().toISOString() : null,
     createdAt: new Date().toISOString()
   };
 
   if (!store.vleKycApplications) store.vleKycApplications = [];
   store.vleKycApplications.unshift(newApp);
+
   saveStore(store);
 
-  res.status(201).json({ success: true, application: newApp });
+  let token = null;
+  if (newCafe) {
+    token = jwt.sign(
+      {
+        role: 'cafe_owner',
+        cafeId: newCafe.id,
+        shopName: newCafe.shopName
+      },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+  }
+
+  res.status(201).json({
+    success: true,
+    activated: isAutoActivate,
+    message: isAutoActivate 
+      ? '🎉 बधाई हो! आपका साइबर कैफे अकाउंट QR कोड से तुरंत सक्रिय (Active) हो गया है!' 
+      : 'VLE KYC आवेदन सफलतापूर्वक जमा हो गया।',
+    application: newApp,
+    cafe: newCafe,
+    licenseKey: isAutoActivate ? licenseKey : null,
+    pin: '1234',
+    token
+  });
 });
 
 app.get('/api/superadmin/kyc-applications', (req, res) => {

@@ -3,6 +3,7 @@ import {
   Wallet, IndianRupee, ArrowDownLeft, ArrowUpRight, Plus, 
   CheckCircle2, QrCode, Smartphone, RefreshCw, AlertCircle, ShieldCheck, Clock
 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import { authFetch } from '../utils/api';
 
 export default function CustomerWalletModal({ 
@@ -216,11 +217,50 @@ export default function CustomerWalletModal({
                 <button type="button" onClick={() => setIsQrOpen(false)} className="text-slate-400 font-bold">✕</button>
               </div>
 
-              {/* Shop UPI ID info */}
-              <div className="text-center p-2.5 bg-white rounded-xl border border-slate-200 space-y-0.5">
-                <p className="text-[11px] text-slate-500 font-medium">दुकान की अधिकृत UPI ID:</p>
+              {/* Shop UPI ID info & Real Scanable QR Code */}
+              <div className="bg-white p-3 rounded-2xl border border-emerald-200 text-center space-y-2 flex flex-col items-center shadow-xs">
+                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">दुकानदार QR कोड स्कैन करें (0% शुल्क):</span>
+                <div className="p-2 bg-white rounded-xl shadow-xs border border-emerald-100 inline-block">
+                  <QRCodeSVG 
+                    value={`upi://pay?pa=${displayUpi}&pn=${encodeURIComponent(selectedCafe?.shopName || 'SmartCafe')}&am=${addAmount || 100}&cu=INR&tn=Customer-Wallet-Topup`}
+                    size={140}
+                    level="H"
+                    includeMargin={true}
+                  />
+                </div>
+                <div className="flex items-center gap-1.5 flex-wrap justify-center">
+                  <a
+                    href={`upi://pay?pa=${displayUpi}&pn=${encodeURIComponent(selectedCafe?.shopName || 'SmartCafe')}&am=${addAmount || 100}&cu=INR&tn=Customer-Wallet-Topup`}
+                    className="px-2 py-0.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-md text-[10px] font-black border border-indigo-200"
+                  >
+                    PhonePe
+                  </a>
+                  <a
+                    href={`upi://pay?pa=${displayUpi}&pn=${encodeURIComponent(selectedCafe?.shopName || 'SmartCafe')}&am=${addAmount || 100}&cu=INR&tn=Customer-Wallet-Topup`}
+                    className="px-2 py-0.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-md text-[10px] font-black border border-blue-200"
+                  >
+                    Google Pay
+                  </a>
+                  <a
+                    href={`upi://pay?pa=${displayUpi}&pn=${encodeURIComponent(selectedCafe?.shopName || 'SmartCafe')}&am=${addAmount || 100}&cu=INR&tn=Customer-Wallet-Topup`}
+                    className="px-2 py-0.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-md text-[10px] font-black border border-sky-200"
+                  >
+                    Paytm
+                  </a>
+                  <a
+                    href={`upi://pay?pa=${displayUpi}&pn=${encodeURIComponent(selectedCafe?.shopName || 'SmartCafe')}&am=${addAmount || 100}&cu=INR&tn=Customer-Wallet-Topup`}
+                    className="px-2 py-0.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-md text-[10px] font-black border border-emerald-200"
+                  >
+                    BHIM UPI
+                  </a>
+                </div>
                 <p className="font-mono font-black text-xs text-indigo-700 select-all">{displayUpi}</p>
-                <p className="text-[10px] text-slate-400">PhonePe / GPay / Paytm से इस UPI पर राशि भेजें</p>
+                <a
+                  href={`upi://pay?pa=${displayUpi}&pn=${encodeURIComponent(selectedCafe?.shopName || 'SmartCafe')}&am=${addAmount || 100}&cu=INR&tn=Customer-Wallet-Topup`}
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-[11px] font-bold shadow-xs transition"
+                >
+                  ⚡ मोबाइल UPI ऐप से ₹{addAmount || 100} भेजें
+                </a>
               </div>
 
               {/* Amount Quick Select */}
