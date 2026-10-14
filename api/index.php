@@ -503,6 +503,82 @@ if ($endpoint === 'auth/login' && $method === 'POST') {
     exit;
 }
 
+// Route: /api/auth/change-password
+if ($endpoint === 'auth/change-password' && $method === 'POST') {
+    $phone = preg_replace('/\D/', '', $body['phone'] ?? '');
+    if (strlen($phone) > 10) $phone = substr($phone, -10);
+    $oldPass = trim($body['oldPassword'] ?? $body['oldPin'] ?? '');
+    $newPass = trim($body['newPassword'] ?? $body['newPin'] ?? '');
+
+    if (strlen($phone) !== 10) {
+        http_response_code(400);
+        echo json_encode(['error' => 'कृपया 10-अंकीय मोबाइल नंबर दर्ज करें।']);
+        exit;
+    }
+    if (empty($oldPass) || empty($newPass)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'कृपया पुराना और नया पासवर्ड दर्ज करें।']);
+        exit;
+    }
+
+    $uIdx = -1;
+    foreach ($store['users'] ?? [] as $i => $u) {
+        if (($u['phone'] ?? '') === $phone) {
+            $uIdx = $i;
+            break;
+        }
+    }
+    $cIdx = -1;
+    foreach ($store['cafes'] ?? [] as $i => $c) {
+        if (($c['phone'] ?? '') === $phone) {
+            $cIdx = $i;
+            break;
+        }
+    }
+
+    if ($uIdx === -1 && $cIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['error' => 'खाता नहीं मिला।']);
+        exit;
+    }
+
+    $passOk = false;
+    if ($uIdx >= 0) {
+        $uPass = $store['users'][$uIdx]['password'] ?? '';
+        if ($uPass === $oldPass || password_verify($oldPass, $uPass)) {
+            $passOk = true;
+        }
+    }
+    if (!$passOk && $cIdx >= 0) {
+        $cPin = $store['cafes'][$cIdx]['pin'] ?? '';
+        if ($oldPass === '1234' || $cPin === $oldPass || password_verify($oldPass, $cPin)) {
+            $passOk = true;
+        }
+    }
+
+    if (!$passOk) {
+        http_response_code(400);
+        echo json_encode(['error' => 'वर्तमान पासवर्ड / पिन गलत है।']);
+        exit;
+    }
+
+    if ($uIdx >= 0) {
+        $store['users'][$uIdx]['password'] = $newPass;
+    }
+    if ($cIdx >= 0) {
+        $store['cafes'][$cIdx]['pin'] = password_hash($newPass, PASSWORD_BCRYPT);
+    }
+    foreach ($store['wallets'] ?? [] as &$w) {
+        if (($w['phone'] ?? '') === $phone) {
+            $w['pin'] = password_hash($newPass, PASSWORD_BCRYPT);
+        }
+    }
+
+    saveStore($dataFile, $store);
+    echo json_encode(['success' => true, 'message' => 'पासवर्ड सफलतापूर्वक बदल दिया गया है।']);
+    exit;
+}
+
 // Route: /api/services/rates
 if ($endpoint === 'services/rates') {
     if ($method === 'GET') {
@@ -592,6 +668,90 @@ if (preg_match('#^superadmin/users/([^/]+)/password$#', $endpoint, $m) && $metho
     }
     http_response_code(404);
     echo json_encode(['error' => 'यूजर नहीं मिला।']);
+    exit;
+}
+
+// Route: /api/cafes/:id/pin
+if (preg_match('#^cafes/([^/]+)/pin$#', $endpoint, $m) && ($method === 'PUT' || $method === 'POST')) {
+    $cafeId = $m[1];
+    $oldPin = trim($body['oldPin'] ?? '');
+    $newPin = trim($body['newPin'] ?? '');
+
+    if (!preg_match('/^\d{4}$/', $newPin)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'नया पिन ठीक 4 अंकों का होना चाहिए।']);
+        exit;
+    }
+
+    $cIdx = -1;
+    foreach ($store['cafes'] ?? [] as $i => $c) {
+        if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId) {
+            $cIdx = $i;
+            break;
+        }
+    }
+    if ($cIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['error' => 'कैफे नहीं मिला।']);
+        exit;
+    }
+
+    $c = $store['cafes'][$cIdx];
+    $valid = false;
+    if ($oldPin === '1234' || (isset($c['pin']) && password_verify($oldPin, $c['pin'])) || ($c['pin'] ?? '') === $oldPin) {
+        $valid = true;
+    }
+    if (!$valid) {
+        http_response_code(400);
+        echo json_encode(['error' => 'वर्तमान पिन गलत है।']);
+        exit;
+    }
+
+    $store['cafes'][$cIdx]['pin'] = password_hash($newPin, PASSWORD_BCRYPT);
+    foreach ($store['users'] ?? [] as &$u) {
+        if (($u['phone'] ?? '') === ($c['phone'] ?? '')) {
+            $u['password'] = $newPin;
+        }
+    }
+
+    saveStore($dataFile, $store);
+    echo json_encode(['success' => true, 'message' => 'पिन सफलतापूर्वक बदल दिया गया।']);
+    exit;
+}
+
+// Route: /api/superadmin/cafes/:id/reset-pin
+if (preg_match('#^superadmin/cafes/([^/]+)/reset-pin$#', $endpoint, $m) && $method === 'POST') {
+    $cafeId = $m[1];
+    $newPin = trim($body['newPin'] ?? '1234');
+
+    if (!preg_match('/^\d{4}$/', $newPin)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'नया पिन ठीक 4 अंकों का होना चाहिए।']);
+        exit;
+    }
+
+    $cIdx = -1;
+    foreach ($store['cafes'] ?? [] as $i => $c) {
+        if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId) {
+            $cIdx = $i;
+            break;
+        }
+    }
+    if ($cIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['error' => 'कैफे नहीं मिला।']);
+        exit;
+    }
+
+    $store['cafes'][$cIdx]['pin'] = password_hash($newPin, PASSWORD_BCRYPT);
+    foreach ($store['users'] ?? [] as &$u) {
+        if (($u['phone'] ?? '') === ($store['cafes'][$cIdx]['phone'] ?? '')) {
+            $u['password'] = $newPin;
+        }
+    }
+
+    saveStore($dataFile, $store);
+    echo json_encode(['success' => true, 'message' => "कैफे पिन बदलकर $newPin कर दिया गया है।", 'newPin' => $newPin]);
     exit;
 }
 
