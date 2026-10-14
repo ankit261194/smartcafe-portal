@@ -2954,6 +2954,23 @@ app.post('/api/services/execute-automated', (req, res) => {
     });
   }
 
+  const serviceTitles = {
+    rcDownload: 'वाहन RC टू PDF / PVC स्मार्ट कार्ड',
+    panCard: 'इंस्टेंट पैन कार्ड CR-80 PVC',
+    aadhaarCard: 'एडवांस आधार CR-80 PVC स्मार्ट कार्ड',
+    voterCard: 'डिजिटल वोटर स्मार्ट कार्ड (EPIC)',
+    ayushmanCard: 'आयुष्मान भारत PM-JAY गोल्डन कार्ड',
+    rationCard: 'राशन कार्ड पर्चा / NFSA स्लिप',
+    electricityBill: 'बिजली बिल भुगतान रसीद',
+    edistrictSlip: 'e-District आय/जाति/निवास सत्यापन पर्ची',
+    drivingLicence: 'ड्राइविंग लाइसेंस (DL) CR-80 PVC स्मार्ट कार्ड',
+    challanSearch: 'वाहन ई-चालान जांच एवं भुगतान रसीद',
+    ePan: 'ई-पैन कार्ड डिजिटल डाउनलोड एवं स्लिप',
+    findPan: 'गुमशुदा पैन कार्ड खोज एवं सत्यापन पर्ची',
+    searchEpic: 'मतदाता सूचना पर्ची (Voter Information Slip)',
+    receiptMaker: 'साइबर कैफे / जन सेवा केंद्र अधिकृत बिल रसीद'
+  };
+
   let wholesaleCost = 200;
   let retailFee = 250;
   let serviceDisplayName = normServiceType;
@@ -3000,23 +3017,6 @@ app.post('/api/services/execute-automated', (req, res) => {
       });
     }
   }
-
-  const serviceTitles = {
-    rcDownload: 'वाहन RC टू PDF / PVC स्मार्ट कार्ड',
-    panCard: 'इंस्टेंट पैन कार्ड CR-80 PVC',
-    aadhaarCard: 'एडवांस आधार CR-80 PVC स्मार्ट कार्ड',
-    voterCard: 'डिजिटल वोटर स्मार्ट कार्ड (EPIC)',
-    ayushmanCard: 'आयुष्मान भारत PM-JAY गोल्डन कार्ड',
-    rationCard: 'राशन कार्ड पर्चा / NFSA स्लिप',
-    electricityBill: 'बिजली बिल भुगतान रसीद',
-    edistrictSlip: 'e-District आय/जाति/निवास सत्यापन पर्ची',
-    drivingLicence: 'ड्राइविंग लाइसेंस (DL) CR-80 PVC स्मार्ट कार्ड',
-    challanSearch: 'वाहन ई-चालान जांच एवं भुगतान रसीद',
-    ePan: 'ई-पैन कार्ड डिजिटल डाउनलोड एवं स्लिप',
-    findPan: 'गुमशुदा पैन कार्ड खोज एवं सत्यापन पर्ची',
-    searchEpic: 'मतदाता सूचना पर्ची (Voter Information Slip)',
-    receiptMaker: 'साइबर कैफे / जन सेवा केंद्र अधिकृत बिल रसीद'
-  };
 
   // If funded, execute double-entry ledger deduction
   if (!isTrial) {
@@ -3141,6 +3141,66 @@ app.post('/api/services/execute-automated', (req, res) => {
     generatedData = getReceiptDetails(params?.query || customerPhone, { ...params, shopName: cafe.shopName, shopAddress: cafe.address, shopPhone: cafe.phone });
     docTitle = `कैफे बिल रसीद (${generatedData.receiptNo}) - ₹${generatedData.amount}`;
     refNumber = generatedData.receiptNo;
+  }
+
+  // Universal Fallback Generator for all 79 services so generatedData is NEVER null/undefined
+  if (!generatedData) {
+    const kind = ((service79 && (service79.group || service79.category)) || serviceType || '').toLowerCase();
+    if (kind.includes('pan')) {
+      generatedData = getPanCardDetails(params?.panNo || params?.query || 'AAAPA1234A', params);
+      docTitle = `पैन कार्ड (${generatedData.panNo}) - ${generatedData.name}`;
+      refNumber = generatedData.panNo;
+    } else if (kind.includes('aadhaar')) {
+      generatedData = getAadhaarDetails(params?.aadhaarNo || params?.query || '999988887777', params);
+      docTitle = `आधार PVC (${generatedData.maskedAadhaar}) - ${generatedData.name}`;
+      refNumber = generatedData.aadhaarNo;
+    } else if (kind.includes('voter') || kind.includes('epic')) {
+      generatedData = getVoterDetails(params?.epicNo || params?.query || 'XYZ1234567', params);
+      docTitle = `वोटर स्मार्ट कार्ड (${generatedData.epicNo}) - ${generatedData.name}`;
+      refNumber = generatedData.epicNo;
+    } else if (kind.includes('rc') || kind.includes('vehicle')) {
+      const regNo = (params?.regNo || params?.vehicleNumber || params?.query || 'UP32AB1234').toUpperCase().replace(/[\s-]+/g, '');
+      generatedData = getVehicleDetails(regNo, params);
+      vehicleData = generatedData;
+      docTitle = `वाहन RC (${generatedData.regNo}) - ${generatedData.makerModel}`;
+      refNumber = generatedData.regNo;
+    } else if (kind.includes('dl') || kind.includes('licence')) {
+      generatedData = getDrivingLicenceDetails(params?.dlNo || params?.query || 'UP32 20180012345', params);
+      docTitle = `ड्राइविंग लाइसेंस (${generatedData.dlNo}) - ${generatedData.name}`;
+      refNumber = generatedData.dlNo;
+    } else if (kind.includes('ayushman') || kind.includes('health') || kind.includes('pmjay') || kind.includes('abha')) {
+      generatedData = getAyushmanDetails(params?.pmjayId || params?.id || params?.query || 'ABHA-1234-5678-9012', params);
+      docTitle = `आयुष्मान कार्ड (${generatedData.pmjayId}) - ${generatedData.name}`;
+      refNumber = generatedData.pmjayId;
+    } else if (kind.includes('ration')) {
+      generatedData = getRationDetails(params?.rationNo || params?.query || '102030405060', params);
+      docTitle = `राशन पर्ची (${generatedData.rationNo}) - ${generatedData.headName}`;
+      refNumber = generatedData.rationNo;
+    } else if (kind.includes('electric') || kind.includes('bill') || kind.includes('utility')) {
+      generatedData = getElectricityBillDetails(params?.consumerNo || params?.query || '1234567890', params);
+      docTitle = `बिजली रसीद (${generatedData.consumerNo}) - ₹${generatedData.netPayable}`;
+      refNumber = generatedData.consumerNo;
+    } else if (kind.includes('challan')) {
+      generatedData = getChallanDetails(params?.challanNo || params?.vehicleNo || params?.query || 'UP1234567890', params);
+      docTitle = `ई-चालान रसीद (${generatedData.vehicleNo}) - ₹${generatedData.amount}`;
+      refNumber = generatedData.challanNo;
+    } else if (kind.includes('edistrict')) {
+      generatedData = getEdistrictDetails(params?.appNo || '230123456789', params?.certNo || '1234567890', params);
+      docTitle = `e-District सत्यापन (${generatedData.certNo}) - ${generatedData.applicantName}`;
+      refNumber = generatedData.certNo;
+    } else {
+      generatedData = getReceiptDetails(params?.query || params?.primaryInput || customerPhone || '9876543210', {
+        ...params,
+        serviceName: serviceDisplayName,
+        customerName: params?.customerName || params?.name || 'नागरिक',
+        shopName: cafe.shopName,
+        shopAddress: cafe.address,
+        shopPhone: cafe.phone,
+        amount: retailFee
+      });
+      docTitle = `${serviceDisplayName} रसीद (${generatedData.receiptNo}) - ₹${generatedData.amount}`;
+      refNumber = generatedData.receiptNo;
+    }
   }
 
   const newOrder = {

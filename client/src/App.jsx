@@ -33,11 +33,13 @@ import RekhaSidebar from './components/RekhaSidebar';
 import RekhaDashboard from './components/RekhaDashboard';
 import InstantToolsEngine from './components/InstantToolsEngine';
 import ServicePage from './components/ServicePage';
+import CategoryPage from './components/CategoryPage';
 import RekhaOrders from './components/RekhaOrders';
 import IndianFlagBackdrop from './components/IndianFlagBackdrop';
 import ScrollToTopWidget from './components/ScrollToTopWidget';
 import { authFetch, getServerBaseUrl, setServerBaseUrl } from './utils/api';
 import { useLanguage } from './context/LanguageContext';
+import { getMergedServicesCatalog, SERVICE_CATEGORIES } from './data/servicesCatalog';
 import { ArrowLeft, Home, ChevronRight } from 'lucide-react';
 
 export default function App() {
@@ -97,6 +99,7 @@ export default function App() {
   });
   const [sidebarSearchTerm, setSidebarSearchTerm] = useState('');
   const [activeInstantToolId, setActiveInstantToolId] = useState('aadhaar_advance');
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [broadcastNotice, setBroadcastNotice] = useState(null);
 
@@ -239,13 +242,23 @@ export default function App() {
     if (mode === 'superadmin') {
       navigateToTier('customer');
     } else if (mode === 'admin') {
-      if (adminTab !== 'dashboard' && adminTab !== 'home') {
+      if (adminTab === 'tool' && selectedCategory) {
+        setAdminTab('category');
+      } else if (adminTab === 'category') {
+        setAdminTab('dashboard');
+      } else if (adminTab !== 'dashboard' && adminTab !== 'home') {
         setAdminTab('dashboard');
       } else {
         navigateToTier('customer');
       }
     } else {
-      setCustomerTab('home');
+      if (customerTab === 'tool' && selectedCategory) {
+        setCustomerTab('category');
+      } else if (customerTab === 'category') {
+        setCustomerTab('home');
+      } else {
+        setCustomerTab('home');
+      }
     }
   };
 
@@ -262,6 +275,12 @@ export default function App() {
   const getCurrentPageTitle = () => {
     if (mode === 'superadmin') {
       return language === 'hi' ? '🛡️ सुपर एडमिन SaaS कंट्रोल रूम' : '🛡️ Super Admin Control Room';
+    }
+
+    if (customerTab === 'category' || adminTab === 'category') {
+      return selectedCategory 
+        ? (selectedCategory.title?.[language] || selectedCategory.title?.hi || 'सेवा श्रेणी') 
+        : (language === 'hi' ? 'सेवा श्रेणी' : 'Service Category');
     }
     
     if (mode === 'admin') {
@@ -299,8 +318,8 @@ export default function App() {
   };
 
   const hasCustomHeader = 
-    (customerTab === 'tool' || customerTab.startsWith('tool-') || customerTab === 'orders') ||
-    (adminTab === 'tool' || adminTab.startsWith('tool-') || adminTab === 'orders');
+    (customerTab === 'tool' || customerTab.startsWith('tool-') || customerTab === 'category' || customerTab === 'orders') ||
+    (adminTab === 'tool' || adminTab.startsWith('tool-') || adminTab === 'category' || adminTab === 'orders');
 
   const isSubPage = 
     !hasCustomHeader && (
@@ -310,7 +329,22 @@ export default function App() {
     );
 
   useEffect(() => {
-    const handlePopState = () => {
+    const handlePopState = (e) => {
+      const state = e?.state;
+      if (state?.appTab === 'tool' && state.toolId) {
+        setActiveInstantToolId(state.toolId);
+        if (mode === 'customer') setCustomerTab('tool');
+        else setAdminTab('tool');
+        return;
+      }
+      if (state?.appTab === 'category' && state.catId) {
+        const found = SERVICE_CATEGORIES.find(c => c.id === state.catId);
+        if (found) setSelectedCategory(found);
+        if (mode === 'customer') setCustomerTab('category');
+        else setAdminTab('category');
+        return;
+      }
+
       const p = window.location.pathname.toLowerCase();
       const hash = window.location.hash.toLowerCase();
       let newMode = 'customer';
@@ -321,10 +355,24 @@ export default function App() {
       }
       setMode(newMode);
       sessionStorage.setItem('active_mode', newMode);
+
+      if (newMode === 'customer') {
+        if (customerTab === 'tool' && selectedCategory) {
+          setCustomerTab('category');
+        } else {
+          setCustomerTab('home');
+        }
+      } else if (newMode === 'admin') {
+        if (adminTab === 'tool' && selectedCategory) {
+          setAdminTab('category');
+        } else {
+          setAdminTab('dashboard');
+        }
+      }
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [mode, customerTab, adminTab, selectedCategory]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -342,25 +390,41 @@ export default function App() {
     localStorage.removeItem('cafe_auth');
     localStorage.removeItem('cafe_token');
     localStorage.removeItem('is_staff_auth');
+    localStorage.removeItem('cybercafe_customer');
+    localStorage.removeItem('smartcafe_user');
+    localStorage.removeItem('smartcafe_token');
     setIsSuperAdminAuth(false);
     setIsCafeAuth(false);
     setIsStaffAuth(false);
+    setCustomerSession(null);
     navigateToTier('customer');
   };
 
   const handleLaunchService = (toolKey) => {
-    const isAuthenticated = !!(customerSession?.phone || isCafeAuth || isSuperAdminAuth);
-    if (!isAuthenticated && mode === 'customer') {
-      setRoleAuthModalConfig({
-        isOpen: true,
-        type: 'customer',
-        pendingTool: toolKey
-      });
-      return;
-    }
     setActiveInstantToolId(toolKey);
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.pushState({ appTab: 'tool', toolId: toolKey }, '');
+      } catch (e) {}
+    }
     if (mode === 'customer') setCustomerTab('tool');
     else setAdminTab('tool');
+  };
+
+  const handleSelectCategory = (cat) => {
+    // If passed category is an ID string, find the category object
+    let catObj = cat;
+    if (typeof cat === 'string') {
+      catObj = SERVICE_CATEGORIES.find(c => c.id === cat) || { id: cat, title: { hi: cat, en: cat } };
+    }
+    setSelectedCategory(catObj);
+    if (typeof window !== 'undefined') {
+      try {
+        window.history.pushState({ appTab: 'category', catId: catObj.id }, '');
+      } catch (e) {}
+    }
+    if (mode === 'customer') setCustomerTab('category');
+    else setAdminTab('category');
   };
 
   // Fetch shop settings and cafes
@@ -894,6 +958,7 @@ export default function App() {
                     handleLaunchService(toolKey);
                   }
                 }}
+                onSelectCategory={handleSelectCategory}
                 onNavigateTab={(tab) => {
                   if (tab === 'quick-print' || tab === 'print') {
                     setCustomerTab('print');
@@ -921,6 +986,18 @@ export default function App() {
               />
             )}
 
+            {customerTab === 'category' && selectedCategory && (
+              <CategoryPage
+                category={selectedCategory}
+                catalog={getMergedServicesCatalog(services79Rates)}
+                onSelectService={(serviceId) => {
+                  handleLaunchService(serviceId);
+                }}
+                onBack={() => setCustomerTab('home')}
+                theme={theme}
+              />
+            )}
+
             {customerTab === 'portalhome' && (
               <CustomerHome
                 settings={settings}
@@ -939,7 +1016,13 @@ export default function App() {
                   setActiveInstantToolId(toolId);
                   setCustomerTab('tool');
                 }}
-                onBack={() => setCustomerTab('home')}
+                onBack={() => {
+                  if (selectedCategory) {
+                    setCustomerTab('category');
+                  } else {
+                    setCustomerTab('home');
+                  }
+                }}
                 selectedCafe={selectedCafe}
                 customerSession={customerSession}
                 walletBalance={walletBalance}
@@ -1051,10 +1134,10 @@ export default function App() {
                     if (toolKey === 'quick-print' || toolKey === 'print') {
                       setAdminTab('prints');
                     } else {
-                      setActiveInstantToolId(toolKey);
-                      setAdminTab('tool');
+                      handleLaunchService(toolKey);
                     }
                   }}
+                  onSelectCategory={handleSelectCategory}
                   onNavigateTab={(tab) => {
                     if (tab === 'quick-print' || tab === 'print') {
                       setAdminTab('prints');
@@ -1081,6 +1164,18 @@ export default function App() {
                 />
               )}
 
+              {adminTab === 'category' && selectedCategory && (
+                <CategoryPage
+                  category={selectedCategory}
+                  catalog={getMergedServicesCatalog(services79Rates)}
+                  onSelectService={(serviceId) => {
+                    handleLaunchService(serviceId);
+                  }}
+                  onBack={() => setAdminTab('dashboard')}
+                  theme={theme}
+                />
+              )}
+
               {(adminTab === 'tool' || adminTab.startsWith('tool-')) && (
                 <ServicePage
                   activeToolId={adminTab.startsWith('tool-') ? adminTab.replace('tool-', '') : activeInstantToolId}
@@ -1088,7 +1183,13 @@ export default function App() {
                     setActiveInstantToolId(toolId);
                     setAdminTab('tool');
                   }}
-                  onBack={() => setAdminTab('dashboard')}
+                  onBack={() => {
+                    if (selectedCategory) {
+                      setAdminTab('category');
+                    } else {
+                      setAdminTab('dashboard');
+                    }
+                  }}
                   selectedCafe={selectedCafe}
                   customerSession={customerSession}
                   walletBalance={walletBalance}

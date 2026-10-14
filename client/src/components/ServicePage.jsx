@@ -11,6 +11,7 @@ import { jsPDF } from 'jspdf';
 import { authFetch } from '../utils/api';
 import { useLanguage } from '../context/LanguageContext';
 import { getMergedServicesCatalog } from '../data/servicesCatalog';
+import { CATEGORY_ICON_MAP } from './RekhaDashboard';
 
 // Sample Avatars (Self-contained, sharp vector SVGs as data URIs)
 const SAMPLE_PHOTOS = {
@@ -72,16 +73,27 @@ export default function ServicePage({
     if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc'].includes(id) || cat === 'rc' || id.includes('rc_')) return 'rc';
     if (['pan', 'pan_find', 'pan_details'].includes(id) || cat === 'pan' || id.includes('pan_')) return 'pan';
     if (id === 'epan') return 'epan';
-    if (['aadhaar', 'aadhaar_advance', 'aadhaar_original_pdf_otp', 'aadhaar_original_pdf_no_otp', 'aadhaar_otp_kyc', 'aadhaar_pvc'].includes(id) || cat === 'aadhaar' || id.includes('aadhaar_')) return 'aadhaar';
+    if (['aadhaar', 'aadhaar_advance', 'aadhaar_original_pdf_otp', 'aadhaar_original_pdf_no_otp', 'aadhaar_otp_kyc', 'aadhaar_pvc'].includes(id) || cat === 'aadhaar' || id.includes('aadhaar_') || id.includes('uid_') || id.includes('pvc_')) return 'aadhaar';
     if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp'].includes(id) || cat === 'voter' || id.includes('voter_')) return 'voter';
-    if (['dl', 'driving_licence_pdf', 'dl_details'].includes(id) || cat === 'dl' || id.includes('driving_licence')) return 'dl';
-    if (['ayushman', 'ayushman_card', 'abha_card'].includes(id) || cat === 'health') return 'ayushman';
-    if (['ration', 'ration_pdf_by_ration', 'samagra_service', 'rtps_bihar_pdf'].includes(id) || ['ration', 'welfare'].includes(cat) || id.includes('ration_')) return 'ration';
+    if (['dl', 'driving_licence_pdf', 'dl_details'].includes(id) || cat === 'dl' || id.includes('driving_licence') || id.includes('dl_')) return 'dl';
+    if (['ayushman', 'ayushman_card', 'abha_card', 'abha_otp'].includes(id) || cat === 'health' || id.includes('ayushman') || id.includes('abha')) return 'ayushman';
+    if (['ration', 'ration_pdf_by_ration'].includes(id) || cat === 'ration' || id.includes('ration_')) return 'ration';
     if (['electricity', 'electric_bill_pdf_bihar'].includes(id) || cat === 'utility' || id.includes('electric_bill')) return 'electricity';
-    if (['challan', 'chalan_find'].includes(id) || id.includes('chalan')) return 'challan';
+    if (['challan', 'chalan_find'].includes(id) || id.includes('chalan') || id.includes('challan')) return 'challan';
     if (['edistrict', 'edistrict-verify', 'edistrict-decl', 'edistrict-packer', 'edistrict-bhulekh'].includes(id) || cat === 'edistrict') return 'edistrict';
+    if (cat === 'banking' || id.includes('bank') || id.includes('nsdl') || id.includes('npci')) return 'banking';
+    if (cat === 'telecom' || id.includes('telecom') || id.includes('sim') || id.includes('cdr')) return 'telecom';
+    if (cat === 'agriculture' || id.includes('agri') || id.includes('kisan')) return 'agriculture';
+    if (cat === 'welfare' || id.includes('samagra') || id.includes('sambal') || id.includes('eshram')) return 'welfare';
     return 'receipt';
   }, [currentTool]);
+
+  // Safe Dynamic Service Icon Component (Resolves undefined icon crash)
+  const ServiceIconComponent = useMemo(() => {
+    return currentTool?.icon || 
+      (CATEGORY_ICON_MAP && (CATEGORY_ICON_MAP[currentTool?.category] || CATEGORY_ICON_MAP[toolKind])) || 
+      Sparkles;
+  }, [currentTool, toolKind]);
 
   const photoInputRef = useRef(null);
   const signInputRef = useRef(null);
@@ -321,6 +333,26 @@ export default function ServicePage({
       params.vehicleNo = val.toUpperCase();
       params.name = customerName.trim() || undefined;
     }
+    if (toolKind === 'banking') {
+      params.accountNo = val;
+      params.name = customerName.trim() || undefined;
+      params.bankName = secondaryInput.trim() || 'NSDL Payments Bank';
+    }
+    if (toolKind === 'agriculture') {
+      params.farmerId = val.toUpperCase();
+      params.name = customerName.trim() || undefined;
+      params.khasraNo = secondaryInput.trim() || 'खसरा सं. 142/1';
+    }
+    if (toolKind === 'welfare') {
+      params.samagraId = val;
+      params.name = customerName.trim() || undefined;
+      params.schemeName = secondaryInput.trim() || 'समग्र सामाजिक सुरक्षा योजना';
+    }
+    if (toolKind === 'telecom') {
+      params.mobileNo = val;
+      params.name = customerName.trim() || undefined;
+      params.operatorName = secondaryInput.trim() || 'JIO / Airtel / BSNL';
+    }
     if (toolKind === 'receipt') {
       params.serviceDesc = secondaryInput.trim() || 'ऑनलाइन सेवाएं';
     }
@@ -508,7 +540,7 @@ export default function ServicePage({
         return;
       }
       const val = primaryInput.trim() || activeData.regNo || activeData.panNo || activeData.aadhaarNo || activeData.appNo || '-';
-      const isCard = ['rc', 'pan', 'aadhaar', 'voter', 'dl', 'ayushman'].includes(currentTool.id);
+      const isCard = ['rc', 'pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'epan'].includes(toolKind);
       const cardData = activeData;
 
       if (isCard) {
@@ -527,35 +559,35 @@ export default function ServicePage({
         doc.roundedRect(1.5, 1.5, 82.6, 51, 2, 2, 'D');
 
         // Header band
-        if (currentTool.id === 'pan') {
+        if (['pan', 'epan'].includes(toolKind)) {
           doc.setFillColor(6, 95, 70); // Emerald 800
           doc.rect(1.5, 1.5, 82.6, 8, 'F');
           doc.setTextColor(255, 255, 255);
           doc.setFontSize(7);
           doc.setFont('helvetica', 'bold');
           doc.text('INCOME TAX DEPARTMENT - GOVT. OF INDIA', 42.8, 6.5, { align: 'center' });
-        } else if (currentTool.id === 'aadhaar') {
+        } else if (toolKind === 'aadhaar') {
           doc.setFillColor(220, 38, 38); // Red 600
           doc.rect(1.5, 1.5, 82.6, 8, 'F');
           doc.setTextColor(255, 255, 255);
           doc.setFontSize(7);
           doc.setFont('helvetica', 'bold');
           doc.text('GOVERNMENT OF INDIA - UIDAI AADHAAR', 42.8, 6.5, { align: 'center' });
-        } else if (currentTool.id === 'voter') {
+        } else if (toolKind === 'voter') {
           doc.setFillColor(217, 119, 6); // Amber 600
           doc.rect(1.5, 1.5, 82.6, 8, 'F');
           doc.setTextColor(255, 255, 255);
           doc.setFontSize(7);
           doc.setFont('helvetica', 'bold');
           doc.text('ELECTION COMMISSION OF INDIA (EPIC)', 42.8, 6.5, { align: 'center' });
-        } else if (currentTool.id === 'dl') {
+        } else if (toolKind === 'dl') {
           doc.setFillColor(49, 46, 129); // Indigo 900
           doc.rect(1.5, 1.5, 82.6, 8, 'F');
           doc.setTextColor(255, 255, 255);
           doc.setFontSize(7);
           doc.setFont('helvetica', 'bold');
           doc.text('UNION OF INDIA - DRIVING LICENCE (SARATHI)', 42.8, 6.5, { align: 'center' });
-        } else if (currentTool.id === 'rc') {
+        } else if (toolKind === 'rc') {
           doc.setFillColor(37, 99, 235); // Blue 600
           doc.rect(1.5, 1.5, 82.6, 8, 'F');
           doc.setTextColor(255, 255, 255);
@@ -580,34 +612,34 @@ export default function ServicePage({
         doc.text(`FATHER: ${cardData.fatherName || '-'}`, 5, 19);
         doc.text(`DOB: ${cardData.dob}   GENDER: ${cardData.gender || 'MALE'}`, 5, 24);
 
-        if (currentTool.id === 'rc') {
+        if (toolKind === 'rc') {
           doc.text(`MODEL: ${cardData.makerModel || 'MOTOR VEHICLE'}`, 5, 29);
           doc.setFontSize(8);
           doc.setFont('courier', 'bold');
           doc.setTextColor(37, 99, 235);
           doc.text(`REG NO: ${cardData.regNo || val}`, 5, 35);
-        } else if (currentTool.id === 'dl') {
+        } else if (toolKind === 'dl') {
           doc.text(`VALIDITY: NT UPTO 2042`, 5, 29);
           doc.setFontSize(8);
           doc.setFont('courier', 'bold');
           doc.setTextColor(49, 46, 129);
           doc.text(`DL NO: ${cardData.dlNo || val}`, 5, 35);
-        } else if (currentTool.id === 'pan') {
+        } else if (['pan', 'epan'].includes(toolKind)) {
           doc.setFontSize(9);
           doc.setFont('courier', 'bold');
           doc.setTextColor(6, 95, 70);
           doc.text(`PAN: ${cardData.panNo || val}`, 5, 35);
-        } else if (currentTool.id === 'aadhaar') {
+        } else if (toolKind === 'aadhaar') {
           doc.setFontSize(8.5);
           doc.setFont('courier', 'bold');
           doc.setTextColor(220, 38, 38);
           doc.text(`AADHAAR: ${cardData.aadhaarNo || val}`, 5, 35);
-        } else if (currentTool.id === 'voter') {
+        } else if (toolKind === 'voter') {
           doc.setFontSize(8.5);
           doc.setFont('courier', 'bold');
           doc.setTextColor(217, 119, 6);
           doc.text(`EPIC NO: ${cardData.epicNo || val}`, 5, 35);
-        } else if (currentTool.id === 'ayushman') {
+        } else if (toolKind === 'ayushman') {
           doc.setFontSize(8.5);
           doc.setFont('courier', 'bold');
           doc.setTextColor(161, 98, 7);
@@ -643,7 +675,7 @@ export default function ServicePage({
         doc.setTextColor(100, 116, 139);
         doc.text(`Smart Cafe Portal • Order ID: ${Date.now().toString().slice(-8)}`, 42.8, 50, { align: 'center' });
 
-        doc.save(`${currentTool.id.toUpperCase()}_${val}.pdf`);
+        doc.save(`${(currentTool.name || toolKind).toUpperCase().replace(/[\s/]+/g, '_')}_${val}.pdf`);
       } else {
         // A4 Portrait Slip / Receipt
         const doc = new jsPDF({
@@ -702,7 +734,7 @@ export default function ServicePage({
         doc.text('This is an authentic computer-generated official receipt/certificate and does not require a physical signature.', 105, 270, { align: 'center' });
         doc.text(`Generated at ${selectedCafe?.shopName || 'Smart Cafe'} • Powered by Smart Cafe B2B Portal`, 105, 275, { align: 'center' });
 
-        doc.save(`${currentTool.id.toUpperCase()}_Slip_${val}.pdf`);
+        doc.save(`${(currentTool.name || toolKind).toUpperCase().replace(/[\s/]+/g, '_')}_Slip_${val}.pdf`);
       }
     } catch (e) {
       console.error('PDF generation error, fallback to print:', e);
@@ -719,7 +751,10 @@ export default function ServicePage({
   // Filtered orders for this specific tool
   const toolOrders = orderHistory.filter(o => {
     const matchesTool = o.serviceType === currentTool.serviceType || 
-      (currentTool.id === 'rc' && (o.serviceType === 'rcDownload' || o.vehicleNumber));
+      o.serviceType === currentTool.id ||
+      (toolKind === 'rc' && (o.serviceType === 'rcDownload' || o.vehicleNumber)) ||
+      (toolKind === 'pan' && (o.serviceType === 'panCard' || o.panNo)) ||
+      (toolKind === 'aadhaar' && (o.serviceType === 'aadhaarCard' || o.aadhaarNo));
     if (!matchesTool) return false;
     if (!historySearch) return true;
     const s = historySearch.toLowerCase();
@@ -745,7 +780,7 @@ export default function ServicePage({
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-black text-xs sm:text-sm shadow-md shadow-orange-500/20 active:scale-95 transition cursor-pointer group"
           >
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-            <span>{language === 'hi' ? '← डैशबोर्ड पर वापस जाएं' : '← Back to Dashboard'}</span>
+            <span>{language === 'hi' ? '← वापस जाएं' : '← Back'}</span>
           </button>
 
           <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
@@ -753,9 +788,9 @@ export default function ServicePage({
               {isOperator ? (language === 'hi' ? 'संचालक डैशबोर्ड' : 'Operator Dashboard') : (language === 'hi' ? 'नागरिक पोर्टल' : 'Citizen Portal')}
             </span>
             <span>›</span>
-            <span className="font-semibold text-slate-700 dark:text-slate-300">{localize(currentTool.categoryName)}</span>
+            <span className="font-semibold text-slate-700 dark:text-slate-300">{localize(currentTool?.categoryName || currentTool?.category || '')}</span>
             <span>›</span>
-            <span className="font-black text-orange-600 dark:text-orange-400">{localize(currentTool.title)}</span>
+            <span className="font-black text-orange-600 dark:text-orange-400">{localize(currentTool?.title || currentTool?.name || 'सेवा')}</span>
           </div>
         </div>
 
@@ -767,12 +802,12 @@ export default function ServicePage({
                 {isOperator ? (language === 'hi' ? 'थोक B2B दर' : 'Wholesale B2B Rate') : (language === 'hi' ? 'खुदरा शुल्क' : 'Retail Price')}
               </span>
               <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 text-sm">
-                ₹{isOperator ? currentTool.wholesaleRate : currentTool.retailRate}
+                ₹{isOperator ? (currentTool?.wholesaleRate ?? 0) : (currentTool?.retailRate ?? 0)}
               </span>
             </div>
             {isOperator && (
               <span className="bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-400 text-[10px] font-black px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-800">
-                {language === 'hi' ? 'मुनाफ़ा: +' : 'Margin: +'}₹{currentTool.retailRate - currentTool.wholesaleRate}
+                {language === 'hi' ? 'मुनाफ़ा: +' : 'Margin: +'}₹{Math.max(0, (currentTool?.retailRate || 0) - (currentTool?.wholesaleRate || 0))}
               </span>
             )}
           </div>
@@ -805,18 +840,18 @@ export default function ServicePage({
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
                   <span className="bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full border border-orange-200 dark:border-orange-900">
-                    {localize(currentTool.badge)}
+                    {localize(currentTool?.badge || currentTool?.categoryName || 'सेवा')}
                   </span>
                   <span className="bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-full">
                     ⚡ 0.5s Engine
                   </span>
                 </div>
                 <h2 className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-                  <currentTool.icon className="w-5 h-5 text-orange-500" />
-                  <span>{localize(currentTool.title)}</span>
+                  <ServiceIconComponent className="w-5 h-5 text-orange-500" />
+                  <span>{localize(currentTool?.title || currentTool?.name || 'सेवा')}</span>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  {localize(currentTool.subtitle)}
+                  {localize(currentTool?.subtitle || currentTool?.desc || '')}
                 </p>
               </div>
 
@@ -867,6 +902,14 @@ export default function ServicePage({
                       raw = raw.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 18);
                     } else if (['electricity', 'ration'].includes(toolKind)) {
                       raw = raw.replace(/\D/g, '').slice(0, 12);
+                    } else if (toolKind === 'banking') {
+                      raw = raw.replace(/\D/g, '').slice(0, 18);
+                    } else if (toolKind === 'telecom') {
+                      raw = raw.replace(/\D/g, '').slice(0, 10);
+                    } else if (toolKind === 'agriculture') {
+                      raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 15);
+                    } else if (toolKind === 'welfare') {
+                      raw = raw.replace(/\D/g, '').slice(0, 12);
                     } else if (toolKind === 'receipt') {
                       raw = raw.replace(/\D/g, '').slice(0, 10);
                     } else {
@@ -892,6 +935,10 @@ export default function ServicePage({
                         {toolKind === 'ration' && '12-अंकीय राशन कार्ड संख्या'}
                         {toolKind === 'challan' && 'चालान / वाहन क्रमांक'}
                         {toolKind === 'ayushman' && 'PM-JAY आईडी / राशन अथवा आधार संख्या'}
+                        {toolKind === 'banking' && 'बैंक खाता संख्या / ग्राहक आईडी'}
+                        {toolKind === 'telecom' && '10-अंकीय मोबाइल नंबर'}
+                        {toolKind === 'agriculture' && 'किसान आईडी / आधार / खसरा संख्या'}
+                        {toolKind === 'welfare' && 'समग्र परिवार / सदस्य / UAN आईडी'}
                         {toolKind === 'receipt' && '10-अंकीय ग्राहक मोबाइल नंबर'}
                       </>
                     ) : (
@@ -906,6 +953,10 @@ export default function ServicePage({
                         {toolKind === 'ration' && '12-Digit Ration Card Number'}
                         {toolKind === 'challan' && 'Challan / Vehicle Reg Number'}
                         {toolKind === 'ayushman' && 'PM-JAY ID or Ration/Aadhaar'}
+                        {toolKind === 'banking' && 'Bank Account No / Customer ID'}
+                        {toolKind === 'telecom' && '10-Digit Mobile Number'}
+                        {toolKind === 'agriculture' && 'Farmer ID / Aadhaar / Khasra No'}
+                        {toolKind === 'welfare' && 'Samagra / Member / UAN ID'}
                         {toolKind === 'receipt' && '10-Digit Customer Mobile Number'}
                       </>
                     )}
@@ -920,14 +971,17 @@ export default function ServicePage({
               </div>
 
               {/* 1. PERSONAL DETAILS (NAME & FATHER'S NAME) - ONLY FOR SERVICES THAT REQUIRE THEM */}
-              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'receipt'].includes(currentTool.id) && (
-                <div className={`grid gap-3 ${['pan', 'voter', 'dl', 'ayushman'].includes(currentTool.id) ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'receipt', 'banking', 'agriculture', 'welfare'].includes(toolKind) && (
+                <div className={`grid gap-3 ${['pan', 'voter', 'dl', 'ayushman', 'welfare'].includes(toolKind) ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                      {currentTool.id === 'voter' ? (language === 'hi' ? 'मतदाता का पूरा नाम *' : 'Voter Full Name *') :
-                       currentTool.id === 'dl' ? (language === 'hi' ? 'लाइसेंस धारक का नाम *' : 'Licence Holder Name *') :
-                       currentTool.id === 'ayushman' ? (language === 'hi' ? 'लाभार्थी का पूरा नाम *' : 'Beneficiary Full Name *') :
-                       currentTool.id === 'receipt' ? (language === 'hi' ? 'ग्राहक का नाम' : 'Customer Name') :
+                      {toolKind === 'voter' ? (language === 'hi' ? 'मतदाता का पूरा नाम *' : 'Voter Full Name *') :
+                       toolKind === 'dl' ? (language === 'hi' ? 'लाइसेंस धारक का नाम *' : 'Licence Holder Name *') :
+                       toolKind === 'ayushman' ? (language === 'hi' ? 'लाभार्थी का पूरा नाम *' : 'Beneficiary Full Name *') :
+                       toolKind === 'banking' ? (language === 'hi' ? 'खाताधारक का नाम *' : 'Account Holder Name *') :
+                       toolKind === 'agriculture' ? (language === 'hi' ? 'किसान / आवेदक का नाम *' : 'Farmer / Applicant Name *') :
+                       toolKind === 'welfare' ? (language === 'hi' ? 'हितग्राही / सदस्य का नाम *' : 'Beneficiary Member Name *') :
+                       toolKind === 'receipt' ? (language === 'hi' ? 'ग्राहक का नाम' : 'Customer Name') :
                        t('sp_applicant_name')}
                     </label>
                     <input
@@ -935,7 +989,7 @@ export default function ServicePage({
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
                       placeholder={
-                        currentTool.id === 'receipt'
+                        toolKind === 'receipt'
                           ? (language === 'hi' ? 'ग्राहक का नाम दर्ज करें' : 'Enter customer name')
                           : (language === 'hi' ? 'आवेदक का पूरा नाम दर्ज करें' : 'Enter applicant full name')
                       }
@@ -943,10 +997,10 @@ export default function ServicePage({
                     />
                   </div>
 
-                  {['pan', 'voter', 'dl', 'ayushman'].includes(currentTool.id) && (
+                  {['pan', 'voter', 'dl', 'ayushman', 'welfare'].includes(toolKind) && (
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                        {currentTool.id === 'pan' ? (language === 'hi' ? 'पिता का पूरा नाम *' : "Father's Full Name *") :
+                        {toolKind === 'pan' ? (language === 'hi' ? 'पिता का पूरा नाम *' : "Father's Full Name *") :
                          t('sp_father_husband_name')}
                       </label>
                       <input
@@ -954,9 +1008,9 @@ export default function ServicePage({
                         value={fatherName}
                         onChange={(e) => setFatherName(e.target.value)}
                         placeholder={
-                          currentTool.id === 'pan'
-                            ? (language === 'hi' ? 'पिता का नाम दर्ज करें' : "Enter father's name")
-                            : (language === 'hi' ? 'पिता अथवा पति का नाम दर्ज करें' : 'Enter father or husband name')
+                          toolKind === 'pan'
+                            ? (language === 'hi' ? 'पिता का पूरा नाम दर्ज करें' : "Enter father's full name")
+                            : (language === 'hi' ? 'पिता अथवा पति का नाम दर्ज करें' : 'Enter father or spouse name')
                         }
                         className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs sm:text-sm font-semibold focus:outline-none"
                       />
@@ -966,8 +1020,8 @@ export default function ServicePage({
               )}
 
               {/* 2. REAL HTML5 DATE PICKER FOR DOB & GENDER - ONLY FOR SERVICES THAT REQUIRE THEM */}
-              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'epan'].includes(currentTool.id) && (
-                <div className={`grid gap-3 ${['aadhaar', 'voter', 'ayushman'].includes(currentTool.id) ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'epan', 'welfare', 'agriculture'].includes(toolKind) && (
+                <div className={`grid gap-3 ${['aadhaar', 'voter', 'ayushman', 'welfare'].includes(toolKind) ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5 text-orange-500" />
@@ -987,8 +1041,8 @@ export default function ServicePage({
                     )}
                   </div>
 
-                  {/* Gender: STRICTLY only on Aadhaar, Voter, and Ayushman (PAN has no gender) */}
-                  {['aadhaar', 'voter', 'ayushman'].includes(currentTool.id) && (
+                  {/* Gender: STRICTLY only on Aadhaar, Voter, Ayushman, and Welfare */}
+                  {['aadhaar', 'voter', 'ayushman', 'welfare'].includes(toolKind) && (
                     <div className="space-y-1.5">
                       <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                         {t('sp_gender_label')} *
@@ -1007,8 +1061,8 @@ export default function ServicePage({
                 </div>
               )}
 
-              {/* 3. PERMANENT ADDRESS - STRICTLY ONLY FOR AADHAAR CARD */}
-              {currentTool.id === 'aadhaar' && (
+              {/* 3. PERMANENT ADDRESS - FOR AADHAAR, WELFARE, AGRICULTURE */}
+              {['aadhaar', 'welfare', 'agriculture'].includes(toolKind) && (
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
                     {t('sp_address_label')} *
@@ -1017,22 +1071,25 @@ export default function ServicePage({
                     type="text"
                     value={addressInput}
                     onChange={(e) => setAddressInput(e.target.value)}
-                    placeholder={language === 'hi' ? 'पूरा स्थायी पता दर्ज करें' : 'Enter full permanent address'}
+                    placeholder={language === 'hi' ? 'पूरा स्थायी पता दर्ज करें (ग्राम/शहर, जिला, राज्य, पिनकोड)' : 'Enter full permanent address'}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none"
                   />
                 </div>
               )}
 
-              {/* 4. SECONDARY FIELD - ONLY FOR EDISTRICT, ELECTRICITY, DL, RECEIPT */}
-              {['edistrict', 'electricity', 'dl', 'receipt'].includes(currentTool.id) && (
+              {/* 4. SECONDARY FIELD - ONLY FOR EDISTRICT, ELECTRICITY, DL, RECEIPT, BANKING, AGRI, TELECOM */}
+              {['edistrict', 'electricity', 'dl', 'receipt', 'banking', 'agriculture', 'telecom'].includes(toolKind) && (
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                    {currentTool.id === 'edistrict' ? (language === 'hi' ? 'प्रमाण पत्र क्रमांक *' : 'Certificate ID *') :
-                     currentTool.id === 'electricity' ? (language === 'hi' ? 'विद्युत वितरण निगम (Discom Board)' : 'Discom Board') :
-                     currentTool.id === 'dl' ? (language === 'hi' ? 'अधिकृत COV श्रेणी (जैसे LMV, MCWG)' : 'Authorized COV Category') :
+                    {toolKind === 'edistrict' ? (language === 'hi' ? 'प्रमाण पत्र क्रमांक *' : 'Certificate ID *') :
+                     toolKind === 'electricity' ? (language === 'hi' ? 'विद्युत वितरण निगम (Discom Board)' : 'Discom Board') :
+                     toolKind === 'dl' ? (language === 'hi' ? 'अधिकृत COV श्रेणी (जैसे LMV, MCWG)' : 'Authorized COV Category') :
+                     toolKind === 'banking' ? (language === 'hi' ? 'बैंक अथवा शाखा का नाम' : 'Bank / Branch Name') :
+                     toolKind === 'agriculture' ? (language === 'hi' ? 'खसरा / खाता संख्या' : 'Khasra / Khata Number') :
+                     toolKind === 'telecom' ? (language === 'hi' ? 'टेलीकॉम ऑपरेटर (JIO/Airtel/BSNL)' : 'Telecom Operator') :
                      (language === 'hi' ? 'सेवा विवरण' : 'Service Description')}
                   </label>
-                  {currentTool.id === 'electricity' ? (
+                  {toolKind === 'electricity' ? (
                     <select
                       value={secondaryInput}
                       onChange={(e) => setSecondaryInput(e.target.value)}
@@ -1056,8 +1113,11 @@ export default function ServicePage({
                       value={secondaryInput}
                       onChange={(e) => setSecondaryInput(e.target.value)}
                       placeholder={
-                        currentTool.id === 'edistrict' ? (language === 'hi' ? 'प्रमाण पत्र क्रमांक दर्ज करें' : 'Enter Certificate ID') :
-                        currentTool.id === 'dl' ? (language === 'hi' ? 'LMV-NT, MCWG दर्ज करें' : 'LMV-NT, MCWG') :
+                        toolKind === 'edistrict' ? (language === 'hi' ? 'प्रमाण पत्र क्रमांक दर्ज करें' : 'Enter Certificate ID') :
+                        toolKind === 'dl' ? (language === 'hi' ? 'LMV-NT, MCWG दर्ज करें' : 'LMV-NT, MCWG') :
+                        toolKind === 'banking' ? (language === 'hi' ? 'बैंक अथवा BC शाखा का नाम दर्ज करें' : 'Enter Bank Name') :
+                        toolKind === 'agriculture' ? (language === 'hi' ? 'खसरा / खाता संख्या दर्ज करें' : 'Enter Khasra / Khata No') :
+                        toolKind === 'telecom' ? (language === 'hi' ? 'JIO / Airtel / BSNL दर्ज करें' : 'Enter Telecom Operator') :
                         (language === 'hi' ? 'सेवा विवरण दर्ज करें' : 'Enter Service Description')
                       }
                       className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-orange-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-xs font-semibold focus:outline-none"
@@ -1066,8 +1126,8 @@ export default function ServicePage({
                 </div>
               )}
 
-              {/* PHOTO & SIGNATURE UPLOAD / PRESET PICKER (FOR PVC SMART CARDS) */}
-              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman'].includes(currentTool.id) && (
+              {/* PHOTO & SIGNATURE UPLOAD / PRESET PICKER (FOR PVC SMART CARDS & CERTIFICATES) */}
+              {['pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'welfare'].includes(toolKind) && (
                 <div className="p-4 bg-slate-50 dark:bg-slate-900/60 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-black text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
@@ -1129,8 +1189,8 @@ export default function ServicePage({
                     </div>
                   </div>
 
-                  {/* Signature Controls (for PAN & DL) */}
-                  {['pan', 'dl'].includes(currentTool.id) && (
+                  {/* Signature Controls (for PAN, DL, Voter) */}
+                  {['pan', 'dl', 'voter'].includes(toolKind) && (
                     <div className="flex items-center gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
                       <div className="w-16 h-8 rounded-lg border border-slate-300 dark:border-slate-700 bg-white p-1 overflow-hidden shrink-0 flex items-center justify-center">
                         <img src={signData} alt="Signature" className="max-h-full max-w-full object-contain" />
@@ -1202,18 +1262,22 @@ export default function ServicePage({
                   <>
                     <Sparkles className="w-5 h-5" />
                     <span>
-                      {currentTool.id === 'rc' ? (language === 'hi' ? '⚡ 1-क्लिक वाहन RC जनरेट करें' : '⚡ 1-Click Generate RC') :
-                       currentTool.id === 'ration' ? (language === 'hi' ? '⚡ 1-क्लिक राशन पर्ची जनरेट करें' : '⚡ 1-Click Generate Ration Slip') :
-                       currentTool.id === 'challan' ? (language === 'hi' ? '⚡ 1-क्लिक ई-चालान जांचें' : '⚡ 1-Click Verify Challan') :
-                       currentTool.id === 'electricity' ? (language === 'hi' ? '⚡ 1-क्लिक बिल रसीद जनरेट करें' : '⚡ 1-Click Generate Bill Receipt') :
-                       currentTool.id === 'edistrict' ? (language === 'hi' ? '⚡ 1-क्लिक सत्यापन पर्ची जनरेट करें' : '⚡ 1-Click Generate Verification Slip') :
-                       currentTool.id === 'epan' ? (language === 'hi' ? '⚡ 1-क्लिक ई-पैन डाउनलोड करें' : '⚡ 1-Click Download e-PAN') :
-                       currentTool.id === 'pan' ? (language === 'hi' ? '⚡ 1-क्लिक PVC पैन कार्ड जनरेट करें' : '⚡ 1-Click Generate PVC PAN') :
-                       currentTool.id === 'aadhaar' ? (language === 'hi' ? '⚡ 1-क्लिक PVC आधार कार्ड जनरेट करें' : '⚡ 1-Click Generate PVC Aadhaar') :
-                       currentTool.id === 'voter' ? (language === 'hi' ? '⚡ 1-क्लिक वोटर कार्ड जनरेट करें' : '⚡ 1-Click Generate Voter Card') :
-                       currentTool.id === 'dl' ? (language === 'hi' ? '⚡ 1-क्लिक DL कार्ड जनरेट करें' : '⚡ 1-Click Generate DL Card') :
-                       currentTool.id === 'ayushman' ? (language === 'hi' ? '⚡ 1-क्लिक गोल्डन कार्ड जनरेट करें' : '⚡ 1-Click Generate Golden Card') :
-                       currentTool.id === 'receipt' ? (language === 'hi' ? '⚡ 1-क्लिक रसीद जनरेट करें' : '⚡ 1-Click Generate Receipt') :
+                      {toolKind === 'rc' ? (language === 'hi' ? '⚡ 1-क्लिक वाहन RC जनरेट करें' : '⚡ 1-Click Generate RC') :
+                       toolKind === 'ration' ? (language === 'hi' ? '⚡ 1-क्लिक राशन पर्ची जनरेट करें' : '⚡ 1-Click Generate Ration Slip') :
+                       toolKind === 'challan' ? (language === 'hi' ? '⚡ 1-क्लिक ई-चालान जांचें' : '⚡ 1-Click Verify Challan') :
+                       toolKind === 'electricity' ? (language === 'hi' ? '⚡ 1-क्लिक बिल रसीद जनरेट करें' : '⚡ 1-Click Generate Bill Receipt') :
+                       toolKind === 'edistrict' ? (language === 'hi' ? '⚡ 1-क्लिक सत्यापन पर्ची जनरेट करें' : '⚡ 1-Click Generate Verification Slip') :
+                       toolKind === 'epan' ? (language === 'hi' ? '⚡ 1-क्लिक ई-पैन डाउनलोड करें' : '⚡ 1-Click Download e-PAN') :
+                       toolKind === 'pan' ? (language === 'hi' ? '⚡ 1-क्लिक PVC पैन कार्ड जनरेट करें' : '⚡ 1-Click Generate PVC PAN') :
+                       toolKind === 'aadhaar' ? (language === 'hi' ? '⚡ 1-क्लिक PVC आधार कार्ड जनरेट करें' : '⚡ 1-Click Generate PVC Aadhaar') :
+                       toolKind === 'voter' ? (language === 'hi' ? '⚡ 1-क्लिक वोटर कार्ड जनरेट करें' : '⚡ 1-Click Generate Voter Card') :
+                       toolKind === 'dl' ? (language === 'hi' ? '⚡ 1-क्लिक DL कार्ड जनरेट करें' : '⚡ 1-Click Generate DL Card') :
+                       toolKind === 'ayushman' ? (language === 'hi' ? '⚡ 1-क्लिक गोल्डन कार्ड जनरेट करें' : '⚡ 1-Click Generate Golden Card') :
+                       toolKind === 'banking' ? (language === 'hi' ? '⚡ 1-क्लिक बैंक पावती रसीद जनरेट करें' : '⚡ 1-Click Generate Banking Slip') :
+                       toolKind === 'agriculture' ? (language === 'hi' ? '⚡ 1-क्लिक किसान पावती जनरेट करें' : '⚡ 1-Click Generate Agri Slip') :
+                       toolKind === 'welfare' ? (language === 'hi' ? '⚡ 1-क्लिक योजना प्रमाण पत्र जनरेट करें' : '⚡ 1-Click Generate Welfare Certificate') :
+                       toolKind === 'telecom' ? (language === 'hi' ? '⚡ 1-क्लिक टेलीकॉम पावती जनरेट करें' : '⚡ 1-Click Generate Telecom Slip') :
+                       toolKind === 'receipt' ? (language === 'hi' ? '⚡ 1-क्लिक रसीद जनरेट करें' : '⚡ 1-Click Generate Receipt') :
                        t('sp_btn_generate')}
                     </span>
                   </>
@@ -1250,7 +1314,7 @@ export default function ServicePage({
 
             <div className="flex items-center gap-2 flex-wrap">
               {/* Card Side Toggle */}
-              {['pan', 'aadhaar', 'voter', 'dl', 'rc'].includes(currentTool.id) && (
+              {['pan', 'aadhaar', 'voter', 'dl', 'rc', 'ayushman', 'epan'].includes(toolKind) && (
                 <div className="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center gap-1 text-xs font-bold">
                   <button
                     type="button"
@@ -1320,11 +1384,11 @@ export default function ServicePage({
               {!activeData ? (
                 <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto space-y-4">
                   <div className="w-16 h-16 rounded-3xl bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 flex items-center justify-center shadow-inner">
-                    <currentTool.icon className="w-8 h-8" />
+                    <ServiceIconComponent className="w-8 h-8" />
                   </div>
                   <div className="space-y-1.5">
                     <h4 className="text-base font-black text-slate-900 dark:text-white">
-                      {localize(currentTool.title)} • {language === 'hi' ? 'लाइव काउंटर' : 'Live Counter'}
+                      {localize(currentTool?.title || currentTool?.name || 'सेवा')} • {language === 'hi' ? 'लाइव काउंटर' : 'Live Counter'}
                     </h4>
                     <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                       {language === 'hi'
@@ -1357,7 +1421,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 1. PAN CARD RENDERER (NSDL / UTI OFFICIAL FORMAT) */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'pan' && (
+                    {toolKind === 'pan' && (
                       <>
                         {(cardSide === 'both' || cardSide === 'front') && (
                           <div className="cr80-card-scaler relative group max-w-full">
@@ -1457,7 +1521,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 2. AADHAAR CARD RENDERER (UIDAI CR-80 PVC FORMAT) */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'aadhaar' && (
+                    {toolKind === 'aadhaar' && (
                       <>
                         {(cardSide === 'both' || cardSide === 'front') && (
                           <div className="cr80-card-scaler relative group max-w-full">
@@ -1540,7 +1604,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 3. VOTER SMART CARD (EPIC CR-80 FORMAT) */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'voter' && (
+                    {toolKind === 'voter' && (
                       <>
                         {(cardSide === 'both' || cardSide === 'front') && (
                           <div className="cr80-card-scaler relative group max-w-full">
@@ -1626,7 +1690,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 4. DRIVING LICENCE (SARATHI PARIVAHAN CR-80 PVC) */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'dl' && (
+                    {toolKind === 'dl' && (
                       <>
                         {(cardSide === 'both' || cardSide === 'front') && (
                           <div className="cr80-card-scaler relative group max-w-full">
@@ -1723,7 +1787,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 5. AYUSHMAN GOLDEN CARD */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'ayushman' && (
+                    {toolKind === 'ayushman' && (
                       <div className="cr80-card-scaler relative group max-w-full">
                         <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-slate-400 pointer-events-none" />
                         <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
@@ -1771,7 +1835,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 6. VEHICLE RC CERTIFICATE & PVC SMART CARD */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'rc' && (
+                    {toolKind === 'rc' && (
                       <div className="flex flex-wrap items-center justify-center gap-4">
                         {(cardSide === 'both' || cardSide === 'front') && (
                           <div className="cr80-card-scaler relative group max-w-full">
@@ -1848,7 +1912,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 7. RATION CARD NFSA SLIP */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'ration' && (
+                    {toolKind === 'ration' && (
                       <div className="w-full max-w-xl bg-white border-2 border-slate-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
                         <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
                           <div>
@@ -1908,7 +1972,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 8. ELECTRICITY BILL SLIP */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'electricity' && (
+                    {toolKind === 'electricity' && (
                       <div className="w-full max-w-xl bg-white border-2 border-slate-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
                         <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
                           <div>
@@ -1963,7 +2027,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 9. E-DISTRICT VERIFICATION SLIP */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'edistrict' && (
+                    {toolKind === 'edistrict' && (
                       <div className="w-full max-w-xl bg-white border-2 border-slate-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
                         <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
                           <div>
@@ -2007,7 +2071,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 10. VEHICLE CHALLAN SLIP */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'challan' && (
+                    {toolKind === 'challan' && (
                       <div className="w-full max-w-xl bg-white border-2 border-slate-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
                         <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
                           <div>
@@ -2064,7 +2128,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 11. E-PAN DOWNLOAD CERTIFICATE LETTER */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'epan' && (
+                    {toolKind === 'epan' && (
                       <div className="w-full max-w-xl bg-white border-2 border-slate-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
                         <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
                           <div>
@@ -2114,7 +2178,7 @@ export default function ServicePage({
                     {/* ======================================================= */}
                     {/* 12. CYBER CAFE COUNTER TAX RECEIPT */}
                     {/* ======================================================= */}
-                    {currentTool.id === 'receipt' && (
+                    {toolKind === 'receipt' && (
                       <div className="w-full max-w-md bg-white border-2 border-slate-900 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
                         <div className="text-center border-b-2 border-slate-900 pb-2">
                           <h3 className="text-base font-black uppercase text-slate-950">
@@ -2158,6 +2222,152 @@ export default function ServicePage({
                         <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-500">
                           <span>{language === 'hi' ? 'अधिकृत रसीद • हस्ताक्षर की आवश्यकता नहीं' : 'Authorized Receipt • Signature Not Required'}</span>
                           <span className="font-bold text-emerald-700">{language === 'hi' ? 'सफल भुगतान' : 'Payment Success'}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 13. BANKING & NSDL BC ACKNOWLEDGEMENT RECEIPT */}
+                    {/* ======================================================= */}
+                    {toolKind === 'banking' && (
+                      <div className="w-full max-w-xl bg-white border-2 border-indigo-900 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
+                        <div className="border-b-2 border-indigo-900 pb-2 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-indigo-800 uppercase">{language === 'hi' ? 'राष्ट्रीय बैंकिंग एवं डीबीटी सेवा केंद्र' : 'National Banking & DBT Customer Service'}</div>
+                            <h3 className="text-base font-black text-slate-900">{cardData.bankName || 'NSDL Payments Bank / CSP Counter'}</h3>
+                            <p className="text-[11px] text-slate-600">{language === 'hi' ? 'बैंक खाता एवं आधार सीडिंग पावती पर्ची' : 'Bank Account & DBT Seeding Acknowledgement'}</p>
+                          </div>
+                          <div className="p-1 bg-white border rounded">
+                            <QRCodeSVG value={`BANK:ACK:${cardData.accountNo || cardData.refNumber || '-'}|NAME:${cardData.name || '-'}|STATUS:VERIFIED`} size={54} />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-slate-50 p-3 rounded-xl border text-xs">
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'खाता संख्या / संदर्भ' : 'Account / Reference'}</span>
+                            <strong className="font-mono text-indigo-900">{cardData.accountNo || cardData.refNumber || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'खाताधारक का नाम' : 'Account Holder'}</span>
+                            <strong className="text-slate-900">{cardData.name || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'डीबीटी / एनपीसीआई स्थिति' : 'DBT / NPCI Status'}</span>
+                            <strong className="text-emerald-700">{language === 'hi' ? 'सक्रिय (Active)' : 'Active'}</strong>
+                          </div>
+                        </div>
+
+                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>{selectedCafe?.shopName || 'डिजिटल सेवा केंद्र'}</span>
+                          <span className="font-bold text-emerald-700">{language === 'hi' ? 'सत्यापित पावती' : 'Verified Acknowledgement'}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 14. AGRICULTURE & PM-KISAN / AGRISTACK RECEIPT */}
+                    {/* ======================================================= */}
+                    {toolKind === 'agriculture' && (
+                      <div className="w-full max-w-xl bg-white border-2 border-emerald-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
+                        <div className="border-b-2 border-emerald-800 pb-2 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-emerald-800 uppercase">{language === 'hi' ? 'कृषि एवं किसान कल्याण मंत्रालय • भारत सरकार' : 'Ministry of Agriculture & Farmers Welfare • GoI'}</div>
+                            <h3 className="text-base font-black text-slate-900">{language === 'hi' ? 'एग्रीस्टैक / पीएम-किसान पंजीकरण एवं ई-केवाईसी पर्ची' : 'AgriStack / PM-Kisan Farmer Registry Slip'}</h3>
+                          </div>
+                          <div className="p-1 bg-white border rounded">
+                            <QRCodeSVG value={`AGRI:FARMER:${cardData.farmerId || cardData.refNumber || '-'}|NAME:${cardData.name || '-'}|STATUS:ACTIVE`} size={54} />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-emerald-50/50 p-3 rounded-xl border border-emerald-200 text-xs">
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'किसान पंजीकरण संख्या' : 'Farmer Reg ID'}</span>
+                            <strong className="font-mono text-emerald-900">{cardData.farmerId || cardData.refNumber || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'किसान का नाम' : 'Farmer Name'}</span>
+                            <strong className="text-slate-900">{cardData.name || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'भूलेख / खसरा विवरण' : 'Land / Khasra Details'}</span>
+                            <strong className="text-slate-800">{cardData.khasraNo || 'सत्यापित (Verified)'}</strong>
+                          </div>
+                        </div>
+
+                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>{language === 'hi' ? 'ई-केवाईसी स्थिति: सफल' : 'e-KYC Status: Successful'}</span>
+                          <span className="font-bold text-emerald-700">{language === 'hi' ? 'अधिकृत किसान पावती' : 'Authorized Farmer Slip'}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 15. WELFARE & SAMAGRA / SAMBAL / E-SHRAM CERTIFICATE */}
+                    {/* ======================================================= */}
+                    {toolKind === 'welfare' && (
+                      <div className="w-full max-w-xl bg-white border-2 border-orange-700 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
+                        <div className="border-b-2 border-orange-700 pb-2 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-orange-700 uppercase">{language === 'hi' ? 'सामाजिक सुरक्षा एवं जनकल्याण विभाग' : 'Social Security & Public Welfare Department'}</div>
+                            <h3 className="text-base font-black text-slate-900">{language === 'hi' ? 'समग्र / संबल / जनकल्याण योजना प्रमाण पत्र' : 'Welfare & Social Security Scheme Certificate'}</h3>
+                          </div>
+                          <div className="p-1 bg-white border rounded">
+                            <QRCodeSVG value={`WELFARE:ID:${cardData.samagraId || cardData.refNumber || '-'}|NAME:${cardData.name || '-'}`} size={54} />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-orange-50/50 p-3 rounded-xl border border-orange-200 text-xs">
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'समग्र / सदस्य आईडी' : 'Samagra / Member ID'}</span>
+                            <strong className="font-mono text-orange-950">{cardData.samagraId || cardData.refNumber || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'हितग्राही का नाम' : 'Beneficiary Name'}</span>
+                            <strong className="text-slate-900">{cardData.name || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'योजना नाम' : 'Scheme'}</span>
+                            <strong className="text-slate-800">{cardData.schemeName || 'संबल / सामाजिक सुरक्षा'}</strong>
+                          </div>
+                        </div>
+
+                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>{language === 'hi' ? 'प्रमाण पत्र स्थिति: अधिकृत' : 'Certificate Status: Authorized'}</span>
+                          <span className="font-bold text-emerald-700">{language === 'hi' ? 'सफल सत्यापन' : 'Verified'}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 16. TELECOM SIM & ACTIVATION ACKNOWLEDGEMENT */}
+                    {/* ======================================================= */}
+                    {toolKind === 'telecom' && (
+                      <div className="w-full max-w-xl bg-white border-2 border-blue-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
+                        <div className="border-b-2 border-blue-800 pb-2 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-blue-800 uppercase">{language === 'hi' ? 'दूरसंचार विभाग • अधिकृत रिटेलर काउंटर' : 'Department of Telecommunications • Authorized Retailer'}</div>
+                            <h3 className="text-base font-black text-slate-900">{cardData.operatorName || 'Telecom Customer Services'}</h3>
+                            <p className="text-[11px] text-slate-600">{language === 'hi' ? 'सिम एक्टिवेशन एवं बायोमेट्रिक ई-केवाईसी पावती' : 'SIM Activation & Biometric e-KYC Slip'}</p>
+                          </div>
+                          <div className="p-1 bg-white border rounded">
+                            <QRCodeSVG value={`TELECOM:MOB:${cardData.mobileNo || cardData.refNumber || '-'}|NAME:${cardData.name || '-'}`} size={54} />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-2 bg-blue-50/50 p-3 rounded-xl border border-blue-200 text-xs">
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'मोबाइल नंबर' : 'Mobile Number'}</span>
+                            <strong className="font-mono text-blue-900 text-sm">{cardData.mobileNo || cardData.refNumber || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">{language === 'hi' ? 'ग्राहक का नाम' : 'Customer Name'}</span>
+                            <strong className="text-slate-900">{cardData.name || '-'}</strong>
+                          </div>
+                        </div>
+
+                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>{selectedCafe?.shopName || 'दूरसंचार सेवा केंद्र'}</span>
+                          <span className="font-bold text-emerald-700">{language === 'hi' ? 'सक्रियण सफल' : 'Activation Complete'}</span>
                         </div>
                       </div>
                     )}

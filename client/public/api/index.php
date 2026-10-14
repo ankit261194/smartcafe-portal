@@ -2325,6 +2325,65 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         $refNumber = $generatedData['receiptNo'];
     }
 
+    // Universal Fallback Generator for all 79 services
+    if (!$generatedData) {
+        $kind = strtolower(($service79['group'] ?? $service79['category'] ?? $serviceType ?? ''));
+        if (strpos($kind, 'pan') !== false) {
+            $generatedData = getPanCardDetails($params['panNo'] ?? $params['query'] ?? 'AAAPA1234A', $params);
+            $docTitle = "पैन कार्ड ({$generatedData['panNo']}) - {$generatedData['name']}";
+            $refNumber = $generatedData['panNo'];
+        } elseif (strpos($kind, 'aadhaar') !== false) {
+            $generatedData = getAadhaarDetails($params['aadhaarNo'] ?? $params['query'] ?? '999988887777', $params);
+            $docTitle = "आधार PVC ({$generatedData['maskedAadhaar']}) - {$generatedData['name']}";
+            $refNumber = $generatedData['aadhaarNo'];
+        } elseif (strpos($kind, 'voter') !== false || strpos($kind, 'epic') !== false) {
+            $generatedData = getVoterDetails($params['epicNo'] ?? $params['query'] ?? 'XYZ1234567', $params);
+            $docTitle = "वोटर स्मार्ट कार्ड ({$generatedData['epicNo']}) - {$generatedData['name']}";
+            $refNumber = $generatedData['epicNo'];
+        } elseif (strpos($kind, 'rc') !== false || strpos($kind, 'vehicle') !== false) {
+            $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['regNo'] ?? $params['vehicleNumber'] ?? $params['query'] ?? 'UP32AB1234'));
+            $generatedData = getVehicleDetails($regNo, $params);
+            $vehicleData = $generatedData;
+            $docTitle = "वाहन RC ({$generatedData['regNo']}) - {$generatedData['makerModel']}";
+            $refNumber = $generatedData['regNo'];
+        } elseif (strpos($kind, 'dl') !== false || strpos($kind, 'licence') !== false) {
+            $generatedData = getDrivingLicenceDetails($params['dlNo'] ?? $params['query'] ?? 'UP32 20180012345', $params);
+            $docTitle = "ड्राइविंग लाइसेंस ({$generatedData['dlNo']}) - {$generatedData['name']}";
+            $refNumber = $generatedData['dlNo'];
+        } elseif (strpos($kind, 'ayushman') !== false || strpos($kind, 'health') !== false || strpos($kind, 'pmjay') !== false || strpos($kind, 'abha') !== false) {
+            $generatedData = getAyushmanDetails($params['pmjayId'] ?? $params['id'] ?? $params['query'] ?? 'ABHA-1234-5678-9012', $params);
+            $docTitle = "आयुष्मान कार्ड ({$generatedData['pmjayId']}) - {$generatedData['name']}";
+            $refNumber = $generatedData['pmjayId'];
+        } elseif (strpos($kind, 'ration') !== false) {
+            $generatedData = getRationDetails($params['rationNo'] ?? $params['query'] ?? '102030405060', $params);
+            $docTitle = "राशन पर्ची ({$generatedData['rationNo']}) - {$generatedData['headName']}";
+            $refNumber = $generatedData['rationNo'];
+        } elseif (strpos($kind, 'electric') !== false || strpos($kind, 'bill') !== false || strpos($kind, 'utility') !== false) {
+            $generatedData = getElectricityBillDetails($params['consumerNo'] ?? $params['query'] ?? '1234567890', $params);
+            $docTitle = "बिजली रसीद ({$generatedData['consumerNo']}) - ₹{$generatedData['netPayable']}";
+            $refNumber = $generatedData['consumerNo'];
+        } elseif (strpos($kind, 'challan') !== false) {
+            $generatedData = getChallanDetails($params['challanNo'] ?? $params['vehicleNo'] ?? $params['query'] ?? 'UP1234567890', $params);
+            $docTitle = "ई-चालान रसीद ({$generatedData['vehicleNo']}) - ₹{$generatedData['amount']}";
+            $refNumber = $generatedData['challanNo'];
+        } elseif (strpos($kind, 'edistrict') !== false) {
+            $generatedData = getEdistrictDetails($params['appNo'] ?? '230123456789', $params['certNo'] ?? '1234567890', $params);
+            $docTitle = "e-District सत्यापन ({$generatedData['certNo']}) - {$generatedData['applicantName']}";
+            $refNumber = $generatedData['certNo'];
+        } else {
+            $generatedData = getReceiptDetails($params['query'] ?? $customerPhone ?? '9876543210', array_merge($params, [
+                'serviceName' => ($serviceTitles[$normServiceType] ?? $normServiceType),
+                'customerName' => $params['customerName'] ?? 'नागरिक',
+                'shopName' => $cafe['shopName'] ?? '',
+                'shopAddress' => $cafe['address'] ?? '',
+                'shopPhone' => $cafe['phone'] ?? '',
+                'amount' => $retailFee
+            ]));
+            $docTitle = "{$normServiceType} रसीद ({$generatedData['receiptNo']}) - ₹{$generatedData['amount']}";
+            $refNumber = $generatedData['receiptNo'];
+        }
+    }
+
     $orderId = 'ORD-' . time() . '-' . rand(1000, 9999);
     $newOrder = [
         'id' => $orderId,
