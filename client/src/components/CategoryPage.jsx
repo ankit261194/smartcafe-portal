@@ -149,7 +149,7 @@ export default function CategoryPage({
   // Filter services strictly matching this category
   const services = useMemo(() => {
     if (!category?.id) return [];
-    let list = catalog.filter(s => s.group === category.id);
+    let list = catalog.filter(s => s.group === category.id || s.category === category.id);
     if (searchTerm.trim()) {
       const q = searchTerm.toLowerCase().trim();
       list = list.filter(s => {

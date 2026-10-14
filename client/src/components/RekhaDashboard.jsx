@@ -60,7 +60,7 @@ export default function RekhaDashboard({
   const categoryCounts = useMemo(() => {
     const counts = {};
     SERVICE_CATEGORIES.forEach(cat => {
-      counts[cat.id] = fullCatalog.filter(s => s.group === cat.id).length;
+      counts[cat.id] = fullCatalog.filter(s => s.group === cat.id || s.category === cat.id).length;
     });
     return counts;
   }, [fullCatalog]);
