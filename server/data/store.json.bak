@@ -805,13 +805,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-14T18:23:41.593Z",
+      "lastRun": "2026-10-14T19:23:25.980Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-14T19:23:41.585Z"
+      "nextRun": "2026-10-14T20:23:25.980Z"
     }
   },
   "superAdminAuditLogs": [
@@ -12013,5 +12013,6 @@
       "isBlocked": false,
       "createdAt": "2026-10-14T10:15:15.756Z"
     }
-  ]
+  ],
+  "verifiedBankReceipts": []
 }

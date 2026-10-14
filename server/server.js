@@ -3450,6 +3450,125 @@ app.get('/api/receipt/lookup/:input', (req, res) => {
   res.json(getReceiptDetails(req.params.input));
 });
 
+
+// ============================================================================
+// 100% AUTOMATED BANK / UPI NOTIFICATION WEBHOOK (Zero-Bypass Auto Approval)
+// ============================================================================
+app.post('/api/webhook/bank-notification', (req, res) => {
+  const store = getStore();
+  const { notification, title, app: appName, secret } = req.body;
+
+  // Security Verification
+  const EXPECTED_SECRET = 'SMARTCAFE_AUTO_2026';
+  if (secret && secret !== EXPECTED_SECRET) {
+    return res.status(403).json({ error: 'Unauthorized webhook secret' });
+  }
+
+  const rawText = `${title || ''} ${notification || ''}`;
+  console.log('[Bank Notification Webhook Received]:', rawText);
+
+  // Extract 12-digit UTR
+  const utrMatch = rawText.match(/\b(\d{12})\b/);
+  // Extract Amount (e.g. ₹500, Rs. 500, Rs 500, INR 500, 500.00)
+  const amtMatch = rawText.match(/(?:rs\.?|inr|₹|received|credited)\s*([0-9]+(?:\.[0-9]{1,2})?)/i) ||
+                   rawText.match(/([0-9]+(?:\.[0-9]{1,2})?)\s*(?:rs|inr|₹)/i);
+
+  if (!utrMatch) {
+    return res.json({ success: true, message: 'Notification received but no 12-digit UTR found', ignored: true });
+  }
+
+  const detectedUtr = utrMatch[1];
+  const detectedAmount = amtMatch ? parseFloat(amtMatch[1]) : null;
+
+  if (!store.verifiedBankReceipts) store.verifiedBankReceipts = [];
+
+  // Record verified receipt
+  const existingReceipt = store.verifiedBankReceipts.find(r => r.utr === detectedUtr);
+  if (!existingReceipt) {
+    store.verifiedBankReceipts.push({
+      utr: detectedUtr,
+      amount: detectedAmount,
+      rawText,
+      verifiedAt: new Date().toISOString()
+    });
+  }
+
+  let autoApproved = false;
+  let approvedType = null;
+
+  // Check 1: Pending Customer & B2B UTR Requests
+  if (store.utrRequests && store.utrRequests.length > 0) {
+    const pendingReq = store.utrRequests.find(u => u.utr === detectedUtr && u.status === 'pending');
+    if (pendingReq) {
+      pendingReq.status = 'approved';
+      pendingReq.approvedAt = new Date().toISOString();
+      pendingReq.autoVerified = true;
+
+      if (pendingReq.tier === 'customer_to_sanchalak') {
+        if (!store.wallets) store.wallets = [];
+        let wallet = store.wallets.find(w => w.phone === pendingReq.customerPhone);
+        if (!wallet) {
+          wallet = { phone: pendingReq.customerPhone, customerName: pendingReq.customerName || 'Customer', balance: pendingReq.amount };
+          store.wallets.push(wallet);
+        } else {
+          wallet.balance += pendingReq.amount;
+        }
+        autoApproved = true;
+        approvedType = 'customer_wallet';
+      } else if (pendingReq.tier === 'sanchalak_to_superadmin') {
+        const cafe = (store.cafes || []).find(c => c.id === pendingReq.cafeId);
+        if (cafe) {
+          if (!cafe.b2bWallet) cafe.b2bWallet = { balance: 0, transactions: [] };
+          cafe.b2bWallet.balance += pendingReq.amount;
+          cafe.b2bWallet.transactions.unshift({
+            id: `TXN-B2B-${Date.now()}`,
+            amount: pendingReq.amount,
+            utr: pendingReq.utr,
+            type: 'credit',
+            note: 'ऑटोमैटिक बैंक नोटिफिकेशन द्वारा स्वीकृत B2B टॉप-अप',
+            date: new Date().toISOString()
+          });
+          autoApproved = true;
+          approvedType = 'b2b_wallet';
+        }
+      }
+    }
+  }
+
+  // Check 2: Pending ₹299 VLE KYC Applications
+  if (store.vleKycApplications && store.vleKycApplications.length > 0) {
+    const pendingKyc = store.vleKycApplications.find(k => k.utr === detectedUtr && (k.status === 'pending' || k.status === 'pending_approval'));
+    if (pendingKyc) {
+      pendingKyc.status = 'approved';
+      pendingKyc.approvedAt = new Date().toISOString();
+      pendingKyc.autoVerified = true;
+
+      let cafe = (store.cafes || []).find(c => c.phone === pendingKyc.phone || c.vleId === pendingKyc.vleId);
+      if (cafe) {
+        cafe.isFrozen = false;
+        cafe.subscription = {
+          plan: 'pro_annual_299',
+          validTill: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+          status: 'active'
+        };
+      }
+      autoApproved = true;
+      approvedType = 'vle_kyc_299';
+    }
+  }
+
+  saveStore(store);
+
+  return res.json({
+    success: true,
+    utr: detectedUtr,
+    amount: detectedAmount,
+    autoApproved,
+    approvedType,
+    message: autoApproved ? `UTR ${detectedUtr} ऑटोमैटिक स्वीकृत व क्रेडिट हो गया!` : `UTR ${detectedUtr} बैंक रसीद दर्ज हुई, UTR सबमिशन का इंतज़ार है।`
+  });
+});
+
 // 5. Zero-Gateway Direct UPI + 12-Digit UTR Approval Loop APIs
 // Tier 1: Customer -> Sanchalak UTR submission
 app.post('/api/wallet/submit-utr', (req, res) => {
@@ -3498,6 +3617,22 @@ app.post('/api/wallet/submit-utr', (req, res) => {
     rejectReason: '',
     createdAt: new Date().toISOString()
   };
+
+  // Instant Auto-Approval if bank notification already arrived
+  const alreadyBankVerified = (store.verifiedBankReceipts || []).find(r => r.utr === cleanUtr);
+  if (alreadyBankVerified) {
+    newReq.status = 'approved';
+    newReq.approvedAt = new Date().toISOString();
+    newReq.autoVerified = true;
+    if (!store.wallets) store.wallets = [];
+    let wallet = store.wallets.find(w => w.phone === phone);
+    if (!wallet) {
+      wallet = { phone, customerName: customerName || 'ग्राहक', balance: amt };
+      store.wallets.push(wallet);
+    } else {
+      wallet.balance += amt;
+    }
+  }
 
   if (!store.utrRequests) store.utrRequests = [];
   store.utrRequests.unshift(newReq);
@@ -3641,6 +3776,23 @@ app.post('/api/cafes/:id/b2b-wallet/submit-utr', upload.single('paymentSlip'), (
     createdAt: new Date().toISOString()
   };
 
+  // Instant Auto-Approval for B2B if bank notification already arrived
+  const alreadyB2bVerified = (store.verifiedBankReceipts || []).find(r => r.utr === cleanUtr);
+  if (alreadyB2bVerified) {
+    newReq.status = 'approved';
+    newReq.approvedAt = new Date().toISOString();
+    newReq.autoVerified = true;
+    if (!cafe.b2bWallet) cafe.b2bWallet = { balance: 0, transactions: [] };
+    cafe.b2bWallet.balance += amt;
+    cafe.b2bWallet.transactions.unshift({
+      id: `TXN-B2B-${Date.now()}`,
+      amount: amt,
+      utr: cleanUtr,
+      type: 'credit',
+      note: 'ऑटोमैटिक बैंक नोटिफिकेशन द्वारा स्वीकृत B2B टॉप-अप',
+      date: new Date().toISOString()
+    });
+  }
   if (!store.utrRequests) store.utrRequests = [];
   store.utrRequests.unshift(newReq);
   saveStore(store);
