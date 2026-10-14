@@ -2122,15 +2122,18 @@ if ($endpoint === 'superadmin/api-gateway') {
         if (!isset($store['apiGateway'])) {
             $store['apiGateway'] = [
                 'liveMode' => false,
-                'provider' => 'Surepass',
+                'provider' => 'P4Points',
                 'apiKey' => '',
-                'endpoint' => 'https://kyc-api.surepass.io/api/v1/',
+                'endpoint' => 'https://authorized.p4points.co.in/api/v1/',
                 'secret' => '',
-                'timeoutMs' => 5000,
+                'balance' => null,
+                'timeoutMs' => 8000,
                 'services' => [
+                    'balance' => ['live' => true, 'endpoint' => 'https://authorized.p4points.co.in/api/v1/Balance_info.php'],
+                    'panVerify' => ['live' => true, 'endpoint' => 'https://authorized.p4points.co.in/api/v1/panVerificationPremium.php'],
+                    'aadhaarToPan' => ['live' => true, 'endpoint' => 'https://authorized.p4points.co.in/api/v1/getPanNumber.php'],
+                    'ekyc' => ['live' => true, 'endpoint' => 'https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php'],
                     'rc' => ['live' => false, 'endpoint' => 'https://kyc-api.surepass.io/api/v1/rc/rc-full'],
-                    'pan' => ['live' => false, 'endpoint' => 'https://kyc-api.surepass.io/api/v1/pan/pan-comprehensive'],
-                    'aadhaar' => ['live' => false, 'endpoint' => 'https://kyc-api.surepass.io/api/v1/aadhaar-v2/generate-otp'],
                     'voter' => ['live' => false, 'endpoint' => 'https://kyc-api.surepass.io/api/v1/voter-id/voter-id'],
                     'dl' => ['live' => false, 'endpoint' => 'https://kyc-api.surepass.io/api/v1/driving-license/driving-license'],
                     'challan' => ['live' => false, 'endpoint' => 'https://kyc-api.surepass.io/api/v1/rc/echallan'],
@@ -2148,11 +2151,11 @@ if ($endpoint === 'superadmin/api-gateway') {
         $curr = $store['apiGateway'] ?? [];
         $store['apiGateway'] = array_merge($curr, [
             'liveMode' => !empty($body['liveMode']),
-            'provider' => $body['provider'] ?? ($curr['provider'] ?? 'Surepass'),
+            'provider' => $body['provider'] ?? ($curr['provider'] ?? 'P4Points'),
             'apiKey' => isset($body['apiKey']) ? trim((string)$body['apiKey']) : ($curr['apiKey'] ?? ''),
-            'endpoint' => isset($body['endpoint']) ? trim((string)$body['endpoint']) : ($curr['endpoint'] ?? ''),
+            'endpoint' => isset($body['endpoint']) ? trim((string)$body['endpoint']) : ($curr['endpoint'] ?? 'https://authorized.p4points.co.in/api/v1/'),
             'secret' => isset($body['secret']) ? trim((string)$body['secret']) : ($curr['secret'] ?? ''),
-            'timeoutMs' => intval($body['timeoutMs'] ?? 5000),
+            'timeoutMs' => intval($body['timeoutMs'] ?? 8000),
             'services' => $body['services'] ?? ($curr['services'] ?? []),
             'updatedAt' => date('c')
         ]);
@@ -2164,22 +2167,151 @@ if ($endpoint === 'superadmin/api-gateway') {
 
 if ($endpoint === 'superadmin/api-gateway/test' && $method === 'POST') {
     $targetKey = $body['apiKey'] ?? ($store['apiGateway']['apiKey'] ?? '');
+    $targetProvider = $body['provider'] ?? ($store['apiGateway']['provider'] ?? 'P4Points');
+    $targetEndpoint = $body['endpoint'] ?? ($store['apiGateway']['endpoint'] ?? 'https://authorized.p4points.co.in/api/v1/');
+
     if (!$targetKey) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'error' => 'कृपया टेस्ट करने हेतु वैध API Key दर्ज करें।']);
+        echo json_encode(['success' => false, 'error' => 'कृपया टेस्ट करने हेतु वैध 32-अक्षर वाली API Key दर्ज करें।']);
         exit;
     }
+
+    if ($targetProvider === 'P4Points' || strpos($targetEndpoint, 'p4points') !== false) {
+        $t0 = microtime(true);
+        $ch = curl_init('https://authorized.p4points.co.in/api/v1/Balance_info.php?apiKey=' . urlencode($targetKey));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $raw = curl_exec($ch);
+        $latency = round((microtime(true) - $t0) * 1000) . 'ms';
+        curl_close($ch);
+
+        $json = json_decode($raw, true);
+        if ($json && (($json['status'] ?? '') === 'success' || isset($json['balance']))) {
+            $store['apiGateway']['balance'] = $json['balance'];
+            $store['apiGateway']['lastCheckedAt'] = date('c');
+            saveStore($dataFile, $store);
+            echo json_encode([
+                'success' => true,
+                'message' => "✅ P4Points गेटवे लाइव कनेक्टेड! लेटेंसी: $latency • उपलब्ध बैलेंस: ₹" . $json['balance'],
+                'balance' => $json['balance'],
+                'ping' => [
+                    'provider' => 'P4Points',
+                    'endpoint' => $targetEndpoint,
+                    'status' => 'active',
+                    'latency' => $latency,
+                    'balance' => $json['balance'],
+                    'testedAt' => date('c')
+                ]
+            ]);
+            exit;
+        } else {
+            $err = $json['message'] ?? ($json['error'] ?? 'प्रमाणीकरण विफल (Invalid API Key)');
+            http_response_code(400);
+            echo json_encode([
+                'success' => false,
+                'error' => $err,
+                'message' => "❌ P4Points सर्वर रिस्पांस: $err",
+                'ping' => [
+                    'provider' => 'P4Points',
+                    'endpoint' => $targetEndpoint,
+                    'status' => 'error',
+                    'latency' => $latency,
+                    'testedAt' => date('c')
+                ]
+            ]);
+            exit;
+        }
+    }
+
     echo json_encode([
         'success' => true,
-        'message' => '✅ गेटवे कनेक्शन टेस्ट सफल! प्रोफ़ाइल: ' . ($body['provider'] ?? 'Surepass') . ' • लेटेंसी: 142ms • स्थिति: लाइव तैयार',
+        'message' => '✅ गेटवे कनेक्शन टेस्ट सफल! प्रोफ़ाइल: ' . $targetProvider . ' • लेटेंसी: 142ms • स्थिति: लाइव तैयार',
         'ping' => [
-            'provider' => $body['provider'] ?? 'Surepass',
-            'endpoint' => $body['endpoint'] ?? 'https://kyc-api.surepass.io/api/v1/',
+            'provider' => $targetProvider,
+            'endpoint' => $targetEndpoint,
             'status' => 'active',
             'latency' => '142ms',
             'testedAt' => date('c')
         ]
     ]);
+    exit;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// P4Points Proxy Endpoints (Hostinger PHP)
+// ═══════════════════════════════════════════════════════════════════════════
+if ($endpoint === 'gateway/p4points/balance') {
+    $apiKey = $_GET['apiKey'] ?? ($store['apiGateway']['apiKey'] ?? '');
+    if (!$apiKey) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'API Key कॉन्फ़िगर नहीं है।']);
+        exit;
+    }
+    $ch = curl_init('https://authorized.p4points.co.in/api/v1/Balance_info.php?apiKey=' . urlencode($apiKey));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 8);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $res = curl_exec($ch);
+    curl_close($ch);
+    echo $res ?: json_encode(['status' => 'error', 'message' => 'Failed to reach P4Points API']);
+    exit;
+}
+
+if ($endpoint === 'gateway/p4points/aadhaar-to-pan') {
+    $apiKey = $_GET['apiKey'] ?? ($store['apiGateway']['apiKey'] ?? '');
+    $uid = preg_replace('/\D/', '', $_GET['uidNumber'] ?? ($_GET['aadhaar'] ?? ''));
+    if (!$apiKey || strlen($uid) !== 12) {
+        http_response_code(400);
+        echo json_encode(['status' => 400, 'error' => 'apiKey and 12-digit uidNumber required']);
+        exit;
+    }
+    $ch = curl_init("https://authorized.p4points.co.in/api/v1/getPanNumber.php?apiKey=" . urlencode($apiKey) . "&uidNumber=" . urlencode($uid));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $res = curl_exec($ch);
+    curl_close($ch);
+    echo $res ?: json_encode(['status' => 500, 'error' => 'Failed to reach P4Points API']);
+    exit;
+}
+
+if ($endpoint === 'gateway/p4points/pan-verify') {
+    $apiKey = $_GET['apiKey'] ?? ($store['apiGateway']['apiKey'] ?? '');
+    $pan = strtoupper(trim($_GET['panNumber'] ?? ($_GET['pan'] ?? '')));
+    if (!$apiKey || strlen($pan) !== 10) {
+        http_response_code(400);
+        echo json_encode(['statusCode' => 400, 'status' => 'error', 'message' => 'apiKey and 10-char panNumber required']);
+        exit;
+    }
+    $ch = curl_init("https://authorized.p4points.co.in/api/v1/panVerificationPremium.php?apiKey=" . urlencode($apiKey) . "&panNumber=" . urlencode($pan));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $res = curl_exec($ch);
+    curl_close($ch);
+    echo $res ?: json_encode(['statusCode' => 500, 'status' => 'error', 'message' => 'Failed to reach P4Points API']);
+    exit;
+}
+
+if ($endpoint === 'gateway/p4points/ekyc' && $method === 'POST') {
+    $apiKey = $body['apiKey'] ?? ($store['apiGateway']['apiKey'] ?? '');
+    $aadhar = preg_replace('/\D/', '', $body['aadhar'] ?? '');
+    $bioenc = $body['bioenc'] ?? '';
+    if (!$apiKey || strlen($aadhar) !== 12 || empty($bioenc)) {
+        http_response_code(400);
+        echo json_encode(['status' => false, 'code' => 400, 'error' => 'Missing required parameters (apiKey, aadhar, bioenc)']);
+        exit;
+    }
+    $ch = curl_init('https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(['apiKey' => $apiKey, 'aadhar' => $aadhar, 'bioenc' => $bioenc]));
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $res = curl_exec($ch);
+    curl_close($ch);
+    echo $res ?: json_encode(['status' => false, 'code' => 500, 'error' => 'Failed to reach P4Points API']);
     exit;
 }
 

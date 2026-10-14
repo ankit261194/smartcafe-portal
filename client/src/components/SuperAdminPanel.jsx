@@ -37,15 +37,18 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
   // Future Live API Gateway Configuration State (Requirement 7)
   const [apiGateway, setApiGateway] = useState({
     liveMode: false,
-    provider: 'Surepass',
+    provider: 'P4Points',
     apiKey: '',
-    endpoint: 'https://kyc-api.surepass.io/api/v1/',
+    endpoint: 'https://authorized.p4points.co.in/api/v1/',
     secret: '',
-    timeoutMs: 5000,
+    balance: null,
+    timeoutMs: 8000,
     services: {
+      balance: { live: true, endpoint: 'https://authorized.p4points.co.in/api/v1/Balance_info.php' },
+      panVerify: { live: true, endpoint: 'https://authorized.p4points.co.in/api/v1/panVerificationPremium.php' },
+      aadhaarToPan: { live: true, endpoint: 'https://authorized.p4points.co.in/api/v1/getPanNumber.php' },
+      ekyc: { live: true, endpoint: 'https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php' },
       rc: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/rc/rc-full' },
-      pan: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/pan/pan-comprehensive' },
-      aadhaar: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/aadhaar-v2/generate-otp' },
       voter: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/voter-id/voter-id' },
       dl: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/driving-license/driving-license' },
       challan: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/rc/echallan' },
@@ -345,9 +348,12 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        setGatewayTestResult({ success: true, message: data.message, ping: data.ping });
+        if (data.balance !== undefined) {
+          setApiGateway(prev => ({ ...prev, balance: data.balance }));
+        }
+        setGatewayTestResult({ success: true, message: data.message, ping: data.ping, balance: data.balance });
       } else {
-        setGatewayTestResult({ success: false, message: data.error || 'कनेक्शन टेस्ट विफल।' });
+        setGatewayTestResult({ success: false, message: data.message || data.error || 'कनेक्शन टेस्ट विफल।' });
       }
     } catch (e) {
       setGatewayTestResult({ success: false, message: 'सर्वर से संपर्क करने में असमर्थ।' });
@@ -1051,8 +1057,9 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
               <label className="block text-xs font-black uppercase text-slate-700 dark:text-slate-300 tracking-wider">
                 1. API प्रदाता चुनें (Select API Provider)
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {[
+                  { id: 'P4Points', name: 'P4Points B2B Gateway', desc: 'authorized.p4points.co.in (Aadhaar to PAN, PAN Verify, eKYC, Balance Info API)', defaultEndpoint: 'https://authorized.p4points.co.in/api/v1/' },
                   { id: 'Surepass', name: 'Surepass Technologies', desc: 'NSDL, Parivahan, UIDAI, ECI भारत सरकार अनुशंसित', defaultEndpoint: 'https://kyc-api.surepass.io/api/v1/' },
                   { id: 'RapidAPI', name: 'RapidAPI Enterprise', desc: 'ग्लोबल डेवलपर्स गेटवे (Vehicle RC, PAN, Voter)', defaultEndpoint: 'https://india-gov-api.p.rapidapi.com/v1/' },
                   { id: 'Custom', name: 'कस्टम API एंडपॉइंट (Custom REST)', desc: 'आपका अपना निजी API सर्वर या थर्ड-पार्टी वेंडर', defaultEndpoint: 'https://api.yourdomain.com/v1/' }
@@ -1064,7 +1071,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                       onClick={() => setApiGateway(prev => ({ 
                         ...prev, 
                         provider: prov.id,
-                        endpoint: prev.endpoint || prov.defaultEndpoint
+                        endpoint: prov.defaultEndpoint
                       }))}
                       className={`p-4 rounded-2xl border-2 transition cursor-pointer flex flex-col justify-between ${
                         isSelected 

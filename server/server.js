@@ -3667,22 +3667,25 @@ app.post('/api/edistrict/verify-certificate', (req, res) => {
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
-// 12. Super Admin API Gateway Settings (Ready for Future Live APIs)
+// 12. Super Admin API Gateway Settings & P4Points Live Gateway
 // ═══════════════════════════════════════════════════════════════════════════
 app.get('/api/superadmin/api-gateway', (req, res) => {
   const store = getStore();
   if (!store.apiGateway) {
     store.apiGateway = {
       liveMode: false,
-      provider: 'Surepass',
+      provider: 'P4Points',
       apiKey: '',
-      endpoint: 'https://kyc-api.surepass.io/api/v1/',
+      endpoint: 'https://authorized.p4points.co.in/api/v1/',
       secret: '',
-      timeoutMs: 5000,
+      balance: null,
+      timeoutMs: 8000,
       services: {
+        balance: { live: true, endpoint: 'https://authorized.p4points.co.in/api/v1/Balance_info.php' },
+        panVerify: { live: true, endpoint: 'https://authorized.p4points.co.in/api/v1/panVerificationPremium.php' },
+        aadhaarToPan: { live: true, endpoint: 'https://authorized.p4points.co.in/api/v1/getPanNumber.php' },
+        ekyc: { live: true, endpoint: 'https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php' },
         rc: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/rc/rc-full' },
-        pan: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/pan/pan-comprehensive' },
-        aadhaar: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/aadhaar-v2/generate-otp' },
         voter: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/voter-id/voter-id' },
         dl: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/driving-license/driving-license' },
         challan: { live: false, endpoint: 'https://kyc-api.surepass.io/api/v1/rc/echallan' },
@@ -3702,11 +3705,11 @@ app.post('/api/superadmin/api-gateway', (req, res) => {
   store.apiGateway = {
     ...(store.apiGateway || {}),
     liveMode: Boolean(liveMode),
-    provider: provider || store.apiGateway?.provider || 'Surepass',
+    provider: provider || store.apiGateway?.provider || 'P4Points',
     apiKey: apiKey !== undefined ? String(apiKey).trim() : (store.apiGateway?.apiKey || ''),
-    endpoint: endpoint !== undefined ? String(endpoint).trim() : (store.apiGateway?.endpoint || ''),
+    endpoint: endpoint !== undefined ? String(endpoint).trim() : (store.apiGateway?.endpoint || 'https://authorized.p4points.co.in/api/v1/'),
     secret: secret !== undefined ? String(secret).trim() : (store.apiGateway?.secret || ''),
-    timeoutMs: parseInt(timeoutMs) || 5000,
+    timeoutMs: parseInt(timeoutMs) || 8000,
     services: services || store.apiGateway?.services || {},
     updatedAt: new Date().toISOString()
   };
@@ -3714,25 +3717,171 @@ app.post('/api/superadmin/api-gateway', (req, res) => {
   res.json({ success: true, message: '✅ API गेटवे सेटिंग्स सफलतापूर्वक सहेजी गईं!', apiGateway: store.apiGateway });
 });
 
-app.post('/api/superadmin/api-gateway/test', (req, res) => {
+app.post('/api/superadmin/api-gateway/test', async (req, res) => {
   const store = getStore();
   const { provider, apiKey, endpoint } = req.body;
   const targetKey = apiKey || store.apiGateway?.apiKey;
-  const targetEndpoint = endpoint || store.apiGateway?.endpoint;
+  const targetProvider = provider || store.apiGateway?.provider || 'P4Points';
+  const targetEndpoint = endpoint || store.apiGateway?.endpoint || 'https://authorized.p4points.co.in/api/v1/';
+
   if (!targetKey) {
-    return res.status(400).json({ success: false, error: 'कृपया टेस्ट करने हेतु वैध API Key दर्ज करें।' });
+    return res.status(400).json({ success: false, error: 'कृपया टेस्ट करने हेतु वैध 32-अक्षर वाली API Key दर्ज करें।' });
   }
+
+  // If testing P4Points gateway (or endpoint points to p4points):
+  if (targetProvider === 'P4Points' || targetEndpoint.includes('p4points')) {
+    try {
+      const startTime = Date.now();
+      const apiUrl = `https://authorized.p4points.co.in/api/v1/Balance_info.php?apiKey=${encodeURIComponent(targetKey)}`;
+      const response = await fetch(apiUrl, { method: 'GET', signal: AbortSignal.timeout(8000) });
+      const data = await response.json().catch(() => null);
+      const latency = `${Date.now() - startTime}ms`;
+
+      if (data && (data.status === 'success' || data.balance !== undefined)) {
+        if (!store.apiGateway) store.apiGateway = {};
+        store.apiGateway.balance = data.balance;
+        store.apiGateway.lastCheckedAt = new Date().toISOString();
+        saveStore(store);
+        return res.json({
+          success: true,
+          message: `✅ P4Points गेटवे लाइव कनेक्टेड! लेटेंसी: ${latency} • उपलब्ध बैलेंस: ₹${data.balance}`,
+          balance: data.balance,
+          ping: {
+            provider: 'P4Points',
+            endpoint: targetEndpoint,
+            status: 'active',
+            latency,
+            balance: data.balance,
+            testedAt: new Date().toISOString()
+          }
+        });
+      } else {
+        const errorMsg = data?.message || data?.error || 'प्रमाणीकरण विफल (Invalid API Key)';
+        return res.status(400).json({
+          success: false,
+          error: errorMsg,
+          message: `❌ P4Points सर्वर रिस्पांस: ${errorMsg}`,
+          ping: {
+            provider: 'P4Points',
+            endpoint: targetEndpoint,
+            status: 'error',
+            latency,
+            testedAt: new Date().toISOString()
+          }
+        });
+      }
+    } catch (err) {
+      return res.status(502).json({
+        success: false,
+        error: `P4Points सर्वर से संपर्क नहीं हो सका: ${err.message}`,
+        message: `❌ गेटवे कनेक्शन टाइमआउट / नेटवर्क त्रुटि: ${err.message}`
+      });
+    }
+  }
+
+  // Generic fallback test for other providers
   res.json({
     success: true,
-    message: `✅ गेटवे कनेक्शन टेस्ट सफल! प्रोफ़ाइल: ${provider || 'Surepass'} • लेटेंसी: 142ms • स्थिति: लाइव तैयार`,
+    message: `✅ गेटवे कनेक्शन टेस्ट सफल! प्रोफ़ाइल: ${targetProvider} • लेटेंसी: 142ms • स्थिति: लाइव तैयार`,
     ping: {
-      provider: provider || 'Surepass',
-      endpoint: targetEndpoint || 'https://kyc-api.surepass.io/api/v1/',
+      provider: targetProvider,
+      endpoint: targetEndpoint,
       status: 'active',
       latency: '142ms',
       testedAt: new Date().toISOString()
     }
   });
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// P4Points Live Endpoints Proxy (Secure Server-Side Calling)
+// ═══════════════════════════════════════════════════════════════════════════
+app.get('/api/gateway/p4points/balance', async (req, res) => {
+  const store = getStore();
+  const apiKey = req.query.apiKey || store.apiGateway?.apiKey;
+  if (!apiKey) return res.status(400).json({ status: 'error', message: 'API Key कॉन्फ़िगर नहीं है।' });
+
+  try {
+    const url = `https://authorized.p4points.co.in/api/v1/Balance_info.php?apiKey=${encodeURIComponent(apiKey)}`;
+    const upstream = await fetch(url, { signal: AbortSignal.timeout(8000) });
+    const data = await upstream.json();
+    if (data?.status === 'success' && store.apiGateway) {
+      store.apiGateway.balance = data.balance;
+      store.apiGateway.lastCheckedAt = new Date().toISOString();
+      saveStore(store);
+    }
+    res.json(data);
+  } catch (e) {
+    res.status(502).json({ status: 'error', message: 'P4Points Balance API Error: ' + e.message });
+  }
+});
+
+app.get('/api/gateway/p4points/aadhaar-to-pan', async (req, res) => {
+  const store = getStore();
+  const apiKey = req.query.apiKey || store.apiGateway?.apiKey;
+  const uidNumber = (req.query.uidNumber || req.query.aadhaar || '').replace(/\D/g, '');
+  if (!apiKey) return res.status(400).json({ status: 400, error: 'API Key कॉन्फ़िगर नहीं है।' });
+  if (!uidNumber || uidNumber.length !== 12) {
+    return res.status(400).json({ status: 400, error: '12-अंकों का वैध आधार नंबर अनिवार्य है।' });
+  }
+
+  try {
+    const url = `https://authorized.p4points.co.in/api/v1/getPanNumber.php?apiKey=${encodeURIComponent(apiKey)}&uidNumber=${encodeURIComponent(uidNumber)}`;
+    const upstream = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    const data = await upstream.json();
+    res.json(data);
+  } catch (e) {
+    res.status(502).json({ status: 500, error: 'P4Points Aadhaar to PAN API Error: ' + e.message });
+  }
+});
+
+app.get('/api/gateway/p4points/pan-verify', async (req, res) => {
+  const store = getStore();
+  const apiKey = req.query.apiKey || store.apiGateway?.apiKey;
+  const panNumber = (req.query.panNumber || req.query.pan || '').trim().toUpperCase();
+  if (!apiKey) return res.status(400).json({ statusCode: 400, status: 'error', message: 'API Key कॉन्फ़िगर नहीं है।' });
+  if (!panNumber || panNumber.length !== 10) {
+    return res.status(400).json({ statusCode: 400, status: 'error', message: '10-अक्षरों का वैध PAN नंबर अनिवार्य है।' });
+  }
+
+  try {
+    const url = `https://authorized.p4points.co.in/api/v1/panVerificationPremium.php?apiKey=${encodeURIComponent(apiKey)}&panNumber=${encodeURIComponent(panNumber)}`;
+    const upstream = await fetch(url, { signal: AbortSignal.timeout(10000) });
+    const data = await upstream.json();
+    res.json(data);
+  } catch (e) {
+    res.status(502).json({ statusCode: 500, status: 'error', message: 'P4Points PAN Verification API Error: ' + e.message });
+  }
+});
+
+app.post('/api/gateway/p4points/ekyc', async (req, res) => {
+  const store = getStore();
+  const apiKey = req.body.apiKey || store.apiGateway?.apiKey;
+  const aadhar = (req.body.aadhar || '').replace(/\D/g, '');
+  const bioenc = req.body.bioenc || '';
+
+  if (!apiKey) return res.status(400).json({ status: false, code: 400, error: 'API Key कॉन्फ़िगर नहीं है।' });
+  if (!aadhar || aadhar.length !== 12 || !bioenc) {
+    return res.status(400).json({ status: false, code: 400, error: 'aadhar (12 digits) and bioenc are required' });
+  }
+
+  try {
+    const params = new URLSearchParams();
+    params.append('apiKey', apiKey);
+    params.append('aadhar', aadhar);
+    params.append('bioenc', bioenc);
+
+    const upstream = await fetch('https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
+      signal: AbortSignal.timeout(15000)
+    });
+    const data = await upstream.json();
+    res.json(data);
+  } catch (e) {
+    res.status(502).json({ status: false, code: 500, error: 'P4Points eKYC API Error: ' + e.message });
+  }
 });
 
 // Dedicated Direct APK Download Endpoint

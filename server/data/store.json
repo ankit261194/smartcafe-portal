@@ -601,8 +601,8 @@
       "shopName": "स्मार्ट डिजिटल सेवा केंद्र एवं साइबर कैफे",
       "ownerName": "संचालक",
       "phone": "9876543210",
-      "pin": "$2b$10$6j2BOpUI4uCs1nen8I0E6.jV1nZeTk07d6ySVOlAr6EOYGAgVoc3W",
-      "staffPin": "$2b$10$H6rTh6iX7HUvtPzsYO2gNONpZ9zcp6UzTA.z5jE2WEuMqyVa3F9B2",
+      "pin": "$2b$10$o6hfgcXu14BKmxqeX0AhAe50xb0YuF4C5Of8aN95KtRO3/3wJva3O",
+      "staffPin": "$2b$10$qsIAnYUt8DoS7GcowioeX.wF.Rq8q5lPoAR2ZlYHi5tMYouCX41Iy",
       "staffEnabled": true,
       "email": "cafe101@smartcafe.sbs",
       "vleId": "VLE-UP-2026-101",
@@ -622,8 +622,8 @@
         "plan": "₹299 वार्षिक प्रो प्लान",
         "amount": 299,
         "status": "active",
-        "validTill": "2027-10-14T09:06:12.180Z",
-        "activatedAt": "2026-10-14T09:06:12.180Z",
+        "validTill": "2027-10-14T10:15:15.756Z",
+        "activatedAt": "2026-10-14T10:15:15.756Z",
         "utr": "987654321012"
       },
       "b2bWallet": {
@@ -650,7 +650,7 @@
         "formFeeNormal": 70,
         "formFeeComplex": 120
       },
-      "createdAt": "2026-10-14T09:06:12.180Z"
+      "createdAt": "2026-10-14T10:15:15.756Z"
     }
   ],
   "superAdminRates": {
@@ -664,13 +664,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-14T08:09:15.283Z",
+      "lastRun": "2026-10-14T10:13:19.425Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-14T09:09:15.283Z"
+      "nextRun": "2026-10-14T11:13:19.425Z"
     }
   },
   "superAdminAuditLogs": [

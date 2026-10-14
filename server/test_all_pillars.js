@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const BASE = 'http://localhost:5000';
+const BASE = 'http://127.0.0.1:5000';
 const storePath = path.join(__dirname, 'data', 'store.json');
 let backupStoreContent = null;
 
