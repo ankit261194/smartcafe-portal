@@ -26,6 +26,7 @@ import AdminUtrApprovalModal from './components/AdminUtrApprovalModal';
 import LicenseCertificateModal from './components/LicenseCertificateModal';
 import VleKycModal from './components/VleKycModal';
 import RoleAuthModal from './components/RoleAuthModal';
+import UserProfileModal from './components/UserProfileModal';
 import OperatorGateway from './components/OperatorGateway';
 import SuperAdminGateway from './components/SuperAdminGateway';
 import JanSevaModal from './components/JanSevaModal';
@@ -213,6 +214,16 @@ export default function App() {
     isOpen: false,
     type: 'customer' // 'customer', 'cafe', or 'superadmin'
   });
+
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const handleOpenCustomerProfile = () => {
+    if (customerSession?.phone || isCafeAuth || localStorage.getItem('smartcafe_user') || localStorage.getItem('cafe_auth')) {
+      setIsProfileModalOpen(true);
+    } else {
+      setRoleAuthModalConfig({ isOpen: true, type: 'customer' });
+    }
+  };
 
   // Configurable Mobile Server URL State & Capacitor native environment detection
   const [showServerConfigModal, setShowServerConfigModal] = useState(false);
@@ -727,7 +738,7 @@ export default function App() {
           onOpenCustomerComplaints={() => setIsCustomerComplaintsOpen(true)}
           onOpenLicenseCertificate={() => setIsLicenseModalOpen(true)}
           customerSession={customerSession}
-          onOpenCustomerProfile={() => setRoleAuthModalConfig({ isOpen: true, type: 'customer' })}
+          onOpenCustomerProfile={handleOpenCustomerProfile}
           onOpenShopkeeperLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'cafe' })}
           onOpenSuperAdminLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'superadmin' })}
           onOpenKyc={() => setIsKycModalOpen(true)}
@@ -985,7 +996,7 @@ export default function App() {
                 onOpenWallet={() => setIsWalletOpen(true)}
                 onOpenB2bWallet={() => setIsB2bWalletOpen(true)}
                 onOpenStandee={() => setIsStandeeOpen(true)}
-                onOpenCustomerProfile={() => setRoleAuthModalConfig({ isOpen: true, type: 'customer' })}
+                onOpenCustomerProfile={handleOpenCustomerProfile}
                 onOpenShopkeeperLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'cafe' })}
                 onOpenSuperAdminLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'superadmin' })}
                 onOpenCustomerLogin={(toolId) => setRoleAuthModalConfig({ isOpen: true, type: 'customer', pendingTool: toolId || null })}
@@ -1163,7 +1174,7 @@ export default function App() {
                   onOpenWallet={() => setIsWalletOpen(true)}
                   onOpenB2bWallet={() => setIsB2bWalletOpen(true)}
                   onOpenStandee={() => setIsStandeeOpen(true)}
-                  onOpenCustomerProfile={() => setRoleAuthModalConfig({ isOpen: true, type: 'customer' })}
+                  onOpenCustomerProfile={handleOpenCustomerProfile}
                   onOpenShopkeeperLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'cafe' })}
                   onOpenSuperAdminLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'superadmin' })}
                   onOpenCustomerLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'customer' })}
@@ -1589,6 +1600,44 @@ export default function App() {
             setRoleAuthModalConfig({ isOpen: false, type: 'customer', pendingTool: null });
             setActiveInstantToolId(pt);
             setCustomerTab('tool');
+          }
+        }}
+      />
+
+      {/* Universal User & Operator Profile & Security Modal */}
+      <UserProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        currentUser={
+          customerSession || (isCafeAuth && selectedCafe ? {
+            id: selectedCafe.id,
+            name: selectedCafe.shopName || selectedCafe.ownerName || 'संचालक',
+            shopName: selectedCafe.shopName || '',
+            phone: selectedCafe.phone || '',
+            role: 'cafe',
+            balance: sanchalakB2bBalance || selectedCafe.b2bWallet?.balance || 0,
+            password: selectedCafe.pin || '1234'
+          } : (() => {
+            try {
+              return JSON.parse(localStorage.getItem('smartcafe_user') || 'null');
+            } catch {
+              return null;
+            }
+          })())
+        }
+        onLogout={handleLogout}
+        onUserUpdated={(updatedUser) => {
+          if (updatedUser?.role === 'cafe') {
+            if (selectedCafe) setSelectedCafe(prev => ({ ...prev, ...updatedUser }));
+          } else {
+            setCustomerSession(updatedUser);
+          }
+        }}
+        onOpenWalletModal={() => {
+          if (isCafeAuth) {
+            setIsB2bWalletOpen(true);
+          } else {
+            setIsWalletOpen(true);
           }
         }}
       />

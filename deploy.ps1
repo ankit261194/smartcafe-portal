@@ -12,7 +12,26 @@ Set-Location -Path "$PSScriptRoot\client"
 npm run build
 Set-Location -Path "$PSScriptRoot"
 
-Write-Host "[2/5] Synchronizing Production Assets and PHP API..." -ForegroundColor Cyan
+Write-Host "[2/5] Synchronizing Production Assets and PHP API (Preserving User Accounts)..." -ForegroundColor Cyan
+node -e "
+const fs = require('fs');
+const p1 = 'server/data/store.json';
+const p2 = 'client/public/api/data/store.json';
+const p3 = 'client/dist/api/data/store.json';
+let s1 = fs.existsSync(p1) ? JSON.parse(fs.readFileSync(p1)) : {};
+let s2 = fs.existsSync(p2) ? JSON.parse(fs.readFileSync(p2)) : {};
+let s3 = fs.existsSync(p3) ? JSON.parse(fs.readFileSync(p3)) : {};
+const allUsersMap = new Map();
+[...(s3.users||[]), ...(s2.users||[]), ...(s1.users||[])].forEach(u => {
+  if (u && u.phone) allUsersMap.set(u.phone, u);
+});
+const mergedUsers = Array.from(allUsersMap.values());
+if (s1.users) s1.users = mergedUsers;
+if (s2.users) s2.users = mergedUsers;
+fs.writeFileSync(p1, JSON.stringify(s1, null, 2));
+fs.writeFileSync(p2, JSON.stringify(s2, null, 2));
+console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts.');
+"
 Copy-Item -Path "$PSScriptRoot\client\public\.htaccess" -Destination "$PSScriptRoot\client\dist\.htaccess" -Force
 if (-not (Test-Path "$PSScriptRoot\client\dist\api")) {
     New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\api" -Force

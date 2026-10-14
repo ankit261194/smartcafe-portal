@@ -621,6 +621,56 @@ app.post('/api/auth/login', (req, res) => {
   });
 });
 
+// Universal User & Operator Change Password API
+app.post('/api/auth/change-password', (req, res) => {
+  const store = getStore();
+  const { phone, oldPassword, newPassword } = req.body;
+  const cleanPhone = String(phone || '').replace(/\D/g, '').slice(-10);
+  const cleanOld = String(oldPassword || '').trim();
+  const cleanNew = String(newPassword || '').trim();
+
+  if (!cleanPhone || cleanPhone.length !== 10) {
+    return res.status(400).json({ error: 'कृपया 10-अंकीय मोबाइल नंबर दर्ज करें।' });
+  }
+  if (!cleanOld || !cleanNew) {
+    return res.status(400).json({ error: 'कृपया पुराना और नया पासवर्ड दर्ज करें।' });
+  }
+
+  const user = (store.users || []).find(u => u.phone === cleanPhone);
+  const cafe = (store.cafes || []).find(c => c.phone === cleanPhone || c.code === cleanPhone);
+
+  if (!user && !cafe) {
+    return res.status(404).json({ error: 'खाता नहीं मिला।' });
+  }
+
+  let passOk = false;
+  if (user && user.password && user.password === cleanOld) {
+    passOk = true;
+  } else if (user && isBcryptHash(user.password) && verifyCredential(cleanOld, user.password)) {
+    passOk = true;
+  } else if (cafe && verifyCredential(cleanOld, cafe.pin)) {
+    passOk = true;
+  }
+
+  if (!passOk) {
+    return res.status(400).json({ error: 'वर्तमान पासवर्ड / पिन गलत है।' });
+  }
+
+  if (user) {
+    user.password = cleanNew;
+  }
+  if (cafe) {
+    cafe.pin = hashCredential(cleanNew);
+  }
+  const wallet = (store.wallets || []).find(w => w.phone === cleanPhone);
+  if (wallet) {
+    wallet.pin = hashCredential(cleanNew);
+  }
+
+  saveStore(store);
+  res.json({ success: true, message: 'पासवर्ड सफलतापूर्वक बदल दिया गया है।' });
+});
+
 // Super Admin User Directory Management APIs
 app.get('/api/superadmin/users', (req, res) => {
   const store = getStore();
@@ -1523,6 +1573,9 @@ app.post('/api/superadmin/cafes/:id/reset-pin', (req, res) => {
   const plainNewPin = String(newPin).trim();
   cafe.pin = hashCredential(plainNewPin);
 
+  const u = (store.users || []).find(usr => usr.phone === cafe.phone || usr.id === cafe.id);
+  if (u) u.password = plainNewPin;
+
   // Audit log
   if (!store.superAdminAuditLogs) store.superAdminAuditLogs = [];
   store.superAdminAuditLogs.unshift({
@@ -1637,6 +1690,8 @@ app.put('/api/cafes/:id/pin', (req, res) => {
   }
 
   store.cafes[idx].pin = hashCredential(cleanNew);
+  const usr = (store.users || []).find(u => u.phone === store.cafes[idx].phone || u.id === store.cafes[idx].id);
+  if (usr) usr.password = cleanNew;
   saveStore(store);
   res.json({ success: true, message: 'पिन सफलतापूर्वक बदल दिया गया!' });
 });

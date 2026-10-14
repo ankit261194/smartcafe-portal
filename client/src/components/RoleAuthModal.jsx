@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Lock, User, Smartphone, Crown, Monitor, Key, AlertCircle, CheckCircle2, MessageCircle, Store, Sparkles, LogIn, UserPlus } from 'lucide-react';
+import { ShieldCheck, Lock, User, Smartphone, Crown, Monitor, Key, AlertCircle, CheckCircle2, MessageCircle, Store, Sparkles, LogIn, UserPlus, Eye, EyeOff, HelpCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function RoleAuthModal({
@@ -27,6 +27,12 @@ export default function RoleAuthModal({
   // Login form state
   const [loginIdentifier, setLoginIdentifier] = useState(selectedCafe?.phone || '');
   const [loginPassword, setLoginPassword] = useState('');
+
+  // Password visibility states
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
 
   // Super Admin state
   const [adminPassword, setAdminPassword] = useState('');
@@ -233,15 +239,25 @@ export default function RoleAuthModal({
                 <label className="block font-bold text-slate-800 dark:text-slate-200 mb-1">
                   {isHi ? 'मास्टर एडमिन पासवर्ड (Master Password) *' : 'Master Admin Password *'}
                 </label>
-                <input
-                  type="password"
-                  required
-                  autoFocus
-                  value={adminPassword}
-                  onChange={(e) => setAdminPassword(e.target.value)}
-                  placeholder={isHi ? 'सुरक्षित मास्टर पासवर्ड दर्ज करें' : 'Enter master password'}
-                  className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl font-mono text-sm font-bold text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-amber-500"
-                />
+                <div className="relative">
+                  <input
+                    type={showAdminPassword ? "text" : "password"}
+                    required
+                    autoFocus
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    placeholder={isHi ? 'सुरक्षित मास्टर पासवर्ड दर्ज करें' : 'Enter master password'}
+                    className="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl font-mono text-sm font-bold text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-amber-500 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowAdminPassword(!showAdminPassword)}
+                    className="absolute right-3 top-2.5 p-1 text-slate-400 hover:text-slate-200 cursor-pointer"
+                    title={showAdminPassword ? "पासवर्ड छिपाएं" : "पासवर्ड दिखाएं"}
+                  >
+                    {showAdminPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               <button
@@ -344,33 +360,62 @@ export default function RoleAuthModal({
                   </div>
 
                   <div>
-                    <label className="block font-bold text-slate-800 dark:text-slate-200 mb-1">
-                      {isHi ? 'पासवर्ड (Password) *' : 'Password *'}
-                    </label>
+                    <div className="flex items-center justify-between mb-1">
+                      <label className="block font-bold text-slate-800 dark:text-slate-200">
+                        {isHi ? 'पासवर्ड / 4-अंकीय पिन (Password / PIN) *' : 'Password / 4-Digit PIN *'}
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setShowForgotModal(!showForgotModal)}
+                        className="text-[11px] text-amber-600 dark:text-amber-400 hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                      >
+                        <HelpCircle className="w-3 h-3" />
+                        <span>{isHi ? 'पासवर्ड / पिन भूल गए?' : 'Forgot Password?'}</span>
+                      </button>
+                    </div>
+
                     <div className="relative">
                       <input
-                        type="password"
+                        type={showLoginPassword ? "text" : "password"}
                         required
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl font-mono text-slate-900 dark:text-white font-bold focus:outline-hidden focus:ring-2 focus:ring-blue-500"
+                        placeholder={isHi ? 'पासवर्ड अथवा 4-अंकीय पिन दर्ज करें' : 'Enter password or 4-digit PIN'}
+                        className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl font-mono text-slate-900 dark:text-white font-bold focus:outline-hidden focus:ring-2 focus:ring-blue-500 pr-10"
                       />
-                      <Lock className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
+                      <button
+                        type="button"
+                        onClick={() => setShowLoginPassword(!showLoginPassword)}
+                        className="absolute right-3 top-2.5 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                        title={showLoginPassword ? "पासवर्ड छिपाएं" : "पासवर्ड दिखाएं"}
+                      >
+                        {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
                     </div>
                   </div>
 
-                  {/* Forgot Password via WhatsApp */}
-                  <div className="flex justify-end">
-                    <button
-                      type="button"
-                      onClick={handleForgotPasswordWhatsApp}
-                      className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 font-bold flex items-center gap-1.5 transition underline hover:no-underline"
-                    >
-                      <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>{isHi ? 'पासवर्ड भूल गए? एडमिन से WhatsApp पर रीसेट करवाएं' : 'Forgot Password? Reset via WhatsApp'}</span>
-                    </button>
-                  </div>
+                  {/* Forgot Password / PIN Helper Card */}
+                  {showForgotModal && (
+                    <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-800 rounded-2xl p-3.5 space-y-2 text-xs">
+                      <div className="flex items-center gap-1.5 font-black text-amber-900 dark:text-amber-300">
+                        <Key className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                        <span>{isHi ? 'ऑपरेटर / नागरिक पासवर्ड रिकवरी सहायता:' : 'Password Recovery Help:'}</span>
+                      </div>
+                      <p className="text-[11px] text-amber-800 dark:text-amber-200/90 leading-relaxed">
+                        {isHi 
+                          ? '1. सुपर एडमिन अपने कंट्रोल रूम के "उपयोगकर्ता व पासवर्ड" टैब में आपका पिन/पासवर्ड तुरंत देख सकते हैं और 1-क्लिक में बदल सकते हैं।'
+                          : '1. Super Admin can view and reset your password/PIN in the Master Control Room.'}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleForgotPasswordWhatsApp}
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-2 transition shadow-xs cursor-pointer active:scale-95 text-xs"
+                      >
+                        <MessageCircle className="w-4 h-4" />
+                        <span>{isHi ? '📲 WhatsApp पर एडमिन से पिन रीसेट करवाएं (8533955333)' : 'Reset PIN via WhatsApp (8533955333)'}</span>
+                      </button>
+                    </div>
+                  )}
 
                   <button
                     type="submit"
@@ -479,14 +524,21 @@ export default function RoleAuthModal({
                     </label>
                     <div className="relative">
                       <input
-                        type="text"
+                        type={showSignupPassword ? "text" : "password"}
                         required
                         value={signupPassword}
                         onChange={(e) => setSignupPassword(e.target.value)}
-                        placeholder={isHi ? 'अपना पासवर्ड दर्ज करें' : 'Enter password'}
-                        className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl font-mono text-slate-900 dark:text-white font-bold focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+                        placeholder={isHi ? 'अपना सुरक्षित पासवर्ड बनाएं' : 'Enter secure password'}
+                        className="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl font-mono text-slate-900 dark:text-white font-bold focus:outline-hidden focus:ring-2 focus:ring-indigo-500 pr-10"
                       />
-                      <Lock className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
+                      <button
+                        type="button"
+                        onClick={() => setShowSignupPassword(!showSignupPassword)}
+                        className="absolute right-3 top-2.5 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                        title={showSignupPassword ? "पासवर्ड छिपाएं" : "पासवर्ड दिखाएं"}
+                      >
+                        {showSignupPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
                     </div>
                     <span className="text-[10px] text-slate-400 mt-0.5 block">
                       {isHi ? 'कोई OTP का झंझट नहीं — तुरंत खाता सक्रिय हो जाएगा।' : 'Instant activation without OTP delays.'}

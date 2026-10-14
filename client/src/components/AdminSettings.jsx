@@ -3,7 +3,7 @@ import {
   Settings, Save, Store, Phone, MapPin, 
   CreditCard, IndianRupee, QrCode, CheckCircle2, AlertCircle,
   Wallet, ShieldCheck, Award, ArrowUpRight, TrendingUp, RefreshCw,
-  Lock, KeyRound, Users, UserCheck, ShieldAlert, Globe
+  Lock, KeyRound, Users, UserCheck, ShieldAlert, Globe, Eye, EyeOff
 } from 'lucide-react';
 import { authFetch } from '../utils/api';
 
@@ -74,6 +74,8 @@ export default function AdminSettings({
 
   // PIN Change State
   const [pinForm, setPinForm] = useState({ oldPin: '', newPin: '' });
+  const [showOldPin, setShowOldPin] = useState(false);
+  const [showNewPin, setShowNewPin] = useState(false);
   const [pinSaving, setPinSaving] = useState(false);
   const [pinMessage, setPinMessage] = useState(null);
 
@@ -538,28 +540,46 @@ export default function AdminSettings({
         <form onSubmit={handlePinSubmit} className="flex flex-col sm:flex-row items-end gap-3 pt-1">
           <div className="w-full sm:w-48">
             <label className="block text-slate-600 font-semibold mb-1 text-xs">पुराना पिन (Current PIN) *</label>
-            <input
-              type="password"
-              maxLength="4"
-              required
-              value={pinForm.oldPin}
-              onChange={(e) => setPinForm(prev => ({ ...prev, oldPin: e.target.value }))}
-              placeholder="वर्तमान PIN"
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-mono font-bold text-center tracking-widest focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
-            />
+            <div className="relative">
+              <input
+                type={showOldPin ? "text" : "password"}
+                maxLength="4"
+                required
+                value={pinForm.oldPin}
+                onChange={(e) => setPinForm(prev => ({ ...prev, oldPin: e.target.value }))}
+                placeholder="वर्तमान PIN"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-mono font-bold text-center tracking-widest focus:ring-2 focus:ring-amber-500 focus:outline-hidden pr-8"
+              />
+              <button
+                type="button"
+                onClick={() => setShowOldPin(!showOldPin)}
+                className="absolute right-2 top-2.5 p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                {showOldPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              </button>
+            </div>
           </div>
 
           <div className="w-full sm:w-48">
             <label className="block text-slate-600 font-semibold mb-1 text-xs">नया 4-अंकीय पिन *</label>
-            <input
-              type="password"
-              maxLength="4"
-              required
-              value={pinForm.newPin}
-              onChange={(e) => setPinForm(prev => ({ ...prev, newPin: e.target.value }))}
-              placeholder="नया PIN"
-              className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-mono font-bold text-center tracking-widest focus:ring-2 focus:ring-amber-500 focus:outline-hidden"
-            />
+            <div className="relative">
+              <input
+                type={showNewPin ? "text" : "password"}
+                maxLength="4"
+                required
+                value={pinForm.newPin}
+                onChange={(e) => setPinForm(prev => ({ ...prev, newPin: e.target.value }))}
+                placeholder="नया PIN"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-sm font-mono font-bold text-center tracking-widest focus:ring-2 focus:ring-amber-500 focus:outline-hidden pr-8"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPin(!showNewPin)}
+                className="absolute right-2 top-2.5 p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                {showNewPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              </button>
+            </div>
           </div>
 
           <button

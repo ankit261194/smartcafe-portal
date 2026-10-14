@@ -1,13 +1,8 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React from 'react';
 import { 
-  Printer, FileText, Search, Settings, 
-  IndianRupee, QrCode, ShieldCheck,
-  Award, CreditCard, Sparkles, Building2, Wallet, Crown,
-  Car, MessageSquare, Lock, User, LogOut, Menu, Sun, Moon, ArrowRight
+  Printer, Wallet, Crown, User, LogOut, Menu, Sun, Moon
 } from 'lucide-react';
-import { INSTANT_TOOLS } from './InstantToolsEngine';
 import { useLanguage } from '../context/LanguageContext';
-import { CATEGORY_ICON_MAP } from './RekhaDashboard';
 
 export default function Navbar({
   settings,
@@ -39,43 +34,12 @@ export default function Navbar({
   isStaffAuth = false,
   onLogout,
   onToggleSidebar,
-  onSelectTool,
   theme = 'light',
   toggleTheme = () => {},
   disabledTools = [],
   toolStatus = {}
 }) {
-  const { language, setLanguage, toggleLanguage, t, localize } = useLanguage();
-  const [toolSearchQuery, setToolSearchQuery] = useState('');
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const searchContainerRef = useRef(null);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
-        setIsSearchOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const matchedTools = useMemo(() => {
-    if (!toolSearchQuery.trim()) return [];
-    const q = toolSearchQuery.toLowerCase().trim();
-    return INSTANT_TOOLS.filter(t => {
-      const isHidden = (disabledTools && (disabledTools.includes(t.id) || disabledTools.includes(t.serviceType))) ||
-        (toolStatus && (toolStatus[t.id] === false || toolStatus[t.serviceType] === false));
-      if (isHidden) return false;
-      const titleStr = typeof t.title === 'object' ? (t.title[language] || t.title.hi) : (t.title || '');
-      const subStr = typeof t.subtitle === 'object' ? (t.subtitle[language] || t.subtitle.hi) : (t.subtitle || '');
-      const badgeStr = typeof t.badge === 'object' ? (t.badge[language] || t.badge.hi) : (t.badge || '');
-      return titleStr.toLowerCase().includes(q) ||
-        subStr.toLowerCase().includes(q) ||
-        t.id.toLowerCase().includes(q) ||
-        badgeStr.toLowerCase().includes(q);
-    });
-  }, [toolSearchQuery, disabledTools, toolStatus, language]);
+  const { language, setLanguage, t, localize } = useLanguage();
 
   const displayBalance = mode === 'admin' ? sanchalakB2bBalance : walletBalance;
   const isOperator = mode === 'admin';
@@ -83,16 +47,16 @@ export default function Navbar({
   return (
     <header className="sticky top-0 z-50 bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#065f46] text-white shadow-md border-b border-emerald-600/40 no-print transition-all duration-200">
       
-      {/* SINGLE UNIFIED MODERN NAVBAR */}
-      <div className="max-w-7xl mx-auto px-2 sm:px-4 h-15 flex items-center justify-between gap-1.5 sm:gap-3 max-w-full">
+      {/* 1. TOP MAIN NAVBAR ROW */}
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 h-14 sm:h-15 flex items-center justify-between gap-2 max-w-full">
         
         {/* Left: Sleek Standard Menu Toggle (☰) & Brand Logo */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 min-w-0 shrink">
           {onToggleSidebar && (
             <button
               type="button"
               onClick={onToggleSidebar}
-              className="p-1.5 sm:p-2 text-white hover:bg-white/15 active:scale-95 rounded-xl transition cursor-pointer flex items-center gap-1.5 border border-white/20"
+              className="p-1.5 sm:p-2 text-white hover:bg-white/15 active:scale-95 rounded-xl transition cursor-pointer flex items-center gap-1.5 border border-white/20 shrink-0"
               title={language === 'hi' ? 'साइड मेन्यू' : 'Side Menu'}
               aria-label="Toggle Side Menu"
             >
@@ -106,126 +70,48 @@ export default function Navbar({
               if (mode === 'customer') onCustomerTabChange('home');
               else if (mode === 'admin') onAdminTabChange('dashboard');
             }}
-            className="flex items-center gap-2 cursor-pointer select-none"
+            className="flex items-center gap-2 cursor-pointer select-none min-w-0"
           >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-white p-0.5 shadow-md shrink-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-white p-0.5 shadow-md shrink-0">
               <div className="w-full h-full bg-[#064e3b] rounded-[14px] flex items-center justify-center">
                 <span className="font-black text-white text-xs sm:text-sm tracking-tight">
                   SC
                 </span>
               </div>
             </div>
-            <div className="truncate max-w-[120px] xs:max-w-[160px] sm:max-w-none">
-              <h1 className="font-black text-white text-xs sm:text-base leading-tight tracking-tight truncate flex items-center gap-1">
-                <span>Smart Cafe</span>
-                <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">
+            <div className="min-w-0 truncate">
+              <h1 className="font-black text-white text-xs sm:text-base leading-tight tracking-tight flex items-center gap-1 truncate">
+                <span className="truncate">Smart Cafe</span>
+                <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs shrink-0">
                   B2B
                 </span>
                 {mode === 'admin' && (
-                  <span className="hidden sm:inline bg-indigo-900 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">
+                  <span className="hidden sm:inline bg-indigo-900 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs shrink-0">
                     {isStaffAuth ? t('staff') : t('operator')}
                   </span>
                 )}
                 {mode === 'superadmin' && (
-                  <span className="hidden sm:inline bg-amber-300 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">
+                  <span className="hidden sm:inline bg-amber-300 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs shrink-0">
                     {t('root_admin')}
                   </span>
                 )}
               </h1>
-              <p className="text-[9px] sm:text-[11px] text-emerald-100 font-extrabold truncate">
+              <p className="text-[9px] sm:text-[11px] text-emerald-100 font-extrabold truncate hidden xs:block">
                 {selectedCafe?.shopName || t('brand_tagline')}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Center: Fast Tool Search Bar */}
-        <div ref={searchContainerRef} className="relative flex-1 max-w-[190px] sm:max-w-xs lg:max-w-sm mx-1 sm:mx-3">
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 text-emerald-200 absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <input
-              type="text"
-              value={toolSearchQuery}
-              onChange={(e) => {
-                setToolSearchQuery(e.target.value);
-                setIsSearchOpen(true);
-              }}
-              onFocus={() => setIsSearchOpen(true)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && matchedTools.length > 0) {
-                  e.preventDefault();
-                  if (onSelectTool) onSelectTool(matchedTools[0].id);
-                  setIsSearchOpen(false);
-                  setToolSearchQuery('');
-                }
-              }}
-              placeholder={t('search_placeholder')}
-              className="w-full bg-white/15 hover:bg-white/20 focus:bg-white text-white focus:text-slate-900 placeholder:text-emerald-100 pl-7 pr-6 py-1.5 rounded-xl text-xs font-semibold border border-white/20 focus:border-white focus:outline-none transition shadow-2xs"
-            />
-            {toolSearchQuery && (
-              <button
-                type="button"
-                onClick={() => {
-                  setToolSearchQuery('');
-                  setIsSearchOpen(false);
-                }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-xs font-bold cursor-pointer"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-
-          {/* Autocomplete Dropdown */}
-          {isSearchOpen && toolSearchQuery.trim() && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-[#0f1d36] border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl z-50 overflow-hidden divide-y divide-slate-100 dark:divide-slate-800 max-h-72 overflow-y-auto">
-              {matchedTools.length === 0 ? (
-                <div className="p-3 text-xs text-slate-500 dark:text-slate-400 text-center">
-                  {t('search_no_results')}
-                </div>
-              ) : (
-                matchedTools.map(t => {
-                  const IconComp = t?.icon || (CATEGORY_ICON_MAP && CATEGORY_ICON_MAP[t?.category]) || Sparkles;
-                  return (
-                    <button
-                      key={t.id}
-                      type="button"
-                      onClick={() => {
-                        if (onSelectTool) onSelectTool(t.id);
-                        setIsSearchOpen(false);
-                        setToolSearchQuery('');
-                      }}
-                      className="w-full text-left p-2.5 hover:bg-emerald-50/70 dark:hover:bg-slate-800/80 transition flex items-center justify-between gap-2 cursor-pointer"
-                    >
-                      <div className="flex items-center gap-2 truncate">
-                        <div className={`w-7 h-7 rounded-xl bg-gradient-to-tr ${t.color || 'from-emerald-600 to-teal-700'} text-white flex items-center justify-center shrink-0`}>
-                          <IconComp className="w-3.5 h-3.5" />
-                        </div>
-                        <div className="truncate">
-                          <div className="text-xs font-bold text-slate-900 dark:text-white truncate">{localize(t?.title || t?.name || 'सेवा')}</div>
-                          <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate">{localize(t?.subtitle || t?.desc || '')}</div>
-                        </div>
-                      </div>
-                      <span className="text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-100 dark:bg-amber-950/60 border border-amber-300/40 px-2 py-0.5 rounded-md shrink-0">
-                        ₹{mode === 'admin' ? (t.wholesaleRate ?? 0) : (t.retailRate ?? 0)}
-                      </span>
-                    </button>
-                  );
-                })
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Right: Integrated Actions (Language, Wallet, Day/Night, Role Switch) */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        {/* Right: Integrated Actions (Language, Wallet, Day/Night, Desktop Auth) */}
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0 ml-auto">
           
-          {/* Dynamic Language Switcher (Hindi vs English - Pure Single Language Mode) */}
+          {/* Dynamic Language Switcher (Responsive: HI/EN on mobile, Hindi/English on desktop) */}
           <div className="flex items-center bg-white/15 border border-white/20 rounded-xl overflow-hidden shadow-2xs backdrop-blur-xs p-0.5 shrink-0">
             <button
               type="button"
               onClick={() => setLanguage('hi')}
-              className={`px-2 py-1 text-xs font-black rounded-lg transition cursor-pointer flex items-center gap-1 ${
+              className={`px-1.5 sm:px-2 py-1 text-xs font-black rounded-lg transition cursor-pointer flex items-center gap-1 ${
                 language === 'hi' 
                   ? 'bg-white text-emerald-900 shadow-xs' 
                   : 'text-white/80 hover:text-white'
@@ -234,11 +120,12 @@ export default function Navbar({
             >
               <span>🇮🇳</span>
               <span className="hidden sm:inline">हिंदी</span>
+              <span className="sm:hidden text-[10px]">HI</span>
             </button>
             <button
               type="button"
               onClick={() => setLanguage('en')}
-              className={`px-2 py-1 text-xs font-black rounded-lg transition cursor-pointer flex items-center gap-1 ${
+              className={`px-1.5 sm:px-2 py-1 text-xs font-black rounded-lg transition cursor-pointer flex items-center gap-1 ${
                 language === 'en' 
                   ? 'bg-white text-emerald-900 shadow-xs' 
                   : 'text-white/80 hover:text-white'
@@ -246,17 +133,17 @@ export default function Navbar({
               title="Switch to English"
             >
               <span className="hidden sm:inline">English</span>
-              <span className="sm:hidden">EN</span>
+              <span className="sm:hidden text-[10px]">EN</span>
             </button>
           </div>
 
-          {/* Live Wallet Pill with [+ Add Money] (Visible ONLY when logged in) */}
+          {/* Live Wallet Pill (Visible ONLY when logged in) */}
           {Boolean(customerSession?.phone || isCafeAuth || isOperator || isSuperAdminAuth || mode === 'admin') && (
-            <div className="flex items-center bg-white/20 border border-white/30 rounded-xl overflow-hidden shadow-2xs backdrop-blur-xs">
+            <div className="flex items-center bg-white/20 border border-white/30 rounded-xl overflow-hidden shadow-2xs backdrop-blur-xs shrink-0">
               <button
                 type="button"
                 onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
-                className="px-2 sm:px-2.5 py-1.5 text-white font-bold text-xs flex items-center gap-1.5 hover:bg-white/10 transition cursor-pointer"
+                className="px-2 sm:px-2.5 py-1.5 text-white font-bold text-xs flex items-center gap-1 hover:bg-white/10 transition cursor-pointer"
                 title={isOperator ? t('b2b_wallet_title') : t('customer_wallet_title')}
               >
                 <Wallet className="w-3.5 h-3.5 text-amber-200 shrink-0" />
@@ -267,7 +154,7 @@ export default function Navbar({
               <button
                 type="button"
                 onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
-                className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-2 py-1.5 text-[11px] transition cursor-pointer hidden xs:flex items-center gap-0.5"
+                className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-2 py-1.5 text-[11px] transition cursor-pointer hidden sm:flex items-center gap-0.5"
                 title={t('add_funds')}
               >
                 <span>{t('add_money')}</span>
@@ -279,23 +166,23 @@ export default function Navbar({
           <button
             type="button"
             onClick={toggleTheme}
-            className="bg-white/20 hover:bg-white/30 text-white border border-white/30 font-black px-2 py-1.5 rounded-xl text-xs flex items-center gap-1 transition shadow-2xs cursor-pointer shrink-0"
+            className="bg-white/20 hover:bg-white/30 text-white border border-white/30 font-black p-1.5 sm:px-2 sm:py-1.5 rounded-xl text-xs flex items-center gap-1 transition shadow-2xs cursor-pointer shrink-0"
             title={theme === 'dark' ? t('day_mode_full') : t('night_mode_full')}
           >
             {theme === 'dark' ? (
               <>
-                <Sun className="w-4 h-4 text-amber-300" />
+                <Sun className="w-4 h-4 text-amber-300 shrink-0" />
                 <span className="hidden md:inline text-amber-200">{t('day_mode')}</span>
               </>
             ) : (
               <>
-                <Moon className="w-4 h-4 text-amber-200" />
+                <Moon className="w-4 h-4 text-amber-200 shrink-0" />
                 <span className="hidden md:inline text-white">{t('night_mode')}</span>
               </>
             )}
           </button>
 
-          {/* Role / Operator Gateway Actions (Desktop view - No horizontal clipping) */}
+          {/* Desktop User Gateway & Profile (Hidden on mobile < sm) */}
           {mode === 'customer' && (
             customerSession?.phone ? (
               <div className="hidden sm:flex items-center gap-2 shrink-0">
@@ -366,14 +253,19 @@ export default function Navbar({
 
           {mode === 'admin' && (
             <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-              {/* Operator Badge & Shop Indicator */}
-              <div className="hidden md:flex items-center gap-1.5 bg-white/20 border border-white/30 px-2.5 py-1 rounded-xl text-xs text-white font-bold">
+              {/* Operator Badge & Shop Indicator (Click to open profile & change password) */}
+              <button
+                type="button"
+                onClick={onOpenCustomerProfile}
+                className="hidden md:flex items-center gap-1.5 bg-white/20 hover:bg-white/30 border border-white/30 px-2.5 py-1 rounded-xl text-xs text-white font-bold transition cursor-pointer"
+                title={language === 'hi' ? 'ऑपरेटर प्रोफ़ाइल एवं पासवर्ड बदलें' : 'Operator Profile & Change Password'}
+              >
                 <span>🏪</span>
                 <span className="truncate max-w-[140px] font-black">{selectedCafe?.shopName || (language === 'hi' ? 'दुकानदार काउंटर' : 'Shopkeeper Counter')}</span>
-                <span className="bg-white text-emerald-900 text-[9px] font-black px-1.5 py-0.2 rounded">
+                <span className="bg-white text-emerald-900 text-[9px] font-black px-1.5 py-0.5 rounded">
                   {isStaffAuth ? t('staff') : t('operator')}
                 </span>
-              </div>
+              </button>
 
               {/* Pending prints count alert */}
               {pendingPrintsCount > 0 && (
@@ -422,17 +314,19 @@ export default function Navbar({
 
       </div>
 
-      {/* 3. MOBILE UPFRONT GATEWAY BAR (100% Mobile Friendly, Login First, Never Cut Off, Dark Emerald Theme) */}
+      {/* 2. MOBILE CLEAN GATEWAY BAR (100% Responsive Grid, Zero Text Spilling) */}
       {mode === 'customer' && (
         customerSession?.phone ? (
           <div className="sm:hidden w-full bg-[#064e3b]/95 text-white border-t border-emerald-600/40 px-3 py-1.5 flex items-center justify-between gap-2 shadow-inner">
             <button
               type="button"
               onClick={onOpenCustomerProfile}
-              className="text-xs font-black text-emerald-200 truncate flex items-center gap-1.5 min-w-0"
+              className="text-xs font-black text-emerald-200 truncate flex items-center gap-1.5 min-w-0 flex-1 text-left"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
-              <span className="truncate">{customerSession.name || (language === 'hi' ? 'ग्राहक' : 'Customer')} ({customerSession.phone})</span>
+              <span className="truncate max-w-[200px]">
+                {customerSession.name || (language === 'hi' ? 'ग्राहक' : 'Customer')} ({customerSession.phone})
+              </span>
             </button>
             <button
               type="button"
@@ -444,45 +338,40 @@ export default function Navbar({
             </button>
           </div>
         ) : (
-          <div className="sm:hidden w-full bg-[#064e3b]/95 text-white border-t border-emerald-600/40 px-2.5 py-1.5 flex items-center justify-between gap-1.5 shadow-inner">
-            <span className="text-[10px] font-black text-emerald-200 uppercase tracking-tight flex items-center gap-1 shrink-0 pl-1">
-              <span>{t('quick_gateway')}</span>
-            </span>
-            <div className="flex items-center gap-1.5 flex-1 justify-end min-w-0">
-              <button
-                type="button"
-                onClick={() => {
-                  if (onOpenShopkeeperLogin) onOpenShopkeeperLogin();
-                  else if (onModeToggle) onModeToggle('admin');
-                }}
-                className="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-2.5 py-1.5 rounded-xl text-[11px] flex items-center gap-1 shadow-sm shrink-0 active:scale-95 cursor-pointer"
-                title={language === 'hi' ? 'दुकानदार काउंटर लॉगिन' : 'Shopkeeper Login'}
-              >
-                <span className="text-xs">🏪</span>
-                <span>{t('shopkeeper')}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (onOpenSuperAdminLogin) onOpenSuperAdminLogin();
-                  else if (onModeToggle) onModeToggle('superadmin');
-                }}
-                className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-2.5 py-1.5 rounded-xl text-[11px] flex items-center gap-1 shadow-sm shrink-0 active:scale-95 cursor-pointer"
-                title={language === 'hi' ? 'सुपर एडमिन लॉगिन' : 'Super Admin Login'}
-              >
-                <Crown className="w-3 h-3 text-slate-950" />
-                <span>{t('admin')}</span>
-              </button>
-              <button
-                type="button"
-                onClick={onOpenCustomerProfile}
-                className="bg-white/20 hover:bg-white/30 text-white border border-white/30 font-bold px-2 py-1.5 rounded-xl text-[11px] flex items-center gap-1 shrink-0 active:scale-95 cursor-pointer"
-                title={language === 'hi' ? 'नागरिक लॉगिन / साइनअप' : 'Citizen Login / Sign Up'}
-              >
-                <User className="w-3 h-3 text-emerald-200" />
-                <span>{language === 'hi' ? 'लॉगिन' : 'Login'}</span>
-              </button>
-            </div>
+          <div className="sm:hidden w-full bg-[#064e3b]/95 text-white border-t border-emerald-600/40 px-2 py-1.5 grid grid-cols-3 gap-1.5 shadow-inner">
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenShopkeeperLogin) onOpenShopkeeperLogin();
+                else if (onModeToggle) onModeToggle('admin');
+              }}
+              className="flex items-center justify-center gap-1 bg-emerald-600 hover:bg-emerald-500 text-white font-black py-1.5 px-1 rounded-xl text-xs shadow-sm truncate active:scale-95 cursor-pointer min-w-0"
+              title={language === 'hi' ? 'दुकानदार काउंटर लॉगिन' : 'Shopkeeper Login'}
+            >
+              <span className="text-xs shrink-0">🏪</span>
+              <span className="truncate">{t('shopkeeper')}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenSuperAdminLogin) onOpenSuperAdminLogin();
+                else if (onModeToggle) onModeToggle('superadmin');
+              }}
+              className="flex items-center justify-center gap-1 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-1.5 px-1 rounded-xl text-xs shadow-sm truncate active:scale-95 cursor-pointer min-w-0"
+              title={language === 'hi' ? 'सुपर एडमिन लॉगिन' : 'Super Admin Login'}
+            >
+              <Crown className="w-3 h-3 text-slate-950 shrink-0" />
+              <span className="truncate">{t('admin')}</span>
+            </button>
+            <button
+              type="button"
+              onClick={onOpenCustomerProfile}
+              className="flex items-center justify-center gap-1 bg-white/20 hover:bg-white/30 text-white border border-white/30 font-bold py-1.5 px-1 rounded-xl text-xs shadow-sm truncate active:scale-95 cursor-pointer min-w-0"
+              title={language === 'hi' ? 'नागरिक लॉगिन / साइनअप' : 'Citizen Login / Sign Up'}
+            >
+              <User className="w-3 h-3 text-emerald-200 shrink-0" />
+              <span className="truncate">{language === 'hi' ? 'लॉगिन' : 'Login'}</span>
+            </button>
           </div>
         )
       )}
