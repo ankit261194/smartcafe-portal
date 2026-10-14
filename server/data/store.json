@@ -10447,5 +10447,58 @@
       },
       "createdAt": "2026-10-12T15:39:39.681Z"
     }
-  ]
+  ],
+  "apiGateway": {
+    "liveMode": true,
+    "provider": "P4Points",
+    "apiKey": "f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/",
+    "secret": "",
+    "balance": "2000.00",
+    "lastCheckedAt": "2026-10-14T10:20:09.778Z",
+    "timeoutMs": 8000,
+    "services": {
+      "balance": {
+        "live": true,
+        "endpoint": "https://authorized.p4points.co.in/api/v1/Balance_info.php"
+      },
+      "panVerify": {
+        "live": true,
+        "endpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php"
+      },
+      "aadhaarToPan": {
+        "live": true,
+        "endpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber.php"
+      },
+      "ekyc": {
+        "live": true,
+        "endpoint": "https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php"
+      },
+      "rc": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/rc/rc-full"
+      },
+      "voter": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/voter-id/voter-id"
+      },
+      "dl": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/driving-license/driving-license"
+      },
+      "challan": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/rc/echallan"
+      },
+      "electricity": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/utility/electricity"
+      },
+      "edistrict": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/revenue/edistrict"
+      }
+    },
+    "updatedAt": "2026-10-14T10:19:09.955Z"
+  }
 }
