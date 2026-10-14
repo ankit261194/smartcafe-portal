@@ -122,6 +122,33 @@ function getStore($dataFile) {
                 $data['users'] = [];
                 $changed = true;
             }
+
+            // Immune Vault: Restore and merge all persistent users & passwords from users_master.json
+            $masterUsersFile = $dataDir . '/users_master.json';
+            if (file_exists($masterUsersFile)) {
+                $masterUsers = json_decode(file_get_contents($masterUsersFile), true);
+                if (is_array($masterUsers)) {
+                    foreach ($masterUsers as $mu) {
+                        $mPhone = $mu['phone'] ?? '';
+                        $foundIdx = -1;
+                        foreach ($data['users'] as $idx => $u) {
+                            if (($u['phone'] ?? '') === $mPhone) {
+                                $foundIdx = $idx;
+                                break;
+                            }
+                        }
+                        if ($foundIdx === -1) {
+                            $data['users'][] = $mu;
+                            $changed = true;
+                        } else {
+                            if (!empty($mu['password']) && (empty($data['users'][$foundIdx]['password']) || $data['users'][$foundIdx]['password'] === '1234')) {
+                                $data['users'][$foundIdx]['password'] = $mu['password'];
+                                $changed = true;
+                            }
+                        }
+                    }
+                }
+            }
             if (!empty($data['cafes'])) {
                 foreach ($data['cafes'] as $c) {
                     $found = false;
@@ -199,6 +226,11 @@ function getStore($dataFile) {
 }
 
 function saveStore($dataFile, $store) {
+    $dataDir = dirname($dataFile);
+    $masterUsersFile = $dataDir . '/users_master.json';
+    if (!empty($store['users']) && is_array($store['users'])) {
+        @file_put_contents($masterUsersFile, json_encode($store['users'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
     return file_put_contents($dataFile, json_encode($store, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
 }
 

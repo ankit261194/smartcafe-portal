@@ -1,0 +1,46 @@
+[
+  {
+    "id": "USR-1791996751776",
+    "name": "Shyam",
+    "shopName": "Shyam",
+    "phone": "9811122233",
+    "password": "password123",
+    "role": "citizen",
+    "balance": 0,
+    "isBlocked": false,
+    "createdAt": "2026-10-14T16:52:31.777Z"
+  },
+  {
+    "id": "USR-1791980693071",
+    "name": "रमेश कुमार डिजिटल केंद्र",
+    "shopName": "रमेश कुमार डिजिटल केंद्र",
+    "phone": "9800077023",
+    "password": "Pass@6594",
+    "role": "cafe",
+    "balance": 0,
+    "isBlocked": false,
+    "createdAt": "2026-10-14T12:24:53.071Z"
+  },
+  {
+    "id": "USR-1791980675131",
+    "name": "रमेश कुमार डिजिटल केंद्र",
+    "shopName": "रमेश कुमार डिजिटल केंद्र",
+    "phone": "9800016569",
+    "password": "Pass@7449",
+    "role": "cafe",
+    "balance": 0,
+    "isBlocked": false,
+    "createdAt": "2026-10-14T12:24:35.131Z"
+  },
+  {
+    "id": "CAFE-101",
+    "name": "संचालक",
+    "shopName": "स्मार्ट डिजिटल सेवा केंद्र एवं साइबर कैफे",
+    "phone": "9876543210",
+    "password": "1234",
+    "role": "cafe",
+    "balance": 0,
+    "isBlocked": false,
+    "createdAt": "2026-10-14T10:15:15.756Z"
+  }
+]
