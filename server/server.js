@@ -778,14 +778,18 @@ app.post('/api/superadmin/services/rates', (req, res) => {
         };
       }
     });
-  } else if (service && service.id) {
-    const idx = store.services_79.findIndex(s => s.id === service.id || s.num === service.num);
+  } else if ((service && service.id) || req.body.serviceId) {
+    const targetId = (service && service.id) || req.body.serviceId;
+    const idx = store.services_79.findIndex(s => s.id === targetId || s.num === Number(targetId));
     if (idx !== -1) {
+      const wRate = req.body.wholesaleRate !== undefined ? req.body.wholesaleRate : service?.wholesaleRate;
+      const rRate = req.body.retailRate !== undefined ? req.body.retailRate : service?.retailRate;
+      const act = req.body.isActive !== undefined ? req.body.isActive : service?.isActive;
       store.services_79[idx] = {
         ...store.services_79[idx],
-        wholesaleRate: service.wholesaleRate !== undefined ? parseFloat(service.wholesaleRate) : store.services_79[idx].wholesaleRate,
-        retailRate: service.retailRate !== undefined ? parseFloat(service.retailRate) : store.services_79[idx].retailRate,
-        isActive: service.isActive !== undefined ? Boolean(service.isActive) : store.services_79[idx].isActive
+        wholesaleRate: wRate !== undefined ? parseFloat(wRate) : store.services_79[idx].wholesaleRate,
+        retailRate: rRate !== undefined ? parseFloat(rRate) : store.services_79[idx].retailRate,
+        isActive: act !== undefined ? Boolean(act) : store.services_79[idx].isActive
       };
     }
   }
@@ -2916,13 +2920,39 @@ app.post('/api/services/execute-automated', (req, res) => {
     receiptMaker: 15
   };
 
-  const wholesaleCost = store.superAdminRates?.[normServiceType] !== undefined 
-    ? store.superAdminRates[normServiceType] 
-    : (defaultWholesaleRates[normServiceType] || 200);
+  // Check 79-Services dynamic live rates first
+  const service79 = (store.services_79 || []).find(s => 
+    s.id === serviceType || 
+    s.id === req.body.serviceId || 
+    s.id === req.body.toolId ||
+    s.num === Number(serviceType)
+  );
 
-  const retailFee = cafe.retailRates?.[normServiceType] !== undefined 
-    ? cafe.retailRates[normServiceType] 
-    : (defaultRetailRates[normServiceType] || (wholesaleCost + 50));
+  if (service79 && service79.isActive === false) {
+    return res.status(403).json({
+      error: `⚠️ सेवा "${service79.name}" वर्तमान में सुपर एडमिन द्वारा अक्षम (Disabled) है।`
+    });
+  }
+
+  let wholesaleCost = 200;
+  let retailFee = 250;
+  let serviceDisplayName = normServiceType;
+
+  if (service79) {
+    wholesaleCost = Number(service79.wholesaleRate) || 0;
+    retailFee = Number(service79.retailRate) || 0;
+    serviceDisplayName = service79.name;
+  } else {
+    wholesaleCost = store.superAdminRates?.[normServiceType] !== undefined 
+      ? store.superAdminRates[normServiceType] 
+      : (defaultWholesaleRates[normServiceType] || 200);
+
+    retailFee = cafe.retailRates?.[normServiceType] !== undefined 
+      ? cafe.retailRates[normServiceType] 
+      : (defaultRetailRates[normServiceType] || (wholesaleCost + 50));
+    
+    serviceDisplayName = serviceTitles[normServiceType] || normServiceType;
+  }
 
   const margin = retailFee - wholesaleCost;
 
@@ -2977,7 +3007,7 @@ app.post('/api/services/execute-automated', (req, res) => {
         id: `TXN-${Date.now()}`,
         type: 'debit',
         amount: retailFee,
-        note: `ऑनलाइन सेवा शुल्क: ${serviceTitles[normServiceType] || normServiceType}`,
+        note: `ऑनलाइन सेवा शुल्क: ${serviceDisplayName}`,
         createdAt: new Date().toISOString()
       });
     }
@@ -2988,7 +3018,7 @@ app.post('/api/services/execute-automated', (req, res) => {
       id: `B2B-TXN-${Date.now()}`,
       type: 'debit',
       amount: wholesaleCost,
-      note: `थोक एडमिन सेवा कटौती: ${serviceTitles[normServiceType] || normServiceType}`,
+      note: `थोक एडमिन सेवा कटौती: ${serviceDisplayName}`,
       createdAt: new Date().toISOString()
     });
 
@@ -2996,7 +3026,7 @@ app.post('/api/services/execute-automated', (req, res) => {
     store.cashbook.unshift({
       id: `CB-${Date.now()}`,
       cafeId: cafe.id,
-      title: `${serviceTitles[normServiceType] || normServiceType} नेट मार्जिन (+₹${margin})`,
+      title: `${serviceDisplayName} नेट मार्जिन (+₹${margin})`,
       category: 'Automated Service',
       amount: margin,
       paymentMode: isOperatorB2bDirect ? 'cash' : 'wallet',
@@ -3009,7 +3039,7 @@ app.post('/api/services/execute-automated', (req, res) => {
   // 4. Generate Official White-Labeled Service Record
   let generatedData = null;
   let vehicleData = null;
-  let docTitle = serviceTitles[normServiceType] || 'डिजिटल सेवा';
+  let docTitle = serviceDisplayName;
   let refNumber = params?.vehicleNumber || params?.panNo || params?.aadhaarNo || params?.epicNo || params?.consumerNo || params?.rationNo || params?.appNo || params?.dlNo || params?.challanNo || 'DOC';
 
   if (normServiceType === 'rcDownload') {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { 
   Car, CreditCard, FileText, Zap, Award, Printer, Download, Sparkles, 
@@ -10,6 +10,7 @@ import confetti from 'canvas-confetti';
 import { jsPDF } from 'jspdf';
 import { authFetch } from '../utils/api';
 import { useLanguage } from '../context/LanguageContext';
+import { getMergedServicesCatalog } from '../data/servicesCatalog';
 
 // Sample Avatars (Self-contained, sharp vector SVGs as data URIs)
 const SAMPLE_PHOTOS = {
@@ -25,25 +26,25 @@ const SAMPLE_SIGNS = {
 
 export const INSTANT_TOOLS = [
   {
-    id: 'edistrict',
-    title: { hi: 'e-District आय/जाति/निवास सत्यापन', en: 'e-District Income/Caste/Domicile Verification' },
-    subtitle: { hi: 'राजस्व परिषद डिजिटल सत्यापन प्रमाण पत्र पर्ची', en: 'Revenue Board Digital Verification Certificate Slip' },
-    category: 'edistrict',
-    categoryName: { hi: 'e-District सेवाएं', en: 'e-District Services' },
-    icon: Award,
-    badge: { hi: 'सत्यापित पर्ची', en: 'Verified Slip' },
-    color: 'from-violet-600 to-purple-700',
-    accentColor: 'purple',
-    serviceType: 'edistrictSlip',
-    retailRate: 30,
+    id: 'aadhaar_advance',
+    title: { hi: 'आधार एडवांस (फिंगरप्रिंट)', en: 'Aadhaar Advance (Fingerprint)' },
+    subtitle: { hi: 'बायोमेट्रिक फिंगर से तुरंत आधार कार्ड डाउनलोड', en: 'Instant Aadhaar Download via Fingerprint' },
+    category: 'aadhaar',
+    categoryName: { hi: 'आधार सेवाएं', en: 'Aadhaar Services' },
+    icon: ShieldCheck,
+    badge: { hi: 'लाइव सेवा', en: 'Live Service' },
+    color: 'from-red-600 to-rose-700',
+    accentColor: 'rose',
+    serviceType: 'aadhaarCard',
+    retailRate: 25,
     wholesaleRate: 15,
-    placeholder: { hi: 'आवेदन क्रमांक दर्ज करें', en: 'Enter Application Number' },
-    inputLabel: { hi: 'आवेदन क्रमांक', en: 'Application Number' }
+    placeholder: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    inputLabel: { hi: 'आधार नंबर', en: 'Aadhaar Number' }
   }
 ];
 
 export default function ServicePage({
-  activeToolId = 'edistrict',
+  activeToolId = 'aadhaar_advance',
   onSelectTool,
   onBack,
   selectedCafe,
@@ -56,10 +57,32 @@ export default function ServicePage({
   onOpenAuthModal,
   onBalanceUpdated,
   disabledTools = [],
-  theme = 'light'
+  theme = 'light',
+  services79Rates = []
 }) {
   const { language, t, localize } = useLanguage();
-  const currentTool = INSTANT_TOOLS.find(t => t.id === activeToolId) || INSTANT_TOOLS[0];
+  const allServices = useMemo(() => getMergedServicesCatalog(services79Rates), [services79Rates]);
+  const currentTool = useMemo(() => {
+    return allServices.find(s => s.id === activeToolId || s.num === Number(activeToolId)) || allServices[0] || INSTANT_TOOLS[0];
+  }, [allServices, activeToolId]);
+
+  const toolKind = useMemo(() => {
+    const id = (currentTool?.id || '').toLowerCase();
+    const cat = (currentTool?.category || '').toLowerCase();
+    if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc'].includes(id) || cat === 'rc' || id.includes('rc_')) return 'rc';
+    if (['pan', 'pan_find', 'pan_details'].includes(id) || cat === 'pan' || id.includes('pan_')) return 'pan';
+    if (id === 'epan') return 'epan';
+    if (['aadhaar', 'aadhaar_advance', 'aadhaar_original_pdf_otp', 'aadhaar_original_pdf_no_otp', 'aadhaar_otp_kyc', 'aadhaar_pvc'].includes(id) || cat === 'aadhaar' || id.includes('aadhaar_')) return 'aadhaar';
+    if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp'].includes(id) || cat === 'voter' || id.includes('voter_')) return 'voter';
+    if (['dl', 'driving_licence_pdf', 'dl_details'].includes(id) || cat === 'dl' || id.includes('driving_licence')) return 'dl';
+    if (['ayushman', 'ayushman_card', 'abha_card'].includes(id) || cat === 'health') return 'ayushman';
+    if (['ration', 'ration_pdf_by_ration', 'samagra_service', 'rtps_bihar_pdf'].includes(id) || ['ration', 'welfare'].includes(cat) || id.includes('ration_')) return 'ration';
+    if (['electricity', 'electric_bill_pdf_bihar'].includes(id) || cat === 'utility' || id.includes('electric_bill')) return 'electricity';
+    if (['challan', 'chalan_find'].includes(id) || id.includes('chalan')) return 'challan';
+    if (['edistrict', 'edistrict-verify', 'edistrict-decl', 'edistrict-packer', 'edistrict-bhulekh'].includes(id) || cat === 'edistrict') return 'edistrict';
+    return 'receipt';
+  }, [currentTool]);
+
   const photoInputRef = useRef(null);
   const signInputRef = useRef(null);
 
@@ -220,11 +243,7 @@ export default function ServicePage({
     if (e) e.preventDefault();
     let val = primaryInput.trim();
     if (!val) {
-      setErrorMsg(`कृपया ${currentTool.inputLabel} दर्ज करें।`);
-      return;
-    }
-    if (currentTool.id === 'edistrict' && !secondaryInput.trim()) {
-      setErrorMsg(language === 'hi' ? 'कृपया प्रमाण पत्र क्रमांक दर्ज करें।' : 'Please enter Certificate ID.');
+      setErrorMsg(language === 'hi' ? 'कृपया पहचान / संदर्भ संख्या दर्ज करें।' : 'Please enter reference ID or number.');
       return;
     }
 
@@ -261,56 +280,49 @@ export default function ServicePage({
       fatherName: fatherName.trim() || undefined,
       dob: dobDate ? formatDobDisplay(dobDate) : undefined,
       gender: gender,
-      address: addressInput.trim() || undefined
+      address: addressInput.trim() || undefined,
+      referenceNumber: val,
+      query: val,
+      serviceId: currentTool.id,
+      serviceName: currentTool.name
     };
 
-    if (currentTool.id === 'rc') params.vehicleNumber = val.toUpperCase();
-    if (currentTool.id === 'pan') {
+    if (toolKind === 'rc') params.vehicleNumber = val.toUpperCase();
+    if (toolKind === 'pan' || toolKind === 'epan') {
       params.panNo = val.toUpperCase();
       params.name = customerName.trim() || undefined;
     }
-    if (currentTool.id === 'aadhaar') {
+    if (toolKind === 'aadhaar') {
       params.aadhaarNo = val;
       params.name = customerName.trim() || undefined;
       params.address = addressInput.trim() || undefined;
     }
-    if (currentTool.id === 'voter') {
+    if (toolKind === 'voter') {
       params.epicNo = val.toUpperCase();
       params.name = customerName.trim() || undefined;
     }
-    if (currentTool.id === 'ayushman') {
+    if (toolKind === 'ayushman') {
       params.pmjayId = val.toUpperCase();
       params.name = customerName.trim() || undefined;
     }
-    if (currentTool.id === 'ration') {
+    if (toolKind === 'ration') {
       params.rationNo = val;
       params.headName = customerName.trim() || undefined;
     }
-    if (currentTool.id === 'electricity') {
+    if (toolKind === 'electricity') {
       params.consumerNo = val;
       params.consumerName = customerName.trim() || undefined;
     }
-    if (currentTool.id === 'edistrict') {
-      params.appNo = val;
-      params.certNo = secondaryInput.trim();
-      params.applicantName = customerName.trim() || undefined;
-    }
-    if (currentTool.id === 'dl') {
+    if (toolKind === 'dl') {
       params.dlNo = val.toUpperCase();
       params.name = customerName.trim() || undefined;
     }
-    if (currentTool.id === 'challan') {
+    if (toolKind === 'challan') {
       params.vehicleNo = val.toUpperCase();
       params.name = customerName.trim() || undefined;
     }
-    if (currentTool.id === 'epan') {
-      params.panNo = val.toUpperCase();
-      params.name = customerName.trim() || undefined;
-    }
-    if (currentTool.id === 'receipt') {
-      params.query = val;
+    if (toolKind === 'receipt') {
       params.serviceDesc = secondaryInput.trim() || 'ऑनलाइन सेवाएं';
-      params.customerName = customerName.trim() || undefined;
     }
 
     try {
@@ -321,7 +333,8 @@ export default function ServicePage({
         body: JSON.stringify({
           cafeId,
           customerPhone: effectivePhone,
-          serviceType: currentTool.serviceType,
+          serviceType: currentTool.id,
+          serviceId: currentTool.id,
           operatorB2bDirect: isOperator,
           params
         })
@@ -833,28 +846,28 @@ export default function ServicePage({
                   value={primaryInput}
                   onChange={(e) => {
                     let raw = e.target.value;
-                    if (['pan', 'epan'].includes(currentTool.id)) {
+                    if (['pan', 'epan'].includes(toolKind)) {
                       raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
-                    } else if (currentTool.id === 'aadhaar') {
+                    } else if (toolKind === 'aadhaar') {
                       const digits = raw.replace(/\D/g, '').slice(0, 12);
                       const parts = [];
                       for (let i = 0; i < digits.length; i += 4) {
                         parts.push(digits.substring(i, i + 4));
                       }
                       raw = parts.join(' ');
-                    } else if (currentTool.id === 'voter') {
+                    } else if (toolKind === 'voter') {
                       raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
-                    } else if (currentTool.id === 'rc') {
+                    } else if (toolKind === 'rc') {
                       raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11);
-                    } else if (currentTool.id === 'dl') {
+                    } else if (toolKind === 'dl') {
                       raw = raw.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 16);
-                    } else if (currentTool.id === 'challan') {
+                    } else if (toolKind === 'challan') {
                       raw = raw.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 15);
-                    } else if (currentTool.id === 'ayushman') {
+                    } else if (toolKind === 'ayushman') {
                       raw = raw.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 18);
-                    } else if (['electricity', 'ration', 'edistrict'].includes(currentTool.id)) {
-                      raw = raw.replace(/\D/g, '').slice(0, currentTool.id === 'edistrict' ? 16 : 12);
-                    } else if (currentTool.id === 'receipt') {
+                    } else if (['electricity', 'ration'].includes(toolKind)) {
+                      raw = raw.replace(/\D/g, '').slice(0, 12);
+                    } else if (toolKind === 'receipt') {
                       raw = raw.replace(/\D/g, '').slice(0, 10);
                     } else {
                       raw = raw.toUpperCase();
@@ -869,36 +882,35 @@ export default function ServicePage({
                   <span className="text-slate-500 dark:text-slate-400">
                     {language === 'hi' ? (
                       <>
-                        {currentTool.id === 'pan' && '10-अंकीय पैन नंबर'}
-                        {currentTool.id === 'epan' && '10-अंकीय पैन अथवा पावती संख्या'}
-                        {currentTool.id === 'aadhaar' && '12-अंकीय आधार संख्या (स्वतः 4-अंकीय स्पेस)'}
-                        {currentTool.id === 'voter' && '10-अंकीय वोटर आईडी EPIC कोड'}
-                        {currentTool.id === 'rc' && 'वाहन पंजीयन क्रमांक (जैसे UP32AB1234)'}
-                        {currentTool.id === 'dl' && 'सारथी ड्राइविंग लाइसेंस क्रमांक'}
-                        {currentTool.id === 'electricity' && 'उपभोक्ता खाता संख्या'}
-                        {currentTool.id === 'ration' && '12-अंकीय राशन कार्ड संख्या'}
-                        {currentTool.id === 'edistrict' && 'आवेदन क्रमांक संख्या'}
-                        {currentTool.id === 'challan' && 'चालान / वाहन क्रमांक'}
-                        {currentTool.id === 'ayushman' && 'PM-JAY आईडी / राशन अथवा आधार संख्या'}
-                        {currentTool.id === 'receipt' && '10-अंकीय ग्राहक मोबाइल नंबर'}
+                        {toolKind === 'pan' && '10-अंकीय पैन नंबर'}
+                        {toolKind === 'epan' && '10-अंकीय पैन अथवा पावती संख्या'}
+                        {toolKind === 'aadhaar' && '12-अंकीय आधार संख्या (स्वतः 4-अंकीय स्पेस)'}
+                        {toolKind === 'voter' && '10-अंकीय वोटर आईडी EPIC कोड'}
+                        {toolKind === 'rc' && 'वाहन पंजीयन क्रमांक (जैसे UP32AB1234)'}
+                        {toolKind === 'dl' && 'सारथी ड्राइविंग लाइसेंस क्रमांक'}
+                        {toolKind === 'electricity' && 'उपभोक्ता खाता संख्या'}
+                        {toolKind === 'ration' && '12-अंकीय राशन कार्ड संख्या'}
+                        {toolKind === 'challan' && 'चालान / वाहन क्रमांक'}
+                        {toolKind === 'ayushman' && 'PM-JAY आईडी / राशन अथवा आधार संख्या'}
+                        {toolKind === 'receipt' && '10-अंकीय ग्राहक मोबाइल नंबर'}
                       </>
                     ) : (
                       <>
-                        {currentTool.id === 'pan' && '10-Digit PAN Number'}
-                        {currentTool.id === 'epan' && '10-Digit PAN or Ack Number'}
-                        {currentTool.id === 'aadhaar' && '12-Digit Aadhaar (Auto 4-Digit Spacing)'}
-                        {currentTool.id === 'voter' && '10-Digit EPIC Voter ID'}
-                        {currentTool.id === 'rc' && 'Vehicle Registration Number (e.g. UP32AB1234)'}
-                        {currentTool.id === 'dl' && 'Sarathi Driving Licence Number'}
-                        {currentTool.id === 'electricity' && 'Consumer Account Number'}
-                        {currentTool.id === 'ration' && '12-Digit Ration Card Number'}
-                        {currentTool.id === 'edistrict' && 'Application Number'}
-                        {currentTool.id === 'challan' && 'Challan / Vehicle Reg Number'}
-                        {currentTool.id === 'ayushman' && 'PM-JAY ID or Ration/Aadhaar'}
-                        {currentTool.id === 'receipt' && '10-Digit Customer Mobile Number'}
+                        {toolKind === 'pan' && '10-Digit PAN Number'}
+                        {toolKind === 'epan' && '10-Digit PAN or Ack Number'}
+                        {toolKind === 'aadhaar' && '12-Digit Aadhaar (Auto 4-Digit Spacing)'}
+                        {toolKind === 'voter' && '10-Digit EPIC Voter ID'}
+                        {toolKind === 'rc' && 'Vehicle Registration Number (e.g. UP32AB1234)'}
+                        {toolKind === 'dl' && 'Sarathi Driving Licence Number'}
+                        {toolKind === 'electricity' && 'Consumer Account Number'}
+                        {toolKind === 'ration' && '12-Digit Ration Card Number'}
+                        {toolKind === 'challan' && 'Challan / Vehicle Reg Number'}
+                        {toolKind === 'ayushman' && 'PM-JAY ID or Ration/Aadhaar'}
+                        {toolKind === 'receipt' && '10-Digit Customer Mobile Number'}
                       </>
                     )}
                   </span>
+
                   {primaryInput && (
                     <span className="text-emerald-600 dark:text-emerald-400 font-mono">
                       {primaryInput.length} {language === 'hi' ? 'वर्ण' : 'chars'}

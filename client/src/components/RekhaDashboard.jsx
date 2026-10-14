@@ -1,140 +1,30 @@
-import React from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Car, CreditCard, ShieldCheck, Award, FileText, Zap, Sparkles, 
-  Printer, ArrowRight, Wallet, History, Users, Clock, CheckCircle2, 
-  Layers, Crop, ChevronRight, User, Download
+  Printer, ArrowRight, Wallet, History, Search, X, CheckCircle2, 
+  Layers, Lock, AlertCircle, RefreshCw, ChevronRight, ChevronLeft, 
+  User, ExternalLink, Smartphone
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { getMergedServicesCatalog, SERVICE_CATEGORIES } from '../data/servicesCatalog';
 
-export const DIRECT_SERVICES_TILES = [
-  { 
-    id: 'edistrict-verify', 
-    label: { hi: 'प्रमाण पत्र सत्यापन', en: 'Certificate Verification' }, 
-    sub: { hi: 'आय / जाति / निवास', en: 'Income/Caste/Domicile' }, 
-    icon: Award, 
-    color: 'from-violet-600 to-purple-600', 
-    wholesale: '₹15', 
-    retail: '₹30' 
-  },
-  { 
-    id: 'edistrict-decl', 
-    label: { hi: 'स्वप्रमाणित घोषणा पत्र', en: 'Self Declaration Form' }, 
-    sub: { hi: '1-क्लिक जनरेटर', en: '1-Click Generator' }, 
-    icon: FileText, 
-    color: 'from-emerald-600 to-teal-600', 
-    wholesale: '₹10', 
-    retail: '₹20' 
-  },
-  { 
-    id: 'edistrict-packer', 
-    label: { hi: '100KB फाइल पैकर', en: '100KB Doc Packer' }, 
-    sub: { hi: 'फोटो <20KB, डॉक <100KB', en: 'Photo <20KB, Doc <100KB' }, 
-    icon: Sparkles, 
-    color: 'from-blue-600 to-indigo-600', 
-    wholesale: 'निःशुल्क', 
-    retail: 'निःशुल्क' 
-  },
-  { 
-    id: 'edistrict-apply', 
-    label: { hi: 'ऑनलाइन फॉर्म आवेदन', en: 'Online Apply Desk' }, 
-    sub: { hi: 'आय, जाति, निवास फॉर्म', en: 'Income, Caste, Domicile' }, 
-    icon: Layers, 
-    color: 'from-amber-600 to-orange-600', 
-    wholesale: '₹50', 
-    retail: '₹100' 
-  },
-  { 
-    id: 'edistrict-bhulekh', 
-    label: { hi: 'भूलेख खतौनी नकल', en: 'Bhulekh Land Records' }, 
-    sub: { hi: 'खसरा व खतौनी जांच', en: 'Khasra & Khatauni Slip' }, 
-    icon: Award, 
-    color: 'from-cyan-600 to-blue-700', 
-    wholesale: '₹10', 
-    retail: '₹20' 
-  },
-  { 
-    id: 'quick-print', 
-    label: { hi: 'त्वरित दस्तावेज़ प्रिंट', en: 'Quick Document Print' }, 
-    sub: { hi: 'लाइव प्रिंटिंग सेवा', en: 'Live Document Print' }, 
-    icon: Printer, 
-    color: 'from-slate-700 to-slate-900', 
-    wholesale: '₹2/पेज', 
-    retail: '₹5/पेज' 
-  }
-];
-
-export const REKHA_CATEGORIES_CONFIG = [
-  {
-    id: 'edistrict-verify',
-    title: { hi: 'e-District प्रमाण पत्र सत्यापन', en: 'e-District Verification Slips' },
-    desc: { hi: 'आय, जाति एवं निवास प्रमाण पत्र डिजिटल सत्यापन पर्ची QR कोड सहित', en: 'Income, Caste & Domicile Digital Verification Certificate Slip with QR' },
-    toolsCount: 3,
-    icon: Award,
-    color: 'from-violet-600 via-purple-600 to-violet-700',
-    lightBg: 'bg-violet-50/70 dark:bg-violet-950/30',
-    borderColor: 'border-violet-200 dark:border-violet-900/60',
-    accentText: 'text-violet-600 dark:text-violet-400',
-    wholesaleBadge: { hi: 'थोक: ₹15', en: 'Wholesale: ₹15' },
-    retailBadge: { hi: 'खुदरा: ₹30', en: 'Retail: ₹30' },
-    defaultToolId: 'edistrict-verify'
-  },
-  {
-    id: 'edistrict-decl',
-    title: { hi: 'स्वप्रमाणित घोषणा पत्र जनरेटर', en: 'Self Declaration Form Generator' },
-    desc: { hi: 'e-District आय, जाति व निवास आवेदन हेतु आवश्यक स्वप्रमाणित घोषणा पत्र', en: 'Mandatory Self-Declaration Form PDF for e-District Certificate Applications' },
-    toolsCount: 3,
-    icon: FileText,
-    color: 'from-emerald-600 via-teal-600 to-emerald-700',
-    lightBg: 'bg-emerald-50/70 dark:bg-emerald-950/30',
-    borderColor: 'border-emerald-200 dark:border-emerald-900/60',
-    accentText: 'text-emerald-600 dark:text-emerald-400',
-    wholesaleBadge: { hi: 'थोक: ₹10', en: 'Wholesale: ₹10' },
-    retailBadge: { hi: 'खुदरा: ₹20', en: 'Retail: ₹20' },
-    defaultToolId: 'edistrict-decl'
-  },
-  {
-    id: 'edistrict-packer',
-    title: { hi: '100KB e-District फाइल पैकर', en: '100KB / 20KB Document Packer' },
-    desc: { hi: 'e-District पोर्टल नियमों अनुसार फोटो < 20KB व दस्तावेज < 100KB ऑटो कंप्रेसर', en: 'Instant Image & Document Compressor for e-District Upload Standards' },
-    toolsCount: 2,
-    icon: Sparkles,
-    color: 'from-blue-600 via-indigo-600 to-blue-700',
-    lightBg: 'bg-blue-50/70 dark:bg-blue-950/30',
-    borderColor: 'border-blue-200 dark:border-blue-900/60',
-    accentText: 'text-blue-600 dark:text-blue-400',
-    wholesaleBadge: { hi: 'निःशुल्क टूल', en: 'Free Tool' },
-    retailBadge: { hi: 'निःशुल्क सेवा', en: 'Free Service' },
-    defaultToolId: 'edistrict-packer'
-  },
-  {
-    id: 'edistrict-apply',
-    title: { hi: 'e-District प्रमाण पत्र ऑनलाइन आवेदन', en: 'e-District Online Certificate Applications' },
-    desc: { hi: 'आय प्रमाण पत्र, जाति प्रमाण पत्र, निवास प्रमाण पत्र, दिव्यांग व हैसियत प्रमाण पत्र', en: 'Official Online Application Desk for Income, Caste, Domicile Certificates' },
-    toolsCount: 6,
-    icon: Layers,
-    color: 'from-amber-600 via-orange-600 to-amber-700',
-    lightBg: 'bg-amber-50/70 dark:bg-amber-950/30',
-    borderColor: 'border-amber-200 dark:border-amber-900/60',
-    accentText: 'text-amber-600 dark:text-amber-400',
-    wholesaleBadge: { hi: 'थोक: ₹50', en: 'Wholesale: ₹50' },
-    retailBadge: { hi: 'खुदरा: ₹100', en: 'Retail: ₹100' },
-    defaultToolId: 'edistrict-apply'
-  },
-  {
-    id: 'edistrict-bhulekh',
-    title: { hi: 'भूलेख खसरा-खतौनी नकल', en: 'Bhulekh Land Records (Khatauni)' },
-    desc: { hi: 'राजस्व परिषद उत्तर प्रदेश / राज्य भूलेख खतौनी सत्यापन एवं मुद्रण पर्ची', en: 'UP & State Land Records Khatauni Verification and Print Slip' },
-    toolsCount: 1,
-    icon: Award,
-    color: 'from-cyan-600 via-teal-600 to-cyan-700',
-    lightBg: 'bg-cyan-50/70 dark:bg-cyan-950/30',
-    borderColor: 'border-cyan-200 dark:border-cyan-900/60',
-    accentText: 'text-cyan-600 dark:text-cyan-400',
-    wholesaleBadge: { hi: 'थोक: ₹10', en: 'Wholesale: ₹10' },
-    retailBadge: { hi: 'खुदरा: ₹20', en: 'Retail: ₹20' },
-    defaultToolId: 'edistrict-bhulekh'
-  }
-];
+// Map category IDs to rich Lucide icons
+const CATEGORY_ICON_MAP = {
+  aadhaar: ShieldCheck,
+  pan: CreditCard,
+  rc: Car,
+  dl: Award,
+  voter: Award,
+  ration: FileText,
+  health: ShieldCheck,
+  welfare: Layers,
+  utility: Zap,
+  banking: Zap,
+  agriculture: FileText,
+  lookup: Search,
+  telecom: Smartphone,
+  all: Sparkles
+};
 
 export default function RekhaDashboard({
   onSelectTool,
@@ -154,39 +44,159 @@ export default function RekhaDashboard({
   customerSession,
   disabledTools = [],
   toolStatus = {},
-  theme = 'light'
+  theme = 'light',
+  services79Rates = []
 }) {
   const { language, t, localize } = useLanguage();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategoryModal, setSelectedCategoryModal] = useState(null);
+  const [modalSearch, setModalSearch] = useState('');
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  // 1. Dynamic Merged Catalog (Enriched 79 P4Points Services)
+  const fullCatalog = useMemo(() => {
+    return getMergedServicesCatalog(services79Rates);
+  }, [services79Rates]);
+
+  // 2. Dynamic Category Counts
+  const categoryCounts = useMemo(() => {
+    const counts = {};
+    SERVICE_CATEGORIES.forEach(cat => {
+      counts[cat.id] = fullCatalog.filter(s => s.group === cat.id).length;
+    });
+    return counts;
+  }, [fullCatalog]);
+
+  // 3. Carousel Slides (Compact announcements - Height ~85px)
+  const promoSlides = useMemo(() => [
+    {
+      badge: language === 'hi' ? '🇮🇳 79+ लाइव सेवाएं' : '🇮🇳 79+ Live Services',
+      title: language === 'hi' 
+        ? 'आधिकारिक डिजिटल सेवा हब — 1-क्लिक में HD PDF व PVC कार्ड' 
+        : 'Official Digital Service Hub — 1-Click HD PDF & PVC Cards',
+      sub: language === 'hi'
+        ? 'आधार, पैन, वाहन RC, वोटर, राशन व राज्य कल्याण सेवाएं बिना किसी देरी के उपलब्ध।'
+        : 'Instant Aadhaar, PAN, Vehicle RC, Voter, Ration & Welfare services live.',
+      color: 'from-orange-600 via-amber-600 to-orange-700'
+    },
+    {
+      badge: language === 'hi' ? '🚗 वाहन RC व DL' : '🚗 Vehicle RC & DL',
+      title: language === 'hi'
+        ? 'गाड़ी नंबर से तुरंत वाहन RC PDF व ड्राइविंग लाइसेंस सर्च'
+        : 'Instant MoRTH Vehicle RC PDF & Sarathi DL Search',
+      sub: language === 'hi'
+        ? 'परिवहन अधिकृत प्रिंट फॉर्मेट व ई-चालान जांच सिर्फ 1-क्लिक में।'
+        : 'Official MoRTH Parivahan format and traffic challan check in seconds.',
+      color: 'from-emerald-600 via-teal-600 to-emerald-700'
+    },
+    {
+      badge: language === 'hi' ? '🏪 थोक B2B रेट्स' : '🏪 Wholesale B2B Rates',
+      title: language === 'hi'
+        ? 'दुकानदार व VLE काउंटर: प्रत्येक ऑर्डर पर सीधा ₹10 से ₹70 का मार्जिन'
+        : 'VLE Counter: Pocket ₹10 to ₹70 Net Margin Per Service',
+      sub: language === 'hi'
+        ? 'थोक दर B2B वॉलेट से स्वतः कटेगी और आपका कमीशन तुरंत सुरक्षित रहेगा।'
+        : 'Wholesale rates deduct automatically and profits are safely logged.',
+      color: 'from-blue-600 via-indigo-600 to-blue-700'
+    }
+  ], [language]);
+
+  // Auto rotate carousel slides
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide(prev => (prev + 1) % promoSlides.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [promoSlides.length]);
+
+  // 4. Global Search Filtered Services
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase().trim();
+    return fullCatalog.filter(s => {
+      const nameMatch = s.name && s.name.toLowerCase().includes(q);
+      const idMatch = s.id && s.id.toLowerCase().includes(q);
+      const titleHi = s.title?.hi && s.title.hi.toLowerCase().includes(q);
+      const titleEn = s.title?.en && s.title.en.toLowerCase().includes(q);
+      const subHi = s.sub?.hi && s.sub.hi.toLowerCase().includes(q);
+      const subEn = s.sub?.en && s.sub.en.toLowerCase().includes(q);
+      const catMatch = s.category && s.category.toLowerCase().includes(q);
+      return nameMatch || idMatch || titleHi || titleEn || subHi || subEn || catMatch;
+    });
+  }, [fullCatalog, searchQuery]);
+
+  // 5. Services inside Modal Category
+  const modalCategoryServices = useMemo(() => {
+    if (!selectedCategoryModal) return [];
+    let list = fullCatalog.filter(s => s.group === selectedCategoryModal.id);
+    if (modalSearch.trim()) {
+      const q = modalSearch.toLowerCase().trim();
+      list = list.filter(s => {
+        const nameMatch = s.name && s.name.toLowerCase().includes(q);
+        const titleHi = s.title?.hi && s.title.hi.toLowerCase().includes(q);
+        const titleEn = s.title?.en && s.title.en.toLowerCase().includes(q);
+        return nameMatch || titleHi || titleEn;
+      });
+    }
+    return list;
+  }, [fullCatalog, selectedCategoryModal, modalSearch]);
+
   const displayBalance = isOperator ? sanchalakB2bBalance : walletBalance;
 
+  // Handle service click
+  const handleServiceClick = (serviceId) => {
+    setSelectedCategoryModal(null);
+    if (onSelectTool) {
+      onSelectTool(serviceId);
+    }
+  };
+
   return (
-    <div className="space-y-6 sm:space-y-8 w-full max-w-full overflow-x-hidden">
+    <div className="space-y-4 sm:space-y-6 w-full max-w-full overflow-x-hidden">
       
       {/* =================================================================== */}
-      {/* 1. COMPACT SLIM TICKER STRIP (PURE SINGLE LANGUAGE) */}
+      {/* 1. TOP ANNOUNCEMENT & ROLE ACCESS BAR */}
       {/* =================================================================== */}
-      <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-emerald-50 dark:bg-slate-900/90 border border-orange-300/80 dark:border-slate-800 rounded-2xl px-3.5 py-2 shadow-xs flex flex-col md:flex-row items-center justify-between gap-2.5">
+      <div className="bg-gradient-to-r from-orange-50 via-amber-50 to-emerald-50 dark:bg-slate-900/90 border border-orange-300/80 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
         
-        {/* Left: 1-Line Live Ticker Announcement */}
-        <div className="flex items-center gap-2 min-w-0 flex-1">
-          <span className="p-1 bg-orange-600 text-white rounded-lg shrink-0 shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+        {/* Left: Live Ticker Announcement */}
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          <span className="p-1.5 bg-gradient-to-tr from-orange-600 to-amber-600 text-white rounded-xl shrink-0 shadow-xs">
+            <Sparkles className="w-4 h-4 animate-pulse" />
           </span>
           <div className="text-xs text-slate-800 dark:text-slate-200 truncate font-semibold">
             <span className="text-orange-700 dark:text-orange-400 font-black mr-1">
-              {language === 'hi' ? '📢 लाइव:' : '📢 Live:'}
+              {language === 'hi' ? '📢 लाइव सेवा हब:' : '📢 Live Hub:'}
             </span>
             <span>
               {language === 'hi' 
-                ? 'वाहन RC, एडवांस CR-80 PVC आधार, पैन कार्ड व आय-जाति प्रमाण पत्र — HD प्रिंट तैयार! (थोक मार्जिन: ₹15-₹50)'
-                : 'Vehicle RC, Advance CR-80 PVC Aadhaar, PAN Card & e-District Certificates — HD Prints Ready! (Wholesale Margin: ₹15-₹50)'
+                ? isOperator 
+                  ? '79+ B2B थोक सेवाएं लाइव! आधार, RC, पैन, वोटर व राशन — थोक रेट्स व सीधा कमीशन एक्टिव।'
+                  : '79+ सरकारी व डिजिटल सेवाएं उपलब्ध! आधार, RC, पैन, वोटर व राशन पर्ची — 1-क्लिक डाउनलोड।'
+                : isOperator
+                  ? '79+ B2B Wholesale Services Live! Instant wholesale profit margins active.'
+                  : '79+ Official Citizen Services Available! Instant 1-Click Delivery.'
               }
             </span>
           </div>
         </div>
 
-        {/* Right: Quick Action Controls */}
-        <div className="flex items-center gap-2 shrink-0">
+        {/* Right: Balance Pill & Role Gate Controls */}
+        <div className="flex items-center gap-2 shrink-0 flex-wrap">
+          {/* Live Wallet Pill */}
+          <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1 flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 shadow-2xs">
+            <Wallet className="w-3.5 h-3.5 text-amber-500" />
+            <span>{isOperator ? (language === 'hi' ? 'B2B बैलेंस:' : 'B2B Balance:') : (language === 'hi' ? 'वॉलेट:' : 'Wallet:')}</span>
+            <span className="font-mono font-black text-emerald-600 dark:text-emerald-400">₹{displayBalance}</span>
+            <button
+              type="button"
+              onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
+              className="text-[10px] bg-emerald-600 hover:bg-emerald-700 text-white px-2 py-0.5 rounded-lg font-black transition cursor-pointer"
+            >
+              + {language === 'hi' ? 'जोड़ें' : 'Add'}
+            </button>
+          </div>
+
           {!isOperator ? (
             <>
               <button
@@ -213,9 +223,8 @@ export default function RekhaDashboard({
               </button>
             </>
           ) : (
-            <div className="bg-white/80 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1 flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300">
-              <span>🏪 {selectedCafe?.shopName || (language === 'hi' ? 'B2B काउंटर' : 'B2B Counter')}</span>
-              <span className="font-mono font-black text-amber-600">₹{displayBalance}</span>
+            <div className="bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 rounded-xl px-2.5 py-1 text-xs font-black text-emerald-800 dark:text-emerald-300 flex items-center gap-1">
+              <span>🏪 {selectedCafe?.shopName || (language === 'hi' ? 'VLE काउंटर' : 'VLE Counter')}</span>
             </div>
           )}
 
@@ -223,276 +232,375 @@ export default function RekhaDashboard({
             type="button"
             onClick={() => onNavigateTab('orders')}
             className="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 transition shadow-2xs cursor-pointer"
-            title={language === 'hi' ? 'निःशुल्क रिप्रिंट हिस्ट्री' : 'Free Reprint History'}
+            title={language === 'hi' ? 'ऑर्डर हिस्ट्री व रिप्रिंट' : 'Order History & Reprint'}
           >
-            <History className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span className="hidden sm:inline">{t('reprint')}</span>
+            <History className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span className="hidden sm:inline">{language === 'hi' ? 'रिप्रिंट हिस्ट्री' : 'Reprint'}</span>
           </button>
         </div>
 
       </div>
 
       {/* =================================================================== */}
-      {/* 2. DIRECT 1-CLICK INSTANT SERVICES GRID (3 COLS ON MOBILE, 6 ON DESKTOP) */}
+      {/* 2. COMPACT PROMO CAROUSEL (Slim Height ~85px - No Screen Takeover) */}
       {/* =================================================================== */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-amber-500" />
-              <span>{t('instant_tools_heading')}</span>
-            </h2>
-            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              {t('instant_tools_sub')}
-            </p>
-          </div>
+      <div className="relative rounded-2xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800 text-white">
+        
+        {/* Tricolor Accent Top Stripe */}
+        <div className="absolute top-0 left-0 right-0 h-1 flex z-20">
+          <div className="flex-1 bg-[#f97316]"></div>
+          <div className="flex-1 bg-white"></div>
+          <div className="flex-1 bg-[#16a34a]"></div>
         </div>
 
-        {/* Responsive Grid: 3 Columns on Mobile (<640px), 4 on sm, 6 on md+ */}
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2 sm:gap-3 w-full max-w-full">
-          {DIRECT_SERVICES_TILES.map((tItem) => {
-            const Icon = tItem.icon;
-            const labelStr = localize(tItem.label);
-            const subStr = localize(tItem.sub);
-
-            return (
-              <button
-                key={tItem.id}
-                type="button"
-                onClick={() => onSelectTool(tItem.id)}
-                className="group bg-white dark:bg-[#0c162c] rounded-2xl p-2 sm:p-3.5 border border-slate-200 dark:border-slate-800 hover:border-orange-500 dark:hover:border-orange-500 shadow-2xs hover:shadow-md transition-all flex flex-col items-center justify-between text-center relative overflow-hidden active:scale-95 cursor-pointer"
-              >
-                <span className="self-end text-[9px] sm:text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-300/40 px-1 sm:px-1.5 py-0.2 rounded-md">
-                  {isOperator ? tItem.wholesale : tItem.retail}
-                </span>
-
-                <div className={`w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr ${tItem.color} text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition my-1 shrink-0`}>
-                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                </div>
-
-                <div className="w-full">
-                  <span className="text-[11px] sm:text-xs font-black text-slate-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition block truncate leading-tight">
-                    {labelStr}
-                  </span>
-                  <span className="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 block truncate font-medium mt-0.5">
-                    {subStr}
-                  </span>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* =================================================================== */}
-      {/* 3. CLEAN CATEGORY BOXES GRID (2 COLS ON MOBILE, 4 ON DESKTOP - NO SUB-SERVICE PILL CLUTTER) */}
-      {/* =================================================================== */}
-      <div className="space-y-3 sm:space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-base sm:text-lg md:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-amber-500" />
-              <span>{t('category_suites_heading')}</span>
-            </h2>
-            <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              {t('category_suites_sub')}
-            </p>
-          </div>
-        </div>
-
-        {/* Clean Responsive Category Grid: 2 Columns on Mobile, 2 on sm, 3 on lg, 4 on xl */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-4 md:gap-5 w-full max-w-full">
-          {REKHA_CATEGORIES_CONFIG.map((cat) => {
-            const Icon = cat.icon;
-            const titleStr = localize(cat.title);
-            const descStr = localize(cat.desc);
-            const badgeStr = isOperator ? localize(cat.wholesaleBadge) : localize(cat.retailBadge);
-
-            return (
-              <div
-                key={cat.id}
-                onClick={() => onSelectTool(cat.defaultToolId)}
-                className={`bg-white dark:bg-[#0c162c] rounded-2xl sm:rounded-3xl p-3 sm:p-5 border ${cat.borderColor} hover:border-orange-500 dark:hover:border-orange-500 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between group relative overflow-hidden cursor-pointer`}
-              >
-                {/* Top Header of Category Box */}
-                <div className="space-y-2 sm:space-y-3">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className={`w-8 h-8 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center shadow-md shadow-slate-900/10 group-hover:scale-105 transition shrink-0`}>
-                      <Icon className="w-4 h-4 sm:w-6 sm:h-6" />
-                    </div>
-
-                    <span className="text-[9px] sm:text-[10px] font-mono font-bold text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 border border-amber-300/40 px-1.5 sm:px-2 py-0.5 rounded-md truncate max-w-[95px] sm:max-w-none text-right">
-                      {badgeStr}
-                    </span>
-                  </div>
-
-                  <div>
-                    <h3 className="font-black text-slate-900 dark:text-white text-xs sm:text-base group-hover:text-orange-600 dark:group-hover:text-orange-400 transition leading-snug truncate">
-                      {titleStr}
-                    </h3>
-                    <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium leading-relaxed line-clamp-2">
-                      {descStr}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Bottom 1-Click Launch Action (Clean, un-cluttered card footer) */}
-                <div className="mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-slate-100 dark:border-slate-800">
-                  <div
-                    className="w-full bg-slate-50 group-hover:bg-gradient-to-r group-hover:from-orange-500 group-hover:to-amber-500 group-hover:text-white text-slate-700 dark:bg-slate-800/60 dark:text-slate-200 font-black py-1.5 sm:py-2 px-2 sm:px-3 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs flex items-center justify-between transition shadow-2xs group-hover:shadow-md"
-                  >
-                    <span>{t('launch_service')}</span>
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition shrink-0" />
-                  </div>
-                </div>
-
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* =================================================================== */}
-      {/* 4. RECENT ORDERS & FREE REPRINT STRIP */}
-      {/* =================================================================== */}
-      <div className="bg-white dark:bg-[#0c162c] rounded-3xl p-5 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <span className="p-2.5 bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 rounded-2xl">
-              <History className="w-5 h-5" />
+        {/* Slide Content */}
+        <div className={`p-4 sm:p-5 bg-gradient-to-r ${promoSlides[activeSlide].color} transition-all duration-500 flex items-center justify-between gap-4`}>
+          <div className="min-w-0 flex-1">
+            <span className="inline-block text-[10px] font-black uppercase tracking-wider bg-black/25 px-2.5 py-0.5 rounded-full mb-1 border border-white/20">
+              {promoSlides[activeSlide].badge}
             </span>
-            <div>
-              <h3 className="font-black text-slate-900 dark:text-white text-base">
-                {t('recent_orders_title')}
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
-                {t('recent_orders_sub')}
-              </p>
-            </div>
+            <h2 className="text-sm sm:text-base font-black truncate leading-snug">
+              {promoSlides[activeSlide].title}
+            </h2>
+            <p className="text-[11px] sm:text-xs text-white/90 truncate mt-0.5 hidden sm:block">
+              {promoSlides[activeSlide].sub}
+            </p>
           </div>
 
+          {/* Carousel Navigation Buttons */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => setActiveSlide(prev => (prev - 1 + promoSlides.length) % promoSlides.length)}
+              className="p-1 rounded-lg bg-black/20 hover:bg-black/40 text-white transition cursor-pointer"
+              aria-label="Previous Slide"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveSlide(prev => (prev + 1) % promoSlides.length)}
+              className="p-1 rounded-lg bg-black/20 hover:bg-black/40 text-white transition cursor-pointer"
+              aria-label="Next Slide"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Carousel Dots */}
+        <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 flex items-center gap-1 z-20">
+          {promoSlides.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveSlide(idx)}
+              className={`h-1 rounded-full transition-all ${activeSlide === idx ? 'w-4 bg-white' : 'w-1.5 bg-white/40'}`}
+              aria-label={`Slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+      </div>
+
+      {/* =================================================================== */}
+      {/* 3. FAST SEARCH BAR (1-Click Instant Service Access) */}
+      {/* =================================================================== */}
+      <div className="relative">
+        <Search className="w-4 h-4 sm:w-5 sm:h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder={language === 'hi' 
+            ? 'किसी भी सेवा का नाम या नंबर सर्च करें (जैसे RC, पैन, आधार, राशन, समग्र, बिजली)...' 
+            : 'Search any service: Aadhaar, PAN, RC, Ration, Samagra, Electricity, Voter...'
+          }
+          className="w-full pl-10 pr-10 py-2.5 sm:py-3 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 text-xs sm:text-sm focus:outline-none focus:border-orange-500 shadow-xs"
+        />
+        {searchQuery && (
           <button
             type="button"
-            onClick={() => onNavigateTab('orders')}
-            className="text-xs font-bold text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 flex items-center gap-1 cursor-pointer"
+            onClick={() => setSearchQuery('')}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
           >
-            <span>{t('view_all_history')} ➔</span>
+            <X className="w-4 h-4" />
           </button>
-        </div>
-
-        {orderHistory.length === 0 ? (
-          <div className="py-6 text-center text-slate-400 text-xs space-y-1.5">
-            <Clock className="w-6 h-6 mx-auto text-slate-300 dark:text-slate-600" />
-            <p>{t('no_orders_yet')}</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {orderHistory.slice(0, 3).map((item) => (
-              <div 
-                key={item.id || item.orderId}
-                className="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800 transition flex items-center justify-between gap-3"
-              >
-                <div className="space-y-0.5 truncate">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono block">
-                    {new Date(item.createdAt).toLocaleDateString(language === 'hi' ? 'hi-IN' : 'en-US')}
-                  </span>
-                  <strong className="text-xs text-slate-900 dark:text-white font-bold block truncate">
-                    {item.docTitle || item.serviceTitle || (language === 'hi' ? 'डिजिटल सेवा' : 'Digital Service')}
-                  </strong>
-                  <span className="text-xs font-mono font-black text-indigo-700 dark:text-indigo-400 block">
-                    {item.refNumber || item.vehicleNumber || '-'}
-                  </span>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => onNavigateTab('orders')}
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shrink-0 cursor-pointer shadow-xs"
-                >
-                  <Printer className="w-3.5 h-3.5" />
-                  <span>{t('reprint')}</span>
-                </button>
-              </div>
-            ))}
-          </div>
         )}
       </div>
 
       {/* =================================================================== */}
-      {/* 5. UTILITY SUITE (Print, Resizer, PDF - 3 COLS ACROSS ALL SCREENS) */}
+      {/* 4. SEARCH RESULTS VIEW (When User Types in Search Bar) */}
       {/* =================================================================== */}
-      <div className="grid grid-cols-3 sm:grid-cols-3 gap-2 sm:gap-4 w-full max-w-full">
-        
-        <div
-          onClick={() => onNavigateTab('print')}
-          className="bg-gradient-to-br from-blue-900 to-indigo-900 text-white p-3 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xs hover:shadow-lg transition cursor-pointer flex flex-col justify-between active:scale-95"
-        >
-          <div>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/20 text-white flex items-center justify-center mb-2 sm:mb-3 shrink-0">
-              <Printer className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">
-              {language === 'hi' ? 'क्विक प्रिंट' : 'Quick Print'}
-            </h4>
-            <p className="hidden sm:block text-xs text-blue-200 mt-1 leading-relaxed">
-              {language === 'hi' 
-                ? 'फ़ाइल अपलोड करें, B&W या कलर चुनें और तत्काल प्रिंट निकालें।' 
-                : 'Upload files, choose B&W or color, and print instantly.'}
-            </p>
+      {searchQuery.trim() ? (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-black text-slate-900 dark:text-white flex items-center gap-2">
+              <Search className="w-4 h-4 text-orange-600" />
+              <span>
+                {language === 'hi' ? `"${searchQuery}" के लिए परिणाम (${searchResults.length})` : `Results for "${searchQuery}" (${searchResults.length})`}
+              </span>
+            </h3>
+            <button
+              onClick={() => setSearchQuery('')}
+              className="text-xs text-orange-600 hover:underline font-bold"
+            >
+              {language === 'hi' ? 'खोज हटाएं' : 'Clear search'}
+            </button>
           </div>
-          <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-2 border-t border-white/20 text-[10px] sm:text-xs font-bold text-yellow-300 flex items-center justify-between">
-            <span>{language === 'hi' ? 'प्रिंट ➔' : 'Print ➔'}</span>
-            <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
+
+          {searchResults.length === 0 ? (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 text-center border border-slate-200 dark:border-slate-800">
+              <AlertCircle className="w-8 h-8 text-amber-500 mx-auto mb-2" />
+              <p className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                {language === 'hi' ? 'कोई सेवा नहीं मिली' : 'No service found'}
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                {language === 'hi' ? 'कृपया अन्य शब्द टाइप करें।' : 'Please try another search keyword.'}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {searchResults.map(service => {
+                const margin = Math.max(0, (Number(service.retailRate) || 0) - (Number(service.wholesaleRate) || 0));
+                const serviceTitle = service.title ? localize(service.title) : service.name;
+                const serviceSub = service.sub ? localize(service.sub) : `${service.name} आधिकारिक डिजिटल सेवा`;
+
+                return (
+                  <div
+                    key={service.id}
+                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col justify-between hover:border-orange-500 hover:shadow-md transition shadow-xs"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-1.5">
+                        <span className="text-[10px] font-mono text-slate-400">#{service.num}</span>
+                        <span className="text-[10px] bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 font-bold px-2 py-0.5 rounded-full">
+                          LIVE ⚡
+                        </span>
+                      </div>
+                      <h4 className="font-bold text-sm text-slate-900 dark:text-white line-clamp-1">
+                        {serviceTitle}
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
+                        {serviceSub}
+                      </p>
+                    </div>
+
+                    <div className="mt-3 pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+                      <div>
+                        {isOperator ? (
+                          <div className="text-xs">
+                            <span className="text-[10px] text-slate-500 block">थोक दर:</span>
+                            <span className="font-mono font-black text-emerald-600 dark:text-emerald-400">₹{service.wholesaleRate}</span>
+                            <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold ml-1.5">(+₹{margin} लाभ)</span>
+                          </div>
+                        ) : (
+                          <div className="text-xs">
+                            <span className="text-[10px] text-slate-500 block">सेवा शुल्क:</span>
+                            <span className="font-mono font-black text-slate-900 dark:text-white text-sm">₹{service.retailRate}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleServiceClick(service.id)}
+                        className="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-xs transition active:scale-95 cursor-pointer"
+                      >
+                        <span>{language === 'hi' ? 'खोलें' : 'Open'}</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      ) : (
+        /* =================================================================== */
+        /* 5. CLEAN CATEGORY CARDS GRID (When NOT searching) */
+        /* =================================================================== */
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Layers className="w-4 h-4 text-orange-600 dark:text-orange-400" />
+              <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                {language === 'hi' ? '🏛️ सेवा श्रेणियां (Service Categories)' : '🏛️ Service Categories'}
+              </h2>
+            </div>
+            <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">
+              {fullCatalog.length} {language === 'hi' ? 'सेवाएं उपलब्ध' : 'services available'}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-3.5">
+            {SERVICE_CATEGORIES.map((cat) => {
+              const IconComp = CATEGORY_ICON_MAP[cat.id] || Sparkles;
+              const count = categoryCounts[cat.id] || 0;
+
+              return (
+                <div
+                  key={cat.id}
+                  onClick={() => {
+                    setSelectedCategoryModal(cat);
+                    setModalSearch('');
+                  }}
+                  className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center justify-between text-center hover:border-orange-500 hover:shadow-md transition-all duration-200 cursor-pointer group active:scale-98 min-h-[145px]"
+                >
+                  {/* Category Icon */}
+                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform mb-2`}>
+                    <IconComp className="w-6 h-6" />
+                  </div>
+
+                  {/* Category Title */}
+                  <div className="w-full">
+                    <h3 className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-100 group-hover:text-orange-600 dark:group-hover:text-orange-400 line-clamp-1 leading-snug">
+                      {localize(cat.title)}
+                    </h3>
+                    <span className="inline-block text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full mt-1.5">
+                      {count} {language === 'hi' ? 'सेवाएं' : 'Services'}
+                    </span>
+                  </div>
+
+                  {/* Small Action */}
+                  <div className="mt-2 text-[10px] font-bold text-orange-600 dark:text-orange-400 opacity-80 group-hover:opacity-100 flex items-center gap-0.5">
+                    <span>{language === 'hi' ? 'सेवाएं देखें' : 'View Options'}</span>
+                    <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
+      )}
 
-        <div
-          onClick={() => onNavigateTab('resizer')}
-          className="bg-gradient-to-br from-purple-900 to-slate-900 text-white p-3 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xs hover:shadow-lg transition cursor-pointer flex flex-col justify-between active:scale-95"
-        >
-          <div>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/20 text-white flex items-center justify-center mb-2 sm:mb-3 shrink-0">
-              <Crop className="w-4 h-4 sm:w-5 sm:h-5" />
+      {/* =================================================================== */}
+      {/* 6. CATEGORY SERVICES MODAL / DRAWER (Clean Options Popup) */}
+      {/* =================================================================== */}
+      {selectedCategoryModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+            
+            {/* Modal Header */}
+            <div className="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3 bg-slate-50/70 dark:bg-slate-950/40">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`w-10 h-10 rounded-2xl bg-gradient-to-tr ${selectedCategoryModal.color} text-white flex items-center justify-center shrink-0 shadow-xs`}>
+                  {React.createElement(CATEGORY_ICON_MAP[selectedCategoryModal.id] || Sparkles, { className: 'w-5 h-5' })}
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-black text-base sm:text-lg text-slate-900 dark:text-white truncate leading-snug">
+                    {localize(selectedCategoryModal.title)}
+                  </h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                    {categoryCounts[selectedCategoryModal.id] || 0} {language === 'hi' ? 'लाइव सेवाएं उपलब्ध' : 'services live'}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setSelectedCategoryModal(null)}
+                className="w-8 h-8 rounded-full bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center hover:bg-slate-300 dark:hover:bg-slate-700 transition cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">
-              {language === 'hi' ? 'फ़ोटो रिसाइज़र' : 'Photo Resizer'}
-            </h4>
-            <p className="hidden sm:block text-xs text-purple-200 mt-1 leading-relaxed">
-              {language === 'hi' 
-                ? 'सरकारी फॉर्म हेतु फ़ोटो को 20KB-50KB व सिग्नेचर को 10KB-20KB में बदलें।' 
-                : 'Resize photos to 20KB-50KB and signatures to 10KB-20KB for govt forms.'}
-            </p>
-          </div>
-          <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-2 border-t border-white/20 text-[10px] sm:text-xs font-bold text-yellow-300 flex items-center justify-between">
-            <span>{language === 'hi' ? 'रिसाइज़ ➔' : 'Resize ➔'}</span>
-            <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
+
+            {/* Modal Internal Search */}
+            <div className="p-3 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900">
+              <div className="relative">
+                <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="text"
+                  value={modalSearch}
+                  onChange={(e) => setModalSearch(e.target.value)}
+                  placeholder={language === 'hi' ? 'इस श्रेणी में खोजें...' : 'Filter in this category...'}
+                  className="w-full pl-9 pr-8 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-orange-500"
+                />
+                {modalSearch && (
+                  <button
+                    type="button"
+                    onClick={() => setModalSearch('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Services List */}
+            <div className="p-4 sm:p-5 overflow-y-auto space-y-2.5 flex-1 scrollbar-thin">
+              {modalCategoryServices.length === 0 ? (
+                <div className="text-center py-8 text-xs text-slate-500">
+                  {language === 'hi' ? 'कोई सेवा नहीं मिली' : 'No service found'}
+                </div>
+              ) : (
+                modalCategoryServices.map((service) => {
+                  const margin = Math.max(0, (Number(service.retailRate) || 0) - (Number(service.wholesaleRate) || 0));
+                  const serviceTitle = service.title ? localize(service.title) : service.name;
+                  const serviceSub = service.sub ? localize(service.sub) : `${service.name} आधिकारिक डिजिटल सेवा`;
+
+                  return (
+                    <div
+                      key={service.id}
+                      className="bg-slate-50/70 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between gap-3 transition shadow-2xs hover:shadow-xs hover:border-orange-400"
+                    >
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <span className="text-[10px] font-mono text-slate-400">#{service.num}</span>
+                          <h4 className="font-bold text-xs sm:text-sm text-slate-900 dark:text-white truncate">
+                            {serviceTitle}
+                          </h4>
+                        </div>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                          {serviceSub}
+                        </p>
+                      </div>
+
+                      {/* Rates & Action */}
+                      <div className="flex items-center gap-3 shrink-0">
+                        {isOperator ? (
+                          <div className="text-right text-xs">
+                            <span className="text-[10px] text-slate-400 block">{language === 'hi' ? 'थोक दर' : 'Wholesale'}</span>
+                            <span className="font-mono font-black text-emerald-600 dark:text-emerald-400">₹{service.wholesaleRate}</span>
+                            <span className="text-[10px] text-blue-600 dark:text-blue-400 font-bold block">(+₹{margin})</span>
+                          </div>
+                        ) : (
+                          <div className="text-right text-xs">
+                            <span className="text-[10px] text-slate-400 block">{language === 'hi' ? 'शुल्क' : 'Fee'}</span>
+                            <span className="font-mono font-black text-slate-900 dark:text-white text-sm">₹{service.retailRate}</span>
+                          </div>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => handleServiceClick(service.id)}
+                          className="bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white font-black px-3.5 py-2 rounded-xl text-xs flex items-center gap-1 shadow-xs transition active:scale-95 cursor-pointer"
+                        >
+                          <span>{language === 'hi' ? 'शुरू करें' : 'Open'}</span>
+                          <ArrowRight className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-3 border-t border-slate-100 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-950/40 text-center">
+              <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                {language === 'hi' 
+                  ? '🔒 आधिकारिक P4Points API द्वारा 100% वेरिफाइड जन सेवा केंद्र पोर्टल' 
+                  : '🔒 100% Verified Official P4Points API Gateway'
+                }
+              </span>
+            </div>
+
           </div>
         </div>
-
-        <div
-          onClick={() => onNavigateTab('pdf')}
-          className="bg-gradient-to-br from-teal-900 to-slate-900 text-white p-3 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xs hover:shadow-lg transition cursor-pointer flex flex-col justify-between active:scale-95"
-        >
-          <div>
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-white/20 text-white flex items-center justify-center mb-2 sm:mb-3 shrink-0">
-              <Layers className="w-4 h-4 sm:w-5 sm:h-5" />
-            </div>
-            <h4 className="font-black text-xs sm:text-base text-white truncate leading-tight">
-              {language === 'hi' ? 'PDF टूल्स' : 'PDF Tools'}
-            </h4>
-            <p className="hidden sm:block text-xs text-teal-200 mt-1 leading-relaxed">
-              {language === 'hi' 
-                ? 'मार्कशीट, आधार व प्रमाण पत्र की कई PDF फाइलों को 1-क्लिक में जोड़ें।' 
-                : 'Merge multiple PDF files like marksheets, Aadhaar, and slips in 1 click.'}
-            </p>
-          </div>
-          <div className="mt-2.5 sm:mt-4 pt-1.5 sm:pt-2 border-t border-white/20 text-[10px] sm:text-xs font-bold text-yellow-300 flex items-center justify-between">
-            <span>{language === 'hi' ? 'PDF ➔' : 'PDF ➔'}</span>
-            <ArrowRight className="w-3.5 h-3.5 hidden xs:inline" />
-          </div>
-        </div>
-
-      </div>
+      )}
 
     </div>
   );

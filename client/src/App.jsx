@@ -4,7 +4,6 @@ import CustomerHome from './components/CustomerHome';
 import QuickPrint from './components/QuickPrint';
 import ServiceApply from './components/ServiceApply';
 import StatusTracker from './components/StatusTracker';
-import JobBulletin from './components/JobBulletin';
 import AdminPrintQueue from './components/AdminPrintQueue';
 import AdminApplications from './components/AdminApplications';
 import AdminCashbook from './components/AdminCashbook';
@@ -15,7 +14,6 @@ import ImageResizerTool from './components/ImageResizerTool';
 import PdfMergerTool from './components/PdfMergerTool';
 import CustomerVault from './components/CustomerVault';
 import PortalsDirectory from './components/PortalsDirectory';
-import EDistrictSuite from './components/EDistrictSuite';
 import PrintPortalCards from './components/PrintPortalCards';
 import SuperAdminPanel from './components/SuperAdminPanel';
 import CustomerWalletModal from './components/CustomerWalletModal';
@@ -98,8 +96,7 @@ export default function App() {
     return false;
   });
   const [sidebarSearchTerm, setSidebarSearchTerm] = useState('');
-  const [activeInstantToolId, setActiveInstantToolId] = useState('edistrict');
-  const [edistrictSubTab, setEdistrictSubTab] = useState('verify');
+  const [activeInstantToolId, setActiveInstantToolId] = useState('aadhaar_advance');
 
   const [broadcastNotice, setBroadcastNotice] = useState(null);
 
@@ -165,8 +162,26 @@ export default function App() {
     }
   };
 
+  // Master 79 Services Dynamic Rates State (Persisted in server & database)
+  const [services79Rates, setServices79Rates] = useState([]);
+
+  const fetchServices79Rates = async () => {
+    try {
+      const res = await fetch('/api/services/rates');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.services)) {
+          setServices79Rates(data.services);
+        }
+      }
+    } catch (err) {
+      console.warn('Error fetching 79 services rates:', err);
+    }
+  };
+
   useEffect(() => {
     fetchToolSettings();
+    fetchServices79Rates();
   }, []);
 
   // Authentication & Dynamic Customer Session (No fake defaults)
@@ -552,40 +567,17 @@ export default function App() {
             mode === 'customer' 
               ? (customerTab === 'tool' ? `tool-${activeInstantToolId}` : 
                  customerTab === 'home' || customerTab === 'dashboard' ? 'dashboard' :
-                 customerTab === 'edistrict' ? (edistrictSubTab === 'verify' ? 'tool-edistrict' : edistrictSubTab === 'declaration' ? 'edistrict-decl' : edistrictSubTab === 'compressor' ? 'edistrict-packer' : edistrictSubTab === 'bhulekh' ? 'edistrict-bhulekh' : 'tool-edistrict') :
-                 customerTab === 'apply' ? 'edistrict-apply' :
                  customerTab === 'print' ? 'print' :
                  customerTab)
               : (adminTab === 'tool' ? `tool-${activeInstantToolId}` : 
                  adminTab === 'dashboard' ? 'dashboard' :
-                 adminTab === 'edistrict' ? (edistrictSubTab === 'verify' ? 'tool-edistrict' : edistrictSubTab === 'declaration' ? 'edistrict-decl' : edistrictSubTab === 'compressor' ? 'edistrict-packer' : edistrictSubTab === 'bhulekh' ? 'edistrict-bhulekh' : 'tool-edistrict') :
                  adminTab === 'prints' ? 'queue' :
-                 adminTab === 'applications' ? 'edistrict-apply' :
                  adminTab)
           }
           onSelectTab={(tabId) => {
             if (tabId === 'dashboard') {
               if (mode === 'customer') setCustomerTab('home');
               else setAdminTab('dashboard');
-            } else if (tabId === 'tool-edistrict' || tabId === 'edistrict-verify' || tabId === 'edistrict') {
-              setEdistrictSubTab('verify');
-              if (mode === 'customer') setCustomerTab('edistrict');
-              else setAdminTab('edistrict');
-            } else if (tabId === 'edistrict-decl') {
-              setEdistrictSubTab('declaration');
-              if (mode === 'customer') setCustomerTab('edistrict');
-              else setAdminTab('edistrict');
-            } else if (tabId === 'edistrict-packer') {
-              setEdistrictSubTab('compressor');
-              if (mode === 'customer') setCustomerTab('edistrict');
-              else setAdminTab('edistrict');
-            } else if (tabId === 'edistrict-bhulekh') {
-              setEdistrictSubTab('bhulekh');
-              if (mode === 'customer') setCustomerTab('edistrict');
-              else setAdminTab('edistrict');
-            } else if (tabId === 'edistrict-apply') {
-              if (mode === 'customer') setCustomerTab('apply');
-              else setAdminTab('applications');
             } else if (tabId === 'print' || tabId === 'quick-print') {
               if (mode === 'customer') setCustomerTab('print');
               else setAdminTab('prints');
@@ -896,42 +888,14 @@ export default function App() {
             {(customerTab === 'home' || customerTab === 'dashboard') && (
               <RekhaDashboard
                 onSelectTool={(toolKey) => {
-                  if (toolKey === 'edistrict-verify') {
-                    setEdistrictSubTab('verify');
-                    setCustomerTab('edistrict');
-                  } else if (toolKey === 'edistrict-decl') {
-                    setEdistrictSubTab('declaration');
-                    setCustomerTab('edistrict');
-                  } else if (toolKey === 'edistrict-packer') {
-                    setEdistrictSubTab('compressor');
-                    setCustomerTab('edistrict');
-                  } else if (toolKey === 'edistrict-bhulekh') {
-                    setEdistrictSubTab('bhulekh');
-                    setCustomerTab('edistrict');
-                  } else if (toolKey === 'edistrict-apply') {
-                    setCustomerTab('apply');
-                  } else if (toolKey === 'quick-print' || toolKey === 'print') {
+                  if (toolKey === 'quick-print' || toolKey === 'print') {
                     setCustomerTab('print');
                   } else {
                     handleLaunchService(toolKey);
                   }
                 }}
                 onNavigateTab={(tab) => {
-                  if (tab === 'edistrict-verify') {
-                    setEdistrictSubTab('verify');
-                    setCustomerTab('edistrict');
-                  } else if (tab === 'edistrict-decl') {
-                    setEdistrictSubTab('declaration');
-                    setCustomerTab('edistrict');
-                  } else if (tab === 'edistrict-packer') {
-                    setEdistrictSubTab('compressor');
-                    setCustomerTab('edistrict');
-                  } else if (tab === 'edistrict-bhulekh') {
-                    setEdistrictSubTab('bhulekh');
-                    setCustomerTab('edistrict');
-                  } else if (tab === 'edistrict-apply') {
-                    setCustomerTab('apply');
-                  } else if (tab === 'quick-print' || tab === 'print') {
+                  if (tab === 'quick-print' || tab === 'print') {
                     setCustomerTab('print');
                   } else {
                     setCustomerTab(tab);
@@ -952,6 +916,7 @@ export default function App() {
                 disabledTools={toolSettings.disabledTools}
                 toolStatus={toolSettings.toolStatus}
                 theme={theme}
+                services79Rates={services79Rates}
               />
             )}
 
@@ -988,6 +953,7 @@ export default function App() {
                 }}
                 disabledTools={toolSettings.disabledTools}
                 theme={theme}
+                services79Rates={services79Rates}
               />
             )}
 
@@ -1026,26 +992,12 @@ export default function App() {
               <StatusTracker settings={settings} />
             )}
 
-            {customerTab === 'jobs' && (
-              <JobBulletin
-                onApplyJob={handleApplyFromJob}
-                isOperator={false}
-              />
-            )}
-
             {customerTab === 'resizer' && (
               <ImageResizerTool />
             )}
 
             {customerTab === 'pdf' && (
               <PdfMergerTool />
-            )}
-
-            {customerTab === 'edistrict' && (
-              <EDistrictSuite
-                initialSubTab={edistrictSubTab}
-                selectedCafe={selectedCafe}
-              />
             )}
 
             {customerTab === 'printportal' && (
@@ -1095,21 +1047,7 @@ export default function App() {
                 <RekhaDashboard
                   isOperator={true}
                   onSelectTool={(toolKey) => {
-                    if (toolKey === 'edistrict-verify') {
-                      setEdistrictSubTab('verify');
-                      setAdminTab('edistrict');
-                    } else if (toolKey === 'edistrict-decl') {
-                      setEdistrictSubTab('declaration');
-                      setAdminTab('edistrict');
-                    } else if (toolKey === 'edistrict-packer') {
-                      setEdistrictSubTab('compressor');
-                      setAdminTab('edistrict');
-                    } else if (toolKey === 'edistrict-bhulekh') {
-                      setEdistrictSubTab('bhulekh');
-                      setAdminTab('edistrict');
-                    } else if (toolKey === 'edistrict-apply') {
-                      setAdminTab('applications');
-                    } else if (toolKey === 'quick-print' || toolKey === 'print') {
+                    if (toolKey === 'quick-print' || toolKey === 'print') {
                       setAdminTab('prints');
                     } else {
                       setActiveInstantToolId(toolKey);
@@ -1117,21 +1055,7 @@ export default function App() {
                     }
                   }}
                   onNavigateTab={(tab) => {
-                    if (tab === 'edistrict-verify') {
-                      setEdistrictSubTab('verify');
-                      setAdminTab('edistrict');
-                    } else if (tab === 'edistrict-decl') {
-                      setEdistrictSubTab('declaration');
-                      setAdminTab('edistrict');
-                    } else if (tab === 'edistrict-packer') {
-                      setEdistrictSubTab('compressor');
-                      setAdminTab('edistrict');
-                    } else if (tab === 'edistrict-bhulekh') {
-                      setEdistrictSubTab('bhulekh');
-                      setAdminTab('edistrict');
-                    } else if (tab === 'edistrict-apply') {
-                      setAdminTab('applications');
-                    } else if (tab === 'quick-print' || tab === 'print') {
+                    if (tab === 'quick-print' || tab === 'print') {
                       setAdminTab('prints');
                     } else {
                       setAdminTab(tab);
@@ -1151,6 +1075,7 @@ export default function App() {
                   disabledTools={toolSettings.disabledTools}
                   toolStatus={toolSettings.toolStatus}
                   theme={theme}
+                  services79Rates={services79Rates}
                 />
               )}
 
@@ -1175,6 +1100,7 @@ export default function App() {
                   }}
                   disabledTools={toolSettings.disabledTools}
                   theme={theme}
+                  services79Rates={services79Rates}
                 />
               )}
 
@@ -1212,13 +1138,6 @@ export default function App() {
               {!isStaffAuth && adminTab === 'udhar' && (
                 <UdharRegister
                   settings={settings}
-                  selectedCafe={selectedCafe}
-                />
-              )}
-
-              {!isStaffAuth && adminTab === 'edistrict' && (
-                <EDistrictSuite
-                  initialSubTab={edistrictSubTab}
                   selectedCafe={selectedCafe}
                 />
               )}
@@ -1294,6 +1213,7 @@ export default function App() {
             <SuperAdminPanel 
               theme={theme} 
               onToolStatusUpdated={fetchToolSettings} 
+              onRatesUpdated={fetchServices79Rates}
               onBackToPortal={() => navigateToTier('customer')}
             />
           )

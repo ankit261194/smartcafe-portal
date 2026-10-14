@@ -12,46 +12,80 @@ export const REKHA_NAV_CATEGORIES = [
       en: '1. Main Dashboard'
     },
     items: [
-      { id: 'dashboard', label: { hi: 'डैशबोर्ड (होम)', en: 'Dashboard (Home)' }, icon: Home }
+      { id: 'dashboard', label: { hi: 'डैशबोर्ड (सभी 79+ सेवाएं)', en: 'Dashboard (All 79+ Services)' }, icon: Home }
     ]
   },
   {
     category: {
-      hi: '2. e-District सेवाएं',
-      en: '2. e-District Services'
+      hi: '2. 🪪 आधार सेवाएं (Aadhaar)',
+      en: '2. 🪪 Aadhaar Hub'
     },
     items: [
-      { id: 'tool-edistrict', label: { hi: 'e-District सत्यापन प्रमाण पत्र', en: 'e-District Verification Slip' }, icon: Award },
-      { id: 'edistrict-decl', label: { hi: 'स्वप्रमाणित घोषणा पत्र जनरेटर', en: 'Self Declaration Form' }, icon: FileText },
-      { id: 'edistrict-packer', label: { hi: '100KB e-District फाइल पैकर', en: '100KB Document Packer' }, icon: Sparkles },
-      { id: 'edistrict-apply', label: { hi: 'e-District प्रमाण पत्र ऑनलाइन आवेदन', en: 'e-District Online Applications' }, icon: Layers },
-      { id: 'edistrict-bhulekh', label: { hi: 'भूलेख खसरा-खतौनी नकल', en: 'Bhulekh & Land Records' }, icon: Award }
+      { id: 'tool-aadhaar_advance', label: { hi: 'आधार एडवांस (फिंगरप्रिंट)', en: 'Aadhaar Advance (Fingerprint)' }, icon: Award },
+      { id: 'tool-aadhaar_original_pdf_no_otp', label: { hi: 'आधार ओरिजिनल PDF (बिना OTP)', en: 'Aadhaar PDF (No OTP)' }, icon: FileText },
+      { id: 'tool-aadhaar_pvc', label: { hi: 'आधार CR-80 PVC कार्ड', en: 'Aadhaar PVC Card' }, icon: Award }
     ]
   },
   {
     category: {
-      hi: '3. त्वरित दस्तावेज़ प्रिंट',
-      en: '3. Quick Document Print'
+      hi: '3. 💳 पैन कार्ड सेवाएं (PAN)',
+      en: '3. 💳 PAN Hub'
     },
     items: [
-      { id: 'print', label: { hi: 'त्वरित प्रिंटिंग सेवा', en: 'Quick Document Print' }, icon: Printer }
+      { id: 'tool-pan_find', label: { hi: 'पैन नंबर सर्च (Find PAN)', en: 'Find PAN by Aadhaar' }, icon: Award },
+      { id: 'tool-pan_details', label: { hi: 'पैन वेरिफिकेशन व एक्टिव स्टेटस', en: 'PAN Verification & Status' }, icon: FileText }
     ]
   },
   {
     category: {
-      hi: '4. वॉलेट एवं पासबुक',
-      en: '4. Wallet & Passbook'
+      hi: '4. 🚗 वाहन व RTO सेवाएं',
+      en: '4. 🚗 Vehicle & RTO'
     },
     items: [
-      { id: 'wallet', label: { hi: 'वॉलेट एवं पासबुक विवरण', en: 'Wallet & Passbook Details' }, icon: Wallet }
+      { id: 'tool-rc_pdf_download', label: { hi: 'वाहन RC टू PDF / PVC', en: 'Vehicle RC to PDF / PVC' }, icon: Award },
+      { id: 'tool-driving_licence_pdf', label: { hi: 'ड्राइविंग लाइसेंस (DL) PDF', en: 'Driving Licence PDF' }, icon: FileText },
+      { id: 'tool-chalan_find', label: { hi: 'ई-चालान जांच एवं रसीद', en: 'e-Challan Search & Receipt' }, icon: Award }
     ]
   },
   {
     category: {
-      hi: '5. आवेदन एवं प्रिंट हिस्ट्री',
-      en: '5. Applications & History'
+      hi: '5. 🗳️ वोटर कार्ड सेवाएं',
+      en: '5. 🗳️ Voter Hub'
     },
     items: [
+      { id: 'tool-voter_pdf', label: { hi: 'डिजिटल वोटर स्मार्ट कार्ड', en: 'Digital Voter Card PDF' }, icon: Award },
+      { id: 'tool-voter_original_pdf_no_otp', label: { hi: 'वोटर ओरिजिनल PDF (बिना OTP)', en: 'Voter PDF (No OTP)' }, icon: FileText }
+    ]
+  },
+  {
+    category: {
+      hi: '6. 🌾 राशन व राज्य कल्याण',
+      en: '6. 🌾 Ration & Welfare'
+    },
+    items: [
+      { id: 'tool-ration_pdf_by_ration', label: { hi: 'राशन कार्ड पर्चा / PDF', en: 'Ration Card Slip / PDF' }, icon: FileText },
+      { id: 'tool-samagra_service', label: { hi: 'समग्र आईडी परिवार व सदस्य', en: 'Samagra ID Search & PDF' }, icon: Award },
+      { id: 'tool-rtps_bihar_pdf', label: { hi: 'RTPS बिहार प्रमाण पत्र PDF', en: 'RTPS Bihar Certificate' }, icon: FileText }
+    ]
+  },
+  {
+    category: {
+      hi: '7. 🏦 बैंकिंग व यूटिलिटी',
+      en: '7. 🏦 Banking & Tools'
+    },
+    items: [
+      { id: 'tool-nsdl_bank', label: { hi: 'NSDL पेमेंट्स बैंक सेवा', en: 'NSDL Payments Bank' }, icon: Award },
+      { id: 'tool-electric_bill_pdf_bihar', label: { hi: 'बिजली बिल भुगतान रसीद', en: 'Electricity Bill Receipt' }, icon: FileText }
+    ]
+  },
+  {
+    category: {
+      hi: '8. त्वरित टूल्स एवं वॉलेट',
+      en: '8. Quick Tools & Wallet'
+    },
+    items: [
+      { id: 'print', label: { hi: 'त्वरित प्रिंटिंग सेवा', en: 'Quick Document Print' }, icon: Printer },
+      { id: 'wallet', label: { hi: 'वॉलेट एवं पासबुक विवरण', en: 'Wallet & Passbook Details' }, icon: Wallet },
       { id: 'orders', label: { hi: 'आवेदन एवं प्रिंट हिस्ट्री', en: 'Applications & History' }, icon: History }
     ]
   }
@@ -107,7 +141,7 @@ export default function RekhaSidebar({
         border-r border-slate-200 dark:border-slate-800/80 flex flex-col 
         transition-all duration-300 ease-in-out select-none shadow-sm backdrop-blur-md no-print
         ${isOpen 
-          ? 'w-76 sm:w-80 translate-x-0 opacity-100' 
+          ? 'w-60 sm:w-64 translate-x-0 opacity-100' 
           : '-translate-x-full lg:w-0 lg:translate-x-0 lg:overflow-hidden lg:opacity-0 lg:pointer-events-none lg:border-r-0'
         }
       `}>
