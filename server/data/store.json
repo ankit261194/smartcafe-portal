@@ -645,6 +645,13 @@
       "pin": "$2b$10$9Q7JiSFspvt.O2Z3Nb8VfOA5OSz.WtswxE2SzqUmE2BsMiMiK3BYe",
       "balance": 0,
       "transactions": []
+    },
+    {
+      "phone": "9811122233",
+      "customerName": "Shyam",
+      "pin": "$2b$10$A5omUZK5TE9dqUiilvBHR.Y2sO.VoszRPP/0kJeuApS1ZGi1WiCdq",
+      "balance": 0,
+      "transactions": []
     }
   ],
   "cafes": [
@@ -11962,6 +11969,17 @@
     }
   ],
   "users": [
+    {
+      "id": "USR-1791996751776",
+      "name": "Shyam",
+      "shopName": "Shyam",
+      "phone": "9811122233",
+      "password": "password123",
+      "role": "citizen",
+      "balance": 0,
+      "isBlocked": false,
+      "createdAt": "2026-10-14T16:52:31.777Z"
+    },
     {
       "id": "USR-1791980693071",
       "name": "रमेश कुमार डिजिटल केंद्र",

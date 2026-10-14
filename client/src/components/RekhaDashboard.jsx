@@ -124,19 +124,7 @@ export default function RekhaDashboard({
       {/* =================================================================== */}
       {/* 2. CLEAN 13 CATEGORY CARDS GRID */}
       {/* =================================================================== */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Layers className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-            <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
-              {language === 'hi' ? '🏛️ सेवा श्रेणियां (Service Categories)' : '🏛️ Service Categories'}
-            </h2>
-          </div>
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-semibold">
-            {fullCatalog.length} {language === 'hi' ? 'सेवाएं उपलब्ध' : 'services available'}
-          </span>
-        </div>
-
+      <div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-3.5">
           {SERVICE_CATEGORIES.map((cat) => {
             const IconComp = CATEGORY_ICON_MAP[cat.id] || Sparkles;

@@ -402,6 +402,18 @@ export default function App() {
 
   const handleLaunchService = (toolKey) => {
     setActiveInstantToolId(toolKey);
+    // Automatically find and attach category so Back navigation is always 100% accurate
+    try {
+      const all = getMergedServicesCatalog(services79Rates);
+      const matched = all.find(s => s.id === toolKey || s.num === Number(toolKey));
+      if (matched) {
+        const catObj = SERVICE_CATEGORIES.find(c => c.id === matched.group || c.id === matched.category);
+        if (catObj) {
+          setSelectedCategory(catObj);
+        }
+      }
+    } catch (e) {}
+
     if (typeof window !== 'undefined') {
       try {
         window.history.pushState({ appTab: 'tool', toolId: toolKey }, '');
@@ -986,9 +998,9 @@ export default function App() {
               />
             )}
 
-            {customerTab === 'category' && selectedCategory && (
+            {customerTab === 'category' && (
               <CategoryPage
-                category={selectedCategory}
+                category={selectedCategory || SERVICE_CATEGORIES[0]}
                 catalog={getMergedServicesCatalog(services79Rates)}
                 onSelectService={(serviceId) => {
                   handleLaunchService(serviceId);
@@ -1164,9 +1176,9 @@ export default function App() {
                 />
               )}
 
-              {adminTab === 'category' && selectedCategory && (
+              {adminTab === 'category' && (
                 <CategoryPage
-                  category={selectedCategory}
+                  category={selectedCategory || SERVICE_CATEGORIES[0]}
                   catalog={getMergedServicesCatalog(services79Rates)}
                   onSelectService={(serviceId) => {
                     handleLaunchService(serviceId);
