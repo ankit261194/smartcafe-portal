@@ -33,6 +33,7 @@ export default function RekhaDashboard({
   walletBalance = 0,
   sanchalakB2bBalance = 0,
   isOperator = false,
+  isSuperAdminAuth = false,
   onOpenWallet,
   onOpenB2bWallet,
   onOpenStandee,

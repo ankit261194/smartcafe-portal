@@ -916,6 +916,7 @@ export default function App() {
                 disabledTools={toolSettings.disabledTools}
                 toolStatus={toolSettings.toolStatus}
                 theme={theme}
+                isSuperAdminAuth={isSuperAdminAuth}
                 services79Rates={services79Rates}
               />
             )}
@@ -1075,6 +1076,7 @@ export default function App() {
                   disabledTools={toolSettings.disabledTools}
                   toolStatus={toolSettings.toolStatus}
                   theme={theme}
+                  isSuperAdminAuth={isSuperAdminAuth}
                   services79Rates={services79Rates}
                 />
               )}
