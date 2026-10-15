@@ -39,7 +39,7 @@
     "phone": "8006518960",
     "password": "password123",
     "role": "citizen",
-    "balance": 500,
+    "balance": 0,
     "isBlocked": false,
     "createdAt": "2026-10-15T00:00:00.000Z"
   },
@@ -50,8 +50,19 @@
     "phone": "9999988888",
     "password": "1234",
     "role": "cafe",
-    "balance": 10000,
+    "balance": 0,
     "isBlocked": false,
     "createdAt": "2026-10-15T07:55:27.835Z"
+  },
+  {
+    "id": "CAFE-TEST",
+    "name": "संचालक",
+    "shopName": "डिजिटल सेवा केंद्र",
+    "phone": "9876543210",
+    "password": "1234",
+    "role": "cafe",
+    "balance": 5000,
+    "isBlocked": false,
+    "createdAt": "2026-10-15T10:41:47.251Z"
   }
 ]

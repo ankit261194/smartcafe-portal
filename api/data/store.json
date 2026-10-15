@@ -753,7 +753,7 @@
     {
       "phone": "8006518960",
       "customerName": "ankit kumar",
-      "balance": 500,
+      "balance": 0,
       "transactions": [
         {
           "id": "TXN-INIT-500",
@@ -767,7 +767,13 @@
     {
       "phone": "9999988888",
       "customerName": "परीक्षण संचालक",
-      "balance": 10000,
+      "balance": 0,
+      "transactions": []
+    },
+    {
+      "phone": "9876543210",
+      "customerName": "संचालक",
+      "balance": 5000,
       "transactions": []
     }
   ],
@@ -3166,7 +3172,7 @@
       "phone": "8006518960",
       "password": "password123",
       "role": "citizen",
-      "balance": 500,
+      "balance": 0,
       "isBlocked": false,
       "createdAt": "2026-10-15T00:00:00.000Z"
     },
@@ -3177,9 +3183,20 @@
       "phone": "9999988888",
       "password": "1234",
       "role": "cafe",
-      "balance": 10000,
+      "balance": 0,
       "isBlocked": false,
       "createdAt": "2026-10-15T07:55:27.835Z"
+    },
+    {
+      "id": "CAFE-TEST",
+      "name": "संचालक",
+      "shopName": "डिजिटल सेवा केंद्र",
+      "phone": "9876543210",
+      "password": "1234",
+      "role": "cafe",
+      "balance": 5000,
+      "isBlocked": false,
+      "createdAt": "2026-10-15T10:41:47.251Z"
     }
   ],
   "verifiedBankReceipts": []
