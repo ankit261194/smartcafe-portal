@@ -61,7 +61,7 @@ export default function VehicleRCDownload({
   const handleLookup = async (regNoToSearch) => {
     const reg = (regNoToSearch || vehicleNumber).trim().toUpperCase();
     if (reg.length < 6) {
-      setErrorMsg('कृपया वैध गाड़ी नंबर (जैसे UP32AB1234) दर्ज करें।');
+      setErrorMsg('कृपया वैध गाड़ी नंबर दर्ज करें।');
       return;
     }
     setErrorMsg('');

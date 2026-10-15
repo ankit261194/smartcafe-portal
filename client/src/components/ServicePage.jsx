@@ -266,7 +266,7 @@ export default function ServicePage({
   const handleQuickRecharge = async (amt = 500) => {
     try {
       setLoading(true);
-      const targetPhone = customerSession?.phone || localStorage.getItem('last_wallet_phone') || '9876543210';
+      const targetPhone = customerSession?.phone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960';
       if (isOperator) {
         const cId = selectedCafe?.id || 'SMARTCAFE-HQ';
         const res = await fetch(`/api/cafes/${cId}/b2b-wallet/topup-instant`, {
@@ -315,7 +315,7 @@ export default function ServicePage({
     setErrorMsg('');
     setLoading(true);
 
-    const effectivePhone = customerSession?.phone || (isOperator ? (selectedCafe?.phone || '9876543210') : '9876543210');
+    const effectivePhone = customerSession?.phone || (isOperator ? (selectedCafe?.phone || '8006518960') : (localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960'));
     const cafeId = selectedCafe?.id || (isOperator ? (selectedCafe?.code || 'SMARTCAFE-HQ') : 'SMARTCAFE-HQ');
 
     const params = {
@@ -923,7 +923,7 @@ export default function ServicePage({
             required
             value={primaryInput}
             onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
-            placeholder="UP32AB1234 / UP1234567890"
+            placeholder="गाड़ी या चालान नंबर दर्ज करें"
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
           />
         </div>

@@ -14,7 +14,7 @@ export default function CustomerWalletModal({
   selectedCafe,
   onBalanceUpdated
 }) {
-  const [phone, setPhone] = useState(currentPhone || '9876543210');
+  const [phone, setPhone] = useState(currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960');
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(false);
   const [addAmount, setAddAmount] = useState('200');
@@ -51,7 +51,7 @@ export default function CustomerWalletModal({
   };
 
   const fetchWallet = async (phoneToFetch) => {
-    const p = phoneToFetch || phone || currentPhone || '9876543210';
+    const p = phoneToFetch || phone || currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960';
     setLoading(true);
     try {
       const res = await authFetch(`/api/wallet/${p}`);
@@ -71,7 +71,7 @@ export default function CustomerWalletModal({
 
   useEffect(() => {
     if (isOpen) {
-      fetchWallet(phone || currentPhone || '9876543210');
+      fetchWallet(phone || currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960');
     }
   }, [isOpen, phone]);
 
@@ -80,7 +80,7 @@ export default function CustomerWalletModal({
     setErrorMsg('');
     setSuccessMsg('');
     setLoading(true);
-    const targetPhone = (phone || currentPhone || '9876543210').trim();
+    const targetPhone = (phone || currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960').trim();
     try {
       const res = await authFetch('/api/wallet/topup-instant', {
         method: 'POST',
