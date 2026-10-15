@@ -749,6 +749,41 @@
       "pin": "$2b$10$bA9kEAr.tSHFCXUCV6Vc5ug/YAlIhcJmLSsnOxdwUr7rdb1ETBnCe",
       "balance": 0,
       "transactions": []
+    },
+    {
+      "phone": "8006518960",
+      "customerName": "ankit kumar",
+      "balance": 500,
+      "transactions": [
+        {
+          "id": "TXN-INIT-500",
+          "type": "credit",
+          "amount": 500,
+          "description": "Opening Balance",
+          "createdAt": "2026-10-15T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "phone": "9876543210",
+      "customerName": "सत्यापित उपभोक्ता",
+      "balance": 250,
+      "transactions": [
+        {
+          "id": "TXN-1792035586687",
+          "type": "debit",
+          "amount": 250,
+          "note": "ऑनलाइन सेवा शुल्क: वाहन RC टू PDF / PVC स्मार्ट कार्ड",
+          "createdAt": "2026-10-15T03:39:46.687Z"
+        },
+        {
+          "id": "TXN-INSTANT-1792035586622",
+          "amount": 500,
+          "type": "credit",
+          "note": "त्वरित 1-क्लिक वॉलेट टॉप-अप (Instant Top-up)",
+          "date": "2026-10-15T03:39:46.622Z"
+        }
+      ]
     }
   ],
   "cafes": [
@@ -12356,6 +12391,17 @@
       "balance": 0,
       "isBlocked": false,
       "createdAt": "2026-10-14T10:15:15.756Z"
+    },
+    {
+      "id": "USR-8006518960",
+      "name": "ankit kumar",
+      "shopName": "स्मार्ट डिजिटल सेवा केंद्र",
+      "phone": "8006518960",
+      "password": "password123",
+      "role": "citizen",
+      "balance": 500,
+      "isBlocked": false,
+      "createdAt": "2026-10-15T00:00:00.000Z"
     }
   ],
   "verifiedBankReceipts": []

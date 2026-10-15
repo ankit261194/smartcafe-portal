@@ -169,6 +169,35 @@ function getStore($dataFile) {
                         ];
                         $changed = true;
                     }
+            // Also ensure wallets entry exists for all persistent users
+            if (!isset($data['wallets']) || !is_array($data['wallets'])) {
+                $data['wallets'] = [];
+                $changed = true;
+            }
+            foreach ($data['users'] as $u) {
+                $uPhone = $u['phone'] ?? '';
+                if ($uPhone) {
+                    $wFound = false;
+                    foreach ($data['wallets'] as &$w) {
+                        if (($w['phone'] ?? '') === $uPhone) {
+                            $wFound = true;
+                            if (empty($w['balance']) && !empty($u['balance'])) {
+                                $w['balance'] = floatval($u['balance']);
+                                $changed = true;
+                            }
+                            break;
+                        }
+                    }
+                    unset($w);
+                    if (!$wFound) {
+                        $data['wallets'][] = [
+                            'phone' => $uPhone,
+                            'customerName' => $u['name'] ?? 'ग्राहक',
+                            'balance' => floatval($u['balance'] ?? 500),
+                            'transactions' => []
+                        ];
+                        $changed = true;
+                    }
                 }
             }
 
@@ -1235,6 +1264,165 @@ if ($endpoint === 'wallet/topup-instant' && $method === 'POST') {
     }
     saveStore($dataFile, $store);
     echo json_encode(['success' => true, 'balance' => $walletData['balance'], 'wallet' => $walletData]);
+    exit;
+}
+
+// ---------------------------------------------------------------------------
+// Route: /api/webhook/bank-notification (Automated Bank / UPI Push Webhook)
+// ---------------------------------------------------------------------------
+if ($endpoint === 'webhook/bank-notification') {
+    if ($method === 'GET') {
+        echo json_encode(['status' => 'active', 'service' => 'SmartCafe Bank Notification Webhook Bridge', 'version' => '2026.1']);
+        exit;
+    }
+    
+    $notification = $body['notification'] ?? '';
+    $title = $body['title'] ?? '';
+    $appName = $body['app'] ?? '';
+    $secret = $body['secret'] ?? '';
+
+    $EXPECTED_SECRET = 'SMARTCAFE_AUTO_2026';
+    if (!empty($secret) && $secret !== $EXPECTED_SECRET) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Unauthorized webhook secret']);
+        exit;
+    }
+
+    $rawText = trim($title . ' ' . $notification);
+    
+    // Extract 12-digit UTR
+    $detectedUtr = null;
+    if (preg_match('/\b(\d{12})\b/', $rawText, $utrMatch)) {
+        $detectedUtr = $utrMatch[1];
+    }
+
+    // Extract Amount (e.g. ₹500, Rs. 500, Rs 500, INR 500, 500.00)
+    $detectedAmount = null;
+    if (preg_match('/(?:rs\.?|inr|₹|credited|received)\s*([0-9]+(?:\.[0-9]{1,2})?)/i', $rawText, $amtMatch)) {
+        $detectedAmount = floatval($amtMatch[1]);
+    } elseif (preg_match('/([0-9]+(?:\.[0-9]{1,2})?)\s*(?:rs|inr|₹)/i', $rawText, $amtMatch)) {
+        $detectedAmount = floatval($amtMatch[1]);
+    }
+
+    if (!$detectedUtr) {
+        echo json_encode([
+            'success' => true,
+            'message' => 'Notification received, no 12-digit UTR found in text',
+            'ignored' => true,
+            'rawText' => $rawText
+        ]);
+        exit;
+    }
+
+    if (!isset($store['verifiedBankReceipts'])) $store['verifiedBankReceipts'] = [];
+
+    // Record verified receipt
+    $receiptFound = false;
+    foreach ($store['verifiedBankReceipts'] as &$r) {
+        if (($r['utr'] ?? '') === $detectedUtr) {
+            $receiptFound = true;
+            break;
+        }
+    }
+    unset($r);
+
+    if (!$receiptFound) {
+        array_unshift($store['verifiedBankReceipts'], [
+            'utr' => $detectedUtr,
+            'amount' => $detectedAmount,
+            'rawText' => $rawText,
+            'app' => $appName,
+            'verifiedAt' => date('c')
+        ]);
+    }
+
+    $autoApproved = false;
+    $approvedType = null;
+
+    // Check 1: Pending Customer & B2B UTR Requests
+    if (!empty($store['utrRequests']) && is_array($store['utrRequests'])) {
+        foreach ($store['utrRequests'] as &$u) {
+            if (($u['utr'] ?? '') === $detectedUtr && ($u['status'] ?? '') === 'pending') {
+                $u['status'] = 'approved';
+                $u['approvedAt'] = date('c');
+                $u['autoVerified'] = true;
+
+                $effectiveAmt = $detectedAmount ?: floatval($u['amount'] ?? 0);
+
+                if (($u['tier'] ?? '') === 'customer_to_sanchalak' || !empty($u['customerPhone'])) {
+                    $cPhone = $u['customerPhone'] ?? ($u['phone'] ?? '');
+                    if (!isset($store['wallets'])) $store['wallets'] = [];
+                    $wFound = false;
+                    foreach ($store['wallets'] as &$w) {
+                        if (($w['phone'] ?? '') === $cPhone) {
+                            $w['balance'] = (floatval($w['balance'] ?? 0)) + $effectiveAmt;
+                            if (!isset($w['transactions'])) $w['transactions'] = [];
+                            array_unshift($w['transactions'], [
+                                'id' => 'TXN-AUTO-' . time(),
+                                'amount' => $effectiveAmt,
+                                'type' => 'credit',
+                                'note' => 'स्वतः UPI बैंक सत्यापन क्रेडिट (UTR #' . $detectedUtr . ')',
+                                'date' => date('c')
+                            ]);
+                            $wFound = true;
+                            break;
+                        }
+                    }
+                    unset($w);
+                    if (!$wFound) {
+                        $store['wallets'][] = [
+                            'phone' => $cPhone,
+                            'customerName' => $u['customerName'] ?? 'ग्राहक',
+                            'balance' => $effectiveAmt,
+                            'transactions' => [[
+                                'id' => 'TXN-AUTO-' . time(),
+                                'amount' => $effectiveAmt,
+                                'type' => 'credit',
+                                'note' => 'स्वतः UPI बैंक सत्यापन क्रेडिट (UTR #' . $detectedUtr . ')',
+                                'date' => date('c')
+                            ]]
+                        ];
+                    }
+                    $autoApproved = true;
+                    $approvedType = 'customer_wallet';
+                } elseif (($u['tier'] ?? '') === 'sanchalak_to_superadmin' || !empty($u['cafeId'])) {
+                    $uCafeId = $u['cafeId'] ?? '';
+                    if (!empty($store['cafes'])) {
+                        foreach ($store['cafes'] as &$c) {
+                            if ($c['id'] === $uCafeId) {
+                                if (!isset($c['b2bWallet'])) $c['b2bWallet'] = ['balance' => 0, 'transactions' => []];
+                                $c['b2bWallet']['balance'] = (floatval($c['b2bWallet']['balance'] ?? 0)) + $effectiveAmt;
+                                if (!isset($c['b2bWallet']['transactions'])) $c['b2bWallet']['transactions'] = [];
+                                array_unshift($c['b2bWallet']['transactions'], [
+                                    'id' => 'B2B-AUTO-' . time(),
+                                    'amount' => $effectiveAmt,
+                                    'type' => 'credit',
+                                    'note' => 'स्वतः B2B UPI बैंक सत्यापन क्रेडिट (UTR #' . $detectedUtr . ')',
+                                    'date' => date('c')
+                                ]);
+                                $autoApproved = true;
+                                $approvedType = 'b2b_wallet';
+                                break;
+                            }
+                        }
+                        unset($c);
+                    }
+                }
+            }
+        }
+        unset($u);
+    }
+
+    saveStore($dataFile, $store);
+
+    echo json_encode([
+        'success' => true,
+        'message' => $autoApproved ? "UTR #{$detectedUtr} स्वतः स्वीकृत एवं वॉलेट में क्रेडिट हो गया!" : "UTR #{$detectedUtr} बैंक रसीद में सुरक्षित हुआ (वेटिंग फॉर रिक्वेस्ट)।",
+        'utr' => $detectedUtr,
+        'amount' => $detectedAmount,
+        'autoApproved' => $autoApproved,
+        'approvedType' => $approvedType
+    ]);
     exit;
 }
 
@@ -2554,6 +2742,310 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
                         'isLiveFromP4Points' => true
                     ];
                 }
+            }
+        }
+    }
+
+    // 6. Voter Verification
+    if (strpos($norm, 'voter') !== false || strpos($norm, 'epic') !== false) {
+        $epicNo = strtoupper(trim($params['epicNo'] ?? ($params['epic'] ?? ($params['query'] ?? ''))));
+        if (strlen($epicNo) >= 5) {
+            $url = 'https://authorized.p4points.co.in/api/v1/voterVerification_new.php?apiKey=' . urlencode($p4ApiKey) . '&epicNumber=' . urlencode($epicNo);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                $doc = $json['response']['docs'][0] ?? null;
+                if ($doc) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'voter',
+                        'epicNo' => $doc['epic_no'] ?? $epicNo,
+                        'name' => trim(($doc['FirstName'] ?? '') . ' ' . ($doc['LastName'] ?? '')) ?: ($doc['name_v1'] ?? 'मतदाता'),
+                        'fatherName' => $doc['rln_name'] ?? '',
+                        'gender' => $doc['gender'] ?? 'M',
+                        'dob' => $doc['dob'] ?? '',
+                        'age' => $doc['age'] ?? '30',
+                        'district' => $doc['district'] ?? '',
+                        'state' => $doc['state'] ?? '',
+                        'assembly' => $doc['ac_name'] ?? '',
+                        'partName' => $doc['part_name'] ?? '',
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 7. Electric Bill PDF
+    if (strpos($norm, 'electric') !== false || strpos($norm, 'bijli') !== false || strpos($norm, 'bill') !== false) {
+        $caNo = preg_replace('/[^0-9]/', '', $params['consumerNo'] ?? ($params['caNumber'] ?? ($params['query'] ?? '')));
+        if (strlen($caNo) >= 6) {
+            $url = 'https://authorized.p4points.co.in/api/v1/elctricBillPDF.php?apiKey=' . urlencode($p4ApiKey) . '&caNumber=' . urlencode($caNo);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['pdf_base64'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'electricity',
+                        'consumerNo' => $caNo,
+                        'pdfBase64' => $json['pdf_base64'],
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 8. eShram Verification
+    if (strpos($norm, 'eshram') !== false || strpos($norm, 'shram') !== false) {
+        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['query'] ?? '')));
+        if (strlen($uid) === 12) {
+            $url = 'https://authorized.p4points.co.in/api/v1/eshramVerification.php?apiKey=' . urlencode($p4ApiKey) . '&uidNumber=' . urlencode($uid);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['success']) && !empty($json['data'])) {
+                    $d = $json['data'];
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'eshram',
+                        'name' => $d['name']['name_en'] ?? 'श्रमिक',
+                        'dob' => $d['dob'] ?? '',
+                        'gender' => $d['gender'] ?? 'Male',
+                        'state' => $d['state'] ?? '',
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 9. NPCI Link Status
+    if (strpos($norm, 'npci') !== false || strpos($norm, 'dbt') !== false) {
+        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['query'] ?? ''));
+        if (strlen($uid) === 12) {
+            $url = 'https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php?apiKey=' . urlencode($p4ApiKey) . '&aadhar=' . urlencode($uid);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['status']) && !empty($json['data'])) {
+                    $d = $json['data'];
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'npci',
+                        'bankName' => $d['bank'] ?? 'STATE BANK OF INDIA',
+                        'status' => $d['status'] ?? 'ACTIVE',
+                        'lastUpdate' => $d['last_update'] ?? date('Y-m-d'),
+                        'aadhaarNo' => $uid,
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 10. Aadhaar to Ration PDF
+    if (strpos($norm, 'aadhar_to_ration') !== false || strpos($norm, 'aadhaarrationslip') !== false) {
+        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['query'] ?? ''));
+        if (strlen($uid) === 12) {
+            $url = 'https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php?apiKey=' . urlencode($p4ApiKey) . '&aadhar=' . urlencode($uid) . '&rationtype=new';
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['api_response']['pdf'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'ration',
+                        'name' => $json['api_response']['name'] ?? 'राशन धारक',
+                        'rationNo' => $json['api_response']['ration_no'] ?? '',
+                        'pdfBase64' => $json['api_response']['pdf'],
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 11. RC Fast PDF
+    if (strpos($norm, 'rc_fast') !== false || strpos($norm, 'rcfast') !== false) {
+        $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicleNumber'] ?? ($params['rcNo'] ?? ($params['query'] ?? ''))));
+        if (strlen($regNo) >= 4) {
+            $url = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php?apiKey=' . urlencode($p4ApiKey) . '&rcno=' . urlencode($regNo) . '&type=non%20chip';
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['pdf'])) {
+                    $d = $json['data'] ?? [];
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'rc',
+                        'regNo' => $d['vrc'] ?? $regNo,
+                        'ownerName' => $d['owner_name'] ?? 'वाहन स्वामी',
+                        'fatherName' => $d['owner_father_name'] ?? '',
+                        'chassisNo' => $d['chassis'] ?? '',
+                        'engineNo' => $d['engine'] ?? '',
+                        'maker' => $d['maker'] ?? '',
+                        'model' => $d['model'] ?? '',
+                        'pdfBase64' => $json['pdf'],
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 12. Chassis to RC
+    if (strpos($norm, 'chassis_to_rc') !== false || strpos($norm, 'chassis') !== false) {
+        $chassisNo = strtoupper(trim($params['chassisNumber'] ?? ($params['query'] ?? '')));
+        if (strlen($chassisNo) >= 5) {
+            $url = 'https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php?apiKey=' . urlencode($p4ApiKey) . '&chassisNumber=' . urlencode($chassisNo);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['status']) && !empty($json['plate'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'rc',
+                        'regNo' => $json['plate'],
+                        'ownerName' => $json['full_name'] ?? 'वाहन स्वामी',
+                        'fatherName' => $json['relation_name'] ?? '',
+                        'chassisNo' => $chassisNo,
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 13. RC to Mobile & Father Name
+    if (strpos($norm, 'rc_to_mobile') !== false || strpos($norm, 'rc_mobile') !== false) {
+        $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicleNumber'] ?? ($params['query'] ?? '')));
+        if (strlen($regNo) >= 4) {
+            $url = 'https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php?apiKey=' . urlencode($p4ApiKey) . '&vehicalNumber=' . urlencode($regNo);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['status']) && !empty($json['holder'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'rc',
+                        'regNo' => $regNo,
+                        'ownerName' => $json['holder']['full_name'] ?? 'वाहन स्वामी',
+                        'fatherName' => $json['holder']['relation_name'] ?? '',
+                        'mobileNumber' => $json['holder']['contact'] ?? '',
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 14. AgriStack Farmer Details
+    if (strpos($norm, 'agristak') !== false || strpos($norm, 'farmer') !== false) {
+        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['query'] ?? '')));
+        if (strlen($uid) === 12) {
+            $url = 'https://authorized.p4points.co.in/api/v1/AgriStak/farmer-details.php?apiKey=' . urlencode($p4ApiKey) . '&uidNumber=' . urlencode($uid);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['data'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'agristack',
+                        'farmerDetails' => $json['data']['farmerDetails'] ?? [],
+                        'landOwnership' => $json['data']['farmerLandOwnerShips'] ?? [],
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 15. RTPS Certificate Bihar
+    if (strpos($norm, 'rtps') !== false || strpos($norm, 'edistrict') !== false) {
+        $appNo = trim($params['appNo'] ?? ($params['applicationNumber'] ?? ($params['query'] ?? '')));
+        $name = trim($params['name'] ?? ($params['customerName'] ?? ''));
+        if (strlen($appNo) >= 5) {
+            $url = 'https://authorized.p4points.co.in/api/v1/RtpsCertificate-Br.php?apiKey=' . urlencode($p4ApiKey) . '&applicationNumber=' . urlencode($appNo) . '&name=' . urlencode($name);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['status']) && !empty($json['pdf'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'edistrict',
+                        'appNo' => $appNo,
+                        'name' => $json['name'] ?? $name,
+                        'pdfBase64' => $json['pdf'],
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 16. Aadhaar PDF / OTP KYC (aadhaar_otp_kyc)
+    if (strpos($norm, 'aadhaar_otp') !== false || strpos($norm, 'aadhaar_pdf') !== false || strpos($norm, 'uidai') !== false) {
+        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['query'] ?? ''));
+        if (strlen($uid) === 12) {
+            $url = 'https://authorized.p4points.co.in/api/v1/aadhaar_pdf.php?action=sendOtp&aadhaar=' . urlencode($uid) . '&apiKey=' . urlencode($p4ApiKey);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                return [
+                    'source' => 'p4points',
+                    'service' => 'aadhaar_otp',
+                    'status' => $json['status'] ?? 'otp_sent',
+                    'message' => $json['message'] ?? 'आधार पंजीकृत मोबाइल पर OTP प्रेषित कर दिया गया है।',
+                    'maskedAadhaar' => 'XXXX XXXX ' . substr($uid, -4),
+                    'aadhaarNo' => $uid,
+                    'isLiveFromP4Points' => true
+                ];
             }
         }
     }
