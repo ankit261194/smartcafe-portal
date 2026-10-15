@@ -136,7 +136,7 @@ export default function Navbar({
                 {isOperator 
                   ? (selectedCafe?.shopName ? `🏪 ${selectedCafe.shopName}` : (language === 'hi' ? 'दुकानदार B2B थोक काउंटर' : 'Shopkeeper Counter'))
                   : isCustomerUser 
-                  ? (customerSession.name ? `👤 ${customerSession.name} (+91 ${customerSession.phone})` : `+91 ${customerSession.phone}`)
+                  ? (customerSession?.name ? `👤 ${customerSession.name} (+91 ${customerSession.phone})` : `+91 ${customerSession?.phone || ''}`)
                   : (selectedCafe?.shopName || t('brand_tagline'))}
               </p>
             </div>
@@ -382,7 +382,7 @@ export default function Navbar({
           >
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0"></span>
             <span className="truncate">
-              {customerSession.name ? `${customerSession.name}` : `+91 ${customerSession.phone}`}
+              {customerSession?.name ? `${customerSession.name}` : `+91 ${customerSession?.phone || ''}`}
             </span>
           </div>
           <button

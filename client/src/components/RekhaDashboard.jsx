@@ -287,10 +287,10 @@ export default function RekhaDashboard({
               <div className="min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
                   <h2 className="text-base sm:text-lg font-black tracking-tight text-white truncate">
-                    {language === 'hi' ? `नमस्ते, ${customerSession.name || 'नागरिक'}` : `Welcome, ${customerSession.name || 'Citizen'}`}
+                    {language === 'hi' ? `नमस्ते, ${customerSession?.name || 'नागरिक'}` : `Welcome, ${customerSession?.name || 'Citizen'}`}
                   </h2>
                   <span className="bg-cyan-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">
-                    खाता: +91 {customerSession.phone}
+                    खाता: +91 {customerSession?.phone || ''}
                   </span>
                 </div>
                 <p className="text-xs text-indigo-200/90 font-bold mt-0.5">
@@ -514,11 +514,15 @@ export default function RekhaDashboard({
                     {count} {language === 'hi' ? 'सेवाएं' : 'Services'}
                   </span>
 
-                  {isOperator && (
+                  {isOther ? (
                     <span className="block text-[9px] font-black text-emerald-600 dark:text-emerald-400 mt-1">
-                      {isOther ? (language === 'hi' ? '100% मुफ्त • ₹0' : '100% Free') : (language === 'hi' ? 'थोक दरें लागू' : 'B2B Rates')}
+                      {language === 'hi' ? '🎉 100% मुफ़्त • ₹0' : '🎉 100% Free • ₹0'}
                     </span>
-                  )}
+                  ) : isOperator ? (
+                    <span className="block text-[9px] font-black text-amber-600 dark:text-amber-400 mt-1">
+                      {language === 'hi' ? 'थोक दरें लागू' : 'B2B Wholesale'}
+                    </span>
+                  ) : null}
                 </div>
 
                 {/* Small Action */}

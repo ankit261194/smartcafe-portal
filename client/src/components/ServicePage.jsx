@@ -73,6 +73,23 @@ function ServicePageContent({
     return allServices.find(s => s.id === activeToolId || s.num === Number(activeToolId)) || allServices[0] || INSTANT_TOOLS[0];
   }, [allServices, activeToolId]);
 
+  const isFreeService = useMemo(() => {
+    return Boolean(
+      currentTool?.category === 'other' || 
+      currentTool?.group === 'other' || 
+      currentTool?.isFree === true ||
+      ['pvc_auto_cropper', 'passport_photo_maker', 'govt_form_resizer', 'bank_ifsc_lookup', 'pincode_lookup', 'qr_generator', 'sarkari_job_feed'].includes(currentTool?.id) ||
+      (isOperator ? Number(currentTool?.wholesaleRate) === 0 : Number(currentTool?.retailRate) === 0)
+    );
+  }, [currentTool, isOperator]);
+
+  const requiredFee = useMemo(() => {
+    if (isFreeService) return 0;
+    return isOperator 
+      ? (currentTool?.wholesaleRate !== undefined ? Number(currentTool.wholesaleRate) : 15) 
+      : (currentTool?.retailRate !== undefined ? Number(currentTool.retailRate) : 30);
+  }, [isFreeService, isOperator, currentTool]);
+
   const toolKind = useMemo(() => {
     const id = (currentTool?.id || '').toLowerCase();
     const cat = (currentTool?.category || currentTool?.group || '').toLowerCase();
@@ -351,10 +368,9 @@ function ServicePageContent({
       return;
     }
 
-    // Fee and Balance Evaluation (Zero Hard-Block Frictionless Mode)
-    const requiredFee = isOperator ? (currentTool.wholesaleRate || 15) : (currentTool.retailRate || 30);
+    // Balance Evaluation (Zero Hard-Block Frictionless Mode)
     const currentBal = isOperator ? (sanchalakB2bBalance || 0) : (walletBalance || 0);
-    const isTrialPreview = (currentBal < requiredFee);
+    const isTrialPreview = !isFreeService && (currentBal < requiredFee);
 
     setErrorMsg('');
     setLoading(true);
@@ -622,9 +638,9 @@ function ServicePageContent({
           success: true,
           isInstantPreview: true,
           message: '✅ 1-क्लिक इंस्टेंट जनरेशन सफल! आधिकारिक प्रति तैयार है।',
-          retailFee: currentTool.retailRate,
-          wholesaleCost: currentTool.wholesaleRate,
-          margin: currentTool.retailRate - currentTool.wholesaleRate,
+          retailFee: isFreeService ? 0 : (currentTool?.retailRate !== undefined ? Number(currentTool.retailRate) : 30),
+          wholesaleCost: isFreeService ? 0 : (currentTool?.wholesaleRate !== undefined ? Number(currentTool.wholesaleRate) : 15),
+          margin: 0,
           vehicleData: mergedData,
           generatedData: mergedData,
           data: mergedData
@@ -2032,6 +2048,10 @@ function ServicePageContent({
                   <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     ⏳ Coming Soon
                   </span>
+                ) : isFreeService ? (
+                  <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
+                    🎉 {language === 'hi' ? '100% मुफ़्त सेवा' : '100% Free Tool'}
+                  </span>
                 ) : (
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🟢 Live API
@@ -2095,7 +2115,7 @@ function ServicePageContent({
               )}
 
               {/* Balance Status Notice */}
-              {((isOperator ? (sanchalakB2bBalance || 0) : (walletBalance || 0)) < (isOperator ? (currentTool.wholesaleRate || 15) : (currentTool.retailRate || 30))) && (
+              {!isFreeService && requiredFee > 0 && ((isOperator ? (sanchalakB2bBalance || 0) : (walletBalance || 0)) < requiredFee) && (
                 <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-bold flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     <IndianRupee className="w-3.5 h-3.5 text-amber-600" />
@@ -2116,14 +2136,26 @@ function ServicePageContent({
 
               {/* Bottom Action Row: Live Fee Badge on Left + Action Buttons on Right */}
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-3">
-                <div className="bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-1.5">
-                  <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                    {language === 'hi' ? 'शुल्क:' : 'Fee:'}
-                  </span>
-                  <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 text-sm">
-                    ₹{isOperator ? (currentTool.wholesaleRate || 15) : (currentTool.retailRate || 30)}
-                  </span>
-                </div>
+                {isFreeService || requiredFee === 0 ? (
+                  <div className="bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-300 dark:border-emerald-700/60 flex items-center gap-1.5 shadow-2xs">
+                    <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
+                      {language === 'hi' ? 'शुल्क:' : 'Fee:'}
+                    </span>
+                    <span className="font-black text-emerald-700 dark:text-emerald-400 text-xs flex items-center gap-1">
+                      <span>🎉</span>
+                      <span>{language === 'hi' ? '100% मुफ़्त (₹0)' : '100% Free (₹0)'}</span>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="bg-slate-100 dark:bg-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center gap-1.5">
+                    <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400">
+                      {language === 'hi' ? 'शुल्क:' : 'Fee:'}
+                    </span>
+                    <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 text-sm">
+                      ₹{requiredFee}
+                    </span>
+                  </div>
+                )}
 
                 <div className="flex items-center gap-2">
                   {showSecondaryButton && (

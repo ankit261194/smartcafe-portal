@@ -322,10 +322,13 @@ export function getMergedServicesCatalog(liveRates = []) {
     const enrich = SERVICE_ENRICHMENT[s.id] || {};
     const group = getServiceGroup(s.category);
 
+    const isOtherService = s.category === 'other' || group === 'other' || ['pvc_auto_cropper', 'passport_photo_maker', 'govt_form_resizer', 'bank_ifsc_lookup', 'pincode_lookup', 'qr_generator', 'sarkari_job_feed'].includes(s.id);
+
     return {
       ...s,
-      wholesaleRate: live.wholesaleRate !== undefined ? Number(live.wholesaleRate) : s.wholesaleRate,
-      retailRate: live.retailRate !== undefined ? Number(live.retailRate) : s.retailRate,
+      wholesaleRate: isOtherService ? 0 : (live.wholesaleRate !== undefined ? Number(live.wholesaleRate) : s.wholesaleRate),
+      retailRate: isOtherService ? 0 : (live.retailRate !== undefined ? Number(live.retailRate) : s.retailRate),
+      isFree: isOtherService || (s.wholesaleRate === 0 && s.retailRate === 0),
       isActive: live.isActive !== undefined ? Boolean(live.isActive) : (s.isActive !== false),
       title: enrich.title || { hi: s.name, en: s.name },
       sub: enrich.sub || { hi: `${s.name} आधिकारिक डिजिटल सेवा`, en: `Official ${s.name} Service` },

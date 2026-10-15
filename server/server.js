@@ -3963,7 +3963,14 @@ app.post('/api/services/execute-automated', async (req, res) => {
   let retailFee = 250;
   let serviceDisplayName = normServiceType;
 
-  if (service79) {
+  const isOtherCategory = (service79 && (service79.category === 'other' || service79.group === 'other')) ||
+    ['pvc_auto_cropper', 'passport_photo_maker', 'govt_form_resizer', 'bank_ifsc_lookup', 'pincode_lookup', 'qr_generator', 'sarkari_job_feed'].includes(normServiceType);
+
+  if (isOtherCategory) {
+    wholesaleCost = 0;
+    retailFee = 0;
+    serviceDisplayName = service79?.name || normServiceType;
+  } else if (service79) {
     wholesaleCost = Number(service79.wholesaleRate) || 0;
     retailFee = Number(service79.retailRate) || 0;
     serviceDisplayName = service79.name;
@@ -3986,8 +3993,8 @@ app.post('/api/services/execute-automated', async (req, res) => {
   if (!store.wallets) store.wallets = [];
   let customerWallet = store.wallets.find(w => w.phone === effectiveCustomerPhone);
 
-  let isTrial = Boolean(previewMode);
-  if (!previewMode) {
+  let isTrial = isOtherCategory ? false : Boolean(previewMode);
+  if (!previewMode && !isOtherCategory) {
     if (cafe.b2bWallet.balance < wholesaleCost) {
       return res.status(403).json({
         error: `संचालक B2B बैलेंस अपर्याप्त है (वर्तमान: ₹${cafe.b2bWallet.balance}, आवश्यक: ₹${wholesaleCost})। कृपया वॉलेट रिचार्ज करें।`,
