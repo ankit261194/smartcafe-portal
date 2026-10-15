@@ -261,7 +261,19 @@ function saveStore($dataFile, $store) {
     if (!empty($store['users']) && is_array($store['users'])) {
         @file_put_contents($masterUsersFile, json_encode($store['users'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
     }
-    return file_put_contents($dataFile, json_encode($store, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    $res = file_put_contents($dataFile, json_encode($store, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+    // Synchronously mirror to active Relational SQL Database (ACID)
+    try {
+        $pdo = getPdoConnection();
+        if ($pdo) {
+            syncStoreToSql($pdo, $store);
+        }
+    } catch (Throwable $e) {
+        error_log("SQL Mirroring Warning: " . $e->getMessage());
+    }
+
+    return $res;
 }
 
 // 4. Request Parsing
@@ -271,6 +283,12 @@ $rawBody = file_get_contents('php://input');
 $body = json_decode($rawBody, true) ?: $_POST;
 
 $store = getStore($dataFile);
+
+// Auto-migrate to active Relational SQL database on boot if tables empty
+$pdo = getPdoConnection();
+if ($pdo) {
+    autoMigrateIfEmpty($pdo, $store);
+}
 
 // 5. Auth Token Helper
 if (!function_exists('getallheaders')) {
@@ -4776,24 +4794,8 @@ if ($endpoint === 'system/gateway-health' || $endpoint === 'superadmin/gateway-h
 // 2. MySQL Enterprise Database Architecture & Migration Engine (Option 1)
 // ═══════════════════════════════════════════════════════════════════════════
 if ($endpoint === 'system/db-status' || $endpoint === 'superadmin/db-status') {
-    $cfg = getDbConfig();
     $pdo = getPdoConnection();
-    $status = [
-        'type' => $pdo ? 'mysql' : 'json',
-        'isMysqlConnected' => !empty($pdo),
-        'configFound' => !empty($cfg),
-        'database' => $cfg['database'] ?? null,
-        'host' => $cfg['host'] ?? null,
-        'tables' => []
-    ];
-
-    if ($pdo) {
-        try {
-            $tables = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
-            $status['tables'] = $tables;
-        } catch (Throwable $e) {}
-    }
-
+    $status = getDbStatusInfo($pdo);
     echo json_encode(['success' => true, 'dbStatus' => $status]);
     exit;
 }
@@ -4811,15 +4813,15 @@ if ($endpoint === 'system/migrate-db' || $endpoint === 'superadmin/migrate-db') 
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'error' => 'MySQL डेटाबेस कनेक्ट नहीं है। कृपया पहले api/db-config.php में Hostinger MySQL क्रेडेंशियल्स दर्ज करें।'
+            'error' => 'डेटाबेस इंजन कनेक्ट नहीं हो सका।'
         ]);
         exit;
     }
 
-    $result = migrateJsonStoreToMysql($pdo, $store);
+    $result = migrateJsonStoreToSql($pdo, $store);
     echo json_encode([
         'success' => $result['success'] ?? false,
-        'message' => !empty($result['success']) ? '✅ JSON स्टोर का संपूर्ण डेटा MySQL में 100% सफलतापूर्वक माइग्रेट हो गया!' : 'माइग्रेशन विफल',
+        'message' => !empty($result['success']) ? '✅ रिलेशनल SQL डेटाबेस में 100% डेटा सफलतापूर्वक माइग्रेट हो गया!' : 'माइग्रेशन विफल',
         'details' => $result
     ]);
     exit;
