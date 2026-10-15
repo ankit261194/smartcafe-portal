@@ -23,6 +23,7 @@ export const CATEGORY_ICON_MAP = {
   agriculture: FileText,
   lookup: Search,
   telecom: Smartphone,
+  other: Sparkles,
   all: Sparkles
 };
 
@@ -116,8 +117,43 @@ export default function RekhaDashboard({
 
       </div>
 
+      {/* 24x7 Live Sarkari Job & Exam Alerts Banner */}
+      <div 
+        onClick={() => {
+          if (onSelectTool) {
+            onSelectTool({ id: 'sarkari_job_feed', name: 'लाइव सरकारी नौकरी, एडमिट कार्ड व योजनाएं', category: 'other' });
+          } else if (onSelectCategory) {
+            onSelectCategory({ id: 'other', title: { hi: '⚡ अन्य उपयोगी सेवाएं', en: '⚡ Other Services' } });
+          }
+        }}
+        className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 rounded-2xl p-3 sm:p-3.5 text-white shadow-sm flex items-center justify-between gap-3 cursor-pointer hover:shadow-md transition-all active:scale-99"
+      >
+        <div className="flex items-center gap-2.5 overflow-hidden">
+          <div className="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
+            <Sparkles className="w-4 h-4 text-white animate-pulse" />
+          </div>
+          <div className="overflow-hidden">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-white/25 px-2 py-0.5 rounded-full">
+                {language === 'hi' ? '📢 लाइव सरकारी अलर्ट 24x7' : '📢 Live Govt Alerts'}
+              </span>
+              <span className="text-[10px] text-amber-100 font-bold hidden sm:inline">
+                {language === 'hi' ? 'रोज़ाना नए फॉर्म व एडमिट कार्ड' : 'Daily New Forms & Results'}
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm font-black truncate text-white/95 mt-0.5">
+              UIIC AO Admit Card 2026 • SSC Constable GD 2026 • RPF SI Exam City • UP Police Result
+            </p>
+          </div>
+        </div>
+        <div className="shrink-0 flex items-center gap-1 bg-white text-orange-600 font-black px-3 py-1.5 rounded-xl text-xs hover:bg-orange-50 transition shadow-xs">
+          <span>{language === 'hi' ? 'सभी देखें' : 'View All'}</span>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </div>
+      </div>
+
       {/* =================================================================== */}
-      {/* 2. CLEAN 13 CATEGORY CARDS GRID */}
+      {/* 2. CLEAN 14 CATEGORY CARDS GRID */}
       {/* =================================================================== */}
       <div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-3.5">

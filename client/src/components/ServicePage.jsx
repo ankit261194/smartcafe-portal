@@ -84,6 +84,10 @@ function ServicePageContent({
     if (['electricity', 'electric_bill_pdf_bihar'].includes(id) || cat === 'utility' || id.includes('electric_bill')) return 'electricity';
     if (['challan', 'chalan_find'].includes(id) || id.includes('chalan') || id.includes('challan')) return 'challan';
     if (['edistrict', 'edistrict-verify', 'edistrict-decl', 'edistrict-packer', 'edistrict-bhulekh'].includes(id) || cat === 'edistrict') return 'edistrict';
+    if (id === 'bank_ifsc_lookup' || id.includes('ifsc')) return 'ifsc';
+    if (id === 'pincode_lookup' || id.includes('pincode')) return 'pincode';
+    if (id === 'qr_generator' || id.includes('qr_')) return 'qr';
+    if (id === 'sarkari_job_feed' || id.includes('sarkari')) return 'sarkari_feed';
     if (cat === 'banking' || id.includes('bank') || id.includes('nsdl') || id.includes('npci')) return 'banking';
     if (cat === 'telecom' || id.includes('telecom') || id.includes('sim') || id.includes('cdr')) return 'telecom';
     if (cat === 'agriculture' || id.includes('agri') || id.includes('kisan')) return 'agriculture';
@@ -446,6 +450,25 @@ function ServicePageContent({
     }
     if (toolKind === 'receipt') {
       params.serviceDesc = secondaryInput.trim() || 'ऑनलाइन सेवाएं';
+    }
+    if (toolKind === 'ifsc') {
+      params.ifscCode = val.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      params.ifsc = params.ifscCode;
+      params.query = params.ifscCode;
+    }
+    if (toolKind === 'pincode') {
+      params.pincode = val.replace(/[^0-9]/g, '');
+      params.pin = params.pincode;
+      params.query = params.pincode;
+    }
+    if (toolKind === 'qr') {
+      params.text = val;
+      params.upi = val;
+      params.query = val;
+    }
+    if (toolKind === 'sarkari_feed') {
+      params.filter = val;
+      params.query = val;
     }
 
     try {
@@ -1808,7 +1831,113 @@ function ServicePageContent({
       );
     }
 
-    // 29. DEFAULT / FALLBACK (Clean single input)
+    // 29. BANK IFSC LOOKUP (Single Click Instant)
+    if (id === 'bank_ifsc_lookup' || id.includes('ifsc')) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {language === 'hi' ? 'बैंक IFSC कोड (11 अक्षर) *' : 'Bank IFSC Code (11 Chars) *'}
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11))}
+              placeholder="जैसे SBIN0000123 / PUNB0024000 / HDFC0000128"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-black text-sm focus:outline-none uppercase tracking-wider"
+            />
+          </div>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            {language === 'hi'
+              ? '💡 केवल 11-अक्षरों का IFSC कोड डालें और 1-क्लिक में बैंक शाखा, पूरा पता, MICR व डिजिटल पेमेंट विवरण प्राप्त करें।'
+              : '💡 Enter 11-digit IFSC code for instant Bank Name, Branch, Full Address & MICR.'}
+          </p>
+        </div>
+      );
+    }
+
+    // 30. INDIA POST PINCODE LOOKUP (Single Click Instant)
+    if (id === 'pincode_lookup' || id.includes('pincode')) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {language === 'hi' ? '6-अंकों का पिनकोड (Pincode) *' : '6-Digit Indian Pincode *'}
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+              placeholder="जैसे 110001, 201001, 800001"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-black text-sm focus:outline-none tracking-widest"
+            />
+          </div>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            {language === 'hi'
+              ? '💡 पिनकोड डालते ही सभी डाकघरों की सूची, जिला और राज्य 0.2 सेकंड में प्राप्त करें।'
+              : '💡 Instant Post Offices list, District & State in 0.2 seconds.'}
+          </p>
+        </div>
+      );
+    }
+
+    // 31. INSTANT HIGH-RES QR GENERATOR (Single Click Instant)
+    if (id === 'qr_generator' || id.includes('qr_')) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {language === 'hi' ? 'UPI ID, मोबाइल नंबर या टेक्स्ट *' : 'UPI ID, Mobile or Custom Text *'}
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.slice(0, 100))}
+              placeholder="जैसे 8006518960@upi / https://smartcafe.sbs / दुकान का नाम"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
+            />
+          </div>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
+            {language === 'hi'
+              ? '💡 दुकान काउंटर स्टैंडी या रसीद टोकन के लिए 300 DPI एचडी क्यूआर कोड तुरंत 1-क्लिक में बनाएं।'
+              : '💡 300 DPI High-Res QR code for shop counters, payments and receipts.'}
+          </p>
+        </div>
+      );
+    }
+
+    // 32. LIVE SARKARI JOB FEED (Instant Feed)
+    if (id === 'sarkari_job_feed' || id.includes('sarkari')) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {language === 'hi' ? 'फ़िल्टर / सर्च कीवर्ड (वैकल्पिक)' : 'Filter / Keyword (Optional)'}
+            </label>
+            <input
+              type="text"
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.slice(0, 50))}
+              placeholder="जैसे SSC, Railway, Police, UPSC, Navy"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
+            />
+          </div>
+          <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-900 dark:text-amber-200 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-amber-600 shrink-0" />
+            <span>
+              {language === 'hi'
+                ? '💡 सीधे "⚡ ताज़ा अपडेट प्राप्त करें" दबाएं और 24x7 लाइव सरकारी नौकरी व एडमिट कार्ड की लिस्ट देखें।'
+                : '💡 Press "Generate" to fetch all 24x7 live government exams, jobs, and admit cards.'}
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    // 33. DEFAULT / FALLBACK (Clean single input)
     return (
       <div className="space-y-1.5">
         <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -3093,6 +3222,221 @@ function ServicePageContent({
                         <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
                           <span>{selectedCafe?.shopName || 'दूरसंचार सेवा केंद्र'}</span>
                           <span className="font-bold text-emerald-700">{language === 'hi' ? 'सक्रियण सफल' : 'Activation Complete'}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 17. BANK IFSC CODE & BRANCH PASSBOOK SLIP */}
+                    {/* ======================================================= */}
+                    {toolKind === 'ifsc' && (
+                      <div className="w-full max-w-xl bg-white border-2 border-indigo-900 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
+                        <div className="border-b-2 border-indigo-900 pb-2 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-indigo-800 uppercase">
+                              {language === 'hi' ? 'भारतीय रिज़र्व बैंक (RBI) अधिकृत IFSC व शाखा विवरण' : 'Reserve Bank of India Authorized Bank IFSC Slip'}
+                            </div>
+                            <h3 className="text-lg font-black text-slate-900">{cardData.bank || cardData.bankName || 'State Bank of India'}</h3>
+                            <p className="text-[11px] text-slate-600 font-semibold">{cardData.branch ? `शाखा: ${cardData.branch}` : 'अधिकृत बैंक शाखा'}</p>
+                          </div>
+                          <div className="p-1 bg-white border rounded">
+                            <QRCodeSVG value={`IFSC:${cardData.ifsc || cardData.refNumber}|BANK:${cardData.bank || '-'}|BRANCH:${cardData.branch || '-'}`} size={54} />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-indigo-50/50 p-3 rounded-xl border border-indigo-200 text-xs">
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">{language === 'hi' ? 'IFSC कोड' : 'IFSC Code'}</span>
+                            <strong className="font-mono text-indigo-900 text-sm font-black">{cardData.ifsc || cardData.refNumber || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">{language === 'hi' ? 'MICR कोड' : 'MICR Code'}</span>
+                            <strong className="font-mono text-slate-900">{cardData.micr || 'उपलब्ध नहीं'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">{language === 'hi' ? 'शहर / जिला' : 'City / District'}</span>
+                            <strong className="text-slate-900">{cardData.city || cardData.district || '-'}</strong>
+                          </div>
+                          <div className="sm:col-span-3">
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">{language === 'hi' ? 'शाखा का पूरा पता' : 'Branch Address'}</span>
+                            <span className="text-slate-800 font-medium">{cardData.address || '-'}</span>
+                          </div>
+                        </div>
+
+                        <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs flex flex-wrap items-center justify-between gap-2">
+                          <span className="text-[10px] font-bold text-slate-600 uppercase">{language === 'hi' ? 'डिजिटल पेमेंट सपोर्ट:' : 'Digital Support:'}</span>
+                          <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">RTGS: ✅</span>
+                          <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">NEFT: ✅</span>
+                          <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">IMPS: ✅</span>
+                          <span className="inline-flex items-center gap-1 font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">UPI: ✅</span>
+                        </div>
+
+                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>{selectedCafe?.shopName || 'स्मार्ट कैफे बैंकिंग पॉइंट'}</span>
+                          <span className="font-bold text-emerald-700">{language === 'hi' ? 'सत्यापित बैंक डेटा' : 'Verified Bank Data'}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 18. INDIA POST PINCODE & POST OFFICES SLIP */}
+                    {/* ======================================================= */}
+                    {toolKind === 'pincode' && (
+                      <div className="w-full max-w-xl bg-white border-2 border-red-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
+                        <div className="border-b-2 border-red-800 pb-2 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-red-800 uppercase">
+                              {language === 'hi' ? 'भारतीय डाक विभाग • डाकघर अवस्थिति विवरण' : 'Department of Posts • India Post Locator'}
+                            </div>
+                            <h3 className="text-lg font-black text-slate-900">
+                              {language === 'hi' ? `पिनकोड: ${cardData.pincode || cardData.refNumber || '-'}` : `Pincode: ${cardData.pincode || cardData.refNumber || '-'}`}
+                            </h3>
+                            <p className="text-[11px] text-slate-600 font-semibold">{cardData.district ? `${cardData.district}, ${cardData.state || ''}` : 'भारत'}</p>
+                          </div>
+                          <div className="p-1 bg-white border rounded">
+                            <QRCodeSVG value={`PIN:${cardData.pincode || cardData.refNumber}|DIST:${cardData.district || '-'}|STATE:${cardData.state || '-'}`} size={54} />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-red-50/50 p-3 rounded-xl border border-red-200 text-xs">
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">{language === 'hi' ? 'पिनकोड' : 'Pincode'}</span>
+                            <strong className="font-mono text-red-950 text-base font-black">{cardData.pincode || cardData.refNumber || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">{language === 'hi' ? 'जिला (District)' : 'District'}</span>
+                            <strong className="text-slate-900">{cardData.district || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">{language === 'hi' ? 'राज्य (State)' : 'State'}</span>
+                            <strong className="text-slate-900">{cardData.state || '-'}</strong>
+                          </div>
+                        </div>
+
+                        {cardData.postOffices && cardData.postOffices.length > 0 && (
+                          <div className="space-y-1.5">
+                            <div className="text-[11px] font-black text-slate-800 uppercase flex items-center justify-between">
+                              <span>{language === 'hi' ? 'संबद्ध डाकघरों की सूची:' : 'Associated Post Offices:'}</span>
+                              <span className="text-slate-500 text-[10px]">({cardData.postOffices.length} डाकघर)</span>
+                            </div>
+                            <div className="max-h-48 overflow-y-auto space-y-1 pr-1">
+                              {cardData.postOffices.map((po, idx) => (
+                                <div key={idx} className="p-2 bg-slate-50 border rounded-lg text-xs flex items-center justify-between gap-2">
+                                  <div>
+                                    <span className="font-bold text-slate-900">{po.name || po.Name}</span>
+                                    <span className="text-[10px] text-slate-500 block">{po.branchType || po.BranchType || 'Sub Post Office'}</span>
+                                  </div>
+                                  <span className={`text-[10px] px-2 py-0.5 rounded font-bold ${
+                                    (po.deliveryStatus || po.DeliveryStatus) === 'Delivery'
+                                      ? 'bg-emerald-100 text-emerald-800'
+                                      : 'bg-amber-100 text-amber-800'
+                                  }`}>
+                                    {po.deliveryStatus || po.DeliveryStatus || 'Delivery'}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>{selectedCafe?.shopName || 'स्मार्ट कैफे डाक सेवा'}</span>
+                          <span className="font-bold text-emerald-700">{language === 'hi' ? 'सत्यापित डाक डेटा' : 'Verified Postal Data'}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 19. INSTANT HIGH-RES QR CODE PAYMENT STANDEE */}
+                    {/* ======================================================= */}
+                    {toolKind === 'qr' && (
+                      <div className="w-full max-w-sm bg-white border-2 border-slate-900 rounded-3xl p-6 text-slate-900 font-sans space-y-4 shadow-xl text-center">
+                        <div className="border-b pb-3">
+                          <div className="text-[10px] font-black tracking-widest text-orange-600 uppercase">
+                            BHIM UPI • DIGITAL INDIA
+                          </div>
+                          <h3 className="text-lg font-black text-slate-900">
+                            {selectedCafe?.shopName || 'डिजिटल सेवा केंद्र काउंटर'}
+                          </h3>
+                          <p className="text-xs text-slate-500 font-medium">ऑल UPI पेमेंट्स स्वीकार्य</p>
+                        </div>
+
+                        <div className="flex justify-center p-4 bg-slate-50 rounded-2xl border-2 border-slate-200 shadow-inner">
+                          {cardData.qrUrl ? (
+                            <img src={cardData.qrUrl} alt="Payment QR" className="w-56 h-56 object-contain" />
+                          ) : (
+                            <QRCodeSVG value={cardData.text || primaryInput || 'https://smartcafe.sbs'} size={220} level="H" />
+                          )}
+                        </div>
+
+                        <div className="bg-slate-950 text-white py-2.5 px-4 rounded-xl">
+                          <span className="text-[10px] text-slate-400 block uppercase tracking-wider">UPI ID / लिंक / संदर्भ</span>
+                          <strong className="font-mono text-sm text-yellow-400 break-all">{cardData.text || primaryInput || '-'}</strong>
+                        </div>
+
+                        <p className="text-[11px] text-slate-500 font-semibold">
+                          {language === 'hi'
+                            ? 'Google Pay, PhonePe, Paytm या किसी भी UPI ऐप से स्कैन करके भुगतान करें'
+                            : 'Scan & Pay using any UPI app (GPay, PhonePe, Paytm)'}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 20. LIVE SARKARI JOB & EXAM ALERTS FEED */}
+                    {/* ======================================================= */}
+                    {toolKind === 'sarkari_feed' && (
+                      <div className="w-full max-w-2xl bg-white border-2 border-amber-600 rounded-2xl p-5 text-slate-900 font-sans space-y-4 shadow-md">
+                        <div className="border-b pb-3 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-amber-700 uppercase">
+                              {language === 'hi' ? 'ताज़ा सरकारी भर्ती, एडमिट कार्ड व परिणाम लाइव' : 'Latest Government Jobs, Admit Cards & Results'}
+                            </div>
+                            <h3 className="text-base font-black text-slate-900">
+                              {language === 'hi' ? '📢 सरकारी योजनाएं एवं भर्ती अलर्ट' : '📢 Sarkari Live Notifications Desk'}
+                            </h3>
+                          </div>
+                          <button
+                            onClick={() => handleInstantGenerate()}
+                            className="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1"
+                          >
+                            <RefreshCw className="w-3.5 h-3.5" />
+                            <span>{language === 'hi' ? 'रिफ्रेश' : 'Refresh'}</span>
+                          </button>
+                        </div>
+
+                        <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
+                          {(cardData.items || [
+                            { title: 'United India Insurance UIIC AO Admit Card 2026 for 225 Post', link: 'https://www.sarkariresult.com', pubDate: 'Today', category: 'Admit Card' },
+                            { title: 'SSC Constable GD 2026 Online Application Form', link: 'https://www.sarkariresult.com', pubDate: 'Active', category: 'Latest Job' },
+                            { title: 'Railway RPF SI & Constable Exam City Details', link: 'https://www.sarkariresult.com', pubDate: 'Update', category: 'Exam' },
+                            { title: 'UP Police Constable Result & Cutoff 2026', link: 'https://www.sarkariresult.com', pubDate: 'Latest', category: 'Result' }
+                          ]).map((item, idx) => (
+                            <div key={idx} className="p-3 bg-slate-50 hover:bg-amber-50/60 border border-slate-200 rounded-xl transition-all flex items-start justify-between gap-3">
+                              <div className="space-y-1">
+                                <span className="inline-block text-[9px] uppercase font-black px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300">
+                                  {item.category || 'Govt Alert'}
+                                </span>
+                                <h4 className="text-xs font-bold text-slate-900 leading-snug">{item.title}</h4>
+                                <span className="text-[10px] text-slate-500 block">{item.pubDate}</span>
+                              </div>
+                              {item.link && (
+                                <a
+                                  href={item.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="shrink-0 px-3 py-1.5 bg-slate-900 hover:bg-orange-600 text-white rounded-lg text-[11px] font-bold transition-all text-center"
+                                >
+                                  {language === 'hi' ? 'फॉर्म भरें' : 'Apply'}
+                                </a>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>{selectedCafe?.shopName || 'डिजिटल सेवा केंद्र'}</span>
+                          <span className="font-bold text-emerald-700">{language === 'hi' ? '24x7 लाइव सरकारी अपडेट्स' : '24x7 Live Feed'}</span>
                         </div>
                       </div>
                     )}

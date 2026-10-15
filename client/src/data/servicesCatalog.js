@@ -118,10 +118,19 @@ export const SERVICE_CATEGORIES = [
     borderColor: 'border-teal-200 dark:border-teal-900/50',
     lightBg: 'bg-teal-50/70 dark:bg-teal-950/30',
     desc: { hi: 'ऑपरेटर चेक, रिचार्ज प्लान सर्च व डायनामिक QR जनरेटर', en: 'Check Operator, Recharge Plans & QR Generator' }
+  },
+  {
+    id: 'other',
+    title: { hi: '⚡ अन्य उपयोगी सेवाएं (Other Services)', en: '⚡ Other Useful Services' },
+    icon: 'Sparkles',
+    color: 'from-amber-500 to-orange-600',
+    borderColor: 'border-amber-200 dark:border-amber-900/50',
+    lightBg: 'bg-amber-50/70 dark:bg-amber-950/30',
+    desc: { hi: 'बैंक IFSC सर्च, डाकघर पिनकोड लोकेटर, इंस्टेंट QR कोड मेकर व लाइव सरकारी जॉब अलर्ट', en: 'Bank IFSC Lookup, India Post Pincode Finder, Instant QR Generator & Live Sarkari Jobs' }
   }
 ];
 
-// Helper to determine group category for the 79 services
+// Helper to determine group category for services
 export function getServiceGroup(cat) {
   if (cat === 'aadhaar') return 'aadhaar';
   if (cat === 'pan') return 'pan';
@@ -135,6 +144,7 @@ export function getServiceGroup(cat) {
   if (cat === 'banking') return 'banking';
   if (cat === 'agriculture') return 'agriculture';
   if (cat === 'lookup') return 'lookup';
+  if (cat === 'other') return 'other';
   if (cat === 'telecom' || cat === 'misc' || cat === 'edistrict') return 'telecom';
   return cat;
 }
@@ -248,6 +258,30 @@ const SERVICE_ENRICHMENT = {
     sub: { hi: 'जीरो बैलेंस बैंक खाता व बैंकिंग पॉइंट सुविधा', en: 'Zero Balance Bank Account Facility' },
     inputLabel: { hi: 'ग्राहक का 10-अंकीय मोबाइल नंबर', en: 'Customer Mobile Number' },
     placeholder: { hi: 'मोबाइल नंबर दर्ज करें', en: 'Enter Mobile Number' }
+  },
+  bank_ifsc_lookup: {
+    title: { hi: 'बैंक IFSC सर्च व शाखा विवरण', en: 'Bank IFSC Code & Branch Finder' },
+    sub: { hi: '11-अंकों के IFSC कोड से बैंक शाखा, पता, MICR व UPI विवरण 1-क्लिक में', en: 'Instant Bank Name, Branch, Full Address & MICR by IFSC' },
+    inputLabel: { hi: 'बैंक IFSC कोड (11 अक्षर)', en: 'Bank IFSC Code (11 Chars)' },
+    placeholder: { hi: 'जैसे SBIN0000123 / PUNB0024000', en: 'e.g. SBIN0000123 / PUNB0024000' }
+  },
+  pincode_lookup: {
+    title: { hi: 'डाकघर पिनकोड सर्च व एड्रेस लोकेटर', en: 'India Post Pincode & Branch Finder' },
+    sub: { hi: '6-अंकों के पिनकोड से सभी डाकघरों की सूची, जिला व राज्य विवरण 1-क्लिक में', en: 'Instant Post Offices List, District & State by Pincode' },
+    inputLabel: { hi: '6-अंकों का पिनकोड (Pincode)', en: '6-Digit Indian Pincode' },
+    placeholder: { hi: 'जैसे 110001 / 201001 / 800001', en: 'e.g. 110001 / 201001 / 800001' }
+  },
+  qr_generator: {
+    title: { hi: 'इंस्टेंट पेमेंट व टोकन QR कोड मेकर', en: 'Instant High-Res QR Code Maker' },
+    sub: { hi: 'दुकान काउंटर, रसीद या टोकन के लिए 300 DPI एचडी क्यूआर कोड तुरंत बनाएं', en: '300 DPI High-Res Payment & Tracking QR Code Generator' },
+    inputLabel: { hi: 'UPI ID, मोबाइल नंबर या टेक्स्ट', en: 'UPI ID, Mobile or Custom Text' },
+    placeholder: { hi: 'जैसे 8006518960@upi या दुकान का नाम', en: 'e.g. 8006518960@upi or Shop Name' }
+  },
+  sarkari_job_feed: {
+    title: { hi: 'लाइव सरकारी नौकरी, एडमिट कार्ड व योजनाएं', en: 'Live Sarkari Jobs, Admit Cards & Results' },
+    sub: { hi: 'रोज़ाना निकलने वाले सभी नए सरकारी फॉर्म व एडमिट कार्ड का 24x7 लाइव फीड', en: '24x7 Live Feed of Latest Government Forms & Exams' },
+    inputLabel: { hi: 'सर्च कीवर्ड या फ़िल्टर (वैकल्पिक)', en: 'Search Keyword / Filter (Optional)' },
+    placeholder: { hi: 'जैसे SSC, Railway, Police, UPSC', en: 'e.g. SSC, Railway, Police, UPSC' }
   }
 };
 

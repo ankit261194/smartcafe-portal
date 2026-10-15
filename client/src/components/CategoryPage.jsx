@@ -129,6 +129,14 @@ function ServiceRoundIcon({ toolKind, serviceId }) {
     );
   }
 
+  if (toolKind === 'other' || sId.includes('ifsc') || sId.includes('pincode') || sId.includes('qr') || sId.includes('sarkari')) {
+    return (
+      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-xs">
+        <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 stroke-[2.2]" />
+      </div>
+    );
+  }
+
   return (
     <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-rose-600 to-red-700 text-white flex items-center justify-center shadow-xs">
       <ShieldCheck className="w-6 h-6 sm:w-7 sm:h-7 stroke-[2.2]" />
