@@ -8,11 +8,14 @@
  * Udhar, SuperAdmin) directly on Hostinger without requiring Node.js VPS.
  */
 
-// 1. CORS & Response Headers
+// 1. CORS & Anti-Cache Response Headers (Strictly No-Store for Real-Time Financial API)
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
+header('Pragma: no-cache');
+header('Expires: 0');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
