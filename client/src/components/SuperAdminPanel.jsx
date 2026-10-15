@@ -74,6 +74,22 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
   const [loadingDbStatus, setLoadingDbStatus] = useState(false);
   const [migratingDb, setMigratingDb] = useState(false);
   const [migrationResult, setMigrationResult] = useState(null);
+  const [showDbSetupWizard, setShowDbSetupWizard] = useState(false);
+  const [dbConfigForm, setDbConfigForm] = useState({ host: 'localhost', database: '', username: '', password: '', port: 3306 });
+  const [savingDbConfig, setSavingDbConfig] = useState(false);
+  const [dbConfigResult, setDbConfigResult] = useState(null);
+
+  // 24x7 Telegram Alert Bot State
+  const [telegramConfig, setTelegramConfig] = useState({ botToken: '', chatId: '', enabled: false });
+  const [savingTelegram, setSavingTelegram] = useState(false);
+  const [testingTelegram, setTestingTelegram] = useState(false);
+  const [telegramResult, setTelegramResult] = useState(null);
+
+  // Meta WhatsApp / Fast2SMS State
+  const [whatsappConfig, setWhatsappConfig] = useState({ metaToken: '', phoneNumberId: '', fast2smsKey: '', whatsappEnabled: false, smsEnabled: false });
+  const [savingWhatsapp, setSavingWhatsapp] = useState(false);
+  const [testingWhatsapp, setTestingWhatsapp] = useState(false);
+  const [whatsappResult, setWhatsappResult] = useState(null);
   
   // System Health state
   const [systemHealth, setSystemHealth] = useState(null);
@@ -362,6 +378,141 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
       alert('सर्वर से संपर्क नहीं हो सका।');
     } finally {
       setMigratingDb(false);
+    }
+  };
+
+  const handleSaveDbConfig = async (e) => {
+    if (e) e.preventDefault();
+    if (!dbConfigForm.database.trim() || !dbConfigForm.username.trim()) {
+      alert('डेटाबेस का नाम (Database Name) और उपयोगकर्ता नाम (Username) दर्ज करें!');
+      return;
+    }
+    setSavingDbConfig(true);
+    setDbConfigResult(null);
+    try {
+      const res = await authFetch('/api/system/save-db-config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...dbConfigForm,
+          masterKey: 'Aa@910010025123343'
+        })
+      });
+      const data = await res.json();
+      setDbConfigResult(data);
+      if (res.ok && data.success) {
+        alert('✅ ' + data.message);
+        setShowDbSetupWizard(false);
+        fetchDbStatus();
+      } else {
+        alert('❌ ' + (data.error || 'कॉन्फ़िगरेशन सहेजने में विफलता।'));
+      }
+    } catch (err) {
+      alert('सर्वर से संपर्क नहीं हो सका।');
+    } finally {
+      setSavingDbConfig(false);
+    }
+  };
+
+  const handleDownloadSqlDump = () => {
+    window.open('/api/system/export-sql', '_blank');
+  };
+
+  const handleSaveTelegram = async (e) => {
+    if (e) e.preventDefault();
+    setSavingTelegram(true);
+    setTelegramResult(null);
+    try {
+      const res = await authFetch('/api/superadmin/telegram/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(telegramConfig)
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert('✅ ' + data.message);
+      } else {
+        alert('❌ ' + (data.error || 'सेव करने में त्रुटि।'));
+      }
+    } catch (e) {
+      alert('सर्वर से संपर्क नहीं हो सका।');
+    } finally {
+      setSavingTelegram(false);
+    }
+  };
+
+  const handleTestTelegram = async () => {
+    if (!telegramConfig.botToken || !telegramConfig.chatId) {
+      alert('कृपया पहले Bot Token और Chat ID दर्ज करें!');
+      return;
+    }
+    setTestingTelegram(true);
+    setTelegramResult(null);
+    try {
+      const res = await authFetch('/api/superadmin/telegram/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(telegramConfig)
+      });
+      const data = await res.json();
+      setTelegramResult(data);
+      if (res.ok && data.success) {
+        alert('✅ ' + data.message);
+      } else {
+        alert('❌ ' + (data.error || 'टेस्ट अलर्ट भेजने में विफलता।'));
+      }
+    } catch (e) {
+      alert('सर्वर से संपर्क नहीं हो सका।');
+    } finally {
+      setTestingTelegram(false);
+    }
+  };
+
+  const handleSaveWhatsapp = async (e) => {
+    if (e) e.preventDefault();
+    setSavingWhatsapp(true);
+    setWhatsappResult(null);
+    try {
+      const res = await authFetch('/api/superadmin/whatsapp/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(whatsappConfig)
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert('✅ ' + data.message);
+      } else {
+        alert('❌ ' + (data.error || 'सेव करने में त्रुटि।'));
+      }
+    } catch (e) {
+      alert('सर्वर से संपर्क नहीं हो सका।');
+    } finally {
+      setSavingWhatsapp(false);
+    }
+  };
+
+  const handleTestWhatsapp = async () => {
+    const testPhone = prompt('टेस्ट व्हाट्सएप/एसएमएस भेजने हेतु 10-अंकीय मोबाइल नंबर दर्ज करें:', '8006518960');
+    if (!testPhone || testPhone.trim().length !== 10) return;
+    setTestingWhatsapp(true);
+    setWhatsappResult(null);
+    try {
+      const res = await authFetch('/api/superadmin/whatsapp/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: testPhone.trim() })
+      });
+      const data = await res.json();
+      setWhatsappResult(data);
+      if (res.ok && data.success) {
+        alert('✅ ' + data.message);
+      } else {
+        alert('❌ ' + (data.error || 'टेस्ट संदेश भेजने में विफलता।'));
+      }
+    } catch (e) {
+      alert('सर्वर से संपर्क नहीं हो सका।');
+    } finally {
+      setTestingWhatsapp(false);
     }
   };
 
@@ -1490,6 +1641,109 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
 
             </form>
           </div>
+
+          {/* Option 6: Meta WhatsApp Cloud API / SMS Gateway Card */}
+          <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-6 sm:p-7 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+            <div className="flex items-center gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+                <Smartphone className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>स्वचालित व्हाट्सएप व SMS गेटवे (Meta Cloud API & Fast2SMS)</span>
+                  <span className="bg-emerald-500 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full">
+                    ऑटो-डिस्पैचर
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  कार्ड जनरेशन, प्रिंट पूर्ण होने एवं UTR अप्रूवल पर ग्राहक के मोबाइल पर ऑटोमैटिक रसीद व डाउनलोड लिंक भेजना।
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleSaveWhatsapp} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
+                    Meta Cloud API Access Token
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="EAAGm0PX4ZC0BA..."
+                    value={whatsappConfig.metaToken}
+                    onChange={(e) => setWhatsappConfig(prev => ({ ...prev, metaToken: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl font-mono text-xs text-slate-800 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
+                    WhatsApp Phone Number ID
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="104598712345678"
+                    value={whatsappConfig.phoneNumberId}
+                    onChange={(e) => setWhatsappConfig(prev => ({ ...prev, phoneNumberId: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl font-mono text-xs text-slate-800 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 font-bold mb-1">
+                    Fast2SMS API Key (SMS बैकअप)
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="W7kPqX4LmR..."
+                    value={whatsappConfig.fast2smsKey}
+                    onChange={(e) => setWhatsappConfig(prev => ({ ...prev, fast2smsKey: e.target.value }))}
+                    className="w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl font-mono text-xs text-slate-800 dark:text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-700 dark:text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={whatsappConfig.whatsappEnabled}
+                      onChange={(e) => setWhatsappConfig(prev => ({ ...prev, whatsappEnabled: e.target.checked }))}
+                      className="w-4 h-4 text-emerald-600 rounded"
+                    />
+                    <span>व्हाट्सएप ऑटो-मैसेज चालू रखें</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-700 dark:text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={whatsappConfig.smsEnabled}
+                      onChange={(e) => setWhatsappConfig(prev => ({ ...prev, smsEnabled: e.target.checked }))}
+                      className="w-4 h-4 text-emerald-600 rounded"
+                    />
+                    <span>SMS अलर्ट चालू रखें</span>
+                  </label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handleTestWhatsapp}
+                    disabled={testingWhatsapp}
+                    className="bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer border border-emerald-200 dark:border-emerald-800"
+                  >
+                    <span>{testingWhatsapp ? 'भेज रहे हैं...' : '💬 टेस्ट नोटिफिकेशन भेजें'}</span>
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={savingWhatsapp}
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    <span>{savingWhatsapp ? 'सहेज रहे हैं...' : '💾 सेटिंग्स सहेजें'}</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
@@ -2367,7 +2621,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 self-start sm:self-auto">
+              <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
                 <button
                   type="button"
                   onClick={fetchDbStatus}
@@ -2379,15 +2633,105 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                 </button>
                 <button
                   type="button"
+                  onClick={() => setShowDbSetupWizard(prev => !prev)}
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-sm cursor-pointer"
+                >
+                  <KeyRound className="w-3.5 h-3.5" />
+                  <span>{showDbSetupWizard ? 'विजार्ड बंद करें' : '⚙️ वेब सेटअप विजार्ड'}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownloadSqlDump}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 transition border border-slate-700 cursor-pointer"
+                  title="सभी टेबल्स का SQL डंप डाउनलोड करें"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>.SQL डंप</span>
+                </button>
+                <button
+                  type="button"
                   onClick={handleMigrateDb}
                   disabled={migratingDb}
                   className="bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-lg disabled:opacity-50 cursor-pointer"
                 >
                   <Database className={`w-3.5 h-3.5 ${migratingDb ? 'animate-spin' : ''}`} />
-                  <span>{migratingDb ? 'माइग्रेट हो रहा है...' : '⚡ 1-क्लिक MySQL में माइग्रेट करें'}</span>
+                  <span>{migratingDb ? 'माइग्रेट हो रहा है...' : '⚡ 1-क्लिक माइग्रेट'}</span>
                 </button>
               </div>
             </div>
+
+            {/* Direct Web Setup Wizard Form (In-App Hostinger Configurator) */}
+            {showDbSetupWizard && (
+              <form onSubmit={handleSaveDbConfig} className="bg-white/10 border border-white/20 rounded-2xl p-4 text-xs space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-extrabold text-amber-300 text-xs flex items-center gap-1.5">
+                    <span>⚡ Hostinger MySQL डायरेक्ट वेब सेटअप विजार्ड</span>
+                    <span className="text-[10px] text-slate-300 font-normal">(Hostinger cPanel/FTP खोलने की आवश्यकता नहीं)</span>
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => setShowDbSetupWizard(false)}
+                    className="text-slate-400 hover:text-white font-bold cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">Host (होस्ट)</label>
+                    <input
+                      type="text"
+                      value={dbConfigForm.host}
+                      onChange={(e) => setDbConfigForm(prev => ({ ...prev, host: e.target.value }))}
+                      placeholder="localhost"
+                      className="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white font-mono text-xs focus:outline-hidden focus:border-amber-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">डेटाबेस नाम *</label>
+                    <input
+                      type="text"
+                      required
+                      value={dbConfigForm.database}
+                      onChange={(e) => setDbConfigForm(prev => ({ ...prev, database: e.target.value }))}
+                      placeholder="u123456_smartcafe"
+                      className="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white font-mono text-xs focus:outline-hidden focus:border-amber-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">यूजरनेम *</label>
+                    <input
+                      type="text"
+                      required
+                      value={dbConfigForm.username}
+                      onChange={(e) => setDbConfigForm(prev => ({ ...prev, username: e.target.value }))}
+                      placeholder="u123456_admin"
+                      className="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white font-mono text-xs focus:outline-hidden focus:border-amber-400"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-300 font-bold mb-1">पासवर्ड</label>
+                    <input
+                      type="password"
+                      value={dbConfigForm.password}
+                      onChange={(e) => setDbConfigForm(prev => ({ ...prev, password: e.target.value }))}
+                      placeholder="••••••••••••"
+                      className="w-full bg-black/40 border border-white/20 rounded-xl px-3 py-1.5 text-white font-mono text-xs focus:outline-hidden focus:border-amber-400"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center justify-end gap-2 pt-1">
+                  <button
+                    type="submit"
+                    disabled={savingDbConfig}
+                    className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-md disabled:opacity-50 cursor-pointer"
+                  >
+                    <Save className="w-3.5 h-3.5" />
+                    <span>{savingDbConfig ? 'कनेक्ट हो रहा है...' : '⚡ टेस्ट कनेक्शन व MySQL में सेव करें'}</span>
+                  </button>
+                </div>
+              </form>
+            )}
 
             {/* Live Database Engine Telemetry Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-1">
@@ -2448,9 +2792,128 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
               </span>
               <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-300 leading-relaxed">
                 <li>Hostinger hPanel ➔ <strong>Databases</strong> ➔ <strong>MySQL Databases</strong> में जाएं और नया डेटाबेस व यूजर बनाएं (उदा. <code className="bg-white/10 px-1 py-0.5 rounded text-amber-300">u123456_smartcafe</code>)।</li>
-                <li>फ़ाइल मैनेजर में <code className="bg-white/10 px-1 py-0.5 rounded text-amber-300">public_html/api/db-config.sample.php</code> की एक कॉपी बनाकर नाम <code className="bg-white/10 px-1 py-0.5 rounded text-emerald-300 font-bold">db-config.php</code> रखें और अपने डेटाबेस क्रेडेंशियल्स भरें।</li>
-                <li>ऊपर दिए गए <strong>"⚡ 1-क्लिक MySQL में माइग्रेट करें"</strong> बटन को दबाएं। सिस्टम स्वतः 7 टेबल्स बनाकर सारा पिछला डेटा बिना किसी डेटा हानि के MySQL में सुरक्षित कर देगा।</li>
+                <li>ऊपर दिए गए <strong>"⚙️ वेब सेटअप विजार्ड"</strong> बटन पर क्लिक करके डेटाबेस नाम, यूजर व पासवर्ड भरें और सेव करें।</li>
+                <li>सिस्टम स्वतः 7 रिलेशनल टेबल्स बनाकर सारा पिछला डेटा बिना किसी डेटा हानि के MySQL में सुरक्षित कर देगा।</li>
               </ol>
+            </div>
+          </div>
+
+          {/* ═══════════════════════════════════════════════════════════════════ */}
+          {/* Option 2 & 5: 24×7 Instant Auto-UTR Engine & Telegram Alert Bot */}
+          {/* ═══════════════════════════════════════════════════════════════════ */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Auto-UTR Webhook Card */}
+            <div className="bg-white dark:bg-[#0f1d36] border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-xs space-y-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold">
+                  <Zap className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>24×7 इंस्टेंट ऑटो-UTR वेबहुक इंजन</span>
+                    <span className="bg-emerald-500 text-slate-950 px-2 py-0.2 rounded-full text-[10px] font-black">
+                      सक्रिय (ACTIVE)
+                    </span>
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    बैंक/PhonePe पेमेंट SMS से UTR मैच होते ही 0.5 सेकंड में ऑटोमैटिक वॉलेट क्रेडिट।
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-2 text-xs">
+                <div className="bg-slate-50 dark:bg-slate-900/80 p-3 rounded-xl border border-slate-200 dark:border-slate-800 font-mono text-[11px]">
+                  <span className="text-slate-400 block text-[10px]">वेबहुक एंडपॉइंट URL:</span>
+                  <strong className="text-emerald-600 dark:text-emerald-400 break-all">
+                    https://smartcafe.sbs/api/webhook/upi-payment
+                  </strong>
+                </div>
+                <div className="bg-slate-50 dark:bg-slate-900/80 p-3 rounded-xl border border-slate-200 dark:border-slate-800 font-mono text-[11px]">
+                  <span className="text-slate-400 block text-[10px]">सीक्रेट कुंजी (Webhook Secret):</span>
+                  <strong className="text-slate-800 dark:text-slate-200">
+                    Aa@910010025123343
+                  </strong>
+                </div>
+                <p className="text-[10px] text-slate-400 leading-relaxed">
+                  💡 Android SMS Forwarder / MacroDroid द्वारा बैंक SMS फॉरवर्ड करते ही UTR ऑटोमैटिक रूप से वेरीफाई होकर वॉलेट में बैलेंस जोड़ देगा। डुप्लीकेट UTR पर स्वतः फ्रॉड लॉक एक्टिव है।
+                </p>
+              </div>
+            </div>
+
+            {/* Telegram Alert Bot Card */}
+            <div className="bg-white dark:bg-[#0f1d36] border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-xs space-y-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-sky-500/10 text-sky-500 flex items-center justify-center font-bold">
+                  <Megaphone className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                    <span>24×7 टेलीग्राम अलर्ट बॉट (@SmartCafeAlertsBot)</span>
+                    <span className="bg-sky-500 text-white px-2 py-0.2 rounded-full text-[10px] font-black">
+                      पुश अलर्ट
+                    </span>
+                  </h4>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    P4Points लो-बैलेंस (&lt;₹200), नया कैफे आवेदन व सुरक्षा अलर्ट्स सीधे आपके फोन पर।
+                  </p>
+                </div>
+              </div>
+
+              <form onSubmit={handleSaveTelegram} className="space-y-2.5 text-xs">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-300 font-bold text-[10px] mb-1">Bot Token</label>
+                    <input
+                      type="text"
+                      placeholder="123456789:ABCdefGhI..."
+                      value={telegramConfig.botToken}
+                      onChange={(e) => setTelegramConfig(prev => ({ ...prev, botToken: e.target.value }))}
+                      className="w-full px-2.5 py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-slate-800 dark:text-white font-mono text-[11px]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-slate-600 dark:text-slate-300 font-bold text-[10px] mb-1">Admin Chat ID</label>
+                    <input
+                      type="text"
+                      placeholder="987654321"
+                      value={telegramConfig.chatId}
+                      onChange={(e) => setTelegramConfig(prev => ({ ...prev, chatId: e.target.value }))}
+                      className="w-full px-2.5 py-1.5 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl text-slate-800 dark:text-white font-mono text-[11px]"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-1">
+                  <label className="flex items-center gap-1.5 cursor-pointer font-bold text-slate-700 dark:text-slate-300">
+                    <input
+                      type="checkbox"
+                      checked={telegramConfig.enabled}
+                      onChange={(e) => setTelegramConfig(prev => ({ ...prev, enabled: e.target.checked }))}
+                      className="w-4 h-4 text-sky-600 rounded"
+                    />
+                    <span>अलर्ट सक्रिय रखें</span>
+                  </label>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={handleTestTelegram}
+                      disabled={testingTelegram}
+                      className="bg-sky-50 dark:bg-sky-950/60 hover:bg-sky-100 text-sky-700 dark:text-sky-300 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer border border-sky-200 dark:border-sky-800"
+                    >
+                      <span>{testingTelegram ? 'भेज रहे हैं...' : '🔔 टेस्ट अलर्ट'}</span>
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={savingTelegram}
+                      className="bg-sky-600 hover:bg-sky-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 transition shadow-sm cursor-pointer"
+                    >
+                      <Save className="w-3.5 h-3.5" />
+                      <span>{savingTelegram ? 'सहेज रहे हैं...' : 'सहेजें'}</span>
+                    </button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
 

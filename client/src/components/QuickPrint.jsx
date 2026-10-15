@@ -8,10 +8,12 @@ import { QRCodeSVG } from 'qrcode.react';
 import confetti from 'canvas-confetti';
 import { PDFDocument } from 'pdf-lib';
 import PrintTokenModal from './PrintTokenModal';
+import PvcTraySheetModal from './PvcTraySheetModal';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted }) {
   const { language, t } = useLanguage();
+  const [showPvcTrayModal, setShowPvcTrayModal] = useState(false);
   const [file, setFile] = useState(null);
   const [customerName, setCustomerName] = useState('');
   const [phone, setPhone] = useState('');
@@ -404,6 +406,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                   <option value="A4">{t('qp_size_a4')}</option>
                   <option value="Legal">{t('qp_size_legal')}</option>
                   <option value="Photo4x6">{t('qp_size_photo')}</option>
+                  <option value="PVC_5in1">📄 5-in-1 PVC ट्रे शीट (CR-80)</option>
                 </select>
               </div>
             </div>
@@ -435,6 +438,18 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
                   className="w-full bg-slate-50 dark:bg-[#0b1528] border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-xl px-3.5 py-2 text-sm focus:ring-2 focus:ring-orange-500 focus:outline-none"
                 />
               </div>
+            </div>
+
+            {/* A4 5-Card PVC Tray Sheet Generator Button */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setShowPvcTrayModal(true)}
+                className="w-full bg-indigo-50 dark:bg-indigo-950/40 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 border border-indigo-300 dark:border-indigo-700/60 text-indigo-700 dark:text-indigo-300 font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer transition shadow-xs"
+              >
+                <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <span>📄 A4 शीट पर 5-कार्ड ट्रे प्रिंट लेआउट (5-in-1 PVC Tray Sheet)</span>
+              </button>
             </div>
 
           </div>
@@ -576,6 +591,12 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
         onClose={() => setSubmittedData(null)}
         data={submittedData}
         type="print"
+      />
+
+      {/* A4 5-in-1 ISO CR-80 PVC Tray Sheet Modal */}
+      <PvcTraySheetModal
+        isOpen={showPvcTrayModal}
+        onClose={() => setShowPvcTrayModal(false)}
       />
 
     </div>

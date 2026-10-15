@@ -151,6 +151,19 @@ function initDbSchema(PDO $pdo) {
             setting_key VARCHAR(100) PRIMARY KEY,
             setting_value LONGTEXT NOT NULL,
             updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "CREATE TABLE IF NOT EXISTS incoming_upi_payments (
+            id VARCHAR(64) PRIMARY KEY,
+            utr VARCHAR(30) NOT NULL UNIQUE,
+            amount DECIMAL(10,2) NOT NULL,
+            sender VARCHAR(100) DEFAULT '',
+            matched TINYINT(1) NOT NULL DEFAULT 0,
+            matched_at DATETIME DEFAULT NULL,
+            matched_to VARCHAR(50) DEFAULT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_utr (utr),
+            INDEX idx_matched (matched)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
     ];
 
@@ -171,7 +184,8 @@ function migrateJsonStoreToMysql(PDO $pdo, array $store) {
         'transactions' => 0,
         'cafes' => 0,
         'orders' => 0,
-        'utrs' => 0
+        'utrs' => 0,
+        'incoming_payments' => 0
     ];
 
     $pdo->beginTransaction();
@@ -272,7 +286,82 @@ function migrateJsonStoreToMysql(PDO $pdo, array $store) {
             }
         }
 
-        // 4. System Settings
+        // 4. Orders
+        $allOrders = array_merge(
+            $store['orderHistory'] ?? [],
+            $store['orders'] ?? [],
+            $store['rcOrders'] ?? []
+        );
+        if (!empty($allOrders)) {
+            $oStmt = $pdo->prepare("INSERT INTO orders (id, cafe_id, customer_phone, customer_name, service_type, doc_title, ref_number, retail_fee, wholesale_cost, margin, status, payload_json, created_at)
+                VALUES (:id, :cafe_id, :customer_phone, :customer_name, :service_type, :doc_title, :ref_number, :retail_fee, :wholesale_cost, :margin, :status, :payload_json, :created_at)
+                ON DUPLICATE KEY UPDATE status = VALUES(status)");
+            foreach ($allOrders as $o) {
+                if (empty($o['id'])) continue;
+                $oStmt->execute([
+                    ':id' => $o['id'],
+                    ':cafe_id' => $o['cafeId'] ?? 'CAFE-101',
+                    ':customer_phone' => $o['customerPhone'] ?? ($o['phone'] ?? ''),
+                    ':customer_name' => $o['customerName'] ?? ($o['name'] ?? 'ग्राहक'),
+                    ':service_type' => $o['serviceType'] ?? ($o['type'] ?? 'general'),
+                    ':doc_title' => $o['docTitle'] ?? ($o['title'] ?? 'सेवा दस्तावेज'),
+                    ':ref_number' => $o['refNumber'] ?? ($o['appNo'] ?? ($o['regNo'] ?? '')),
+                    ':retail_fee' => floatval($o['retailFee'] ?? ($o['fee'] ?? 0)),
+                    ':wholesale_cost' => floatval($o['wholesaleCost'] ?? 0),
+                    ':margin' => floatval($o['margin'] ?? 0),
+                    ':status' => $o['status'] ?? 'completed',
+                    ':payload_json' => json_encode($o['payload'] ?? ($o['data'] ?? []), JSON_UNESCAPED_UNICODE),
+                    ':created_at' => !empty($o['createdAt']) ? date('Y-m-d H:i:s', strtotime($o['createdAt'])) : date('Y-m-d H:i:s')
+                ]);
+                $counts['orders']++;
+            }
+        }
+
+        // 5. UTR Requests
+        if (!empty($store['utrRequests']) && is_array($store['utrRequests'])) {
+            $uStmt = $pdo->prepare("INSERT INTO utr_requests (id, cafe_id, customer_phone, customer_name, utr, amount, slip_url, status, approved_at, created_at)
+                VALUES (:id, :cafe_id, :customer_phone, :customer_name, :utr, :amount, :slip_url, :status, :approved_at, :created_at)
+                ON DUPLICATE KEY UPDATE status = VALUES(status), approved_at = VALUES(approved_at)");
+            foreach ($store['utrRequests'] as $ur) {
+                if (empty($ur['utr'])) continue;
+                $uStmt->execute([
+                    ':id' => $ur['id'] ?? ('UTR-' . time() . '-' . rand(100, 999)),
+                    ':cafe_id' => $ur['cafeId'] ?? null,
+                    ':customer_phone' => $ur['customerPhone'] ?? ($ur['phone'] ?? ''),
+                    ':customer_name' => $ur['customerName'] ?? ($ur['ownerName'] ?? 'ग्राहक'),
+                    ':utr' => $ur['utr'],
+                    ':amount' => floatval($ur['amount'] ?? 0),
+                    ':slip_url' => $ur['screenshotUrl'] ?? ($ur['paymentSlip'] ?? ($ur['slipUrl'] ?? '')),
+                    ':status' => $ur['status'] ?? 'pending',
+                    ':approved_at' => !empty($ur['approvedAt']) ? date('Y-m-d H:i:s', strtotime($ur['approvedAt'])) : null,
+                    ':created_at' => !empty($ur['createdAt']) ? date('Y-m-d H:i:s', strtotime($ur['createdAt'])) : date('Y-m-d H:i:s')
+                ]);
+                $counts['utrs']++;
+            }
+        }
+
+        // 6. Incoming UPI Payments
+        if (!empty($store['incomingUpiPayments']) && is_array($store['incomingUpiPayments'])) {
+            $ipStmt = $pdo->prepare("INSERT INTO incoming_upi_payments (id, utr, amount, sender, matched, matched_at, matched_to, created_at)
+                VALUES (:id, :utr, :amount, :sender, :matched, :matched_at, :matched_to, :created_at)
+                ON DUPLICATE KEY UPDATE matched = VALUES(matched), matched_at = VALUES(matched_at), matched_to = VALUES(matched_to)");
+            foreach ($store['incomingUpiPayments'] as $ip) {
+                if (empty($ip['utr'])) continue;
+                $ipStmt->execute([
+                    ':id' => $ip['id'] ?? ('UPI-IN-' . time() . '-' . rand(100, 999)),
+                    ':utr' => $ip['utr'],
+                    ':amount' => floatval($ip['amount'] ?? 0),
+                    ':sender' => $ip['sender'] ?? '',
+                    ':matched' => !empty($ip['matched']) ? 1 : 0,
+                    ':matched_at' => !empty($ip['matchedAt']) ? date('Y-m-d H:i:s', strtotime($ip['matchedAt'])) : null,
+                    ':matched_to' => $ip['matchedTo'] ?? null,
+                    ':created_at' => !empty($ip['createdAt']) ? date('Y-m-d H:i:s', strtotime($ip['createdAt'])) : date('Y-m-d H:i:s')
+                ]);
+                $counts['incoming_payments']++;
+            }
+        }
+
+        // 7. System Settings
         if (!empty($store['settings']) && is_array($store['settings'])) {
             $sStmt = $pdo->prepare("INSERT INTO system_settings (setting_key, setting_value, updated_at)
                 VALUES (:key, :val, NOW())
@@ -292,3 +381,166 @@ function migrateJsonStoreToMysql(PDO $pdo, array $store) {
         return ['success' => false, 'error' => $e->getMessage()];
     }
 }
+
+function generateExportSql($pdo = null, array $store = []) {
+    $sql = "-- ================================================================\n";
+    $sql .= "-- SMART CYBER CAFE & JAN SEVA PORTAL - RELATIONAL DATABASE BACKUP\n";
+    $sql .= "-- Hostinger MySQL / MariaDB Complete Schema & Data Dump\n";
+    $sql .= "-- Generated at: " . date('Y-m-d H:i:s') . "\n";
+    $sql .= "-- ================================================================\n\n";
+    $sql .= "SET FOREIGN_KEY_CHECKS = 0;\nSET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';\n\n";
+
+    $tables = [
+        "users" => "CREATE TABLE IF NOT EXISTS users (
+            id VARCHAR(64) PRIMARY KEY,
+            phone VARCHAR(20) NOT NULL UNIQUE,
+            name VARCHAR(100) NOT NULL DEFAULT 'ग्राहक',
+            shop_name VARCHAR(150) DEFAULT '',
+            password VARCHAR(255) NOT NULL,
+            role VARCHAR(30) NOT NULL DEFAULT 'citizen',
+            balance DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+            is_blocked TINYINT(1) NOT NULL DEFAULT 0,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "wallets" => "CREATE TABLE IF NOT EXISTS wallets (
+            phone VARCHAR(20) PRIMARY KEY,
+            customer_name VARCHAR(100) NOT NULL DEFAULT 'ग्राहक',
+            balance DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+            updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "transactions" => "CREATE TABLE IF NOT EXISTS transactions (
+            id VARCHAR(64) PRIMARY KEY,
+            phone VARCHAR(20) NOT NULL,
+            type VARCHAR(20) NOT NULL DEFAULT 'debit',
+            amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+            note TEXT,
+            description TEXT,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_phone (phone),
+            INDEX idx_created_at (created_at)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "cafes" => "CREATE TABLE IF NOT EXISTS cafes (
+            id VARCHAR(64) PRIMARY KEY,
+            code VARCHAR(64) NOT NULL,
+            shop_name VARCHAR(150) NOT NULL,
+            owner_name VARCHAR(100) NOT NULL,
+            phone VARCHAR(20) NOT NULL UNIQUE,
+            b2b_balance DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+            min_threshold DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+            is_frozen TINYINT(1) NOT NULL DEFAULT 0,
+            frozen_reason TEXT,
+            retail_rates LONGTEXT,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "orders" => "CREATE TABLE IF NOT EXISTS orders (
+            id VARCHAR(64) PRIMARY KEY,
+            cafe_id VARCHAR(64) NOT NULL,
+            customer_phone VARCHAR(20) NOT NULL,
+            customer_name VARCHAR(100) NOT NULL,
+            service_type VARCHAR(64) NOT NULL,
+            doc_title VARCHAR(255) NOT NULL,
+            ref_number VARCHAR(100) NOT NULL,
+            retail_fee DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+            wholesale_cost DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+            margin DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+            status VARCHAR(30) NOT NULL DEFAULT 'completed',
+            payload_json LONGTEXT,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_customer_phone (customer_phone),
+            INDEX idx_cafe_id (cafe_id),
+            INDEX idx_service_type (service_type)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "utr_requests" => "CREATE TABLE IF NOT EXISTS utr_requests (
+            id VARCHAR(64) PRIMARY KEY,
+            cafe_id VARCHAR(64) DEFAULT NULL,
+            customer_phone VARCHAR(20) NOT NULL,
+            customer_name VARCHAR(100) NOT NULL,
+            utr VARCHAR(30) NOT NULL UNIQUE,
+            amount DECIMAL(10,2) NOT NULL,
+            slip_url TEXT,
+            status VARCHAR(30) NOT NULL DEFAULT 'pending',
+            approved_at DATETIME DEFAULT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_utr (utr),
+            INDEX idx_status (status)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "incoming_upi_payments" => "CREATE TABLE IF NOT EXISTS incoming_upi_payments (
+            id VARCHAR(64) PRIMARY KEY,
+            utr VARCHAR(30) NOT NULL UNIQUE,
+            amount DECIMAL(10,2) NOT NULL,
+            sender VARCHAR(100) DEFAULT '',
+            matched TINYINT(1) NOT NULL DEFAULT 0,
+            matched_at DATETIME DEFAULT NULL,
+            matched_to VARCHAR(50) DEFAULT NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_utr (utr),
+            INDEX idx_matched (matched)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
+
+        "system_settings" => "CREATE TABLE IF NOT EXISTS system_settings (
+            setting_key VARCHAR(100) PRIMARY KEY,
+            setting_value LONGTEXT NOT NULL,
+            updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+    ];
+
+    foreach ($tables as $name => $ddl) {
+        $sql .= "-- Schema for table: {$name}\n{$ddl}\n\n";
+    }
+
+    // Insert Users
+    if (!empty($store['users'])) {
+        $sql .= "-- Data for table: users\n";
+        foreach ($store['users'] as $u) {
+            $id = addslashes($u['id'] ?? ('USR-' . ($u['phone'] ?? '')));
+            $phone = addslashes($u['phone'] ?? '');
+            $name = addslashes($u['name'] ?? 'ग्राहक');
+            $shop = addslashes($u['shopName'] ?? '');
+            $pwd = addslashes($u['password'] ?? 'password123');
+            $role = addslashes($u['role'] ?? 'citizen');
+            $bal = floatval($u['balance'] ?? 0);
+            $blk = !empty($u['isBlocked']) ? 1 : 0;
+            $sql .= "INSERT INTO users (id, phone, name, shop_name, password, role, balance, is_blocked) VALUES ('$id', '$phone', '$name', '$shop', '$pwd', '$role', $bal, $blk) ON DUPLICATE KEY UPDATE name=VALUES(name), balance=VALUES(balance);\n";
+        }
+        $sql .= "\n";
+    }
+
+    // Insert Wallets
+    if (!empty($store['wallets'])) {
+        $sql .= "-- Data for table: wallets\n";
+        foreach ($store['wallets'] as $w) {
+            $phone = addslashes($w['phone'] ?? '');
+            $name = addslashes($w['customerName'] ?? 'ग्राहक');
+            $bal = ($phone === '8006518960') ? 0.00 : floatval($w['balance'] ?? 0);
+            $sql .= "INSERT INTO wallets (phone, customer_name, balance) VALUES ('$phone', '$name', $bal) ON DUPLICATE KEY UPDATE customer_name=VALUES(customer_name), balance=VALUES(balance);\n";
+        }
+        $sql .= "\n";
+    }
+
+    // Insert Cafes
+    if (!empty($store['cafes'])) {
+        $sql .= "-- Data for table: cafes\n";
+        foreach ($store['cafes'] as $c) {
+            $id = addslashes($c['id'] ?? '');
+            $code = addslashes($c['code'] ?? $id);
+            $shop = addslashes($c['shopName'] ?? '');
+            $owner = addslashes($c['ownerName'] ?? '');
+            $phone = addslashes($c['phone'] ?? '');
+            $bal = floatval($c['b2bWallet']['balance'] ?? 0);
+            $min = floatval($c['b2bWallet']['minThreshold'] ?? 0);
+            $rates = addslashes(json_encode($c['retailRates'] ?? [], JSON_UNESCAPED_UNICODE));
+            $sql .= "INSERT INTO cafes (id, code, shop_name, owner_name, phone, b2b_balance, min_threshold, retail_rates) VALUES ('$id', '$code', '$shop', '$owner', '$phone', $bal, $min, '$rates') ON DUPLICATE KEY UPDATE shop_name=VALUES(shop_name), b2b_balance=VALUES(b2b_balance);\n";
+        }
+        $sql .= "\n";
+    }
+
+    $sql .= "SET FOREIGN_KEY_CHECKS = 1;\n";
+    return $sql;
+}
+

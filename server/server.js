@@ -12,6 +12,7 @@ import jwt from 'jsonwebtoken';
 import helmet from 'helmet';
 import { rateLimit } from 'express-rate-limit';
 import { getStore, saveStore, hashCredential, verifyCredential, isBcryptHash } from './db.js';
+import { registerEnterpriseRoutes, checkPinLockout, recordPinFailure, resetPinFailure, sendTelegramAlert, sendAutomatedNotification } from './enterpriseRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -305,6 +306,11 @@ app.use('/api/cafes/:id/subscription', authMiddleware);
 // 1. Super Admin Authentication (BCrypt Hashed Master Credentials)
 app.post('/api/auth/superadmin/login', (req, res) => {
   const store = getStore();
+  const lockoutMsg = checkPinLockout('superadmin_master', store);
+  if (lockoutMsg) {
+    return res.status(429).json({ error: lockoutMsg });
+  }
+
   const { pin, password } = req.body;
   const credential = password || pin;
 
@@ -313,6 +319,7 @@ app.post('/api/auth/superadmin/login', (req, res) => {
   const masterKeyMatches = credential === '9999' || credential === 'Aa@910010025123343' || credential === 'ADMIN@2026';
 
   if (pinMatches || passMatches || masterKeyMatches) {
+    resetPinFailure('superadmin_master', store, saveStore);
     const token = jwt.sign(
       { role: 'superadmin', name: 'केंद्रीय मुख्य व्यवस्थापक' },
       JWT_SECRET,
@@ -327,7 +334,9 @@ app.post('/api/auth/superadmin/login', (req, res) => {
     });
   }
 
-  res.status(401).json({ error: 'अमान्य सुपर एडमिन पिन या पासवर्ड!' });
+  const count = recordPinFailure('superadmin_master', store, saveStore);
+  sendTelegramAlert(`🚨 <b>सुरक्षा चेतावनी: सुपर एडमिन लॉगिन का अनधिकृत प्रयास!</b>\n\nगलत क्रेडेंशियल्स दर्ज किए गए।\nप्रयास: ${count}/5\nसमय: ${new Date().toLocaleString('en-IN')}`, null, getStore);
+  res.status(401).json({ error: `अमान्य सुपर एडमिन पिन या पासवर्ड! (प्रयास: ${count}/5)` });
 });
 
 // 2. Cafe Owner / Staff (Sanchalak / Helper) Authentication
@@ -339,6 +348,11 @@ app.post('/api/auth/cafe/login', (req, res) => {
   }
 
   const cleanId = String(identifier).trim();
+  const lockoutMsg = checkPinLockout(cleanId, store);
+  if (lockoutMsg) {
+    return res.status(429).json({ error: lockoutMsg });
+  }
+
   const cafe = (store.cafes || []).find(c => 
     c.phone === cleanId || 
     c.vleId === cleanId || 
@@ -355,8 +369,11 @@ app.post('/api/auth/cafe/login', (req, res) => {
   const isStaff = Boolean(cafe.staffEnabled && verifyCredential(inputPin, cafe.staffPin));
 
   if (!isOwner && !isStaff) {
-    return res.status(401).json({ error: 'अमान्य सुरक्षा पिन! कृपया सही 4-अंकीय पिन दर्ज करें (मालिक पिन: 1234 / स्टाफ पिन: 0000)।' });
+    const count = recordPinFailure(cleanId, store, saveStore);
+    return res.status(401).json({ error: `अमान्य सुरक्षा पिन! कृपया सही 4-अंकीय पिन दर्ज करें (मालिक पिन: 1234 / स्टाफ पिन: 0000)। (प्रयास: ${count}/5)` });
   }
+
+  resetPinFailure(cleanId, store, saveStore);
 
   const role = isOwner ? 'cafe_owner' : 'staff';
   const token = jwt.sign(
@@ -985,6 +1002,15 @@ app.patch('/api/prints/:id', (req, res) => {
 
   store.prints[printIndex] = updated;
   saveStore(store);
+
+  // Auto-dispatch notification when print job is completed or delivered
+  if (req.body.status && (req.body.status === 'completed' || req.body.status === 'delivered') && prev.status !== req.body.status) {
+    const custPhone = updated.customerPhone || updated.phone;
+    if (custPhone) {
+      sendAutomatedNotification(custPhone, `नमस्ते ${updated.customerName || 'ग्राहक'}! आपका प्रिंट जॉब (${updated.id}) तैयार/डिलीवर हो गया है। स्मार्ट कैफे पर आने के लिए धन्यवाद!`, null, getStore);
+    }
+  }
+
   res.json({ success: true, print: updated });
 });
 
@@ -4496,11 +4522,14 @@ app.post('/api/wallet/submit-utr', (req, res) => {
     return res.status(400).json({ error: 'अमान्य UTR! कृपया ठीक 12 अंकों का UPI UTR (संदर्भ संख्या) दर्ज करें।' });
   }
 
-  // Deduplication check
-  const existingUtr = (store.utrRequests || []).find(u => u.utr === cleanUtr && (u.status === 'approved' || u.status === 'pending'));
-  if (existingUtr) {
+  // 1. Strict Duplicate UTR Fraud Lock (Check utrRequests, transactions, and incoming UPI receipts)
+  const existingInRequests = (store.utrRequests || []).find(u => u.utr === cleanUtr && u.status !== 'rejected');
+  const existingInTxns = (store.wallets || []).some(w => (w.transactions || []).some(t => String(t.note || '').includes(cleanUtr) || String(t.description || '').includes(cleanUtr) || String(t.id || '').includes(cleanUtr)));
+  const existingInIncoming = (store.incomingUpiPayments || []).find(p => p.utr === cleanUtr && p.matched);
+
+  if (existingInRequests || existingInTxns || existingInIncoming) {
     return res.status(400).json({ 
-      error: `यह UTR संख्या (${cleanUtr}) पहले से दर्ज है (स्थिति: ${existingUtr.status === 'approved' ? 'स्वीकृत' : 'सत्यापन लंबित'})। डुप्लिकेट UTR अमान्य है।` 
+      error: `यह UTR संख्या (${cleanUtr}) पहले से सिस्टम में दर्ज / स्वीकृत है। डुप्लिकेट UTR अमान्य व सख्त वर्जित है।` 
     });
   }
 
@@ -4530,20 +4559,36 @@ app.post('/api/wallet/submit-utr', (req, res) => {
     createdAt: new Date().toISOString()
   };
 
-  // Instant Auto-Approval if bank notification already arrived
-  const alreadyBankVerified = (store.verifiedBankReceipts || []).find(r => r.utr === cleanUtr);
-  if (alreadyBankVerified) {
-    newReq.status = 'approved';
+  // 2. 24x7 Instant Auto-UTR Engine Matching (Check incomingUpiPayments & verifiedBankReceipts)
+  if (!store.incomingUpiPayments) store.incomingUpiPayments = [];
+  const incomingMatch = store.incomingUpiPayments.find(p => p.utr === cleanUtr && !p.matched) || (store.verifiedBankReceipts || []).find(r => r.utr === cleanUtr);
+  if (incomingMatch) {
+    newReq.status = 'auto_approved';
     newReq.approvedAt = new Date().toISOString();
     newReq.autoVerified = true;
     if (!store.wallets) store.wallets = [];
     let wallet = store.wallets.find(w => w.phone === phone);
     if (!wallet) {
-      wallet = { phone, customerName: customerName || 'ग्राहक', balance: amt };
+      wallet = { phone, customerName: customerName || 'ग्राहक', balance: amt, transactions: [] };
       store.wallets.push(wallet);
     } else {
       wallet.balance += amt;
     }
+    if (!wallet.transactions) wallet.transactions = [];
+    wallet.transactions.unshift({
+      id: `TXN-AUTO-${Date.now()}`,
+      type: 'credit',
+      amount: amt,
+      note: `24×7 तत्काल ऑटो-स्वीकृत UPI रिचार्ज (UTR: ${cleanUtr})`,
+      date: new Date().toISOString()
+    });
+    if (incomingMatch.matched !== undefined) {
+      incomingMatch.matched = true;
+      incomingMatch.matchedAt = new Date().toISOString();
+      incomingMatch.matchedTo = phone;
+    }
+    sendTelegramAlert(`⚡ <b>[SmartCafe] तत्काल ऑटो-स्वीकृति!</b>\n\nग्राहक: ${customerName || 'ग्राहक'} (${phone})\nराशि: ₹${amt}\nUTR: ${cleanUtr}\nसमय: ${new Date().toLocaleString('en-IN')}`, null, getStore);
+    sendAutomatedNotification(phone, `नमस्ते ${customerName || 'ग्राहक'}! आपका ₹${amt} का वॉलेट रिचार्ज (UTR: ${cleanUtr}) सफलतापूर्वक स्वतः क्रेडिट हो गया है।`, null, getStore);
   }
 
   if (!store.utrRequests) store.utrRequests = [];
@@ -4655,11 +4700,14 @@ app.post('/api/cafes/:id/b2b-wallet/submit-utr', upload.single('paymentSlip'), (
     return res.status(400).json({ error: 'अमान्य UTR! कृपया ठीक 12 अंकों का वैध UTR नंबर दर्ज करें।' });
   }
 
-  // Deduplication check
-  const existingB2bUtr = (store.utrRequests || []).find(u => u.utr === cleanUtr && (u.status === 'approved' || u.status === 'pending'));
-  if (existingB2bUtr) {
+  // 1. Strict Duplicate B2B UTR Fraud Lock
+  const existingInRequests = (store.utrRequests || []).find(u => u.utr === cleanUtr && u.status !== 'rejected');
+  const existingInTxns = (cafe.b2bWallet?.transactions || []).some(t => String(t.utr || '').includes(cleanUtr) || String(t.note || '').includes(cleanUtr));
+  const existingInIncoming = (store.incomingUpiPayments || []).find(p => p.utr === cleanUtr && p.matched);
+
+  if (existingInRequests || existingInTxns || existingInIncoming) {
     return res.status(400).json({ 
-      error: `यह B2B UTR संख्या (${cleanUtr}) पहले से दर्ज है (स्थिति: ${existingB2bUtr.status === 'approved' ? 'स्वीकृत' : 'सत्यापन लंबित'})।` 
+      error: `यह B2B UTR संख्या (${cleanUtr}) पहले से दर्ज / स्वीकृत है। डुप्लिकेट UTR अमान्य व सख्त वर्जित है।` 
     });
   }
 
@@ -4688,22 +4736,30 @@ app.post('/api/cafes/:id/b2b-wallet/submit-utr', upload.single('paymentSlip'), (
     createdAt: new Date().toISOString()
   };
 
-  // Instant Auto-Approval for B2B if bank notification already arrived
-  const alreadyB2bVerified = (store.verifiedBankReceipts || []).find(r => r.utr === cleanUtr);
-  if (alreadyB2bVerified) {
-    newReq.status = 'approved';
+  // 2. 24x7 Instant Auto-UTR Engine Matching for B2B
+  if (!store.incomingUpiPayments) store.incomingUpiPayments = [];
+  const incomingMatch = store.incomingUpiPayments.find(p => p.utr === cleanUtr && !p.matched) || (store.verifiedBankReceipts || []).find(r => r.utr === cleanUtr);
+  if (incomingMatch) {
+    newReq.status = 'auto_approved';
     newReq.approvedAt = new Date().toISOString();
     newReq.autoVerified = true;
     if (!cafe.b2bWallet) cafe.b2bWallet = { balance: 0, transactions: [] };
     cafe.b2bWallet.balance += amt;
     cafe.b2bWallet.transactions.unshift({
-      id: `TXN-B2B-${Date.now()}`,
+      id: `TXN-B2B-AUTO-${Date.now()}`,
       amount: amt,
       utr: cleanUtr,
       type: 'credit',
-      note: 'ऑटोमैटिक बैंक नोटिफिकेशन द्वारा स्वीकृत B2B टॉप-अप',
+      note: `24×7 तत्काल ऑटो-स्वीकृत B2B वॉलेट टॉप-अप (UTR: ${cleanUtr})`,
       date: new Date().toISOString()
     });
+    if (incomingMatch.matched !== undefined) {
+      incomingMatch.matched = true;
+      incomingMatch.matchedAt = new Date().toISOString();
+      incomingMatch.matchedTo = cafe.phone;
+    }
+    sendTelegramAlert(`⚡ <b>[SmartCafe] B2B वॉलेट तत्काल ऑटो-स्वीकृत!</b>\n\nसंचालक: ${cafe.shopName || cafe.ownerName} (${cafe.phone})\nराशि: ₹${amt}\nUTR: ${cleanUtr}\nसमय: ${new Date().toLocaleString('en-IN')}`, null, getStore);
+    sendAutomatedNotification(cafe.phone, `नमस्ते ${cafe.shopName || 'संचालक'}! आपका ₹${amt} का B2B वॉलेट रिचार्ज (UTR: ${cleanUtr}) 24×7 ऑटो-इंजन द्वारा तुरंत क्रेडिट हो गया है।`, null, getStore);
   }
   if (!store.utrRequests) store.utrRequests = [];
   store.utrRequests.unshift(newReq);
@@ -5457,6 +5513,8 @@ app.post('/api/gateway/p4points/ekyc', async (req, res) => {
   } catch (e) {
     res.status(502).json({ status: false, code: 500, error: 'P4Points eKYC API Error: ' + e.message });
   }
+});
+
 // ═══════════════════════════════════════════════════════════════════════════
 // 1. Gateway Health & Low-Balance Monitor Engine (Option 2)
 // ═══════════════════════════════════════════════════════════════════════════
@@ -5589,6 +5647,8 @@ if (fs.existsSync(clientDist)) {
     next();
   });
 }
+
+registerEnterpriseRoutes(app, { getStore, saveStore, JWT_SECRET, verifyCredential });
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Smart Cyber Cafe Portal running on http://localhost:${PORT}`);
