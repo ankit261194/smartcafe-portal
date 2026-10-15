@@ -489,7 +489,7 @@ export default function ServicePage({
         receipt: `/api/receipt/lookup/${encodeURIComponent(val)}`
       };
 
-      const targetUrl = fallbackUrlMap[currentTool.id] || `/api/rc/lookup/${encodeURIComponent(val)}`;
+      const targetUrl = fallbackUrlMap[currentTool.id] || fallbackUrlMap[toolKind] || `/api/rc/lookup/${encodeURIComponent(val)}`;
       const fRes = await fetch(targetUrl);
       if (fRes.ok) {
         const lookupData = await fRes.json();

@@ -3036,14 +3036,15 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
         const uidUrl = `https://authorized.p4points.co.in/api/v1/getPanNumber.php?apiKey=${encodeURIComponent(p4ApiKey)}&uidNumber=${encodeURIComponent(uid)}`;
         const res = await fetch(uidUrl, { signal: AbortSignal.timeout(12000) });
         const json = await res.json().catch(() => null);
-        if (json && (json.status === 200 || json.pan_number)) {
+        const pan = json?.panNumber || json?.pan_number || json?.pan;
+        if (pan) {
           return {
             source: 'p4points',
             service: 'aadhaarToPan',
-            panNo: json.pan_number || json.pan || '',
+            panNo: pan,
             maskedAadhaar: `XXXX XXXX ${uid.slice(-4)}`,
             aadhaarNo: uid,
-            name: json.name || params?.name || 'PAN धारक',
+            name: json?.name || params?.name || 'PAN धारक',
             isLiveFromP4Points: true
           };
         }
@@ -3087,15 +3088,16 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     const dob = params?.dob || '01-01-1990';
     if (dlNo && dlNo.length >= 6) {
       try {
-        const dlUrl = `https://authorized.p4points.co.in/api/v1/dlpdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&dlNo=${encodeURIComponent(dlNo)}&dob=${encodeURIComponent(dob)}`;
-        const res = await fetch(dlUrl, { signal: AbortSignal.timeout(10000) });
+        const dlUrl = `https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php?apiKey=${encodeURIComponent(p4ApiKey)}&dlNo=${encodeURIComponent(dlNo)}&dob=${encodeURIComponent(dob)}&dltype=1`;
+        const res = await fetch(dlUrl, { signal: AbortSignal.timeout(12000) });
         const json = await res.json().catch(() => null);
-        if (json && json.status === 200 && json.pdf_url) {
+        const pdf = json?.file || json?.pdf || json?.pdf_url;
+        if (pdf) {
           return {
             source: 'p4points',
             service: 'dl',
             dlNo: dlNo,
-            pdfUrl: json.pdf_url,
+            pdfUrl: pdf,
             isLiveFromP4Points: true
           };
         }
@@ -3110,7 +3112,7 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     const rationNo = String(params?.rationNo || params?.query || '').replace(/[^0-9]/g, '');
     if (rationNo && rationNo.length >= 6) {
       try {
-        const rationUrl = `https://authorized.p4points.co.in/api/v1/rationPdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&ration_no=${encodeURIComponent(rationNo)}&rationtype=NFSA`;
+        const rationUrl = `https://authorized.p4points.co.in/api/v1/rationPdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&ration_no=${encodeURIComponent(rationNo)}&rationtype=new`;
         const res = await fetch(rationUrl, { signal: AbortSignal.timeout(10000) });
         const json = await res.json().catch(() => null);
         if (json && json.status === 1 && json.pdf_url) {
@@ -3128,13 +3130,397 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
   }
 
+  // 6. Voter Verification
+  if (norm.includes('voter') || norm.includes('epic')) {
+    const epicNo = String(params?.epicNo || params?.epic || params?.query || '').trim().toUpperCase();
+    if (epicNo && epicNo.length >= 5) {
+      try {
+        const voterUrl = `https://authorized.p4points.co.in/api/v1/voterVerification_new.php?apiKey=${encodeURIComponent(p4ApiKey)}&epicNumber=${encodeURIComponent(epicNo)}`;
+        const res = await fetch(voterUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        const doc = json?.data || json?.response?.docs?.[0];
+        if (doc) {
+          return {
+            source: 'p4points',
+            service: 'voter',
+            epicNo: doc.epicNumber || doc.epic_no || epicNo,
+            name: `${doc.FirstName || ''} ${doc.LastName || ''}`.trim() || doc.name_v1 || doc.name || 'मतदाता',
+            fatherName: doc.rln_name || doc.relativeName || '',
+            gender: doc.gender || 'M',
+            dob: doc.dob || '',
+            age: doc.age || '30',
+            district: doc.district || '',
+            state: doc.state || '',
+            assembly: doc.ac_name || doc.assemblyName || '',
+            partName: doc.part_name || '',
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Voter fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 7. Electric Bill PDF
+  if (norm.includes('electric') || norm.includes('bijli') || norm.includes('bill')) {
+    const caNo = String(params?.consumerNo || params?.caNumber || params?.query || '').replace(/[^0-9]/g, '');
+    if (caNo && caNo.length >= 6) {
+      try {
+        const elecUrl = `https://authorized.p4points.co.in/api/v1/elctricBillPDF.php?apiKey=${encodeURIComponent(p4ApiKey)}&caNumber=${encodeURIComponent(caNo)}`;
+        const res = await fetch(elecUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.pdf_base64) {
+          return {
+            source: 'p4points',
+            service: 'electricity',
+            consumerNo: caNo,
+            pdfBase64: json.pdf_base64,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Electric Bill PDF fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 8. eShram Verification
+  if (norm.includes('eshram') || norm.includes('shram')) {
+    const uid = String(params?.aadhaarNo || params?.uidNumber || params?.query || '').replace(/[^0-9]/g, '');
+    if (uid.length === 12) {
+      try {
+        const shramUrl = `https://authorized.p4points.co.in/api/v1/eshramVerification.php?apiKey=${encodeURIComponent(p4ApiKey)}&uidNumber=${encodeURIComponent(uid)}`;
+        const res = await fetch(shramUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.success && json.data) {
+          return {
+            source: 'p4points',
+            service: 'eshram',
+            name: json.data?.name?.name_en || 'श्रमिक',
+            dob: json.data.dob || '',
+            gender: json.data.gender || 'Male',
+            state: json.data.state || '',
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points eShram fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 9. NPCI Link Status
+  if (norm.includes('npci') || norm.includes('dbt')) {
+    const uid = String(params?.aadhaarNo || params?.query || '').replace(/[^0-9]/g, '');
+    if (uid.length === 12) {
+      try {
+        const npciUrl = `https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php?apiKey=${encodeURIComponent(p4ApiKey)}&aadhar=${encodeURIComponent(uid)}`;
+        const res = await fetch(npciUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.status && json.data) {
+          return {
+            source: 'p4points',
+            service: 'npci',
+            bankName: json.data.bank || 'STATE BANK OF INDIA',
+            status: json.data.status || 'ACTIVE',
+            lastUpdate: json.data.last_update || new Date().toISOString().split('T')[0],
+            aadhaarNo: uid,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points NPCI fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 10. Aadhaar to Ration PDF
+  if (norm.includes('aadhar_to_ration') || norm.includes('aadhaarrationslip')) {
+    const uid = String(params?.aadhaarNo || params?.query || '').replace(/[^0-9]/g, '');
+    if (uid.length === 12) {
+      try {
+        const arUrl = `https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&aadhar=${encodeURIComponent(uid)}&rationtype=new`;
+        const res = await fetch(arUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.api_response && json.api_response.pdf) {
+          return {
+            source: 'p4points',
+            service: 'ration',
+            name: json.api_response.name || 'राशन धारक',
+            rationNo: json.api_response.ration_no || '',
+            pdfBase64: json.api_response.pdf,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Aadhaar to Ration fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 11. RC Fast PDF
+  if (norm.includes('rc_fast') || norm.includes('rcfast')) {
+    const regNo = String(params?.vehicleNumber || params?.rcNo || params?.query || '').replace(/[\s-]+/g, '').toUpperCase();
+    if (regNo && regNo.length >= 4) {
+      try {
+        const rfUrl = `https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php?apiKey=${encodeURIComponent(p4ApiKey)}&rcno=${encodeURIComponent(regNo)}&type=non%20chip`;
+        const res = await fetch(rfUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.pdf) {
+          const d = json.data || {};
+          return {
+            source: 'p4points',
+            service: 'rc',
+            regNo: d.vrc || regNo,
+            ownerName: d.owner_name || 'वाहन स्वामी',
+            fatherName: d.owner_father_name || '',
+            chassisNo: d.chassis || '',
+            engineNo: d.engine || '',
+            maker: d.maker || '',
+            model: d.model || '',
+            pdfBase64: json.pdf,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points RC Fast PDF fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 12. Chassis to RC
+  if (norm.includes('chassis_to_rc') || norm.includes('chassis')) {
+    const chassisNo = String(params?.chassisNumber || params?.query || '').trim().toUpperCase();
+    if (chassisNo && chassisNo.length >= 5) {
+      try {
+        const cUrl = `https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php?apiKey=${encodeURIComponent(p4ApiKey)}&chassis_no=${encodeURIComponent(chassisNo)}`;
+        const res = await fetch(cUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.status && json.plate) {
+          return {
+            source: 'p4points',
+            service: 'rc',
+            regNo: json.plate,
+            ownerName: json.full_name || 'वाहन स्वामी',
+            fatherName: json.relation_name || '',
+            chassisNo: chassisNo,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Chassis to RC fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 13. RC to Mobile & Father Name
+  if (norm.includes('rc_to_mobile') || norm.includes('rc_mobile')) {
+    const regNo = String(params?.vehicleNumber || params?.query || '').replace(/[\s-]+/g, '').toUpperCase();
+    if (regNo && regNo.length >= 4) {
+      try {
+        const rmUrl = `https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php?apiKey=${encodeURIComponent(p4ApiKey)}&vehicalNumber=${encodeURIComponent(regNo)}`;
+        const res = await fetch(rmUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.status && json.holder) {
+          return {
+            source: 'p4points',
+            service: 'rc',
+            regNo: regNo,
+            ownerName: json.holder.full_name || 'वाहन स्वामी',
+            fatherName: json.holder.relation_name || '',
+            mobileNumber: json.holder.contact || '',
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points RC to Mobile fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 14. PAN to GST
+  if (norm.includes('pan_to_gst') || norm.includes('pantogst')) {
+    const pan = String(params?.panNo || params?.pan || params?.query || '').trim().toUpperCase();
+    if (pan.length === 10) {
+      try {
+        const pgUrl = `https://authorized.p4points.co.in/api/v1/pan_to_gst.php?apiKey=${encodeURIComponent(p4ApiKey)}&pan=${encodeURIComponent(pan)}`;
+        const res = await fetch(pgUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.items && json.items.length > 0) {
+          return {
+            source: 'p4points',
+            service: 'gst',
+            panNo: pan,
+            gstList: json.items,
+            gstCount: json.count || json.items.length,
+            firstGst: json.items[0]?.gstin || '',
+            state: json.items[0]?.state || '',
+            status: json.items[0]?.auth_status || 'Active',
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points PAN to GST fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 15. GST to PAN
+  if (norm.includes('gst_to_pan') || norm.includes('gsttopan')) {
+    const gst = String(params?.gstNo || params?.gstin || params?.query || '').trim().toUpperCase();
+    if (gst.length >= 10) {
+      try {
+        const gpUrl = `https://authorized.p4points.co.in/api/v1/gst_to_pan.php?apiKey=${encodeURIComponent(p4ApiKey)}&gst=${encodeURIComponent(gst)}`;
+        const res = await fetch(gpUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.pan) {
+          return {
+            source: 'p4points',
+            service: 'panCard',
+            gstNo: gst,
+            panNo: json.pan,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points GST to PAN fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 16. Learning Licence PDF Download
+  if (norm.includes('ll_pdf') || norm.includes('ll_download')) {
+    const idNumber = String(params?.appNo || params?.idNumber || params?.query || '').trim();
+    if (idNumber.length >= 5) {
+      try {
+        const llUrl = `https://authorized.p4points.co.in/api/v1/LL_application_pdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&idNumber=${encodeURIComponent(idNumber)}`;
+        const res = await fetch(llUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.pdf) {
+          return {
+            source: 'p4points',
+            service: 'dl',
+            idNumber: idNumber,
+            dlNo: idNumber,
+            pdfBase64: json.pdf,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points LL PDF fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 17. Instant Voter Mobile Link (No OTP)
+  if (norm.includes('instant_voter') || norm.includes('voter_link') || norm.includes('voter_mobile')) {
+    const epic = String(params?.epicNo || params?.epic || params?.query || '').trim().toUpperCase();
+    const mobile = String(params?.mobile || params?.mobileNumber || params?.phone || '').replace(/[^0-9]/g, '');
+    if (epic.length >= 5 && mobile.length === 10) {
+      try {
+        const ivUrl = `https://authorized.p4points.co.in/api/v4/instant_voter_link.php?apiKey=${encodeURIComponent(p4ApiKey)}&epic=${encodeURIComponent(epic)}&mobile=${encodeURIComponent(mobile)}`;
+        const res = await fetch(ivUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.status) {
+          return {
+            source: 'p4points',
+            service: 'voter',
+            epicNo: epic,
+            mobileNumber: mobile,
+            refId: json.refId || `VCM${Date.now()}`,
+            message: json.message || 'वोटर कार्ड में मोबाइल नंबर सफलतापूर्वक लिंक हो गया है।',
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Instant Voter Mobile fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 18. PAN Find (Name + Mobile)
+  if (norm.includes('pan_find_name') || norm.includes('pan_name_mobile')) {
+    const name = String(params?.name || params?.customerName || params?.query || '').trim();
+    const mobile = String(params?.mobile || params?.phone || '').replace(/[^0-9]/g, '');
+    if (name.length >= 3 && mobile.length === 10) {
+      try {
+        const pfUrl = `https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php?apiKey=${encodeURIComponent(p4ApiKey)}&name=${encodeURIComponent(name)}&mobile=${encodeURIComponent(mobile)}`;
+        const res = await fetch(pfUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.panNumber) {
+          return {
+            source: 'p4points',
+            service: 'panCard',
+            panNo: json.panNumber,
+            name: json.name || name,
+            mobile: mobile,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points PAN Find fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 19. AgriStack Farmer Passbook PDF
+  if (norm.includes('farmer_pdf') || norm.includes('agristack_pdf')) {
+    const uid = String(params?.aadhaarNo || params?.uidNumber || params?.query || '').replace(/[^0-9]/g, '');
+    if (uid.length === 12) {
+      try {
+        const apUrl = `https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&uidNumber=${encodeURIComponent(uid)}`;
+        const res = await fetch(apUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.pdfBase64) {
+          return {
+            source: 'p4points',
+            service: 'agristack',
+            farmerName: json.farmerNameEn || json.farmerNameLocal || 'किसान',
+            mobileNumber: json.farmerMobileNumber || '',
+            pdfBase64: json.pdfBase64,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points AgriStack PDF fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 20. RTPS Certificate Bihar
+  if (norm.includes('rtps') || norm.includes('edistrict')) {
+    const appNo = String(params?.appNo || params?.applicationNumber || params?.query || '').trim();
+    const name = String(params?.name || params?.customerName || '').trim();
+    if (appNo.length >= 5) {
+      try {
+        const rtpsUrl = `https://authorized.p4points.co.in/api/v1/RtpsCertificate-Br.php?apiKey=${encodeURIComponent(p4ApiKey)}&applicationNumber=${encodeURIComponent(appNo)}&name=${encodeURIComponent(name)}`;
+        const res = await fetch(rtpsUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && json.status && json.pdf) {
+          return {
+            source: 'p4points',
+            service: 'edistrict',
+            appNo: appNo,
+            name: json.name || name,
+            pdfBase64: json.pdf,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points RTPS fetch failed:', err.message);
+      }
+    }
+  }
+
   return null;
 }
 
 // 3. Two-Tier Financial Ledger Zero-Bypass Automated Service Execution
 app.post('/api/services/execute-automated', async (req, res) => {
   const store = getStore();
-  const { cafeId, customerPhone, serviceType, params, previewMode } = req.body;
+  const serviceType = req.body.serviceType || req.body.serviceId || '';
+  const { cafeId, customerPhone, params, previewMode } = req.body;
 
   if (!serviceType) {
     return res.status(400).json({ error: 'सेवा प्रकार अनिवार्य है।' });
