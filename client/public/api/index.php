@@ -1181,10 +1181,20 @@ if ($endpoint === 'wallet/add-money' && $method === 'POST') {
 }
 
 
-// Route: /api/wallet/topup-instant (Instant top-up for fast test recharge)
+// Route: /api/wallet/topup-instant (Strictly Super Admin Master Auth Protected)
 if ($endpoint === 'wallet/topup-instant' && $method === 'POST') {
+    $masterPass = $body['masterPassword'] ?? ($body['password'] ?? '');
+    if ($masterPass !== 'Aa@910010025123343' && ($headers['Authorization'] ?? '') !== 'Bearer superadmin_secret_token') {
+        http_response_code(403);
+        echo json_encode(['error' => 'अनधिकृत प्रवेश! वॉलेट टॉप-अप केवल वैध UPI UTR सत्यापन अथवा सुपर एडमिन द्वारा ही संभव है।']);
+        exit;
+    }
     $phone = trim($body['phone'] ?? '');
-    if (!$phone) $phone = '8006518960';
+    if (!$phone) {
+        http_response_code(400);
+        echo json_encode(['error' => 'फ़ोन नंबर अनिवार्य है।']);
+        exit;
+    }
     $amount = floatval($body['amount'] ?? 500);
     if ($amount <= 0) $amount = 500;
     if (!isset($store['wallets'])) $store['wallets'] = [];
@@ -1562,8 +1572,14 @@ if (preg_match('#^cafes/([^/]+)/b2b-wallet$#', $endpoint, $m)) {
     exit;
 }
 
-// Route: /api/cafes/:id/b2b-wallet/topup-instant
+// Route: /api/cafes/:id/b2b-wallet/topup-instant (Strictly Super Admin Master Auth Protected)
 if (preg_match('#^cafes/([^/]+)/b2b-wallet/topup-instant$#', $endpoint, $m) && $method === 'POST') {
+    $masterPass = $body['masterPassword'] ?? ($body['password'] ?? '');
+    if ($masterPass !== 'Aa@910010025123343' && ($headers['Authorization'] ?? '') !== 'Bearer superadmin_secret_token') {
+        http_response_code(403);
+        echo json_encode(['error' => 'अनधिकृत प्रवेश! B2B वॉलेट टॉप-अप केवल सुपर एडमिन अनुमोदन द्वारा ही संभव है।']);
+        exit;
+    }
     $cafeId = $m[1];
     $amount = floatval($body['amount'] ?? 500);
     if ($amount <= 0) $amount = 500;
@@ -2535,7 +2551,192 @@ function getReceiptDetails($input, $custom = []) {
 // ═══════════════════════════════════════════════════════════════════════════
 function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
     if (!$p4ApiKey) return null;
-    $norm = strtolower((string)$serviceType);
+    $norm = strtolower(trim((string)$serviceType));
+
+    // Dynamic 79 Catalog Resolution
+    static $s79Map = null;
+    if ($s79Map === null) {
+        $s79Map = [];
+        $p = __DIR__ . '/data/services_79.json';
+        if (file_exists($p)) {
+            $raw = json_decode(file_get_contents($p), true) ?: [];
+            foreach ($raw as $item) {
+                if (!empty($item['id'])) {
+                    $s79Map[strtolower($item['id'])] = $item;
+                }
+            }
+        }
+    }
+
+    $matchedService = $s79Map[$norm] ?? ($s79Map[str_replace('-', '_', $norm)] ?? null);
+    if (!$matchedService) {
+        $legacyMap = [
+            'rcdownload' => 'rc_to_details', 'rc_download' => 'rc_to_details',
+            'pancard' => 'pan_details', 'pan_card' => 'pan_details',
+            'aadhaarcard' => 'aadhaar_advance', 'aadhaar_card' => 'aadhaar_advance',
+            'votercard' => 'voter_verification', 'voter_card' => 'voter_verification',
+            'rationcard' => 'ration_pdf_by_ration', 'ration_card' => 'ration_pdf_by_ration',
+            'electricitybill' => 'electric_bill_pdf_bihar', 'electricity_bill' => 'electric_bill_pdf_bihar',
+            'drivinglicence' => 'driving_licence_pdf', 'driving_licence' => 'driving_licence_pdf',
+            'ayushmancard' => 'ayushman_image_jpg', 'ayushman_card' => 'ayushman_image_jpg',
+            'edistrictslip' => 'rtps_bihar_pdf', 'edistrict_slip' => 'rtps_bihar_pdf',
+            'epan' => 'pan_find', 'findpan' => 'pan_find', 'challansearch' => 'chalan_find',
+            'searchepic' => 'voter_verification'
+        ];
+        $mappedId = $legacyMap[$norm] ?? null;
+        if ($mappedId && isset($s79Map[$mappedId])) {
+            $matchedService = $s79Map[$mappedId];
+        }
+    }
+
+    $val = trim($params['query'] ?? ($params['vehicleNumber'] ?? ($params['rcno'] ?? ($params['regNo'] ?? ($params['panNo'] ?? ($params['panNumber'] ?? ($params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['epicNo'] ?? ($params['epicNumber'] ?? ($params['caNumber'] ?? ($params['consumerNo'] ?? ($params['rationNo'] ?? ($params['ration_no'] ?? ($params['dlNo'] ?? ($params['idNumber'] ?? ($params['mobile'] ?? ($params['mobileNumber'] ?? ($params['val'] ?? '')))))))))))))))))));
+
+    if ($matchedService && !empty($matchedService['apiEndpoint'])) {
+        $endpointUrl = $matchedService['apiEndpoint'];
+        $httpMethod = strtoupper($matchedService['method'] ?? 'GET');
+
+        $p4Params = [
+            'apiKey' => $p4ApiKey,
+            'api_key' => $p4ApiKey,
+            'apikey' => $p4ApiKey
+        ];
+
+        $lowerUrl = strtolower($endpointUrl);
+
+        if (strpos($lowerUrl, 'rc') !== false || strpos($lowerUrl, 'vahan') !== false) {
+            $regClean = strtoupper(preg_replace('/[\s-]+/', '', $val));
+            $p4Params['rcno'] = $regClean;
+            $p4Params['vehicalNumber'] = $regClean;
+            $p4Params['rc_number'] = $regClean;
+            $p4Params['type'] = 'non chip';
+            $p4Params['tpe'] = 'non chip';
+            $p4Params['cardtype'] = '1';
+            $p4Params['chiptype'] = '1';
+        }
+        if (strpos($lowerUrl, 'pan') !== false || strpos($lowerUrl, 'gst') !== false) {
+            $panClean = strtoupper(trim($val));
+            $p4Params['pan'] = $panClean;
+            $p4Params['panNumber'] = $panClean;
+            $p4Params['panNo'] = $panClean;
+            if (strlen($panClean) === 12 && ctype_digit($panClean)) {
+                $p4Params['uidNumber'] = $panClean;
+            }
+            if (!empty($params['name']) || !empty($params['customerName'])) {
+                $p4Params['name'] = $params['name'] ?? $params['customerName'];
+            }
+            if (!empty($params['mobile']) || !empty($params['phone'])) {
+                $p4Params['mobile'] = $params['mobile'] ?? $params['phone'];
+            }
+            if (strpos($lowerUrl, 'gst') !== false) {
+                $p4Params['gst'] = $val;
+            }
+        }
+        if (strpos($lowerUrl, 'voter') !== false || strpos($lowerUrl, 'epic') !== false) {
+            $epicClean = strtoupper(trim($val));
+            $p4Params['epicNumber'] = $epicClean;
+            $p4Params['epic'] = $epicClean;
+            $p4Params['epic_number'] = $epicClean;
+            $p4Params['voterNumber'] = $epicClean;
+            $p4Params['mobile'] = $params['mobile'] ?? ($params['phone'] ?? '');
+        }
+        if (strpos($lowerUrl, 'ration') !== false) {
+            $p4Params['ration_no'] = $val;
+            $p4Params['aadhar'] = $val;
+            $p4Params['uidNumber'] = $val;
+            $p4Params['rationtype'] = 'NFSA';
+        }
+        if (strpos($lowerUrl, 'dl') !== false) {
+            $p4Params['dlNo'] = strtoupper(trim($val));
+            $p4Params['dl_number'] = strtoupper(trim($val));
+            $p4Params['dob'] = $params['dob'] ?? '01-01-1990';
+            $p4Params['dltype'] = '1';
+        }
+        if (strpos($lowerUrl, 'll') !== false) {
+            $p4Params['idNumber'] = $val;
+            $p4Params['application_number'] = $val;
+            $p4Params['date_of_birth'] = $params['dob'] ?? '01-01-1990';
+            $p4Params['state_name'] = 'UP';
+        }
+        if (strpos($lowerUrl, 'electric') !== false || strpos($lowerUrl, 'elctric') !== false || strpos($lowerUrl, 'bill') !== false) {
+            $p4Params['caNumber'] = preg_replace('/[^0-9]/', '', $val);
+            $p4Params['consumerNo'] = preg_replace('/[^0-9]/', '', $val);
+        }
+        if (strpos($lowerUrl, 'lookup') !== false || strpos($lowerUrl, 'mobile') !== false) {
+            $cleanPhone = preg_replace('/[^0-9]/', '', $val);
+            $p4Params['mobile'] = $cleanPhone;
+            $p4Params['mobileNumber'] = $cleanPhone;
+            $p4Params['phone'] = $cleanPhone;
+        }
+        if (strpos($lowerUrl, 'npci') !== false) {
+            $cleanAadhaar = preg_replace('/[^0-9]/', '', $val);
+            $p4Params['aadhar'] = $cleanAadhaar;
+            $p4Params['uidNumber'] = $cleanAadhaar;
+        }
+        if (strpos($lowerUrl, 'agristak') !== false || strpos($lowerUrl, 'agristack') !== false) {
+            $p4Params['uidNumber'] = preg_replace('/[^0-9]/', '', $val);
+            $p4Params['state'] = 'UP';
+        }
+        if (strpos($lowerUrl, 'rtps') !== false) {
+            $p4Params['applicationNumber'] = trim($val);
+            $p4Params['name'] = $params['name'] ?? ($params['applicantName'] ?? 'Applicant');
+        }
+        if (strpos($lowerUrl, 'eshram') !== false) {
+            $p4Params['uidNumber'] = preg_replace('/[^0-9]/', '', $val);
+        }
+        if (strpos($lowerUrl, 'chassis') !== false) {
+            $p4Params['chassisNumber'] = strtoupper(trim($val));
+        }
+
+        foreach ($params as $k => $v) {
+            if (!isset($p4Params[$k]) && is_scalar($v) && $v !== '') {
+                $p4Params[$k] = $v;
+            }
+        }
+
+        $targetUrl = $endpointUrl;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'SmartCafe-B2B-Gateway/2.0');
+
+        if ($httpMethod === 'POST') {
+            curl_setopt($ch, CURLOPT_URL, $targetUrl);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($p4Params));
+        } else {
+            $sep = (strpos($targetUrl, '?') === false) ? '?' : '&';
+            curl_setopt($ch, CURLOPT_URL, $targetUrl . $sep . http_build_query($p4Params));
+        }
+
+        $rawResp = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($rawResp && $httpCode < 500) {
+            $json = json_decode($rawResp, true);
+            if (is_array($json)) {
+                $hasData = !empty($json['data']) || !empty($json['holder']) || !empty($json['response']) || !empty($json['items']) || !empty($json['panNumber']) || !empty($json['full_pan_number']) || !empty($json['farmerNameEn']);
+                $hasPdf = !empty($json['pdf']) || !empty($json['pdf_base64']) || !empty($json['pdfBase64']) || !empty($json['Rc_Pdf']) || !empty($json['file']) || !empty($json['pdf_url']);
+                $isExplicitSuccess = (!empty($json['success']) && $json['success'] !== false) || (isset($json['status']) && ($json['status'] === true || $json['status'] == 1 || $json['status'] == 100 || $json['status'] === 'success' || $json['status'] == 200)) || (isset($json['code']) && $json['code'] == 100);
+
+                if ($hasData || $hasPdf || $isExplicitSuccess) {
+                    $pdfVal = $json['pdf'] ?? ($json['pdf_base64'] ?? ($json['pdfBase64'] ?? ($json['Rc_Pdf'] ?? ($json['file'] ?? ($json['pdf_url'] ?? null)))));
+                    return [
+                        'source' => 'p4points',
+                        'service' => $serviceType,
+                        'serviceId' => $matchedService['id'],
+                        'isLiveFromP4Points' => true,
+                        'pdfUrl' => $pdfVal,
+                        'data' => $json['data'] ?? ($json['holder'] ?? ($json['response'] ?? $json)),
+                        'raw' => $json
+                    ];
+                }
+            }
+        }
+    }
 
     // 1. RC Services
     if (strpos($norm, 'rc') !== false || $norm === 'rcdownload' || strpos($norm, 'vehicle') !== false || strpos($norm, 'chassis') !== false || strpos($norm, 'engine') !== false) {

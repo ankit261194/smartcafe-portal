@@ -1730,11 +1730,18 @@ app.put('/api/cafes/:id/staff-pin', (req, res) => {
 
 // Customer Digital Wallet API (Strict Zero-Bypass)
 
-// 1-Click Instant Wallet Top-up (No scanner needed for direct test/owner top-up)
+// 1-Click Instant Wallet Top-up (Strictly Super Admin Master Auth Protected)
 app.post('/api/wallet/topup-instant', (req, res) => {
+  const masterPass = req.body?.masterPassword || req.body?.password || '';
+  if (masterPass !== 'Aa@910010025123343' && req.headers['authorization'] !== 'Bearer superadmin_secret_token') {
+    return res.status(403).json({ error: 'अनधिकृत प्रवेश! वॉलेट टॉप-अप केवल वैध UPI UTR सत्यापन अथवा सुपर एडमिन द्वारा ही संभव है।' });
+  }
   const store = getStore();
   const { phone, amount } = req.body;
-  const cleanPhone = String(phone || '8006518960').trim();
+  if (!phone) {
+    return res.status(400).json({ error: 'फ़ोन नंबर अनिवार्य है।' });
+  }
+  const cleanPhone = String(phone).trim();
   const amt = parseFloat(amount) || 500;
   
   if (!store.wallets) store.wallets = [];
@@ -1757,8 +1764,12 @@ app.post('/api/wallet/topup-instant', (req, res) => {
   return res.json({ success: true, balance: wallet.balance, wallet });
 });
 
-// 1-Click Instant Sanchalak B2B Wallet Top-up
+// 1-Click Instant Sanchalak B2B Wallet Top-up (Strictly Super Admin Master Auth Protected)
 app.post('/api/cafes/:id/b2b-wallet/topup-instant', (req, res) => {
+  const masterPass = req.body?.masterPassword || req.body?.password || '';
+  if (masterPass !== 'Aa@910010025123343' && req.headers['authorization'] !== 'Bearer superadmin_secret_token') {
+    return res.status(403).json({ error: 'अनधिकृत प्रवेश! B2B वॉलेट टॉप-अप केवल सुपर एडमिन अनुमोदन द्वारा ही संभव है।' });
+  }
   const store = getStore();
   const cafeId = req.params.id;
   const { amount } = req.body;
@@ -2970,8 +2981,214 @@ app.get('/api/cafes/:id/service-status/:serviceType', (req, res) => {
 // ═══════════════════════════════════════════════════════════════════════════
 async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
   if (!p4ApiKey) return null;
-  const norm = String(serviceType || '').toLowerCase();
-  
+  const norm = String(serviceType || '').toLowerCase().trim();
+
+  // Dynamic 79 Catalog Resolution
+  let matchedService = null;
+  try {
+    const s79Path = path.join(__dirname, 'data', 'services_79.json');
+    if (fs.existsSync(s79Path)) {
+      const s79List = JSON.parse(fs.readFileSync(s79Path, 'utf8'));
+      matchedService = s79List.find(s => String(s.id).toLowerCase() === norm || String(s.id).toLowerCase() === norm.replace(/-/g, '_'));
+      if (!matchedService) {
+        const legacyMap = {
+          'rcdownload': 'rc_to_details', 'rc_download': 'rc_to_details',
+          'pancard': 'pan_details', 'pan_card': 'pan_details',
+          'aadhaarcard': 'aadhaar_advance', 'aadhaar_card': 'aadhaar_advance',
+          'votercard': 'voter_verification', 'voter_card': 'voter_verification',
+          'rationcard': 'ration_pdf_by_ration', 'ration_card': 'ration_pdf_by_ration',
+          'electricitybill': 'electric_bill_pdf_bihar', 'electricity_bill': 'electric_bill_pdf_bihar',
+          'drivinglicence': 'driving_licence_pdf', 'driving_licence': 'driving_licence_pdf',
+          'ayushmancard': 'ayushman_image_jpg', 'ayushman_card': 'ayushman_image_jpg',
+          'edistrictslip': 'rtps_bihar_pdf', 'edistrict_slip' : 'rtps_bihar_pdf',
+          'epan': 'pan_find', 'findpan': 'pan_find', 'challansearch': 'chalan_find',
+          'searchepic': 'voter_verification'
+        };
+        const mappedId = legacyMap[norm];
+        if (mappedId) {
+          matchedService = s79List.find(s => s.id === mappedId);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Error reading services_79.json in dispatcher:', e.message);
+  }
+
+  const val = String(params?.query || params?.vehicleNumber || params?.rcno || params?.regNo || params?.panNo || params?.panNumber || params?.aadhaarNo || params?.uidNumber || params?.epicNo || params?.epicNumber || params?.caNumber || params?.consumerNo || params?.rationNo || params?.ration_no || params?.dlNo || params?.idNumber || params?.mobile || params?.mobileNumber || params?.val || '').trim();
+
+  if (matchedService && matchedService.apiEndpoint) {
+    const endpointUrl = matchedService.apiEndpoint;
+    const httpMethod = String(matchedService.method || 'GET').toUpperCase();
+
+    const p4Params = {
+      apiKey: p4ApiKey,
+      api_key: p4ApiKey,
+      apikey: p4ApiKey
+    };
+
+    const lowerUrl = endpointUrl.toLowerCase();
+
+    if (lowerUrl.includes('rc') || lowerUrl.includes('vahan')) {
+      const regClean = val.toUpperCase().replace(/[\s-]+/g, '');
+      p4Params.rcno = regClean;
+      p4Params.vehicalNumber = regClean;
+      p4Params.rc_number = regClean;
+      p4Params.type = 'non chip';
+      p4Params.tpe = 'non chip';
+      p4Params.cardtype = '1';
+      p4Params.chiptype = '1';
+    }
+    if (lowerUrl.includes('pan') || lowerUrl.includes('gst')) {
+      const panClean = val.toUpperCase();
+      p4Params.pan = panClean;
+      p4Params.panNumber = panClean;
+      p4Params.panNo = panClean;
+      if (panClean.length === 12 && /^\d+$/.test(panClean)) {
+        p4Params.uidNumber = panClean;
+      }
+      if (params?.name || params?.customerName) {
+        p4Params.name = params?.name || params?.customerName;
+      }
+      if (params?.mobile || params?.phone) {
+        p4Params.mobile = params?.mobile || params?.phone;
+      }
+      if (lowerUrl.includes('gst')) p4Params.gst = val;
+    }
+    if (lowerUrl.includes('voter') || lowerUrl.includes('epic')) {
+      const epicClean = val.toUpperCase();
+      p4Params.epicNumber = epicClean;
+      p4Params.epic = epicClean;
+      p4Params.epic_number = epicClean;
+      p4Params.voterNumber = epicClean;
+      p4Params.mobile = params?.mobile || params?.phone || '';
+    }
+    if (lowerUrl.includes('ration')) {
+      p4Params.ration_no = val;
+      p4Params.aadhar = val;
+      p4Params.uidNumber = val;
+      p4Params.rationtype = 'NFSA';
+    }
+    if (lowerUrl.includes('dl')) {
+      p4Params.dlNo = val.toUpperCase();
+      p4Params.dl_number = val.toUpperCase();
+      p4Params.dob = params?.dob || '01-01-1990';
+      p4Params.dltype = '1';
+    }
+    if (lowerUrl.includes('ll')) {
+      p4Params.idNumber = val;
+      p4Params.application_number = val;
+      p4Params.date_of_birth = params?.dob || '01-01-1990';
+      p4Params.state_name = 'UP';
+    }
+    if (lowerUrl.includes('electric') || lowerUrl.includes('elctric') || lowerUrl.includes('bill')) {
+      p4Params.caNumber = val.replace(/\D/g, '');
+      p4Params.consumerNo = val.replace(/\D/g, '');
+    }
+    if (lowerUrl.includes('lookup') || lowerUrl.includes('mobile')) {
+      const cleanPhone = val.replace(/\D/g, '');
+      p4Params.mobile = cleanPhone;
+      p4Params.mobileNumber = cleanPhone;
+      p4Params.phone = cleanPhone;
+    }
+    if (lowerUrl.includes('npci')) {
+      const cleanAadhaar = val.replace(/\D/g, '');
+      p4Params.aadhar = cleanAadhaar;
+      p4Params.uidNumber = cleanAadhaar;
+    }
+    if (lowerUrl.includes('agristak') || lowerUrl.includes('agristack')) {
+      p4Params.uidNumber = val.replace(/\D/g, '');
+      p4Params.state = 'UP';
+    }
+    if (lowerUrl.includes('rtps')) {
+      p4Params.applicationNumber = val;
+      p4Params.name = params?.name || params?.applicantName || 'Applicant';
+    }
+    if (lowerUrl.includes('eshram')) {
+      p4Params.uidNumber = val.replace(/\D/g, '');
+    }
+    if (lowerUrl.includes('chassis')) {
+      p4Params.chassisNumber = val.toUpperCase();
+    }
+
+    if (params && typeof params === 'object') {
+      for (const [k, v] of Object.entries(params)) {
+        if (p4Params[k] === undefined && v !== undefined && v !== '') {
+          p4Params[k] = v;
+        }
+      }
+    }
+
+    try {
+      let finalUrl = endpointUrl;
+      const queryStr = new URLSearchParams(p4Params).toString();
+      const options = {
+        rejectUnauthorized: false,
+        timeout: 15000,
+        headers: { 'User-Agent': 'SmartCafe-B2B-Gateway/2.0' }
+      };
+
+      const result = await new Promise((resolve) => {
+        if (httpMethod === 'POST') {
+          options.method = 'POST';
+          options.headers = options.headers || {};
+          options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+          const req = https.request(finalUrl, options, (res) => {
+            let body = '';
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => {
+              try {
+                const json = JSON.parse(body);
+                resolve({ ok: true, json });
+              } catch (e) {
+                resolve({ ok: false, raw: body });
+              }
+            });
+          });
+          req.on('error', (err) => resolve({ ok: false, error: err.message }));
+          req.write(queryStr);
+          req.end();
+        } else {
+          const sep = finalUrl.includes('?') ? '&' : '?';
+          finalUrl += sep + queryStr;
+          https.get(finalUrl, options, (res) => {
+            let body = '';
+            res.on('data', chunk => body += chunk);
+            res.on('end', () => {
+              try {
+                const json = JSON.parse(body);
+                resolve({ ok: true, json });
+              } catch (e) {
+                resolve({ ok: false, raw: body });
+              }
+            });
+          }).on('error', (err) => resolve({ ok: false, error: err.message }));
+        }
+      });
+
+      if (result && result.ok && result.json) {
+        const json = result.json;
+        const hasData = Boolean(json.data || json.holder || json.response || json.items || json.panNumber || json.full_pan_number || json.farmerNameEn);
+        const hasPdf = Boolean(json.pdf || json.pdf_base64 || json.pdfBase64 || json.Rc_Pdf || json.file || json.pdf_url);
+        const isExplicitSuccess = Boolean((json.success && json.success !== false) || json.status === true || json.status === 1 || json.status === 100 || json.status === 'success' || json.status === 200 || json.code === 100);
+
+        if (hasData || hasPdf || isExplicitSuccess) {
+          const pdfVal = json.pdf || json.pdf_base64 || json.pdfBase64 || json.Rc_Pdf || json.file || json.pdf_url || null;
+          return {
+            source: 'p4points',
+            service: serviceType,
+            serviceId: matchedService.id,
+            isLiveFromP4Points: true,
+            pdfUrl: pdfVal,
+            data: json.data || json.holder || json.response || json,
+            raw: json
+          };
+        }
+      }
+    } catch (err) {
+      console.warn('Dynamic dispatch failed for', matchedService.id, err.message);
+    }
+  }
+
   // 1. RC Services (rcDownload, rc_fast_pdf, rc_details, chassis_to_rc, engine_to_rc, etc.)
   if (norm.includes('rc') || norm === 'rcdownload' || norm.includes('vehicle') || norm.includes('chassis') || norm.includes('engine')) {
     const regNo = String(params?.vehicleNumber || params?.rcNo || params?.regNo || params?.query || '').replace(/[\s-]+/g, '').toUpperCase();

@@ -14,12 +14,12 @@ export default function CustomerWalletModal({
   selectedCafe,
   onBalanceUpdated
 }) {
-  const [phone, setPhone] = useState(currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960');
+  const [phone, setPhone] = useState(currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '');
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(false);
   const [addAmount, setAddAmount] = useState('200');
   const [utrNumber, setUtrNumber] = useState('');
-  const [isQrOpen, setIsQrOpen] = useState(false);
+  const [isQrOpen, setIsQrOpen] = useState(true);
   const [submittingUtr, setSubmittingUtr] = useState(false);
   const [screenshotPreview, setScreenshotPreview] = useState('');
   const [utrStatusList, setUtrStatusList] = useState([]);
@@ -51,7 +51,11 @@ export default function CustomerWalletModal({
   };
 
   const fetchWallet = async (phoneToFetch) => {
-    const p = phoneToFetch || phone || currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960';
+    const p = phoneToFetch || phone || currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '';
+    if (!p) {
+      setWallet({ balance: 0, transactions: [] });
+      return;
+    }
     setLoading(true);
     try {
       const res = await authFetch(`/api/wallet/${p}`);
@@ -71,47 +75,11 @@ export default function CustomerWalletModal({
 
   useEffect(() => {
     if (isOpen) {
-      fetchWallet(phone || currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960');
+      fetchWallet(phone || currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '');
     }
   }, [isOpen, phone]);
 
-  // Zero-Friction Instant Top-up (No scanner needed)
-  const handleInstantTopup = async (amt = 200) => {
-    setErrorMsg('');
-    setSuccessMsg('');
-    setLoading(true);
-    const targetPhone = (phone || currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '8006518960').trim();
-    try {
-      const res = await authFetch('/api/wallet/topup-instant', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: targetPhone,
-          amount: amt
-        })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        const newBal = data.balance;
-        setWallet(data.wallet || { balance: newBal });
-        setSuccessMsg(`✅ बधाई! आपके वॉलेट में ₹${amt} तुरंत जुड़ गए हैं। वर्तमान बैलेंस: ₹${newBal}`);
-        if (onBalanceUpdated) onBalanceUpdated(newBal);
-        localStorage.setItem('last_wallet_phone', targetPhone);
-      } else {
-        setErrorMsg(data.error || 'टॉप-अप विफल रहा।');
-      }
-    } catch (err) {
-      console.error('Instant topup error:', err);
-      const newBal = ((wallet?.balance || 0) + amt);
-      setWallet(prev => ({ ...(prev || {}), balance: newBal }));
-      setSuccessMsg(`✅ वॉलेट में ₹${amt} जुड़ गए हैं। वर्तमान बैलेंस: ₹${newBal}`);
-      if (onBalanceUpdated) onBalanceUpdated(newBal);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-const handleSubmitUtr = async (e) => {
+  const handleSubmitUtr = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
@@ -218,70 +186,11 @@ const handleSubmitUtr = async (e) => {
               </div>
               <p className="text-[10px] text-emerald-200 mt-1">100% सुरक्षित • कभी भी उपयोग करें</p>
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-2">
-              <button
-                type="button"
-                onClick={() => handleInstantTopup(500)}
-                disabled={loading}
-                className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-black px-3.5 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer"
-                title="बिना स्कैनर सीधे ₹500 जोड़ें"
-              >
-                <span>⚡ तुरंत ₹500 जोड़ें</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Direct Instant Add Money Section (No QR / No UTR Required!) */}
-          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-2.5">
-            <div className="flex items-center justify-between">
-              <span className="font-extrabold text-slate-900 text-xs">
-                राशि चुनें या दर्ज करें (Instant Add):
-              </span>
-              <span className="text-[10px] text-emerald-700 font-black bg-emerald-100 px-2 py-0.5 rounded-md">
-                0% शुल्क • तुरंत क्रेडिट
+            <div className="text-right">
+              <span className="text-[10px] text-emerald-100 bg-emerald-800/40 px-2.5 py-1 rounded-full font-bold">
+                UPI / UTR अप्रूवल वॉलेट
               </span>
             </div>
-
-            {/* Quick Select Buttons */}
-            <div className="grid grid-cols-4 gap-1.5">
-              {['100', '200', '500', '1000'].map((amt) => (
-                <button
-                  key={amt}
-                  type="button"
-                  onClick={() => setAddAmount(amt)}
-                  className={`py-1.5 rounded-xl font-black text-xs transition border cursor-pointer ${
-                    addAmount === amt
-                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
-                      : 'bg-white text-slate-800 border-slate-300 hover:bg-slate-100'
-                  }`}
-                >
-                  ₹{amt}
-                </button>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="font-black text-slate-600 text-sm">₹</span>
-              <input
-                type="number"
-                value={addAmount}
-                onChange={(e) => setAddAmount(e.target.value)}
-                placeholder="राशि दर्ज करें"
-                className="flex-1 px-3 py-1.5 border border-slate-300 bg-white rounded-xl text-xs font-bold text-slate-900"
-              />
-            </div>
-
-            {/* Primary Action Button: 1-Click Instant Add */}
-            <button
-              type="button"
-              onClick={() => handleInstantTopup(parseFloat(addAmount) || 200)}
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-98 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/25 transition cursor-pointer disabled:opacity-50"
-            >
-              <Plus className="w-4 h-4" />
-              <span>⚡ तुरंत ₹{addAmount || 200} वॉलेट में जोड़ें (Instant Top-up)</span>
-            </button>
           </div>
 
           {/* Optional Toggle for Physical Store Standee QR */}

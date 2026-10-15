@@ -140,7 +140,7 @@
     "wholesaleRate": 20,
     "retailRate": 40,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/find_manual.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panfind.php",
     "method": "POST"
   },
   {
@@ -152,7 +152,7 @@
     "wholesaleRate": 10,
     "retailRate": 25,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/find_alt.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panfind.php",
     "method": "POST"
   },
   {
@@ -164,7 +164,7 @@
     "wholesaleRate": 70,
     "retailRate": 100,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/to_aadhar.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber.php",
     "method": "GET"
   },
   {
@@ -176,7 +176,7 @@
     "wholesaleRate": 5,
     "retailRate": 15,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/to_gst.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan_to_gst.php",
     "method": "GET"
   },
   {
@@ -188,7 +188,7 @@
     "wholesaleRate": 10,
     "retailRate": 25,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/gst/to_pan.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/gst_to_pan.php",
     "method": "GET"
   },
   {
@@ -200,7 +200,7 @@
     "wholesaleRate": 20,
     "retailRate": 40,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/mobile_find.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET"
   },
   {
@@ -212,7 +212,7 @@
     "wholesaleRate": 15,
     "retailRate": 30,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/basic.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET"
   },
   {
@@ -224,7 +224,7 @@
     "wholesaleRate": 7,
     "retailRate": 15,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/mask.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET"
   },
   {
@@ -236,7 +236,7 @@
     "wholesaleRate": 5,
     "retailRate": 15,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/aadhar_mask.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET"
   },
   {
@@ -248,7 +248,7 @@
     "wholesaleRate": 30,
     "retailRate": 50,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/to_udyam.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET"
   },
   {
@@ -260,7 +260,7 @@
     "wholesaleRate": 5,
     "retailRate": 15,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter/verify.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php",
     "method": "GET"
   },
   {
@@ -284,7 +284,7 @@
     "wholesaleRate": 5,
     "retailRate": 15,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter/pdf.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php",
     "method": "GET"
   },
   {
@@ -296,7 +296,7 @@
     "wholesaleRate": 35,
     "retailRate": 60,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter/original_pdf.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php",
     "method": "POST"
   },
   {
@@ -320,7 +320,7 @@
     "wholesaleRate": 30,
     "retailRate": 50,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php",
     "method": "GET"
   },
   {
@@ -332,7 +332,7 @@
     "wholesaleRate": 10,
     "retailRate": 20,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/verify.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
     "method": "GET"
   },
   {
@@ -356,7 +356,7 @@
     "wholesaleRate": 15,
     "retailRate": 30,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
     "method": "GET"
   },
   {
@@ -368,7 +368,7 @@
     "wholesaleRate": 45,
     "retailRate": 70,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/up_to_aadhaar.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
     "method": "GET"
   },
   {
@@ -380,7 +380,7 @@
     "wholesaleRate": 180,
     "retailRate": 220,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/all_state_to_aadhaar.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
     "method": "GET"
   },
   {
@@ -392,7 +392,7 @@
     "wholesaleRate": 45,
     "retailRate": 70,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/assam_to_aadhaar.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
     "method": "GET"
   },
   {
@@ -404,7 +404,7 @@
     "wholesaleRate": 70,
     "retailRate": 100,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/up_info.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
     "method": "GET"
   },
   {
@@ -428,7 +428,7 @@
     "wholesaleRate": 8,
     "retailRate": 20,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dl/details.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php",
     "method": "GET"
   },
   {
@@ -440,7 +440,7 @@
     "wholesaleRate": 10,
     "retailRate": 25,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dl/to_mobile.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php",
     "method": "GET"
   },
   {
@@ -452,7 +452,7 @@
     "wholesaleRate": 15,
     "retailRate": 30,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ll/find.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/LL_application_pdf.php",
     "method": "GET"
   },
   {
@@ -464,7 +464,7 @@
     "wholesaleRate": 20,
     "retailRate": 40,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ll/pdf.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/LL_application_pdf.php",
     "method": "GET"
   },
   {
@@ -512,7 +512,7 @@
     "wholesaleRate": 8,
     "retailRate": 20,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/father_name.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/RcToFatherName.php",
     "method": "GET"
   },
   {
@@ -536,7 +536,7 @@
     "wholesaleRate": 30,
     "retailRate": 50,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/chassis_to_rc.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php",
     "method": "GET"
   },
   {
@@ -548,7 +548,7 @@
     "wholesaleRate": 12,
     "retailRate": 25,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/chassis_alt.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php",
     "method": "GET"
   },
   {
@@ -560,7 +560,7 @@
     "wholesaleRate": 30,
     "retailRate": 50,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/engine_to_rc.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
     "method": "GET"
   },
   {
@@ -572,7 +572,7 @@
     "wholesaleRate": 30,
     "retailRate": 50,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/chassis_to_mobile.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
     "method": "GET"
   },
   {
@@ -584,7 +584,7 @@
     "wholesaleRate": 15,
     "retailRate": 30,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php",
     "method": "POST"
   },
   {
@@ -596,7 +596,7 @@
     "wholesaleRate": 10,
     "retailRate": 20,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/challan/find.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
     "method": "GET"
   },
   {
@@ -608,7 +608,7 @@
     "wholesaleRate": 18,
     "retailRate": 35,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/challan/find_mobile.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
     "method": "GET"
   },
   {
@@ -620,7 +620,7 @@
     "wholesaleRate": 15,
     "retailRate": 30,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/vahan_check.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
     "method": "GET"
   },
   {
@@ -632,7 +632,7 @@
     "wholesaleRate": 20,
     "retailRate": 40,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/lookup/mobile_to_details.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET"
   },
   {
@@ -644,7 +644,7 @@
     "wholesaleRate": 70,
     "retailRate": 100,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/lookup/mobile_lookup.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET"
   },
   {
@@ -656,7 +656,7 @@
     "wholesaleRate": 10,
     "retailRate": 20,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/mobile_to_upi.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET"
   },
   {
@@ -668,7 +668,7 @@
     "wholesaleRate": 15,
     "retailRate": 30,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/mobile_to_multi_upi.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET"
   },
   {
@@ -680,7 +680,7 @@
     "wholesaleRate": 20,
     "retailRate": 40,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/mobile_to_account.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET"
   },
   {
@@ -692,7 +692,7 @@
     "wholesaleRate": 30,
     "retailRate": 50,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/mobile_to_multi_account.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET"
   },
   {
@@ -704,7 +704,7 @@
     "wholesaleRate": 10,
     "retailRate": 20,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/upi_to_details.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET"
   },
   {
@@ -716,7 +716,7 @@
     "wholesaleRate": 20,
     "retailRate": 40,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/lookup/telegram_to_number.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET"
   },
   {
@@ -728,7 +728,7 @@
     "wholesaleRate": 35,
     "retailRate": 60,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/telecom/vi_sim.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET"
   },
   {
@@ -740,7 +740,7 @@
     "wholesaleRate": 240,
     "retailRate": 300,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/nsdl_bank.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "POST"
   },
   {
@@ -752,7 +752,7 @@
     "wholesaleRate": 15,
     "retailRate": 30,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/npci_verify.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET"
   },
   {
@@ -776,7 +776,7 @@
     "wholesaleRate": 110,
     "retailRate": 150,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/welfare/eshram.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification.php",
     "method": "POST"
   },
   {
@@ -788,7 +788,7 @@
     "wholesaleRate": 80,
     "retailRate": 120,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/welfare/eshram_update.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification.php",
     "method": "POST"
   },
   {
@@ -800,7 +800,7 @@
     "wholesaleRate": 20,
     "retailRate": 40,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/agristack/pdf.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf.php",
     "method": "GET"
   },
   {
@@ -812,7 +812,7 @@
     "wholesaleRate": 10,
     "retailRate": 20,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/agristack/verify.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/farmer-details.php",
     "method": "GET"
   },
   {
@@ -824,7 +824,7 @@
     "wholesaleRate": 12,
     "retailRate": 25,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/agristack/dbt.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/checkStatus.php",
     "method": "GET"
   },
   {
@@ -836,7 +836,7 @@
     "wholesaleRate": 5,
     "retailRate": 15,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/edistrict/rtps_bihar.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/RtpsCertificate-Br.php",
     "method": "GET"
   },
   {
@@ -848,7 +848,7 @@
     "wholesaleRate": 5,
     "retailRate": 15,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/utility/electric_bill_bihar.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/elctricBillPDF.php",
     "method": "GET"
   },
   {
@@ -860,7 +860,7 @@
     "wholesaleRate": 20,
     "retailRate": 40,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/lookup/gmail_to_details.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET"
   },
   {
@@ -884,7 +884,7 @@
     "wholesaleRate": 20,
     "retailRate": 40,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/welfare/samagra.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
     "method": "GET"
   },
   {
@@ -896,7 +896,7 @@
     "wholesaleRate": 25,
     "retailRate": 45,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/welfare/sambal.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
     "method": "GET"
   },
   {
@@ -908,7 +908,7 @@
     "wholesaleRate": 60,
     "retailRate": 90,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/utility/udyam_pdf.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET"
   },
   {
@@ -932,7 +932,7 @@
     "wholesaleRate": 1,
     "retailRate": 5,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/telecom/check_operator.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET"
   },
   {
@@ -944,7 +944,7 @@
     "wholesaleRate": 1,
     "retailRate": 5,
     "isActive": true,
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/telecom/check_plan.php",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET"
   }
 ]

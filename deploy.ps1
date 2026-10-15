@@ -38,13 +38,20 @@ const allWalletsMap = new Map();
   if (w && w.phone) allWalletsMap.set(w.phone, w);
 });
 mergedUsers.forEach(u => {
-  if (u && u.phone && !allWalletsMap.has(u.phone)) {
-    allWalletsMap.set(u.phone, {
-      phone: u.phone,
-      customerName: u.name || 'ग्राहक',
-      balance: u.balance || 500,
-      transactions: []
-    });
+  if (u && u.phone) {
+    if (!allWalletsMap.has(u.phone)) {
+      allWalletsMap.set(u.phone, {
+        phone: u.phone,
+        customerName: u.name || 'ग्राहक',
+        balance: (u.balance !== undefined ? u.balance : 0),
+        transactions: []
+      });
+    } else {
+      const existing = allWalletsMap.get(u.phone);
+      if (u.balance !== undefined && u.balance === 0) {
+        existing.balance = 0;
+      }
+    }
   }
 });
 const mergedWallets = Array.from(allWalletsMap.values());
