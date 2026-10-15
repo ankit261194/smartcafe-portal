@@ -2876,13 +2876,17 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             curl_close($ch);
             if ($resp) {
                 $json = json_decode($resp, true);
-                if (!empty($json['api_response']['pdf'])) {
+                $pdf = $json['Ration_Pdf'] ?? ($json['api_response']['pdf'] ?? ($json['pdf'] ?? ''));
+                if (!empty($pdf)) {
                     return [
                         'source' => 'p4points',
                         'service' => 'ration',
-                        'name' => $json['api_response']['name'] ?? 'राशन धारक',
-                        'rationNo' => $json['api_response']['ration_no'] ?? '',
-                        'pdfBase64' => $json['api_response']['pdf'],
+                        'name' => $json['name'] ?? ($json['api_response']['name'] ?? 'राशन धारक'),
+                        'rationNo' => $json['ration_no'] ?? ($json['api_response']['ration_no'] ?? ''),
+                        'state' => $json['StateName'] ?? '',
+                        'district' => $json['DistName'] ?? '',
+                        'fpsId' => $json['fpsId'] ?? '',
+                        'pdfBase64' => $pdf,
                         'isLiveFromP4Points' => true
                     ];
                 }
