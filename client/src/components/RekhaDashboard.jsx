@@ -3,7 +3,8 @@ import {
   Car, CreditCard, ShieldCheck, Award, FileText, Zap, Sparkles, 
   Printer, ArrowRight, Wallet, History, Search, X, CheckCircle2, 
   Layers, Lock, AlertCircle, RefreshCw, ChevronRight, ChevronLeft, 
-  User, ExternalLink, Smartphone, Check
+  User, ExternalLink, Smartphone, Check, BookOpen, Settings, LogOut,
+  HelpCircle, QrCode
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { getMergedServicesCatalog, SERVICE_CATEGORIES } from '../data/servicesCatalog';
@@ -48,7 +49,9 @@ export default function RekhaDashboard({
   disabledTools = [],
   toolStatus = {},
   theme = 'light',
-  services79Rates = []
+  services79Rates = [],
+  pendingPrintsCount = 0,
+  onLogout
 }) {
   const { language, t, localize } = useLanguage();
 
@@ -66,64 +69,363 @@ export default function RekhaDashboard({
     return counts;
   }, [fullCatalog]);
 
-  const isUserLoggedIn = Boolean(customerSession?.phone || isOperator || isSuperAdminAuth);
+  const isCustomerUser = Boolean(customerSession?.phone && !isOperator);
   const displayBalance = isOperator ? sanchalakB2bBalance : walletBalance;
+
+  const handleConfirmLogout = () => {
+    let confirmMsg = 'क्या आप निश्चित रूप से लॉगआउट करना चाहते हैं?';
+    if (isOperator) confirmMsg = 'दुकानदार B2B काउंटर से लॉगआउट करें?';
+    else if (isCustomerUser) confirmMsg = 'नागरिक खाते से लॉगआउट करें?';
+
+    if (window.confirm(confirmMsg)) {
+      if (onLogout) onLogout();
+    }
+  };
 
   return (
     <div className="space-y-4 sm:space-y-5 w-full max-w-full overflow-x-hidden">
       
       {/* =================================================================== */}
-      {/* TOP HEADER & QUICK CONTROLS (DIRECT ACCESS, ZERO CLUTTER) */}
+      {/* 1. DISTINCT ROLE-SPECIFIC HERO PRESENTATION CARD (3 CLEAR TIERS) */}
       {/* =================================================================== */}
-      <div className="bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 shadow-xs flex items-center justify-between gap-3 backdrop-blur-md">
-        
-        {/* Left: Clean Service Navigator */}
-        <div className="flex items-center gap-2 min-w-0">
-          <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-            <Layers className="w-3.5 h-3.5" />
-          </div>
-          <span className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200 truncate">
-            {language === 'hi' ? 'डिजिटल सेवा पोर्टल' : 'Digital Services Portal'}
-          </span>
-        </div>
 
-        {/* Right: Quick Reprint History & Wallet Controls */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Live Wallet Pill (HIDDEN FOR GUESTS, VISIBLE ONLY WHEN LOGGED IN) */}
-          {isUserLoggedIn && (
-            <div className="hidden sm:flex bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-2.5 py-1 items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300">
-              <Wallet className="w-3.5 h-3.5 text-amber-500" />
-              <span className="font-mono font-black text-emerald-600 dark:text-emerald-400">₹{displayBalance}</span>
+      {/* ------------------------------------------------------------------- */}
+      {/* TIER A: CYBER CAFE OPERATOR / VLE SANCHALAK B2B COUNTER DESK */}
+      {/* ------------------------------------------------------------------- */}
+      {isOperator ? (
+        <div className="bg-gradient-to-r from-[#022c22] via-[#064e3b] to-[#0f172a] text-white border-2 border-amber-400/50 rounded-3xl p-4 sm:p-5 shadow-xl relative overflow-hidden">
+          {/* Subtle Accent Glow */}
+          <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
+
+          {/* Top Row: Shop Info & Active VLE Status */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-emerald-700/50 pb-3.5 mb-3.5">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-12 h-12 rounded-2xl bg-amber-400/20 border border-amber-300/40 p-1 flex items-center justify-center shrink-0 text-2xl shadow-sm">
+                🏪
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-base sm:text-lg font-black tracking-tight text-white truncate">
+                    {selectedCafe?.shopName || (language === 'hi' ? 'दुकानदार B2B थोक काउंटर' : 'Shopkeeper B2B Counter')}
+                  </h2>
+                  <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">
+                    VLE ID: {selectedCafe?.vleId || 'VLE-Active'}
+                  </span>
+                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>365-दिन अधिकृत डिजिटल सेवा केंद्र</span>
+                  </span>
+                </div>
+                <p className="text-xs text-emerald-200/90 font-bold mt-0.5">
+                  {language === 'hi' 
+                    ? '💡 थोक दरें सक्रिय: ग्राहक से पूरी फीस लें, आपका शुद्ध कमीशन सीधे B2B वॉलेट में सुरक्षित।' 
+                    : '💡 Wholesale Rates Active: Collect full fee, margin instantly credited.'}
+                </p>
+              </div>
+            </div>
+
+            {/* Logout from Counter */}
+            <button
+              type="button"
+              onClick={handleConfirmLogout}
+              className="bg-rose-600/90 hover:bg-rose-600 text-white font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0 border border-rose-400/50"
+              title="काउंटर से बाहर निकलें"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>{language === 'hi' ? 'काउंटर लॉगआउट' : 'Exit Counter'}</span>
+            </button>
+          </div>
+
+          {/* 4 Counter Live Stats Tiles */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 mb-3.5">
+            {/* Tile 1: B2B Wallet Balance */}
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex flex-col justify-between">
+              <span className="text-[11px] font-extrabold text-amber-300">
+                {language === 'hi' ? '💰 B2B थोक वॉलेट' : '💰 B2B Wallet'}
+              </span>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-lg sm:text-xl font-mono font-black text-white">
+                  ₹{sanchalakB2bBalance}
+                </span>
+                <button
+                  type="button"
+                  onClick={onOpenB2bWallet}
+                  className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-[10px] px-2 py-1 rounded-lg transition active:scale-95 cursor-pointer"
+                >
+                  +{language === 'hi' ? 'रिचार्ज' : 'Topup'}
+                </button>
+              </div>
+            </div>
+
+            {/* Tile 2: Live Print Queue Alert */}
+            <div 
+              onClick={() => onNavigateTab('prints')}
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex flex-col justify-between cursor-pointer hover:bg-white/15 transition group"
+            >
+              <span className="text-[11px] font-extrabold text-emerald-300 flex items-center justify-between">
+                <span>{language === 'hi' ? '🖨️ लाइव प्रिंट कतार' : '🖨️ Print Queue'}</span>
+                {pendingPrintsCount > 0 && (
+                  <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full animate-pulse">
+                    {pendingPrintsCount} {language === 'hi' ? 'नए' : 'New'}
+                  </span>
+                )}
+              </span>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-xs font-bold text-white/90 group-hover:text-amber-200 transition">
+                  {language === 'hi' ? '1-क्लिक साइलेंट प्रिंट' : '1-Click Silent Print'}
+                </span>
+                <ChevronRight className="w-4 h-4 text-white/60 group-hover:translate-x-1 transition" />
+              </div>
+            </div>
+
+            {/* Tile 3: Daily Cashbook */}
+            <div 
+              onClick={() => onNavigateTab('cashbook')}
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex flex-col justify-between cursor-pointer hover:bg-white/15 transition group"
+            >
+              <span className="text-[11px] font-extrabold text-cyan-300">
+                {language === 'hi' ? '📖 दैनिक रोकड़ बही' : '📖 Cashbook'}
+              </span>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-xs font-bold text-white/90 group-hover:text-cyan-200 transition">
+                  {language === 'hi' ? 'दैनिक हिसाब व आय' : 'Daily Income Record'}
+                </span>
+                <ChevronRight className="w-4 h-4 text-white/60 group-hover:translate-x-1 transition" />
+              </div>
+            </div>
+
+            {/* Tile 4: Udhar Register */}
+            <div 
+              onClick={() => onNavigateTab('udhar')}
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex flex-col justify-between cursor-pointer hover:bg-white/15 transition group"
+            >
+              <span className="text-[11px] font-extrabold text-rose-300">
+                {language === 'hi' ? '📒 ग्राहक उधार खाता' : '📒 Udhar Ledger'}
+              </span>
+              <div className="flex items-center justify-between mt-1">
+                <span className="text-xs font-bold text-white/90 group-hover:text-rose-200 transition">
+                  {language === 'hi' ? 'बकाया हिसाब लेज़र' : 'Customer Debt Ledger'}
+                </span>
+                <ChevronRight className="w-4 h-4 text-white/60 group-hover:translate-x-1 transition" />
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Operator Shortcuts Bar */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
+            <span className="text-[11px] font-black text-amber-300/80 shrink-0 hidden sm:inline">
+              {language === 'hi' ? 'काउंटर टूल्स:' : 'Counter Tools:'}
+            </span>
+            <button
+              type="button"
+              onClick={() => onNavigateTab('prints')}
+              className="bg-white/15 hover:bg-white/25 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition"
+            >
+              <Printer className="w-3 h-3 text-amber-300" />
+              <span>{language === 'hi' ? 'प्रिंट कतार' : 'Print Queue'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigateTab('applications')}
+              className="bg-white/15 hover:bg-white/25 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition"
+            >
+              <FileText className="w-3 h-3 text-cyan-300" />
+              <span>{language === 'hi' ? 'फॉर्म डेस्क' : 'Applications'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigateTab('cashbook')}
+              className="bg-white/15 hover:bg-white/25 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition"
+            >
+              <BookOpen className="w-3 h-3 text-emerald-300" />
+              <span>{language === 'hi' ? 'रोकड़ बही' : 'Cashbook'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigateTab('udhar')}
+              className="bg-white/15 hover:bg-white/25 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition"
+            >
+              <Layers className="w-3 h-3 text-rose-300" />
+              <span>{language === 'hi' ? 'उधार खाता' : 'Udhar'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigateTab('orders')}
+              className="bg-white/15 hover:bg-white/25 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition"
+            >
+              <History className="w-3 h-3 text-blue-300" />
+              <span>{language === 'hi' ? 'ऑर्डर लिस्ट' : 'Orders'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={onOpenStandee}
+              className="bg-white/15 hover:bg-white/25 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition"
+            >
+              <QrCode className="w-3 h-3 text-purple-300" />
+              <span>{language === 'hi' ? 'स्टैंडी QR' : 'Standee QR'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigateTab('settings')}
+              className="bg-white/15 hover:bg-white/25 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition"
+            >
+              <Settings className="w-3 h-3 text-slate-300" />
+              <span>{language === 'hi' ? 'दुकान सेटिंग्स' : 'Settings'}</span>
+            </button>
+          </div>
+        </div>
+      ) : isCustomerUser ? (
+        /* ------------------------------------------------------------------- */
+        /* TIER B: REGISTERED CITIZEN USER PERSONAL ACCOUNT DESK */
+        /* ------------------------------------------------------------------- */
+        <div className="bg-gradient-to-r from-[#0f172a] via-[#1e1b4b] to-[#1e3a8a] text-white border-2 border-indigo-500/50 rounded-3xl p-4 sm:p-5 shadow-xl relative overflow-hidden">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-indigo-700/50 pb-3 mb-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-11 h-11 rounded-2xl bg-cyan-400/20 border border-cyan-300/40 p-1 flex items-center justify-center shrink-0 text-xl shadow-sm text-cyan-300">
+                <User className="w-6 h-6" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h2 className="text-base sm:text-lg font-black tracking-tight text-white truncate">
+                    {language === 'hi' ? `नमस्ते, ${customerSession.name || 'नागरिक'}` : `Welcome, ${customerSession.name || 'Citizen'}`}
+                  </h2>
+                  <span className="bg-cyan-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">
+                    खाता: +91 {customerSession.phone}
+                  </span>
+                </div>
+                <p className="text-xs text-indigo-200/90 font-bold mt-0.5">
+                  {language === 'hi' 
+                    ? 'सुरक्षित डिजिटल नागरिक सेवा केंद्र • आपके सभी सरकारी दस्तावेज़ व प्रमाण पत्र' 
+                    : 'Secure Citizen Portal • All your government certificates & smart cards'}
+                </p>
+              </div>
+            </div>
+
+            {/* Logout from Citizen Account */}
+            <button
+              type="button"
+              onClick={handleConfirmLogout}
+              className="bg-rose-600/90 hover:bg-rose-600 text-white font-black px-3.5 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0 border border-rose-400/50"
+              title="खाते से लॉगआउट करें"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>{language === 'hi' ? 'खाता लॉगआउट' : 'Logout'}</span>
+            </button>
+          </div>
+
+          {/* 3 Citizen Quick Action Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 mb-2.5">
+            {/* Wallet Tile */}
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex items-center justify-between">
+              <div>
+                <span className="text-[11px] font-extrabold text-cyan-300 block">
+                  {language === 'hi' ? '💳 पर्सनल वॉलेट' : '💳 Personal Wallet'}
+                </span>
+                <span className="text-lg font-mono font-black text-white">
+                  ₹{walletBalance}
+                </span>
+              </div>
               <button
                 type="button"
-                onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
-                className="text-[10px] bg-emerald-600 hover:bg-emerald-700 text-white px-1.5 py-0.5 rounded font-black transition cursor-pointer"
+                onClick={onOpenWallet}
+                className="bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs px-3 py-1.5 rounded-xl transition active:scale-95 cursor-pointer"
               >
-                +
+                +{language === 'hi' ? 'पैसे जोड़ें' : 'Add Money'}
               </button>
             </div>
-          )}
 
-          <button
-            type="button"
-            onClick={() => onNavigateTab('orders')}
-            className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer shrink-0"
-            title={language === 'hi' ? 'ऑर्डर हिस्ट्री व 1-क्लिक रिप्रिंट' : 'Order History & Free Reprint'}
-          >
-            <History className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-            <span className="hidden xs:inline">{language === 'hi' ? 'रिप्रिंट हिस्ट्री' : 'Reprint'}</span>
-          </button>
+            {/* Orders & Reprint Tile */}
+            <div 
+              onClick={() => onNavigateTab('orders')}
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex items-center justify-between cursor-pointer hover:bg-white/15 transition group"
+            >
+              <div>
+                <span className="text-[11px] font-extrabold text-amber-300 block">
+                  {language === 'hi' ? '🖨️ मेरे ऑर्डर्स व रिप्रिंट' : '🖨️ My Orders & Reprint'}
+                </span>
+                <span className="text-xs font-bold text-white/80 group-hover:text-white">
+                  {language === 'hi' ? 'कार्ड्स 1-क्लिक डाउनलोड' : 'Instant Card Download'}
+                </span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-white/60 group-hover:translate-x-1 transition" />
+            </div>
+
+            {/* Help & Support Tile */}
+            <div 
+              onClick={() => onNavigateTab('complaint')}
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex items-center justify-between cursor-pointer hover:bg-white/15 transition group"
+            >
+              <div>
+                <span className="text-[11px] font-extrabold text-emerald-300 block">
+                  {language === 'hi' ? '💬 सहायता व टिकट' : '💬 Support & Helpdesk'}
+                </span>
+                <span className="text-xs font-bold text-white/80 group-hover:text-white">
+                  {language === 'hi' ? 'शिकायत व संपर्क' : 'Raise Issue or Ticket'}
+                </span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-white/60 group-hover:translate-x-1 transition" />
+            </div>
+          </div>
         </div>
+      ) : (
+        /* ------------------------------------------------------------------- */
+        /* TIER C: PUBLIC CITIZEN WELCOMING BANNER (GUEST / UNAUTHENTICATED) */
+        /* ------------------------------------------------------------------- */
+        <div className="bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#065f46] text-white border border-emerald-500/40 rounded-3xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 text-2xl shadow-sm">
+                🇮🇳
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-white/25 px-2.5 py-0.5 rounded-full">
+                    {language === 'hi' ? 'डिजिटल नागरिक सेवा केंद्र' : 'Citizen Digital Service Hub'}
+                  </span>
+                  <span className="text-[10px] text-emerald-200 font-bold hidden sm:inline">
+                    {language === 'hi' ? '100% सुरक्षित • तेज़ • 0% कमीशन' : '100% Secure • Fast • 0% Commission'}
+                  </span>
+                </div>
+                <h2 className="text-base sm:text-lg font-black tracking-tight text-white mt-1">
+                  {language === 'hi' 
+                    ? 'घर बैठे 1-क्लिक में सरकारी प्रमाण पत्र, PVC कार्ड, बिजली बिल व प्रिंट सेवाएं' 
+                    : '1-Click Govt Certificates, PVC Cards, Electricity Bill & Print Services'}
+                </h2>
+              </div>
+            </div>
 
-      </div>
+            {/* Quick Public Action Buttons */}
+            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={onOpenShopkeeperLogin}
+                className="flex-1 sm:flex-initial bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs shadow-md transition active:scale-95 cursor-pointer flex items-center justify-center gap-1"
+              >
+                <span>🏪</span>
+                <span>{language === 'hi' ? 'दुकानदार लॉगिन' : 'Operator Login'}</span>
+              </button>
+              <button
+                type="button"
+                onClick={onOpenCustomerLogin}
+                className="flex-1 sm:flex-initial bg-white/20 hover:bg-white/30 text-white border border-white/30 font-black px-3.5 py-2 rounded-xl text-xs transition active:scale-95 cursor-pointer flex items-center justify-center gap-1"
+              >
+                <User className="w-3.5 h-3.5 text-emerald-200" />
+                <span>{language === 'hi' ? 'नागरिक लॉगिन' : 'Citizen Login'}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* 24x7 Live Sarkari Job & Exam Alerts Banner */}
+      {/* =================================================================== */}
+      {/* 2. 24x7 LIVE SARKARI JOB & EXAM ALERTS BANNER */}
+      {/* =================================================================== */}
       <div 
         onClick={() => {
           if (onSelectTool) {
             onSelectTool({ id: 'sarkari_job_feed', name: 'लाइव सरकारी नौकरी, एडमिट कार्ड व योजनाएं', category: 'other' });
           } else if (onSelectCategory) {
-            onSelectCategory({ id: 'other', title: { hi: '⚡ अन्य उपयोगी सेवाएं (Other Services)', en: '⚡ Other Useful Services' } });
+            onSelectCategory({ id: 'other', title: { hi: 'अन्य सेवाएं', en: 'Other Services' } });
           }
         }}
         className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 rounded-2xl p-3 sm:p-3.5 text-white shadow-sm flex items-center justify-between gap-3 cursor-pointer hover:shadow-md transition-all active:scale-99"
@@ -153,7 +455,7 @@ export default function RekhaDashboard({
       </div>
 
       {/* =================================================================== */}
-      {/* 2. CATEGORY QUICK-SWITCH HORIZONTAL FILTER PILLS BAR */}
+      {/* 3. CATEGORY QUICK-SWITCH HORIZONTAL FILTER PILLS BAR */}
       {/* =================================================================== */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
         <span className="text-xs font-black text-slate-500 shrink-0 hidden sm:inline">
@@ -176,7 +478,7 @@ export default function RekhaDashboard({
       </div>
 
       {/* =================================================================== */}
-      {/* 4. CLEAN 14 CATEGORY CARDS GRID */}
+      {/* 4. CLEAN 14 CATEGORY CARDS GRID (INCLUDING "अन्य सेवाएं") */}
       {/* =================================================================== */}
       <div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-3.5">
@@ -193,7 +495,9 @@ export default function RekhaDashboard({
                     onSelectCategory(cat);
                   }
                 }}
-                className="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-orange-500 hover:shadow-md rounded-2xl p-4 flex flex-col items-center justify-between text-center transition-all duration-200 cursor-pointer group active:scale-98 min-h-[145px]"
+                className={`bg-white dark:bg-slate-900 border ${
+                  isOperator ? 'border-amber-200/80 dark:border-amber-900/30' : 'border-slate-200/90 dark:border-slate-800'
+                } hover:border-orange-500 hover:shadow-md rounded-2xl p-4 flex flex-col items-center justify-between text-center transition-all duration-200 cursor-pointer group active:scale-98 min-h-[145px]`}
               >
                 {/* Category Icon */}
                 <div className={`w-12 h-12 rounded-2xl bg-gradient-to-tr ${cat.color} text-white flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform mb-2`}>
@@ -209,6 +513,12 @@ export default function RekhaDashboard({
                   <span className="inline-block text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full mt-1.5">
                     {count} {language === 'hi' ? 'सेवाएं' : 'Services'}
                   </span>
+
+                  {isOperator && (
+                    <span className="block text-[9px] font-black text-emerald-600 dark:text-emerald-400 mt-1">
+                      {isOther ? (language === 'hi' ? '100% मुफ्त • ₹0' : '100% Free') : (language === 'hi' ? 'थोक दरें लागू' : 'B2B Rates')}
+                    </span>
+                  )}
                 </div>
 
                 {/* Small Action */}

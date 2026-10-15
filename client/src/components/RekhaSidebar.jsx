@@ -1,7 +1,8 @@
 import React from 'react';
 import { 
   LayoutDashboard, Printer, Search, Wallet, User, 
-  HelpCircle, LogOut, X, ShieldCheck, Sparkles
+  HelpCircle, LogOut, X, ShieldCheck, Sparkles,
+  FileText, BookOpen, Layers, Settings, QrCode
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -20,25 +21,49 @@ export default function RekhaSidebar({
   onOpenCustomerProfile,
   onOpenShopkeeperLogin,
   onOpenCustomerLogin,
+  onOpenSuperAdminLogin,
+  onOpenStandee,
   customerSession,
   isOperator = false,
   isSuperAdminAuth = false
 }) {
   const { language, t, localize } = useLanguage();
 
-  const isUserLoggedIn = Boolean(customerSession?.phone || isOperator || isSuperAdminAuth);
-  const displayBalance = (isOperator || mode === 'admin') ? sanchalakB2bBalance : walletBalance;
+  const isCustomerUser = Boolean(customerSession?.phone && mode === 'customer');
+  const isOperatorActive = isOperator || mode === 'admin';
+  const isUserLoggedIn = Boolean(isCustomerUser || isOperatorActive || isSuperAdminAuth);
+  const displayBalance = isOperatorActive ? sanchalakB2bBalance : walletBalance;
 
-  // Exact 7 core navigation items with Other Services featured
-  const NAV_ITEMS = [
+  // 1. Operator Navigation Items (Commercial Cyber Cafe Desk)
+  const OPERATOR_NAV_ITEMS = [
     {
       id: 'dashboard',
-      label: { hi: 'डैशबोर्ड', en: 'Dashboard' },
+      label: { hi: 'थोक डैशबोर्ड', en: 'B2B Dashboard' },
       icon: LayoutDashboard
     },
     {
+      id: 'prints',
+      label: { hi: 'लाइव प्रिंट कतार', en: 'Live Print Queue' },
+      icon: Printer
+    },
+    {
+      id: 'applications',
+      label: { hi: 'फॉर्म आवेदन डेस्क', en: 'Application Desk' },
+      icon: FileText
+    },
+    {
+      id: 'cashbook',
+      label: { hi: 'दैनिक रोकड़ बही', en: 'Daily Cashbook' },
+      icon: BookOpen
+    },
+    {
+      id: 'udhar',
+      label: { hi: 'ग्राहक उधार रजिस्टर', en: 'Udhar Register' },
+      icon: Layers
+    },
+    {
       id: 'orders',
-      label: { hi: 'प्रिंट लिस्ट / ऑर्डर्स', en: 'Print List / Orders' },
+      label: { hi: 'प्रिंट लिस्ट व ऑर्डर्स', en: 'Print List / Orders' },
       icon: Printer
     },
     {
@@ -48,13 +73,43 @@ export default function RekhaSidebar({
       badge: { hi: 'लाइव', en: 'Live' }
     },
     {
+      id: 'settings',
+      label: { hi: 'दुकान सेटिंग्स व रेट्स', en: 'Cafe Settings' },
+      icon: Settings
+    }
+  ];
+
+  // 2. Customer User Navigation Items (Personal Citizen Portal)
+  const CUSTOMER_NAV_ITEMS = [
+    {
+      id: 'dashboard',
+      label: { hi: 'नागरिक सेवा डैशबोर्ड', en: 'Services Dashboard' },
+      icon: LayoutDashboard
+    },
+    {
+      id: 'print',
+      label: { hi: 'त्वरित दस्तावेज़ प्रिंट', en: 'Quick Print' },
+      icon: Printer
+    },
+    {
+      id: 'orders',
+      label: { hi: 'मेरे ऑर्डर्स व रिप्रिंट', en: 'My Orders & Reprint' },
+      icon: Printer
+    },
+    {
       id: 'wallet',
-      label: { hi: 'वॉलेट मैनेज', en: 'Wallet Manage' },
+      label: { hi: 'वॉलेट मैनेज (+ पैसे जोड़ें)', en: 'My Wallet (+ Add)' },
       icon: Wallet
     },
     {
+      id: 'panfind-list',
+      label: { hi: 'पैन फाइंड लिस्ट', en: 'PAN Find List' },
+      icon: Search,
+      badge: { hi: 'लाइव', en: 'Live' }
+    },
+    {
       id: 'myaccount',
-      label: { hi: 'माय अकाउंट / प्रोफाइल', en: 'My Account' },
+      label: { hi: 'माय प्रोफाइल', en: 'My Profile' },
       icon: User
     },
     {
@@ -63,6 +118,69 @@ export default function RekhaSidebar({
       icon: HelpCircle
     }
   ];
+
+  // 3. Public Guest Navigation Items (Unauthenticated)
+  const GUEST_NAV_ITEMS = [
+    {
+      id: 'dashboard',
+      label: { hi: 'सभी नागरिक सेवाएं', en: 'All Services' },
+      icon: LayoutDashboard
+    },
+    {
+      id: 'print',
+      label: { hi: 'त्वरित दस्तावेज़ प्रिंट', en: 'Quick Print' },
+      icon: Printer
+    },
+    {
+      id: 'guest-operator-login',
+      label: { hi: '🏪 दुकानदार B2B काउंटर', en: '🏪 Shopkeeper Counter' },
+      icon: User
+    },
+    {
+      id: 'guest-customer-login',
+      label: { hi: '👤 नागरिक लॉगिन / साइनअप', en: '👤 Citizen Login' },
+      icon: User
+    },
+    {
+      id: 'complaint',
+      label: { hi: 'सहायता केंद्र', en: 'Help Center' },
+      icon: HelpCircle
+    }
+  ];
+
+  const currentNavItems = isOperatorActive 
+    ? OPERATOR_NAV_ITEMS 
+    : isCustomerUser 
+    ? CUSTOMER_NAV_ITEMS 
+    : GUEST_NAV_ITEMS;
+
+  const handleItemClick = (item) => {
+    if (item.id === 'wallet') {
+      if (isOperatorActive && onOpenB2bWallet) onOpenB2bWallet();
+      else if (onOpenWallet) onOpenWallet();
+    } else if (item.id === 'myaccount') {
+      if (onOpenCustomerProfile) onOpenCustomerProfile();
+    } else if (item.id === 'guest-operator-login') {
+      if (onOpenShopkeeperLogin) onOpenShopkeeperLogin();
+    } else if (item.id === 'guest-customer-login') {
+      if (onOpenCustomerLogin) onOpenCustomerLogin();
+      else if (onOpenCustomerProfile) onOpenCustomerProfile();
+    } else {
+      if (onSelectTab) onSelectTab(item.id);
+    }
+    if (window.innerWidth < 1024 && onClose) onClose();
+  };
+
+  const handleLogoutClick = () => {
+    let confirmMsg = 'क्या आप निश्चित रूप से लॉगआउट करना चाहते हैं?';
+    if (isOperatorActive) confirmMsg = 'दुकानदार B2B काउंटर से लॉगआउट करें?';
+    else if (isCustomerUser) confirmMsg = 'नागरिक खाते से लॉगआउट करें?';
+
+    if (window.confirm(confirmMsg)) {
+      if (onLogout) onLogout();
+      if (onClose) onClose();
+    }
+  };
 
   return (
     <>
@@ -74,13 +192,13 @@ export default function RekhaSidebar({
         />
       )}
 
-      {/* 100% Fixed Screen Sidebar (Zero Scroll, Fits Within Viewport Height) */}
+      {/* 100% Fixed Screen Sidebar */}
       <aside className={`
         fixed lg:sticky top-0 left-0 z-50 h-screen
         bg-white dark:bg-[#0c162c] text-slate-800 dark:text-slate-100 
         border-r border-slate-200 dark:border-slate-800/80 flex flex-col justify-between
         transition-all duration-300 ease-in-out select-none shadow-2xl backdrop-blur-md no-print
-        overflow-hidden
+        overflow-y-auto scrollbar-thin
         ${isOpen 
           ? 'w-64 sm:w-72 translate-x-0 opacity-100' 
           : '-translate-x-full lg:w-0 lg:translate-x-0 lg:overflow-hidden lg:opacity-0 lg:pointer-events-none lg:border-r-0'
@@ -89,7 +207,7 @@ export default function RekhaSidebar({
         
         {/* Top Header Group */}
         <div className="shrink-0">
-          {/* Indian Flag Tricolor Accent Ribbon */}
+          {/* Top Tricolor Accent Ribbon */}
           <div className="h-1.5 w-full flex shrink-0">
             <div className="flex-1 bg-gradient-to-r from-[#f97316] to-[#ff9933]"></div>
             <div className="flex-1 bg-white border-x border-slate-200"></div>
@@ -113,12 +231,22 @@ export default function RekhaSidebar({
               <div className="truncate">
                 <div className="font-black text-slate-900 dark:text-white text-sm tracking-tight leading-tight flex items-center gap-1.5">
                   <span>Smart Cafe</span>
-                  <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow-2xs">
-                    B2B
-                  </span>
+                  {isOperatorActive ? (
+                    <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded shadow-2xs">
+                      B2B
+                    </span>
+                  ) : isCustomerUser ? (
+                    <span className="bg-indigo-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow-2xs">
+                      USER
+                    </span>
+                  ) : null}
                 </div>
-                <p className="text-[10px] text-orange-600 dark:text-orange-400 font-black leading-tight truncate">
-                  {selectedCafe?.shopName || (language === 'hi' ? 'डिजिटल सेवा केंद्र' : 'Digital Seva Kendra')}
+                <p className="text-[10px] font-black leading-tight truncate text-emerald-600 dark:text-emerald-400">
+                  {isOperatorActive
+                    ? (selectedCafe?.shopName || (language === 'hi' ? 'दुकानदार B2B काउंटर' : 'Shopkeeper Counter'))
+                    : isCustomerUser
+                    ? (customerSession.name ? `${customerSession.name}` : `+91 ${customerSession.phone}`)
+                    : (selectedCafe?.shopName || (language === 'hi' ? 'डिजिटल नागरिक सेवा केंद्र' : 'Citizen Service Hub'))}
                 </p>
               </div>
             </div>
@@ -135,36 +263,35 @@ export default function RekhaSidebar({
             </button>
           </div>
 
-          {/* Live Wallet Pill */}
-          <div className="mx-3 my-2.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2 shadow-2xs">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-              <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 truncate">
-                {mode === 'admin' || isOperator ? (language === 'hi' ? 'B2B वॉलेट' : 'B2B Wallet') : (language === 'hi' ? 'वॉलेट बैलेंस' : 'Wallet')}
-              </span>
-              <span className="font-mono font-black text-slate-950 dark:text-white shrink-0 text-xs sm:text-sm">
-                ₹{displayBalance}
-              </span>
+          {/* Live Wallet Pill (When Logged in) */}
+          {isUserLoggedIn && (
+            <div className="mx-3 my-2.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2 shadow-2xs">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 truncate">
+                  {isOperatorActive ? (language === 'hi' ? 'B2B थोक वॉलेट' : 'B2B Wallet') : (language === 'hi' ? 'वॉलेट बैलेंस' : 'Wallet')}
+                </span>
+                <span className="font-mono font-black text-slate-950 dark:text-white shrink-0 text-xs sm:text-sm">
+                  ₹{displayBalance}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (isOperatorActive && onOpenB2bWallet) onOpenB2bWallet();
+                  else if (onOpenWallet) onOpenWallet();
+                }}
+                className="shrink-0 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-[10px] font-black px-2 py-1 rounded-lg transition shadow-2xs cursor-pointer"
+              >
+                +{language === 'hi' ? 'जोड़ें' : 'Add'}
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                if (mode === 'admin' || isOperator) {
-                  if (onOpenB2bWallet) onOpenB2bWallet();
-                } else {
-                  if (onOpenWallet) onOpenWallet();
-                }
-              }}
-              className="shrink-0 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-[10px] font-black px-2 py-1 rounded-lg transition shadow-2xs cursor-pointer"
-            >
-              +{language === 'hi' ? 'जोड़ें' : 'Add'}
-            </button>
-          </div>
+          )}
         </div>
 
-        {/* Middle Navigation Group (Strictly Fixed 6 Items, Zero Scroll) */}
-        <div className="flex-1 px-3 py-1 space-y-1.5 flex flex-col justify-center">
-          {NAV_ITEMS.map((item) => {
+        {/* Middle Navigation Group */}
+        <div className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+          {currentNavItems.map((item) => {
             const isActive = activeTab === item.id;
             const Icon = item.icon;
 
@@ -172,12 +299,9 @@ export default function RekhaSidebar({
               <button
                 key={item.id}
                 type="button"
-                onClick={() => {
-                  if (onSelectTab) onSelectTab(item.id);
-                  if (window.innerWidth < 1024 && onClose) onClose();
-                }}
+                onClick={() => handleItemClick(item)}
                 className={`
-                  w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-bold text-xs sm:text-sm
+                  w-full flex items-center justify-between px-3 py-2 rounded-xl font-bold text-xs sm:text-sm
                   transition-all duration-150 cursor-pointer text-left group
                   ${isActive 
                     ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/25 font-black' 
@@ -212,21 +336,20 @@ export default function RekhaSidebar({
 
         {/* Bottom Group (Dedicated Logout Button & SSL Security Badge) */}
         <div className="p-3 border-t border-slate-100 dark:border-slate-800/80 space-y-2 shrink-0">
-          {/* Strictly Dedicated Red Logout Button in Side Toggle */}
+          {/* Dedicated Red Logout Button */}
           {isUserLoggedIn ? (
             <button
               type="button"
-              onClick={() => {
-                if (window.confirm(language === 'hi' ? 'क्या आप निश्चित रूप से लॉगआउट करना चाहते हैं?' : 'Are you sure you want to log out?')) {
-                  if (onLogout) onLogout();
-                  if (onClose) onClose();
-                }
-              }}
-              className="w-full bg-rose-600 hover:bg-rose-700 active:scale-98 text-white font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-rose-600/30 transition cursor-pointer text-xs sm:text-sm"
-              title={language === 'hi' ? 'खाते से लॉगआउट करें' : 'Logout of Account'}
+              onClick={handleLogoutClick}
+              className="w-full bg-rose-600 hover:bg-rose-700 active:scale-98 text-white font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-rose-600/30 transition cursor-pointer text-xs sm:text-sm border border-rose-500"
+              title={isOperatorActive ? 'काउंटर से बाहर निकलें' : 'खाते से लॉगआउट करें'}
             >
               <LogOut className="w-4 h-4 shrink-0" />
-              <span>{language === 'hi' ? 'लॉगआउट करें (Logout)' : 'Logout'}</span>
+              <span>
+                {isOperatorActive 
+                  ? (language === 'hi' ? 'काउंटर से बाहर निकलें (लॉगआउट)' : 'Exit Counter (Logout)')
+                  : (language === 'hi' ? 'खाता लॉगआउट करें (Logout)' : 'Logout of Account')}
+              </span>
             </button>
           ) : (
             <div className="grid grid-cols-2 gap-1.5">
@@ -249,7 +372,7 @@ export default function RekhaSidebar({
                 }}
                 className="bg-slate-800 hover:bg-slate-700 active:scale-98 text-white font-black py-2 px-2 rounded-xl text-center text-xs shadow-sm transition cursor-pointer"
               >
-                👤 {language === 'hi' ? 'ग्राहक' : 'Citizen'}
+                👤 {language === 'hi' ? 'नागरिक' : 'Citizen'}
               </button>
             </div>
           )}

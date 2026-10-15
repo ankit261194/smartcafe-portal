@@ -75,7 +75,8 @@ function ServicePageContent({
 
   const toolKind = useMemo(() => {
     const id = (currentTool?.id || '').toLowerCase();
-    if (id === 'pvc_auto_cropper' || id.includes('cropper') || id.includes('pvc_auto') || id.includes('pvc_crop')) return 'pvc_crop';
+    const cat = (currentTool?.category || currentTool?.group || '').toLowerCase();
+    if (id === 'pvc_card_cropper' || id === 'pvc_auto_cropper' || id.includes('cropper') || id.includes('pvc_auto') || id.includes('pvc_crop')) return 'pvc_crop';
     if (id === 'passport_photo_maker' || id.includes('passport_photo') || id.includes('photo_maker')) return 'passport_photo';
     if (id === 'govt_form_resizer' || id.includes('resizer') || id.includes('compressor')) return 'govt_resizer';
     if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc'].includes(id) || cat === 'rc' || id.includes('rc_')) return 'rc';

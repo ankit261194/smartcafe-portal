@@ -677,6 +677,18 @@ export default function App() {
               setSelectedCategory(null);
               if (mode === 'customer') setCustomerTab('home');
               else setAdminTab('dashboard');
+            } else if (tabId === 'prints') {
+              setAdminTab('prints');
+            } else if (tabId === 'applications') {
+              setAdminTab('applications');
+            } else if (tabId === 'cashbook') {
+              setAdminTab('cashbook');
+            } else if (tabId === 'udhar') {
+              setAdminTab('udhar');
+            } else if (tabId === 'settings') {
+              setAdminTab('settings');
+            } else if (tabId === 'print') {
+              setCustomerTab('print');
             } else if (tabId === 'other_services') {
               handleSelectCategory('other');
             } else if (tabId === 'orders') {
@@ -706,6 +718,8 @@ export default function App() {
           onOpenCustomerProfile={handleOpenCustomerProfile}
           onOpenShopkeeperLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'cafe' })}
           onOpenCustomerLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'customer' })}
+          onOpenSuperAdminLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'superadmin' })}
+          onOpenStandee={() => setIsStandeeOpen(true)}
           onLogout={handleLogout}
         />
       )}
@@ -1002,6 +1016,8 @@ export default function App() {
                 theme={theme}
                 isSuperAdminAuth={isSuperAdminAuth}
                 services79Rates={services79Rates}
+                pendingPrintsCount={pendingPrintsCount}
+                onLogout={handleLogout}
               />
             )}
 
@@ -1172,6 +1188,8 @@ export default function App() {
                   theme={theme}
                   isSuperAdminAuth={isSuperAdminAuth}
                   services79Rates={services79Rates}
+                  pendingPrintsCount={pendingPrintsCount}
+                  onLogout={handleLogout}
                 />
               )}
 
