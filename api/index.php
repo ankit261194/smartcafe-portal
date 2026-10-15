@@ -56,49 +56,7 @@ function getStore($dataFile) {
             if (strpos($data['settings']['address'] ?? '', 'मेन मार्केट') !== false) { $data['settings']['address'] = ''; $changed = true; }
             if (($data['settings']['superAdminPhone'] ?? '') === '9800000000') { $data['settings']['superAdminPhone'] = ''; $changed = true; }
             if (empty($data['cafes']) || !is_array($data['cafes'])) {
-                $data['cafes'] = [[
-                    'id' => 'CAFE-101',
-                    'code' => '101',
-                    'slug' => 'cafe-101',
-                    'shopName' => 'स्मार्ट डिजिटल सेवा केंद्र एवं साइबर कैफे',
-                    'ownerName' => 'संचालक',
-                    'phone' => '9876543210',
-                    'pin' => password_hash('1234', PASSWORD_BCRYPT),
-                    'staffPin' => password_hash('0000', PASSWORD_BCRYPT),
-                    'staffEnabled' => true,
-                    'email' => 'cafe101@smartcafe.sbs',
-                    'vleId' => 'VLE-UP-2026-101',
-                    'address' => 'मुख्य बाजार, डिजिटल सेवा केंद्र',
-                    'city' => 'लखनऊ',
-                    'district' => 'लखनऊ',
-                    'licenseKey' => 'VLE-LIC-2026-UP101-9988',
-                    'kycStatus' => 'verified',
-                    'isFrozen' => false,
-                    'subscription' => [
-                        'plan' => '₹299 वार्षिक प्रो प्लान',
-                        'amount' => 299,
-                        'status' => 'active',
-                        'validTill' => date('c', strtotime('+365 days')),
-                        'activatedAt' => date('c'),
-                        'utr' => '987654321012'
-                    ],
-                    'b2bWallet' => [
-                        'balance' => 0,
-                        'minThreshold' => 200,
-                        'transactions' => []
-                    ],
-                    'retailRates' => [
-                        'rcDownload' => 250, 'panCard' => 150, 'incomeCert' => 80,
-                        'casteCert' => 80, 'niwasCert' => 80, 'drivingLicence' => 250, 'pvcCard' => 70
-                    ],
-                    'rates' => [
-                        'bwPage' => 3, 'colorPage' => 10, 'xerox' => 2,
-                        'lamination' => 20, 'photoCopyBothSide' => 3,
-                        'passportPhoto' => 50, 'formFeeNormal' => 70, 'formFeeComplex' => 120
-                    ],
-                    'createdAt' => date('c')
-                ]];
-                $changed = true;
+                $data['cafes'] = [];
             }
 
             // Ensure Super Admin Phone, WhatsApp, Suman Devi UPI & QR
@@ -160,7 +118,7 @@ function getStore($dataFile) {
                             'id' => $c['id'],
                             'name' => $c['ownerName'] ?? 'संचालक',
                             'shopName' => $c['shopName'] ?? 'डिजिटल सेवा केंद्र',
-                            'phone' => $c['phone'] ?? '9876543210',
+                            'phone' => $c['phone'] ?? '',
                             'password' => '1234',
                             'role' => 'cafe',
                             'balance' => $c['b2bWallet']['balance'] ?? 0,
@@ -1226,7 +1184,7 @@ if ($endpoint === 'wallet/add-money' && $method === 'POST') {
 // Route: /api/wallet/topup-instant (Instant top-up for fast test recharge)
 if ($endpoint === 'wallet/topup-instant' && $method === 'POST') {
     $phone = trim($body['phone'] ?? '');
-    if (!$phone) $phone = '9876543210';
+    if (!$phone) $phone = '8006518960';
     $amount = floatval($body['amount'] ?? 500);
     if ($amount <= 0) $amount = 500;
     if (!isset($store['wallets'])) $store['wallets'] = [];
