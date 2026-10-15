@@ -650,72 +650,54 @@ export default function App() {
       {/* Full-Screen Indian National Flag (Tiranga) Backdrop */}
       <IndianFlagBackdrop theme={theme} />
 
-      {/* Rekha Print Navy Sidebar Navigation */}
+      {/* Rekha Print Navy Sidebar Navigation (Fixed 100%, 6 Items + Dedicated Logout) */}
       {mode !== 'superadmin' && (
         <RekhaSidebar
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           activeTab={
             mode === 'customer' 
-              ? (customerTab === 'tool' ? `tool-${activeInstantToolId}` : 
+              ? (customerTab === 'orders' ? 'orders' :
+                 customerTab === 'complaints' ? 'complaint' :
                  customerTab === 'home' || customerTab === 'dashboard' ? 'dashboard' :
-                 customerTab === 'print' ? 'print' :
                  customerTab)
-              : (adminTab === 'tool' ? `tool-${activeInstantToolId}` : 
+              : (adminTab === 'orders' || adminTab === 'prints' ? 'orders' :
+                 adminTab === 'complaints' ? 'complaint' :
                  adminTab === 'dashboard' ? 'dashboard' :
-                 adminTab === 'prints' ? 'queue' :
                  adminTab)
           }
           onSelectTab={(tabId) => {
             if (tabId === 'dashboard') {
+              setSelectedCategory(null);
               if (mode === 'customer') setCustomerTab('home');
               else setAdminTab('dashboard');
-            } else if (tabId === 'print' || tabId === 'quick-print') {
-              if (mode === 'customer') setCustomerTab('print');
-              else setAdminTab('prints');
-            } else if (tabId.startsWith('tool-')) {
-              const toolKey = tabId.replace('tool-', '');
-              handleLaunchService(toolKey);
             } else if (tabId === 'orders') {
               if (mode === 'customer') setCustomerTab('orders');
               else setAdminTab('orders');
+            } else if (tabId === 'panfind-list') {
+              handleLaunchService('pan_find');
             } else if (tabId === 'wallet') {
               if (mode === 'admin') setIsB2bWalletOpen(true);
               else setIsWalletOpen(true);
-            } else if (tabId === 'queue') {
-              setAdminTab('prints');
-            } else if (tabId === 'applications') {
-              setAdminTab('applications');
-            } else if (tabId === 'cashbook') {
-              setAdminTab('cashbook');
-            } else if (tabId === 'udhar') {
-              setAdminTab('udhar');
-            } else if (tabId === 'standee') {
-              setIsStandeeOpen(true);
-            } else if (tabId === 'settings') {
-              setAdminTab('settings');
-            } else {
-              if (mode === 'customer') setCustomerTab(tabId);
-              else setAdminTab(tabId);
+            } else if (tabId === 'myaccount') {
+              handleOpenCustomerProfile();
+            } else if (tabId === 'complaint') {
+              if (mode === 'customer') setCustomerTab('complaints');
+              else setAdminTab('complaints');
             }
           }}
           mode={mode}
           selectedCafe={selectedCafe}
+          customerSession={customerSession}
+          isOperator={mode === 'admin'}
           walletBalance={walletBalance}
           sanchalakB2bBalance={sanchalakB2bBalance}
-          pendingPrintsCount={pendingPrintsCount}
           onOpenWallet={() => setIsWalletOpen(true)}
           onOpenB2bWallet={() => setIsB2bWalletOpen(true)}
-          onOpenKyc={() => setIsKycModalOpen(true)}
+          onOpenCustomerProfile={handleOpenCustomerProfile}
           onOpenShopkeeperLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'cafe' })}
-          onOpenSuperAdminLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'superadmin' })}
-          isStaffAuth={isStaffAuth}
-          searchTerm={sidebarSearchTerm}
-          onSearchChange={setSidebarSearchTerm}
-          theme={theme}
-          toggleTheme={toggleTheme}
-          disabledTools={toolSettings.disabledTools}
-          toolStatus={toolSettings.toolStatus}
+          onOpenCustomerLogin={() => setRoleAuthModalConfig({ isOpen: true, type: 'customer' })}
+          onLogout={handleLogout}
         />
       )}
 

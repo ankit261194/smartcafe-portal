@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  Printer, Wallet, Crown, User, LogOut, Menu, Sun, Moon
+  Printer, Wallet, Crown, User, Menu, Sun, Moon
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -195,15 +195,6 @@ export default function Navbar({
                     {customerSession.name ? `${customerSession.name}` : (language === 'hi' ? 'ग्राहक' : 'Customer')} ({customerSession.phone})
                   </span>
                 </button>
-                <button
-                  type="button"
-                  onClick={onLogout}
-                  className="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black px-2.5 sm:px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition cursor-pointer shrink-0"
-                  title={t('logout')}
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  <span>{t('logout')}</span>
-                </button>
               </div>
             ) : (
               <div className="hidden sm:flex items-center gap-1.5 shrink-0">
@@ -276,17 +267,6 @@ export default function Navbar({
                   <span>{pendingPrintsCount}</span>
                 </button>
               )}
-
-              {/* Prominent Red Logout Button */}
-              <button
-                type="button"
-                onClick={onLogout}
-                className="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black px-2.5 sm:px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition cursor-pointer shrink-0"
-                title={t('logout')}
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>{t('logout')}</span>
-              </button>
             </div>
           )}
 
@@ -296,15 +276,6 @@ export default function Navbar({
                 <Crown className="w-3 h-3" />
                 <span>{t('root_admin')}</span>
               </span>
-              <button
-                type="button"
-                onClick={onLogout}
-                className="bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black px-2.5 sm:px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-rose-600/30 transition cursor-pointer shrink-0"
-                title={t('logout')}
-              >
-                <LogOut className="w-3.5 h-3.5" />
-                <span>{t('logout')}</span>
-              </button>
             </div>
           )}
 
@@ -328,11 +299,11 @@ export default function Navbar({
             </button>
             <button
               type="button"
-              onClick={onLogout}
-              className="bg-rose-600 hover:bg-rose-700 text-white font-black px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm shrink-0 active:scale-95 cursor-pointer"
+              onClick={onToggleSidebar}
+              className="bg-emerald-700/80 hover:bg-emerald-700 text-white font-bold px-2.5 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm shrink-0 active:scale-95 cursor-pointer"
             >
-              <LogOut className="w-3 h-3" />
-              <span>{t('logout')}</span>
+              <Menu className="w-3.5 h-3.5" />
+              <span>{language === 'hi' ? 'मेन्यू' : 'Menu'}</span>
             </button>
           </div>
         ) : (

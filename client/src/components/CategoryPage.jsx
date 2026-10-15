@@ -3,7 +3,7 @@ import {
   ArrowLeft, Search, X, Sparkles, ShieldCheck, CreditCard, 
   Car, Award, FileText, Zap, Layers, Smartphone, CheckCircle2,
   Lock, RefreshCw, Printer, User, Fingerprint, QrCode, Cpu,
-  Flame, Landmark, HeartHandshake, Eye, Check
+  Flame, Landmark, HeartHandshake, Eye, Check, Clock, AlertTriangle
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { CATEGORY_ICON_MAP } from './RekhaDashboard';
@@ -164,11 +164,28 @@ export default function CategoryPage({
     return list;
   }, [catalog, category?.id, searchTerm]);
 
+  // Strict Separation: Active Live Services vs. Under Development / Coming Soon
+  const liveServices = useMemo(() => {
+    return services.filter(s => !s.isComingSoon && s.status !== 'coming_soon');
+  }, [services]);
+
+  const comingSoonServices = useMemo(() => {
+    return services.filter(s => s.isComingSoon || s.status === 'coming_soon');
+  }, [services]);
+
   if (!category) {
     return null;
   }
 
   const categoryTitle = localize(category.title);
+
+  const handleComingSoonClick = (service) => {
+    const sName = service.title ? localize(service.title) : service.name;
+    alert(language === 'hi' 
+      ? `🚧 "${sName}" पर वर्तमान में कार्य चल रहा है। यह सेवा आगामी सिस्टम अपडेट में आधिकारिक सरकारी API के साथ लाइव की जा रही है।`
+      : `🚧 "${sName}" is currently under development and will be activated with official APIs in the upcoming update.`
+    );
+  };
 
   return (
     <div className="space-y-6 pb-12 animate-in fade-in duration-200">
@@ -215,8 +232,8 @@ export default function CategoryPage({
                 <h1 className="text-base sm:text-xl font-black text-slate-900 dark:text-white truncate">
                   {categoryTitle}
                 </h1>
-                <span className="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/60 text-[10px] sm:text-xs font-black px-2 py-0.5 rounded-full shrink-0">
-                  {services.length} {language === 'hi' ? 'लाइव सेवाएं' : 'Live'}
+                <span className="bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/60 text-[10px] sm:text-xs font-black px-2.5 py-0.5 rounded-full shrink-0">
+                  {liveServices.length} {language === 'hi' ? 'सक्रिय लाइव' : 'Live'}
                 </span>
               </div>
               <p className="text-xs text-slate-500 dark:text-slate-400 font-medium truncate mt-0.5">
@@ -249,10 +266,7 @@ export default function CategoryPage({
 
       </div>
 
-      {/* =================================================================== */}
-      {/* 2. ROUND CIRCULAR ICONS GRID (MATCHING REKHA PRINT STYLE SCREENSHOT) */}
-      {/* Strict Rule: NO RATES ON THIS SCREEN! Rates only show on detail page */}
-      {/* =================================================================== */}
+      {/* No Results Fallback */}
       {services.length === 0 ? (
         <div className="bg-white/90 dark:bg-slate-900/90 p-12 rounded-3xl border border-slate-200 dark:border-slate-800 text-center space-y-3">
           <Search className="w-12 h-12 mx-auto text-slate-300 dark:text-slate-600" />
@@ -271,59 +285,170 @@ export default function CategoryPage({
           </button>
         </div>
       ) : (
-        <div className="bg-slate-900/40 dark:bg-black/30 p-4 sm:p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-inner">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8 justify-items-center">
-            {services.map((service) => {
-              const displayTitle = service.title ? localize(service.title) : service.name;
-
-              return (
-                <div
-                  key={service.id}
-                  onClick={() => onSelectService(service.id)}
-                  className="group flex flex-col items-center cursor-pointer select-none"
-                  title={displayTitle}
-                >
-                  {/* The Round Circular Disc Button */}
-                  <div className="
-                    w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 
-                    rounded-full 
-                    bg-gradient-to-b from-white via-slate-50 to-amber-50/40 
-                    dark:from-slate-800 dark:via-slate-850 dark:to-slate-900 
-                    border-[3px] border-emerald-500/60 dark:border-emerald-400/50 
-                    group-hover:border-emerald-500 dark:group-hover:border-emerald-400 
-                    group-hover:ring-4 group-hover:ring-emerald-500/20 dark:group-hover:ring-emerald-400/20
-                    group-hover:scale-105 active:scale-95 
-                    shadow-lg group-hover:shadow-2xl 
-                    transition-all duration-200 ease-out 
-                    flex flex-col items-center justify-center p-2.5 sm:p-3 text-center
-                  ">
-                    {/* Top Graphic / Icon */}
-                    <div className="mb-1.5 sm:mb-2 group-hover:-translate-y-0.5 transition-transform duration-200">
-                      <ServiceRoundIcon toolKind={service.kind || category.id} serviceId={service.id} />
-                    </div>
-
-                    {/* Bottom Service Name INSIDE the circle */}
-                    <span className="
-                      font-black text-[10px] sm:text-[11px] md:text-xs 
-                      text-slate-800 dark:text-slate-100 
-                      leading-tight line-clamp-2 
-                      px-1 max-w-[100px] sm:max-w-[110px]
-                      group-hover:text-emerald-700 dark:group-hover:text-emerald-300
-                      transition-colors
-                    ">
-                      {displayTitle}
-                    </span>
-                  </div>
-
-                  {/* Subtle Sub-label or Indicator */}
-                  <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 text-center">
-                    <span>{language === 'hi' ? 'खोलें' : 'Open'}</span>
-                    <span>➔</span>
-                  </span>
+        <div className="space-y-8">
+          
+          {/* =================================================================== */}
+          {/* SECTION 1: 🟢 चालू और सक्रिय लाइव सेवाएं (LIVE ACTIVE SERVICES) */}
+          {/* =================================================================== */}
+          {liveServices.length > 0 && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white">
+                    {language === 'hi' ? '🟢 चालू और सक्रिय सेवाएं (Live Services)' : '🟢 Active Live Services'}
+                  </h2>
                 </div>
-              );
-            })}
-          </div>
+                <span className="text-[11px] font-black bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/60 px-2.5 py-0.5 rounded-full">
+                  {liveServices.length} {language === 'hi' ? 'सक्रिय सेवाएं' : 'Active'}
+                </span>
+              </div>
+
+              <div className="bg-slate-900/40 dark:bg-black/30 p-4 sm:p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-inner">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5 sm:gap-6 justify-items-center">
+                  {liveServices.map((service) => {
+                    const displayTitle = service.title ? localize(service.title) : service.name;
+
+                    return (
+                      <div
+                        key={service.id}
+                        onClick={() => onSelectService(service.id)}
+                        className="group flex flex-col items-center cursor-pointer select-none"
+                        title={displayTitle}
+                      >
+                        {/* The Round Circular Disc Button */}
+                        <div className="
+                          w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 
+                          rounded-full 
+                          bg-gradient-to-b from-white via-slate-50 to-amber-50/40 
+                          dark:from-slate-800 dark:via-slate-850 dark:to-slate-900 
+                          border-[3px] border-emerald-500/70 dark:border-emerald-400/60 
+                          group-hover:border-emerald-500 dark:group-hover:border-emerald-400 
+                          group-hover:ring-4 group-hover:ring-emerald-500/25 dark:group-hover:ring-emerald-400/25
+                          group-hover:scale-105 active:scale-95 
+                          shadow-lg group-hover:shadow-2xl 
+                          transition-all duration-200 ease-out 
+                          flex flex-col items-center justify-center p-2.5 sm:p-3 text-center
+                        ">
+                          {/* Top Graphic / Icon */}
+                          <div className="mb-1.5 sm:mb-2 group-hover:-translate-y-0.5 transition-transform duration-200">
+                            <ServiceRoundIcon toolKind={service.kind || category.id} serviceId={service.id} />
+                          </div>
+
+                          {/* Service Name INSIDE the circle */}
+                          <span className="
+                            font-black text-[10px] sm:text-[11px] md:text-xs 
+                            text-slate-800 dark:text-slate-100 
+                            leading-tight line-clamp-2 
+                            px-1 max-w-[100px] sm:max-w-[110px]
+                            group-hover:text-emerald-700 dark:group-hover:text-emerald-300
+                            transition-colors
+                          ">
+                            {displayTitle}
+                          </span>
+                        </div>
+
+                        {/* Open Action Indicator */}
+                        <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 mt-2 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 text-center">
+                          <span>{language === 'hi' ? 'खोलें' : 'Open'}</span>
+                          <span>➔</span>
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* =================================================================== */}
+          {/* SECTION 2: 🚧 इन सेवाओं पर काम चल रहा है, जल्द ही लाइव होंगी (COMING SOON) */}
+          {/* =================================================================== */}
+          {comingSoonServices.length > 0 && (
+            <div className="pt-6 border-t-2 border-dashed border-slate-300 dark:border-slate-800 space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+                    <Clock className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      <span>{language === 'hi' ? '🚧 इन सेवाओं पर काम चल रहा है, जल्द ही लाइव होंगी' : '🚧 Under Development — Coming Soon'}</span>
+                    </h2>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+                      {language === 'hi' ? 'ये सेवाएं अगले अपडेट में आधिकारिक सरकारी API के साथ लाइव जोड़ी जा रही हैं' : 'These services are being integrated with official APIs and will be active shortly'}
+                    </p>
+                  </div>
+                </div>
+                <span className="self-start sm:self-auto text-[10px] font-black bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border border-amber-300 dark:border-amber-700/60 px-2.5 py-1 rounded-full shrink-0">
+                  {comingSoonServices.length} {language === 'hi' ? 'आगामी सेवाएं' : 'Upcoming'}
+                </span>
+              </div>
+
+              <div className="bg-amber-500/5 dark:bg-amber-950/20 p-4 sm:p-6 rounded-3xl border border-amber-300/40 dark:border-amber-800/40 shadow-inner">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5 sm:gap-6 justify-items-center">
+                  {comingSoonServices.map((service) => {
+                    const displayTitle = service.title ? localize(service.title) : service.name;
+
+                    return (
+                      <div
+                        key={service.id}
+                        onClick={() => handleComingSoonClick(service)}
+                        className="group flex flex-col items-center cursor-pointer select-none opacity-85 hover:opacity-100 transition-opacity"
+                        title={`${displayTitle} (काम प्रगति पर है)`}
+                      >
+                        {/* The Round Circular Disc Button with Amber Theme */}
+                        <div className="
+                          w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 
+                          rounded-full 
+                          bg-gradient-to-b from-white via-slate-50 to-amber-100/30 
+                          dark:from-slate-800/90 dark:via-slate-850 dark:to-slate-900 
+                          border-[3px] border-amber-400/60 dark:border-amber-500/50 
+                          border-dashed
+                          group-hover:border-amber-500 dark:group-hover:border-amber-400 
+                          group-hover:ring-4 group-hover:ring-amber-500/20 dark:group-hover:ring-amber-400/20
+                          group-hover:scale-105 active:scale-95 
+                          shadow-md group-hover:shadow-xl 
+                          transition-all duration-200 ease-out 
+                          flex flex-col items-center justify-center p-2.5 sm:p-3 text-center
+                          relative
+                        ">
+                          {/* Coming Soon Tiny Badge Pill */}
+                          <span className="absolute -top-1.5 bg-amber-500 text-slate-950 text-[8px] font-black px-2 py-0.2 rounded-full uppercase tracking-wider shadow-2xs">
+                            {language === 'hi' ? 'जल्द ही' : 'Soon'}
+                          </span>
+
+                          {/* Top Graphic / Icon */}
+                          <div className="mb-1.5 sm:mb-2 group-hover:-translate-y-0.5 transition-transform duration-200 opacity-75 group-hover:opacity-100">
+                            <ServiceRoundIcon toolKind={service.kind || category.id} serviceId={service.id} />
+                          </div>
+
+                          {/* Service Name INSIDE the circle */}
+                          <span className="
+                            font-black text-[10px] sm:text-[11px] md:text-xs 
+                            text-slate-700 dark:text-slate-200 
+                            leading-tight line-clamp-2 
+                            px-1 max-w-[100px] sm:max-w-[110px]
+                            group-hover:text-amber-700 dark:group-hover:text-amber-300
+                            transition-colors
+                          ">
+                            {displayTitle}
+                          </span>
+                        </div>
+
+                        {/* Coming Soon Indicator */}
+                        <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400 mt-2 flex items-center gap-1 text-center">
+                          <Clock className="w-3 h-3" />
+                          <span>{language === 'hi' ? 'काम जारी' : 'In Progress'}</span>
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       )}
 
@@ -334,8 +459,8 @@ export default function CategoryPage({
         <CheckCircle2 className="w-4 h-4 text-emerald-500" />
         <span>
           {language === 'hi'
-            ? '100% सुरक्षित एवं अधिकृत डिजिटल सेवा केंद्र — किसी भी सेवा पर क्लिक करके विवरण भरें'
-            : '100% Authorized Digital Seva Kendra Gateway — Click any service to fill details'}
+            ? '100% सुरक्षित एवं अधिकृत डिजिटल सेवा केंद्र — किसी भी चालू सेवा पर क्लिक करके सीधे आवेदन करें'
+            : '100% Authorized Digital Seva Kendra Gateway — Click any active service to proceed'}
         </span>
       </div>
 

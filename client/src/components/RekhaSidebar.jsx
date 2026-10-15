@@ -1,128 +1,68 @@
 import React from 'react';
 import { 
-  Home, Award, FileText, Wallet, History, Printer, BookOpen, 
-  Users, QrCode, Settings, Sparkles, Layers, X, Search, Sun, Moon
+  LayoutDashboard, Printer, Search, Wallet, User, 
+  HelpCircle, LogOut, X, ShieldCheck
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
-
-export const REKHA_NAV_CATEGORIES = [
-  {
-    category: {
-      hi: '1. मुख्य डैशबोर्ड',
-      en: '1. Main Dashboard'
-    },
-    items: [
-      { id: 'dashboard', label: { hi: 'डैशबोर्ड (सभी 79+ सेवाएं)', en: 'Dashboard (All 79+ Services)' }, icon: Home }
-    ]
-  },
-  {
-    category: {
-      hi: '2. 🪪 आधार सेवाएं (Aadhaar)',
-      en: '2. 🪪 Aadhaar Hub'
-    },
-    items: [
-      { id: 'tool-aadhaar_advance', label: { hi: 'आधार एडवांस (फिंगरप्रिंट)', en: 'Aadhaar Advance (Fingerprint)' }, icon: Award },
-      { id: 'tool-aadhaar_original_pdf_no_otp', label: { hi: 'आधार ओरिजिनल PDF (बिना OTP)', en: 'Aadhaar PDF (No OTP)' }, icon: FileText },
-      { id: 'tool-aadhaar_pvc', label: { hi: 'आधार CR-80 PVC कार्ड', en: 'Aadhaar PVC Card' }, icon: Award }
-    ]
-  },
-  {
-    category: {
-      hi: '3. 💳 पैन कार्ड सेवाएं (PAN)',
-      en: '3. 💳 PAN Hub'
-    },
-    items: [
-      { id: 'tool-pan_find', label: { hi: 'पैन नंबर सर्च (Find PAN)', en: 'Find PAN by Aadhaar' }, icon: Award },
-      { id: 'tool-pan_details', label: { hi: 'पैन वेरिफिकेशन व एक्टिव स्टेटस', en: 'PAN Verification & Status' }, icon: FileText }
-    ]
-  },
-  {
-    category: {
-      hi: '4. 🚗 वाहन व RTO सेवाएं',
-      en: '4. 🚗 Vehicle & RTO'
-    },
-    items: [
-      { id: 'tool-rc_pdf_download', label: { hi: 'वाहन RC टू PDF / PVC', en: 'Vehicle RC to PDF / PVC' }, icon: Award },
-      { id: 'tool-driving_licence_pdf', label: { hi: 'ड्राइविंग लाइसेंस (DL) PDF', en: 'Driving Licence PDF' }, icon: FileText },
-      { id: 'tool-chalan_find', label: { hi: 'ई-चालान जांच एवं रसीद', en: 'e-Challan Search & Receipt' }, icon: Award }
-    ]
-  },
-  {
-    category: {
-      hi: '5. 🗳️ वोटर कार्ड सेवाएं',
-      en: '5. 🗳️ Voter Hub'
-    },
-    items: [
-      { id: 'tool-voter_pdf', label: { hi: 'डिजिटल वोटर स्मार्ट कार्ड', en: 'Digital Voter Card PDF' }, icon: Award },
-      { id: 'tool-voter_original_pdf_no_otp', label: { hi: 'वोटर ओरिजिनल PDF (बिना OTP)', en: 'Voter PDF (No OTP)' }, icon: FileText }
-    ]
-  },
-  {
-    category: {
-      hi: '6. 🌾 राशन व राज्य कल्याण',
-      en: '6. 🌾 Ration & Welfare'
-    },
-    items: [
-      { id: 'tool-ration_pdf_by_ration', label: { hi: 'राशन कार्ड पर्चा / PDF', en: 'Ration Card Slip / PDF' }, icon: FileText },
-      { id: 'tool-samagra_service', label: { hi: 'समग्र आईडी परिवार व सदस्य', en: 'Samagra ID Search & PDF' }, icon: Award },
-      { id: 'tool-rtps_bihar_pdf', label: { hi: 'RTPS बिहार प्रमाण पत्र PDF', en: 'RTPS Bihar Certificate' }, icon: FileText }
-    ]
-  },
-  {
-    category: {
-      hi: '7. 🏦 बैंकिंग व यूटिलिटी',
-      en: '7. 🏦 Banking & Tools'
-    },
-    items: [
-      { id: 'tool-nsdl_bank', label: { hi: 'NSDL पेमेंट्स बैंक सेवा', en: 'NSDL Payments Bank' }, icon: Award },
-      { id: 'tool-electric_bill_pdf_bihar', label: { hi: 'बिजली बिल भुगतान रसीद', en: 'Electricity Bill Receipt' }, icon: FileText }
-    ]
-  },
-  {
-    category: {
-      hi: '8. त्वरित टूल्स एवं वॉलेट',
-      en: '8. Quick Tools & Wallet'
-    },
-    items: [
-      { id: 'print', label: { hi: 'त्वरित प्रिंटिंग सेवा', en: 'Quick Document Print' }, icon: Printer },
-      { id: 'wallet', label: { hi: 'वॉलेट एवं पासबुक विवरण', en: 'Wallet & Passbook Details' }, icon: Wallet },
-      { id: 'orders', label: { hi: 'आवेदन एवं प्रिंट हिस्ट्री', en: 'Applications & History' }, icon: History }
-    ]
-  }
-];
-
-export const OPERATOR_EXCLUSIVE_ITEMS = [
-  { id: 'queue', label: { hi: 'लाइव ग्राहक प्रिंट कतार', en: 'Live Customer Print Queue' }, icon: Printer },
-  { id: 'cashbook', label: { hi: 'दैनिक रोकड़ बही', en: 'Daily Cashbook' }, icon: BookOpen },
-  { id: 'udhar', label: { hi: 'उधार खाता', en: 'Udhar Register' }, icon: Users },
-  { id: 'standee', label: { hi: 'दुकान QR स्टैन्डी पोस्टर', en: 'Shop QR Standee Poster' }, icon: QrCode },
-  { id: 'settings', label: { hi: 'कैफे सेटिंग्स एवं रेट कार्ड', en: 'Cafe Settings & Rate Card' }, icon: Settings }
-];
 
 export default function RekhaSidebar({
   isOpen,
   onClose,
-  activeTab,
+  activeTab = 'dashboard',
   onSelectTab,
-  mode, // 'customer', 'admin', or 'superadmin'
+  onLogout,
+  mode = 'customer',
   selectedCafe,
   walletBalance = 0,
   sanchalakB2bBalance = 0,
-  pendingPrintsCount = 0,
   onOpenWallet,
   onOpenB2bWallet,
-  onOpenKyc,
+  onOpenCustomerProfile,
   onOpenShopkeeperLogin,
-  onOpenSuperAdminLogin,
-  isStaffAuth = false,
-  searchTerm = '',
-  onSearchChange,
-  theme = 'light',
-  toggleTheme = () => {},
-  disabledTools = [],
-  toolStatus = {}
+  onOpenCustomerLogin,
+  customerSession,
+  isOperator = false,
+  isSuperAdminAuth = false
 }) {
   const { language, t, localize } = useLanguage();
+
+  const isUserLoggedIn = Boolean(customerSession?.phone || isOperator || isSuperAdminAuth);
+  const displayBalance = (isOperator || mode === 'admin') ? sanchalakB2bBalance : walletBalance;
+
+  // Exact 6 core navigation items as strictly requested (Zero Clutter, 100% Fixed)
+  const NAV_ITEMS = [
+    {
+      id: 'dashboard',
+      label: { hi: 'डैशबोर्ड', en: 'Dashboard' },
+      icon: LayoutDashboard
+    },
+    {
+      id: 'orders',
+      label: { hi: 'प्रिंट लिस्ट / ऑर्डर्स', en: 'Print List / Orders' },
+      icon: Printer
+    },
+    {
+      id: 'panfind-list',
+      label: { hi: 'पैन फाइंड लिस्ट', en: 'PAN Find List' },
+      icon: Search,
+      badge: { hi: 'लाइव', en: 'Live' }
+    },
+    {
+      id: 'wallet',
+      label: { hi: 'वॉलेट मैनेज', en: 'Wallet Manage' },
+      icon: Wallet
+    },
+    {
+      id: 'myaccount',
+      label: { hi: 'माय अकाउंट / प्रोफाइल', en: 'My Account' },
+      icon: User
+    },
+    {
+      id: 'complaint',
+      label: { hi: 'सहायता व शिकायत', en: 'Help & Complaint' },
+      icon: HelpCircle
+    }
+  ];
 
   return (
     <>
@@ -130,254 +70,190 @@ export default function RekhaSidebar({
       {isOpen && (
         <div 
           onClick={onClose}
-          className="fixed inset-0 bg-slate-900/60 z-40 lg:hidden backdrop-blur-xs transition-opacity no-print"
+          className="fixed inset-0 bg-slate-950/70 z-40 lg:hidden backdrop-blur-xs transition-opacity no-print"
         />
       )}
 
-      {/* Sidebar Aside — Modern Clean Standard Layout */}
+      {/* 100% Fixed Screen Sidebar (Zero Scroll, Fits Within Viewport Height) */}
       <aside className={`
         fixed lg:sticky top-0 left-0 z-50 h-screen
-        bg-white/95 dark:bg-[#0c162c] text-slate-800 dark:text-slate-100 
-        border-r border-slate-200 dark:border-slate-800/80 flex flex-col 
-        transition-all duration-300 ease-in-out select-none shadow-sm backdrop-blur-md no-print
+        bg-white dark:bg-[#0c162c] text-slate-800 dark:text-slate-100 
+        border-r border-slate-200 dark:border-slate-800/80 flex flex-col justify-between
+        transition-all duration-300 ease-in-out select-none shadow-2xl backdrop-blur-md no-print
+        overflow-hidden
         ${isOpen 
-          ? 'w-60 sm:w-64 translate-x-0 opacity-100' 
+          ? 'w-64 sm:w-72 translate-x-0 opacity-100' 
           : '-translate-x-full lg:w-0 lg:translate-x-0 lg:overflow-hidden lg:opacity-0 lg:pointer-events-none lg:border-r-0'
         }
       `}>
         
-        {/* Indian Flag Tricolor Accent Ribbon */}
-        <div className="h-1.5 w-full flex shrink-0">
-          <div className="flex-1 bg-gradient-to-r from-[#f97316] to-[#ff9933]"></div>
-          <div className="flex-1 bg-white border-x border-slate-200"></div>
-          <div className="flex-1 bg-gradient-to-r from-[#16a34a] to-[#138808]"></div>
-        </div>
-
-        {/* Brand Header & Clean Close (✕) Button */}
-        <div className="p-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-400 to-emerald-600 p-0.5 shadow-md shadow-orange-500/20 shrink-0">
-              <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[14px] flex items-center justify-center">
-                <span className="font-black text-transparent bg-clip-text bg-gradient-to-tr from-orange-500 via-amber-500 to-emerald-600 text-base tracking-tight">
-                  SC
-                </span>
-              </div>
-            </div>
-            <div className="truncate">
-              <div className="font-black text-slate-900 dark:text-white text-sm sm:text-base tracking-tight leading-tight flex items-center gap-1.5">
-                <span>Smart Cafe</span>
-                <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">
-                  B2B
-                </span>
-              </div>
-              <p className="text-[10px] text-orange-600 dark:text-orange-400 font-extrabold leading-tight truncate">
-                {selectedCafe?.shopName || t('brand_tagline')}
-              </p>
-            </div>
+        {/* Top Header Group */}
+        <div className="shrink-0">
+          {/* Indian Flag Tricolor Accent Ribbon */}
+          <div className="h-1.5 w-full flex shrink-0">
+            <div className="flex-1 bg-gradient-to-r from-[#f97316] to-[#ff9933]"></div>
+            <div className="flex-1 bg-white border-x border-slate-200"></div>
+            <div className="flex-1 bg-gradient-to-r from-[#16a34a] to-[#138808]"></div>
           </div>
 
-          {/* Clean Standard Close Button (✕) */}
-          <button 
-            type="button"
-            onClick={onClose}
-            className="p-1.5 text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center shrink-0"
-            title={t('close_menu')}
-            aria-label="Close sidebar"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        {/* Live Wallet Ultra-Compact 1-Line Pill */}
-        <div className="mx-3 my-1 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 truncate">
-              {mode === 'admin' ? t('b2b_wallet_title') : t('customer_wallet_title')}
-            </span>
-            <span className="font-mono font-black text-slate-950 dark:text-white shrink-0">
-              ₹{mode === 'admin' ? sanchalakB2bBalance : walletBalance}
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={mode === 'admin' ? onOpenB2bWallet : onOpenWallet}
-            className="shrink-0 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-[10px] font-bold px-2 py-0.5 rounded-lg transition cursor-pointer"
-          >
-            +{t('add_funds')}
-          </button>
-        </div>
-
-        {/* Quick Search */}
-        <div className="px-3 py-2">
-          <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => onSearchChange(e.target.value)}
-              placeholder={t('search_tools_sidebar')}
-              className="w-full bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:outline-none focus:border-orange-500 transition font-bold"
-            />
-          </div>
-        </div>
-
-        {/* Scrollable Nav Items */}
-        <div className="flex-1 overflow-y-auto px-3 py-2 space-y-4 sidebar-scroll">
-          
-          {REKHA_NAV_CATEGORIES.map((cat, idx) => {
-            const catTitle = localize(cat.category);
-            const filteredItems = cat.items.filter(item => {
-              const rawToolKey = item.id.replace('tool-', '');
-              const isHidden = (disabledTools && (disabledTools.includes(rawToolKey) || disabledTools.includes(item.id))) ||
-                (toolStatus && (toolStatus[rawToolKey] === false || toolStatus[item.id] === false));
-              if (isHidden) return false;
-              const labelStr = localize(item.label);
-              return !searchTerm || labelStr.toLowerCase().includes(searchTerm.toLowerCase());
-            });
-
-            if (filteredItems.length === 0) return null;
-
-            return (
-              <div key={idx} className="space-y-1.5">
-                <div className="px-3 py-1.5 text-xs font-black uppercase tracking-wider text-orange-700 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/50 rounded-xl border-l-4 border-orange-600 flex items-center justify-between shadow-2xs">
-                  <span>{catTitle}</span>
-                </div>
-
-                <div className="space-y-1">
-                  {filteredItems.map((item) => {
-                    const isActive = activeTab === item.id;
-                    const Icon = item.icon;
-                    const itemLabel = localize(item.label);
-
-                      const rawKey = item.id.replace('tool-', '');
-                      const isComing = ['aadhaar_advance', 'aadhaar_original_pdf_no_otp', 'aadhaar_pvc', 'abha_card', 'abha_otp', 'samagra_service', 'sambal_pdf', 'ayushman_image_jpg'].includes(rawKey);
-
-                      return (
-                        <button
-                          key={item.id}
-                          type="button"
-                          onClick={() => {
-                            onSelectTab(item.id);
-                            if (window.innerWidth < 1024) onClose();
-                          }}
-                          className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer shadow-xs text-left ${
-                            isActive 
-                              ? 'bg-gradient-to-r from-orange-600 via-amber-600 to-orange-700 text-white font-black shadow-md shadow-orange-500/30 border border-orange-500' 
-                              : 'text-slate-950 dark:text-white hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-100/70 dark:hover:bg-slate-800 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-orange-300'
-                          }`}
-                        >
-                          <div className="flex items-center gap-2 min-w-0">
-                            <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-orange-600 dark:text-orange-400'}`} />
-                            <span className="font-black text-xs sm:text-sm leading-snug truncate">{itemLabel}</span>
-                          </div>
-                          {item.id.startsWith('tool-') && (
-                            isComing ? (
-                              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${isActive ? 'bg-amber-300 text-slate-950' : 'bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200'}`}>
-                                ⏳ Soon
-                              </span>
-                            ) : (
-                              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${isActive ? 'bg-emerald-300 text-slate-950' : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200'}`}>
-                                🟢 Live
-                              </span>
-                            )
-                          )}
-                        </button>
-                      );
-                  })}
+          {/* Brand & Close Button */}
+          <div className="p-3.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2.5">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-500 via-amber-400 to-emerald-600 p-0.5 shadow-md shadow-orange-500/20 shrink-0">
+                <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[10px] flex items-center justify-center">
+                  <span className="font-black text-transparent bg-clip-text bg-gradient-to-tr from-orange-500 via-amber-500 to-emerald-600 text-sm tracking-tight">
+                    SC
+                  </span>
                 </div>
               </div>
-            );
-          })}
-
-          {/* Operator Exclusive Sidebar Section */}
-          {mode === 'admin' && (
-            <div className="space-y-1.5 pt-3 border-t-2 border-slate-200 dark:border-slate-800">
-              <div className="px-3 py-1.5 text-xs font-black uppercase tracking-wider text-indigo-800 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/50 rounded-xl border-l-4 border-indigo-600 flex items-center justify-between shadow-2xs">
-                <span>{t('cat_operator_ctrl')}</span>
-                <span className="bg-indigo-600 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow-xs">VLE</span>
-              </div>
-
-              <div className="space-y-1">
-                {OPERATOR_EXCLUSIVE_ITEMS.map((item) => {
-                  if (isStaffAuth && (item.id === 'cashbook' || item.id === 'udhar' || item.id === 'settings')) {
-                    return null;
-                  }
-
-                  const isActive = activeTab === item.id;
-                  const Icon = item.icon;
-                  const itemLabel = localize(item.label);
-
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => {
-                        onSelectTab(item.id);
-                        if (window.innerWidth < 1024) onClose();
-                      }}
-                      className={`w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer shadow-xs text-left ${
-                        isActive 
-                          ? 'bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-700 text-white font-black shadow-md shadow-indigo-600/30 border border-indigo-500' 
-                          : 'text-slate-950 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-slate-800 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-indigo-300'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-indigo-600 dark:text-indigo-400'}`} />
-                        <span className="font-black text-xs sm:text-sm leading-snug">{itemLabel}</span>
-                      </div>
-
-                      {item.id === 'queue' && pendingPrintsCount > 0 && (
-                        <span className="bg-amber-400 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-full animate-pulse shadow-xs shrink-0">
-                          {pendingPrintsCount}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
+              <div className="truncate">
+                <div className="font-black text-slate-900 dark:text-white text-sm tracking-tight leading-tight flex items-center gap-1.5">
+                  <span>Smart Cafe</span>
+                  <span className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded shadow-2xs">
+                    B2B
+                  </span>
+                </div>
+                <p className="text-[10px] text-orange-600 dark:text-orange-400 font-black leading-tight truncate">
+                  {selectedCafe?.shopName || (language === 'hi' ? 'डिजिटल सेवा केंद्र' : 'Digital Seva Kendra')}
+                </p>
               </div>
             </div>
-          )}
 
-        </div>
+            {/* Close Button (✕) */}
+            <button 
+              type="button"
+              onClick={onClose}
+              className="p-1.5 text-slate-500 hover:text-rose-600 dark:text-slate-400 dark:hover:text-rose-400 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center justify-center shrink-0"
+              title={language === 'hi' ? 'मेन्यू बंद करें' : 'Close Menu'}
+              aria-label="Close sidebar"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
-        {/* Footer info & Theme Switcher & KYC VLE link */}
-        <div className="p-3 border-t border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-slate-900/60 space-y-2">
-          
-          {/* Day / Night Theme Switcher Button */}
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="w-full bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-extrabold p-2 rounded-xl text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-2xs"
-            title={theme === 'dark' ? t('day_mode_full') : t('night_mode_full')}
-          >
-            {theme === 'dark' ? (
-              <>
-                <Sun className="w-4 h-4 text-amber-400" />
-                <span className="text-amber-300 font-black">{t('day_mode_full')}</span>
-              </>
-            ) : (
-              <>
-                <Moon className="w-4 h-4 text-indigo-600" />
-                <span className="text-slate-700 font-black">{t('night_mode_full')}</span>
-              </>
-            )}
-          </button>
-
-          {onOpenKyc && (
+          {/* Live Wallet Pill */}
+          <div className="mx-3 my-2.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 flex items-center justify-between gap-2 shadow-2xs">
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+              <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 truncate">
+                {mode === 'admin' || isOperator ? (language === 'hi' ? 'B2B वॉलेट' : 'B2B Wallet') : (language === 'hi' ? 'वॉलेट बैलेंस' : 'Wallet')}
+              </span>
+              <span className="font-mono font-black text-slate-950 dark:text-white shrink-0 text-xs sm:text-sm">
+                ₹{displayBalance}
+              </span>
+            </div>
             <button
               type="button"
-              onClick={onOpenKyc}
-              className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-bold p-2 rounded-xl text-[11px] flex items-center justify-center gap-1.5 transition shadow-xs cursor-pointer"
+              onClick={() => {
+                if (mode === 'admin' || isOperator) {
+                  if (onOpenB2bWallet) onOpenB2bWallet();
+                } else {
+                  if (onOpenWallet) onOpenWallet();
+                }
+              }}
+              className="shrink-0 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-[10px] font-black px-2 py-1 rounded-lg transition shadow-2xs cursor-pointer"
             >
-              <Sparkles className="w-3.5 h-3.5 text-yellow-300" />
-              <span>{t('register_vle')}</span>
+              +{language === 'hi' ? 'जोड़ें' : 'Add'}
             </button>
+          </div>
+        </div>
+
+        {/* Middle Navigation Group (Strictly Fixed 6 Items, Zero Scroll) */}
+        <div className="flex-1 px-3 py-1 space-y-1.5 flex flex-col justify-center">
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeTab === item.id;
+            const Icon = item.icon;
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  if (onSelectTab) onSelectTab(item.id);
+                  if (window.innerWidth < 1024 && onClose) onClose();
+                }}
+                className={`
+                  w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-bold text-xs sm:text-sm
+                  transition-all duration-150 cursor-pointer text-left group
+                  ${isActive 
+                    ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/25 font-black' 
+                    : 'text-slate-800 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:text-orange-600 dark:hover:text-orange-400'
+                  }
+                `}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <div className={`
+                    w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-transform group-hover:scale-105
+                    ${isActive 
+                      ? 'bg-white/20 text-white' 
+                      : 'bg-slate-200/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 group-hover:text-orange-600 dark:group-hover:text-orange-400'
+                    }
+                  `}>
+                    <Icon className="w-4 h-4" />
+                  </div>
+                  <span className="truncate leading-tight font-black">
+                    {localize(item.label)}
+                  </span>
+                </div>
+
+                {item.badge && (
+                  <span className="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-blue-500 text-white uppercase tracking-wider shrink-0 shadow-2xs">
+                    {localize(item.badge)}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Bottom Group (Dedicated Logout Button & SSL Security Badge) */}
+        <div className="p-3 border-t border-slate-100 dark:border-slate-800/80 space-y-2 shrink-0">
+          {/* Strictly Dedicated Red Logout Button in Side Toggle */}
+          {isUserLoggedIn ? (
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm(language === 'hi' ? 'क्या आप निश्चित रूप से लॉगआउट करना चाहते हैं?' : 'Are you sure you want to log out?')) {
+                  if (onLogout) onLogout();
+                  if (onClose) onClose();
+                }
+              }}
+              className="w-full bg-rose-600 hover:bg-rose-700 active:scale-98 text-white font-black py-2.5 px-3 rounded-xl flex items-center justify-center gap-2 shadow-md shadow-rose-600/30 transition cursor-pointer text-xs sm:text-sm"
+              title={language === 'hi' ? 'खाते से लॉगआउट करें' : 'Logout of Account'}
+            >
+              <LogOut className="w-4 h-4 shrink-0" />
+              <span>{language === 'hi' ? 'लॉगआउट करें (Logout)' : 'Logout'}</span>
+            </button>
+          ) : (
+            <div className="grid grid-cols-2 gap-1.5">
+              <button
+                type="button"
+                onClick={() => {
+                  if (onOpenShopkeeperLogin) onOpenShopkeeperLogin();
+                  if (onClose) onClose();
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white font-black py-2 px-2 rounded-xl text-center text-xs shadow-sm transition cursor-pointer"
+              >
+                🏪 {language === 'hi' ? 'दुकानदार' : 'Operator'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  if (onOpenCustomerProfile) onOpenCustomerProfile();
+                  else if (onOpenCustomerLogin) onOpenCustomerLogin();
+                  if (onClose) onClose();
+                }}
+                className="bg-slate-800 hover:bg-slate-700 active:scale-98 text-white font-black py-2 px-2 rounded-xl text-center text-xs shadow-sm transition cursor-pointer"
+              >
+                👤 {language === 'hi' ? 'ग्राहक' : 'Citizen'}
+              </button>
+            </div>
           )}
 
-          <div className="flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500 px-1 font-mono">
-            <span>Smart Cafe B2B v2026.5</span>
-            <span className="text-emerald-500 font-bold">{t('live_ready')}</span>
+          {/* Security SSL Notice */}
+          <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-500 dark:text-slate-400 font-semibold pt-1">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+            <span>{language === 'hi' ? '100% सुरक्षित 256-Bit एन्क्रिप्टेड' : '100% Secure 256-Bit SSL'}</span>
           </div>
         </div>
 
