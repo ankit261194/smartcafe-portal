@@ -6,7 +6,7 @@
     "category": "aadhaar",
     "providerCost": 9,
     "wholesaleRate": 15,
-    "retailRate": 25,
+    "retailRate": 30,
     "isActive": true,
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/finger/advance.php",
     "method": "POST"

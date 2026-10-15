@@ -1083,22 +1083,7 @@ export default function App() {
               />
             )}
 
-            {customerTab === 'apply' && (
-              <ServiceApply
-                settings={settings}
-                selectedCafe={selectedCafe}
-                preselectedService={preselectedService}
-                onApplicationSubmitted={() => {}}
-                onOpenJanSevaStudio={(sId) => {
-                  setSelectedJanSevaId(sId);
-                  setJanSevaModalOpen(true);
-                }}
-              />
-            )}
 
-            {customerTab === 'track' && (
-              <StatusTracker settings={settings} />
-            )}
 
             {customerTab === 'resizer' && (
               <ImageResizerTool />
@@ -1112,22 +1097,7 @@ export default function App() {
               <PrintPortalCards preloadedCard={preloadedPvcCard} />
             )}
 
-            {customerTab === 'rc' && (
-              <VehicleRCDownload
-                selectedCafe={selectedCafe}
-                settings={settings}
-                customerPhone={customerSession?.phone || ''}
-                customerWalletBalance={walletBalance}
-                onOpenWallet={() => setIsWalletOpen(true)}
-                onCustomerBalanceUpdated={fetchWalletBalance}
-                onB2bBalanceUpdated={fetchB2bWallet}
-                onOpenPvcPortal={(pvcData) => {
-                  setPreloadedPvcCard(pvcData);
-                  setCustomerTab('printportal');
-                }}
-                onOpenB2bTopUp={() => setIsB2bWalletOpen(true)}
-              />
-            )}
+
           </>
         )}
 
@@ -1348,63 +1318,8 @@ export default function App() {
 
       </main>
 
-      {/* Mobile Sticky Bottom Navigation Bar (Tier 1 Customer View Only) */}
-      {mode === 'customer' && (
-        <nav className={`sm:hidden fixed bottom-0 left-0 right-0 z-40 ${theme === 'dark' ? 'bg-[#0f172a]/95 border-slate-800 text-slate-200' : 'bg-white/95 border-slate-200 text-slate-600'} backdrop-blur-md border-t py-2 px-3 flex items-center justify-around shadow-lg no-print`}>
-          <button
-            onClick={() => setCustomerTab('home')}
-            className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition cursor-pointer ${
-              customerTab === 'home' ? 'text-orange-600 dark:text-orange-400 font-black' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <span className="text-base leading-none">🏠</span>
-            <span>{t('bottom_home')}</span>
-          </button>
-
-          <button
-            onClick={() => setCustomerTab('print')}
-            className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition cursor-pointer ${
-              customerTab === 'print' ? 'text-orange-600 dark:text-orange-400 font-black' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <span className="text-base leading-none">🖨️</span>
-            <span>{t('bottom_print')}</span>
-          </button>
-
-          <button
-            onClick={() => setCustomerTab('apply')}
-            className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition cursor-pointer ${
-              customerTab === 'apply' ? 'text-emerald-600 dark:text-emerald-400 font-black' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <span className="text-base leading-none">📄</span>
-            <span>{t('bottom_apply')}</span>
-          </button>
-
-          <button
-            onClick={() => setCustomerTab('track')}
-            className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition cursor-pointer ${
-              customerTab === 'track' ? 'text-amber-500 font-black' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <span className="text-base leading-none">🔍</span>
-            <span>{t('bottom_track')}</span>
-          </button>
-
-          <button
-            onClick={() => setCustomerTab('rc')}
-            className={`flex flex-col items-center gap-0.5 text-[10px] font-bold transition cursor-pointer ${
-              customerTab === 'rc' ? 'text-orange-600 dark:text-orange-400 font-black' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <span className="text-base leading-none">🚗</span>
-            <span>{t('bottom_rc')}</span>
-          </button>
-        </nav>
-      )}
-
       {/* Clean Authentic Footer */}
-      <footer className={`no-print bg-white dark:bg-[#0b1528] border-t border-slate-200 dark:border-slate-800 mt-auto py-6 px-4 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors duration-200 ${mode === 'customer' ? 'pb-24 sm:pb-6' : ''}`}>
+      <footer className="no-print bg-white dark:bg-[#0b1528] border-t border-slate-200 dark:border-slate-800 mt-auto py-6 px-4 text-center text-xs text-slate-500 dark:text-slate-400 transition-colors duration-200">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
             <span className="font-bold text-slate-800 dark:text-slate-200">

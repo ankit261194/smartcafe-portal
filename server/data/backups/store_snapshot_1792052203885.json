@@ -84,6 +84,17 @@
   ],
   "cashbook": [
     {
+      "id": "CB-1792050946244",
+      "cafeId": "CAFE-101",
+      "title": "इंस्टेंट पैन कार्ड CR-80 PVC नेट मार्जिन (+₹43)",
+      "category": "Automated Service",
+      "amount": 43,
+      "paymentMode": "wallet",
+      "type": "income",
+      "customer": "सत्यापित उपभोक्ता",
+      "createdAt": "2026-10-15T07:55:46.244Z"
+    },
+    {
       "id": "CB-1792035586687",
       "cafeId": "CAFE-101",
       "title": "वाहन RC टू PDF / PVC स्मार्ट कार्ड नेट मार्जिन (+₹50)",
@@ -799,10 +810,31 @@
       "transactions": []
     },
     {
+      "phone": "8006518960",
+      "customerName": "ankit kumar",
+      "balance": 500,
+      "transactions": [
+        {
+          "id": "TXN-INIT-500",
+          "type": "credit",
+          "amount": 500,
+          "description": "Opening Balance",
+          "createdAt": "2026-10-15T00:00:00.000Z"
+        }
+      ]
+    },
+    {
       "phone": "9876543210",
       "customerName": "सत्यापित उपभोक्ता",
-      "balance": 250,
+      "balance": 100,
       "transactions": [
+        {
+          "id": "TXN-1792050946244",
+          "type": "debit",
+          "amount": 150,
+          "note": "ऑनलाइन सेवा शुल्क: इंस्टेंट पैन कार्ड CR-80 PVC",
+          "createdAt": "2026-10-15T07:55:46.244Z"
+        },
         {
           "id": "TXN-1792035586687",
           "type": "debit",
@@ -854,9 +886,16 @@
         "utr": "987654321012"
       },
       "b2bWallet": {
-        "balance": 800,
+        "balance": 693,
         "minThreshold": 200,
         "transactions": [
+          {
+            "id": "B2B-TXN-1792050946244",
+            "type": "debit",
+            "amount": 107,
+            "note": "थोक एडमिन सेवा कटौती: इंस्टेंट पैन कार्ड CR-80 PVC",
+            "createdAt": "2026-10-15T07:55:46.244Z"
+          },
           {
             "id": "B2B-TXN-1792035586687",
             "type": "debit",
@@ -966,6 +1005,29 @@
       "frozenReason": "",
       "kycStatus": "verified",
       "licenseKey": "VLE-LIC-2026-UP24-7023"
+    },
+    {
+      "id": "CAFE-TEST",
+      "code": "TEST",
+      "b2bWallet": {
+        "balance": 5000
+      },
+      "pin": "$2b$10$Xf1CLcxfz./KfjnzcqhWHex/Med7Gb97GCqSisfqe/6kmImnOQE4e",
+      "staffPin": "$2b$10$QfXRFrWK9ES9IREQu1xmpurP090jJasCnTqdGHrC44p/jlPL3B2h6",
+      "staffEnabled": true,
+      "retailRates": {
+        "rcDownload": 250,
+        "panCard": 150,
+        "incomeCert": 80,
+        "casteCert": 80,
+        "niwasCert": 80,
+        "drivingLicence": 250,
+        "pvcCard": 70
+      },
+      "isFrozen": false,
+      "frozenReason": "",
+      "kycStatus": "verified",
+      "licenseKey": "VLE-LIC-2026-UP24-TEST"
     }
   ],
   "superAdminRates": {
@@ -979,13 +1041,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-15T03:39:37.831Z",
+      "lastRun": "2026-10-15T08:16:40.872Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-15T04:39:37.831Z"
+      "nextRun": "2026-10-15T09:16:40.767Z"
     }
   },
   "superAdminAuditLogs": [
@@ -1358,6 +1420,45 @@
     "tool-rc": true
   },
   "orderHistory": [
+    {
+      "id": "ORD-1792050956264-8836",
+      "orderId": "ORD-1792050956264-2410",
+      "cafeId": "CAFE-101",
+      "cafeShopName": "स्मार्ट डिजिटल सेवा केंद्र एवं साइबर कैफे",
+      "customerPhone": "9876543210",
+      "customerName": "सत्यापित उपभोक्ता",
+      "serviceType": "panCard",
+      "serviceTitle": "इंस्टेंट पैन कार्ड CR-80 PVC",
+      "docTitle": "पैन कार्ड (ABCDE1234F) - राजेश कुमार",
+      "refNumber": "ABCDE1234F",
+      "retailFee": 150,
+      "wholesaleCost": 107,
+      "margin": 43,
+      "status": "completed",
+      "data": {
+        "panNo": "ABCDE1234F",
+        "name": "राजेश कुमार",
+        "fatherName": "-",
+        "dob": "-",
+        "issueDate": "15/10/2026",
+        "category": "INDIVIDUAL",
+        "status": "ACTIVE & VERIFIED (आयकर विभाग / NSDL ITD)",
+        "qrCodeData": "ITD:PAN=ABCDE1234F:NAME=राजेश कुमार:FATHER=-:DOB=-:DIGISIGN=VERIFIED",
+        "cardType": "pan"
+      },
+      "generatedData": {
+        "panNo": "ABCDE1234F",
+        "name": "राजेश कुमार",
+        "fatherName": "-",
+        "dob": "-",
+        "issueDate": "15/10/2026",
+        "category": "INDIVIDUAL",
+        "status": "ACTIVE & VERIFIED (आयकर विभाग / NSDL ITD)",
+        "qrCodeData": "ITD:PAN=ABCDE1234F:NAME=राजेश कुमार:FATHER=-:DOB=-:DIGISIGN=VERIFIED",
+        "cardType": "pan"
+      },
+      "createdAt": "2026-10-15T07:55:56.264Z"
+    },
     {
       "id": "ORD-1792035587583-3671",
       "orderId": "ORD-1792035587583-4108",
@@ -11536,7 +11637,7 @@
       "category": "aadhaar",
       "providerCost": 9,
       "wholesaleRate": 15,
-      "retailRate": 25,
+      "retailRate": 30,
       "isActive": true,
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/finger/advance.php",
       "method": "POST"
@@ -12522,6 +12623,39 @@
       "balance": 0,
       "isBlocked": false,
       "createdAt": "2026-10-14T10:15:15.756Z"
+    },
+    {
+      "id": "USR-8006518960",
+      "name": "ankit kumar",
+      "shopName": "स्मार्ट डिजिटल सेवा केंद्र",
+      "phone": "8006518960",
+      "password": "password123",
+      "role": "citizen",
+      "balance": 500,
+      "isBlocked": false,
+      "createdAt": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "CAFE-999",
+      "name": "परीक्षण संचालक",
+      "shopName": "परीक्षण जन सेवा केंद्र",
+      "phone": "9999988888",
+      "password": "1234",
+      "role": "cafe",
+      "balance": 10000,
+      "isBlocked": false,
+      "createdAt": "2026-10-15T07:55:27.835Z"
+    },
+    {
+      "id": "CAFE-TEST",
+      "name": "संचालक",
+      "shopName": "डिजिटल सेवा केंद्र",
+      "phone": "9876543210",
+      "password": "1234",
+      "role": "cafe",
+      "balance": 5000,
+      "isBlocked": false,
+      "createdAt": "2026-10-15T07:59:13.064Z"
     }
   ],
   "verifiedBankReceipts": []

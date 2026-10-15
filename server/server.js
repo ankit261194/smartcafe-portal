@@ -3410,32 +3410,37 @@ app.post('/api/services/execute-automated', async (req, res) => {
     generatedData = { ...getPanCardDetails(liveP4.panNo, params), ...liveP4 };
     docTitle = `आधार से पैन खोज (${liveP4.panNo})`;
     refNumber = liveP4.panNo;
-  } else if (normServiceType === 'aadhaarCard') {
-    generatedData = getAadhaarDetails(params?.aadhaarNo, params);
-    docTitle = `आधार PVC (${generatedData.maskedAadhaar}) - ${generatedData.name}`;
+  } else if (normServiceType === 'aadhaarCard' || (liveP4 && liveP4.service === 'npci')) {
+    const aid = (liveP4?.aadhaarNo || params?.aadhaarNo || '').replace(/[^0-9]/g, '');
+    generatedData = { ...getAadhaarDetails(aid, params), ...(liveP4 || {}) };
+    docTitle = liveP4 ? `NPCI डीबीटी लिंक स्थिति (${liveP4.bankName})` : `आधार PVC (${generatedData.maskedAadhaar}) - ${generatedData.name}`;
     refNumber = generatedData.aadhaarNo;
-  } else if (normServiceType === 'voterCard') {
-    generatedData = getVoterDetails(params?.epicNo, params);
+  } else if (normServiceType === 'voterCard' || (liveP4 && liveP4.service === 'voter')) {
+    const epic = liveP4?.epicNo || params?.epicNo;
+    generatedData = { ...getVoterDetails(epic, params), ...(liveP4 || {}) };
     docTitle = `वोटर स्मार्ट कार्ड (${generatedData.epicNo}) - ${generatedData.name}`;
     refNumber = generatedData.epicNo;
   } else if (normServiceType === 'ayushmanCard') {
     generatedData = getAyushmanDetails(params?.pmjayId || params?.id, params);
     docTitle = `आयुष्मान कार्ड (${generatedData.pmjayId}) - ${generatedData.name}`;
     refNumber = generatedData.pmjayId;
-  } else if (normServiceType === 'rationCard') {
-    generatedData = getRationDetails(params?.rationNo, params);
+  } else if (normServiceType === 'rationCard' || (liveP4 && liveP4.service === 'ration')) {
+    const rat = liveP4?.rationNo || params?.rationNo;
+    generatedData = { ...getRationDetails(rat, params), ...(liveP4 || {}) };
     docTitle = `राशन पर्ची (${generatedData.rationNo}) - ${generatedData.headName}`;
     refNumber = generatedData.rationNo;
-  } else if (normServiceType === 'electricityBill') {
-    generatedData = getElectricityBillDetails(params?.consumerNo, params);
+  } else if (normServiceType === 'electricityBill' || (liveP4 && liveP4.service === 'electricity')) {
+    const ca = liveP4?.consumerNo || params?.consumerNo;
+    generatedData = { ...getElectricityBillDetails(ca, params), ...(liveP4 || {}) };
     docTitle = `बिजली रसीद (${generatedData.consumerNo}) - ₹${generatedData.netPayable}`;
     refNumber = generatedData.consumerNo;
   } else if (normServiceType === 'edistrictSlip') {
     generatedData = getEdistrictDetails(params?.appNo, params?.certNo, params);
     docTitle = `e-District सत्यापन (${generatedData.certNo}) - ${generatedData.applicantName}`;
     refNumber = generatedData.certNo;
-  } else if (normServiceType === 'drivingLicence' || normServiceType === 'dl') {
-    generatedData = getDrivingLicenceDetails(params?.dlNo, params);
+  } else if (normServiceType === 'drivingLicence' || normServiceType === 'dl' || (liveP4 && liveP4.service === 'dl')) {
+    const dl = liveP4?.dlNo || params?.dlNo;
+    generatedData = { ...getDrivingLicenceDetails(dl, params), ...(liveP4 || {}) };
     docTitle = `ड्राइविंग लाइसेंस (${generatedData.dlNo}) - ${generatedData.name}`;
     refNumber = generatedData.dlNo;
   } else if (normServiceType === 'challanSearch' || normServiceType === 'challan') {
@@ -3456,53 +3461,56 @@ app.post('/api/services/execute-automated', async (req, res) => {
     refNumber = generatedData.receiptNo;
   }
 
-  // Universal Fallback Generator for all 79 services so generatedData is NEVER null/undefined
+  // Universal Fallback Generator for all 79 services (Strictly Zero Dummy Strings)
   if (!generatedData) {
     const kind = ((service79 && (service79.group || service79.category)) || serviceType || '').toLowerCase();
+    const rawVal = (params?.query || params?.primaryInput || params?.vehicleNumber || params?.panNo || params?.aadhaarNo || params?.epicNo || params?.consumerNo || params?.rationNo || params?.dlNo || '').toString().trim();
+
     if (kind.includes('pan')) {
-      generatedData = getPanCardDetails(params?.panNo || params?.query || 'AAAPA1234A', params);
+      generatedData = getPanCardDetails(params?.panNo || rawVal, params);
       docTitle = `पैन कार्ड (${generatedData.panNo}) - ${generatedData.name}`;
       refNumber = generatedData.panNo;
     } else if (kind.includes('aadhaar')) {
-      generatedData = getAadhaarDetails(params?.aadhaarNo || params?.query || '999988887777', params);
+      const aid = (params?.aadhaarNo || rawVal).replace(/[^0-9]/g, '');
+      generatedData = getAadhaarDetails(aid, params);
       docTitle = `आधार PVC (${generatedData.maskedAadhaar}) - ${generatedData.name}`;
       refNumber = generatedData.aadhaarNo;
     } else if (kind.includes('voter') || kind.includes('epic')) {
-      generatedData = getVoterDetails(params?.epicNo || params?.query || 'XYZ1234567', params);
+      generatedData = getVoterDetails(params?.epicNo || rawVal, params);
       docTitle = `वोटर स्मार्ट कार्ड (${generatedData.epicNo}) - ${generatedData.name}`;
       refNumber = generatedData.epicNo;
     } else if (kind.includes('rc') || kind.includes('vehicle')) {
-      const regNo = (params?.regNo || params?.vehicleNumber || params?.query || 'UP32AB1234').toUpperCase().replace(/[\s-]+/g, '');
+      const regNo = (params?.regNo || params?.vehicleNumber || rawVal).toUpperCase().replace(/[\s-]+/g, '');
       generatedData = getVehicleDetails(regNo, params);
       vehicleData = generatedData;
       docTitle = `वाहन RC (${generatedData.regNo}) - ${generatedData.makerModel}`;
       refNumber = generatedData.regNo;
     } else if (kind.includes('dl') || kind.includes('licence')) {
-      generatedData = getDrivingLicenceDetails(params?.dlNo || params?.query || 'UP32 20180012345', params);
+      generatedData = getDrivingLicenceDetails(params?.dlNo || rawVal, params);
       docTitle = `ड्राइविंग लाइसेंस (${generatedData.dlNo}) - ${generatedData.name}`;
       refNumber = generatedData.dlNo;
     } else if (kind.includes('ayushman') || kind.includes('health') || kind.includes('pmjay') || kind.includes('abha')) {
-      generatedData = getAyushmanDetails(params?.pmjayId || params?.id || params?.query || 'ABHA-1234-5678-9012', params);
+      generatedData = getAyushmanDetails(params?.pmjayId || params?.id || rawVal, params);
       docTitle = `आयुष्मान कार्ड (${generatedData.pmjayId}) - ${generatedData.name}`;
       refNumber = generatedData.pmjayId;
     } else if (kind.includes('ration')) {
-      generatedData = getRationDetails(params?.rationNo || params?.query || '102030405060', params);
+      generatedData = getRationDetails(params?.rationNo || rawVal, params);
       docTitle = `राशन पर्ची (${generatedData.rationNo}) - ${generatedData.headName}`;
       refNumber = generatedData.rationNo;
     } else if (kind.includes('electric') || kind.includes('bill') || kind.includes('utility')) {
-      generatedData = getElectricityBillDetails(params?.consumerNo || params?.query || '1234567890', params);
+      generatedData = getElectricityBillDetails(params?.consumerNo || rawVal, params);
       docTitle = `बिजली रसीद (${generatedData.consumerNo}) - ₹${generatedData.netPayable}`;
       refNumber = generatedData.consumerNo;
     } else if (kind.includes('challan')) {
-      generatedData = getChallanDetails(params?.challanNo || params?.vehicleNo || params?.query || 'UP1234567890', params);
+      generatedData = getChallanDetails(params?.challanNo || params?.vehicleNo || rawVal, params);
       docTitle = `ई-चालान रसीद (${generatedData.vehicleNo}) - ₹${generatedData.amount}`;
       refNumber = generatedData.challanNo;
     } else if (kind.includes('edistrict')) {
-      generatedData = getEdistrictDetails(params?.appNo || '230123456789', params?.certNo || '1234567890', params);
+      generatedData = getEdistrictDetails(params?.appNo || rawVal, params?.certNo || '', params);
       docTitle = `e-District सत्यापन (${generatedData.certNo}) - ${generatedData.applicantName}`;
       refNumber = generatedData.certNo;
     } else {
-      generatedData = getReceiptDetails(params?.query || params?.primaryInput || customerPhone || '9876543210', {
+      generatedData = getReceiptDetails(rawVal || customerPhone, {
         ...params,
         serviceName: serviceDisplayName,
         customerName: params?.customerName || params?.name || 'नागरिक',
@@ -3568,7 +3576,7 @@ app.get('/api/rc/lookup/:regNo', (req, res) => {
   }
   const regNo = req.params.regNo.trim().toUpperCase();
   if (regNo.length < 6) {
-    return res.status(400).json({ error: 'कृपया वैध गाड़ी नंबर (जैसे UP32AB1234) दर्ज करें।' });
+    return res.status(400).json({ error: 'कृपया वैध गाड़ी नंबर दर्ज करें।' });
   }
   const details = getVehicleDetails(regNo);
   res.json(details);

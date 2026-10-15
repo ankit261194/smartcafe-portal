@@ -799,6 +799,20 @@
       "transactions": []
     },
     {
+      "phone": "8006518960",
+      "customerName": "ankit kumar",
+      "balance": 500,
+      "transactions": [
+        {
+          "id": "TXN-INIT-500",
+          "type": "credit",
+          "amount": 500,
+          "description": "Opening Balance",
+          "createdAt": "2026-10-15T00:00:00.000Z"
+        }
+      ]
+    },
+    {
       "phone": "9876543210",
       "customerName": "सत्यापित उपभोक्ता",
       "balance": 250,
@@ -979,13 +993,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-15T03:39:37.831Z",
+      "lastRun": "2026-10-15T07:16:36.159Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-15T04:39:37.831Z"
+      "nextRun": "2026-10-15T08:16:36.159Z"
     }
   },
   "superAdminAuditLogs": [
@@ -11536,7 +11550,7 @@
       "category": "aadhaar",
       "providerCost": 9,
       "wholesaleRate": 15,
-      "retailRate": 25,
+      "retailRate": 30,
       "isActive": true,
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/finger/advance.php",
       "method": "POST"
@@ -12522,6 +12536,17 @@
       "balance": 0,
       "isBlocked": false,
       "createdAt": "2026-10-14T10:15:15.756Z"
+    },
+    {
+      "id": "USR-8006518960",
+      "name": "ankit kumar",
+      "shopName": "स्मार्ट डिजिटल सेवा केंद्र",
+      "phone": "8006518960",
+      "password": "password123",
+      "role": "citizen",
+      "balance": 500,
+      "isBlocked": false,
+      "createdAt": "2026-10-15T00:00:00.000Z"
     }
   ],
   "verifiedBankReceipts": []

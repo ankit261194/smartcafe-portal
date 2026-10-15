@@ -850,7 +850,7 @@ export default function ServicePage({
             required
             value={primaryInput}
             onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
-            placeholder="उदा. MBHZCDESKRH174969"
+            placeholder="चैसिस नंबर दर्ज करें"
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
           />
           <span className="text-[11px] text-slate-400 block">चैसिस नंबर दर्ज करें।</span>
@@ -870,7 +870,7 @@ export default function ServicePage({
             required
             value={primaryInput}
             onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
-            placeholder="उदा. Z12EP1074803"
+            placeholder="इंजन नंबर दर्ज करें"
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
           />
           <span className="text-[11px] text-slate-400 block">वाहन का वैध इंजन नंबर दर्ज करें।</span>
@@ -891,7 +891,7 @@ export default function ServicePage({
               required
               value={primaryInput}
               onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11))}
-              placeholder="BR01AB1234 / UP32AB1234"
+              placeholder="गाड़ी नंबर दर्ज करें"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
             />
           </div>
@@ -903,7 +903,7 @@ export default function ServicePage({
               type="text"
               value={fatherName}
               onChange={(e) => setFatherName(e.target.value)}
-              placeholder="RAMESH KUMAR"
+              placeholder="पिता का नाम दर्ज करें"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-sm focus:outline-none"
             />
           </div>
@@ -1008,7 +1008,7 @@ export default function ServicePage({
               required
               value={primaryInput}
               onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
-              placeholder="App****6545"
+              placeholder="आवेदन संख्या दर्ज करें"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono text-sm focus:outline-none uppercase"
             />
           </div>
@@ -1160,7 +1160,6 @@ export default function ServicePage({
                 const f = e.target.files?.[0];
                 if (f) {
                   setUploadedPdfName(f.name);
-                  if (!primaryInput) setPrimaryInput('UIDAI-PDF-' + f.name.slice(0, 8));
                 }
               }}
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3 py-2 text-xs focus:outline-none cursor-pointer"
@@ -1176,7 +1175,7 @@ export default function ServicePage({
               required
               value={secondaryInput}
               onChange={(e) => setSecondaryInput(e.target.value)}
-              placeholder="Enter PDF Password (e.g. ANKI1994)"
+              placeholder="Enter PDF Password"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
             />
           </div>
@@ -1530,7 +1529,7 @@ export default function ServicePage({
               required
               value={secondaryInput}
               onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
-              placeholder="954785****"
+              placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
           </div>
@@ -1676,7 +1675,7 @@ export default function ServicePage({
             required
             value={primaryInput}
             onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10))}
-            placeholder="Enter 10-Digit EPIC Code (e.g. XYZ1234567)"
+            placeholder="EPIC वोटर नंबर दर्ज करें"
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
           />
         </div>
@@ -1731,30 +1730,13 @@ export default function ServicePage({
           </div>
         </div>
 
-        {/* Wholesale & Retail Price Pill */}
         <div className="flex items-center gap-2 self-start sm:self-auto">
-          <div className="bg-slate-100 dark:bg-slate-800/80 px-3.5 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs flex items-center gap-2">
-            <div>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-bold">
-                {isOperator ? (language === 'hi' ? 'थोक B2B दर' : 'Wholesale B2B Rate') : (language === 'hi' ? 'खुदरा शुल्क' : 'Retail Price')}
-              </span>
-              <span className="font-mono font-black text-emerald-600 dark:text-emerald-400 text-sm">
-                ₹{isOperator ? (currentTool?.wholesaleRate ?? 0) : (currentTool?.retailRate ?? 0)}
-              </span>
-            </div>
-            {isOperator && (
-              <span className="bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-400 text-[10px] font-black px-2 py-0.5 rounded-md border border-amber-300 dark:border-amber-800">
-                {language === 'hi' ? 'मुनाफ़ा: +' : 'Margin: +'}₹{Math.max(0, (currentTool?.retailRate || 0) - (currentTool?.wholesaleRate || 0))}
-              </span>
-            )}
-          </div>
-
           <button
             type="button"
             onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
             className="bg-slate-900 dark:bg-white hover:bg-slate-800 text-white dark:text-slate-900 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer"
           >
-            {language === 'hi' ? `+ रिचार्ज (शेष: ₹${isOperator ? sanchalakB2bBalance : walletBalance})` : `+ Add Funds (Bal: ₹${isOperator ? sanchalakB2bBalance : walletBalance})`}
+            {language === 'hi' ? `+ वॉलेट (शेष: ₹${isOperator ? sanchalakB2bBalance : walletBalance})` : `+ Wallet (Bal: ₹${isOperator ? sanchalakB2bBalance : walletBalance})`}
           </button>
         </div>
 

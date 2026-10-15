@@ -767,8 +767,15 @@
     {
       "phone": "9876543210",
       "customerName": "सत्यापित उपभोक्ता",
-      "balance": 250,
+      "balance": 100,
       "transactions": [
+        {
+          "id": "TXN-1792050946244",
+          "type": "debit",
+          "amount": 150,
+          "note": "ऑनलाइन सेवा शुल्क: इंस्टेंट पैन कार्ड CR-80 PVC",
+          "createdAt": "2026-10-15T07:55:46.244Z"
+        },
         {
           "id": "TXN-1792035586687",
           "type": "debit",
@@ -784,6 +791,12 @@
           "date": "2026-10-15T03:39:46.622Z"
         }
       ]
+    },
+    {
+      "phone": "9999988888",
+      "customerName": "परीक्षण संचालक",
+      "balance": 10000,
+      "transactions": []
     }
   ],
   "cafes": [
@@ -12382,15 +12395,15 @@
       "createdAt": "2026-10-14T12:24:35.131Z"
     },
     {
-      "id": "CAFE-101",
+      "id": "CAFE-TEST",
       "name": "संचालक",
-      "shopName": "स्मार्ट डिजिटल सेवा केंद्र एवं साइबर कैफे",
+      "shopName": "डिजिटल सेवा केंद्र",
       "phone": "9876543210",
       "password": "1234",
       "role": "cafe",
-      "balance": 0,
+      "balance": 5000,
       "isBlocked": false,
-      "createdAt": "2026-10-14T10:15:15.756Z"
+      "createdAt": "2026-10-15T07:59:13.064Z"
     },
     {
       "id": "USR-8006518960",
@@ -12402,6 +12415,17 @@
       "balance": 500,
       "isBlocked": false,
       "createdAt": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "CAFE-999",
+      "name": "परीक्षण संचालक",
+      "shopName": "परीक्षण जन सेवा केंद्र",
+      "phone": "9999988888",
+      "password": "1234",
+      "role": "cafe",
+      "balance": 10000,
+      "isBlocked": false,
+      "createdAt": "2026-10-15T07:55:27.835Z"
     }
   ],
   "verifiedBankReceipts": []
