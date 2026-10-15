@@ -166,3 +166,42 @@ html.dark ::-webkit-scrollbar-thumb:hover {
     margin: 0 !important;
   }
 }
+
+/* ========================================================================== */
+/* SMART CAFE LOGO ANIMATION (ZOOM-IN -> 360° SPIN -> ZOOM-OUT -> PAUSE LOOP) */
+/* ========================================================================== */
+@keyframes smartCafeZoomSpin {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.4));
+  }
+  20% {
+    /* 1s Smooth Zoom In */
+    transform: scale(1.18) rotate(0deg);
+    filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.9));
+  }
+  55% {
+    /* Smooth 360-degree round rotation */
+    transform: scale(1.18) rotate(360deg);
+    filter: drop-shadow(0 0 12px rgba(245, 158, 11, 1));
+  }
+  75% {
+    /* Smooth Zoom Out back to normal */
+    transform: scale(1) rotate(360deg);
+    filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.4));
+  }
+  100% {
+    /* Gentle pause before next pulse */
+    transform: scale(1) rotate(360deg);
+    filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.4));
+  }
+}
+
+.animate-smartcafe-icon {
+  display: inline-block;
+  animation: smartCafeZoomSpin 4.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: center center;
+  will-change: transform, filter;
+  backface-visibility: hidden;
+}
+

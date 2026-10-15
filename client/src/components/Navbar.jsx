@@ -72,11 +72,11 @@ export default function Navbar({
             }}
             className="flex items-center gap-2 cursor-pointer select-none min-w-0"
           >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-amber-400/20 p-0.5 shadow-md shrink-0 border border-amber-300/40 overflow-hidden">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-amber-400/20 p-0.5 shadow-md shrink-0 border border-amber-300/40 flex items-center justify-center">
               <img 
                 src="/images/smartcafe_navbar_icon.svg" 
                 alt="Smart Cafe Official" 
-                className="w-full h-full object-contain rounded-[14px]"
+                className="w-full h-full object-contain rounded-[14px] animate-smartcafe-icon"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = '/images/smartcafe_navbar_icon.svg';

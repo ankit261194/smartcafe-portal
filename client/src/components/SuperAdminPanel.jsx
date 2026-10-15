@@ -797,11 +797,11 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-500/20">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex items-start gap-4">
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-400/20 p-1 shadow-lg shrink-0 border border-amber-400/40 overflow-hidden hidden sm:block">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-400/20 p-1 shadow-lg shrink-0 border border-amber-400/40 flex items-center justify-center hidden sm:block">
               <img 
                 src="/images/smartcafe_navbar_icon.svg" 
                 alt="Smart Cafe Official" 
-                className="w-full h-full object-contain rounded-[12px]"
+                className="w-full h-full object-contain rounded-[12px] animate-smartcafe-icon"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = '/images/smartcafe_navbar_icon.svg';
