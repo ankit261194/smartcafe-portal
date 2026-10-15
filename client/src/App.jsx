@@ -484,13 +484,16 @@ export default function App() {
   };
 
   // Fetch wallet balance (Authentic to logged-in user or guest session)
-  const fetchWalletBalance = async () => {
-    const targetPhone = customerSession?.phone || localStorage.getItem('last_wallet_phone') || '9876543210';
+  const fetchWalletBalance = async (forcedPhone) => {
+    const targetPhone = forcedPhone || customerSession?.phone || localStorage.getItem('last_wallet_phone') || '9876543210';
     try {
+      if (forcedPhone || customerSession?.phone) {
+        localStorage.setItem('last_wallet_phone', targetPhone);
+      }
       const res = await authFetch(`/api/wallet/${targetPhone}`);
       const data = await res.json();
       if (data && data.balance !== undefined) {
-        setWalletBalance(data.balance);
+        setWalletBalance(Number(data.balance));
       }
     } catch (err) {
       console.error('Error fetching wallet:', err);
@@ -604,6 +607,7 @@ export default function App() {
     window.addEventListener('offline', handleOffline);
 
     const interval = setInterval(() => {
+      fetchWalletBalance();
       fetchPendingCounts();
       checkLiveOtpRequests();
       fetchB2bWallet();
@@ -1607,7 +1611,7 @@ export default function App() {
         }}
         onCustomerSuccess={(custData) => {
           setCustomerSession(custData);
-          fetchWalletBalance();
+          fetchWalletBalance(custData?.phone);
           if (roleAuthModalConfig.pendingTool) {
             const pt = roleAuthModalConfig.pendingTool;
             setRoleAuthModalConfig({ isOpen: false, type: 'customer', pendingTool: null });

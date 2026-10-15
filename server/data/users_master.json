@@ -42,5 +42,16 @@
     "balance": 0,
     "isBlocked": false,
     "createdAt": "2026-10-14T10:15:15.756Z"
+  },
+  {
+    "id": "USR-8006518960",
+    "name": "ankit kumar",
+    "shopName": "स्मार्ट डिजिटल सेवा केंद्र",
+    "phone": "8006518960",
+    "password": "password123",
+    "role": "citizen",
+    "balance": 500,
+    "isBlocked": false,
+    "createdAt": "2026-10-15T00:00:00.000Z"
   }
 ]

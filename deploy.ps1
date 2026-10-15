@@ -21,26 +21,58 @@ const p3 = 'client/dist/api/data/store.json';
 let s1 = fs.existsSync(p1) ? JSON.parse(fs.readFileSync(p1)) : {};
 let s2 = fs.existsSync(p2) ? JSON.parse(fs.readFileSync(p2)) : {};
 let s3 = fs.existsSync(p3) ? JSON.parse(fs.readFileSync(p3)) : {};
+const mPath = 'server/data/users_master.json';
+let masterUsers = fs.existsSync(mPath) ? JSON.parse(fs.readFileSync(mPath)) : [];
 const allUsersMap = new Map();
-[...(s3.users||[]), ...(s2.users||[]), ...(s1.users||[])].forEach(u => {
+[...masterUsers, ...(s3.users||[]), ...(s2.users||[]), ...(s1.users||[])].forEach(u => {
   if (u && u.phone) allUsersMap.set(u.phone, u);
 });
 const mergedUsers = Array.from(allUsersMap.values());
 if (s1.users) s1.users = mergedUsers;
 if (s2.users) s2.users = mergedUsers;
+if (s3.users) s3.users = mergedUsers;
+
+// Also protect wallets
+const allWalletsMap = new Map();
+[...(s3.wallets||[]), ...(s2.wallets||[]), ...(s1.wallets||[])].forEach(w => {
+  if (w && w.phone) allWalletsMap.set(w.phone, w);
+});
+mergedUsers.forEach(u => {
+  if (u && u.phone && !allWalletsMap.has(u.phone)) {
+    allWalletsMap.set(u.phone, {
+      phone: u.phone,
+      customerName: u.name || 'ग्राहक',
+      balance: u.balance || 500,
+      transactions: []
+    });
+  }
+});
+const mergedWallets = Array.from(allWalletsMap.values());
+if (s1.wallets) s1.wallets = mergedWallets;
+if (s2.wallets) s2.wallets = mergedWallets;
+if (s3.wallets) s3.wallets = mergedWallets;
+
 fs.writeFileSync(p1, JSON.stringify(s1, null, 2));
 fs.writeFileSync(p2, JSON.stringify(s2, null, 2));
+fs.writeFileSync(p3, JSON.stringify(s3, null, 2));
 fs.writeFileSync('server/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
 fs.writeFileSync('client/public/api/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
-console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts.');
+fs.writeFileSync('client/dist/api/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
+console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts & ' + mergedWallets.length + ' wallets.');
 "
 Copy-Item -Path "$PSScriptRoot\client\public\.htaccess" -Destination "$PSScriptRoot\client\dist\.htaccess" -Force
 if (-not (Test-Path "$PSScriptRoot\client\dist\api")) {
     New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\api" -Force
 }
 Copy-Item -Path "$PSScriptRoot\client\public\api\index.php" -Destination "$PSScriptRoot\client\dist\api\index.php" -Force
-if (Test-Path "$PSScriptRoot\client\public\api\data") {
-    Copy-Item -Path "$PSScriptRoot\client\public\api\data" -Destination "$PSScriptRoot\client\dist\api\data" -Recurse -Force
+if (-not (Test-Path "$PSScriptRoot\client\dist\api\data")) {
+    New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\api\data" -Force
+}
+# Immutable Schema & User Vault Files ONLY - NEVER overwrite live store.json
+Copy-Item -Path "$PSScriptRoot\client\public\api\data\services_79.json" -Destination "$PSScriptRoot\client\dist\api\data\services_79.json" -Force
+Copy-Item -Path "$PSScriptRoot\client\public\api\data\users_master.json" -Destination "$PSScriptRoot\client\dist\api\data\users_master.json" -Force
+if (-not (Test-Path "$PSScriptRoot\client\dist\api\data\store.json")) {
+    Copy-Item -Path "$PSScriptRoot\client\public\api\data\store.json" -Destination "$PSScriptRoot\client\dist\api\data\store.json" -Force
 }
 if (Test-Path "$PSScriptRoot\client\public\CyberCafe_Portal.apk") {
     Copy-Item -Path "$PSScriptRoot\client\public\CyberCafe_Portal.apk" -Destination "$PSScriptRoot\client\dist\CyberCafe_Portal.apk" -Force

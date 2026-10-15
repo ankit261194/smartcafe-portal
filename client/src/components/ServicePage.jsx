@@ -1219,13 +1219,13 @@ export default function ServicePage({
             <input
               type="text"
               required
+              maxLength={12}
+              inputMode="numeric"
+              autoComplete="off"
               value={primaryInput}
-              onChange={(e) => {
-                const raw = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
-              setPrimaryInput(raw);
-              }}
-              placeholder="Enter Aadhaar Number"
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+              placeholder="Enter 12-digit Aadhaar Number"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
             />
           </div>
           <div className="space-y-1.5">
@@ -1272,15 +1272,13 @@ export default function ServicePage({
               <input
                 type="text"
                 required
+                maxLength={12}
+                inputMode="numeric"
+                autoComplete="off"
                 value={primaryInput}
-                onChange={(e) => {
-                  const digits = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
-                  const parts = [];
-                  for (let i = 0; i < digits.length; i += 4) parts.push(digits.substring(i, i + 4));
-                  setPrimaryInput(parts.join(' '));
-                }}
-                placeholder="9999 XXXX XXXX"
-                className="w-full bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+                onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+                placeholder="12-digit Aadhaar Number"
+                className="w-full bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
               />
             </div>
           </div>
@@ -1309,13 +1307,13 @@ export default function ServicePage({
           <input
             type="text"
             required
+            maxLength={12}
+            inputMode="numeric"
+            autoComplete="off"
             value={primaryInput}
-            onChange={(e) => {
-              const raw = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
-              setPrimaryInput(raw);
-            }}
+            onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
             placeholder="Enter 12-digit Aadhaar Number"
-            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
           />
         </div>
       );
@@ -1331,13 +1329,13 @@ export default function ServicePage({
           <input
             type="text"
             required
+            maxLength={12}
+            inputMode="numeric"
+            autoComplete="off"
             value={primaryInput}
-            onChange={(e) => {
-              const raw = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
-              setPrimaryInput(raw);
-            }}
-            placeholder="Enter Aadhaar Number"
-            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+            placeholder="Enter 12-digit Aadhaar Number"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
           />
         </div>
       );
@@ -2962,95 +2960,6 @@ export default function ServicePage({
                 </div>
               </div>
             )}
-
-          </div>
-
-          {/* =============================================================== */}
-          {/* 3. PERSISTENT ORDER / FREE REPRINT HISTORY STRIP */}
-          {/* =============================================================== */}
-          <div className="no-print bg-white dark:bg-[#0c162c] rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
-            
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <span className="p-2 bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 rounded-xl">
-                  <History className="w-4 h-4" />
-                </span>
-                <div>
-                  <h4 className="font-black text-slate-900 dark:text-white text-sm">
-                    {localize(currentTool.title)} - {t('sp_history_title')}
-                  </h4>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                    {t('sp_history_sub')}
-                  </p>
-                </div>
-              </div>
-
-              <div className="relative w-full sm:w-56">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
-                <input
-                  type="text"
-                  value={historySearch}
-                  onChange={(e) => setHistorySearch(e.target.value)}
-                  placeholder={t('sp_search_history_hint')}
-                  className="w-full pl-8 pr-3 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 text-xs focus:outline-none focus:border-orange-500"
-                />
-              </div>
-            </div>
-
-            {/* Orders Table */}
-            <div className="overflow-x-auto">
-              {toolOrders.length === 0 ? (
-                <div className="py-8 text-center text-slate-400 text-xs space-y-1">
-                  <Clock className="w-6 h-6 mx-auto text-slate-300 dark:text-slate-600" />
-                  <p>{t('sp_no_history')}</p>
-                </div>
-              ) : (
-                <table className="w-full text-xs text-left">
-                  <thead>
-                    <tr className="bg-slate-50 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 uppercase text-[10px] font-black border-b border-slate-200 dark:border-slate-800">
-                      <th className="p-2.5">{t('sp_th_order_id')}</th>
-                      <th className="p-2.5">{t('sp_th_desc')}</th>
-                      <th className="p-2.5">{t('sp_th_card_ref')}</th>
-                      <th className="p-2.5">{t('sp_th_date')}</th>
-                      <th className="p-2.5">{t('sp_th_fee')}</th>
-                      <th className="p-2.5 text-right">{t('sp_th_reprint')}</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                    {toolOrders.map((order) => (
-                      <tr key={order.id || order.orderId} className="hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition">
-                        <td className="p-2.5 font-mono font-bold text-slate-700 dark:text-slate-300">
-                          {order.id || order.orderId}
-                        </td>
-                        <td className="p-2.5 font-bold text-slate-900 dark:text-white">
-                          {order.docTitle || order.serviceTitle || localize(currentTool.title)}
-                        </td>
-                        <td className="p-2.5 font-mono font-black text-indigo-600 dark:text-indigo-400">
-                          {order.refNumber || order.vehicleNumber || '-'}
-                        </td>
-                        <td className="p-2.5 text-slate-500 dark:text-slate-400 text-[11px]">
-                          {new Date(order.createdAt).toLocaleString(language === 'hi' ? 'hi-IN' : 'en-IN')}
-                        </td>
-                        <td className="p-2.5 font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                          ₹{order.retailFee || currentTool.retailRate}
-                        </td>
-                        <td className="p-2.5 text-right">
-                          <button
-                            type="button"
-                            onClick={() => handleFreeReprint(order)}
-                            className="bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-bold px-3 py-1 rounded-xl text-xs inline-flex items-center gap-1 shadow-xs transition cursor-pointer"
-                            title={t('sp_btn_reprint')}
-                          >
-                            <Printer className="w-3.5 h-3.5" />
-                            <span>🖨️ {t('sp_btn_reprint')}</span>
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
 
           </div>
 
