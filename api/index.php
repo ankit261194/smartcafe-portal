@@ -1513,7 +1513,7 @@ if (preg_match('#^wallet/([0-9]+)$#', $endpoint, $m)) {
                 if (($tx['type'] ?? '') === 'credit') $realBal += floatval($tx['amount'] ?? 0);
                 if (($tx['type'] ?? '') === 'debit') $realBal -= floatval($tx['amount'] ?? 0);
             }
-            $wallet['balance'] = max(0, $realBal);
+            $wallet['balance'] = 0;
             $wallet['customerName'] = 'ankit kumar';
         }
         foreach ($store['wallets'] as &$sw) {
