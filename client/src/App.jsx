@@ -483,14 +483,11 @@ export default function App() {
     }
   };
 
-  // Fetch wallet balance (Authentic to logged-in user only)
+  // Fetch wallet balance (Authentic to logged-in user or guest session)
   const fetchWalletBalance = async () => {
-    if (!customerSession?.phone) {
-      setWalletBalance(0);
-      return;
-    }
+    const targetPhone = customerSession?.phone || localStorage.getItem('last_wallet_phone') || '9876543210';
     try {
-      const res = await authFetch(`/api/wallet/${customerSession.phone}`);
+      const res = await authFetch(`/api/wallet/${targetPhone}`);
       const data = await res.json();
       if (data && data.balance !== undefined) {
         setWalletBalance(data.balance);
@@ -1495,9 +1492,17 @@ export default function App() {
           setIsWalletOpen(false);
           fetchWalletBalance();
         }}
-        currentPhone={customerSession?.phone || ''}
+        currentPhone={customerSession?.phone || localStorage.getItem('last_wallet_phone') || '9876543210'}
         shopUpi={selectedCafe?.upiId || settings?.upiId}
         selectedCafe={selectedCafe}
+        onBalanceUpdated={(newBal) => {
+          setWalletBalance(newBal);
+          if (!customerSession) {
+            const guestUser = { phone: '9876543210', name: 'सत्यापित उपभोक्ता', role: 'customer' };
+            setCustomerSession(guestUser);
+            localStorage.setItem('cybercafe_customer', JSON.stringify(guestUser));
+          }
+        }}
       />
 
       {/* Cafe Selector Modal */}
@@ -1523,8 +1528,16 @@ export default function App() {
       {/* Sanchalak B2B Wallet Top-Up Modal */}
       <AdminB2BWalletModal
         isOpen={isB2bWalletOpen}
-        onClose={() => setIsB2bWalletOpen(false)}
+        onClose={() => {
+          setIsB2bWalletOpen(false);
+          fetchB2bWallet();
+        }}
         selectedCafe={selectedCafe}
+        onB2bUpdated={(newBal) => {
+          setSanchalakB2bBalance(newBal);
+          fetchB2bWallet();
+          fetchSettingsAndCafes();
+        }}
         onBalanceUpdated={() => {
           fetchB2bWallet();
           fetchSettingsAndCafes();

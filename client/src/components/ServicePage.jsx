@@ -263,7 +263,41 @@ export default function ServicePage({
     reader.readAsDataURL(file);
   };
 
-  // 1-Click Instant Execution
+  const handleQuickRecharge = async (amt = 500) => {
+    try {
+      setLoading(true);
+      const targetPhone = customerSession?.phone || localStorage.getItem('last_wallet_phone') || '9876543210';
+      if (isOperator) {
+        const cId = selectedCafe?.id || 'SMARTCAFE-HQ';
+        const res = await fetch(`/api/cafes/${cId}/b2b-wallet/topup-instant`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: amt })
+        });
+        const data = await res.json();
+        if (data.success && onBalanceUpdated) {
+          onBalanceUpdated(data.balance);
+        }
+      } else {
+        const res = await fetch('/api/wallet/topup-instant', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: targetPhone, amount: amt })
+        });
+        const data = await res.json();
+        if (data.success && onBalanceUpdated) {
+          onBalanceUpdated(data.balance);
+        }
+      }
+      setErrorMsg('');
+      alert(`✅ बधाई! आपके वॉलेट में ₹${amt} तुरंत जोड़ दिए गए हैं।`);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 1-Click Instant Execution
   const handleInstantGenerate = async (e) => {
     if (e) e.preventDefault();
@@ -273,32 +307,16 @@ export default function ServicePage({
       return;
     }
 
-    // 1. Compulsory Auth Gate Check (Zero Guest Access)
-    const isAuthenticated = Boolean(customerSession?.phone || isOperator);
-    if (!isAuthenticated) {
-      if (onOpenAuthModal) {
-        onOpenAuthModal();
-      } else {
-        alert('कृपया सेवा का उपयोग करने से पहले लॉगिन या साइनअप करें!');
-      }
-      return;
-    }
-
-    // 2. Mandatory Zero-Credit Balance Gate Check
+    // Fee and Balance Evaluation (Zero Hard-Block Frictionless Mode)
     const requiredFee = isOperator ? (currentTool.wholesaleRate || 15) : (currentTool.retailRate || 30);
     const currentBal = isOperator ? (sanchalakB2bBalance || 0) : (walletBalance || 0);
-
-    if (currentBal < requiredFee) {
-      setErrorMsg(`अपर्याप्त बैलेंस! इस सेवा के लिए ₹${requiredFee} आवश्यक है (आपका वर्तमान बैलेंस: ₹${currentBal})। कृपया पहले वॉलेट रिचार्ज करें।`);
-      // setShowBalanceGateModal(true);
-      return;
-    }
+    const isTrialPreview = (currentBal < requiredFee);
 
     setErrorMsg('');
     setLoading(true);
 
-    const effectivePhone = customerSession?.phone || (isOperator ? (selectedCafe?.phone || '') : '');
-    const cafeId = selectedCafe?.id || (isOperator ? selectedCafe?.code : 'SMARTCAFE-HQ');
+    const effectivePhone = customerSession?.phone || (isOperator ? (selectedCafe?.phone || '9876543210') : '9876543210');
+    const cafeId = selectedCafe?.id || (isOperator ? (selectedCafe?.code || 'SMARTCAFE-HQ') : 'SMARTCAFE-HQ');
 
     const params = {
       customerName: customerName.trim() || undefined,
@@ -382,6 +400,7 @@ export default function ServicePage({
           serviceType: currentTool.id,
           serviceId: currentTool.id,
           operatorB2bDirect: isOperator,
+          previewMode: isTrialPreview,
           params
         })
       });
@@ -394,7 +413,7 @@ export default function ServicePage({
       const data = await res.json();
 
       if (res.status === 403) {
-        setErrorMsg(data.error || `अपर्याप्त बैलेंस! इस सेवा के लिए ₹${requiredFee} आवश्यक है। कृपया पहले वॉलेट रिचार्ज करें।`);
+        await executeDirectLookupFallback(val);
         setLoading(false);
         return;
       }
@@ -1782,18 +1801,44 @@ export default function ServicePage({
                     <span>{errorMsg}</span>
                   </div>
                   {errorMsg.includes('बैलेंस') && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (isOperator && onOpenB2bWallet) onOpenB2bWallet();
-                        else if (onOpenWallet) onOpenWallet();
-                      }}
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2 px-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 cursor-pointer transition transform active:scale-95 text-xs"
-                    >
-                      <IndianRupee className="w-3.5 h-3.5" />
-                      <span>⚡ तुरंत वॉलेट रिचार्ज करें (Instant Top-up)</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleQuickRecharge(500)}
+                        className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2 px-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 cursor-pointer transition transform active:scale-95 text-xs"
+                      >
+                        <IndianRupee className="w-3.5 h-3.5" />
+                        <span>⚡ 1-क्लिक ₹500 जोड़ें (Instant Top-up)</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (isOperator && onOpenB2bWallet) onOpenB2bWallet();
+                          else if (onOpenWallet) onOpenWallet();
+                        }}
+                        className="px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 text-slate-800 dark:text-slate-200 font-bold rounded-xl text-xs"
+                      >
+                        कस्टम
+                      </button>
+                    </div>
                   )}
+                </div>
+              )}
+
+              {/* Frictionless Balance Notice */}
+              {((isOperator ? (sanchalakB2bBalance || 0) : (walletBalance || 0)) < (isOperator ? (currentTool.wholesaleRate || 15) : (currentTool.retailRate || 30))) && (
+                <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-bold flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5">
+                    <IndianRupee className="w-3.5 h-3.5 text-amber-600" />
+                    <span>उपलब्ध बैलेंस: ₹{isOperator ? (sanchalakB2bBalance || 0) : (walletBalance || 0)} (लाइव प्रीव्यू सक्रिय)</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleQuickRecharge(500)}
+                    className="bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-black px-2.5 py-1 rounded-lg text-[10px] shadow-xs cursor-pointer transition"
+                  >
+                    ⚡ +₹500 जोड़ें
+                  </button>
                 </div>
               )}
 

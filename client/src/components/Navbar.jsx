@@ -137,30 +137,28 @@ export default function Navbar({
             </button>
           </div>
 
-          {/* Live Wallet Pill (Visible ONLY when logged in) */}
-          {Boolean(customerSession?.phone || isCafeAuth || isOperator || isSuperAdminAuth || mode === 'admin') && (
-            <div className="flex items-center bg-white/20 border border-white/30 rounded-xl overflow-hidden shadow-2xs backdrop-blur-xs shrink-0">
-              <button
-                type="button"
-                onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
-                className="px-2 sm:px-2.5 py-1.5 text-white font-bold text-xs flex items-center gap-1 hover:bg-white/10 transition cursor-pointer"
-                title={isOperator ? t('b2b_wallet_title') : t('customer_wallet_title')}
-              >
-                <Wallet className="w-3.5 h-3.5 text-amber-200 shrink-0" />
-                <span className="font-mono font-black text-xs sm:text-sm text-white">
-                  {isOperator ? `B2B: ₹${displayBalance}` : `₹${displayBalance}`}
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
-                className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-2 py-1.5 text-[11px] transition cursor-pointer hidden sm:flex items-center gap-0.5"
-                title={t('add_funds')}
-              >
-                <span>{t('add_money')}</span>
-              </button>
-            </div>
-          )}
+          {/* Live Wallet Pill (Always accessible for seamless 1-click add money) */}
+          <div className="flex items-center bg-white/20 border border-white/30 rounded-xl overflow-hidden shadow-2xs backdrop-blur-xs shrink-0">
+            <button
+              type="button"
+              onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
+              className="px-2 sm:px-2.5 py-1.5 text-white font-bold text-xs flex items-center gap-1 hover:bg-white/10 transition cursor-pointer"
+              title={isOperator ? t('b2b_wallet_title') : t('customer_wallet_title')}
+            >
+              <Wallet className="w-3.5 h-3.5 text-amber-200 shrink-0" />
+              <span className="font-mono font-black text-xs sm:text-sm text-white">
+                {isOperator ? `B2B: ₹${displayBalance}` : `₹${displayBalance}`}
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
+              className="bg-amber-400 hover:bg-amber-300 active:scale-95 text-slate-950 font-black px-2 py-1.5 text-[11px] transition cursor-pointer flex items-center gap-0.5"
+              title={t('add_funds')}
+            >
+              <span>{t('add_money')}</span>
+            </button>
+          </div>
 
           {/* Day Mode / Night Mode Switcher (☀️/🌙) */}
           <button

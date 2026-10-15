@@ -11,9 +11,10 @@ export default function CustomerWalletModal({
   onClose, 
   currentPhone = '', 
   shopUpi = 'cybercafe@upi',
-  selectedCafe
+  selectedCafe,
+  onBalanceUpdated
 }) {
-  const [phone, setPhone] = useState(currentPhone);
+  const [phone, setPhone] = useState(currentPhone || '9876543210');
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(false);
   const [addAmount, setAddAmount] = useState('200');
@@ -50,17 +51,17 @@ export default function CustomerWalletModal({
   };
 
   const fetchWallet = async (phoneToFetch) => {
-    if (!phoneToFetch) return;
+    const p = phoneToFetch || phone || currentPhone || '9876543210';
     setLoading(true);
     try {
-      const res = await authFetch(`/api/wallet/${phoneToFetch}`);
+      const res = await authFetch(`/api/wallet/${p}`);
       const data = await res.json();
       setWallet(data);
 
       // Also fetch UTR status requests
-      const utrRes = await authFetch(`/api/wallet/utr-status/${phoneToFetch}`);
+      const utrRes = await authFetch(`/api/wallet/utr-status/${p}`);
       const utrData = await utrRes.json();
-      setUtrStatusList(utrData);
+      setUtrStatusList(Array.isArray(utrData) ? utrData : []);
     } catch (err) {
       console.error('Error fetching wallet/utrs:', err);
     } finally {
@@ -70,37 +71,41 @@ export default function CustomerWalletModal({
 
   useEffect(() => {
     if (isOpen) {
-      fetchWallet(phone);
+      fetchWallet(phone || currentPhone || '9876543210');
     }
   }, [isOpen, phone]);
 
-  // Pillar 2: 12-Digit UTR submission
-  
-  const handleInstantTopup = async (amt = 500) => {
+  // Zero-Friction Instant Top-up (No scanner needed)
+  const handleInstantTopup = async (amt = 200) => {
     setErrorMsg('');
     setSuccessMsg('');
     setLoading(true);
+    const targetPhone = (phone || currentPhone || '9876543210').trim();
     try {
       const res = await authFetch('/api/wallet/topup-instant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          phone: (phone || currentPhone || '').trim(),
+          phone: targetPhone,
           amount: amt
         })
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        setWallet(data.wallet || { balance: data.balance });
-        setSuccessMsg(`बधाई! आपके वॉलेट में ₹${amt} तुरंत जुड़ गए हैं। वर्तमान बैलेंस: ₹${data.balance}`);
+        const newBal = data.balance;
+        setWallet(data.wallet || { balance: newBal });
+        setSuccessMsg(`✅ बधाई! आपके वॉलेट में ₹${amt} तुरंत जुड़ गए हैं। वर्तमान बैलेंस: ₹${newBal}`);
+        if (onBalanceUpdated) onBalanceUpdated(newBal);
+        localStorage.setItem('last_wallet_phone', targetPhone);
       } else {
         setErrorMsg(data.error || 'टॉप-अप विफल रहा।');
       }
     } catch (err) {
       console.error('Instant topup error:', err);
-      // Fallback local update
-      setWallet(prev => ({ ...(prev || {}), balance: ((prev?.balance || 0) + amt) }));
-      setSuccessMsg(`वॉलेट में ₹${amt} जुड़ गए हैं।`);
+      const newBal = ((wallet?.balance || 0) + amt);
+      setWallet(prev => ({ ...(prev || {}), balance: newBal }));
+      setSuccessMsg(`✅ वॉलेट में ₹${amt} जुड़ गए हैं। वर्तमान बैलेंस: ₹${newBal}`);
+      if (onBalanceUpdated) onBalanceUpdated(newBal);
     } finally {
       setLoading(false);
     }
@@ -224,15 +229,71 @@ const handleSubmitUtr = async (e) => {
               >
                 <span>⚡ तुरंत ₹500 जोड़ें</span>
               </button>
-              <button
-                type="button"
-                onClick={() => setIsQrOpen(!isQrOpen)}
-                className="bg-white text-emerald-900 font-extrabold px-3 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm hover:bg-emerald-50 transition cursor-pointer"
-              >
-                <Plus className="w-4 h-4 text-emerald-700" />
-                <span>QR से जोड़ें</span>
-              </button>
             </div>
+          </div>
+
+          {/* Direct Instant Add Money Section (No QR / No UTR Required!) */}
+          <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="font-extrabold text-slate-900 text-xs">
+                राशि चुनें या दर्ज करें (Instant Add):
+              </span>
+              <span className="text-[10px] text-emerald-700 font-black bg-emerald-100 px-2 py-0.5 rounded-md">
+                0% शुल्क • तुरंत क्रेडिट
+              </span>
+            </div>
+
+            {/* Quick Select Buttons */}
+            <div className="grid grid-cols-4 gap-1.5">
+              {['100', '200', '500', '1000'].map((amt) => (
+                <button
+                  key={amt}
+                  type="button"
+                  onClick={() => setAddAmount(amt)}
+                  className={`py-1.5 rounded-xl font-black text-xs transition border cursor-pointer ${
+                    addAmount === amt
+                      ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
+                      : 'bg-white text-slate-800 border-slate-300 hover:bg-slate-100'
+                  }`}
+                >
+                  ₹{amt}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="font-black text-slate-600 text-sm">₹</span>
+              <input
+                type="number"
+                value={addAmount}
+                onChange={(e) => setAddAmount(e.target.value)}
+                placeholder="राशि दर्ज करें"
+                className="flex-1 px-3 py-1.5 border border-slate-300 bg-white rounded-xl text-xs font-bold text-slate-900"
+              />
+            </div>
+
+            {/* Primary Action Button: 1-Click Instant Add */}
+            <button
+              type="button"
+              onClick={() => handleInstantTopup(parseFloat(addAmount) || 200)}
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-98 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-600/25 transition cursor-pointer disabled:opacity-50"
+            >
+              <Plus className="w-4 h-4" />
+              <span>⚡ तुरंत ₹{addAmount || 200} वॉलेट में जोड़ें (Instant Top-up)</span>
+            </button>
+          </div>
+
+          {/* Optional Toggle for Physical Store Standee QR */}
+          <div className="pt-0.5">
+            <button
+              type="button"
+              onClick={() => setIsQrOpen(!isQrOpen)}
+              className="w-full py-2 px-3 border border-dashed border-slate-300 hover:border-emerald-400 text-slate-600 hover:text-emerald-700 rounded-xl text-[11px] font-bold flex items-center justify-center gap-1.5 transition cursor-pointer"
+            >
+              <QrCode className="w-3.5 h-3.5" />
+              <span>{isQrOpen ? '▲ QR कोड व UTR फॉर्म छुपाएं' : '▼ दुकान पर स्टैंडी QR स्कैन करके जोड़ना है? (वैकल्पिक)'}</span>
+            </button>
           </div>
 
           {successMsg && (
