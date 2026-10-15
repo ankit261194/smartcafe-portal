@@ -74,12 +74,12 @@ export default function Navbar({
           >
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-amber-400/20 p-0.5 shadow-md shrink-0 border border-amber-300/40 overflow-hidden">
               <img 
-                src="/images/smartcafe_gold_round_badge.jpg" 
+                src="/images/smartcafe_navbar_icon.svg" 
                 alt="Smart Cafe Official" 
-                className="w-full h-full object-cover rounded-[14px]"
+                className="w-full h-full object-contain rounded-[14px]"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = '/images/smartcafe_signature_vector.svg';
+                  e.target.src = '/images/smartcafe_navbar_icon.svg';
                 }}
               />
             </div>

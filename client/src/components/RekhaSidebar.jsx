@@ -101,12 +101,12 @@ export default function RekhaSidebar({
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-400 via-amber-500 to-orange-500 p-0.5 shadow-md shadow-amber-500/20 shrink-0 overflow-hidden">
                 <img 
-                  src="/images/smartcafe_gold_round_badge.jpg" 
+                  src="/images/smartcafe_navbar_icon.svg" 
                   alt="Smart Cafe Official" 
-                  className="w-full h-full object-cover rounded-[10px]"
+                  className="w-full h-full object-contain rounded-[10px]"
                   onError={(e) => {
                     e.target.onerror = null;
-                    e.target.src = '/images/smartcafe_signature_vector.svg';
+                    e.target.src = '/images/smartcafe_navbar_icon.svg';
                   }}
                 />
               </div>
