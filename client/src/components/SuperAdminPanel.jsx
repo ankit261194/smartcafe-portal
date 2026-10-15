@@ -924,7 +924,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                 {dbStatus && (
                   <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                     <Database className="w-3 h-3 text-indigo-500" />
-                    डेटाबेस: {dbStatus.isMysqlConnected ? '🟢 MySQL Enterprise' : '🟡 JSON फ़ाइल (Active)'}
+                    डेटाबेस: {dbStatus.isMysqlConnected ? '🟢 MySQL Enterprise' : (dbStatus.isSqlConnected ? `🟢 रिलेशनल SQL (${(dbStatus.engine || 'sqlite').toUpperCase()})` : '🟡 JSON फ़ाइल (Active)')}
                   </span>
                 )}
               </div>
@@ -2604,19 +2604,23 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-black text-sm text-white">एंटरप्राइज रिलेशनल डेटाबेस (Dual-Mode MySQL / JSON)</h3>
+                    <h3 className="font-black text-sm text-white">एंटरप्राइज रिलेशनल डेटाबेस (Hostinger MySQL & SQLite SQL)</h3>
                     <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black ${
                       dbStatus?.isMysqlConnected 
                         ? 'bg-emerald-500 text-slate-950' 
-                        : 'bg-amber-400 text-slate-950'
+                        : (dbStatus?.isSqlConnected ? 'bg-emerald-400 text-slate-950' : 'bg-amber-400 text-slate-950')
                     }`}>
-                      {dbStatus?.isMysqlConnected ? '🟢 MySQL ENTERPRISE सक्रिय' : '🟡 पोर्टेबल JSON मोड सक्रिय'}
+                      {dbStatus?.isMysqlConnected 
+                        ? '🟢 MySQL ENTERPRISE सक्रिय' 
+                        : (dbStatus?.isSqlConnected ? `🟢 रिलेशनल SQL (${(dbStatus.engine || 'sqlite').toUpperCase()} PDO) सक्रिय` : '🟡 पोर्टेबल JSON मोड सक्रिय')}
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-300 mt-0.5">
                     {dbStatus?.isMysqlConnected 
                       ? `Hostinger MySQL डेटाबेस से सफलतापूर्वक कनेक्टेड (${dbStatus.database || 'Database'} @ ${dbStatus.host || 'localhost'})`
-                      : 'वर्तमान में सिस्टम सुरक्षित पोर्टेबल JSON स्टोर पर चल रहा है। Hostinger MySQL पर अपग्रेड करने हेतु नीचे 1-क्लिक माइग्रेशन का उपयोग करें।'}
+                      : (dbStatus?.isSqlConnected 
+                          ? `सिस्टम रियल रिलेशनल SQL इंजन (${dbStatus.database || 'portal.sqlite'} - ${dbStatus.tables?.length || 8} टेबल्स, ACID ट्रांजेक्शन) पर 100% सक्रिय है। Hostinger MySQL पर अपग्रेड करने हेतु नीचे विजार्ड का उपयोग करें।`
+                          : 'वर्तमान में सिस्टम सुरक्षित पोर्टेबल JSON स्टोर पर चल रहा है।')}
                   </p>
                 </div>
               </div>
@@ -2738,25 +2742,25 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
               <div className="bg-white/5 border border-white/10 p-3 rounded-xl">
                 <span className="text-slate-400 block text-[10px] font-bold">डेटाबेस इंजन</span>
                 <span className="text-sm font-black text-white mt-1 block font-mono">
-                  {dbStatus?.isMysqlConnected ? 'MariaDB / MySQL PDO' : 'ACID JSON Flat-File'}
+                  {dbStatus?.isMysqlConnected ? 'MariaDB / MySQL Enterprise' : (dbStatus?.isSqlConnected ? `SQLite ${(dbStatus.engine || 'sqlite').toUpperCase()} PDO (ACID)` : 'ACID JSON Flat-File')}
                 </span>
               </div>
               <div className="bg-white/5 border border-white/10 p-3 rounded-xl">
                 <span className="text-slate-400 block text-[10px] font-bold">कनेक्शन स्थिति</span>
-                <span className={`text-sm font-black mt-1 block font-mono ${dbStatus?.isMysqlConnected ? 'text-emerald-400' : 'text-amber-300'}`}>
-                  {dbStatus?.isMysqlConnected ? 'CONNECTED (Active)' : 'STANDALONE (Safe)'}
+                <span className={`text-sm font-black mt-1 block font-mono ${dbStatus?.isSqlConnected || dbStatus?.isMysqlConnected ? 'text-emerald-400' : 'text-amber-300'}`}>
+                  {dbStatus?.isSqlConnected || dbStatus?.isMysqlConnected ? 'CONNECTED (Active Relational SQL)' : 'STANDALONE (Safe)'}
                 </span>
               </div>
               <div className="bg-white/5 border border-white/10 p-3 rounded-xl">
-                <span className="text-slate-400 block text-[10px] font-bold">कॉन्फिग फ़ाइल</span>
-                <span className="text-sm font-black text-white mt-1 block font-mono">
-                  {dbStatus?.configFound ? 'api/db-config.php (मौजूद)' : 'db-config.sample.php'}
+                <span className="text-slate-400 block text-[10px] font-bold">डेटाबेस फ़ाइल / होस्ट</span>
+                <span className="text-sm font-black text-white mt-1 block font-mono truncate" title={dbStatus?.database || 'portal.sqlite'}>
+                  {dbStatus?.database || 'portal.sqlite'}
                 </span>
               </div>
               <div className="bg-white/5 border border-white/10 p-3 rounded-xl">
-                <span className="text-slate-400 block text-[10px] font-bold">सक्रिय टेबल्स</span>
+                <span className="text-slate-400 block text-[10px] font-bold">सक्रिय रिलेशनल टेबल्स</span>
                 <span className="text-sm font-black text-cyan-400 mt-1 block font-mono">
-                  {dbStatus?.tables?.length ? `${dbStatus.tables.length} टेबल्स तैयार` : '7 रिलेशनल स्कीमा'}
+                  {dbStatus?.tables?.length ? `${dbStatus.tables.length} टेबल्स (100% सक्रिय)` : '8 रिलेशनल स्कीमा'}
                 </span>
               </div>
             </div>
