@@ -58,12 +58,12 @@ export default function CustomerWalletModal({
     }
     setLoading(true);
     try {
-      const res = await authFetch(`/api/wallet/${p}`);
+      const res = await authFetch(`/api/wallet/${p}?_t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       setWallet(data);
 
       // Also fetch UTR status requests
-      const utrRes = await authFetch(`/api/wallet/utr-status/${p}`);
+      const utrRes = await authFetch(`/api/wallet/utr-status/${p}?_t=${Date.now()}`, { cache: 'no-store' });
       const utrData = await utrRes.json();
       setUtrStatusList(Array.isArray(utrData) ? utrData : []);
     } catch (err) {

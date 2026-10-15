@@ -494,7 +494,7 @@ export default function App() {
       if (forcedPhone || customerSession?.phone) {
         localStorage.setItem('last_wallet_phone', targetPhone);
       }
-      const res = await authFetch(`/api/wallet/${targetPhone}`);
+      const res = await authFetch(`/api/wallet/${targetPhone}?_t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       if (data && data.balance !== undefined) {
         setWalletBalance(Number(data.balance));

@@ -149,7 +149,7 @@ export default function ServiceApply({
   const checkWalletBalance = async (p) => {
     if (!p || p.length < 10) return;
     try {
-      const res = await authFetch(`/api/wallet/${p}`);
+      const res = await authFetch(`/api/wallet/${p}?_t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       setCustomerWallet(data);
     } catch (err) {
