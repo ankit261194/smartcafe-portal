@@ -2523,6 +2523,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
 // ROUTE: /api/services/execute-automated
 // ---------------------------------------------------------------------------
 if ($endpoint === 'services/execute-automated' && $method === 'POST') {
+    try {
     $cafeId = $body['cafeId'] ?? '';
     $customerPhone = $body['customerPhone'] ?? '';
     $serviceType = $body['serviceType'] ?? '';
@@ -2869,6 +2870,11 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         'order' => $newOrder
     ]);
     exit;
+    } catch (Throwable $e) {
+        http_response_code(500);
+        echo json_encode(['error' => 'PHP Execution Error: ' . $e->getMessage(), 'file' => basename($e->getFile()), 'line' => $e->getLine()]);
+        exit;
+    }
 }
 
 // ---------------------------------------------------------------------------
