@@ -2652,11 +2652,12 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             curl_close($ch);
             if ($resp) {
                 $json = json_decode($resp, true);
-                if (!empty($json['status']) && $json['status'] == 200 && !empty($json['pan_number'])) {
+                $pan = $json['panNumber'] ?? ($json['pan_number'] ?? '');
+                if (!empty($pan)) {
                     return [
                         'source' => 'p4points',
                         'service' => 'aadhaarToPan',
-                        'panNo' => $json['pan_number'],
+                        'panNo' => $pan,
                         'maskedAadhaar' => 'XXXX XXXX ' . substr($uid, -4),
                         'aadhaarNo' => $uid,
                         'name' => $json['name'] ?? ($params['name'] ?? 'PAN धारक'),
@@ -2702,20 +2703,20 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         $dlNo = strtoupper(trim($params['dlNo'] ?? ($params['query'] ?? '')));
         $dob = $params['dob'] ?? '01-01-1990';
         if (strlen($dlNo) >= 6) {
-            $url = 'https://authorized.p4points.co.in/api/v1/dlpdf.php?apiKey=' . urlencode($p4ApiKey) . '&dlNo=' . urlencode($dlNo) . '&dob=' . urlencode($dob);
+            $url = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php?apiKey=' . urlencode($p4ApiKey) . '&dlNo=' . urlencode($dlNo) . '&dob=' . urlencode($dob) . '&dltype=1';
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
             $resp = curl_exec($ch);
             curl_close($ch);
             if ($resp) {
                 $json = json_decode($resp, true);
-                if (!empty($json['status']) && $json['status'] == 200 && !empty($json['pdf_url'])) {
+                if (!empty($json['file']) || !empty($json['pdf']) || !empty($json['pdf_url'])) {
                     return [
                         'source' => 'p4points',
                         'service' => 'dl',
                         'dlNo' => $dlNo,
-                        'pdfUrl' => $json['pdf_url'],
+                        'pdfUrl' => $json['file'] ?? ($json['pdf'] ?? ($json['pdf_url'] ?? '')),
                         'isLiveFromP4Points' => true
                     ];
                 }
@@ -2760,20 +2761,20 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             curl_close($ch);
             if ($resp) {
                 $json = json_decode($resp, true);
-                $doc = $json['response']['docs'][0] ?? null;
+                $doc = $json['data'] ?? ($json['response']['docs'][0] ?? null);
                 if ($doc) {
                     return [
                         'source' => 'p4points',
                         'service' => 'voter',
-                        'epicNo' => $doc['epic_no'] ?? $epicNo,
-                        'name' => trim(($doc['FirstName'] ?? '') . ' ' . ($doc['LastName'] ?? '')) ?: ($doc['name_v1'] ?? 'मतदाता'),
-                        'fatherName' => $doc['rln_name'] ?? '',
+                        'epicNo' => $doc['epicNumber'] ?? ($doc['epic_no'] ?? $epicNo),
+                        'name' => trim(($doc['FirstName'] ?? '') . ' ' . ($doc['LastName'] ?? '')) ?: ($doc['name_v1'] ?? ($doc['name'] ?? 'मतदाता')),
+                        'fatherName' => $doc['rln_name'] ?? ($doc['relativeName'] ?? ''),
                         'gender' => $doc['gender'] ?? 'M',
                         'dob' => $doc['dob'] ?? '',
                         'age' => $doc['age'] ?? '30',
                         'district' => $doc['district'] ?? '',
                         'state' => $doc['state'] ?? '',
-                        'assembly' => $doc['ac_name'] ?? '',
+                        'assembly' => $doc['ac_name'] ?? ($doc['assemblyName'] ?? ''),
                         'partName' => $doc['part_name'] ?? '',
                         'isLiveFromP4Points' => true
                     ];
@@ -2925,7 +2926,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
     if (strpos($norm, 'chassis_to_rc') !== false || strpos($norm, 'chassis') !== false) {
         $chassisNo = strtoupper(trim($params['chassisNumber'] ?? ($params['query'] ?? '')));
         if (strlen($chassisNo) >= 5) {
-            $url = 'https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php?apiKey=' . urlencode($p4ApiKey) . '&chassisNumber=' . urlencode($chassisNo);
+            $url = 'https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php?apiKey=' . urlencode($p4ApiKey) . '&chassis_no=' . urlencode($chassisNo);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
@@ -3052,6 +3053,273 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         }
     }
 
+    // 17. RC to Father Name
+    if (strpos($norm, 'father_name') !== false || strpos($norm, 'rc_father') !== false) {
+        $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicleNumber'] ?? ($params['query'] ?? '')));
+        if (strlen($regNo) >= 4) {
+            $url = 'https://authorized.p4points.co.in/api/v1/RcToFatherName.php?apiKey=' . urlencode($p4ApiKey) . '&vehicalNumber=' . urlencode($regNo);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['holder'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'rc',
+                        'regNo' => $regNo,
+                        'ownerName' => $json['holder']['full_name'] ?? 'वाहन स्वामी',
+                        'fatherName' => $json['holder']['relation_name'] ?? '',
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 18. PAN to GST
+    if (strpos($norm, 'pan_to_gst') !== false || strpos($norm, 'pantogst') !== false) {
+        $pan = strtoupper(trim($params['panNo'] ?? ($params['pan'] ?? ($params['query'] ?? ''))));
+        if (strlen($pan) === 10) {
+            $url = 'https://authorized.p4points.co.in/api/v1/pan_to_gst.php?apiKey=' . urlencode($p4ApiKey) . '&pan=' . urlencode($pan);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['items'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'gst',
+                        'panNo' => $pan,
+                        'gstList' => $json['items'],
+                        'gstCount' => $json['count'] ?? count($json['items']),
+                        'firstGst' => $json['items'][0]['gstin'] ?? '',
+                        'state' => $json['items'][0]['state'] ?? '',
+                        'status' => $json['items'][0]['auth_status'] ?? 'Active',
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 19. GST to PAN
+    if (strpos($norm, 'gst_to_pan') !== false || strpos($norm, 'gsttopan') !== false) {
+        $gst = strtoupper(trim($params['gstNo'] ?? ($params['gstin'] ?? ($params['query'] ?? ''))));
+        if (strlen($gst) >= 10) {
+            $url = 'https://authorized.p4points.co.in/api/v1/gst_to_pan.php?apiKey=' . urlencode($p4ApiKey) . '&gst=' . urlencode($gst);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['pan'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'panCard',
+                        'gstNo' => $gst,
+                        'panNo' => $json['pan'],
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 20. Learning Licence PDF Download
+    if (strpos($norm, 'll_pdf') !== false || strpos($norm, 'll_download') !== false) {
+        $idNumber = trim($params['appNo'] ?? ($params['idNumber'] ?? ($params['query'] ?? '')));
+        if (strlen($idNumber) >= 5) {
+            $url = 'https://authorized.p4points.co.in/api/v1/LL_application_pdf.php?apiKey=' . urlencode($p4ApiKey) . '&idNumber=' . urlencode($idNumber);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['pdf'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'dl',
+                        'idNumber' => $idNumber,
+                        'dlNo' => $idNumber,
+                        'pdfBase64' => $json['pdf'],
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 21. LL Exam Status
+    if (strpos($norm, 'll_status') !== false || strpos($norm, 'learner_status') !== false) {
+        $appNo = trim($params['appNo'] ?? ($params['application_number'] ?? ($params['query'] ?? '')));
+        if (strlen($appNo) >= 5) {
+            $url = 'https://authorized.p4points.co.in/api/v1/ll/cheak-status.php?apiKey=' . urlencode($p4ApiKey) . '&application_number=' . urlencode($appNo);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['data'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'dl',
+                        'appNo' => $appNo,
+                        'status' => $json['data']['request_status'] ?? 'Success',
+                        'documentLink' => $json['data']['document_link'] ?? '',
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 22. Instant Voter Mobile Link (No OTP)
+    if (strpos($norm, 'instant_voter') !== false || strpos($norm, 'voter_link') !== false || strpos($norm, 'voter_mobile') !== false) {
+        $epic = strtoupper(trim($params['epicNo'] ?? ($params['epic'] ?? ($params['query'] ?? ''))));
+        $mobile = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['mobileNumber'] ?? ($params['phone'] ?? '')));
+        if (strlen($epic) >= 5 && strlen($mobile) === 10) {
+            $url = 'https://authorized.p4points.co.in/api/v4/instant_voter_link.php?apiKey=' . urlencode($p4ApiKey) . '&epic=' . urlencode($epic) . '&mobile=' . urlencode($mobile);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['status'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'voter',
+                        'epicNo' => $epic,
+                        'mobileNumber' => $mobile,
+                        'refId' => $json['refId'] ?? ('VCM' . time()),
+                        'message' => $json['message'] ?? 'वोटर कार्ड में मोबाइल नंबर सफलतापूर्वक लिंक हो गया है।',
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 23. PAN Find (Name + Mobile)
+    if (strpos($norm, 'pan_find_name') !== false || strpos($norm, 'pan_name_mobile') !== false) {
+        $name = trim($params['name'] ?? ($params['customerName'] ?? ($params['query'] ?? '')));
+        $mobile = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['phone'] ?? ''));
+        if (strlen($name) >= 3 && strlen($mobile) === 10) {
+            $url = 'https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php?apiKey=' . urlencode($p4ApiKey) . '&name=' . urlencode($name) . '&mobile=' . urlencode($mobile);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['panNumber'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'panCard',
+                        'panNo' => $json['panNumber'],
+                        'name' => $json['name'] ?? $name,
+                        'mobile' => $mobile,
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 24. AgriStack Farmer Passbook PDF
+    if (strpos($norm, 'farmer_pdf') !== false || strpos($norm, 'agristack_pdf') !== false) {
+        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['query'] ?? '')));
+        if (strlen($uid) === 12) {
+            $url = 'https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf.php?apiKey=' . urlencode($p4ApiKey) . '&uidNumber=' . urlencode($uid);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['pdfBase64'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'agristack',
+                        'farmerName' => $json['farmerNameEn'] ?? ($json['farmerNameLocal'] ?? 'किसान'),
+                        'mobileNumber' => $json['farmerMobileNumber'] ?? '',
+                        'pdfBase64' => $json['pdfBase64'],
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 25. AgriStack Status Check
+    if (strpos($norm, 'agristack_status') !== false || strpos($norm, 'farmer_status') !== false) {
+        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['query'] ?? '')));
+        if (strlen($uid) === 12) {
+            $url = 'https://authorized.p4points.co.in/api/v1/AgriStak/checkStatus.php?apiKey=' . urlencode($p4ApiKey) . '&uidNumber=' . urlencode($uid);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                $apiD = $json['api_response_data']['data'] ?? [];
+                if (!empty($apiD)) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'agristack',
+                        'state' => $apiD['autoState'] ?? '',
+                        'approvalStatus' => $apiD['farmerApprovalStatus'] ?? 'Approved',
+                        'farmerName' => $apiD['farmerNameEn'] ?? ($apiD['farmerNameLocal'] ?? 'किसान'),
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 26. Mobile & Identity Universal Lookup
+    if (strpos($norm, 'mobile_lookup') !== false || strpos($norm, 'identity_lookup') !== false) {
+        $val = trim($params['value'] ?? ($params['query'] ?? ''));
+        $type = trim($params['type'] ?? 'phone');
+        if (strlen($val) >= 4) {
+            $url = 'https://authorized.p4points.co.in/api/v1/mobileLookup.php?apiKey=' . urlencode($p4ApiKey) . '&type=' . urlencode($type) . '&value=' . urlencode($val);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['DATA'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'lookup',
+                        'lookupType' => $type,
+                        'lookupValue' => $val,
+                        'data' => $json['DATA'],
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
     return null;
 }
 
@@ -3061,7 +3329,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     try {
     $cafeId = $body['cafeId'] ?? '';
     $customerPhone = $body['customerPhone'] ?? '';
-    $serviceType = $body['serviceType'] ?? '';
+    $serviceType = $body['serviceType'] ?? ($body['serviceId'] ?? '');
     $params = $body['params'] ?? [];
     $isOperatorB2bDirect = !empty($body['operatorB2bDirect']);
     $previewMode = !empty($body['previewMode']);
