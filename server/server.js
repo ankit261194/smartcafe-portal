@@ -1734,7 +1734,7 @@ app.put('/api/cafes/:id/staff-pin', (req, res) => {
 app.post('/api/wallet/topup-instant', (req, res) => {
   const store = getStore();
   const { phone, amount } = req.body;
-  const cleanPhone = String(phone || '9876543210').trim();
+  const cleanPhone = String(phone || '8006518960').trim();
   const amt = parseFloat(amount) || 500;
   
   if (!store.wallets) store.wallets = [];

@@ -485,7 +485,7 @@ export default function App() {
 
   // Fetch wallet balance (Authentic to logged-in user or guest session)
   const fetchWalletBalance = async (forcedPhone) => {
-    const targetPhone = forcedPhone || customerSession?.phone || localStorage.getItem('last_wallet_phone') || '9876543210';
+    const targetPhone = forcedPhone || customerSession?.phone || localStorage.getItem('last_wallet_phone') || '8006518960';
     try {
       if (forcedPhone || customerSession?.phone) {
         localStorage.setItem('last_wallet_phone', targetPhone);
@@ -1411,13 +1411,13 @@ export default function App() {
           setIsWalletOpen(false);
           fetchWalletBalance();
         }}
-        currentPhone={customerSession?.phone || localStorage.getItem('last_wallet_phone') || '9876543210'}
+        currentPhone={customerSession?.phone || localStorage.getItem('last_wallet_phone') || '8006518960'}
         shopUpi={selectedCafe?.upiId || settings?.upiId}
         selectedCafe={selectedCafe}
         onBalanceUpdated={(newBal) => {
           setWalletBalance(newBal);
           if (!customerSession) {
-            const guestUser = { phone: '9876543210', name: 'सत्यापित उपभोक्ता', role: 'customer' };
+            const guestUser = { phone: '8006518960', name: 'ankit kumar', role: 'customer' };
             setCustomerSession(guestUser);
             localStorage.setItem('cybercafe_customer', JSON.stringify(guestUser));
           }

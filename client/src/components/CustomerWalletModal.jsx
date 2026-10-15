@@ -10,7 +10,7 @@ export default function CustomerWalletModal({
   isOpen, 
   onClose, 
   currentPhone = '', 
-  shopUpi = 'cybercafe@upi',
+  shopUpi = '8006518960@pthdfc',
   selectedCafe,
   onBalanceUpdated
 }) {

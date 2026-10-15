@@ -187,31 +187,31 @@ const SERVICE_ENRICHMENT = {
     title: { hi: 'वाहन RC टू PDF / PVC स्मार्ट कार्ड', en: 'Vehicle RC to PDF / PVC' },
     sub: { hi: 'परिवहन MoRTH आधिकारिक वाहन RC प्रमाण पत्र', en: 'Official MoRTH Parivahan RC Certificate' },
     inputLabel: { hi: 'गाड़ी नंबर दर्ज करें (Registration No)', en: 'Vehicle Registration Number' },
-    placeholder: { hi: 'जैसे UP32AB1234 / DL01AB1234', en: 'e.g. UP32AB1234' }
+    placeholder: { hi: 'गाड़ी नंबर दर्ज करें (जैसे DL01AB1234)', en: 'Enter Vehicle Registration Number' }
   },
   rc_to_details: {
     title: { hi: 'वाहन RC विवरण व मालिक का नाम', en: 'Vehicle RC Full Details' },
     sub: { hi: 'गाड़ी मालिक, मॉडल, बीमा व फिटनेस विवरण', en: 'Owner Name, Model, Insurance & Fitness' },
     inputLabel: { hi: 'गाड़ी नंबर दर्ज करें', en: 'Enter Vehicle Number' },
-    placeholder: { hi: 'जैसे UP32AB1234', en: 'e.g. UP32AB1234' }
+    placeholder: { hi: 'गाड़ी नंबर दर्ज करें', en: 'Enter Vehicle Number' }
   },
   chalan_find: {
     title: { hi: 'वाहन ई-चालान जांच एवं रसीद', en: 'e-Challan Search & Receipt' },
     sub: { hi: 'ट्रैफिक चालान स्टेटस, बकाया राशि व कोर्ट विवरण', en: 'Traffic Challan Amount & Pending Status' },
     inputLabel: { hi: 'गाड़ी नंबर या चालान नंबर', en: 'Vehicle or Challan Number' },
-    placeholder: { hi: 'जैसे UP32AB1234 या चालान संख्या', en: 'e.g. UP32AB1234' }
+    placeholder: { hi: 'गाड़ी नंबर या चालान संख्या दर्ज करें', en: 'Enter Vehicle or Challan Number' }
   },
   driving_licence_pdf: {
     title: { hi: 'ड्राइविंग लाइसेंस (DL) PDF डाउनलोड', en: 'Driving Licence PDF' },
     sub: { hi: 'सारथी MoRTH डिजिटल ड्राइविंग लाइसेंस प्रति', en: 'Sarathi MoRTH Digital Driving Licence' },
     inputLabel: { hi: '15-अंकीय DL नंबर दर्ज करें', en: 'Enter 15-Digit DL Number' },
-    placeholder: { hi: 'जैसे UP3220200012345', en: 'e.g. UP3220200012345' }
+    placeholder: { hi: 'DL नंबर दर्ज करें', en: 'Enter DL Number' }
   },
   voter_pdf: {
     title: { hi: 'डिजिटल वोटर स्मार्ट कार्ड (EPIC PDF)', en: 'Digital Voter Card PDF' },
     sub: { hi: 'निर्वाचन आयोग डिजिटल स्मार्ट पहचान पत्र', en: 'Election Commission Smart Voter Card' },
     inputLabel: { hi: '10-अक्षरों का EPIC वोटर कार्ड नंबर', en: '10-Character EPIC Number' },
-    placeholder: { hi: 'जैसे WBF1234567 या ABC1234567', en: 'e.g. WBF1234567' }
+    placeholder: { hi: 'EPIC वोटर नंबर दर्ज करें', en: 'Enter EPIC Number' }
   },
   voter_original_pdf_no_otp: {
     title: { hi: 'वोटर ओरिजिनल PDF (बिना OTP)', en: 'Voter Original PDF (No OTP)' },

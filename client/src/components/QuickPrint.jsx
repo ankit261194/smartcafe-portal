@@ -138,7 +138,7 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
   };
 
   // UPI string for dynamic payment QR
-  const upiId = settings?.upiId || 'cybercafe@upi';
+  const upiId = settings?.upiId || '8006518960@pthdfc';
   const upiPayUrl = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(settings?.shopName || 'CyberCafe')}&am=${totalAmount}&cu=INR&tn=${encodeURIComponent('Print Payment')}`;
 
   return (

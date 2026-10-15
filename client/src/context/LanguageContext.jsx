@@ -198,12 +198,6 @@ export const TRANSLATIONS = {
     sp_th_reprint: "निःशुल्क रिप्रिंट",
     sp_btn_reprint: "रिप्रिंट",
 
-    // Bottom Navigation (Mobile)
-    bottom_home: "होम",
-    bottom_print: "प्रिंट",
-    bottom_apply: "फॉर्म",
-    bottom_track: "ट्रैकर",
-    bottom_rc: "RC कार्ड",
 
     // Service Apply Suite (Pure Hindi)
     sa_page_heading: "सरकारी ऑनलाइन सेवाएं एवं फॉर्म",
@@ -462,12 +456,6 @@ export const TRANSLATIONS = {
     sp_th_reprint: "Free Reprint",
     sp_btn_reprint: "Reprint",
 
-    // Bottom Navigation (Mobile)
-    bottom_home: "Home",
-    bottom_print: "Print",
-    bottom_apply: "Forms",
-    bottom_track: "Tracker",
-    bottom_rc: "RC Card",
 
     // Service Apply Suite (Pure English)
     sa_page_heading: "Government Online Services & Forms",
