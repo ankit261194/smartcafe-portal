@@ -2569,7 +2569,17 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         exit;
     }
 
-    $normServiceType = ($serviceType === 'rc_download' || serviceType === 'rcDownload') ? 'rcDownload' : $serviceType;
+    $normServiceType = ($serviceType === 'rc_download' || $serviceType === 'rcDownload') ? 'rcDownload' : $serviceType;
+
+    $service79 = null;
+    if (!empty($store['services_79']) && is_array($store['services_79'])) {
+        foreach ($store['services_79'] as $s79) {
+            if (($s79['id'] ?? '') === $normServiceType || ($s79['id'] ?? '') === $serviceType) {
+                $service79 = $s79;
+                break;
+            }
+        }
+    }
 
     $defaultWholesaleRates = [
         'rcDownload' => 200, 'panCard' => 15, 'aadhaarCard' => 15,
@@ -2586,8 +2596,13 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         'findPan' => 30, 'searchEpic' => 20, 'receiptMaker' => 15
     ];
 
-    $wholesaleCost = $store['superAdminRates'][$normServiceType] ?? $defaultWholesaleRates[$normServiceType] ?? 200;
-    $retailFee = $cafe['retailRates'][$normServiceType] ?? $defaultRetailRates[$normServiceType] ?? ($wholesaleCost + 50);
+    if ($service79) {
+        $wholesaleCost = floatval($service79['wholesaleRate'] ?? 15);
+        $retailFee = floatval($service79['retailRate'] ?? 30);
+    } else {
+        $wholesaleCost = $store['superAdminRates'][$normServiceType] ?? ($defaultWholesaleRates[$normServiceType] ?? 200);
+        $retailFee = $cafe['retailRates'][$normServiceType] ?? ($defaultRetailRates[$normServiceType] ?? ($wholesaleCost + 50));
+    }
     $margin = $retailFee - $wholesaleCost;
 
     if (!isset($cafe['b2bWallet'])) {
@@ -2769,7 +2784,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
 
     // Universal Fallback Generator for all 79 services
     if (!$generatedData) {
-        $kind = strtolower(($service79['group'] ?? $service79['category'] ?? $serviceType ?? ''));
+        $kind = strtolower((string)($service79['group'] ?? ($service79['category'] ?? $serviceType)));
         if (strpos($kind, 'pan') !== false) {
             $generatedData = getPanCardDetails($params['panNo'] ?? $params['query'] ?? 'AAAPA1234A', $params);
             $docTitle = "पैन कार्ड ({$generatedData['panNo']}) - {$generatedData['name']}";
