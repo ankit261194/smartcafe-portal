@@ -3242,14 +3242,17 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       try {
         const arUrl = `https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&aadhar=${encodeURIComponent(uid)}&rationtype=new`;
         const res = await fetch(arUrl, { signal: AbortSignal.timeout(12000) });
-        const json = await res.json().catch(() => null);
-        if (json && json.api_response && json.api_response.pdf) {
+        const pdf = json?.Ration_Pdf || json?.api_response?.pdf || json?.pdf;
+        if (pdf) {
           return {
             source: 'p4points',
             service: 'ration',
-            name: json.api_response.name || 'राशन धारक',
-            rationNo: json.api_response.ration_no || '',
-            pdfBase64: json.api_response.pdf,
+            name: json?.name || json?.api_response?.name || 'राशन धारक',
+            rationNo: json?.ration_no || json?.api_response?.ration_no || '',
+            state: json?.StateName || '',
+            district: json?.DistName || '',
+            fpsId: json?.fpsId || '',
+            pdfBase64: pdf,
             isLiveFromP4Points: true
           };
         }
