@@ -4212,14 +4212,22 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         'findPan' => 30, 'searchEpic' => 20, 'receiptMaker' => 15
     ];
 
-    if ($service79) {
+    $isOtherCategory = ($service79 && (($service79['category'] ?? '') === 'other' || ($service79['group'] ?? '') === 'other')) 
+        || in_array($normServiceType, ['pvc_auto_cropper', 'passport_photo_maker', 'govt_form_resizer', 'bank_ifsc_lookup', 'pincode_lookup', 'qr_generator', 'sarkari_job_feed']);
+
+    if ($isOtherCategory) {
+        $wholesaleCost = 0.0;
+        $retailFee = 0.0;
+        $margin = 0.0;
+    } elseif ($service79) {
         $wholesaleCost = floatval($service79['wholesaleRate'] ?? 15);
         $retailFee = floatval($service79['retailRate'] ?? 30);
+        $margin = $retailFee - $wholesaleCost;
     } else {
-        $wholesaleCost = $store['superAdminRates'][$normServiceType] ?? ($defaultWholesaleRates[$normServiceType] ?? 200);
-        $retailFee = $cafe['retailRates'][$normServiceType] ?? ($defaultRetailRates[$normServiceType] ?? ($wholesaleCost + 50));
+        $wholesaleCost = floatval($store['superAdminRates'][$normServiceType] ?? ($defaultWholesaleRates[$normServiceType] ?? 200));
+        $retailFee = floatval($cafe['retailRates'][$normServiceType] ?? ($defaultRetailRates[$normServiceType] ?? ($wholesaleCost + 50)));
+        $margin = $retailFee - $wholesaleCost;
     }
-    $margin = $retailFee - $wholesaleCost;
 
     if (!isset($cafe['b2bWallet'])) {
         $cafe['b2bWallet'] = ['balance' => 0, 'minThreshold' => 200, 'transactions' => []];
@@ -4236,13 +4244,17 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
 
     $availCust = ($custWalletIdx !== -1) ? $store['wallets'][$custWalletIdx]['balance'] : 0;
     $isTrial = $previewMode;
-    if ($isOperatorB2bDirect) {
-        if ($cafe['b2bWallet']['balance'] < $wholesaleCost) {
-            $isTrial = true;
-        }
+    if ($isOtherCategory) {
+        $isTrial = false;
     } else {
-        if ($availCust < $retailFee) {
-            $isTrial = true;
+        if ($isOperatorB2bDirect) {
+            if ($cafe['b2bWallet']['balance'] < $wholesaleCost) {
+                $isTrial = true;
+            }
+        } else {
+            if ($availCust < $retailFee) {
+                $isTrial = true;
+            }
         }
     }
 
