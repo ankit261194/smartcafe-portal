@@ -799,6 +799,20 @@
       "transactions": []
     },
     {
+      "phone": "8006518960",
+      "customerName": "ankit kumar",
+      "balance": 500,
+      "transactions": [
+        {
+          "id": "TXN-INIT-500",
+          "type": "credit",
+          "amount": 500,
+          "description": "Opening Balance",
+          "createdAt": "2026-10-15T00:00:00.000Z"
+        }
+      ]
+    },
+    {
       "phone": "9876543210",
       "customerName": "सत्यापित उपभोक्ता",
       "balance": 250,
@@ -816,20 +830,6 @@
           "type": "credit",
           "note": "त्वरित 1-क्लिक वॉलेट टॉप-अप (Instant Top-up)",
           "date": "2026-10-15T03:39:46.622Z"
-        }
-      ]
-    },
-    {
-      "phone": "8006518960",
-      "customerName": "ankit kumar",
-      "balance": 500,
-      "transactions": [
-        {
-          "id": "TXN-INIT-500",
-          "type": "credit",
-          "amount": 500,
-          "description": "Opening Balance",
-          "createdAt": "2026-10-15T00:00:00.000Z"
         }
       ]
     }
