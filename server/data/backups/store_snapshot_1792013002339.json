@@ -649,7 +649,7 @@
     {
       "phone": "9811122233",
       "customerName": "Shyam",
-      "pin": "$2b$10$A5omUZK5TE9dqUiilvBHR.Y2sO.VoszRPP/0kJeuApS1ZGi1WiCdq",
+      "pin": "$2b$10$bA9kEAr.tSHFCXUCV6Vc5ug/YAlIhcJmLSsnOxdwUr7rdb1ETBnCe",
       "balance": 0,
       "transactions": []
     }
@@ -805,13 +805,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-14T16:36:00.819Z",
+      "lastRun": "2026-10-14T21:23:22.108Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-14T17:36:00.819Z"
+      "nextRun": "2026-10-14T22:23:22.108Z"
     }
   },
   "superAdminAuditLogs": [
@@ -12013,5 +12013,6 @@
       "isBlocked": false,
       "createdAt": "2026-10-14T10:15:15.756Z"
     }
-  ]
+  ],
+  "verifiedBankReceipts": []
 }

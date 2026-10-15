@@ -629,25 +629,7 @@
       "createdAt": "2026-10-12T04:57:29.428Z"
     }
   ],
-  "utrRequests": [
-    {
-      "id": "UTR-CUST-1792005869926",
-      "tier": "customer_to_sanchalak",
-      "cafeId": "CAFE-101",
-      "cafeShopName": "स्मार्ट डिजिटल सेवा केंद्र एवं साइबर कैफे",
-      "customerPhone": "9811122233",
-      "customerName": "Shyam",
-      "amount": 200,
-      "utr": "428899887766",
-      "screenshotUrl": "",
-      "upiTarget": "smartcafe@upi",
-      "status": "approved",
-      "rejectReason": "",
-      "createdAt": "2026-10-14T19:24:29.926Z",
-      "approvedAt": "2026-10-14T19:24:29.926Z",
-      "autoVerified": true
-    }
-  ],
+  "utrRequests": [],
   "vleKycApplications": [],
   "wallets": [
     {
@@ -668,7 +650,7 @@
       "phone": "9811122233",
       "customerName": "Shyam",
       "pin": "$2b$10$bA9kEAr.tSHFCXUCV6Vc5ug/YAlIhcJmLSsnOxdwUr7rdb1ETBnCe",
-      "balance": 200,
+      "balance": 0,
       "transactions": []
     }
   ],
@@ -823,13 +805,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-14T19:23:25.980Z",
+      "lastRun": "2026-10-15T00:23:22.297Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-14T20:23:25.980Z"
+      "nextRun": "2026-10-15T01:23:22.297Z"
     }
   },
   "superAdminAuditLogs": [
@@ -12032,18 +12014,5 @@
       "createdAt": "2026-10-14T10:15:15.756Z"
     }
   ],
-  "verifiedBankReceipts": [
-    {
-      "utr": "428812345678",
-      "amount": 500,
-      "rawText": "Paytm UPI Received Rs. 500.00 from Ankit Kumar. UTR: 428812345678 on Paytm",
-      "verifiedAt": "2026-10-14T19:21:09.215Z"
-    },
-    {
-      "utr": "428899887766",
-      "amount": 200,
-      "rawText": "Paytm UPI Received Rs. 200.00 from Suresh Kumar. UTR: 428899887766 on Paytm",
-      "verifiedAt": "2026-10-14T19:23:39.130Z"
-    }
-  ]
+  "verifiedBankReceipts": []
 }

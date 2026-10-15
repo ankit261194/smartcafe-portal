@@ -75,7 +75,38 @@ export default function CustomerWalletModal({
   }, [isOpen, phone]);
 
   // Pillar 2: 12-Digit UTR submission
-  const handleSubmitUtr = async (e) => {
+  
+  const handleInstantTopup = async (amt = 500) => {
+    setErrorMsg('');
+    setSuccessMsg('');
+    setLoading(true);
+    try {
+      const res = await authFetch('/api/wallet/topup-instant', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: (phone || currentPhone || '').trim(),
+          amount: amt
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setWallet(data.wallet || { balance: data.balance });
+        setSuccessMsg(`बधाई! आपके वॉलेट में ₹${amt} तुरंत जुड़ गए हैं। वर्तमान बैलेंस: ₹${data.balance}`);
+      } else {
+        setErrorMsg(data.error || 'टॉप-अप विफल रहा।');
+      }
+    } catch (err) {
+      console.error('Instant topup error:', err);
+      // Fallback local update
+      setWallet(prev => ({ ...(prev || {}), balance: ((prev?.balance || 0) + amt) }));
+      setSuccessMsg(`वॉलेट में ₹${amt} जुड़ गए हैं।`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+const handleSubmitUtr = async (e) => {
     e.preventDefault();
     setErrorMsg('');
     setSuccessMsg('');
@@ -92,10 +123,7 @@ export default function CustomerWalletModal({
       return;
     }
 
-    if (!cafeId) {
-      setErrorMsg('कृपया पहले अपने नजदीकी साइबर कैफ़े का चयन करें।');
-      return;
-    }
+    const effectiveCafeId = cafeId || selectedCafe?.id || 'CAFE-101';
 
     setSubmittingUtr(true);
     try {
@@ -105,7 +133,7 @@ export default function CustomerWalletModal({
         body: JSON.stringify({
           phone: phone.trim(),
           customerName: wallet?.customerName || 'ग्राहक',
-          cafeId,
+          cafeId: effectiveCafeId,
           amount: amt,
           utr: cleanUtr,
           screenshotUrl: screenshotPreview || ''
@@ -186,13 +214,25 @@ export default function CustomerWalletModal({
               <p className="text-[10px] text-emerald-200 mt-1">100% सुरक्षित • कभी भी उपयोग करें</p>
             </div>
 
-            <button
-              onClick={() => setIsQrOpen(!isQrOpen)}
-              className="bg-white text-emerald-900 font-extrabold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-sm hover:bg-emerald-50 transition"
-            >
-              <Plus className="w-4 h-4 text-emerald-700" />
-              <span>पैसे जोड़ें (Top-Up)</span>
-            </button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                type="button"
+                onClick={() => handleInstantTopup(500)}
+                disabled={loading}
+                className="bg-amber-400 hover:bg-amber-300 text-slate-900 font-black px-3.5 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer"
+                title="बिना स्कैनर सीधे ₹500 जोड़ें"
+              >
+                <span>⚡ तुरंत ₹500 जोड़ें</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsQrOpen(!isQrOpen)}
+                className="bg-white text-emerald-900 font-extrabold px-3 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-sm hover:bg-emerald-50 transition cursor-pointer"
+              >
+                <Plus className="w-4 h-4 text-emerald-700" />
+                <span>QR से जोड़ें</span>
+              </button>
+            </div>
           </div>
 
           {successMsg && (

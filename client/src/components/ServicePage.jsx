@@ -290,7 +290,7 @@ export default function ServicePage({
 
     if (currentBal < requiredFee) {
       setErrorMsg(`अपर्याप्त बैलेंस! इस सेवा के लिए ₹${requiredFee} आवश्यक है (आपका वर्तमान बैलेंस: ₹${currentBal})। कृपया पहले वॉलेट रिचार्ज करें।`);
-      setShowBalanceGateModal(true);
+      // setShowBalanceGateModal(true);
       return;
     }
 
@@ -395,7 +395,6 @@ export default function ServicePage({
 
       if (res.status === 403) {
         setErrorMsg(data.error || `अपर्याप्त बैलेंस! इस सेवा के लिए ₹${requiredFee} आवश्यक है। कृपया पहले वॉलेट रिचार्ज करें।`);
-        setShowBalanceGateModal(true);
         setLoading(false);
         return;
       }
@@ -1203,10 +1202,8 @@ export default function ServicePage({
               required
               value={primaryInput}
               onChange={(e) => {
-                const digits = e.target.value.replace(/D/g, '').slice(0, 12);
-                const parts = [];
-                for (let i = 0; i < digits.length; i += 4) parts.push(digits.substring(i, i + 4));
-                setPrimaryInput(parts.join(' '));
+                const raw = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
+              setPrimaryInput(raw);
               }}
               placeholder="Enter Aadhaar Number"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
@@ -1258,7 +1255,7 @@ export default function ServicePage({
                 required
                 value={primaryInput}
                 onChange={(e) => {
-                  const digits = e.target.value.replace(/D/g, '').slice(0, 12);
+                  const digits = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
                   const parts = [];
                   for (let i = 0; i < digits.length; i += 4) parts.push(digits.substring(i, i + 4));
                   setPrimaryInput(parts.join(' '));
@@ -1295,10 +1292,8 @@ export default function ServicePage({
             required
             value={primaryInput}
             onChange={(e) => {
-              const digits = e.target.value.replace(/D/g, '').slice(0, 12);
-              const parts = [];
-              for (let i = 0; i < digits.length; i += 4) parts.push(digits.substring(i, i + 4));
-              setPrimaryInput(parts.join(' '));
+              const raw = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
+              setPrimaryInput(raw);
             }}
             placeholder="Enter 12-digit Aadhaar Number"
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
@@ -1319,10 +1314,8 @@ export default function ServicePage({
             required
             value={primaryInput}
             onChange={(e) => {
-              const digits = e.target.value.replace(/D/g, '').slice(0, 12);
-              const parts = [];
-              for (let i = 0; i < digits.length; i += 4) parts.push(digits.substring(i, i + 4));
-              setPrimaryInput(parts.join(' '));
+              const raw = e.target.value.replace(/[^0-9]/g, '').slice(0, 12);
+              setPrimaryInput(raw);
             }}
             placeholder="Enter Aadhaar Number"
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
@@ -1343,7 +1336,7 @@ export default function ServicePage({
               type="text"
               required
               value={primaryInput}
-              onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 12))}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
               placeholder="Enter Ration Number"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
@@ -1447,7 +1440,7 @@ export default function ServicePage({
               type="text"
               required
               value={primaryInput}
-              onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 12))}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
               placeholder="Enter Aadhaar Number"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
@@ -1469,7 +1462,7 @@ export default function ServicePage({
                 type="text"
                 required
                 value={secondaryInput}
-                onChange={(e) => setSecondaryInput(e.target.value.replace(/D/g, '').slice(0, 10))}
+                onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
                 placeholder="Enter New Mobile Number"
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm font-mono focus:outline-none"
               />
@@ -1490,7 +1483,7 @@ export default function ServicePage({
             type="text"
             required
             value={primaryInput}
-            onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 9))}
+            onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 9))}
             placeholder="Enter Member ID"
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
           />
@@ -1519,7 +1512,7 @@ export default function ServicePage({
               type="text"
               required
               value={secondaryInput}
-              onChange={(e) => setSecondaryInput(e.target.value.replace(/D/g, '').slice(0, 10))}
+              onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
               placeholder="954785****"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
@@ -1537,7 +1530,7 @@ export default function ServicePage({
             type="text"
             required
             value={primaryInput}
-            onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 10))}
+            onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
             placeholder="Enter 10-digit mobile number"
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
           />
@@ -1556,7 +1549,7 @@ export default function ServicePage({
             type="text"
             required
             value={primaryInput}
-            onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 10))}
+            onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
             placeholder="Enter 10-Digit Mobile Number"
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
           />
@@ -1576,7 +1569,7 @@ export default function ServicePage({
               type="text"
               required
               value={primaryInput}
-              onChange={(e) => setPrimaryInput(e.target.value.replace(/D/g, '').slice(0, 12))}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
               placeholder="Enter Consumer Account Number"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
@@ -1783,9 +1776,24 @@ export default function ServicePage({
 
               {/* Error Message */}
               {errorMsg && (
-                <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{errorMsg}</span>
+                <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 text-xs font-bold space-y-2.5 animate-in fade-in">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+                    <span>{errorMsg}</span>
+                  </div>
+                  {errorMsg.includes('बैलेंस') && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (isOperator && onOpenB2bWallet) onOpenB2bWallet();
+                        else if (onOpenWallet) onOpenWallet();
+                      }}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2 px-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 cursor-pointer transition transform active:scale-95 text-xs"
+                    >
+                      <IndianRupee className="w-3.5 h-3.5" />
+                      <span>⚡ तुरंत वॉलेट रिचार्ज करें (Instant Top-up)</span>
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -3005,66 +3013,7 @@ export default function ServicePage({
 
       </div>
 
-      {/* Insufficient Balance Gate Modal (Zero Credit Policy) */}
-      {showBalanceGateModal && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-6 sm:p-7 max-w-md w-full border-2 border-amber-500 shadow-2xl space-y-4 animate-in zoom-in-95">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 border border-amber-300 dark:border-amber-800 flex items-center justify-center text-2xl shrink-0">
-                ⚠️
-              </div>
-              <div>
-                <h3 className="font-black text-slate-900 dark:text-white text-base">
-                  अपर्याप्त बैलेंस (Zero Credit Policy)
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  इस सेवा को निष्पादित करने के लिए पर्याप्त बैलेंस आवश्यक है।
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-[#0b1528] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-slate-500">आवश्यक सेवा शुल्क:</span>
-                <span className="font-black text-indigo-600 dark:text-indigo-400 font-mono text-sm">
-                  ₹{isOperator ? currentTool.wholesaleRate : currentTool.retailRate}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">आपका वर्तमान बैलेंस:</span>
-                <span className="font-black text-rose-600 dark:text-rose-400 font-mono text-sm">
-                  ₹{isOperator ? sanchalakB2bBalance : walletBalance}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setShowBalanceGateModal(false)}
-                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
-              >
-                रद्द करें
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowBalanceGateModal(false);
-                  if (isOperator) {
-                    if (onOpenB2bWallet) onOpenB2bWallet();
-                  } else {
-                    if (onOpenWallet) onOpenWallet();
-                  }
-                }}
-                className="flex-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-black px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30 cursor-pointer"
-              >
-                <IndianRupee className="w-3.5 h-3.5" />
-                <span>➕ अभी वॉलेट रिचार्ज करें</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      
 
     </div>
   );

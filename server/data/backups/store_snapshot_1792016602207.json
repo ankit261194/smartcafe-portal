@@ -805,13 +805,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-14T19:20:59.853Z",
+      "lastRun": "2026-10-14T22:23:22.175Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-14T20:20:59.853Z"
+      "nextRun": "2026-10-14T23:23:22.175Z"
     }
   },
   "superAdminAuditLogs": [
@@ -12014,12 +12014,5 @@
       "createdAt": "2026-10-14T10:15:15.756Z"
     }
   ],
-  "verifiedBankReceipts": [
-    {
-      "utr": "428812345678",
-      "amount": 500,
-      "rawText": "Paytm UPI Received Rs. 500.00 from Ankit Kumar. UTR: 428812345678 on Paytm",
-      "verifiedAt": "2026-10-14T19:21:09.215Z"
-    }
-  ]
+  "verifiedBankReceipts": []
 }
