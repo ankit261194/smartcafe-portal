@@ -70,7 +70,7 @@ export default function App() {
   });
 
   const [customerTab, setCustomerTab] = useState('home'); // 'home', 'print', 'apply', 'track', 'jobs', 'rc', 'printportal', 'edistrict', 'resizer', 'pdf'
-  const [adminTab, setAdminTab] = useState('prints'); // 'prints', 'applications', 'cashbook', 'udhar', 'rc', 'printportal', 'edistrict', 'portals', 'complaints', 'settings', 'resizer', 'pdf', 'customers'
+  const [adminTab, setAdminTab] = useState('dashboard'); // 'dashboard', 'prints', 'applications', 'cashbook', 'udhar', 'rc', 'printportal', 'edistrict', 'portals', 'complaints', 'settings', 'resizer', 'pdf', 'customers'
   const [settings, setSettings] = useState(null);
   const [selectedCafe, setSelectedCafe] = useState(null);
   const [cafes, setCafes] = useState([]);
@@ -1522,7 +1522,8 @@ export default function App() {
         }}
         onActivationLogin={(cafe) => {
           setIsCafeAuth(true);
-          setMode('cafe');
+          setMode('admin');
+          setAdminTab('dashboard');
           if (cafe) setSelectedCafe(cafe);
           fetchSettingsAndCafes();
         }}
@@ -1545,6 +1546,8 @@ export default function App() {
           if (cafeData) setSelectedCafe(cafeData);
           if (isStaff) {
             setAdminTab('prints');
+          } else {
+            setAdminTab('dashboard');
           }
           setMode('admin');
           if (roleAuthModalConfig.pendingTool) {

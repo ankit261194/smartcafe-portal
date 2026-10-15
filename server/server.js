@@ -5533,6 +5533,20 @@ app.post('/api/superadmin/kyc-applications/:id/action', (req, res) => {
   res.json({ success: true, kyc });
 });
 
+app.get('/api/kyc/status/:phone', (req, res) => {
+  const store = getStore();
+  const phone = req.params.phone;
+  const cafe = (store.cafes || []).find(c => c.phone === phone);
+  if (cafe) {
+    return res.json({ status: 'approved', cafe });
+  }
+  const kyc = (store.vleKycApplications || []).find(k => k.phone === phone);
+  if (kyc) {
+    return res.json({ status: kyc.status, kyc });
+  }
+  res.json({ status: 'none' });
+});
+
 app.get('/api/cafes/:id/license-certificate', (req, res) => {
   const store = getStore();
   const cafe = (store.cafes || []).find(c => c.id === req.params.id || c.code === req.params.id);

@@ -209,7 +209,6 @@ export default function CategoryPage({
         </span>
         {SERVICE_CATEGORIES.map(cat => {
           const isActive = cat.id === category?.id;
-          const isOther = cat.id === 'other';
           return (
             <button
               key={cat.id}
@@ -218,17 +217,10 @@ export default function CategoryPage({
               className={`px-3 py-1.5 rounded-full text-xs font-bold transition cursor-pointer shrink-0 whitespace-nowrap active:scale-95 shadow-2xs flex items-center gap-1.5 ${
                 isActive
                   ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black shadow-sm'
-                  : isOther
-                  ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 text-white font-black animate-pulse'
                   : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-orange-500'
               }`}
             >
               <span>{localize(cat.title)}</span>
-              {isOther && !isActive && (
-                <span className="text-[9px] bg-white text-orange-600 px-1 rounded-full font-black">
-                  7 Free
-                </span>
-              )}
             </button>
           );
         })}

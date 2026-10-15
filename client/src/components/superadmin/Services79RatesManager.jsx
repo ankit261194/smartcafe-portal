@@ -19,7 +19,7 @@ const CATEGORY_NAMES = {
   edistrict: 'e-District व राजस्व',
   health: 'आयुष्मान व स्वास्थ्य',
   lookup: 'नंबर व डिटेल खोज',
-  other: '⚡ अन्य सेवाएं (Free Tools)',
+  other: 'अन्य सेवाएं',
   misc: 'अन्य टूल्स'
 };
 

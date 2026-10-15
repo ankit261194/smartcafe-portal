@@ -121,12 +121,12 @@ export const SERVICE_CATEGORIES = [
   },
   {
     id: 'other',
-    title: { hi: '⚡ अन्य उपयोगी सेवाएं (Other Services)', en: '⚡ Other Useful Services' },
+    title: { hi: 'अन्य सेवाएं', en: 'Other Services' },
     icon: 'Sparkles',
     color: 'from-amber-500 to-orange-600',
     borderColor: 'border-amber-200 dark:border-amber-900/50',
     lightBg: 'bg-amber-50/70 dark:bg-amber-950/30',
-    desc: { hi: 'बैंक IFSC सर्च, डाकघर पिनकोड लोकेटर, इंस्टेंट QR कोड मेकर व लाइव सरकारी जॉब अलर्ट', en: 'Bank IFSC Lookup, India Post Pincode Finder, Instant QR Generator & Live Sarkari Jobs' }
+    desc: { hi: 'PVC क्रॉपर, पासपोर्ट फोटो, 50KB रिसाइज़र, बैंक IFSC, पिनकोड व QR कोड', en: 'PVC Cropper, Passport Photo, 50KB Resizer, Bank IFSC, Pincode & QR' }
   }
 ];
 

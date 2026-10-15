@@ -2636,6 +2636,26 @@ if (preg_match('#^superadmin/kyc-applications/([^/]+)/action$#', $endpoint, $m) 
     exit;
 }
 
+// Route: /api/kyc/status/:phone
+if (preg_match('#^kyc/status/([0-9]+)$#', $endpoint, $m)) {
+    $phone = $m[1];
+    $store = loadStore($STORE_FILE);
+    foreach ($store['cafes'] ?? [] as $c) {
+        if (($c['phone'] ?? '') === $phone) {
+            echo json_encode(['status' => 'approved', 'cafe' => $c]);
+            exit;
+        }
+    }
+    foreach ($store['vleKycApplications'] ?? [] as $k) {
+        if (($k['phone'] ?? '') === $phone) {
+            echo json_encode(['status' => $k['status'] ?? 'pending', 'kyc' => $k]);
+            exit;
+        }
+    }
+    echo json_encode(['status' => 'none']);
+    exit;
+}
+
 // ---------------------------------------------------------------------------
 // DETERMINISTIC SERVICE GENERATORS & HELPERS
 // ---------------------------------------------------------------------------

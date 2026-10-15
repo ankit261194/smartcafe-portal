@@ -37,13 +37,6 @@ export default function RekhaSidebar({
       icon: LayoutDashboard
     },
     {
-      id: 'other_services',
-      label: { hi: '⚡ अन्य उपयोगी सेवाएं', en: '⚡ Other Services' },
-      icon: Sparkles,
-      badge: { hi: '7 टूल्स', en: '7 Tools' },
-      isSpecial: true
-    },
-    {
       id: 'orders',
       label: { hi: 'प्रिंट लिस्ट / ऑर्डर्स', en: 'Print List / Orders' },
       icon: Printer
