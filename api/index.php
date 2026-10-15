@@ -169,6 +169,8 @@ function getStore($dataFile) {
                         ];
                         $changed = true;
                     }
+                }
+            }
             // Also ensure wallets entry exists for all persistent users
             if (!isset($data['wallets']) || !is_array($data['wallets'])) {
                 $data['wallets'] = [];
