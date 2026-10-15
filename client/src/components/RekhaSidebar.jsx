@@ -99,12 +99,16 @@ export default function RekhaSidebar({
           {/* Brand & Close Button */}
           <div className="p-3.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2.5">
             <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-500 via-amber-400 to-emerald-600 p-0.5 shadow-md shadow-orange-500/20 shrink-0">
-                <div className="w-full h-full bg-white dark:bg-slate-900 rounded-[10px] flex items-center justify-center">
-                  <span className="font-black text-transparent bg-clip-text bg-gradient-to-tr from-orange-500 via-amber-500 to-emerald-600 text-sm tracking-tight">
-                    SC
-                  </span>
-                </div>
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-400 via-amber-500 to-orange-500 p-0.5 shadow-md shadow-amber-500/20 shrink-0 overflow-hidden">
+                <img 
+                  src="/images/smartcafe_gold_round_badge.jpg" 
+                  alt="Smart Cafe Official" 
+                  className="w-full h-full object-cover rounded-[10px]"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/images/smartcafe_signature_vector.svg';
+                  }}
+                />
               </div>
               <div className="truncate">
                 <div className="font-black text-slate-900 dark:text-white text-sm tracking-tight leading-tight flex items-center gap-1.5">

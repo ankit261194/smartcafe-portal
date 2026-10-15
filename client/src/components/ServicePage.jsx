@@ -47,7 +47,7 @@ export const INSTANT_TOOLS = [
   }
 ];
 
-export default function ServicePage({
+function ServicePageContent({
   activeToolId = 'aadhaar_advance',
   onSelectTool,
   onBack,
@@ -93,9 +93,10 @@ export default function ServicePage({
 
   // Safe Dynamic Service Icon Component (Resolves undefined icon crash)
   const ServiceIconComponent = useMemo(() => {
-    return currentTool?.icon || 
+    const rawIcon = currentTool?.icon || 
       (CATEGORY_ICON_MAP && (CATEGORY_ICON_MAP[currentTool?.category] || CATEGORY_ICON_MAP[toolKind])) || 
       Sparkles;
+    return typeof rawIcon === 'function' ? rawIcon : Sparkles;
   }, [currentTool, toolKind]);
 
   const photoInputRef = useRef(null);
@@ -134,6 +135,11 @@ export default function ServicePage({
   const [cardSide, setCardSide] = useState('both'); // 'both', 'front', 'back'
   const [showBalanceGateModal, setShowBalanceGateModal] = useState(false);
   
+  // Persistent Order History States (Fixes ReferenceError white screen crash)
+  const [orderHistory, setOrderHistory] = useState([]);
+  const [loadingHistory, setLoadingHistory] = useState(false);
+  const [historySearch, setHistorySearch] = useState('');
+
   // Biometric RD Service, OTP Bridge, and A4 5-in-1 Tray States
   const [rdDeviceStatus, setRdDeviceStatus] = useState({ connected: false, name: '', checking: false });
   const [isScanningFingerprint, setIsScanningFingerprint] = useState(false);
@@ -860,22 +866,26 @@ export default function ServicePage({
 
   const activeData = currentResult?.generatedData || currentResult?.vehicleData || null;
 
-  // Filtered orders for this specific tool
-  const toolOrders = orderHistory.filter(o => {
-    const matchesTool = o.serviceType === currentTool.serviceType || 
-      o.serviceType === currentTool.id ||
-      (toolKind === 'rc' && (o.serviceType === 'rcDownload' || o.vehicleNumber)) ||
-      (toolKind === 'pan' && (o.serviceType === 'panCard' || o.panNo)) ||
-      (toolKind === 'aadhaar' && (o.serviceType === 'aadhaarCard' || o.aadhaarNo));
-    if (!matchesTool) return false;
-    if (!historySearch) return true;
-    const s = historySearch.toLowerCase();
-    return (
-      (o.refNumber && o.refNumber.toLowerCase().includes(s)) ||
-      (o.docTitle && o.docTitle.toLowerCase().includes(s)) ||
-      (o.customerName && o.customerName.toLowerCase().includes(s))
-    );
-  });
+  // Filtered orders for this specific tool (safe against undefined or null)
+  const toolOrders = useMemo(() => {
+    if (!Array.isArray(orderHistory)) return [];
+    return orderHistory.filter(o => {
+      if (!o) return false;
+      const matchesTool = o.serviceType === currentTool?.serviceType || 
+        o.serviceType === currentTool?.id ||
+        (toolKind === 'rc' && (o.serviceType === 'rcDownload' || o.vehicleNumber)) ||
+        (toolKind === 'pan' && (o.serviceType === 'panCard' || o.panNo)) ||
+        (toolKind === 'aadhaar' && (o.serviceType === 'aadhaarCard' || o.aadhaarNo));
+      if (!matchesTool) return false;
+      if (!historySearch) return true;
+      const s = String(historySearch).toLowerCase();
+      return (
+        (o.refNumber && String(o.refNumber).toLowerCase().includes(s)) ||
+        (o.docTitle && String(o.docTitle).toLowerCase().includes(s)) ||
+        (o.customerName && String(o.customerName).toLowerCase().includes(s))
+      );
+    });
+  }, [orderHistory, currentTool, toolKind, historySearch]);
 
 
   // Screenshot-Exact Action Button Label Helper
@@ -3124,5 +3134,66 @@ export default function ServicePage({
 
       </div>
     </div>
+  );
+}
+
+/**
+ * 100% Fail-safe Error Boundary (Prevents ANY White Screen Crash)
+ */
+class ServiceErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('ServiceErrorBoundary caught:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-6 sm:p-12 max-w-xl mx-auto my-8 bg-white dark:bg-[#0c162c] border border-rose-300 dark:border-rose-900 rounded-3xl shadow-xl text-center space-y-4">
+          <div className="w-16 h-16 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 mx-auto flex items-center justify-center">
+            <AlertCircle className="w-8 h-8" />
+          </div>
+          <h3 className="text-lg font-black text-slate-900 dark:text-white">
+            सेवा लोड करने में समस्या आई
+          </h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            {this.state.error?.message || 'डैशबोर्ड पर वापस जाएं और पुनः प्रयास करें।'}
+          </p>
+          <div className="pt-2 flex items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                this.setState({ hasError: false, error: null });
+                if (this.props.onBack) this.props.onBack();
+              }}
+              className="bg-orange-600 hover:bg-orange-700 active:scale-95 text-white font-black text-xs px-5 py-2.5 rounded-xl shadow-md transition cursor-pointer"
+            >
+              ← डैशबोर्ड पर वापस जाएं
+            </button>
+            <button
+              type="button"
+              onClick={() => this.setState({ hasError: false, error: null })}
+              className="bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold text-xs px-4 py-2.5 rounded-xl transition cursor-pointer"
+            >
+              पुनः लोड करें
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+export default function ServicePage(props) {
+  return (
+    <ServiceErrorBoundary onBack={props.onBack}>
+      <ServicePageContent {...props} />
+    </ServiceErrorBoundary>
   );
 }

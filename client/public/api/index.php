@@ -1035,6 +1035,46 @@ if (preg_match('#^superadmin/cafes/([^/]+)/reset-pin$#', $endpoint, $m) && $meth
     exit;
 }
 
+// Route: DELETE /api/superadmin/cafes/:id
+if (preg_match('#^superadmin/cafes/([^/]+)$#', $endpoint, $m) && $method === 'DELETE') {
+    $cafeId = $m[1];
+    $found = false;
+    $cafePhone = '';
+    
+    if (isset($store['cafes']) && is_array($store['cafes'])) {
+        foreach ($store['cafes'] as $i => $c) {
+            if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId) {
+                $cafePhone = $c['phone'] ?? '';
+                array_splice($store['cafes'], $i, 1);
+                $found = true;
+                break;
+            }
+        }
+    }
+    
+    // Also remove associated cafe user account if exists
+    if ($cafePhone && isset($store['users']) && is_array($store['users'])) {
+        $store['users'] = array_values(array_filter($store['users'], function($u) use ($cafePhone) {
+            return ($u['phone'] ?? '') !== $cafePhone || ($u['role'] ?? '') !== 'cafe';
+        }));
+    }
+    
+    // Also delete from Relational SQL if PDO active
+    if (function_exists('getPdoConnection')) {
+        $pdo = getPdoConnection();
+        if ($pdo) {
+            try {
+                $delStmt = $pdo->prepare("DELETE FROM cafes WHERE id = :id OR code = :id");
+                $delStmt->execute([':id' => $cafeId]);
+            } catch (Exception $e) {}
+        }
+    }
+    
+    saveStore($dataFile, $store);
+    echo json_encode(['success' => true, 'message' => "कैफे सफलतापूर्वक डिलीट कर दिया गया है।"]);
+    exit;
+}
+
 // Route: /api/superadmin/users/:id/balance
 if (preg_match('#^superadmin/users/([^/]+)/balance$#', $endpoint, $m) && $method === 'POST') {
     $userId = $m[1];
@@ -4484,6 +4524,71 @@ if ($endpoint === 'orders' && $method === 'GET') {
     exit;
 }
 
+// ---------------------------------------------------------------------------
+// ROUTE: /api/pan-find/list (Dedicated PAN Find Request Register)
+// ---------------------------------------------------------------------------
+if (($endpoint === 'pan-find/list' || $endpoint === 'panfind/list' || $endpoint === 'pan-find') && $method === 'GET') {
+    $cafeId = $_GET['cafeId'] ?? '';
+    $phone = $_GET['phone'] ?? '';
+    
+    $allOrders = $store['orderHistory'] ?? [];
+    $panOrders = [];
+    
+    if (!empty($store['panFindRequests'])) {
+        foreach ($store['panFindRequests'] as $pfr) {
+            $panOrders[] = $pfr;
+        }
+    }
+    
+    foreach ($allOrders as $o) {
+        $st = strtolower((string)($o['serviceType'] ?? ''));
+        if (strpos($st, 'pan_find') !== false || strpos($st, 'find_pan') !== false || 
+            strpos($st, 'panfind') !== false || strpos($st, 'aadhaar_to_pan') !== false ||
+            strpos($st, 'uid_to_pan') !== false || strpos($st, 'pan_find_name') !== false) {
+            
+            $genData = $o['data'] ?? ($o['generatedData'] ?? []);
+            $foundPan = $genData['panNumber'] ?? ($genData['panNo'] ?? ($genData['pan'] ?? ''));
+            
+            $status = !empty($foundPan) ? 'completed' : ($o['status'] ?? 'pending');
+            $maskedAadhaar = $genData['maskedAadhaar'] ?? ($genData['aadhaar'] ?? ($o['refNumber'] ?? ''));
+            if (strlen((string)$maskedAadhaar) === 12 && ctype_digit((string)$maskedAadhaar)) {
+                $maskedAadhaar = 'XXXX-XXXX-' . substr((string)$maskedAadhaar, -4);
+            }
+            
+            $panOrders[] = [
+                'id' => $o['id'] ?? ($o['orderId'] ?? 'ORD-' . rand(1000, 9999)),
+                'orderId' => $o['orderId'] ?? ($o['id'] ?? ''),
+                'applicantName' => $genData['name'] ?? ($o['customerName'] ?? 'आवेदक'),
+                'customerPhone' => $o['customerPhone'] ?? '',
+                'searchMethod' => !empty($genData['mobile']) ? ('मोबाइल: ' . $genData['mobile']) : ('आधार: ' . $maskedAadhaar),
+                'searchParam' => $maskedAadhaar ?: (!empty($genData['mobile']) ? $genData['mobile'] : ($o['refNumber'] ?? '')),
+                'maskedAadhaar' => $maskedAadhaar,
+                'panNumber' => $foundPan,
+                'status' => $status,
+                'statusText' => !empty($foundPan) ? "खोजा गया: {$foundPan}" : 'प्रक्रियाधीन',
+                'cafeId' => $o['cafeId'] ?? '',
+                'cafeShopName' => $o['cafeShopName'] ?? '',
+                'createdAt' => $o['createdAt'] ?? date('c'),
+                'fee' => $o['retailFee'] ?? 50
+            ];
+        }
+    }
+    
+    if ($cafeId) {
+        $panOrders = array_values(array_filter($panOrders, fn($p) => ($p['cafeId'] ?? '') === $cafeId));
+    }
+    if ($phone) {
+        $panOrders = array_values(array_filter($panOrders, fn($p) => ($p['customerPhone'] ?? '') === $phone));
+    }
+    
+    echo json_encode([
+        'success' => true,
+        'count' => count($panOrders),
+        'requests' => $panOrders
+    ]);
+    exit;
+}
+
 if (preg_match('#^orders/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $orderId = $m[1];
     $found = null;
@@ -4531,6 +4636,119 @@ if (preg_match('#^rc/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
         exit;
     }
     echo json_encode(getVehicleDetails($regNo));
+    exit;
+}
+
+// ---------------------------------------------------------------------------
+// ROUTE: Complaints Desk (/api/complaints)
+// ---------------------------------------------------------------------------
+if ($endpoint === 'complaints' && $method === 'POST') {
+    $cafeId = $body['cafeId'] ?? '';
+    $customerPhone = trim((string)($body['customerPhone'] ?? ''));
+    $customerName = trim((string)($body['customerName'] ?? 'नागरिक'));
+    $category = $body['category'] ?? 'सामान्य सहायता';
+    $subject = trim((string)($body['subject'] ?? ''));
+    $description = trim((string)($body['description'] ?? ''));
+    $orderId = trim((string)($body['orderId'] ?? ''));
+
+    if (!$customerPhone || !$subject || !$description) {
+        http_response_code(400);
+        echo json_encode(['error' => 'मोबाइल नंबर, विषय और शिकायत विवरण आवश्यक हैं।']);
+        exit;
+    }
+
+    $cafe = null;
+    if (!empty($store['cafes'])) {
+        foreach ($store['cafes'] as $c) {
+            if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId) {
+                $cafe = $c;
+                break;
+            }
+        }
+    }
+
+    $complaintId = 'CMP-' . time() . '-' . rand(100, 999);
+    $newComplaint = [
+        'id' => $complaintId,
+        'cafeId' => $cafe['id'] ?? ($cafeId ?: 'SYSTEM_CENTRAL'),
+        'cafeShopName' => $cafe['shopName'] ?? 'केंद्रीय सहायता केंद्र (Smart Cafe Central)',
+        'customerPhone' => $customerPhone,
+        'customerName' => $customerName,
+        'category' => $category,
+        'subject' => $subject,
+        'description' => $description,
+        'orderId' => $orderId,
+        'status' => 'open',
+        'cafeReplies' => [],
+        'secretAuditNote' => '',
+        'createdAt' => date('c')
+    ];
+
+    if (!isset($store['complaints'])) $store['complaints'] = [];
+    array_unshift($store['complaints'], $newComplaint);
+    saveStore($dataFile, $store);
+
+    if (function_exists('sendTelegramAlert')) {
+        sendTelegramAlert("🚨 नई नागरिक शिकायत दर्ज!\nटोकन: {$complaintId}\nग्राहक: {$customerName} ({$customerPhone})\nविषय: {$subject}\nकैफे: {$newComplaint['cafeShopName']}");
+    }
+
+    echo json_encode(['success' => true, 'message' => 'आपकी शिकायत सफलतापूर्वक दर्ज कर ली गई है।', 'complaint' => $newComplaint]);
+    exit;
+}
+
+if (preg_match('#^complaints/customer/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
+    $phone = trim($m[1]);
+    $all = $store['complaints'] ?? [];
+    $filtered = array_values(array_filter($all, fn($c) => ($c['customerPhone'] ?? '') === $phone));
+    echo json_encode($filtered);
+    exit;
+}
+
+if (preg_match('#^cafes/([^/]+)/complaints$#', $endpoint, $m) && $method === 'GET') {
+    $cafeId = $m[1];
+    $all = $store['complaints'] ?? [];
+    $filtered = array_values(array_filter($all, fn($c) => ($c['cafeId'] ?? '') === $cafeId || $cafeId === 'ALL'));
+    echo json_encode($filtered);
+    exit;
+}
+
+if (preg_match('#^cafes/([^/]+)/complaints/([^/]+)/reply$#', $endpoint, $m) && $method === 'POST') {
+    $cafeId = $m[1];
+    $complaintId = $m[2];
+    $message = trim((string)($body['message'] ?? ''));
+    $status = $body['status'] ?? 'resolved';
+
+    if (!$message) {
+        http_response_code(400);
+        echo json_encode(['error' => 'उत्तर संदेश आवश्यक है।']);
+        exit;
+    }
+
+    $found = false;
+    if (!empty($store['complaints'])) {
+        foreach ($store['complaints'] as &$c) {
+            if ($c['id'] === $complaintId) {
+                if (!isset($c['cafeReplies'])) $c['cafeReplies'] = [];
+                $c['cafeReplies'][] = [
+                    'id' => 'REP-' . time(),
+                    'message' => $message,
+                    'repliedAt' => date('c')
+                ];
+                $c['status'] = $status;
+                $found = true;
+                break;
+            }
+        }
+    }
+
+    if (!$found) {
+        http_response_code(404);
+        echo json_encode(['error' => 'शिकायत टिकट नहीं मिला।']);
+        exit;
+    }
+
+    saveStore($dataFile, $store);
+    echo json_encode(['success' => true, 'message' => 'उत्तर सफलतापूर्वक दर्ज किया गया।']);
     exit;
 }
 

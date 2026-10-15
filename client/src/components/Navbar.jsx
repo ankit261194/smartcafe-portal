@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  Printer, Wallet, Crown, User, Menu, Sun, Moon
+  Printer, Wallet, Crown, User, Menu, Sun, Moon, LogOut
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -72,12 +72,16 @@ export default function Navbar({
             }}
             className="flex items-center gap-2 cursor-pointer select-none min-w-0"
           >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-white p-0.5 shadow-md shrink-0">
-              <div className="w-full h-full bg-[#064e3b] rounded-[14px] flex items-center justify-center">
-                <span className="font-black text-white text-xs sm:text-sm tracking-tight">
-                  SC
-                </span>
-              </div>
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-2xl bg-amber-400/20 p-0.5 shadow-md shrink-0 border border-amber-300/40 overflow-hidden">
+              <img 
+                src="/images/smartcafe_gold_round_badge.jpg" 
+                alt="Smart Cafe Official" 
+                className="w-full h-full object-cover rounded-[14px]"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = '/images/smartcafe_signature_vector.svg';
+                }}
+              />
             </div>
             <div className="min-w-0 truncate">
               <h1 className="font-black text-white text-xs sm:text-base leading-tight tracking-tight flex items-center gap-1 truncate">
@@ -276,6 +280,15 @@ export default function Navbar({
                 <Crown className="w-3 h-3" />
                 <span>{t('root_admin')}</span>
               </span>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="bg-red-600 hover:bg-red-700 text-white font-black px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-sm cursor-pointer active:scale-95 border border-red-500"
+                title="सुपर एडमिन लॉगआउट"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>लॉगआउट</span>
+              </button>
             </div>
           )}
 

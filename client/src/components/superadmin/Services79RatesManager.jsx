@@ -31,6 +31,7 @@ export default function Services79RatesManager({ onRatesUpdated }) {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
   const [unsavedCount, setUnsavedCount] = useState(0);
+  const [liveOnly, setLiveOnly] = useState(false);
 
   const fetchRates = async () => {
     setLoading(true);
@@ -146,7 +147,11 @@ export default function Services79RatesManager({ onRatesUpdated }) {
     }
   };
 
+  const liveServicesCount = services.filter(s => (s.status === 'active' || s.isLive === true) && !s.isComingSoon && s.status !== 'coming_soon').length;
+
   const filteredServices = services.filter(s => {
+    const isLive = (s.status === 'active' || s.isLive === true) && !s.isComingSoon && s.status !== 'coming_soon';
+    if (liveOnly && !isLive) return false;
     const matchesCategory = selectedCategory === 'all' || s.category === selectedCategory;
     const matchesSearch = !search.trim() || 
       s.name.toLowerCase().includes(search.toLowerCase()) || 
@@ -214,6 +219,33 @@ export default function Services79RatesManager({ onRatesUpdated }) {
             placeholder="सर्विस नाम या नंबर खोजें (उदा. 9, PAN, RC)..."
             className="w-full pl-9 pr-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0b1528] text-slate-900 dark:text-white rounded-xl focus:outline-hidden focus:border-emerald-500 font-bold"
           />
+        </div>
+
+        {/* Live vs All 79 Toggle Switch */}
+        <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl text-xs font-black shrink-0 border border-slate-200 dark:border-slate-700">
+          <button
+            type="button"
+            onClick={() => setLiveOnly(false)}
+            className={`px-3 py-1.5 rounded-xl transition cursor-pointer ${
+              !liveOnly 
+                ? 'bg-white dark:bg-[#0f1d36] text-slate-900 dark:text-white shadow-xs font-black' 
+                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            📋 सभी 79 सेवाएं ({services.length})
+          </button>
+          <button
+            type="button"
+            onClick={() => setLiveOnly(true)}
+            className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+              liveOnly 
+                ? 'bg-emerald-600 text-white shadow-xs font-black' 
+                : 'text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40'
+            }`}
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>🟢 केवल लाइव सेवाएं ({liveServicesCount})</span>
+          </button>
         </div>
 
         {/* Category Pills */}

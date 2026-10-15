@@ -1,38 +1,5 @@
 [
   {
-    "id": "USR-1791996751776",
-    "name": "Shyam",
-    "shopName": "Shyam",
-    "phone": "9811122233",
-    "password": "password123",
-    "role": "citizen",
-    "balance": 0,
-    "isBlocked": false,
-    "createdAt": "2026-10-14T16:52:31.777Z"
-  },
-  {
-    "id": "USR-1791980693071",
-    "name": "रमेश कुमार डिजिटल केंद्र",
-    "shopName": "रमेश कुमार डिजिटल केंद्र",
-    "phone": "9800077023",
-    "password": "Pass@6594",
-    "role": "cafe",
-    "balance": 0,
-    "isBlocked": false,
-    "createdAt": "2026-10-14T12:24:53.071Z"
-  },
-  {
-    "id": "USR-1791980675131",
-    "name": "रमेश कुमार डिजिटल केंद्र",
-    "shopName": "रमेश कुमार डिजिटल केंद्र",
-    "phone": "9800016569",
-    "password": "Pass@7449",
-    "role": "cafe",
-    "balance": 0,
-    "isBlocked": false,
-    "createdAt": "2026-10-14T12:24:35.131Z"
-  },
-  {
     "id": "USR-8006518960",
     "name": "ankit kumar",
     "shopName": "स्मार्ट डिजिटल सेवा केंद्र",
@@ -42,27 +9,5 @@
     "balance": 0,
     "isBlocked": false,
     "createdAt": "2026-10-15T00:00:00.000Z"
-  },
-  {
-    "id": "CAFE-999",
-    "name": "परीक्षण संचालक",
-    "shopName": "परीक्षण जन सेवा केंद्र",
-    "phone": "9999988888",
-    "password": "1234",
-    "role": "cafe",
-    "balance": 0,
-    "isBlocked": false,
-    "createdAt": "2026-10-15T07:55:27.835Z"
-  },
-  {
-    "id": "CAFE-TEST",
-    "name": "संचालक",
-    "shopName": "डिजिटल सेवा केंद्र",
-    "phone": "9876543210",
-    "password": "1234",
-    "role": "cafe",
-    "balance": 5000,
-    "isBlocked": false,
-    "createdAt": "2026-10-15T10:41:47.251Z"
   }
 ]

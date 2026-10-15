@@ -1620,6 +1620,32 @@ app.post('/api/superadmin/cafes/:id/reset-pin', (req, res) => {
   res.json({ success: true, message: `कैफे ${cafe.shopName} का सुरक्षा पिन सफलतापूर्वक रीसेट किया गया।`, newPin: plainNewPin });
 });
 
+// Super Admin Delete Cafe
+app.delete('/api/superadmin/cafes/:id', (req, res) => {
+  const store = getStore();
+  const cIndex = (store.cafes || []).findIndex(c => c.id === req.params.id || c.code === req.params.id);
+  if (cIndex === -1) return res.status(404).json({ error: 'कैफे नहीं मिला।' });
+
+  const deletedCafe = store.cafes.splice(cIndex, 1)[0];
+  // Also remove associated cafe user
+  if (deletedCafe && deletedCafe.phone) {
+    store.users = (store.users || []).filter(u => u.phone !== deletedCafe.phone || u.role !== 'cafe');
+  }
+
+  // Audit log
+  if (!store.superAdminAuditLogs) store.superAdminAuditLogs = [];
+  store.superAdminAuditLogs.unshift({
+    id: `AUDIT-${Date.now()}`,
+    action: 'CAFE_DELETED',
+    details: `कैफे ${deletedCafe.shopName || deletedCafe.id} (${deletedCafe.phone || ''}) को सुपर एडमिन द्वारा डिलीट किया गया।`,
+    performedBy: 'Super Admin Master',
+    timestamp: new Date().toISOString()
+  });
+
+  saveStore(store);
+  res.json({ success: true, message: `कैफे ${deletedCafe.shopName || deletedCafe.id} सफलतापूर्वक डिलीट कर दिया गया है।` });
+});
+
 // Live System Health & Storage Monitor API
 app.get('/api/superadmin/system-health', (req, res) => {
   const store = getStore();
@@ -4282,6 +4308,58 @@ app.get('/api/orders/:id', (req, res) => {
   res.json(order);
 });
 
+// Dedicated PAN Find Request Register Endpoint
+app.get(['/api/pan-find/list', '/api/panfind/list', '/api/pan-find'], (req, res) => {
+  const store = getStore();
+  const { cafeId, phone } = req.query;
+  const allOrders = store.orderHistory || [];
+  let panOrders = [];
+
+  if (Array.isArray(store.panFindRequests)) {
+    panOrders.push(...store.panFindRequests);
+  }
+
+  for (const o of allOrders) {
+    const st = String(o.serviceType || '').toLowerCase();
+    if (st.includes('pan_find') || st.includes('find_pan') || st.includes('panfind') ||
+        st.includes('aadhaar_to_pan') || st.includes('uid_to_pan') || st.includes('pan_find_name')) {
+      const genData = o.data || o.generatedData || {};
+      const foundPan = genData.panNumber || genData.panNo || genData.pan || '';
+      const status = foundPan ? 'completed' : (o.status || 'pending');
+      let maskedAadhaar = String(genData.maskedAadhaar || genData.aadhaar || o.refNumber || '');
+      if (maskedAadhaar.length === 12 && /^\d+$/.test(maskedAadhaar)) {
+        maskedAadhaar = 'XXXX-XXXX-' + maskedAadhaar.slice(-4);
+      }
+
+      panOrders.push({
+        id: o.id || o.orderId || ('ORD-' + Math.floor(1000 + Math.random() * 9000)),
+        orderId: o.orderId || o.id || '',
+        applicantName: genData.name || o.customerName || 'आवेदक',
+        customerPhone: o.customerPhone || '',
+        searchMethod: genData.mobile ? ('मोबाइल: ' + genData.mobile) : ('आधार: ' + maskedAadhaar),
+        searchParam: maskedAadhaar || genData.mobile || o.refNumber || '',
+        maskedAadhaar: maskedAadhaar,
+        panNumber: foundPan,
+        status: status,
+        statusText: foundPan ? `खोजा गया: ${foundPan}` : 'प्रक्रियाधीन',
+        cafeId: o.cafeId || '',
+        cafeShopName: o.cafeShopName || '',
+        createdAt: o.createdAt || new Date().toISOString(),
+        fee: o.retailFee || 50
+      });
+    }
+  }
+
+  if (cafeId) panOrders = panOrders.filter(p => p.cafeId === cafeId);
+  if (phone) panOrders = panOrders.filter(p => p.customerPhone === phone);
+
+  res.json({
+    success: true,
+    count: panOrders.length,
+    requests: panOrders
+  });
+});
+
 // Instant Tool Lookups
 app.get('/api/pan/lookup/:panNo', (req, res) => {
   const store = getStore();
@@ -4392,9 +4470,9 @@ app.get('/api/receipt/lookup/:input', (req, res) => {
 // ============================================================================
 // 100% AUTOMATED BANK / UPI NOTIFICATION WEBHOOK (Zero-Bypass Auto Approval)
 // ============================================================================
-app.post('/api/webhook/bank-notification', (req, res) => {
+app.post(['/api/webhook/bank-notification', '/api/webhook/upi-payment'], (req, res) => {
   const store = getStore();
-  const { notification, title, app: appName, secret } = req.body;
+  const { notification, title, app: appName, secret, utr: directUtr, amount: directAmount } = req.body;
 
   // Security Verification
   const EXPECTED_SECRET = 'SMARTCAFE_AUTO_2026';

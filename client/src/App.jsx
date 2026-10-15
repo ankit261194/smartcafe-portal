@@ -20,6 +20,7 @@ import CustomerWalletModal from './components/CustomerWalletModal';
 import CafeSelectorModal from './components/CafeSelectorModal';
 import VehicleRCDownload from './components/VehicleRCDownload';
 import CustomerComplaintsModal from './components/CustomerComplaintsModal';
+import CustomerComplaintsDesk from './components/CustomerComplaintsDesk';
 import AdminComplaints from './components/AdminComplaints';
 import AdminB2BWalletModal from './components/AdminB2BWalletModal';
 import AdminUtrApprovalModal from './components/AdminUtrApprovalModal';
@@ -36,6 +37,7 @@ import InstantToolsEngine from './components/InstantToolsEngine';
 import ServicePage from './components/ServicePage';
 import CategoryPage from './components/CategoryPage';
 import RekhaOrders from './components/RekhaOrders';
+import PanFindList from './components/PanFindList';
 import IndianFlagBackdrop from './components/IndianFlagBackdrop';
 import ScrollToTopWidget from './components/ScrollToTopWidget';
 import { authFetch, getServerBaseUrl, setServerBaseUrl } from './utils/api';
@@ -308,7 +310,8 @@ export default function App() {
         pdf: { hi: '📑 PDF मर्जर व टूल्स (PDF Tools)', en: '📑 PDF Merger & Tools' },
         edistrict: { hi: '📜 ई-डिस्ट्रिक्ट टूल्स सुइट (e-District Suite)', en: '📜 e-District Tools Suite' },
         printportal: { hi: '🪪 CR-80 PVC स्मार्ट कार्ड मेकर (PVC Card Portal)', en: '🪪 CR-80 PVC Smart Card Maker' },
-        rc: { hi: '🚗 वाहन RC टू PDF / PVC (Vehicle RC Tool)', en: '🚗 Vehicle RC Download & PVC' }
+        rc: { hi: '🚗 वाहन RC टू PDF / PVC (Vehicle RC Tool)', en: '🚗 Vehicle RC Download & PVC' },
+        'panfind-list': { hi: '🔍 पैन फाइंड लिस्ट व ट्रैकर (PAN Find List)', en: '🔍 PAN Find List & Tracker' }
       };
       return adminTitles[adminTab]?.[language] || adminTab;
     }
@@ -323,14 +326,15 @@ export default function App() {
       edistrict: { hi: '📜 ई-डिस्ट्रिक्ट टूल्स सुइट (e-District Suite)', en: '📜 e-District Suite' },
       printportal: { hi: '🪪 CR-80 PVC स्मार्ट कार्ड मेकर (PVC Card Portal)', en: '🪪 CR-80 PVC Smart Card Maker' },
       rc: { hi: '🚗 वाहन RC टू PDF / PVC (Vehicle RC Tool)', en: '🚗 Vehicle RC Download & PVC' },
-      portalhome: { hi: '🏠 नागरिक सेवा केंद्र पोर्टल (Citizen Portal Home)', en: '🏠 Citizen Portal Home' }
+      portalhome: { hi: '🏠 नागरिक सेवा केंद्र पोर्टल (Citizen Portal Home)', en: '🏠 Citizen Portal Home' },
+      'panfind-list': { hi: '🔍 पैन फाइंड लिस्ट व ट्रैकर (PAN Find List)', en: '🔍 PAN Find List & Tracker' }
     };
     return customerTitles[customerTab]?.[language] || customerTab;
   };
 
   const hasCustomHeader = 
-    (customerTab === 'tool' || customerTab.startsWith('tool-') || customerTab === 'category' || customerTab === 'orders') ||
-    (adminTab === 'tool' || adminTab.startsWith('tool-') || adminTab === 'category' || adminTab === 'orders');
+    (customerTab === 'tool' || customerTab.startsWith('tool-') || customerTab === 'category' || customerTab === 'orders' || customerTab === 'panfind-list') ||
+    (adminTab === 'tool' || adminTab.startsWith('tool-') || adminTab === 'category' || adminTab === 'orders' || adminTab === 'panfind-list');
 
   const isSubPage = 
     !hasCustomHeader && (
@@ -658,10 +662,12 @@ export default function App() {
           activeTab={
             mode === 'customer' 
               ? (customerTab === 'orders' ? 'orders' :
+                 customerTab === 'panfind-list' ? 'panfind-list' :
                  customerTab === 'complaints' ? 'complaint' :
                  customerTab === 'home' || customerTab === 'dashboard' ? 'dashboard' :
                  customerTab)
               : (adminTab === 'orders' || adminTab === 'prints' ? 'orders' :
+                 adminTab === 'panfind-list' ? 'panfind-list' :
                  adminTab === 'complaints' ? 'complaint' :
                  adminTab === 'dashboard' ? 'dashboard' :
                  adminTab)
@@ -675,7 +681,8 @@ export default function App() {
               if (mode === 'customer') setCustomerTab('orders');
               else setAdminTab('orders');
             } else if (tabId === 'panfind-list') {
-              handleLaunchService('pan_find');
+              if (mode === 'customer') setCustomerTab('panfind-list');
+              else setAdminTab('panfind-list');
             } else if (tabId === 'wallet') {
               if (mode === 'admin') setIsB2bWalletOpen(true);
               else setIsWalletOpen(true);
@@ -1061,6 +1068,19 @@ export default function App() {
               />
             )}
 
+            {customerTab === 'panfind-list' && (
+              <PanFindList
+                onBack={() => setCustomerTab('home')}
+                onLaunchPanFind={() => handleLaunchService('pan_find')}
+                onGeneratePvcCard={(panNumber, applicantName) => {
+                  setPreloadedPvcCard({ panNumber, name: applicantName, type: 'pan' });
+                  handleLaunchService('pan_find');
+                }}
+                selectedCafe={selectedCafe}
+                customerSession={customerSession}
+              />
+            )}
+
             {customerTab === 'print' && (
               <QuickPrint
                 settings={settings}
@@ -1081,6 +1101,14 @@ export default function App() {
 
             {customerTab === 'printportal' && (
               <PrintPortalCards preloadedCard={preloadedPvcCard} />
+            )}
+
+            {customerTab === 'complaints' && (
+              <CustomerComplaintsDesk
+                onBack={() => setCustomerTab('home')}
+                selectedCafe={selectedCafe}
+                customerSession={customerSession}
+              />
             )}
 
 
@@ -1197,6 +1225,19 @@ export default function App() {
                 />
               )}
 
+              {adminTab === 'panfind-list' && (
+                <PanFindList
+                  onBack={() => setAdminTab('dashboard')}
+                  onLaunchPanFind={() => handleLaunchService('pan_find')}
+                  onGeneratePvcCard={(panNumber, applicantName) => {
+                    setPreloadedPvcCard({ panNumber, name: applicantName, type: 'pan' });
+                    handleLaunchService('pan_find');
+                  }}
+                  selectedCafe={selectedCafe}
+                  customerSession={customerSession}
+                />
+              )}
+
               {adminTab === 'prints' && (
                 <AdminPrintQueue
                   selectedCafe={selectedCafe}
@@ -1247,7 +1288,10 @@ export default function App() {
               )}
 
               {!isStaffAuth && adminTab === 'complaints' && (
-                <AdminComplaints selectedCafe={selectedCafe} />
+                <AdminComplaints 
+                  selectedCafe={selectedCafe} 
+                  onBack={() => setAdminTab('dashboard')} 
+                />
               )}
 
               {adminTab === 'resizer' && (
@@ -1298,6 +1342,7 @@ export default function App() {
               onToolStatusUpdated={fetchToolSettings} 
               onRatesUpdated={fetchServices79Rates}
               onBackToPortal={() => navigateToTier('customer')}
+              onLogout={handleLogout}
             />
           )
         )}

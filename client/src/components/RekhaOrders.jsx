@@ -183,7 +183,7 @@ export default function RekhaOrders({ onSelectTool, onBack }) {
         ) : filteredOrders.length === 0 ? (
           <div className="p-12 text-center text-slate-400 text-xs space-y-2">
             <Clock className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600" />
-            <p>{language === 'hi' ? 'कोई ऑर्डर नहीं मिला।' : 'No orders found.'}</p>
+            <p>{language === 'hi' ? 'वर्तमान में कोई रिकॉर्ड नहीं है।' : 'Currently no records found.'}</p>
           </div>
         ) : (
           <div className="overflow-x-auto">

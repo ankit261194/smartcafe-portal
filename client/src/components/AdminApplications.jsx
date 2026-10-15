@@ -338,8 +338,19 @@ export default function AdminApplications({ onUpdateCounts, onNavigateToPrintPor
       </div>
 
       {/* Applications Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filtered.map((app) => {
+      {filtered.length === 0 ? (
+        <div className="bg-white rounded-2xl p-12 text-center border border-slate-200">
+          <FileText className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+          <h4 className="font-bold text-slate-800 text-base">
+            वर्तमान में कोई रिकॉर्ड नहीं है।
+          </h4>
+          <p className="text-xs text-slate-500 mt-1">
+            जैसे ही कोई ग्राहक ऑनलाइन फॉर्म या आवेदन भेजेगा, वह यहाँ दिखाई देगा।
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((app) => {
           const isCashHold = app.paymentStatus === 'hold_cash';
           const isOnlineHold = app.paymentStatus === 'hold_online';
           const isPaid = app.paymentStatus === 'paid' || app.paymentStatus === 'paid_upi' || app.paymentStatus === 'paid_cash';
@@ -447,7 +458,8 @@ export default function AdminApplications({ onUpdateCounts, onNavigateToPrintPor
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
 
       {/* Detail / Action Modal with Live OTP & Auto-Filler Bot */}
       {selectedApp && (

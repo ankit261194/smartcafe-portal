@@ -76,19 +76,14 @@ export default function RekhaDashboard({
       {/* =================================================================== */}
       <div className="bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 shadow-xs flex items-center justify-between gap-3 backdrop-blur-md">
         
-        {/* Left: Category Title & Counter */}
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 flex items-center justify-center shrink-0">
-            <Layers className="w-4 h-4" />
+        {/* Left: Clean Service Navigator */}
+        <div className="flex items-center gap-2 min-w-0">
+          <div className="w-7 h-7 rounded-lg bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <Layers className="w-3.5 h-3.5" />
           </div>
-          <div className="min-w-0">
-            <h2 className="text-sm sm:text-base font-black text-slate-900 dark:text-white leading-tight truncate">
-              {language === 'hi' ? '🏛️ सेवा श्रेणियां (Service Categories)' : '🏛️ Service Categories'}
-            </h2>
-            <span className="text-[11px] text-slate-500 dark:text-slate-400 font-semibold truncate block">
-              {fullCatalog.length} {language === 'hi' ? 'सरकारी व डिजिटल सेवाएं उपलब्ध' : 'Official services ready'}
-            </span>
-          </div>
+          <span className="text-xs sm:text-sm font-black text-slate-800 dark:text-slate-200 truncate">
+            {language === 'hi' ? 'डिजिटल सेवा पोर्टल' : 'Digital Services Portal'}
+          </span>
         </div>
 
         {/* Right: Quick Reprint History & Wallet Controls */}

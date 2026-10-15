@@ -5,7 +5,7 @@ import {
   MapPin, ExternalLink, AlertCircle, ArrowUpRight, Award, Sparkles,
   Lock, Unlock, Eye, EyeOff, Save, Check, X, FileText, QrCode,
   Megaphone, Trash2, Radio, Activity, HardDrive, Cpu, Server, KeyRound,
-  Power, Car, CreditCard, Zap, Download, ArrowLeft,
+  Power, Car, CreditCard, Zap, Download, ArrowLeft, LogOut,
   AlertTriangle, Database
 } from 'lucide-react';
 import { authFetch, getServerBaseUrl } from '../utils/api';
@@ -28,7 +28,7 @@ export const MASTER_12_APIS = [
 ];
 export const MASTER_14_APIS = MASTER_12_APIS;
 
-export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated = () => {}, onBackToPortal = () => {} }) {
+export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated = () => {}, onBackToPortal = () => {}, onLogout = () => {} }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -703,6 +703,26 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
     }
   };
 
+  const handleDeleteCafe = async (cafe) => {
+    const cName = cafe.shopName || cafe.id;
+    if (!window.confirm(`⚠️ क्या आप वाकई "${cName}" (${cafe.phone || cafe.id}) को हमेशा के लिए डिलीट करना चाहते हैं?\n\nयह क्रिया वापस नहीं ली जा सकती!`)) {
+      return;
+    }
+    try {
+      const res = await authFetch(`/api/superadmin/cafes/${cafe.id}`, { method: 'DELETE' });
+      if (res.ok) {
+        alert(`✅ कैफे "${cName}" सफलतापूर्वक डिलीट कर दिया गया है।`);
+        fetchStats();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        alert(`❌ एरर: ${err.error || 'कैफे डिलीट नहीं हो सका।'}`);
+      }
+    } catch (err) {
+      console.error('Delete cafe error:', err);
+      alert('सर्वर से संपर्क नहीं हो सका।');
+    }
+  };
+
   const handleCreateCafe = async (e) => {
     e.preventDefault();
     if (!newShopName || !newOwnerName || !newPhone) {
@@ -776,17 +796,30 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
       {/* Top Banner */}
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl border border-indigo-500/20">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <div className="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-bold text-indigo-300 mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
-              सुपर एडमिन SaaS केंद्रीय कंट्रोल रूम
+          <div className="flex items-start gap-4">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-400/20 p-1 shadow-lg shrink-0 border border-amber-400/40 overflow-hidden hidden sm:block">
+              <img 
+                src="/images/smartcafe_gold_round_badge.jpg" 
+                alt="Smart Cafe Official" 
+                className="w-full h-full object-cover rounded-[12px]"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = '/images/smartcafe_signature_vector.svg';
+                }}
+              />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-              स्मार्ट कैफे नेटवर्क — ₹299 SaaS, गुप्त ऑडिट व थोक रेट इंजन
-            </h1>
-            <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
-              पूरे राज्य/देश के साइबर कैफे, जन सेवा केंद्र और सीएससी का केंद्रीय डैशबोर्ड। थोक रेट तय करें, B2B UTR अप्रूव करें, KYC जारी करें और गुप्त निगरानी से गुणवत्ता बनाए रखें।
-            </p>
+            <div>
+              <div className="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-500/30 px-3 py-1 rounded-full text-xs font-bold text-indigo-300 mb-3">
+                <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+                सुपर एडमिन SaaS केंद्रीय कंट्रोल रूम
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
+                स्मार्ट कैफे नेटवर्क — ₹299 SaaS, गुप्त ऑडिट व थोक रेट इंजन
+              </h1>
+              <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-2xl leading-relaxed">
+                पूरे राज्य/देश के साइबर कैफे, जन सेवा केंद्र और सीएससी का केंद्रीय डैशबोर्ड। थोक रेट तय करें, B2B UTR अप्रूव करें, KYC जारी करें और गुप्त निगरानी से गुणवत्ता बनाए रखें।
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
@@ -799,6 +832,18 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
               >
                 <ArrowLeft className="w-4 h-4 text-orange-400" />
                 <span>← मुख्य पोर्टल पर वापस जाएं</span>
+              </button>
+            )}
+
+            {onLogout && (
+              <button
+                type="button"
+                onClick={onLogout}
+                className="bg-rose-600 hover:bg-rose-700 text-white font-bold px-4 py-2.5 rounded-2xl text-xs sm:text-sm flex items-center gap-2 transition shadow-lg shadow-rose-600/30 cursor-pointer active:scale-95"
+                title="सुपर एडमिन कंट्रोल रूम से लॉगआउट करें"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>🚪 सुपर एडमिन लॉगआउट</span>
               </button>
             )}
 
@@ -1000,21 +1045,6 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
         </button>
 
         <button
-          onClick={() => setActiveTab('api_hub')}
-          className={`px-4 py-2.5 rounded-xl transition flex items-center gap-2 ${
-            activeTab === 'api_hub' 
-              ? 'bg-gradient-to-r from-orange-600 via-amber-600 to-emerald-700 text-white shadow-md' 
-              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
-          }`}
-        >
-          <Server className="w-4 h-4 text-orange-300" />
-          <span>API हब (12 APIs & स्विच)</span>
-          <span className="bg-white/20 text-white px-1.5 py-0.2 rounded-full text-[10px] font-black">
-            12
-          </span>
-        </button>
-
-        <button
           onClick={() => setActiveTab('api_gateway')}
           className={`px-4 py-2.5 rounded-xl transition flex items-center gap-2 ${
             activeTab === 'api_gateway' 
@@ -1114,207 +1144,13 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
       </div>
 
       {/* TAB: 79 SERVICES DYNAMIC RATE & MULTI-TIER MARGIN ENGINE */}
-      {activeTab === 'services_79' && (
+      {(activeTab === 'rates' || activeTab === 'services_79') && (
         <Services79RatesManager onRatesUpdated={fetchStats} />
       )}
 
       {/* TAB: USERS & PASSWORDS DIRECTORY CONTROL ROOM */}
       {activeTab === 'users' && (
         <UsersDirectoryManager />
-      )}
-
-      {/* TAB: 14 CONNECTED APIS HUB & 1-CLICK MASTER TOGGLE SWITCHES */}
-      {activeTab === 'api_hub' && (
-        <div className="space-y-6">
-          {/* Patriotic Banner & Info */}
-          <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-slate-950 via-[#0a1532] to-slate-950 text-white p-6 sm:p-8 shadow-xl border border-slate-800">
-            {/* Indian Flag Tricolor Accent Bar */}
-            <div className="absolute top-0 left-0 right-0 h-1.5 flex z-20">
-              <div className="flex-1 bg-gradient-to-r from-[#f97316] to-[#ff9933]"></div>
-              <div className="flex-1 bg-white"></div>
-              <div className="flex-1 bg-gradient-to-r from-[#16a34a] to-[#138808]"></div>
-            </div>
-
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-2">
-              <div>
-                <div className="inline-flex items-center gap-2 bg-orange-500/20 border border-orange-500/30 px-3 py-1 rounded-full text-xs font-bold text-orange-300 mb-3">
-                  <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
-                  राष्ट्रीय ई-गवर्नेंस एवं यूटिलिटी गेटवे कंट्रोल
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-3">
-                  <Server className="w-7 h-7 text-orange-400" />
-                  <span>केंद्रीय 12 इंस्टेंट API हब व मास्टर 1-क्लिक ऑन/ऑफ स्विच</span>
-                </h2>
-                <p className="text-slate-300 text-xs sm:text-sm mt-2 max-w-3xl leading-relaxed">
-                  सभी 12 प्रामाणिक बैकएंड APIs की लाइव कनेक्टिविटी, स्टेटस, लेटेंसी व थोक मूल्य। किसी भी API का मास्टर स्विच बंद (OFF) करने पर वह सेवा ग्राहक व VLE डैशबोर्ड और साइडबार से तुरंत गायब हो जाती है तथा बैकएंड एंडपॉइंट्स पर HTTP 403 Forbidden से ब्लॉक हो जाती है।
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3 self-start md:self-auto shrink-0">
-                <button
-                  onClick={fetchStats}
-                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-4 py-2.5 rounded-2xl text-xs flex items-center gap-2 transition border border-slate-700 cursor-pointer"
-                >
-                  <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-                  <span>API स्थिति रिफ्रेश</span>
-                </button>
-              </div>
-            </div>
-
-            {/* KPI Summary Cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-6">
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-                <span className="text-xs text-slate-300 font-semibold block">कुल कनेक्टेड APIs</span>
-                <span className="text-2xl font-black mt-2 text-white block">
-                  {MASTER_12_APIS.length} <span className="text-xs font-normal text-slate-300">सरकारी / यूटिलिटी</span>
-                </span>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-                <span className="text-xs text-slate-300 font-semibold block">सक्रिय सेवाएं (Online / Visible)</span>
-                <span className="text-2xl font-black mt-2 text-emerald-400 block">
-                  {MASTER_12_APIS.filter(api => !((stats?.disabledTools || []).includes(api.id) || (stats?.disabledTools || []).includes(api.serviceType) || (stats?.toolStatus && (stats.toolStatus[api.id] === false || stats.toolStatus[api.serviceType] === false)))).length} / {MASTER_12_APIS.length}
-                </span>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-                <span className="text-xs text-slate-300 font-semibold block">अक्षम / ब्लॉक (Disabled)</span>
-                <span className="text-2xl font-black mt-2 text-rose-400 block">
-                  {MASTER_12_APIS.filter(api => ((stats?.disabledTools || []).includes(api.id) || (stats?.disabledTools || []).includes(api.serviceType) || (stats?.toolStatus && (stats.toolStatus[api.id] === false || stats.toolStatus[api.serviceType] === false)))).length} बंद
-                </span>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
-                <span className="text-xs text-slate-300 font-semibold block">औसत प्रतिक्रिया लेटेंसी</span>
-                <span className="text-2xl font-black mt-2 text-amber-300 block">
-                  ~195ms <span className="text-xs font-normal text-slate-300">सब-सेकंड</span>
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Notice */}
-          <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/60 rounded-2xl p-4 text-xs text-amber-900 dark:text-amber-200 flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-            <div className="leading-relaxed">
-              <strong>1-क्लिक मास्टर सुरक्षा स्विच निर्देश:</strong> किसी भी सरकारी पोर्टल (जैसे Sarathi MoRTH या NSDL) का सर्वर मेंटेनेंस डाउनटाइम होने पर, आप यहाँ से उस टूल को 1-क्लिक में अक्षम (OFF) कर सकते हैं। इससे VLE/नागरिकों को कोई असुविधा या बैलेंस कटौती नहीं होगी। काम पूरा होने पर पुनः चालू (ON) कर दें।
-            </div>
-          </div>
-
-          {/* 14 Connected APIs Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {MASTER_14_APIS.map((api, idx) => {
-              const isBlocked = (stats?.disabledTools || []).includes(api.id) || 
-                                (stats?.disabledTools || []).includes(api.serviceType) || 
-                                (stats?.toolStatus && (stats.toolStatus[api.id] === false || stats.toolStatus[api.serviceType] === false));
-              const isEnabled = !isBlocked;
-              const isToggling = togglingTool[api.id] || togglingTool[api.serviceType];
-
-              return (
-                <div
-                  key={api.id}
-                  className={`rounded-2xl p-5 border transition-all shadow-sm ${
-                    isEnabled 
-                      ? 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800' 
-                      : 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50'
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shadow-sm ${
-                        isEnabled ? 'bg-gradient-to-br from-indigo-600 to-indigo-800' : 'bg-slate-500'
-                      }`}>
-                        {idx + 1}
-                      </div>
-                      <div>
-                        <h4 className="font-black text-sm text-slate-900 dark:text-white flex items-center gap-2">
-                          <span>{api.name}</span>
-                          <span className="font-mono text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2 py-0.5 rounded-md">
-                            {api.id}
-                          </span>
-                        </h4>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                          {api.apiName}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Status Badge */}
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-black shrink-0 ${
-                      isEnabled 
-                        ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800' 
-                        : 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-800'
-                    }`}>
-                      {isEnabled ? '🟢 200 OK • सक्रिय' : '🔴 403 BLOCKED • बंद'}
-                    </span>
-                  </div>
-
-                  {/* API Spec Metadata */}
-                  <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80 text-[11px]">
-                    <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
-                      <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-bold">लाइव एंडपॉइंट</span>
-                      <code className="text-indigo-600 dark:text-indigo-400 font-mono font-bold text-[10px] break-all">
-                        {api.endpoint}
-                      </code>
-                    </div>
-
-                    <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
-                      <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-bold">थोक / खुदरा मूल्य</span>
-                      <span className="text-slate-800 dark:text-slate-200 font-black">
-                        थोक: ₹{api.defaultWholesale} | खुदरा: ₹{api.defaultRetail}
-                      </span>
-                    </div>
-
-                    <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
-                      <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-bold">लेटेंसी</span>
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold font-mono">
-                        ⚡ {api.latency}
-                      </span>
-                    </div>
-
-                    <div className="bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
-                      <span className="text-slate-400 dark:text-slate-500 block text-[10px] font-bold">दृश्यता स्थिति</span>
-                      <span className={isEnabled ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-rose-600 dark:text-rose-400 font-bold'}>
-                        {isEnabled ? 'पोर्टल व साइडबार में दृश्यमान' : 'पोर्टल से अदृश्य व गुप्त'}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* 1-Click Master Toggle Button */}
-                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80">
-                    <button
-                      type="button"
-                      disabled={isToggling}
-                      onClick={() => handleToggleTool(api, isEnabled)}
-                      className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-xs ${
-                        isEnabled
-                          ? 'bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white shadow-emerald-600/20'
-                          : 'bg-rose-600 hover:bg-rose-700 active:scale-[0.98] text-white shadow-rose-600/20'
-                      }`}
-                    >
-                      {isToggling ? (
-                        <>
-                          <RefreshCw className="w-4 h-4 animate-spin" />
-                          <span>स्विच अपडेट हो रहा है...</span>
-                        </>
-                      ) : isEnabled ? (
-                        <>
-                          <Check className="w-4 h-4" />
-                          <span>चालू है (Visible) — बंद करने के लिए 1-क्लिक करें (Hide / Block)</span>
-                        </>
-                      ) : (
-                        <>
-                          <Power className="w-4 h-4" />
-                          <span>बंद है (Hidden & Blocked) — पुनः चालू करने के लिए 1-क्लिक करें</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
       )}
 
       {/* TAB: API GATEWAY SETTINGS (READY FOR FUTURE LIVE APIS - REQUIREMENT 7) */}
@@ -1782,221 +1618,143 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {filteredCafes.map((cafe) => {
-              const daysLeft = Math.ceil(
-                (new Date(cafe.subscription?.validTill).getTime() - Date.now()) / (1000 * 3600 * 24)
-              );
-              const isExpired = daysLeft <= 0;
-              const isFrozen = !!cafe.isFrozen;
-              const b2bBal = cafe.b2bWallet?.balance || 0;
+          {filteredCafes.length === 0 ? (
+            <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-12 text-center border border-slate-200 dark:border-slate-800 my-4">
+              <div className="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 mb-4">
+                <Building2 className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-bold text-slate-800 dark:text-slate-200">
+                वर्तमान में कोई कैफे पंजीकृत नहीं है।
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
+                नए साइबर कैफ़े संचालक ₹299 वार्षिक VLE KYC प्लान के तहत पंजीकरण करके इस नेटवर्क से जुड़ सकते हैं।
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredCafes.map((cafe) => {
+                const daysLeft = Math.ceil(
+                  (new Date(cafe.subscription?.validTill).getTime() - Date.now()) / (1000 * 3600 * 24)
+                );
+                const isExpired = daysLeft <= 0;
+                const isFrozen = !!cafe.isFrozen;
+                const b2bBal = cafe.b2bWallet?.balance || 0;
 
-              return (
-                <div 
-                  key={cafe.id} 
-                  className={`bg-white dark:bg-[#0f1d36] rounded-3xl p-5 border transition flex flex-col justify-between ${
-                    isFrozen 
-                      ? 'border-2 border-red-500 bg-red-50/20 dark:bg-red-950/20' 
-                      : 'border-slate-200 dark:border-slate-800 hover:shadow-md'
-                  }`}
-                >
-                  <div>
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-2xl bg-orange-50 dark:bg-orange-950/50 border border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400 flex items-center justify-center font-black text-sm">
-                          {cafe.code}
+                return (
+                  <div 
+                    key={cafe.id} 
+                    className={`bg-white dark:bg-[#0f1d36] rounded-3xl p-5 border transition flex flex-col justify-between ${
+                      isFrozen 
+                        ? 'border-2 border-red-500 bg-red-50/20 dark:bg-red-950/20' 
+                        : 'border-slate-200 dark:border-slate-800 hover:shadow-md'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-2xl bg-orange-50 dark:bg-orange-950/50 border border-orange-200 dark:border-orange-800 text-orange-700 dark:text-orange-400 flex items-center justify-center font-black text-sm">
+                            {cafe.code}
+                          </div>
+                          <div>
+                            <h3 className="font-extrabold text-slate-900 dark:text-white text-base leading-tight">
+                              {cafe.shopName}
+                            </h3>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 mt-0.5">
+                              <span>{cafe.ownerName}</span>
+                              <span>•</span>
+                              <span>+91 {cafe.phone}</span>
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h3 className="font-extrabold text-slate-900 dark:text-white text-base leading-tight">
-                            {cafe.shopName}
-                          </h3>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2 mt-0.5">
-                            <span>{cafe.ownerName}</span>
-                            <span>•</span>
-                            <span>+91 {cafe.phone}</span>
-                          </p>
-                        </div>
-                      </div>
 
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        {isFrozen && (
-                          <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-red-600 text-white">
-                            लाइसेंस निलंबित (FROZEN)
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          {isFrozen && (
+                            <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-red-600 text-white">
+                              लाइसेंस निलंबित (FROZEN)
+                            </span>
+                          )}
+                          <span className={`px-2.5 py-1 rounded-full text-[11px] font-black ${
+                            isExpired
+                              ? 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300'
+                              : 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'
+                          }`}>
+                            {isExpired ? 'समाप्त' : 'सक्रिय (Active)'}
                           </span>
-                        )}
-                        <span className={`px-2.5 py-1 rounded-full text-[11px] font-black ${
-                          isExpired
-                            ? 'bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300'
-                            : 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300'
-                        }`}>
-                          {isExpired ? 'समाप्त' : 'सक्रिय (Active)'}
-                        </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 bg-slate-50 dark:bg-[#0b1528] rounded-2xl p-3 text-xs space-y-1.5 border border-slate-100 dark:border-slate-800">
+                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                          <span className="text-slate-500 dark:text-slate-400">स्थान व शहर:</span>
+                          <span className="font-semibold text-slate-800 dark:text-slate-200">{cafe.city} (पिन: {cafe.pincode})</span>
+                        </div>
+
+                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                          <span className="text-slate-500 dark:text-slate-400">संचालक B2B बैलेंस:</span>
+                          <span className={`font-black ${b2bBal < 200 ? 'text-red-600 font-mono' : 'text-emerald-700 dark:text-emerald-400 font-mono'}`}>
+                            ₹{b2bBal} {b2bBal < 200 && '⚠️ (कोटा कम)'}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                          <span className="text-slate-500 dark:text-slate-400">लाइसेंस कुंजी:</span>
+                          <span className="font-mono font-bold text-orange-600 dark:text-orange-400 text-[11px]">{cafe.licenseKey}</span>
+                        </div>
+
+                        <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
+                          <span className="text-slate-500 dark:text-slate-400">वैधता शेष:</span>
+                          <span className={`font-bold ${daysLeft < 30 ? 'text-amber-600' : 'text-emerald-700 dark:text-emerald-400'}`}>
+                            {daysLeft > 0 ? `${daysLeft} दिन शेष` : 'अवधि समाप्त'}
+                          </span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="mt-4 bg-slate-50 dark:bg-[#0b1528] rounded-2xl p-3 text-xs space-y-1.5 border border-slate-100 dark:border-slate-800">
-                      <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                        <span className="text-slate-500 dark:text-slate-400">स्थान व शहर:</span>
-                        <span className="font-semibold text-slate-800 dark:text-slate-200">{cafe.city} (पिन: {cafe.pincode})</span>
-                      </div>
+                    <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                      <button
+                        onClick={() => handleRenewSubscription(cafe.id)}
+                        className="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer border border-emerald-200 dark:border-emerald-800/60"
+                        title="₹299 वार्षिक लाइसेंस रिन्यू करें"
+                      >
+                        <RefreshCw className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                        <span>₹299 रिन्यू (+365 दिन)</span>
+                      </button>
 
-                      <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                        <span className="text-slate-500 dark:text-slate-400">संचालक B2B बैलेंस:</span>
-                        <span className={`font-black ${b2bBal < 200 ? 'text-red-600 font-mono' : 'text-emerald-700 dark:text-emerald-400 font-mono'}`}>
-                          ₹{b2bBal} {b2bBal < 200 && '⚠️ (कोटा कम)'}
-                        </span>
-                      </div>
+                      <button
+                        onClick={() => handleResetOperatorPin(cafe)}
+                        className="bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-800 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        title="ऑपरेटर का 4-अंकों का लॉगिन पिन रीसेट करें"
+                      >
+                        <KeyRound className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+                        <span>पिन रीसेट (PIN)</span>
+                      </button>
 
-                      <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                        <span className="text-slate-500 dark:text-slate-400">लाइसेंस कुंजी:</span>
-                        <span className="font-mono font-bold text-orange-600 dark:text-orange-400 text-[11px]">{cafe.licenseKey}</span>
-                      </div>
+                      <button
+                        onClick={() => handleToggleFreezeCafe(cafe.id, isFrozen)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
+                          isFrozen 
+                            ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
+                            : 'bg-red-100 dark:bg-red-950/60 hover:bg-red-200 dark:hover:bg-red-900/60 text-red-800 dark:text-red-300'
+                        }`}
+                      >
+                        {isFrozen ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
+                        <span>{isFrozen ? 'लाइसेंस बहाल करें' : 'लाइसेंस फ्रीज करें'}</span>
+                      </button>
 
-                      <div className="flex items-center justify-between text-slate-600 dark:text-slate-400">
-                        <span className="text-slate-500 dark:text-slate-400">वैधता शेष:</span>
-                        <span className={`font-bold ${daysLeft < 30 ? 'text-amber-600' : 'text-emerald-700 dark:text-emerald-400'}`}>
-                          {daysLeft > 0 ? `${daysLeft} दिन शेष` : 'अवधि समाप्त'}
-                        </span>
-                      </div>
+                      <button
+                        onClick={() => handleDeleteCafe(cafe)}
+                        className="bg-red-50 dark:bg-red-950/40 hover:bg-red-100 dark:hover:bg-red-900/50 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer"
+                        title="कैफे को हमेशा के लिए डिलीट करें"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
+                        <span>हटाएं (Delete)</span>
+                      </button>
                     </div>
                   </div>
-
-                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
-                    <button
-                      onClick={() => handleRenewSubscription(cafe.id)}
-                      className="bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer border border-emerald-200 dark:border-emerald-800/60"
-                      title="₹299 वार्षिक लाइसेंस रिन्यू करें"
-                    >
-                      <RefreshCw className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                      <span>₹299 रिन्यू (+365 दिन)</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleResetOperatorPin(cafe)}
-                      className="bg-amber-50 dark:bg-amber-950/40 hover:bg-amber-100 dark:hover:bg-amber-900/50 text-amber-900 dark:text-amber-300 border border-amber-300 dark:border-amber-800 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer"
-                      title="ऑपरेटर का 4-अंकों का लॉगिन पिन रीसेट करें"
-                    >
-                      <KeyRound className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-                      <span>पिन रीसेट (PIN)</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleToggleFreezeCafe(cafe.id, isFrozen)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer ${
-                        isFrozen 
-                          ? 'bg-emerald-600 hover:bg-emerald-700 text-white' 
-                          : 'bg-red-100 dark:bg-red-950/60 hover:bg-red-200 dark:hover:bg-red-900/60 text-red-800 dark:text-red-300'
-                      }`}
-                    >
-                      {isFrozen ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
-                      <span>{isFrozen ? 'लाइसेंस बहाल करें' : 'लाइसेंस फ्रीज करें'}</span>
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: WHOLESALE RATE CARD ENGINE (स्तंभ 4) */}
-      {activeTab === 'rates' && (
-        <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-6 max-w-3xl mx-auto">
-          <div>
-            <h3 className="font-black text-slate-900 dark:text-white text-lg flex items-center gap-2">
-              <IndianRupee className="w-5 h-5 text-orange-500" />
-              <span>केंद्रीय थोक रेट कार्ड इंजन (Central Wholesale Rate Card)</span>
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              सुपर एडमिन द्वारा निर्धारित थोक लागत (Wholesale Base Cost)। सभी कैफे संचालकों के B2B वॉलेट से प्रत्येक स्वचालित सेवा पर यही दर कटेगी।
-            </p>
-          </div>
-
-          {ratesSavedMsg && (
-            <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 p-3 rounded-xl font-bold text-xs flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span>थोक रेट कार्ड सफलतापूर्वक अपडेट हो गया! सभी कैफे पर लागू हो गया है।</span>
+                );
+              })}
             </div>
           )}
-
-          <form onSubmit={handleSaveRates} className="space-y-4 text-xs">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              
-              <div className="bg-slate-50 dark:bg-[#0b1528] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-1.5">
-                <label className="block font-bold text-slate-800 dark:text-slate-200">
-                  वाहन RC डाउनलोड थोक लागत (RC Download Base) *
-                </label>
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-slate-500 dark:text-slate-400 text-sm">₹</span>
-                  <input
-                    type="number"
-                    value={superAdminRates.rcDownload}
-                    onChange={(e) => setSuperAdminRates({ ...superAdminRates, rcDownload: parseFloat(e.target.value) || 0 })}
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl font-black font-mono text-sm text-slate-900 dark:text-amber-400"
-                  />
-                </div>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500">दुकानदार इसे ₹250 में बेचकर +₹50 शुद्ध मार्जिन कमाते हैं।</span>
-              </div>
-
-              <div className="bg-slate-50 dark:bg-[#0b1528] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-1.5">
-                <label className="block font-bold text-slate-800 dark:text-slate-200">
-                  नया पैन कार्ड सरकारी फीस (PAN Card Wholesale) *
-                </label>
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-slate-500 dark:text-slate-400 text-sm">₹</span>
-                  <input
-                    type="number"
-                    value={superAdminRates.panCard}
-                    onChange={(e) => setSuperAdminRates({ ...superAdminRates, panCard: parseFloat(e.target.value) || 0 })}
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl font-black font-mono text-sm text-slate-900 dark:text-amber-400"
-                  />
-                </div>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500">NSDL / UTI सरकारी चालान लागत।</span>
-              </div>
-
-              <div className="bg-slate-50 dark:bg-[#0b1528] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-1.5">
-                <label className="block font-bold text-slate-800 dark:text-slate-200">
-                  आय प्रमाण पत्र थोक फीस (Income Cert) *
-                </label>
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-slate-500 dark:text-slate-400 text-sm">₹</span>
-                  <input
-                    type="number"
-                    value={superAdminRates.incomeCert}
-                    onChange={(e) => setSuperAdminRates({ ...superAdminRates, incomeCert: parseFloat(e.target.value) || 0 })}
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl font-black font-mono text-sm text-slate-900 dark:text-amber-400"
-                  />
-                </div>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500">दुकानदार इसे ₹80 में बेचते हैं।</span>
-              </div>
-
-              <div className="bg-slate-50 dark:bg-[#0b1528] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-1.5">
-                <label className="block font-bold text-slate-800 dark:text-slate-200">
-                  ड्राइविंग लाइसेंस लर्निंग थोक लागत (DL Learning) *
-                </label>
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-slate-500 dark:text-slate-400 text-sm">₹</span>
-                  <input
-                    type="number"
-                    value={superAdminRates.drivingLicence}
-                    onChange={(e) => setSuperAdminRates({ ...superAdminRates, drivingLicence: parseFloat(e.target.value) || 0 })}
-                    className="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl font-black font-mono text-sm text-slate-900 dark:text-amber-400"
-                  />
-                </div>
-                <span className="text-[10px] text-slate-400 dark:text-slate-500">दुकानदार इसे ₹250 में बेचकर +₹100 मार्जिन लेते हैं।</span>
-              </div>
-
-            </div>
-
-            <button
-              type="submit"
-              disabled={savingRates}
-              className="w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-black py-3 rounded-2xl text-xs flex items-center justify-center gap-2 transition shadow-md cursor-pointer"
-            >
-              <Save className="w-4 h-4" />
-              <span>{savingRates ? 'सेव हो रहा है...' : 'केंद्रीय थोक रेट्स सुरक्षित करें (Save Rates)'}</span>
-            </button>
-          </form>
         </div>
       )}
 

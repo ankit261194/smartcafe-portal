@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { 
   HelpCircle, MessageSquare, AlertCircle, CheckCircle2, 
-  Send, RefreshCw, Clock, Building2, User, Phone, Check, ShieldAlert
+  Send, RefreshCw, Clock, Building2, User, Phone, Check, ShieldAlert, ArrowLeft
 } from 'lucide-react';
 import { authFetch } from '../utils/api';
 
-export default function AdminComplaints({ selectedCafe }) {
+export default function AdminComplaints({ selectedCafe, onBack }) {
   const [complaints, setComplaints] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedTicket, setSelectedTicket] = useState(null);
@@ -13,22 +13,21 @@ export default function AdminComplaints({ selectedCafe }) {
   const [newStatus, setNewStatus] = useState('resolved');
   const [sendingReply, setSendingReply] = useState(false);
 
-  const cafeId = selectedCafe?.id || '';
+  const cafeId = selectedCafe?.id || 'ALL';
 
   const fetchComplaints = async () => {
-    if (!cafeId) {
-      setComplaints([]);
-      setLoading(false);
-      return;
-    }
     setLoading(true);
     try {
       const res = await authFetch(`/api/cafes/${cafeId}/complaints`);
-      const data = await res.json();
-      setComplaints(data);
-      if (selectedTicket) {
-        const updated = data.find(c => c.id === selectedTicket.id);
-        if (updated) setSelectedTicket(updated);
+      if (res.ok) {
+        const data = await res.json();
+        setComplaints(Array.isArray(data) ? data : []);
+        if (selectedTicket) {
+          const updated = (Array.isArray(data) ? data : []).find(c => c.id === selectedTicket.id);
+          if (updated) setSelectedTicket(updated);
+        }
+      } else {
+        setComplaints([]);
       }
     } catch (err) {
       console.error(err);
@@ -75,6 +74,30 @@ export default function AdminComplaints({ selectedCafe }) {
   return (
     <div className="space-y-6 max-w-6xl mx-auto">
       
+      {/* 1. TOP BREADCRUMB & BACK NAVIGATION BAR */}
+      {onBack && (
+        <div className="no-print bg-white dark:bg-[#0c162c] rounded-2xl p-3 sm:p-4 border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 transition active:scale-95 cursor-pointer shadow-xs border border-slate-200 dark:border-slate-700"
+          >
+            <ArrowLeft className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span>← डैशबोर्ड पर वापस जाएं</span>
+          </button>
+
+          <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+            <span className="cursor-pointer hover:underline font-semibold" onClick={onBack}>
+              डैशबोर्ड
+            </span>
+            <span>›</span>
+            <span className="font-black text-rose-700 dark:text-rose-400">
+              सहायता व शिकायत डेस्क
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Top Banner */}
       <div className="bg-gradient-to-r from-rose-900 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 md:p-8 shadow-xl border border-rose-500/20 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
@@ -118,7 +141,7 @@ export default function AdminComplaints({ selectedCafe }) {
 
           {complaints.length === 0 ? (
             <div className="bg-white rounded-2xl p-8 text-center text-slate-400 border border-slate-200 text-xs">
-              बधाई! आपके कैफे के खिलाफ कोई शिकायत दर्ज नहीं है।
+              वर्तमान में कोई शिकायत दर्ज नहीं है।
             </div>
           ) : (
             <div className="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">

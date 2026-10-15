@@ -286,7 +286,7 @@ export default function AdminPrintQueue({ onUpdateCounts, selectedCafe }) {
         <div className="bg-white rounded-2xl p-12 text-center border border-slate-200">
           <Printer className="w-12 h-12 text-slate-300 mx-auto mb-3" />
           <h4 className="font-bold text-slate-800 text-base">
-            {searchTerm ? 'खोज के अनुसार कोई प्रिंट नहीं मिला' : 'कोई प्रिंट रिक्वेस्ट नहीं है'}
+            {searchTerm ? 'खोज के अनुसार कोई प्रिंट नहीं मिला' : 'वर्तमान में कोई रिकॉर्ड नहीं है।'}
           </h4>
           <p className="text-xs text-slate-500 mt-1">
             {searchTerm

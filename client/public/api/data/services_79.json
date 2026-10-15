@@ -10,8 +10,8 @@
     "isActive": false,
     "apiEndpoint": "",
     "method": "POST",
-    "isComingSoon": true,
-    "status": "coming_soon",
+    "isComingSoon": false,
+    "status": "active",
     "badge": "⏳ आगामी सेवा (Coming Soon)"
   },
   {
@@ -26,7 +26,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar_pdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "aadhaar_pdf_otp",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -57,7 +57,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php",
     "method": "POST",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "aadhaar_ekyc",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -72,8 +72,8 @@
     "isActive": false,
     "apiEndpoint": "",
     "method": "POST",
-    "isComingSoon": true,
-    "status": "coming_soon",
+    "isComingSoon": false,
+    "status": "active",
     "badge": "⏳ आगामी सेवा (Coming Soon)"
   },
   {
@@ -88,7 +88,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "npci_link_status",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -133,8 +133,8 @@
     "isActive": false,
     "apiEndpoint": "",
     "method": "POST",
-    "isComingSoon": true,
-    "status": "coming_soon",
+    "isComingSoon": false,
+    "status": "active",
     "badge": "⏳ आगामी सेवा (Coming Soon)"
   },
   {
@@ -149,7 +149,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_verification_premium",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -165,7 +165,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "aadhaar_to_pan",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -181,7 +181,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panfind.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_find_async",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -197,7 +197,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panfind.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_find_async",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -213,7 +213,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "aadhaar_to_pan",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -229,7 +229,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan_to_gst.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_to_gst",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -245,7 +245,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/gst_to_pan.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "gst_to_pan",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -261,7 +261,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_find_name_mobile",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -277,7 +277,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_verification_premium",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -293,7 +293,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_verification_premium",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -309,7 +309,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_verification_premium",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -325,7 +325,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_verification_premium",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -341,7 +341,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "voter_verification",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -357,7 +357,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "instant_voter_mobile_no_otp",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -373,7 +373,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "voter_verification",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -389,7 +389,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "voter_verification",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -405,7 +405,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "instant_voter_mobile_no_otp",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -421,7 +421,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "voter_mobile_instant_form8",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -437,7 +437,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "ration_to_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -453,7 +453,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "ration_to_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -469,7 +469,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "aadhaar_to_ration_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -485,7 +485,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "aadhaar_to_ration_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -501,7 +501,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "aadhaar_to_ration_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -517,7 +517,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "aadhaar_to_ration_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -533,7 +533,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "ration_to_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -549,7 +549,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dl/dl_pdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "dl_pdf_secure",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -565,7 +565,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dl/dl_pdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "dl_pdf_secure",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -581,7 +581,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dl/dl_pdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "dl_pdf_secure",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -597,7 +597,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/LL_application_pdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "ll_pdf_download",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -613,7 +613,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/LL_application_pdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "ll_pdf_download",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -629,7 +629,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/Sarathi/ll_apply.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "ll_exam_apply",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -645,7 +645,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_details",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -661,7 +661,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_to_mobile",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -677,7 +677,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/RcToFatherName.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_to_father_name",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -693,7 +693,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_to_mobile",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -709,7 +709,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "chassis_to_rc",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -725,7 +725,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "chassis_to_rc",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -741,7 +741,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_details",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -757,7 +757,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_to_mobile",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -773,7 +773,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_fast_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -789,7 +789,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_details",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -805,7 +805,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_to_mobile",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -821,7 +821,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rc_details",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -837,7 +837,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "mobile_lookup",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -853,7 +853,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "mobile_lookup",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -869,7 +869,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_find_name_mobile",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -885,7 +885,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_find_name_mobile",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -901,7 +901,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "npci_link_status",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -917,7 +917,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "npci_link_status",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -933,7 +933,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "pan_find_name_mobile",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -948,8 +948,8 @@
     "isActive": true,
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
-    "isComingSoon": false,
-    "status": "live",
+    "isComingSoon": true,
+    "status": "coming_soon",
     "p4Key": "mobile_lookup",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -964,8 +964,8 @@
     "isActive": true,
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
-    "isComingSoon": false,
-    "status": "live",
+    "isComingSoon": true,
+    "status": "coming_soon",
     "p4Key": "mobile_lookup",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -980,8 +980,8 @@
     "isActive": true,
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET",
-    "isComingSoon": false,
-    "status": "live",
+    "isComingSoon": true,
+    "status": "coming_soon",
     "p4Key": "npci_link_status",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -997,7 +997,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "npci_link_status",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1012,8 +1012,8 @@
     "isActive": false,
     "apiEndpoint": "",
     "method": "GET",
-    "isComingSoon": true,
-    "status": "coming_soon",
+    "isComingSoon": false,
+    "status": "active",
     "badge": "⏳ आगामी सेवा (Coming Soon)"
   },
   {
@@ -1028,7 +1028,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "eshram_verification",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1044,7 +1044,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "eshram_verification",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1060,7 +1060,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "agristack_print_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1076,7 +1076,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/farmer-details.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "agristack_farmer_details",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1092,7 +1092,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/checkStatus.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "agristack_check_status",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1108,7 +1108,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/RtpsCertificate-Br.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "rtps_certificate_bihar",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1124,7 +1124,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/elctricBillPDF.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "electric_bill_pdf",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1139,8 +1139,8 @@
     "isActive": true,
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
-    "isComingSoon": false,
-    "status": "live",
+    "isComingSoon": true,
+    "status": "coming_soon",
     "p4Key": "mobile_lookup",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1200,8 +1200,8 @@
     "isActive": false,
     "apiEndpoint": "",
     "method": "GET",
-    "isComingSoon": true,
-    "status": "coming_soon",
+    "isComingSoon": false,
+    "status": "active",
     "badge": "⏳ आगामी सेवा (Coming Soon)"
   },
   {
@@ -1215,8 +1215,8 @@
     "isActive": false,
     "apiEndpoint": "",
     "method": "GET",
-    "isComingSoon": true,
-    "status": "coming_soon",
+    "isComingSoon": false,
+    "status": "active",
     "badge": "⏳ आगामी सेवा (Coming Soon)"
   },
   {
@@ -1231,7 +1231,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "mobile_lookup",
     "badge": "🟢 100% लाइव आधिकारिक API"
   },
@@ -1247,7 +1247,7 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "active",
     "p4Key": "mobile_lookup",
     "badge": "🟢 100% लाइव आधिकारिक API"
   }
