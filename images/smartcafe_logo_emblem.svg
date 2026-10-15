@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="emblemBg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="60%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </radialGradient>
+
+    <!-- Cyber Cyan / Blue Gradient -->
+    <linearGradient id="cyberRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0ea5e9" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+
+    <!-- Golden Spark Gradient -->
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+
+    <!-- Laser Line Gradient -->
+    <linearGradient id="laserBeam" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0" />
+      <stop offset="50%" stop-color="#22d3ee" stop-opacity="1" />
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="glowEffect" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    .emblem-title {
+      font-family: 'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+    .emblem-sub {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 4px;
+      font-size: 14px;
+    }
+  </style>
+
+  <!-- Squircle Base Container -->
+  <rect x="16" y="16" width="480" height="480" rx="110" fill="url(#emblemBg)" stroke="#1e293b" stroke-width="4" />
+
+  <!-- Outer Neon Circuit Ring -->
+  <circle cx="256" cy="230" r="165" fill="none" stroke="url(#cyberRing)" stroke-width="4" stroke-dasharray="12 8" opacity="0.4" />
+  <circle cx="256" cy="230" r="150" fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.8" />
+
+  <!-- Orbiting Nodes -->
+  <circle cx="256" cy="65" r="7" fill="url(#goldGradient)" filter="url(#glowEffect)" />
+  <circle cx="406" cy="230" r="6" fill="#38bdf8" filter="url(#glowEffect)" />
+  <circle cx="256" cy="395" r="6" fill="#10b981" filter="url(#glowEffect)" />
+  <circle cx="106" cy="230" r="6" fill="#38bdf8" filter="url(#glowEffect)" />
+
+  <!-- Document / Printing Flow (Top Feed Paper) -->
+  <g transform="translate(186, 115)">
+    <rect x="0" y="0" width="140" height="85" rx="10" fill="#f8fafc" stroke="#38bdf8" stroke-width="2" opacity="0.95" />
+    <line x1="22" y1="24" x2="90" y2="24" stroke="#0284c7" stroke-width="4.5" stroke-linecap="round" />
+    <line x1="22" y1="40" x2="118" y2="40" stroke="#94a3b8" stroke-width="3.5" stroke-linecap="round" />
+    <line x1="22" y1="56" x2="80" y2="56" stroke="#94a3b8" stroke-width="3.5" stroke-linecap="round" />
+  </g>
+
+  <!-- High-Tech Cyber Hub / Printer Body -->
+  <g transform="translate(136, 175)">
+    <!-- Base Printer Unit with Ambient Glow -->
+    <rect x="0" y="0" width="240" height="125" rx="24" fill="url(#cyberRing)" filter="url(#glowEffect)" />
+    
+    <!-- Inner Dark Console Panel -->
+    <rect x="12" y="12" width="216" height="101" rx="18" fill="#0b1329" />
+    
+    <!-- Printing Output Slot -->
+    <rect x="25" y="42" width="190" height="14" rx="7" fill="#020617" stroke="#38bdf8" stroke-width="1.5" />
+    
+    <!-- High-Power Cyan Laser Scan Line -->
+    <line x1="10" y1="49" x2="230" y2="49" stroke="url(#laserBeam)" stroke-width="6" filter="url(#glowEffect)" />
+
+    <!-- WiFi / Cloud Connectivity Waves -->
+    <path d="M 95 24 A 18 18 0 0 1 145 24" fill="none" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" />
+    <path d="M 107 30 A 10 10 0 0 1 133 30" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" />
+    <circle cx="120" cy="34" r="2.5" fill="#f59e0b" />
+
+    <!-- LED Status Cluster -->
+    <circle cx="38" cy="88" r="6" fill="#10b981" filter="url(#glowEffect)" />
+    <circle cx="58" cy="88" r="5" fill="#38bdf8" />
+    <circle cx="76" cy="88" r="5" fill="#f59e0b" />
+
+    <!-- Monogram Emblem "SC" in Console -->
+    <text x="160" y="96" font-family="'Montserrat', sans-serif" font-size="28" font-weight="900" fill="#ffffff" letter-spacing="2">SC</text>
+  </g>
+
+  <!-- Dynamic Printed Page Sliding Out -->
+  <g transform="translate(176, 235)">
+    <path d="M 10 0 L 150 0 L 160 85 L 0 85 Z" fill="#ffffff" opacity="0.98" filter="url(#glowEffect)" />
+    <!-- Golden Verification Seal -->
+    <circle cx="80" cy="42" r="20" fill="url(#goldGradient)" filter="url(#glowEffect)" />
+    <path d="M 72 42 L 78 48 L 90 36" fill="none" stroke="#0f172a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
+    <text x="80" y="74" font-family="'Plus Jakarta Sans', sans-serif" font-size="11" font-weight="800" fill="#0284c7" text-anchor="middle" letter-spacing="1">VERIFIED</text>
+  </g>
+
+  <!-- Bottom Brand Text -->
+  <g transform="translate(256, 420)">
+    <!-- SMART CAFE text -->
+    <text x="0" y="0" class="emblem-title" font-size="36" fill="#ffffff" text-anchor="middle">
+      SMART <tspan fill="url(#cyberRing)">CAFE</tspan>
+    </text>
+    <!-- PRINT PORTAL Subtext -->
+    <text x="0" y="28" class="emblem-sub" fill="#38bdf8" text-anchor="middle">PRINT PORTAL • smartcafe.sbs</text>
+  </g>
+</svg>

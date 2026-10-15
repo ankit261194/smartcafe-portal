@@ -341,8 +341,14 @@ function migrateJsonStoreToSql(PDO $pdo, array $store) {
 
     $pdo->beginTransaction();
     try {
-        // 1. Users
+        // 1. Users & Pruning
         if (!empty($store['users']) && is_array($store['users'])) {
+            $validPhones = array_filter(array_map(function($u) { return $u['phone'] ?? null; }, $store['users']));
+            if (!empty($validPhones)) {
+                $inP = "'" . implode("','", array_map('addslashes', $validPhones)) . "'";
+                $pdo->exec("DELETE FROM users WHERE phone NOT IN ($inP)");
+                $pdo->exec("DELETE FROM wallets WHERE phone NOT IN ($inP)");
+            }
             if ($isSqlite) {
                 $stmt = $pdo->prepare("INSERT OR REPLACE INTO users (id, phone, name, shop_name, password, role, balance, is_blocked, created_at)
                     VALUES (:id, :phone, :name, :shop_name, :password, :role, :balance, :is_blocked, :created_at)");
@@ -429,8 +435,15 @@ function migrateJsonStoreToSql(PDO $pdo, array $store) {
             }
         }
 
-        // 3. Cafes
-        if (!empty($store['cafes']) && is_array($store['cafes'])) {
+        // 3. Cafes (Purge if store has no cafes, or prune removed IDs)
+        if (empty($store['cafes'])) {
+            $pdo->exec("DELETE FROM cafes");
+        } else {
+            $validCafeIds = array_filter(array_map(function($c) { return $c['id'] ?? null; }, $store['cafes']));
+            if (!empty($validCafeIds)) {
+                $inC = "'" . implode("','", array_map('addslashes', $validCafeIds)) . "'";
+                $pdo->exec("DELETE FROM cafes WHERE id NOT IN ($inC)");
+            }
             if ($isSqlite) {
                 $cStmt = $pdo->prepare("INSERT OR REPLACE INTO cafes (id, code, shop_name, owner_name, phone, b2b_balance, min_threshold, is_frozen, frozen_reason, retail_rates, created_at)
                     VALUES (:id, :code, :shop_name, :owner_name, :phone, :b2b_balance, :min_threshold, :is_frozen, :frozen_reason, :retail_rates, :created_at)");
@@ -458,13 +471,20 @@ function migrateJsonStoreToSql(PDO $pdo, array $store) {
             }
         }
 
-        // 4. Orders
+        // 4. Orders (Purge if store has no orders, or prune removed IDs)
         $allOrders = array_merge(
             $store['orderHistory'] ?? [],
             $store['orders'] ?? [],
             $store['rcOrders'] ?? []
         );
-        if (!empty($allOrders)) {
+        if (empty($allOrders)) {
+            $pdo->exec("DELETE FROM orders");
+        } else {
+            $validOrderIds = array_filter(array_map(function($o) { return $o['id'] ?? null; }, $allOrders));
+            if (!empty($validOrderIds)) {
+                $inO = "'" . implode("','", array_map('addslashes', $validOrderIds)) . "'";
+                $pdo->exec("DELETE FROM orders WHERE id NOT IN ($inO)");
+            }
             if ($isSqlite) {
                 $oStmt = $pdo->prepare("INSERT OR REPLACE INTO orders (id, cafe_id, customer_phone, customer_name, service_type, doc_title, ref_number, retail_fee, wholesale_cost, margin, status, payload_json, created_at)
                     VALUES (:id, :cafe_id, :customer_phone, :customer_name, :service_type, :doc_title, :ref_number, :retail_fee, :wholesale_cost, :margin, :status, :payload_json, :created_at)");

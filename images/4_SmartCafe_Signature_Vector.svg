@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 320" width="100%" height="100%">
+  <defs>
+    <!-- Dark Obsidian Radial Background -->
+    <radialGradient id="darkBg" cx="50%" cy="45%" r="75%">
+      <stop offset="0%" stop-color="#18181b" />
+      <stop offset="55%" stop-color="#09090b" />
+      <stop offset="100%" stop-color="#020203" />
+    </radialGradient>
+
+    <!-- 24K Liquid Mirror Gold -->
+    <linearGradient id="gold24k" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb" />
+      <stop offset="15%" stop-color="#fef08a" />
+      <stop offset="35%" stop-color="#eab308" />
+      <stop offset="60%" stop-color="#ca8a04" />
+      <stop offset="80%" stop-color="#fef08a" />
+      <stop offset="100%" stop-color="#a16207" />
+    </linearGradient>
+
+    <!-- Champagne Rose Gold Gradient -->
+    <linearGradient id="roseChampagne" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fde047" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#fef9c3" />
+    </linearGradient>
+
+    <!-- Filter for 3D Glow -->
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" opacity="0.4" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&amp;family=Great+Vibes&amp;family=Plus+Jakarta+Sans:wght@400;600;700&amp;display=swap');
+
+    .title-smart {
+      font-family: 'Cinzel', 'Playfair Display', serif;
+      font-weight: 800;
+      letter-spacing: 9px;
+    }
+    .signature-ankit {
+      font-family: 'Great Vibes', 'Brush Script MT', 'Dancing Script', cursive, serif;
+      font-size: 58px;
+    }
+    .meta-portal {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-weight: 600;
+      letter-spacing: 5px;
+      font-size: 11px;
+    }
+  </style>
+
+  <!-- Luxury Canvas Base -->
+  <rect width="950" height="320" rx="24" fill="url(#darkBg)" stroke="#27272a" stroke-width="2" />
+  
+  <!-- Subtle Framing Line -->
+  <rect x="12" y="12" width="926" height="296" rx="16" fill="none" stroke="url(#gold24k)" stroke-width="0.8" opacity="0.25" stroke-dasharray="8 6" />
+
+  <!-- ==================== BESPOKE 3D MONOGRAM INSIGNIA (SC) ==================== -->
+  <g transform="translate(160, 160)">
+    <!-- Outer Octagon / Luxury Seal -->
+    <polygon points="0,-105 74,-74 105,0 74,74 0,105 -74,74 -105,0 -74,-74" 
+             fill="#09090b" stroke="url(#gold24k)" stroke-width="3" filter="url(#goldGlow)" />
+    
+    <polygon points="0,-92 65,-65 92,0 65,65 0,92 -65,65 -92,0 -65,-65" 
+             fill="none" stroke="url(#roseChampagne)" stroke-width="1.2" opacity="0.5" stroke-dasharray="3 3" />
+
+    <!-- Corner Gold Gems -->
+    <circle cx="0" cy="-105" r="4.5" fill="url(#gold24k)" />
+    <circle cx="105" cy="0" r="4.5" fill="url(#gold24k)" />
+    <circle cx="0" cy="105" r="4.5" fill="url(#gold24k)" />
+    <circle cx="-105" cy="0" r="4.5" fill="url(#gold24k)" />
+
+    <!-- Interlocking Luxury Monogram 'S' & 'C' -->
+    <!-- 'C' Arc -->
+    <path d="M 38 -45 C 10 -68, -55 -45, -55 0 C -55 45, 10 68, 40 45" 
+          fill="none" stroke="url(#gold24k)" stroke-width="7" stroke-linecap="round" opacity="0.9" />
+
+    <!-- 'S' Fluid Ribbon -->
+    <path d="M 28 -55 C 28 -80, -38 -75, -38 -40 C -38 -10, 42 -5, 42 35 C 42 75, -28 78, -42 50" 
+          fill="none" stroke="url(#gold24k)" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" filter="url(#goldGlow)" />
+
+    <!-- Core Star Diamond -->
+    <polygon points="0,-12 4,0 0,12 -4,0" fill="url(#roseChampagne)" />
+  </g>
+
+  <!-- Divider Line with Diamond Accents -->
+  <g transform="translate(325, 50)">
+    <line x1="0" y1="20" x2="0" y2="200" stroke="url(#gold24k)" stroke-width="1.4" opacity="0.4" />
+    <polygon points="0,15 5,20 0,25 -5,20" fill="url(#gold24k)" />
+    <polygon points="0,110 5,115 0,120 -5,115" fill="url(#gold24k)" />
+    <polygon points="0,205 5,210 0,215 -5,210" fill="url(#gold24k)" />
+  </g>
+
+  <!-- ==================== BRANDING & STYLISH SIGNATURE ==================== -->
+  <g transform="translate(370, 75)">
+    <!-- Meta Top Header -->
+    <text x="2" y="15" class="meta-portal" fill="#a1a1aa">
+      EXECUTIVE CYBER LOUNGE • SMARTCAFE.SBS
+    </text>
+
+    <!-- Main Title: SMART CAFE -->
+    <g transform="translate(0, 68)">
+      <text x="0" y="0" class="title-smart" font-size="54" fill="url(#gold24k)" filter="url(#goldGlow)">
+        SMART CAFE
+      </text>
+    </g>
+
+    <!-- Elegant Gold Divider Bar -->
+    <line x1="2" y1="92" x2="520" y2="92" stroke="url(#gold24k)" stroke-width="1.2" opacity="0.6" />
+    <circle cx="2" cy="92" r="2.5" fill="url(#gold24k)" />
+    <circle cx="520" cy="92" r="2.5" fill="url(#gold24k)" />
+
+    <!-- STYLISH NAME: by Ankit Chaudhary -->
+    <g transform="translate(0, 150)">
+      <!-- Prefix "By" in clean serif -->
+      <text x="2" y="-12" font-family="'Cinzel', serif" font-size="14" font-weight="600" fill="#ca8a04" letter-spacing="4">
+        CREATED BY
+      </text>
+
+      <!-- Stylish Signature "Ankit Chaudhary" -->
+      <text x="135" y="-3" class="signature-ankit" fill="url(#gold24k)" filter="url(#goldGlow)">
+        Ankit Chaudhary
+      </text>
+
+      <!-- Signature Tail Swash / Flourish underneath -->
+      <path d="M 135 12 Q 320 22, 510 5 Q 360 16, 210 14" 
+            fill="url(#gold24k)" opacity="0.8" />
+    </g>
+  </g>
+</svg>

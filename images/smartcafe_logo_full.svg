@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 220" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b1120" />
+      <stop offset="50%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#090d16" />
+    </linearGradient>
+
+    <!-- Cyber Cyan to Electric Blue Gradient -->
+    <linearGradient id="cyberBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#2563eb" />
+    </linearGradient>
+
+    <!-- Neon Emerald / Print Laser Gradient -->
+    <linearGradient id="printLaser" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0" />
+      <stop offset="30%" stop-color="#22d3ee" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#38bdf8" stop-opacity="1" />
+      <stop offset="70%" stop-color="#22d3ee" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Golden Accent Gradient -->
+    <linearGradient id="goldAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+
+    <!-- Glassmorphism Gradient -->
+    <linearGradient id="glassCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.02" />
+    </linearGradient>
+
+    <!-- Glowing Filters -->
+    <filter id="cyberGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="15" result="glow" />
+      <feMerge>
+        <feMergeNode in="glow" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <style>
+    .brand-title {
+      font-family: 'Montserrat', 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+    .brand-cafe {
+      font-family: 'Montserrat', 'Plus Jakarta Sans', 'Segoe UI', system-ui, sans-serif;
+      font-weight: 800;
+      letter-spacing: 3px;
+    }
+    .brand-sub {
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 600;
+      letter-spacing: 5px;
+      font-size: 13px;
+    }
+    .brand-owner {
+      font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      font-size: 11px;
+    }
+  </style>
+
+  <!-- Base Canvas Background with Rounded Corners -->
+  <rect width="800" height="220" rx="24" fill="url(#bgGrad)" />
+
+  <!-- Subtle High-tech Grid Background Pattern -->
+  <g opacity="0.06">
+    <line x1="0" y1="55" x2="800" y2="55" stroke="#38bdf8" stroke-width="1" stroke-dasharray="8 8" />
+    <line x1="0" y1="110" x2="800" y2="110" stroke="#38bdf8" stroke-width="1" stroke-dasharray="8 8" />
+    <line x1="0" y1="165" x2="800" y2="165" stroke="#38bdf8" stroke-width="1" stroke-dasharray="8 8" />
+    <line x1="200" y1="0" x2="200" y2="220" stroke="#38bdf8" stroke-width="1" stroke-dasharray="8 8" />
+    <line x1="400" y1="0" x2="400" y2="220" stroke="#38bdf8" stroke-width="1" stroke-dasharray="8 8" />
+    <line x1="600" y1="0" x2="600" y2="220" stroke="#38bdf8" stroke-width="1" stroke-dasharray="8 8" />
+  </g>
+
+  <!-- Ambient Glow behind Icon -->
+  <circle cx="110" cy="110" r="75" fill="#0284c7" opacity="0.25" filter="url(#softGlow)" />
+
+  <!-- ==================== ICON GROUP (Cyber Printer + Document + SC Shield) ==================== -->
+  <g transform="translate(25, 25)">
+    <!-- Outer Cyber Hex Shield -->
+    <rect x="10" y="10" width="150" height="150" rx="36" fill="url(#glassCard)" stroke="#38bdf8" stroke-width="1.8" stroke-opacity="0.4" />
+    
+    <!-- Cyber Tech Corner Accents -->
+    <path d="M 22 40 L 22 22 L 40 22" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+    <path d="M 148 40 L 148 22 L 130 22" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+    <path d="M 22 130 L 22 148 L 40 148" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+    <path d="M 148 130 L 148 148 L 130 148" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Document Feed Tray (Top of Printer) -->
+    <path d="M 52 42 L 118 42 L 126 62 L 44 62 Z" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" opacity="0.9" />
+
+    <!-- Paper Sheet (Input Page with Print Lines) -->
+    <rect x="58" y="24" width="54" height="34" rx="4" fill="#ffffff" opacity="0.95" />
+    <line x1="66" y1="32" x2="96" y2="32" stroke="#0284c7" stroke-width="2" stroke-linecap="round" />
+    <line x1="66" y1="38" x2="104" y2="38" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" />
+    <line x1="66" y1="44" x2="88" y2="44" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" />
+
+    <!-- Main High-Tech Printer Body -->
+    <rect x="36" y="58" width="98" height="52" rx="12" fill="url(#cyberBlue)" filter="url(#cyberGlow)" />
+    
+    <!-- Printer Face Plate / Display -->
+    <rect x="42" y="64" width="86" height="40" rx="8" fill="#0f172a" />
+    
+    <!-- High-Speed Printing Output Paper Slot -->
+    <rect x="48" y="74" width="74" height="6" rx="3" fill="#020617" stroke="#0ea5e9" stroke-width="0.8" />
+    
+    <!-- Neon Laser Scan Beam across print slot -->
+    <line x1="40" y1="77" x2="130" y2="77" stroke="url(#printLaser)" stroke-width="3.5" filter="url(#cyberGlow)" />
+    
+    <!-- Dynamic Output Printed Sheet sliding out -->
+    <g transform="translate(0, 10)">
+      <path d="M 54 75 L 116 75 L 122 126 L 48 126 Z" fill="#f8fafc" opacity="0.98" filter="url(#cyberGlow)" />
+      <!-- Stylized Monogram "SC" printed on document -->
+      <text x="85" y="105" font-family="'Montserrat', sans-serif" font-size="20" font-weight="900" fill="#0369a1" text-anchor="middle" letter-spacing="1">SC</text>
+      <!-- Gold Verification Check Badge on Document -->
+      <circle cx="85" cy="116" r="5" fill="url(#goldAccent)" />
+      <path d="M 82.5 116 L 84.5 118 L 88 114" fill="none" stroke="#0f172a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" />
+    </g>
+
+    <!-- Cyber Cafe Connectivity Elements (WiFi Waves emitting from top) -->
+    <path d="M 72 16 A 18 18 0 0 1 98 16" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" opacity="0.9" />
+    <path d="M 64 10 A 30 30 0 0 1 106 10" fill="none" stroke="#22d3ee" stroke-width="2" stroke-linecap="round" opacity="0.6" />
+    <circle cx="85" cy="21" r="2.2" fill="#38bdf8" />
+
+    <!-- Status Indicator LED Lights -->
+    <circle cx="50" cy="94" r="3" fill="#10b981" filter="url(#cyberGlow)" />
+    <circle cx="60" cy="94" r="3" fill="#38bdf8" />
+    <circle cx="70" cy="94" r="3" fill="#f59e0b" />
+  </g>
+
+  <!-- ==================== TYPOGRAPHY & BRANDING ==================== -->
+  <g transform="translate(210, 48)">
+    <!-- Badge / Category Pill -->
+    <g transform="translate(0, 0)">
+      <rect x="0" y="0" width="220" height="26" rx="13" fill="url(#glassCard)" stroke="#0ea5e9" stroke-width="1.2" />
+      <circle cx="14" cy="13" r="4" fill="#10b981" filter="url(#cyberGlow)" />
+      <text x="26" y="17.5" class="brand-owner" fill="#93c5fd">SMARTCAFE.SBS • ONLINE HUB</text>
+    </g>
+
+    <!-- Main Title: SMART CAFE -->
+    <g transform="translate(0, 68)">
+      <!-- "SMART" in Radiant White / Electric Glow -->
+      <text x="0" y="0" class="brand-title" font-size="54" fill="#ffffff">SMART</text>
+      <!-- "CAFE" in Cyber Gradient -->
+      <text x="245" y="0" class="brand-cafe" font-size="54" fill="url(#cyberBlue)" filter="url(#cyberGlow)">CAFE</text>
+      <!-- Dot Accent in Gold -->
+      <circle cx="438" cy="-12" r="7" fill="url(#goldAccent)" filter="url(#cyberGlow)" />
+    </g>
+
+    <!-- Horizontal Divider with Laser Gradient -->
+    <line x1="0" y1="88" x2="540" y2="88" stroke="url(#printLaser)" stroke-width="2" />
+    <circle cx="0" cy="88" r="2.5" fill="#38bdf8" />
+    <circle cx="540" cy="88" r="2.5" fill="#38bdf8" />
+
+    <!-- Subtitle: PRINT PORTAL & CYBER SERVICES -->
+    <text x="2" y="114" class="brand-sub" fill="#38bdf8">PRINT PORTAL &amp; DIGITAL SERVICES</text>
+
+    <!-- Founder Credit Badge -->
+    <g transform="translate(0, 134)">
+      <text x="2" y="0" class="brand-owner" fill="#64748b">POWERED BY <tspan fill="#e2e8f0" font-weight="700">ANKIT CHAUDHARY</tspan> • FAST &amp; SECURE CLOUD PRINT</text>
+    </g>
+  </g>
+</svg>
