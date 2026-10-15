@@ -175,7 +175,7 @@ function getStore($dataFile) {
                         $w['balance'] = 0;
                         if (isset($w['transactions']) && is_array($w['transactions'])) {
                             $w['transactions'] = array_values(array_filter($w['transactions'], function($tx) {
-                                return ($tx['id'] ?? '') !== 'TXN-INIT-500';
+                                return ($tx['id'] ?? '') !== 'TXN-INIT-500' && strpos($tx['note'] ?? '', 'Instant') === false && strpos($tx['id'] ?? '', 'INSTANT') === false && ($tx['amount'] ?? 0) != 500;
                             }));
                         }
                         $changed = true;
@@ -1201,7 +1201,7 @@ if (preg_match('#^wallet/([0-9]+)$#', $endpoint, $m)) {
                 $wallet['balance'] = 0;
                 if (isset($wallet['transactions']) && is_array($wallet['transactions'])) {
                     $wallet['transactions'] = array_values(array_filter($wallet['transactions'], function($tx) {
-                        return ($tx['id'] ?? '') !== 'TXN-INIT-500';
+                        return ($tx['id'] ?? '') !== 'TXN-INIT-500' && strpos($tx['note'] ?? '', 'Instant') === false && strpos($tx['id'] ?? '', 'INSTANT') === false && ($tx['amount'] ?? 0) != 500;
                     }));
                 }
             }
@@ -3612,6 +3612,8 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                 break;
             }
         }
+    }
+
     if ($service79 && !empty($service79['isComingSoon'])) {
         echo json_encode([
             'success' => false,
