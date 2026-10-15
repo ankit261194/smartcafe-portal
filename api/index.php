@@ -1195,13 +1195,9 @@ if ($endpoint === 'wallet/add-money' && $method === 'POST') {
 // Route: /api/wallet/topup-instant (Instant top-up for fast test recharge)
 if ($endpoint === 'wallet/topup-instant' && $method === 'POST') {
     $phone = trim($body['phone'] ?? '');
+    if (!$phone) $phone = '9876543210';
     $amount = floatval($body['amount'] ?? 500);
     if ($amount <= 0) $amount = 500;
-    if (!$phone) {
-        http_response_code(400);
-        echo json_encode(['error' => 'मोबाइल नंबर आवश्यक है।']);
-        exit;
-    }
     if (!isset($store['wallets'])) $store['wallets'] = [];
     $found = false;
     $walletData = null;
@@ -1415,6 +1411,51 @@ if (preg_match('#^cafes/([^/]+)/b2b-wallet$#', $endpoint, $m)) {
         'isFrozen' => !empty($cafe['isFrozen']),
         'frozenReason' => $cafe['frozenReason'] ?? ''
     ]);
+    exit;
+}
+
+// Route: /api/cafes/:id/b2b-wallet/topup-instant
+if (preg_match('#^cafes/([^/]+)/b2b-wallet/topup-instant$#', $endpoint, $m) && $method === 'POST') {
+    $cafeId = $m[1];
+    $amount = floatval($body['amount'] ?? 500);
+    if ($amount <= 0) $amount = 500;
+
+    $cIdx = -1;
+    foreach ($store['cafes'] ?? [] as $idx => $c) {
+        if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId) {
+            $cIdx = $idx;
+            break;
+        }
+    }
+    if ($cIdx === -1 && !empty($store['cafes'])) {
+        $cIdx = 0;
+    }
+    if ($cIdx >= 0) {
+        if (!isset($store['cafes'][$cIdx]['b2bWallet'])) {
+            $store['cafes'][$cIdx]['b2bWallet'] = ['balance' => 0, 'minThreshold' => 200, 'transactions' => []];
+        }
+        $store['cafes'][$cIdx]['b2bWallet']['balance'] = floatval($store['cafes'][$cIdx]['b2bWallet']['balance'] ?? 0) + $amount;
+        if (!isset($store['cafes'][$cIdx]['b2bWallet']['transactions'])) {
+            $store['cafes'][$cIdx]['b2bWallet']['transactions'] = [];
+        }
+        array_unshift($store['cafes'][$cIdx]['b2bWallet']['transactions'], [
+            'id' => 'B2B-INSTANT-' . time(),
+            'amount' => $amount,
+            'type' => 'credit',
+            'note' => 'त्वरित B2B 1-क्लिक टॉप-अप (Instant Top-up)',
+            'date' => date('c')
+        ]);
+        saveStore($dataFile, $store);
+        echo json_encode([
+            'success' => true,
+            'balance' => $store['cafes'][$cIdx]['b2bWallet']['balance'],
+            'b2bWallet' => $store['cafes'][$cIdx]['b2bWallet'],
+            'message' => "B2B वॉलेट में ₹{$amount} सफलतापूर्वक जोड़ दिए गए।"
+        ]);
+        exit;
+    }
+    http_response_code(404);
+    echo json_encode(['error' => 'कैफे नहीं मिला।']);
     exit;
 }
 
