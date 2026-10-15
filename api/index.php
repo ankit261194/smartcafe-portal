@@ -1237,7 +1237,7 @@ if ($endpoint === 'wallet/topup-instant' && $method === 'POST') {
         ];
         $store['wallets'][] = $walletData;
     }
-    saveStore($store);
+    saveStore($dataFile, $store);
     echo json_encode(['success' => true, 'balance' => $walletData['balance'], 'wallet' => $walletData]);
     exit;
 }
@@ -2356,6 +2356,9 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $resp = curl_exec($ch);
             curl_close($ch);
             if ($resp) {
@@ -2666,7 +2669,11 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     $liveP4 = null;
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'])) {
-        $liveP4 = dispatchLiveP4Points($normServiceType, $params, $p4ApiKey);
+        try {
+            $liveP4 = dispatchLiveP4Points($normServiceType, $params, $p4ApiKey);
+        } catch (Throwable $e) {
+            $liveP4 = null;
+        }
     }
     $generatedData = null;
     $vehicleData = null;
