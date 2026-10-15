@@ -5,7 +5,8 @@ import {
   MapPin, ExternalLink, AlertCircle, ArrowUpRight, Award, Sparkles,
   Lock, Unlock, Eye, EyeOff, Save, Check, X, FileText, QrCode,
   Megaphone, Trash2, Radio, Activity, HardDrive, Cpu, Server, KeyRound,
-  Power, Car, CreditCard, Zap, Download, ArrowLeft
+  Power, Car, CreditCard, Zap, Download, ArrowLeft,
+  AlertTriangle, Database
 } from 'lucide-react';
 import { authFetch, getServerBaseUrl } from '../utils/api';
 import Services79RatesManager from './superadmin/Services79RatesManager';
@@ -63,6 +64,16 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
   const [gatewaySavedMsg, setGatewaySavedMsg] = useState(false);
   const [gatewayTestResult, setGatewayTestResult] = useState(null);
   const [showApiKey, setShowApiKey] = useState(false);
+
+  // Gateway Health & Low-Balance Monitor (Option 2)
+  const [gatewayHealth, setGatewayHealth] = useState(null);
+  const [loadingGatewayHealth, setLoadingGatewayHealth] = useState(false);
+
+  // MySQL Enterprise Database Architecture & Status (Option 1)
+  const [dbStatus, setDbStatus] = useState(null);
+  const [loadingDbStatus, setLoadingDbStatus] = useState(false);
+  const [migratingDb, setMigratingDb] = useState(false);
+  const [migrationResult, setMigrationResult] = useState(null);
   
   // System Health state
   const [systemHealth, setSystemHealth] = useState(null);
@@ -299,16 +310,75 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
     }
   };
 
+  const fetchGatewayHealth = async () => {
+    setLoadingGatewayHealth(true);
+    try {
+      const res = await authFetch('/api/system/gateway-health?_t=' + Date.now(), { cache: 'no-store' });
+      const data = await res.json();
+      if (data && data.success) {
+        setGatewayHealth(data);
+      }
+    } catch (e) {
+      console.warn('Error fetching gateway health:', e);
+    } finally {
+      setLoadingGatewayHealth(false);
+    }
+  };
+
+  const fetchDbStatus = async () => {
+    setLoadingDbStatus(true);
+    try {
+      const res = await authFetch('/api/system/db-status?_t=' + Date.now(), { cache: 'no-store' });
+      const data = await res.json();
+      if (data && data.dbStatus) {
+        setDbStatus(data.dbStatus);
+      }
+    } catch (e) {
+      console.warn('Error fetching DB status:', e);
+    } finally {
+      setLoadingDbStatus(false);
+    }
+  };
+
+  const handleMigrateDb = async () => {
+    if (!window.confirm('क्या आप JSON स्टोर का संपूर्ण डेटा (Users, Wallets, Orders, Cafes) MySQL में माइग्रेट करना चाहते हैं?')) return;
+    setMigratingDb(true);
+    setMigrationResult(null);
+    try {
+      const res = await authFetch('/api/system/migrate-db?key=Aa@910010025123343', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'Aa@910010025123343' })
+      });
+      const data = await res.json();
+      setMigrationResult(data);
+      if (res.ok && data.success) {
+        alert('✅ ' + data.message);
+        fetchDbStatus();
+      } else {
+        alert('❌ ' + (data.error || 'माइग्रेशन विफल रहा।'));
+      }
+    } catch (e) {
+      alert('सर्वर से संपर्क नहीं हो सका।');
+    } finally {
+      setMigratingDb(false);
+    }
+  };
+
   useEffect(() => {
     fetchStats();
     fetchApiGateway();
+    fetchGatewayHealth();
+    fetchDbStatus();
   }, []);
 
   useEffect(() => {
     if (activeTab === 'system_health') {
       fetchSystemHealth();
+      fetchDbStatus();
     } else if (activeTab === 'api_gateway') {
       fetchApiGateway();
+      fetchGatewayHealth();
     }
   }, [activeTab]);
 
@@ -661,6 +731,82 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Real-Time P4Points Health & Low-Balance Alert Engine (Option 2) */}
+      <div className={`rounded-2xl p-4 sm:p-5 border transition-all ${
+        gatewayHealth?.isLowBalance
+          ? 'bg-rose-50 dark:bg-rose-950/40 border-rose-300 dark:border-rose-800 shadow-md'
+          : 'bg-emerald-50/80 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800/60 shadow-xs'
+      }`}>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start sm:items-center gap-3">
+            <div className={`p-2.5 rounded-xl ${
+              gatewayHealth?.isLowBalance
+                ? 'bg-rose-600 text-white animate-pulse'
+                : 'bg-emerald-600 text-white'
+            }`}>
+              <Activity className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-black tracking-wider uppercase text-slate-500 dark:text-slate-400">
+                  अपस्ट्रीम प्रोवाइडर स्थिति (Upstream P4Points Gateway)
+                </span>
+                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                  gatewayHealth?.status === 'HEALTHY'
+                    ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300'
+                    : gatewayHealth?.status === 'LOW_BALANCE'
+                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300 animate-bounce'
+                    : 'bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300 animate-pulse'
+                }`}>
+                  {gatewayHealth?.status === 'HEALTHY' 
+                    ? '🟢 लाइव व सक्रिय (Healthy)' 
+                    : gatewayHealth?.status === 'LOW_BALANCE' 
+                    ? '🟡 कम बैलेंस (Low Balance)' 
+                    : '🔴 क्रिटिकल / डाउन'}
+                </span>
+              </div>
+              <div className="text-sm sm:text-base font-black text-slate-900 dark:text-white flex flex-wrap items-center gap-3 mt-0.5">
+                <span>उपलब्ध API बैलेंस: <strong className="text-emerald-600 dark:text-emerald-400 font-black">₹{gatewayHealth?.balance ?? '...'}</strong></span>
+                <span className="text-xs font-semibold text-slate-500">लेटेंसी: {gatewayHealth?.latencyMs ? `${gatewayHealth.latencyMs}ms` : 'जांच जारी...'}</span>
+                {dbStatus && (
+                  <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] font-bold bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                    <Database className="w-3 h-3 text-indigo-500" />
+                    डेटाबेस: {dbStatus.isMysqlConnected ? '🟢 MySQL Enterprise' : '🟡 JSON फ़ाइल (Active)'}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={fetchGatewayHealth}
+              disabled={loadingGatewayHealth}
+              className="bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 border border-slate-200 dark:border-slate-700 transition cursor-pointer shadow-xs"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${loadingGatewayHealth ? 'animate-spin' : ''}`} />
+              <span>{loadingGatewayHealth ? 'जांच जारी...' : '🔄 बैलेंस रिफ्रेश'}</span>
+            </button>
+            <a
+              href="https://authorized.p4points.co.in/"
+              target="_blank"
+              rel="noreferrer"
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs"
+            >
+              <span>💳 P4Points पोर्टल ➔</span>
+            </a>
+          </div>
+        </div>
+
+        {gatewayHealth?.alertMessage && (
+          <div className="mt-3 pt-3 border-t border-rose-200 dark:border-rose-800/80 text-xs font-black text-rose-700 dark:text-rose-300 flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600 animate-bounce" />
+            <span>{gatewayHealth.alertMessage}</span>
+          </div>
+        )}
       </div>
 
       {/* Super Admin Navigation Tabs */}
@@ -2185,13 +2331,126 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
               </button>
 
               <button
-                onClick={fetchSystemHealth}
-                disabled={loadingHealth}
+                onClick={() => { fetchSystemHealth(); fetchDbStatus(); }}
+                disabled={loadingHealth || loadingDbStatus}
                 className="bg-indigo-50 dark:bg-indigo-950/60 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition border border-indigo-200 dark:border-indigo-800 cursor-pointer"
               >
-                <RefreshCw className={`w-4 h-4 ${loadingHealth ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-4 h-4 ${(loadingHealth || loadingDbStatus) ? 'animate-spin' : ''}`} />
                 <span>ताजा करें</span>
               </button>
+            </div>
+          </div>
+
+          {/* Option 1: MySQL Enterprise Database Architecture & 1-Click Migration Card */}
+          <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 border-2 border-indigo-700/60 rounded-3xl p-5 text-white shadow-xl space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-2xl bg-indigo-500/20 border border-indigo-400/30 flex items-center justify-center text-indigo-400 shrink-0">
+                  <Database className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-black text-sm text-white">एंटरप्राइज रिलेशनल डेटाबेस (Dual-Mode MySQL / JSON)</h3>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black ${
+                      dbStatus?.isMysqlConnected 
+                        ? 'bg-emerald-500 text-slate-950' 
+                        : 'bg-amber-400 text-slate-950'
+                    }`}>
+                      {dbStatus?.isMysqlConnected ? '🟢 MySQL ENTERPRISE सक्रिय' : '🟡 पोर्टेबल JSON मोड सक्रिय'}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mt-0.5">
+                    {dbStatus?.isMysqlConnected 
+                      ? `Hostinger MySQL डेटाबेस से सफलतापूर्वक कनेक्टेड (${dbStatus.database || 'Database'} @ ${dbStatus.host || 'localhost'})`
+                      : 'वर्तमान में सिस्टम सुरक्षित पोर्टेबल JSON स्टोर पर चल रहा है। Hostinger MySQL पर अपग्रेड करने हेतु नीचे 1-क्लिक माइग्रेशन का उपयोग करें।'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={fetchDbStatus}
+                  disabled={loadingDbStatus}
+                  className="bg-white/10 hover:bg-white/20 text-white font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1.5 transition cursor-pointer"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${loadingDbStatus ? 'animate-spin' : ''}`} />
+                  <span>जांचें</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleMigrateDb}
+                  disabled={migratingDb}
+                  className="bg-emerald-500 hover:bg-emerald-400 active:scale-95 text-slate-950 font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-lg disabled:opacity-50 cursor-pointer"
+                >
+                  <Database className={`w-3.5 h-3.5 ${migratingDb ? 'animate-spin' : ''}`} />
+                  <span>{migratingDb ? 'माइग्रेट हो रहा है...' : '⚡ 1-क्लिक MySQL में माइग्रेट करें'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Live Database Engine Telemetry Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs pt-1">
+              <div className="bg-white/5 border border-white/10 p-3 rounded-xl">
+                <span className="text-slate-400 block text-[10px] font-bold">डेटाबेस इंजन</span>
+                <span className="text-sm font-black text-white mt-1 block font-mono">
+                  {dbStatus?.isMysqlConnected ? 'MariaDB / MySQL PDO' : 'ACID JSON Flat-File'}
+                </span>
+              </div>
+              <div className="bg-white/5 border border-white/10 p-3 rounded-xl">
+                <span className="text-slate-400 block text-[10px] font-bold">कनेक्शन स्थिति</span>
+                <span className={`text-sm font-black mt-1 block font-mono ${dbStatus?.isMysqlConnected ? 'text-emerald-400' : 'text-amber-300'}`}>
+                  {dbStatus?.isMysqlConnected ? 'CONNECTED (Active)' : 'STANDALONE (Safe)'}
+                </span>
+              </div>
+              <div className="bg-white/5 border border-white/10 p-3 rounded-xl">
+                <span className="text-slate-400 block text-[10px] font-bold">कॉन्फिग फ़ाइल</span>
+                <span className="text-sm font-black text-white mt-1 block font-mono">
+                  {dbStatus?.configFound ? 'api/db-config.php (मौजूद)' : 'db-config.sample.php'}
+                </span>
+              </div>
+              <div className="bg-white/5 border border-white/10 p-3 rounded-xl">
+                <span className="text-slate-400 block text-[10px] font-bold">सक्रिय टेबल्स</span>
+                <span className="text-sm font-black text-cyan-400 mt-1 block font-mono">
+                  {dbStatus?.tables?.length ? `${dbStatus.tables.length} टेबल्स तैयार` : '7 रिलेशनल स्कीमा'}
+                </span>
+              </div>
+            </div>
+
+            {/* Migration Feedback Result Alert */}
+            {migrationResult && (
+              <div className={`p-3.5 rounded-xl text-xs border ${
+                migrationResult.success 
+                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300' 
+                  : 'bg-rose-500/10 border-rose-500/30 text-rose-300'
+              }`}>
+                <div className="font-black flex items-center gap-2">
+                  <span>{migrationResult.success ? '✅ माइग्रेशन सफल:' : '❌ माइग्रेशन सूचना:'}</span>
+                  <span>{migrationResult.message || migrationResult.error}</span>
+                </div>
+                {migrationResult.details && (
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-2 text-[11px] font-mono text-slate-300">
+                    <div>यूज़र्स: <strong>{migrationResult.details.users ?? 0}</strong></div>
+                    <div>वॉलेट्स: <strong>{migrationResult.details.wallets ?? 0}</strong></div>
+                    <div>कैफे: <strong>{migrationResult.details.cafes ?? 0}</strong></div>
+                    <div>ऑर्डर्स: <strong>{migrationResult.details.orders ?? 0}</strong></div>
+                    <div>ट्रांजेक्शन: <strong>{migrationResult.details.transactions ?? 0}</strong></div>
+                    <div>UTRs: <strong>{migrationResult.details.utrs ?? 0}</strong></div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Hostinger Step-by-Step Instructions */}
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-3.5 text-xs text-slate-300 space-y-2">
+              <span className="font-extrabold text-white text-[11px] flex items-center gap-1.5">
+                <span className="text-amber-400">💡</span> Hostinger hPanel MySQL 2-मिनट एक्टिवेशन गाइड:
+              </span>
+              <ol className="list-decimal list-inside space-y-1 text-[11px] text-slate-300 leading-relaxed">
+                <li>Hostinger hPanel ➔ <strong>Databases</strong> ➔ <strong>MySQL Databases</strong> में जाएं और नया डेटाबेस व यूजर बनाएं (उदा. <code className="bg-white/10 px-1 py-0.5 rounded text-amber-300">u123456_smartcafe</code>)।</li>
+                <li>फ़ाइल मैनेजर में <code className="bg-white/10 px-1 py-0.5 rounded text-amber-300">public_html/api/db-config.sample.php</code> की एक कॉपी बनाकर नाम <code className="bg-white/10 px-1 py-0.5 rounded text-emerald-300 font-bold">db-config.php</code> रखें और अपने डेटाबेस क्रेडेंशियल्स भरें।</li>
+                <li>ऊपर दिए गए <strong>"⚡ 1-क्लिक MySQL में माइग्रेट करें"</strong> बटन को दबाएं। सिस्टम स्वतः 7 टेबल्स बनाकर सारा पिछला डेटा बिना किसी डेटा हानि के MySQL में सुरक्षित कर देगा।</li>
+              </ol>
             </div>
           </div>
 

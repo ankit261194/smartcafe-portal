@@ -77,6 +77,8 @@ if (-not (Test-Path "$PSScriptRoot\client\dist\api")) {
     New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\api" -Force
 }
 Copy-Item -Path "$PSScriptRoot\client\public\api\index.php" -Destination "$PSScriptRoot\client\dist\api\index.php" -Force
+Copy-Item -Path "$PSScriptRoot\client\public\api\db.php" -Destination "$PSScriptRoot\client\dist\api\db.php" -Force
+Copy-Item -Path "$PSScriptRoot\client\public\api\db-config.sample.php" -Destination "$PSScriptRoot\client\dist\api\db-config.sample.php" -Force
 if (-not (Test-Path "$PSScriptRoot\client\dist\api\data")) {
     New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\api\data" -Force
 }
