@@ -4507,6 +4507,38 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             ];
             $docTitle = "ताज़ा सरकारी नौकरी, एडमिट कार्ड व योजनाएं अलर्ट";
             $refNumber = 'FEED-' . date('Ymd');
+        } elseif ($normServiceType === 'pvc_auto_cropper' || strpos($normServiceType, 'pvc_auto') !== false || strpos($normServiceType, 'cropper') !== false) {
+            $generatedData = [
+                'cardType' => $params['cardType'] ?? 'A4 to CR-80 PVC Smart Card',
+                'frontUrl' => $params['frontUrl'] ?? '',
+                'backUrl' => $params['backUrl'] ?? '',
+                'sourceFile' => $params['sourceFile'] ?? 'A4 Document',
+                'refNumber' => 'PVC-' . rand(100000, 999999),
+                'name' => $params['customerName'] ?? 'ग्राहक PVC कार्ड',
+                'paperSize' => $params['paperSize'] ?? 'A4 Standard Sheet'
+            ];
+            $docTitle = "A4 to PVC कार्ड ऑटो-क्रॉप लेआउट (CR-80 85.6mm×54mm)";
+            $refNumber = $generatedData['refNumber'];
+        } elseif ($normServiceType === 'passport_photo_maker' || strpos($normServiceType, 'passport_photo') !== false) {
+            $generatedData = [
+                'photoCount' => intval($params['photoCount'] ?? 8),
+                'paperSize' => $params['paperSize'] ?? '4x6 Inch Photo Paper',
+                'photoUrl' => $params['photoUrl'] ?? '',
+                'refNumber' => 'PHOTO-' . rand(100000, 999999),
+                'name' => $params['customerName'] ?? 'पासपोर्ट साइज फोटो शीट'
+            ];
+            $docTitle = "पासपोर्ट साइज फोटो प्रिंटेबल शीट (4x6 / 8 फोटो)";
+            $refNumber = $generatedData['refNumber'];
+        } elseif ($normServiceType === 'govt_form_resizer' || strpos($normServiceType, 'resizer') !== false || strpos($normServiceType, 'compressor') !== false) {
+            $generatedData = [
+                'targetKb' => $params['targetKb'] ?? '50KB',
+                'compressedSize' => $params['compressedSize'] ?? '48KB',
+                'presetName' => $params['presetName'] ?? 'SSC / Govt Form 50KB',
+                'refNumber' => 'RESIZE-' . rand(100000, 999999),
+                'name' => $params['customerName'] ?? 'सरकारी फॉर्म फोटो/हस्ताक्षर'
+            ];
+            $docTitle = "सरकारी फॉर्म फोटो व साइन रिसाइज़र ({$generatedData['targetKb']})";
+            $refNumber = $generatedData['refNumber'];
         }
     }
 

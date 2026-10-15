@@ -4348,6 +4348,38 @@ app.post('/api/services/execute-automated', async (req, res) => {
       };
       docTitle = 'ताज़ा सरकारी नौकरी, एडमिट कार्ड व योजनाएं अलर्ट';
       refNumber = generatedData.refNumber;
+    } else if (normServiceType === 'pvc_auto_cropper' || normServiceType.includes('cropper') || normServiceType.includes('pvc_auto')) {
+      generatedData = {
+        cardType: params?.cardType || 'A4 to CR-80 PVC Smart Card',
+        frontUrl: params?.frontUrl || '',
+        backUrl: params?.backUrl || '',
+        sourceFile: params?.sourceFile || 'A4 Document',
+        refNumber: `PVC-${Date.now().toString(36).toUpperCase()}`,
+        name: params?.customerName || 'ग्राहक PVC कार्ड',
+        paperSize: params?.paperSize || 'A4 Standard Sheet'
+      };
+      docTitle = 'A4 to PVC कार्ड ऑटो-क्रॉप लेआउट (CR-80 85.6mm×54mm)';
+      refNumber = generatedData.refNumber;
+    } else if (normServiceType === 'passport_photo_maker' || normServiceType.includes('passport_photo')) {
+      generatedData = {
+        photoCount: Number(params?.photoCount) || 8,
+        paperSize: params?.paperSize || '4x6 Inch Photo Paper',
+        photoUrl: params?.photoUrl || '',
+        refNumber: `PHOTO-${Date.now().toString(36).toUpperCase()}`,
+        name: params?.customerName || 'पासपोर्ट साइज फोटो शीट'
+      };
+      docTitle = 'पासपोर्ट साइज फोटो प्रिंटेबल शीट (4x6 / 8 फोटो)';
+      refNumber = generatedData.refNumber;
+    } else if (normServiceType === 'govt_form_resizer' || normServiceType.includes('resizer') || normServiceType.includes('compressor')) {
+      generatedData = {
+        targetKb: params?.targetKb || '50KB',
+        compressedSize: params?.compressedSize || '48KB',
+        presetName: params?.presetName || 'SSC / Govt Form 50KB',
+        refNumber: `RESIZE-${Date.now().toString(36).toUpperCase()}`,
+        name: params?.customerName || 'सरकारी फॉर्म फोटो/हस्ताक्षर'
+      };
+      docTitle = `सरकारी फॉर्म फोटो व साइन रिसाइज़र (${generatedData.targetKb})`;
+      refNumber = generatedData.refNumber;
     } else {
       generatedData = getReceiptDetails(rawVal || customerPhone, {
         ...params,

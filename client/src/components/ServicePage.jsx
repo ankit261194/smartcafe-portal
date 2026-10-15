@@ -15,6 +15,9 @@ import { CATEGORY_ICON_MAP } from './RekhaDashboard';
 import rdService from '../utils/RDServiceBridge';
 import LiveOtpModal from './LiveOtpModal';
 import PvcTraySheetModal from './PvcTraySheetModal';
+import PvcCardAutoCropper from './tools/PvcCardAutoCropper';
+import PassportPhotoMaker from './tools/PassportPhotoMaker';
+import GovtFormResizer from './tools/GovtFormResizer';
 
 // Sample Avatars (Self-contained, sharp vector SVGs as data URIs)
 const SAMPLE_PHOTOS = {
@@ -72,7 +75,9 @@ function ServicePageContent({
 
   const toolKind = useMemo(() => {
     const id = (currentTool?.id || '').toLowerCase();
-    const cat = (currentTool?.category || '').toLowerCase();
+    if (id === 'pvc_auto_cropper' || id.includes('cropper') || id.includes('pvc_auto') || id.includes('pvc_crop')) return 'pvc_crop';
+    if (id === 'passport_photo_maker' || id.includes('passport_photo') || id.includes('photo_maker')) return 'passport_photo';
+    if (id === 'govt_form_resizer' || id.includes('resizer') || id.includes('compressor')) return 'govt_resizer';
     if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc'].includes(id) || cat === 'rc' || id.includes('rc_')) return 'rc';
     if (['pan', 'pan_find', 'pan_details'].includes(id) || cat === 'pan' || id.includes('pan_')) return 'pan';
     if (id === 'epan') return 'epan';
@@ -2000,7 +2005,14 @@ function ServicePageContent({
       {/* =================================================================== */}
       {/* 2. DEDICATED FULL-SCREEN SERVICE WORKSPACE (2-COLUMN RESPONSIVE) */}
       {/* =================================================================== */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full max-w-full">
+      {toolKind === 'pvc_crop' ? (
+        <PvcCardAutoCropper onOrderSaved={fetchOrderHistory} />
+      ) : toolKind === 'passport_photo' ? (
+        <PassportPhotoMaker onOrderSaved={fetchOrderHistory} />
+      ) : toolKind === 'govt_resizer' ? (
+        <GovtFormResizer onOrderSaved={fetchOrderHistory} />
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start w-full max-w-full">
         
         {/* ================================================================= */}
         {/* LEFT COLUMN: THE INPUT FORM (AUTO-CLEARING, HTML5 DATES, PHOTO) */}
@@ -3452,6 +3464,8 @@ function ServicePageContent({
           </div>
 
         </div>
+      </div>
+      )}
 
       {/* Live Government OTP Bridge Modal */}
       <LiveOtpModal
@@ -3476,7 +3490,6 @@ function ServicePageContent({
         toolKind={toolKind}
       />
 
-      </div>
     </div>
   );
 }

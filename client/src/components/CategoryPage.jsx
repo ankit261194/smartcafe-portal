@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { CATEGORY_ICON_MAP } from './RekhaDashboard';
+import { SERVICE_CATEGORIES } from '../data/servicesCatalog';
 
 // Custom Graphical Badges for Round Circular Icons (matching Rekha Print Style)
 function ServiceRoundIcon({ toolKind, serviceId }) {
@@ -129,7 +130,7 @@ function ServiceRoundIcon({ toolKind, serviceId }) {
     );
   }
 
-  if (toolKind === 'other' || sId.includes('ifsc') || sId.includes('pincode') || sId.includes('qr') || sId.includes('sarkari')) {
+  if (toolKind === 'other' || sId.includes('ifsc') || sId.includes('pincode') || sId.includes('qr') || sId.includes('sarkari') || sId.includes('cropper') || sId.includes('photo_maker') || sId.includes('resizer')) {
     return (
       <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-tr from-amber-500 to-orange-600 text-white flex items-center justify-center shadow-xs">
         <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 stroke-[2.2]" />
@@ -148,6 +149,7 @@ export default function CategoryPage({
   category,
   catalog = [],
   onSelectService,
+  onSelectCategory,
   onBack,
   theme = 'light'
 }) {
@@ -197,6 +199,40 @@ export default function CategoryPage({
 
   return (
     <div className="space-y-6 pb-12 animate-in fade-in duration-200">
+
+      {/* =================================================================== */}
+      {/* 0. CATEGORY QUICK SWITCHER HORIZONTAL BAR */}
+      {/* =================================================================== */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+        <span className="text-xs font-black text-slate-500 shrink-0 hidden sm:inline">
+          {language === 'hi' ? 'श्रेणी बदलें:' : 'Switch Category:'}
+        </span>
+        {SERVICE_CATEGORIES.map(cat => {
+          const isActive = cat.id === category?.id;
+          const isOther = cat.id === 'other';
+          return (
+            <button
+              key={cat.id}
+              type="button"
+              onClick={() => onSelectCategory && onSelectCategory(cat)}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold transition cursor-pointer shrink-0 whitespace-nowrap active:scale-95 shadow-2xs flex items-center gap-1.5 ${
+                isActive
+                  ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black shadow-sm'
+                  : isOther
+                  ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-red-600 text-white font-black animate-pulse'
+                  : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:border-orange-500'
+              }`}
+            >
+              <span>{localize(cat.title)}</span>
+              {isOther && !isActive && (
+                <span className="text-[9px] bg-white text-orange-600 px-1 rounded-full font-black">
+                  7 Free
+                </span>
+              )}
+            </button>
+          );
+        })}
+      </div>
       
       {/* =================================================================== */}
       {/* 1. TOP BREADCRUMB & HEADER BAR */}

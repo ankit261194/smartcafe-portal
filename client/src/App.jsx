@@ -677,6 +677,8 @@ export default function App() {
               setSelectedCategory(null);
               if (mode === 'customer') setCustomerTab('home');
               else setAdminTab('dashboard');
+            } else if (tabId === 'other_services') {
+              handleSelectCategory('other');
             } else if (tabId === 'orders') {
               if (mode === 'customer') setCustomerTab('orders');
               else setAdminTab('orders');
@@ -1010,6 +1012,7 @@ export default function App() {
                 onSelectService={(serviceId) => {
                   handleLaunchService(serviceId);
                 }}
+                onSelectCategory={handleSelectCategory}
                 onBack={() => setCustomerTab('home')}
                 theme={theme}
               />
@@ -1179,6 +1182,7 @@ export default function App() {
                   onSelectService={(serviceId) => {
                     handleLaunchService(serviceId);
                   }}
+                  onSelectCategory={handleSelectCategory}
                   onBack={() => setAdminTab('dashboard')}
                   theme={theme}
                 />

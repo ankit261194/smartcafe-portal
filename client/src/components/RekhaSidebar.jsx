@@ -1,7 +1,7 @@
 import React from 'react';
 import { 
   LayoutDashboard, Printer, Search, Wallet, User, 
-  HelpCircle, LogOut, X, ShieldCheck
+  HelpCircle, LogOut, X, ShieldCheck, Sparkles
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -29,12 +29,19 @@ export default function RekhaSidebar({
   const isUserLoggedIn = Boolean(customerSession?.phone || isOperator || isSuperAdminAuth);
   const displayBalance = (isOperator || mode === 'admin') ? sanchalakB2bBalance : walletBalance;
 
-  // Exact 6 core navigation items as strictly requested (Zero Clutter, 100% Fixed)
+  // Exact 7 core navigation items with Other Services featured
   const NAV_ITEMS = [
     {
       id: 'dashboard',
       label: { hi: 'डैशबोर्ड', en: 'Dashboard' },
       icon: LayoutDashboard
+    },
+    {
+      id: 'other_services',
+      label: { hi: '⚡ अन्य उपयोगी सेवाएं', en: '⚡ Other Services' },
+      icon: Sparkles,
+      badge: { hi: '7 टूल्स', en: '7 Tools' },
+      isSpecial: true
     },
     {
       id: 'orders',

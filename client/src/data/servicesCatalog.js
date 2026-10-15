@@ -282,6 +282,24 @@ const SERVICE_ENRICHMENT = {
     sub: { hi: 'रोज़ाना निकलने वाले सभी नए सरकारी फॉर्म व एडमिट कार्ड का 24x7 लाइव फीड', en: '24x7 Live Feed of Latest Government Forms & Exams' },
     inputLabel: { hi: 'सर्च कीवर्ड या फ़िल्टर (वैकल्पिक)', en: 'Search Keyword / Filter (Optional)' },
     placeholder: { hi: 'जैसे SSC, Railway, Police, UPSC', en: 'e.g. SSC, Railway, Police, UPSC' }
+  },
+  pvc_auto_cropper: {
+    title: { hi: 'A4 to PVC कार्ड ऑटो-क्रॉपर (CR-80 85.6mm×54mm)', en: 'A4 to PVC Card Auto-Cropper (CR-80)' },
+    sub: { hi: 'ई-आधार, वोटर या आयुष्मान A4 PDF/इमेज से 1-क्लिक में फ्रंट व बैक PVC कार्ड बनाएं', en: '1-Click Front & Back ISO CR-80 PVC Card Cropper from A4 PDF/Image' },
+    inputLabel: { hi: 'A4 PDF या कार्ड इमेज अपलोड करें', en: 'Upload A4 PDF or Card Image' },
+    placeholder: { hi: 'फ़ाइल चुनें', en: 'Choose File' }
+  },
+  passport_photo_maker: {
+    title: { hi: '1-क्लिक पासपोर्ट साइज फोटो मेकर (4x6 शीट / 8 फोटो)', en: '1-Click Passport Photo Maker (4x6 Sheet)' },
+    sub: { hi: '1 फोटो अपलोड करने पर तुरंत 6, 8 या 12 पासपोर्ट फोटो (3.5x4.5cm) बॉर्डर के साथ प्रिंट शीट', en: 'Instant 4x6 Printable Sheet with 6, 8 or 12 Bordered Photos' },
+    inputLabel: { hi: 'ग्राहक की फोटो अपलोड करें', en: 'Upload Customer Photo' },
+    placeholder: { hi: 'फ़ाइल चुनें', en: 'Choose File' }
+  },
+  govt_form_resizer: {
+    title: { hi: 'सरकारी फॉर्म फोटो व साइन रिसाइज़र (20KB - 50KB Exact)', en: 'Govt Form Photo & Sign Resizer (Exact 50KB)' },
+    sub: { hi: 'SSC, पुलिस, छात्रवृत्ति व पैन फॉर्म के लिए फोटो व साइन बिना क्वालिटी खोए मनचाहे KB में सेट करें', en: 'Resize & Compress Photo/Sign to Exact 20KB-50KB with Zero Quality Loss' },
+    inputLabel: { hi: 'फोटो या हस्ताक्षर अपलोड करें', en: 'Upload Photo or Signature' },
+    placeholder: { hi: 'फ़ाइल चुनें', en: 'Choose File' }
   }
 };
 
