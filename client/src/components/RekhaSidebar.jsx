@@ -250,24 +250,40 @@ export default function RekhaSidebar({
                     const Icon = item.icon;
                     const itemLabel = localize(item.label);
 
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => {
-                          onSelectTab(item.id);
-                          if (window.innerWidth < 1024) onClose();
-                        }}
-                        className={`w-full flex items-center justify-start gap-2.5 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer shadow-xs text-left ${
-                          isActive 
-                            ? 'bg-gradient-to-r from-orange-600 via-amber-600 to-orange-700 text-white font-black shadow-md shadow-orange-500/30 border border-orange-500' 
-                            : 'text-slate-950 dark:text-white hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-100/70 dark:hover:bg-slate-800 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-orange-300'
-                        }`}
-                      >
-                        <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-orange-600 dark:text-orange-400'}`} />
-                        <span className="font-black text-xs sm:text-sm leading-snug">{itemLabel}</span>
-                      </button>
-                    );
+                      const rawKey = item.id.replace('tool-', '');
+                      const isComing = ['aadhaar_advance', 'aadhaar_original_pdf_no_otp', 'aadhaar_pvc', 'abha_card', 'abha_otp', 'samagra_service', 'sambal_pdf', 'ayushman_image_jpg'].includes(rawKey);
+
+                      return (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() => {
+                            onSelectTab(item.id);
+                            if (window.innerWidth < 1024) onClose();
+                          }}
+                          className={`w-full flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-black transition cursor-pointer shadow-xs text-left ${
+                            isActive 
+                              ? 'bg-gradient-to-r from-orange-600 via-amber-600 to-orange-700 text-white font-black shadow-md shadow-orange-500/30 border border-orange-500' 
+                              : 'text-slate-950 dark:text-white hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-100/70 dark:hover:bg-slate-800 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:border-orange-300'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-orange-600 dark:text-orange-400'}`} />
+                            <span className="font-black text-xs sm:text-sm leading-snug truncate">{itemLabel}</span>
+                          </div>
+                          {item.id.startsWith('tool-') && (
+                            isComing ? (
+                              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${isActive ? 'bg-amber-300 text-slate-950' : 'bg-amber-100 dark:bg-amber-900/50 text-amber-800 dark:text-amber-200'}`}>
+                                ⏳ Soon
+                              </span>
+                            ) : (
+                              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${isActive ? 'bg-emerald-300 text-slate-950' : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-200'}`}>
+                                🟢 Live
+                              </span>
+                            )
+                          )}
+                        </button>
+                      );
                   })}
                 </div>
               </div>

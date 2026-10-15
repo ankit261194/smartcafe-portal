@@ -377,6 +377,12 @@ export default function ServicePage({
 
       const data = await res.json();
 
+      if (data.isComingSoon) {
+        setErrorMsg(data.message || '⏳ यह सेवा आगामी है (Coming Soon)। नए अधिकृत API प्रोवाइडर के साथ जल्द लाइव की जा रही है।');
+        setLoading(false);
+        return;
+      }
+
       if (res.status === 403) {
         await executeDirectLookupFallback(val);
         setLoading(false);
@@ -386,6 +392,7 @@ export default function ServicePage({
       if (res.ok && data.success) {
         // Overlay user real inputs strictly
         const rawGen = data.generatedData || data.vehicleData || data.data || {};
+        const officialPdf = rawGen.pdfUrl || rawGen.pdf || rawGen.pdf_base64 || rawGen.pdfBase64 || rawGen.Rc_Pdf || data.pdfUrl || null;
         const mergedData = {
           ...rawGen,
           regNo: val,
@@ -410,11 +417,14 @@ export default function ServicePage({
           gender: gender,
           address: addressInput.trim() || rawGen.address || '-',
           photoUrl: photoData,
-          signUrl: signData
+          signUrl: signData,
+          pdfUrl: officialPdf,
+          isLiveFromP4Points: Boolean(data.isLiveFromP4Points || rawGen.isLiveFromP4Points || data.source === 'p4points' || rawGen.source === 'p4points')
         };
 
         setCurrentResult({
           ...data,
+          pdfUrl: officialPdf,
           generatedData: mergedData,
           vehicleData: mergedData
         });
@@ -537,6 +547,23 @@ export default function ServicePage({
         return;
       }
       const val = primaryInput.trim() || activeData.regNo || activeData.panNo || activeData.aadhaarNo || activeData.appNo || '-';
+
+      // 1. If authentic official PDF is returned from P4Points upstream, download it directly!
+      const rawLivePdf = activeData.pdfUrl || activeData.pdf || activeData.pdf_base64 || activeData.pdfBase64 || activeData.Rc_Pdf || activeData.raw?.pdf_base64 || activeData.raw?.pdfBase64 || activeData.raw?.pdf || activeData.raw?.data?.pdf_base64;
+      if (rawLivePdf && typeof rawLivePdf === 'string' && rawLivePdf.length > 50) {
+        let pdfDataUri = rawLivePdf;
+        if (!pdfDataUri.startsWith('data:') && !pdfDataUri.startsWith('http')) {
+          pdfDataUri = `data:application/pdf;base64,${rawLivePdf}`;
+        }
+        const a = document.createElement('a');
+        a.href = pdfDataUri;
+        a.download = `${currentTool.id}_${val}_official.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return;
+      }
+
       const isCard = ['rc', 'pan', 'aadhaar', 'voter', 'dl', 'ayushman', 'epan'].includes(toolKind);
       const cardData = activeData;
 
@@ -1718,21 +1745,49 @@ export default function ServicePage({
         <div className="no-print w-full lg:col-span-5 space-y-5">
           <div className="bg-white dark:bg-[#0c162c] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md overflow-hidden">
             
-            {/* Blue Header Banner with Title on left & [← Back] on right */}
-            <div className="bg-[#1d4ed8] dark:bg-[#1e40af] text-white px-4 py-3.5 flex items-center justify-between shadow-xs">
+            {/* Header Banner with Title on left & Status Badge & [← Back] on right */}
+            <div className={`${currentTool?.isComingSoon ? 'bg-slate-800' : 'bg-[#1d4ed8] dark:bg-[#1e40af]'} text-white px-4 py-3.5 flex items-center justify-between shadow-xs gap-2`}>
               <span className="font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-2 truncate pr-2">
                 <ServiceIconComponent className="w-4 h-4 text-white shrink-0" />
                 <span className="truncate">{currentTool?.name || currentTool?.title?.en || currentTool?.id?.toUpperCase()}</span>
               </span>
-              <button
-                type="button"
-                onClick={onBack}
-                className="bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition cursor-pointer shrink-0"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>{language === 'hi' ? 'वापस' : 'Back'}</span>
-              </button>
+              <div className="flex items-center gap-2 shrink-0">
+                {currentTool?.isComingSoon ? (
+                  <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
+                    ⏳ Coming Soon
+                  </span>
+                ) : (
+                  <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
+                    🟢 Live API
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={onBack}
+                  className="bg-white/20 hover:bg-white/30 active:scale-95 text-white font-bold text-xs px-2.5 py-1 rounded-lg flex items-center gap-1 transition cursor-pointer"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  <span>{language === 'hi' ? 'वापस' : 'Back'}</span>
+                </button>
+              </div>
             </div>
+
+            {/* Coming Soon Notice Banner */}
+            {currentTool?.isComingSoon && (
+              <div className="m-4 mb-0 p-3.5 bg-amber-500/10 border-2 border-amber-500/40 rounded-xl text-amber-900 dark:text-amber-200 text-xs font-bold flex items-start gap-2.5">
+                <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+                <div>
+                  <div className="font-black text-xs sm:text-sm text-amber-950 dark:text-amber-300">
+                    {language === 'hi' ? '⏳ यह सेवा आगामी है (Coming Soon)' : '⏳ Coming Soon Service'}
+                  </div>
+                  <div className="text-[11px] text-slate-600 dark:text-slate-300 font-medium mt-0.5">
+                    {language === 'hi' 
+                      ? 'यह सेवा नए अधिकृत API प्रोवाइडर के साथ शीघ्र ही लाइव की जाएगी। वर्तमान में इस सेवा पर कोई शुल्क नहीं कटेगा।' 
+                      : 'This service will be made live shortly with an authorized API provider. No fee will be deducted.'}
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Card Body: EXACT Form Inputs matching Screenshots */}
             <form onSubmit={handleInstantGenerate} className="p-5 sm:p-6 space-y-4">
@@ -1807,14 +1862,16 @@ export default function ServicePage({
 
                   <button
                     type="submit"
-                    disabled={loading}
-                    className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-blue-600/25 transition disabled:opacity-50 cursor-pointer"
+                    disabled={loading || currentTool?.isComingSoon}
+                    className={`${currentTool?.isComingSoon ? 'bg-slate-400 dark:bg-slate-700 cursor-not-allowed opacity-75' : 'bg-blue-600 hover:bg-blue-700 active:scale-95 shadow-md shadow-blue-600/25 cursor-pointer'} text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition`}
                   >
                     {loading ? (
                       <>
                         <RefreshCw className="w-4 h-4 animate-spin" />
                         <span>{language === 'hi' ? 'खोज रहे हैं...' : 'Processing...'}</span>
                       </>
+                    ) : currentTool?.isComingSoon ? (
+                      <span>{language === 'hi' ? '⏳ सेवा जल्द उपलब्ध होगी' : '⏳ Coming Soon'}</span>
                     ) : (
                       <span>{getActionButtonText()}</span>
                     )}

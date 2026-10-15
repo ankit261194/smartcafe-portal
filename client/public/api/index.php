@@ -153,13 +153,36 @@ function getStore($dataFile) {
                         $data['wallets'][] = [
                             'phone' => $uPhone,
                             'customerName' => $u['name'] ?? 'ग्राहक',
-                            'balance' => floatval($u['balance'] ?? 500),
+                            'balance' => floatval($u['balance'] ?? 0),
                             'transactions' => []
                         ];
                         $changed = true;
                     }
                 }
             }
+
+            // Security Protection: Customer wallet for 8006518960 and all new accounts strictly ₹0
+            foreach ($data['wallets'] as &$w) {
+                if (($w['phone'] ?? '') === '8006518960') {
+                    $hasApprovedUtr = false;
+                    foreach ($data['utrRequests'] ?? [] as $utr) {
+                        if (($utr['customerPhone'] ?? '') === '8006518960' && ($utr['status'] ?? '') === 'approved') {
+                            $hasApprovedUtr = true;
+                            break;
+                        }
+                    }
+                    if (!$hasApprovedUtr && ($w['balance'] ?? 0) != 0) {
+                        $w['balance'] = 0;
+                        if (isset($w['transactions']) && is_array($w['transactions'])) {
+                            $w['transactions'] = array_values(array_filter($w['transactions'], function($tx) {
+                                return ($tx['id'] ?? '') !== 'TXN-INIT-500';
+                            }));
+                        }
+                        $changed = true;
+                    }
+                }
+            }
+            unset($w);
 
             if ($changed) {
                 file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
@@ -1161,6 +1184,36 @@ if (preg_match('#^wallet/([0-9]+)$#', $endpoint, $m)) {
     if (!isset($store['wallets'])) $store['wallets'] = [];
     foreach ($store['wallets'] as $w) {
         if ($w['phone'] === $phone) { $wallet = $w; break; }
+    }
+    if ($phone === '8006518960') {
+        $hasApprovedUtr = false;
+        foreach ($store['utrRequests'] ?? [] as $utr) {
+            if (($utr['customerPhone'] ?? '') === '8006518960' && ($utr['status'] ?? '') === 'approved') {
+                $hasApprovedUtr = true;
+                break;
+            }
+        }
+        if (!$hasApprovedUtr) {
+            if (!$wallet) {
+                $wallet = ['phone' => $phone, 'customerName' => 'ankit kumar', 'balance' => 0, 'transactions' => []];
+                $store['wallets'][] = $wallet;
+            } else {
+                $wallet['balance'] = 0;
+                if (isset($wallet['transactions']) && is_array($wallet['transactions'])) {
+                    $wallet['transactions'] = array_values(array_filter($wallet['transactions'], function($tx) {
+                        return ($tx['id'] ?? '') !== 'TXN-INIT-500';
+                    }));
+                }
+            }
+            foreach ($store['wallets'] as &$sw) {
+                if (($sw['phone'] ?? '') === '8006518960') {
+                    $sw['balance'] = 0;
+                    $sw['transactions'] = $wallet['transactions'];
+                }
+            }
+            unset($sw);
+            saveStore($dataFile, $store);
+        }
     }
     if (!$wallet) {
         $wallet = ['phone' => $phone, 'customerName' => 'ग्राहक', 'balance' => 0, 'transactions' => []];
@@ -2606,12 +2659,16 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         if (strpos($lowerUrl, 'rc') !== false || strpos($lowerUrl, 'vahan') !== false) {
             $regClean = strtoupper(preg_replace('/[\s-]+/', '', $val));
             $p4Params['rcno'] = $regClean;
+            $p4Params['vehicle'] = $regClean;
             $p4Params['vehicalNumber'] = $regClean;
             $p4Params['rc_number'] = $regClean;
-            $p4Params['type'] = 'non chip';
-            $p4Params['tpe'] = 'non chip';
+            $p4Params['type'] = 'rcpdf';
+            $p4Params['tpe'] = 'rcpdf';
             $p4Params['cardtype'] = '1';
             $p4Params['chiptype'] = '1';
+            if (!empty($params['fatherName'])) {
+                $p4Params['fatherName'] = $params['fatherName'];
+            }
         }
         if (strpos($lowerUrl, 'pan') !== false || strpos($lowerUrl, 'gst') !== false) {
             $panClean = strtoupper(trim($val));
@@ -2631,19 +2688,29 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
                 $p4Params['gst'] = $val;
             }
         }
+        if (strpos($lowerUrl, 'aadhaar_pdf') !== false) {
+            $p4Params['aadhaar'] = preg_replace('/[^0-9]/', '', $val);
+            if (!isset($p4Params['action'])) $p4Params['action'] = 'sendOtp';
+        }
+        if (strpos($lowerUrl, 'ekyc') !== false) {
+            $p4Params['aadhar'] = preg_replace('/[^0-9]/', '', $val);
+            if (!empty($params['bioenc'])) $p4Params['bioenc'] = $params['bioenc'];
+        }
         if (strpos($lowerUrl, 'voter') !== false || strpos($lowerUrl, 'epic') !== false) {
             $epicClean = strtoupper(trim($val));
             $p4Params['epicNumber'] = $epicClean;
             $p4Params['epic'] = $epicClean;
             $p4Params['epic_number'] = $epicClean;
             $p4Params['voterNumber'] = $epicClean;
-            $p4Params['mobile'] = $params['mobile'] ?? ($params['phone'] ?? '');
+            $p4Params['mobile'] = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['phone'] ?? '9876543210'));
+            if (!isset($p4Params['action'])) $p4Params['action'] = 'status';
         }
         if (strpos($lowerUrl, 'ration') !== false) {
-            $p4Params['ration_no'] = $val;
-            $p4Params['aadhar'] = $val;
-            $p4Params['uidNumber'] = $val;
-            $p4Params['rationtype'] = 'NFSA';
+            $cleanRation = trim($val);
+            $p4Params['ration_no'] = $cleanRation;
+            $p4Params['aadhar'] = $cleanRation;
+            $p4Params['uidNumber'] = $cleanRation;
+            $p4Params['rationtype'] = $params['rationtype'] ?? 'new';
         }
         if (strpos($lowerUrl, 'dl') !== false) {
             $p4Params['dlNo'] = strtoupper(trim($val));
@@ -2655,7 +2722,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             $p4Params['idNumber'] = $val;
             $p4Params['application_number'] = $val;
             $p4Params['date_of_birth'] = $params['dob'] ?? '01-01-1990';
-            $p4Params['state_name'] = 'UP';
+            $p4Params['state_name'] = $params['state'] ?? 'UP';
         }
         if (strpos($lowerUrl, 'electric') !== false || strpos($lowerUrl, 'elctric') !== false || strpos($lowerUrl, 'bill') !== false) {
             $p4Params['caNumber'] = preg_replace('/[^0-9]/', '', $val);
@@ -2674,7 +2741,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         }
         if (strpos($lowerUrl, 'agristak') !== false || strpos($lowerUrl, 'agristack') !== false) {
             $p4Params['uidNumber'] = preg_replace('/[^0-9]/', '', $val);
-            $p4Params['state'] = 'UP';
+            $p4Params['state'] = $params['state'] ?? 'UP';
         }
         if (strpos($lowerUrl, 'rtps') !== false) {
             $p4Params['applicationNumber'] = trim($val);
@@ -3545,6 +3612,14 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                 break;
             }
         }
+    if ($service79 && !empty($service79['isComingSoon'])) {
+        echo json_encode([
+            'success' => false,
+            'isComingSoon' => true,
+            'message' => '⏳ यह सेवा आगामी है (Coming Soon)। नए आधिकारिक API प्रोवाइडर के साथ जल्द लाइव की जा रही है।',
+            'service' => $service79
+        ]);
+        exit;
     }
 
     $defaultWholesaleRates = [

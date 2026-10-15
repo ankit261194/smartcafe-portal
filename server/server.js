@@ -3031,12 +3031,14 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     if (lowerUrl.includes('rc') || lowerUrl.includes('vahan')) {
       const regClean = val.toUpperCase().replace(/[\s-]+/g, '');
       p4Params.rcno = regClean;
+      p4Params.vehicle = regClean;
       p4Params.vehicalNumber = regClean;
       p4Params.rc_number = regClean;
-      p4Params.type = 'non chip';
-      p4Params.tpe = 'non chip';
+      p4Params.type = 'rcpdf';
+      p4Params.tpe = 'rcpdf';
       p4Params.cardtype = '1';
       p4Params.chiptype = '1';
+      if (params?.fatherName) p4Params.fatherName = params.fatherName;
     }
     if (lowerUrl.includes('pan') || lowerUrl.includes('gst')) {
       const panClean = val.toUpperCase();
@@ -3054,19 +3056,29 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       }
       if (lowerUrl.includes('gst')) p4Params.gst = val;
     }
+    if (lowerUrl.includes('aadhaar_pdf')) {
+      p4Params.aadhaar = val.replace(/\D/g, '');
+      if (!p4Params.action) p4Params.action = 'sendOtp';
+    }
+    if (lowerUrl.includes('ekyc')) {
+      p4Params.aadhar = val.replace(/\D/g, '');
+      if (params?.bioenc) p4Params.bioenc = params.bioenc;
+    }
     if (lowerUrl.includes('voter') || lowerUrl.includes('epic')) {
       const epicClean = val.toUpperCase();
       p4Params.epicNumber = epicClean;
       p4Params.epic = epicClean;
       p4Params.epic_number = epicClean;
       p4Params.voterNumber = epicClean;
-      p4Params.mobile = params?.mobile || params?.phone || '';
+      p4Params.mobile = (params?.mobile || params?.phone || '9876543210').replace(/\D/g, '');
+      if (!p4Params.action) p4Params.action = 'status';
     }
     if (lowerUrl.includes('ration')) {
-      p4Params.ration_no = val;
-      p4Params.aadhar = val;
-      p4Params.uidNumber = val;
-      p4Params.rationtype = 'NFSA';
+      const cleanRation = val.trim();
+      p4Params.ration_no = cleanRation;
+      p4Params.aadhar = cleanRation;
+      p4Params.uidNumber = cleanRation;
+      p4Params.rationtype = params?.rationtype || 'new';
     }
     if (lowerUrl.includes('dl')) {
       p4Params.dlNo = val.toUpperCase();
@@ -3078,7 +3090,7 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       p4Params.idNumber = val;
       p4Params.application_number = val;
       p4Params.date_of_birth = params?.dob || '01-01-1990';
-      p4Params.state_name = 'UP';
+      p4Params.state_name = params?.state || 'UP';
     }
     if (lowerUrl.includes('electric') || lowerUrl.includes('elctric') || lowerUrl.includes('bill')) {
       p4Params.caNumber = val.replace(/\D/g, '');
@@ -3097,7 +3109,7 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
     if (lowerUrl.includes('agristak') || lowerUrl.includes('agristack')) {
       p4Params.uidNumber = val.replace(/\D/g, '');
-      p4Params.state = 'UP';
+      p4Params.state = params?.state || 'UP';
     }
     if (lowerUrl.includes('rtps')) {
       p4Params.applicationNumber = val;
@@ -3843,6 +3855,15 @@ app.post('/api/services/execute-automated', async (req, res) => {
     s.id === req.body.toolId ||
     s.num === Number(serviceType)
   );
+
+  if (service79 && service79.isComingSoon) {
+    return res.json({
+      success: false,
+      isComingSoon: true,
+      message: '⏳ यह सेवा आगामी है (Coming Soon)। नए आधिकारिक API प्रोवाइडर के साथ जल्द लाइव की जा रही है।',
+      service: service79
+    });
+  }
 
   if (service79 && service79.isActive === false) {
     return res.status(403).json({
