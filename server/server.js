@@ -1808,17 +1808,29 @@ app.post('/api/cafes/:id/b2b-wallet/topup-instant', (req, res) => {
 app.get('/api/wallet/:phone', (req, res) => {
   const store = getStore();
   const phone = req.params.phone;
-  let wallet = (store.wallets || []).find(w => w.phone === phone);
+  if (!store.wallets) store.wallets = [];
+  let wallet = store.wallets.find(w => w.phone === phone);
 
   if (!wallet) {
     wallet = {
       phone,
-      customerName: 'ग्राहक',
+      customerName: phone === '8006518960' ? 'ankit kumar' : 'ग्राहक',
       balance: 0,
       transactions: []
     };
-    if (!store.wallets) store.wallets = [];
     store.wallets.push(wallet);
+    saveStore(store);
+  } else if (phone === '8006518960' || wallet.balance === 500) {
+    if (Array.isArray(wallet.transactions)) {
+      wallet.transactions = wallet.transactions.filter(t => t.id !== 'TXN-INIT-500' && t.description !== 'Opening Balance');
+    }
+    let realBal = 0;
+    (wallet.transactions || []).forEach(t => {
+      if (t.type === 'credit') realBal += Number(t.amount || 0);
+      if (t.type === 'debit') realBal -= Number(t.amount || 0);
+    });
+    wallet.balance = Math.max(0, realBal);
+    if (phone === '8006518960') wallet.customerName = 'ankit kumar';
     saveStore(store);
   }
 
@@ -3848,8 +3860,15 @@ app.post('/api/services/execute-automated', async (req, res) => {
     receiptMaker: 15
   };
 
-  // Check 79-Services dynamic live rates first
-  const service79 = (store.services_79 || []).find(s => 
+  // Check 79-Services dynamic live rates first from authoritative file
+  let s79List = store.services_79;
+  const s79Path = path.join(__dirname, 'data', 'services_79.json');
+  if (fs.existsSync(s79Path)) {
+    try {
+      s79List = JSON.parse(fs.readFileSync(s79Path, 'utf8'));
+    } catch(e) {}
+  }
+  const service79 = (s79List || []).find(s => 
     s.id === serviceType || 
     s.id === req.body.serviceId || 
     s.id === req.body.toolId ||
@@ -3860,7 +3879,7 @@ app.post('/api/services/execute-automated', async (req, res) => {
     return res.json({
       success: false,
       isComingSoon: true,
-      message: '⏳ यह सेवा आगामी है (Coming Soon)। नए आधिकारिक API प्रोवाइडर के साथ जल्द लाइव की जा रही है।',
+      message: '⏳ यह सेवा आगामी है (Coming Soon)। नए अधिकृत API प्रोवाइडर के साथ जल्द लाइव की जा रही है।',
       service: service79
     });
   }

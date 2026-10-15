@@ -66,12 +66,12 @@ function getStore($dataFile) {
             $data['settings']['superAdminPayeeName'] = 'Suman Devi';
             $data['settings']['superAdminQrImage'] = '/images/superadmin_qr.jpg';
 
-            // Load full 79-services master list if missing
-            if (empty($data['services_79']) || count($data['services_79']) < 79) {
-                $sFile = __DIR__ . '/data/services_79.json';
-                if (file_exists($sFile)) {
-                    $data['services_79'] = json_decode(file_get_contents($sFile), true) ?: [];
-                    $changed = true;
+            // Always sync services_79 from authoritative services_79.json
+            $sFile = __DIR__ . '/data/services_79.json';
+            if (file_exists($sFile)) {
+                $latest79 = json_decode(file_get_contents($sFile), true);
+                if (is_array($latest79) && count($latest79) >= 70) {
+                    $data['services_79'] = $latest79;
                 }
             }
 
@@ -161,28 +161,41 @@ function getStore($dataFile) {
                 }
             }
 
-            // Security Protection: Customer wallet for 8006518960 and all new accounts strictly ₹0
+            // Security Protection: Customer wallet for 8006518960 strictly ₹0 unless legitimate approved UTR
             foreach ($data['wallets'] as &$w) {
                 if (($w['phone'] ?? '') === '8006518960') {
-                    $hasApprovedUtr = false;
-                    foreach ($data['utrRequests'] ?? [] as $utr) {
-                        if (($utr['customerPhone'] ?? '') === '8006518960' && ($utr['status'] ?? '') === 'approved') {
-                            $hasApprovedUtr = true;
-                            break;
-                        }
+                    if (isset($w['transactions']) && is_array($w['transactions'])) {
+                        $beforeCount = count($w['transactions']);
+                        $w['transactions'] = array_values(array_filter($w['transactions'], function($tx) {
+                            return ($tx['id'] ?? '') !== 'TXN-INIT-500' 
+                                && ($tx['description'] ?? '') !== 'Opening Balance'
+                                && strpos($tx['note'] ?? '', 'Instant') === false 
+                                && strpos($tx['id'] ?? '', 'INSTANT') === false;
+                        }));
+                        if (count($w['transactions']) !== $beforeCount) $changed = true;
                     }
-                    if (!$hasApprovedUtr && ($w['balance'] ?? 0) != 0) {
-                        $w['balance'] = 0;
-                        if (isset($w['transactions']) && is_array($w['transactions'])) {
-                            $w['transactions'] = array_values(array_filter($w['transactions'], function($tx) {
-                                return ($tx['id'] ?? '') !== 'TXN-INIT-500' && strpos($tx['note'] ?? '', 'Instant') === false && strpos($tx['id'] ?? '', 'INSTANT') === false && ($tx['amount'] ?? 0) != 500;
-                            }));
-                        }
+                    $realBal = 0;
+                    foreach ($w['transactions'] ?? [] as $tx) {
+                        if (($tx['type'] ?? '') === 'credit') $realBal += floatval($tx['amount'] ?? 0);
+                        if (($tx['type'] ?? '') === 'debit') $realBal -= floatval($tx['amount'] ?? 0);
+                    }
+                    if (($w['balance'] ?? 0) != max(0, $realBal)) {
+                        $w['balance'] = max(0, $realBal);
+                        $changed = true;
+                    }
+                    $w['customerName'] = 'ankit kumar';
+                }
+            }
+            unset($w);
+            foreach ($data['users'] as &$u) {
+                if (($u['phone'] ?? '') === '8006518960') {
+                    if (($u['balance'] ?? 0) != 0) {
+                        $u['balance'] = 0;
                         $changed = true;
                     }
                 }
             }
-            unset($w);
+            unset($u);
 
             if ($changed) {
                 file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
@@ -1186,34 +1199,37 @@ if (preg_match('#^wallet/([0-9]+)$#', $endpoint, $m)) {
         if ($w['phone'] === $phone) { $wallet = $w; break; }
     }
     if ($phone === '8006518960') {
-        $hasApprovedUtr = false;
-        foreach ($store['utrRequests'] ?? [] as $utr) {
-            if (($utr['customerPhone'] ?? '') === '8006518960' && ($utr['status'] ?? '') === 'approved') {
-                $hasApprovedUtr = true;
-                break;
+        if (!$wallet) {
+            $wallet = ['phone' => $phone, 'customerName' => 'ankit kumar', 'balance' => 0, 'transactions' => []];
+            $store['wallets'][] = $wallet;
+        } else {
+            if (isset($wallet['transactions']) && is_array($wallet['transactions'])) {
+                $wallet['transactions'] = array_values(array_filter($wallet['transactions'], function($tx) {
+                    return ($tx['id'] ?? '') !== 'TXN-INIT-500' 
+                        && ($tx['description'] ?? '') !== 'Opening Balance'
+                        && strpos($tx['note'] ?? '', 'Instant') === false 
+                        && strpos($tx['id'] ?? '', 'INSTANT') === false;
+                }));
+            }
+            $realBal = 0;
+            foreach ($wallet['transactions'] ?? [] as $tx) {
+                if (($tx['type'] ?? '') === 'credit') $realBal += floatval($tx['amount'] ?? 0);
+                if (($tx['type'] ?? '') === 'debit') $realBal -= floatval($tx['amount'] ?? 0);
+            }
+            $wallet['balance'] = max(0, $realBal);
+            $wallet['customerName'] = 'ankit kumar';
+        }
+        foreach ($store['wallets'] as &$sw) {
+            if (($sw['phone'] ?? '') === '8006518960') {
+                $sw['balance'] = $wallet['balance'];
+                $sw['transactions'] = $wallet['transactions'];
+                $sw['customerName'] = 'ankit kumar';
             }
         }
-        if (!$hasApprovedUtr) {
-            if (!$wallet) {
-                $wallet = ['phone' => $phone, 'customerName' => 'ankit kumar', 'balance' => 0, 'transactions' => []];
-                $store['wallets'][] = $wallet;
-            } else {
-                $wallet['balance'] = 0;
-                if (isset($wallet['transactions']) && is_array($wallet['transactions'])) {
-                    $wallet['transactions'] = array_values(array_filter($wallet['transactions'], function($tx) {
-                        return ($tx['id'] ?? '') !== 'TXN-INIT-500' && strpos($tx['note'] ?? '', 'Instant') === false && strpos($tx['id'] ?? '', 'INSTANT') === false && ($tx['amount'] ?? 0) != 500;
-                    }));
-                }
-            }
-            foreach ($store['wallets'] as &$sw) {
-                if (($sw['phone'] ?? '') === '8006518960') {
-                    $sw['balance'] = 0;
-                    $sw['transactions'] = $wallet['transactions'];
-                }
-            }
-            unset($sw);
-            saveStore($dataFile, $store);
-        }
+        unset($sw);
+        saveStore($dataFile, $store);
+        echo json_encode($wallet);
+        exit;
     }
     if (!$wallet) {
         $wallet = ['phone' => $phone, 'customerName' => 'ग्राहक', 'balance' => 0, 'transactions' => []];
@@ -3560,7 +3576,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     $cafeId = $body['cafeId'] ?? '';
     $customerPhone = $body['customerPhone'] ?? '';
     $serviceType = $body['serviceType'] ?? ($body['serviceId'] ?? '');
-    $params = $body['params'] ?? [];
+    $params = $body['params'] ?? ($body['payload'] ?? []);
     $isOperatorB2bDirect = !empty($body['operatorB2bDirect']);
     $previewMode = !empty($body['previewMode']);
 
@@ -3605,8 +3621,13 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     $normServiceType = ($serviceType === 'rc_download' || $serviceType === 'rcDownload') ? 'rcDownload' : $serviceType;
 
     $service79 = null;
-    if (!empty($store['services_79']) && is_array($store['services_79'])) {
-        foreach ($store['services_79'] as $s79) {
+    $sFile = __DIR__ . '/data/services_79.json';
+    $allServices = file_exists($sFile) ? json_decode(file_get_contents($sFile), true) : [];
+    if (empty($allServices) && !empty($store['services_79'])) {
+        $allServices = $store['services_79'];
+    }
+    if (is_array($allServices)) {
+        foreach ($allServices as $s79) {
             if (($s79['id'] ?? '') === $normServiceType || ($s79['id'] ?? '') === $serviceType) {
                 $service79 = $s79;
                 break;

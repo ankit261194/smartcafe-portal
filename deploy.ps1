@@ -48,8 +48,13 @@ mergedUsers.forEach(u => {
       });
     } else {
       const existing = allWalletsMap.get(u.phone);
-      if (u.balance !== undefined && u.balance === 0) {
-        existing.balance = 0;
+      if (existing) {
+        if (u.balance !== undefined && u.balance === 0) {
+          existing.balance = 0;
+        }
+        if (Array.isArray(existing.transactions)) {
+          existing.transactions = existing.transactions.filter(t => t.id !== 'TXN-INIT-500' && t.description !== 'Opening Balance');
+        }
       }
     }
   }
