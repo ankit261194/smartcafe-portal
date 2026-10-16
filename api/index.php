@@ -5203,6 +5203,247 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
     return null;
 }
 
+// ===========================================================================
+// REKHA PRINT B2B MANUAL RELAY & ASYNC FULFILLMENT ENGINE
+// ===========================================================================
+
+function getRekhaPrintAuthCookie(&$store) {
+    $rekhaConfig = $store['systemSettings']['rekhaPrint'] ?? [
+        'username' => '8006518960',
+        'password' => '012323',
+        'baseUrl' => 'https://rekhaprint.info'
+    ];
+    $loginUrl = rtrim($rekhaConfig['baseUrl'] ?? 'https://rekhaprint.info', '/') . '/members/login.php';
+    $postFields = http_build_query([
+        'username' => $rekhaConfig['username'] ?? '8006518960',
+        'password' => $rekhaConfig['password'] ?? '012323',
+        'login' => 'Login'
+    ]);
+
+    $ch = curl_init($loginUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HEADER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+    curl_setopt($ch, CURLOPT_REFERER, $loginUrl);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $resp = curl_exec($ch);
+    $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+    curl_close($ch);
+
+    if (!$resp) return null;
+    $headers = substr($resp, 0, $headerSize);
+    preg_match_all('/^Set-Cookie:\s*([^;]+)/mi', $headers, $matches);
+    if (!empty($matches[1])) {
+        return implode('; ', $matches[1]);
+    }
+    return null;
+}
+
+function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
+    $cookie = getRekhaPrintAuthCookie($store);
+    if (!$cookie) {
+        return ['success' => false, 'error' => 'Rekha Print login session failed'];
+    }
+
+    $rekhaConfig = $store['systemSettings']['rekhaPrint'] ?? ['baseUrl' => 'https://rekhaprint.info'];
+    $baseUrl = rtrim($rekhaConfig['baseUrl'] ?? 'https://rekhaprint.info', '/');
+    $upstreamFile = $service79['upstreamFile'] ?? 'll_exam_Request.php';
+    $targetUrl = $baseUrl . '/members/' . $upstreamFile;
+
+    $postData = ['submit' => 'submit'];
+    $uService = $service79['upstreamService'] ?? '';
+
+    if ($uService === 'LL_Request') {
+        $postData['applicationNumber'] = trim($params['applicationNumber'] ?? ($params['appNo'] ?? ($params['query'] ?? '')));
+        $postData['dob'] = trim($params['dob'] ?? '');
+        $postData['password'] = trim($params['password'] ?? '');
+        $postData['state'] = trim($params['state'] ?? 'UP');
+        $postData['examsecretpin'] = trim($params['examsecretpin'] ?? '');
+    } elseif ($uService === 'DL Mobile Link') {
+        $postData['applicationNumber'] = trim($params['applicationNumber'] ?? ($params['dlNo'] ?? ($params['query'] ?? '')));
+        $postData['password'] = trim($params['password'] ?? '');
+        $postData['state'] = trim($params['state'] ?? 'UP');
+        $postData['mobile'] = trim($params['mobile'] ?? ($params['phone'] ?? ''));
+    } elseif ($uService === 'Ayushman Download') {
+        $postData['uidNumber'] = trim($params['uidNumber'] ?? ($params['pmjayId'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? ''))));
+        $postData['state_code'] = trim($params['stateCode'] ?? ($params['state'] ?? 'UP'));
+    } elseif ($uService === 'Mobile_Update') {
+        $postData['uidNumber'] = trim($params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? '')));
+        $postData['dob'] = trim($params['dob'] ?? '');
+        $postData['mobile'] = trim($params['mobile'] ?? ($params['phone'] ?? ''));
+    } elseif ($uService === 'puc_services') {
+        $postData['vehicle_number'] = strtoupper(trim($params['vehicleNumber'] ?? ($params['vehicalNumber'] ?? ($params['query'] ?? ''))));
+    } elseif ($uService === 'Land Seeding') {
+        $postData['farmerId'] = trim($params['farmerId'] ?? ($params['registrationNo'] ?? ($params['query'] ?? '')));
+        $postData['state'] = trim($params['state'] ?? 'UP');
+    } elseif ($uService === 'Samagra Print') {
+        $postData['samagraId'] = trim($params['samagraId'] ?? ($params['familyId'] ?? ($params['query'] ?? '')));
+    } elseif ($uService === 'Pan_Number_Link') {
+        $postData['panNo'] = strtoupper(trim($params['panNo'] ?? ($params['pan'] ?? ($params['query'] ?? ''))));
+        $postData['aadhaarNo'] = trim($params['aadhaarNo'] ?? ($params['aadhaar'] ?? ''));
+        $postData['mobile'] = trim($params['mobile'] ?? '');
+    } elseif ($uService === 'Dob_Update') {
+        $postData['aadhaarNo'] = trim($params['aadhaarNo'] ?? ($params['aadhaar'] ?? ($params['query'] ?? '')));
+        $postData['dob'] = trim($params['dob'] ?? '');
+        $postData['mobile'] = trim($params['mobile'] ?? '');
+    } else {
+        foreach ($params as $k => $v) {
+            if (is_scalar($v)) $postData[$k] = (string)$v;
+        }
+    }
+
+    $ch = curl_init($targetUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Cookie: ' . $cookie,
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer: ' . $targetUrl
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $resp = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    $isSuccess = ($httpCode === 200 || $httpCode === 302);
+    return [
+        'success' => $isSuccess,
+        'httpCode' => $httpCode,
+        'responseSnippet' => substr((string)$resp, 0, 500)
+    ];
+}
+
+function pollRekhaPrintRecords(&$store, $targetOrderId = null) {
+    $cookie = getRekhaPrintAuthCookie($store);
+    if (!$cookie) return ['success' => false, 'error' => 'Rekha login failed'];
+
+    $rekhaConfig = $store['systemSettings']['rekhaPrint'] ?? ['baseUrl' => 'https://rekhaprint.info'];
+    $recordsUrl = rtrim($rekhaConfig['baseUrl'] ?? 'https://rekhaprint.info', '/') . '/members/printRecord.php';
+
+    $ch = curl_init($recordsUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Cookie: ' . $cookie,
+        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        'Referer: ' . $recordsUrl
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    $html = curl_exec($ch);
+    curl_close($ch);
+
+    if (!$html) return ['success' => false, 'error' => 'Empty response from printRecord.php'];
+
+    preg_match_all('/<tr[^>]*>(.*?)<\/tr>/is', $html, $rowMatches);
+    $parsedRecords = [];
+    if (!empty($rowMatches[1])) {
+        foreach ($rowMatches[1] as $rowHtml) {
+            preg_match_all('/<td[^>]*>(.*?)<\/td>/is', $rowHtml, $tdMatches);
+            if (!empty($tdMatches[1]) && count($tdMatches[1]) >= 4) {
+                $cells = array_map(function($td) {
+                    return trim(preg_replace('/\s+/', ' ', strip_tags($td)));
+                }, $tdMatches[1]);
+
+                $downloadUrl = '';
+                if (preg_match('/href="([^"]+(?:download|\.pdf|data:application\/pdf)[^"]*)"/i', $rowHtml, $dm)) {
+                    $downloadUrl = html_entity_decode($dm[1]);
+                } elseif (preg_match('/href="(data:[^"]+)"/i', $rowHtml, $dm2)) {
+                    $downloadUrl = $dm2[1];
+                }
+
+                $status = 'Pending';
+                if (stripos($rowHtml, 'Success') !== false || stripos($rowHtml, 'badge-success') !== false) {
+                    $status = 'Success';
+                } elseif (stripos($rowHtml, 'Refund') !== false || stripos($rowHtml, 'Failed') !== false || stripos($rowHtml, 'badge-danger') !== false) {
+                    $status = 'Failed';
+                }
+
+                $parsedRecords[] = [
+                    'text' => implode(' | ', $cells),
+                    'status' => $status,
+                    'downloadUrl' => $downloadUrl,
+                    'rawRow' => $rowHtml
+                ];
+            }
+        }
+    }
+
+    $updatedCount = 0;
+    if (!empty($store['orderHistory'])) {
+        foreach ($store['orderHistory'] as &$order) {
+            if (($order['fulfillmentType'] ?? '') !== 'manual_relay') continue;
+            if ($order['status'] !== 'pending') continue;
+            if ($targetOrderId && $order['id'] !== $targetOrderId && ($order['orderId'] ?? '') !== $targetOrderId) continue;
+
+            $ref = strtolower(trim((string)($order['refNumber'] ?? '')));
+            if (!$ref) continue;
+
+            foreach ($parsedRecords as $rec) {
+                if (stripos(strtolower($rec['text']), $ref) !== false || (!empty($order['upstreamOrderId']) && stripos(strtolower($rec['text']), strtolower($order['upstreamOrderId'])) !== false)) {
+                    if ($rec['status'] === 'Success' && !empty($rec['downloadUrl'])) {
+                        $order['status'] = 'completed';
+                        $order['upstreamStatus'] = 'Success';
+                        $order['pdfUrl'] = $rec['downloadUrl'];
+                        $order['completedAt'] = date('c');
+                        $updatedCount++;
+
+                        if (!empty($order['customerPhone'])) {
+                            sendAutomatedNotification($order['customerPhone'], "नमस्ते {$order['customerName']} जी! आपका {$order['docTitle']} (संदर्भ: {$order['refNumber']}) पूरा हो चुका है। स्मार्ट कैफे से डाउनलोड करें।");
+                        }
+                    } elseif ($rec['status'] === 'Failed') {
+                        $order['status'] = 'rejected';
+                        $order['upstreamStatus'] = 'Failed';
+                        $order['rejectionReason'] = 'रेखा प्रिंट द्वारा आवेदन निरस्त/रिफंड किया गया।';
+                        $order['rejectedAt'] = date('c');
+
+                        // Execute automatic refund to customer wallet
+                        $fee = floatval($order['retailFee'] ?? 0);
+                        if ($fee > 0 && !empty($order['customerPhone']) && !empty($store['wallets'])) {
+                            foreach ($store['wallets'] as &$w) {
+                                if ($w['phone'] === $order['customerPhone']) {
+                                    $w['balance'] += $fee;
+                                    $w['transactions'][] = [
+                                        'id' => 'REFUND-' . time() . '-' . rand(100, 999),
+                                        'type' => 'credit',
+                                        'amount' => $fee,
+                                        'note' => "रिफंड: {$order['docTitle']} (आवेदन अस्वीकृत)",
+                                        'createdAt' => date('c')
+                                    ];
+                                    break;
+                                }
+                            }
+                        }
+                        $updatedCount++;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    $targetOrder = null;
+    if ($targetOrderId && !empty($store['orderHistory'])) {
+        foreach ($store['orderHistory'] as $o) {
+            if ($o['id'] === $targetOrderId || ($o['orderId'] ?? '') === $targetOrderId) {
+                $targetOrder = $o;
+                break;
+            }
+        }
+    }
+
+    return [
+        'success' => true,
+        'scannedRekhaRecords' => count($parsedRecords),
+        'updatedSmartCafeOrders' => $updatedCount,
+        'order' => $targetOrder
+    ];
+}
+
 // ROUTE: /api/services/execute-automated
 // ---------------------------------------------------------------------------
 if ($endpoint === 'services/execute-automated' && $method === 'POST') {
@@ -5390,6 +5631,66 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             'customer' => $params['customerName'] ?? $customerPhone,
             'createdAt' => date('c')
         ]);
+    }
+
+    // ASYNCHRONOUS MANUAL RELAY FULFILLMENT GATEWAY (Rekha Print Engine)
+    if ($service79 && ($service79['fulfillmentType'] ?? '') === 'manual_relay') {
+        $orderId = 'ORD-' . time() . '-' . rand(1000, 9999);
+        $userRef = $params['applicationNumber'] ?? ($params['appNo'] ?? ($params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['farmerId'] ?? ($params['samagraId'] ?? ($params['dlNo'] ?? ($params['vehicleNumber'] ?? ($params['panNo'] ?? ''))))))));
+
+        // Dispatch to Rekha Print backend
+        $relayRes = dispatchRekhaManualRelay($service79, $params, $orderId, $store);
+
+        $newOrder = [
+            'id' => $orderId,
+            'orderId' => $orderId,
+            'cafeId' => $cafe['id'],
+            'cafeShopName' => $cafe['shopName'],
+            'customerPhone' => $customerPhone,
+            'customerName' => $params['customerName'] ?? 'ग्राहक',
+            'serviceType' => $normServiceType,
+            'serviceTitle' => $service79['name'],
+            'docTitle' => $service79['name'] . ($userRef ? " ({$userRef})" : ""),
+            'refNumber' => $userRef ?: $orderId,
+            'retailFee' => $retailFee,
+            'wholesaleCost' => $wholesaleCost,
+            'margin' => $margin,
+            'status' => 'pending',
+            'fulfillmentType' => 'manual_relay',
+            'upstreamService' => $service79['upstreamService'] ?? '',
+            'upstreamFile' => $service79['upstreamFile'] ?? '',
+            'upstreamStatus' => ($relayRes['success'] ?? false) ? 'Pending' : 'Queued',
+            'upstreamDispatched' => ($relayRes['success'] ?? false),
+            'upstreamHttpCode' => $relayRes['httpCode'] ?? 0,
+            'eta' => '2-4 घंटे',
+            'params' => $params,
+            'createdAt' => date('c')
+        ];
+
+        if (!isset($store['orderHistory'])) $store['orderHistory'] = [];
+        array_unshift($store['orderHistory'], $newOrder);
+
+        if (!empty($customerPhone)) {
+            $shopName = $cafe['shopName'] ?? ($store['settings']['shopName'] ?? 'डिजिटल साइबर कैफे');
+            $msg = "नमस्ते {$newOrder['customerName']} जी! आपका {$service79['name']} का आवेदन प्राप्त हुआ (संदर्भ संख्या: {$newOrder['refNumber']})। परिणाम 2-4 घंटे में स्वतः उपलब्ध होगा। - {$shopName}";
+            sendAutomatedNotification($customerPhone, $msg);
+        }
+
+        saveStore($dataFile, $store);
+
+        echo json_encode([
+            'success' => true,
+            'status' => 'pending',
+            'fulfillmentType' => 'manual_relay',
+            'message' => '✅ आवेदन सफलतापूर्वक दर्ज हुआ! रेखा प्रिंट B2B बैकएंड को अग्रसारित। परिणाम 2-4 घंटे में स्वतः उपलब्ध होगा (स्टेटस ऑर्डर हिस्ट्री में चेक करें)।',
+            'retailFee' => $isTrial ? 0 : $retailFee,
+            'wholesaleCost' => $isTrial ? 0 : $wholesaleCost,
+            'margin' => $isTrial ? 0 : $margin,
+            'customerBalance' => ($custWalletIdx !== -1) ? $store['wallets'][$custWalletIdx]['balance'] : 0,
+            'sanchalakB2bBalance' => $cafe['b2bWallet']['balance'] ?? 0,
+            'order' => $newOrder
+        ]);
+        exit;
     }
 
     $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
@@ -5823,6 +6124,211 @@ if ($endpoint === 'orders' && $method === 'GET') {
         $list = array_values(array_filter($list, fn($o) => ($o['serviceType'] ?? '') === $serviceType));
     }
     echo json_encode($list);
+    exit;
+}
+
+// ---------------------------------------------------------------------------
+// ROUTE: /api/services/manual-relay/poll & /api/services/manual-relay/poll-order
+// ---------------------------------------------------------------------------
+if (($endpoint === 'services/manual-relay/poll' || $endpoint === 'manual-orders/poll') && in_array($method, ['GET', 'POST'])) {
+    $res = pollRekhaPrintRecords($store);
+    saveStore($dataFile, $store);
+    echo json_encode($res);
+    exit;
+}
+
+if ($endpoint === 'services/manual-relay/poll-order' && in_array($method, ['GET', 'POST'])) {
+    $targetOrderId = $body['orderId'] ?? ($body['id'] ?? ($_GET['orderId'] ?? ''));
+    $res = pollRekhaPrintRecords($store, $targetOrderId);
+    saveStore($dataFile, $store);
+    echo json_encode($res);
+    exit;
+}
+
+// ---------------------------------------------------------------------------
+// ROUTE: /api/superadmin/manual-orders/update-status (Manual Admin Fulfillment)
+// ---------------------------------------------------------------------------
+if ($endpoint === 'superadmin/manual-orders/update-status' && $method === 'POST') {
+    $adminKey = $body['key'] ?? ($_GET['key'] ?? '');
+    if ($adminKey !== 'Aa@910010025123343' && empty($_SESSION['admin_user'])) {
+        http_response_code(403);
+        echo json_encode(['error' => 'अनधिकृत प्रवेश (Unauthorized)']);
+        exit;
+    }
+
+    $orderId = $body['orderId'] ?? ($body['id'] ?? '');
+    $newStatus = $body['status'] ?? 'completed'; // 'completed' or 'rejected'
+    $pdfUrl = $body['pdfUrl'] ?? '';
+    $rejectionReason = $body['rejectionReason'] ?? ($body['reason'] ?? 'प्रशासनिक अस्वीकृति');
+
+    $found = false;
+    if (!empty($store['orderHistory'])) {
+        foreach ($store['orderHistory'] as &$order) {
+            if ($order['id'] === $orderId || ($order['orderId'] ?? '') === $orderId) {
+                $found = true;
+                if ($newStatus === 'completed') {
+                    $order['status'] = 'completed';
+                    $order['upstreamStatus'] = 'Success';
+                    if ($pdfUrl) $order['pdfUrl'] = $pdfUrl;
+                    $order['completedAt'] = date('c');
+                    if (!empty($order['customerPhone'])) {
+                        sendAutomatedNotification($order['customerPhone'], "नमस्ते {$order['customerName']} जी! आपका {$order['docTitle']} तैयार हो चुका है। स्मार्ट कैफे से डाउनलोड करें।");
+                    }
+                } elseif ($newStatus === 'rejected') {
+                    $order['status'] = 'rejected';
+                    $order['upstreamStatus'] = 'Failed';
+                    $order['rejectionReason'] = $rejectionReason;
+                    $order['rejectedAt'] = date('c');
+
+                    // Refund customer wallet
+                    $fee = floatval($order['retailFee'] ?? 0);
+                    if ($fee > 0 && !empty($order['customerPhone']) && !empty($store['wallets'])) {
+                        foreach ($store['wallets'] as &$w) {
+                            if ($w['phone'] === $order['customerPhone']) {
+                                $w['balance'] += $fee;
+                                $w['transactions'][] = [
+                                    'id' => 'REFUND-' . time() . '-' . rand(100, 999),
+                                    'type' => 'credit',
+                                    'amount' => $fee,
+                                    'note' => "एडमिन रिफंड: {$order['docTitle']} ({$rejectionReason})",
+                                    'createdAt' => date('c')
+                                ];
+                                break;
+                            }
+                        }
+                    }
+                    if (!empty($order['customerPhone'])) {
+                        sendAutomatedNotification($order['customerPhone'], "नमस्ते {$order['customerName']} जी! आपका {$order['docTitle']} अस्वीकृत हुआ। राशि वॉलेट में वापस कर दी गई है।");
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    if ($found) {
+        saveStore($dataFile, $store);
+        echo json_encode(['success' => true, 'message' => 'ऑर्डर स्थिति सफलतापूर्वक अपडेट की गई।']);
+    } else {
+        http_response_code(404);
+        echo json_encode(['error' => 'ऑर्डर नहीं मिला।']);
+    }
+    exit;
+}
+
+// ---------------------------------------------------------------------------
+// ROUTE: /api/superadmin/rekha-gateway/config (Get/Set Rekha Print Credentials)
+// ---------------------------------------------------------------------------
+if ($endpoint === 'superadmin/rekha-gateway/config') {
+    if ($method === 'GET') {
+        $cfg = $store['systemSettings']['rekhaPrint'] ?? [
+            'username' => '8006518960',
+            'baseUrl' => 'https://rekhaprint.info',
+            'enabled' => true
+        ];
+        echo json_encode([
+            'username' => $cfg['username'] ?? '8006518960',
+            'baseUrl' => $cfg['baseUrl'] ?? 'https://rekhaprint.info',
+            'enabled' => $cfg['enabled'] ?? true
+        ]);
+        exit;
+    } elseif ($method === 'POST') {
+        $adminKey = $body['key'] ?? ($_GET['key'] ?? '');
+        if ($adminKey !== 'Aa@910010025123343' && empty($_SESSION['admin_user'])) {
+            http_response_code(403);
+            echo json_encode(['error' => 'अनधिकृत प्रवेश (Unauthorized)']);
+            exit;
+        }
+        if (!isset($store['systemSettings'])) $store['systemSettings'] = [];
+        $currentCfg = $store['systemSettings']['rekhaPrint'] ?? [];
+        $store['systemSettings']['rekhaPrint'] = [
+            'username' => !empty($body['username']) ? trim($body['username']) : ($currentCfg['username'] ?? '8006518960'),
+            'password' => !empty($body['password']) ? trim($body['password']) : ($currentCfg['password'] ?? '012323'),
+            'baseUrl' => !empty($body['baseUrl']) ? rtrim(trim($body['baseUrl']), '/') : ($currentCfg['baseUrl'] ?? 'https://rekhaprint.info'),
+            'enabled' => isset($body['enabled']) ? boolval($body['enabled']) : true
+        ];
+        saveStore($dataFile, $store);
+        echo json_encode(['success' => true, 'message' => 'रेखा प्रिंट B2B रिले क्रेडेंशियल्स सुरक्षित सहेजे गए।']);
+        exit;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// ROUTE: /api/system/sync-rekha-catalog (Rekha Print 24x7 Catalog Scanner)
+// ---------------------------------------------------------------------------
+if (($endpoint === 'system/sync-rekha-catalog' || $endpoint === 'superadmin/sync-rekha-catalog') && in_array($method, ['GET', 'POST'])) {
+    $sFile = __DIR__ . '/data/services_79.json';
+    $currentServices = file_exists($sFile) ? json_decode(file_get_contents($sFile), true) : [];
+    
+    // Scan Rekha Print services
+    $cookie = getRekhaPrintAuthCookie($store);
+    $newFound = [];
+    if ($cookie) {
+        $rekhaConfig = $store['systemSettings']['rekhaPrint'] ?? ['baseUrl' => 'https://rekhaprint.info'];
+        $dashUrl = rtrim($rekhaConfig['baseUrl'] ?? 'https://rekhaprint.info', '/') . '/members/dashboard.php';
+        $ch = curl_init($dashUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Cookie: ' . $cookie,
+            'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $dashHtml = curl_exec($ch);
+        curl_close($ch);
+
+        if ($dashHtml) {
+            preg_match_all('/location\.href=[\'"]([^\'"]+)[\'"][^>]*>.*?<p[^>]*class="card-text"[^>]*>([^<]+)<\/p>/is', $dashHtml, $matches);
+            if (!empty($matches[1])) {
+                foreach ($matches[1] as $idx => $targetHref) {
+                    $svcName = trim($matches[2][$idx] ?? '');
+                    if ($svcName && !in_array($targetHref, ['dashboard', 'printRecord', 'logout'])) {
+                        // Check if already in catalog
+                        $exists = false;
+                        foreach ($currentServices as $cs) {
+                            if (stripos($cs['name'], $svcName) !== false || ($cs['upstreamFile'] ?? '') === $targetHref . '.php') {
+                                $exists = true;
+                                break;
+                            }
+                        }
+                        if (!$exists) {
+                            $newFound[] = [
+                                'id' => 'rekha_' . strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', $targetHref)),
+                                'num' => count($currentServices) + count($newFound) + 1,
+                                'name' => $svcName,
+                                'category' => 'other',
+                                'group' => 'other',
+                                'wholesaleRate' => 20,
+                                'retailRate' => 40,
+                                'isActive' => true,
+                                'isComingSoon' => false,
+                                'serviceType' => 'manual_relay',
+                                'fulfillmentType' => 'manual_relay',
+                                'upstreamService' => $svcName,
+                                'upstreamFile' => $targetHref . '.php',
+                                'requiredInputs' => ['query'],
+                                'eta' => '2-4 घंटे'
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if (!empty($newFound)) {
+        foreach ($newFound as $nf) {
+            $currentServices[] = $nf;
+        }
+        file_put_contents($sFile, json_encode($currentServices, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    }
+
+    echo json_encode([
+        'success' => true,
+        'newServicesDiscovered' => count($newFound),
+        'discovered' => $newFound,
+        'totalServices' => count($currentServices)
+    ]);
     exit;
 }
 
