@@ -5930,21 +5930,27 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     // 1. If Live P4Points returned data, prioritize and map directly
     if (!empty($liveP4)) {
         $p4Service = $liveP4['service'] ?? '';
-        if ($p4Service === 'rc') {
-            $regNo = strtoupper(preg_replace('/[\s-]+/', '', $liveP4['regNo'] ?? ($userVal ?: '')));
-            $vehicleData = array_merge(getVehicleDetails($regNo, $params), $liveP4);
-            $vehicleData['regNo'] = $regNo;
-            $generatedData = $vehicleData;
-            $docTitle = "वाहन RC ({$vehicleData['regNo']}) - {$vehicleData['makerModel']}";
-            $refNumber = $vehicleData['regNo'];
+        $p4Data = is_array($liveP4['data'] ?? null) ? $liveP4['data'] : [];
+        $pdfUrl = $liveP4['pdfUrl'] ?? ($liveP4['raw']['pdf'] ?? ($liveP4['raw']['pdf_base64'] ?? ($liveP4['raw']['pdfBase64'] ?? ($liveP4['raw']['Rc_Pdf'] ?? ($liveP4['raw']['file'] ?? ($liveP4['raw']['pdf_url'] ?? null))))));
+        $generatedData = array_merge($liveP4, $p4Data);
+        if ($pdfUrl) $generatedData['pdfUrl'] = $pdfUrl;
+
+        if ($p4Service === 'rc' || strpos($normServiceType, 'rc') !== false || strpos($normServiceType, 'vehicle') !== false) {
+            $regNo = strtoupper(preg_replace('/[\s-]+/', '', $liveP4['regNo'] ?? ($p4Data['regNo'] ?? ($p4Data['vehicle_number'] ?? ($p4Data['rcno'] ?? ($userVal ?: ''))))));
+            $generatedData['regNo'] = $regNo;
+            $makerModel = $p4Data['maker_model'] ?? ($p4Data['model'] ?? ($p4Data['makerModel'] ?? ($liveP4['makerModel'] ?? 'वाहन RC')));
+            $generatedData['makerModel'] = $makerModel;
+            $vehicleData = $generatedData;
+            $docTitle = "वाहन RC ({$regNo}) - {$makerModel}";
+            $refNumber = $regNo;
 
             $newRcOrder = [
                 'id' => 'RC-ORD-' . rand(1000, 9999),
                 'cafeId' => $cafe['id'],
                 'cafeShopName' => $cafe['shopName'],
                 'customerPhone' => $customerPhone,
-                'customerName' => $params['customerName'] ?? 'ग्राहक',
-                'vehicleNumber' => $vehicleData['regNo'],
+                'customerName' => $params['customerName'] ?? ($p4Data['owner_name'] ?? ($p4Data['owner'] ?? 'ग्राहक')),
+                'vehicleNumber' => $regNo,
                 'retailFee' => $retailFee,
                 'wholesaleCost' => $wholesaleCost,
                 'margin' => $margin,
@@ -5954,41 +5960,42 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             ];
             if (!isset($store['rcOrders'])) $store['rcOrders'] = [];
             array_unshift($store['rcOrders'], $newRcOrder);
-        } elseif ($p4Service === 'panCard' || $p4Service === 'aadhaarToPan') {
-            $panNo = strtoupper(trim($liveP4['panNo'] ?? ($userVal ?: '')));
-            $generatedData = array_merge(getPanCardDetails($panNo, $params), $liveP4);
-            $docTitle = "पैन कार्ड ({$generatedData['panNo']}) - {$generatedData['name']}";
-            $refNumber = $generatedData['panNo'];
-        } elseif ($p4Service === 'voter') {
-            $epic = strtoupper(trim($liveP4['epicNo'] ?? ($userVal ?: '')));
-            $generatedData = array_merge(getVoterDetails($epic, $params), $liveP4);
-            $docTitle = "वोटर स्मार्ट कार्ड ({$generatedData['epicNo']}) - {$generatedData['name']}";
-            $refNumber = $generatedData['epicNo'];
-        } elseif ($p4Service === 'ration') {
-            $rat = trim($liveP4['rationNo'] ?? ($userVal ?: ''));
-            $generatedData = array_merge(getRationDetails($rat, $params), $liveP4);
-            $docTitle = "राशन पर्ची ({$generatedData['rationNo']}) - {$generatedData['headName']}";
-            $refNumber = $generatedData['rationNo'];
-        } elseif ($p4Service === 'electricity') {
-            $ca = trim($liveP4['consumerNo'] ?? ($userVal ?: ''));
-            $generatedData = array_merge(getElectricityBillDetails($ca, $params), $liveP4);
-            $docTitle = "बिजली रसीद ({$generatedData['consumerNo']}) - ₹{$generatedData['netPayable']}";
-            $refNumber = $generatedData['consumerNo'];
-        } elseif ($p4Service === 'dl') {
-            $dl = strtoupper(trim($liveP4['dlNo'] ?? ($userVal ?: '')));
-            $generatedData = array_merge(getDrivingLicenceDetails($dl, $params), $liveP4);
-            $docTitle = "ड्राइविंग लाइसेंस ({$generatedData['dlNo']}) - {$generatedData['name']}";
-            $refNumber = $generatedData['dlNo'];
+        } elseif ($p4Service === 'panCard' || $p4Service === 'aadhaarToPan' || strpos($normServiceType, 'pan') !== false) {
+            $panNo = strtoupper(trim($liveP4['panNo'] ?? ($p4Data['panNumber'] ?? ($p4Data['panNo'] ?? ($p4Data['pan'] ?? ($userVal ?: ''))))));
+            $generatedData['panNo'] = $panNo;
+            $panName = $p4Data['name'] ?? ($p4Data['full_name'] ?? ($params['customerName'] ?? 'PAN धारक'));
+            $docTitle = "पैन कार्ड ({$panNo}) - {$panName}";
+            $refNumber = $panNo;
+        } elseif ($p4Service === 'voter' || strpos($normServiceType, 'voter') !== false || strpos($normServiceType, 'epic') !== false) {
+            $epic = strtoupper(trim($liveP4['epicNo'] ?? ($p4Data['epicNumber'] ?? ($p4Data['epicNo'] ?? ($p4Data['epic_number'] ?? ($userVal ?: ''))))));
+            $generatedData['epicNo'] = $epic;
+            $voterName = $p4Data['name'] ?? ($p4Data['applicant_name'] ?? ($params['customerName'] ?? 'मतदाता'));
+            $docTitle = "वोटर स्मार्ट कार्ड ({$epic}) - {$voterName}";
+            $refNumber = $epic;
+        } elseif ($p4Service === 'ration' || strpos($normServiceType, 'ration') !== false) {
+            $rat = trim($liveP4['rationNo'] ?? ($p4Data['ration_no'] ?? ($p4Data['rationNo'] ?? ($userVal ?: ''))));
+            $generatedData['rationNo'] = $rat;
+            $headName = $p4Data['headName'] ?? ($p4Data['head_name'] ?? ($params['customerName'] ?? 'राशन कार्ड'));
+            $docTitle = "राशन पर्ची ({$rat}) - {$headName}";
+            $refNumber = $rat;
+        } elseif ($p4Service === 'electricity' || strpos($normServiceType, 'electric') !== false || strpos($normServiceType, 'bill') !== false) {
+            $ca = trim($liveP4['consumerNo'] ?? ($p4Data['consumer_no'] ?? ($p4Data['caNumber'] ?? ($userVal ?: ''))));
+            $generatedData['consumerNo'] = $ca;
+            $payable = $p4Data['netPayable'] ?? ($p4Data['amount'] ?? '0');
+            $docTitle = "बिजली रसीद ({$ca}) - ₹{$payable}";
+            $refNumber = $ca;
+        } elseif ($p4Service === 'dl' || strpos($normServiceType, 'dl') !== false || strpos($normServiceType, 'licence') !== false) {
+            $dl = strtoupper(trim($liveP4['dlNo'] ?? ($p4Data['dl_number'] ?? ($p4Data['dlNo'] ?? ($userVal ?: '')))));
+            $generatedData['dlNo'] = $dl;
+            $dlName = $p4Data['name'] ?? ($params['customerName'] ?? 'चालक');
+            $docTitle = "ड्राइविंग लाइसेंस ({$dl}) - {$dlName}";
+            $refNumber = $dl;
         } elseif ($p4Service === 'npci') {
-            $aid = preg_replace('/[^0-9]/', '', $liveP4['aadhaarNo'] ?? ($userVal ?: ''));
-            $generatedData = array_merge(getAadhaarDetails($aid, $params), $liveP4);
-            $docTitle = "NPCI डीबीटी लिंक स्थिति ({$liveP4['bankName']})";
+            $aid = preg_replace('/[^0-9]/', '', $liveP4['aadhaarNo'] ?? ($p4Data['aadhaarNo'] ?? ($userVal ?: '')));
+            $bankName = $liveP4['bankName'] ?? ($p4Data['bankName'] ?? 'बैंक');
+            $docTitle = "NPCI डीबीटी लिंक स्थिति ({$bankName})";
             $refNumber = $aid ?: 'NPCI';
         } else {
-            $generatedData = $liveP4;
-            if (!empty($liveP4['data']) && is_array($liveP4['data'])) {
-                $generatedData = array_merge($liveP4, $liveP4['data']);
-            }
             $docTitle = ($service79['name'] ?? ($serviceTitles[$normServiceType] ?? $normServiceType));
             $refNumber = $userVal ?: 'DOC';
         }
@@ -6029,26 +6036,6 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                     $refNumber = $ifscClean;
                 }
             }
-            if (!$generatedData) {
-                $generatedData = [
-                    'bank' => 'State Bank of India',
-                    'bankName' => 'State Bank of India',
-                    'branch' => 'MAIN BRANCH',
-                    'address' => 'NEAR HEAD POST OFFICE',
-                    'city' => 'NEW DELHI',
-                    'district' => 'CENTRAL DELHI',
-                    'state' => 'DELHI',
-                    'ifsc' => $ifscClean ?: 'SBIN0000123',
-                    'micr' => '110002001',
-                    'rtgs' => true,
-                    'neft' => true,
-                    'imps' => true,
-                    'upi' => true,
-                    'refNumber' => $ifscClean ?: 'SBIN0000123'
-                ];
-                $docTitle = "बैंक IFSC विवरण ({$generatedData['ifsc']})";
-                $refNumber = $generatedData['ifsc'];
-            }
         } elseif ($normServiceType === 'pincode_lookup' || strpos($normServiceType, 'pincode') !== false) {
             $pin = preg_replace('/[^0-9]/', '', $params['pincode'] ?? ($params['pin'] ?? ($params['query'] ?? ($userVal ?: ''))));
             $url = "https://api.postalpincode.in/pincode/" . urlencode($pin);
@@ -6081,20 +6068,6 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                     $docTitle = "डाकघर पिनकोड पर्ची ({$pin}) - " . ($firstPo['District'] ?? '');
                     $refNumber = $pin;
                 }
-            }
-            if (!$generatedData) {
-                $generatedData = [
-                    'pincode' => $pin ?: '110001',
-                    'district' => 'Central Delhi',
-                    'state' => 'Delhi',
-                    'totalOffices' => 1,
-                    'postOffices' => [
-                        ['name' => 'Connaught Place', 'branchType' => 'Head Post Office', 'deliveryStatus' => 'Delivery']
-                    ],
-                    'refNumber' => $pin ?: '110001'
-                ];
-                $docTitle = "डाकघर पिनकोड पर्ची ({$generatedData['pincode']})";
-                $refNumber = $generatedData['pincode'];
             }
         } elseif ($normServiceType === 'qr_generator' || strpos($normServiceType, 'qr_') !== false) {
             $qrText = trim($params['text'] ?? ($params['upi'] ?? ($params['query'] ?? ($userVal ?: ''))));
@@ -6179,80 +6152,9 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         }
     }
 
-    // 2. Failsafe Clean ISO CR-80 PVC / Slip Generation (Strictly ZERO Dummy Fallbacks)
+    // 2. Local Utility: Receipt Maker (Cafe Billing Invoice)
     if (!$generatedData) {
-        $kind = strtolower((string)($service79['group'] ?? ($service79['category'] ?? $normServiceType)));
-        
-        if (strpos($kind, 'rc') !== false || strpos($kind, 'vehicle') !== false || $normServiceType === 'rcDownload') {
-            $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicleNumber'] ?? ($params['regNo'] ?? $userVal)));
-            $vehicleData = getVehicleDetails($regNo, $params);
-            $generatedData = $vehicleData;
-            $docTitle = "वाहन RC ({$vehicleData['regNo']}) - {$vehicleData['makerModel']}";
-            $refNumber = $vehicleData['regNo'];
-
-            $newRcOrder = [
-                'id' => 'RC-ORD-' . rand(1000, 9999),
-                'cafeId' => $cafe['id'],
-                'cafeShopName' => $cafe['shopName'],
-                'customerPhone' => $customerPhone,
-                'customerName' => $params['customerName'] ?? 'ग्राहक',
-                'vehicleNumber' => $vehicleData['regNo'],
-                'retailFee' => $retailFee,
-                'wholesaleCost' => $wholesaleCost,
-                'margin' => $margin,
-                'status' => 'completed',
-                'vehicleData' => $vehicleData,
-                'createdAt' => date('c')
-            ];
-            if (!isset($store['rcOrders'])) $store['rcOrders'] = [];
-            array_unshift($store['rcOrders'], $newRcOrder);
-        } elseif (strpos($kind, 'pan') !== false || $normServiceType === 'panCard' || $normServiceType === 'ePan' || $normServiceType === 'findPan') {
-            $panNo = strtoupper(trim($params['panNo'] ?? $userVal));
-            $generatedData = getPanCardDetails($panNo, $params);
-            $docTitle = "पैन कार्ड ({$generatedData['panNo']}) - {$generatedData['name']}";
-            $refNumber = $generatedData['panNo'];
-        } elseif (strpos($kind, 'aadhaar') !== false || $normServiceType === 'aadhaarCard') {
-            $aid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? $userVal);
-            $generatedData = getAadhaarDetails($aid, $params);
-            $docTitle = "आधार PVC ({$generatedData['maskedAadhaar']}) - {$generatedData['name']}";
-            $refNumber = $generatedData['aadhaarNo'];
-        } elseif (strpos($kind, 'voter') !== false || strpos($kind, 'epic') !== false || $normServiceType === 'voterCard' || $normServiceType === 'searchEpic') {
-            $epic = strtoupper(trim($params['epicNo'] ?? $userVal));
-            $generatedData = getVoterDetails($epic, $params);
-            $docTitle = "वोटर स्मार्ट कार्ड ({$generatedData['epicNo']}) - {$generatedData['name']}";
-            $refNumber = $generatedData['epicNo'];
-        } elseif (strpos($kind, 'ayushman') !== false || strpos($kind, 'health') !== false || strpos($kind, 'pmjay') !== false || strpos($kind, 'abha') !== false || $normServiceType === 'ayushmanCard') {
-            $pmjay = strtoupper(trim($params['pmjayId'] ?? ($params['id'] ?? $userVal)));
-            $generatedData = getAyushmanDetails($pmjay, $params);
-            $docTitle = "आयुष्मान कार्ड ({$generatedData['pmjayId']}) - {$generatedData['name']}";
-            $refNumber = $generatedData['pmjayId'];
-        } elseif (strpos($kind, 'ration') !== false || $normServiceType === 'rationCard') {
-            $rat = trim($params['rationNo'] ?? $userVal);
-            $generatedData = getRationDetails($rat, $params);
-            $docTitle = "राशन पर्ची ({$generatedData['rationNo']}) - {$generatedData['headName']}";
-            $refNumber = $generatedData['rationNo'];
-        } elseif (strpos($kind, 'electric') !== false || strpos($kind, 'bill') !== false || strpos($kind, 'utility') !== false || $normServiceType === 'electricityBill') {
-            $ca = trim($params['consumerNo'] ?? $userVal);
-            $generatedData = getElectricityBillDetails($ca, $params);
-            $docTitle = "बिजली रसीद ({$generatedData['consumerNo']}) - ₹{$generatedData['netPayable']}";
-            $refNumber = $generatedData['consumerNo'];
-        } elseif (strpos($kind, 'dl') !== false || strpos($kind, 'licence') !== false || $normServiceType === 'drivingLicence') {
-            $dl = strtoupper(trim($params['dlNo'] ?? $userVal));
-            $generatedData = getDrivingLicenceDetails($dl, $params);
-            $docTitle = "ड्राइविंग लाइसेंस ({$generatedData['dlNo']}) - {$generatedData['name']}";
-            $refNumber = $generatedData['dlNo'];
-        } elseif (strpos($kind, 'challan') !== false || $normServiceType === 'challanSearch') {
-            $chal = strtoupper(trim($params['challanNo'] ?? ($params['vehicleNo'] ?? $userVal)));
-            $generatedData = getChallanDetails($chal, $params);
-            $docTitle = "ई-चालान रसीद ({$generatedData['vehicleNo']}) - ₹{$generatedData['amount']}";
-            $refNumber = $generatedData['challanNo'];
-        } elseif (strpos($kind, 'edistrict') !== false || $normServiceType === 'edistrictSlip') {
-            $app = trim($params['appNo'] ?? $userVal);
-            $cert = trim($params['certNo'] ?? '');
-            $generatedData = getEdistrictDetails($app, $cert, $params);
-            $docTitle = "e-District सत्यापन ({$generatedData['certNo']}) - {$generatedData['applicantName']}";
-            $refNumber = $generatedData['certNo'];
-        } else {
+        if ($normServiceType === 'receiptMaker' || $normServiceType === 'receipt') {
             $generatedData = getReceiptDetails($userVal ?: $customerPhone, array_merge($params, [
                 'serviceName' => ($service79['name'] ?? ($serviceTitles[$normServiceType] ?? $normServiceType)),
                 'customerName' => $params['customerName'] ?? 'नागरिक',
@@ -6261,9 +6163,37 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                 'shopPhone' => $cafe['phone'] ?? '',
                 'amount' => $retailFee
             ]));
-            $docTitle = "{$normServiceType} रसीद ({$generatedData['receiptNo']}) - ₹{$generatedData['amount']}";
+            $docTitle = "कैफे बिल रसीद ({$generatedData['receiptNo']}) - ₹{$generatedData['amount']}";
             $refNumber = $generatedData['receiptNo'];
         }
+    }
+
+    // 3. Zero-Fake Policy: If no authentic government data was returned by live API/gateway
+    if (!$generatedData) {
+        // Revert wallet debits so customer & cafe are not charged for a failed lookup
+        if (!$isOtherCategory) {
+            if (!$isOperatorB2bDirect && $custWalletIdx !== -1) {
+                $store['wallets'][$custWalletIdx]['balance'] += $retailFee;
+                if (!empty($store['wallets'][$custWalletIdx]['transactions'])) {
+                    array_shift($store['wallets'][$custWalletIdx]['transactions']);
+                }
+            }
+            $cafe['b2bWallet']['balance'] += $wholesaleCost;
+            if (!empty($cafe['b2bWallet']['transactions'])) {
+                array_shift($cafe['b2bWallet']['transactions']);
+            }
+            if (!empty($store['cashbook'])) {
+                array_shift($store['cashbook']);
+            }
+            saveStore($dataFile, $store);
+        }
+
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'error' => 'सरकारी रिकॉर्ड में यह विवरण उपलब्ध नहीं है अथवा सेवा प्रदाता सर्वर अस्थायी रूप से डाउन है।'
+        ]);
+        exit;
     }
 
     $orderId = 'ORD-' . time() . '-' . rand(1000, 9999);
@@ -6749,13 +6679,23 @@ if ($endpoint === 'rc/orders' && $method === 'GET') {
 }
 
 if (preg_match('#^rc/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    $regNo = strtoupper(trim($m[1]));
+    $regNo = strtoupper(preg_replace('/[\s-]+/', '', trim($m[1])));
     if (strlen($regNo) < 6) {
         http_response_code(400);
         echo json_encode(['error' => 'कृपया वैध गाड़ी नंबर दर्ज करें।']);
         exit;
     }
-    echo json_encode(getVehicleDetails($regNo));
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
+    $liveP4 = dispatchLiveP4Points('rc_to_details', ['rcno' => $regNo], $p4ApiKey);
+    if (!empty($liveP4)) {
+        $p4Data = is_array($liveP4['data'] ?? null) ? $liveP4['data'] : [];
+        $resData = array_merge($liveP4, $p4Data);
+        $resData['regNo'] = $regNo;
+        echo json_encode($resData);
+        exit;
+    }
+    http_response_code(404);
+    echo json_encode(['error' => 'सरकारी रिकॉर्ड में यह वाहन विवरण उपलब्ध नहीं है अथवा सर्वर अस्थायी रूप से डाउन है।']);
     exit;
 }
 
