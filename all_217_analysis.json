@@ -1,0 +1,5941 @@
+{
+  "aadhaar-docs.php": {
+    "apiLines": [
+      {
+        "line": 5,
+        "text": "$baseUrl = \"https://\" . paymentapi(\"gateway_Url\");"
+      }
+    ],
+    "formFields": []
+  },
+  "aadhaar_pdf.php": {
+    "apiLines": [
+      {
+        "line": 5,
+        "text": "$apiKey    = $user['api_key'] ?? TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 6,
+        "text": "$targetUrl = TargetApi(\"TargetApi_url\");"
+      },
+      {
+        "line": 9,
+        "text": "define('P4_BASE_URL', \"https://{$targetUrl}/api/v1/aadhaar_pdf.php\");"
+      },
+      {
+        "line": 32,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 33,
+        "text": "curl_setopt_array($ch, ["
+      },
+      {
+        "line": 74,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 75,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "submitotp",
+      "uidNumberResponse",
+      "otp"
+    ]
+  },
+  "aadhartomaskpan.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "aadhaar"
+    ]
+  },
+  "aadhar_auto_robot.php": {
+    "apiLines": [
+      {
+        "line": 331,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 978,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 998,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 1022,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 1030,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 1046,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 1054,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 1072,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 1080,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 1104,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 1112,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 1128,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 1136,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 1152,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 1160,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 1180,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "type",
+      "value",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal"
+    ]
+  },
+  "aadhar_Fingerprint.php": {
+    "apiLines": [
+      {
+        "line": 412,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 422,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 436,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 440,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 450,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 454,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 463,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 467,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 480,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 484,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 493,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 497,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 506,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 510,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 520,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      },
+      {
+        "line": 587,
+        "text": "<script src=\"https://cr7.skyline-pro.live/fingerprint/printcapture.js\"></script>"
+      },
+      {
+        "line": 673,
+        "text": "`http://127.0.0.1:${port}`,"
+      },
+      {
+        "line": 674,
+        "text": "`https://127.0.0.1:${port}`,"
+      },
+      {
+        "line": 675,
+        "text": "`https://localhost:${port}`"
+      },
+      {
+        "line": 690,
+        "text": "$.ajax({"
+      }
+    ],
+    "formFields": [
+      "bioenc",
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ]
+  },
+  "aadhar_Fingerprint1.php": {
+    "apiLines": [
+      {
+        "line": 414,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 424,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 438,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 442,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 452,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 456,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 465,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 469,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 482,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 486,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 495,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 499,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 508,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 512,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 522,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      },
+      {
+        "line": 621,
+        "text": "$.getScript(\"https://<?php echo TargetApi('TargetApi_url'); ?>/api/v1/uid/ekyc_Otp/printcapture.js?v=\" + ssoauth_ver).done(function (script, textStatus) {"
+      },
+      {
+        "line": 768,
+        "text": "`http://127.0.0.1:${port}`,"
+      },
+      {
+        "line": 769,
+        "text": "`https://127.0.0.1:${port}`,"
+      },
+      {
+        "line": 770,
+        "text": "`https://localhost:${port}`"
+      },
+      {
+        "line": 785,
+        "text": "$.ajax({"
+      }
+    ],
+    "formFields": [
+      "bioenc",
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ]
+  },
+  "aadhar_Fingerprint2.php": {
+    "apiLines": [
+      {
+        "line": 412,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 422,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 436,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 440,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 450,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 454,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 463,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 467,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 480,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 484,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 493,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 497,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 506,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 510,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 520,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      },
+      {
+        "line": 619,
+        "text": "$.getScript(\"https://<?php echo TargetApi('TargetApi_url'); ?>/api/v1/uid/printcapture_Server2.js?v=\" + ssoauth_ver).done(function (script, textStatus) {"
+      },
+      {
+        "line": 766,
+        "text": "`http://127.0.0.1:${port}`,"
+      },
+      {
+        "line": 767,
+        "text": "`https://127.0.0.1:${port}`,"
+      },
+      {
+        "line": 768,
+        "text": "`https://localhost:${port}`"
+      },
+      {
+        "line": 783,
+        "text": "$.ajax({"
+      }
+    ],
+    "formFields": [
+      "bioenc",
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ]
+  },
+  "Aadhar_Manual.php": {
+    "apiLines": [
+      {
+        "line": 23,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 297,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 307,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 319,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 323,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 331,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 335,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 344,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 348,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 360,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 364,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 372,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 376,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 384,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 388,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 398,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal"
+    ]
+  },
+  "Aadhar_MobileVerify.php": {
+    "apiLines": [
+      {
+        "line": 412,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 422,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 436,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 440,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 450,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 454,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 463,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 467,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 480,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 484,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 493,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 497,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 506,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 510,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 520,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      },
+      {
+        "line": 587,
+        "text": "<script src=\"https://cr7.skyline-pro.live/fingerprint/printcapture.js\"></script>"
+      },
+      {
+        "line": 673,
+        "text": "`http://127.0.0.1:${port}`,"
+      },
+      {
+        "line": 674,
+        "text": "`https://127.0.0.1:${port}`,"
+      },
+      {
+        "line": 675,
+        "text": "`https://localhost:${port}`"
+      },
+      {
+        "line": 690,
+        "text": "$.ajax({"
+      }
+    ],
+    "formFields": [
+      "bioenc",
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ]
+  },
+  "aadhar_Otp.php": {
+    "apiLines": [
+      {
+        "line": 431,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 441,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 455,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 459,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 467,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 471,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 480,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 484,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 496,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 500,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 508,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 512,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 520,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 524,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 535,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "submitotp",
+      "uidNumberResponse",
+      "otp",
+      "token",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ]
+  },
+  "Aadhar_validate.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber"
+    ]
+  },
+  "Aadhar_Verify.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber"
+    ]
+  },
+  "aasham_uid_find.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "rationNumber"
+    ]
+  },
+  "ABHA-Card-Download.php": {
+    "apiLines": [
+      {
+        "line": 17,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 23,
+        "text": "$url = \"https://authorized.p4points.co.in/api/v3/abha/send_otp.php?\" . $query;"
+      },
+      {
+        "line": 25,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 26,
+        "text": "curl_setopt_array($ch, ["
+      },
+      {
+        "line": 40,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 47,
+        "text": "$url = \"https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?\" . $query;"
+      },
+      {
+        "line": 49,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 50,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "send_otp",
+      "uid_number",
+      "verify_otp",
+      "otp",
+      "reset_form"
+    ]
+  },
+  "ABHA-Card-Download_widhoutopt.php": {
+    "apiLines": [
+      {
+        "line": 17,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 24,
+        "text": "$url = \"https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?\" . $query;"
+      },
+      {
+        "line": 26,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 27,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "download_card",
+      "uid_number",
+      "dob"
+    ]
+  },
+  "addmember.php": {
+    "apiLines": [
+      {
+        "line": 47,
+        "text": "$message = \"Dear {$insData['name']}, Your Login Username: {$insData['username']} and Password: {$insData['password']}, Login https://\".baseurl();"
+      },
+      {
+        "line": 53,
+        "text": "\"Login Here: *https://\".baseurl().\"*\\n\\n\" ."
+      }
+    ],
+    "formFields": [
+      "usercreate",
+      "name",
+      "password",
+      "company",
+      "mobile",
+      "email",
+      "aadhaar",
+      "pan",
+      "usertype"
+    ]
+  },
+  "addmemberotp.php": {
+    "apiLines": [
+      {
+        "line": 21,
+        "text": "$url = \"https://securedesk.in/api/sms/send-message\";"
+      },
+      {
+        "line": 34,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 35,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 36,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 37,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));"
+      },
+      {
+        "line": 38,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);"
+      },
+      {
+        "line": 39,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 159,
+        "text": "$message = \"Dear {$insData['name']}, Your Login Username: {$insData['username']} and Password: {$insData['password']}, Login https://\".baseurl();"
+      },
+      {
+        "line": 165,
+        "text": "\"Login Here: *https://\".baseurl().\"*\\n\\n\" ."
+      }
+    ],
+    "formFields": [
+      "usercreate",
+      "name",
+      "password",
+      "company",
+      "mobile",
+      "email",
+      "aadhaar",
+      "pan",
+      "usertype",
+      "verify_member_otp",
+      "email_otp",
+      "mobile_otp",
+      "resend_member_otp",
+      "cancel_create"
+    ]
+  },
+  "addmoney.php": {
+    "apiLines": [
+      {
+        "line": 70,
+        "text": "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";"
+      },
+      {
+        "line": 72,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 73,
+        "text": "curl_setopt($ch, CURLOPT_URL, $api_url);"
+      },
+      {
+        "line": 74,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 75,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 76,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+      },
+      {
+        "line": 77,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);"
+      },
+      {
+        "line": 78,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 79,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);"
+      },
+      {
+        "line": 80,
+        "text": "curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);"
+      },
+      {
+        "line": 81,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+      }
+    ],
+    "formFields": [
+      "smartpg",
+      "amount"
+    ]
+  },
+  "addmoney1.php": {
+    "apiLines": [
+      {
+        "line": 70,
+        "text": "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";"
+      },
+      {
+        "line": 72,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 73,
+        "text": "curl_setopt($ch, CURLOPT_URL, $api_url);"
+      },
+      {
+        "line": 74,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 75,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 76,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+      },
+      {
+        "line": 77,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);"
+      },
+      {
+        "line": 78,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 79,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);"
+      },
+      {
+        "line": 80,
+        "text": "curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);"
+      },
+      {
+        "line": 81,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+      },
+      {
+        "line": 160,
+        "text": "strpos($qr_image, 'http://') !== 0 &&"
+      },
+      {
+        "line": 161,
+        "text": "strpos($qr_image, 'https://') !== 0"
+      }
+    ],
+    "formFields": [
+      "smartpg",
+      "amount"
+    ]
+  },
+  "addmoneyresponse.php": {
+    "apiLines": [
+      {
+        "line": 43,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 48,
+        "text": "$url = \"https://\" . paymentapi(\"gateway_Url\") . \"/api/check-order-status\";"
+      },
+      {
+        "line": 54,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 55,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 56,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 57,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);"
+      },
+      {
+        "line": 58,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));"
+      },
+      {
+        "line": 170,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      }
+    ],
+    "formFields": [
+      "order_id"
+    ]
+  },
+  "addmoneys.php": {
+    "apiLines": [
+      {
+        "line": 14,
+        "text": "$redirect_url = \"https://\" . $_SERVER['SERVER_NAME'] . \"/members/paymentResponse.php?\" ."
+      },
+      {
+        "line": 69,
+        "text": "\"https://\" . paymentapi(\"gateway_Url\") . \"/api2/create-orderpopup.php?\" . $queryParams,"
+      },
+      {
+        "line": 70,
+        "text": "\"https://\" . paymentapi(\"gateway_Url\") . \"/api2/create-orderpopup2.php?\" . $queryParams,"
+      },
+      {
+        "line": 71,
+        "text": "\"https://\" . paymentapi(\"gateway_Url\") . \"/api2/create-orderpopup3.php?\" . $queryParams"
+      },
+      {
+        "line": 75,
+        "text": "$ch = curl_init($api_url);"
+      },
+      {
+        "line": 76,
+        "text": "curl_setopt_array($ch, ["
+      },
+      {
+        "line": 100,
+        "text": "$successGifUrl = \"https://\" . paymentapi(\"gateway_Url\") . \"/api2/img/success-gif.gif\";"
+      },
+      {
+        "line": 103,
+        "text": "<script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>"
+      },
+      {
+        "line": 104,
+        "text": "<script src=\"https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script>"
+      },
+      {
+        "line": 124,
+        "text": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 200 200\" width=\"60\" height=\"60\">"
+      },
+      {
+        "line": 213,
+        "text": "$.post('../members/BharatPeProxy.php', {"
+      },
+      {
+        "line": 239,
+        "text": "$.post('../members/proxy.php', { byte_order_status: byteTransactionId }, data => {"
+      },
+      {
+        "line": 306,
+        "text": "<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@x.x.x'></script>"
+      },
+      {
+        "line": 307,
+        "text": "<script disable-devtool-auto src='https://cdn.jsdelivr.net/npm/disable-devtool@latest'></script>"
+      }
+    ],
+    "formFields": [
+      "smartupi",
+      "amount"
+    ]
+  },
+  "adhar-pvc.php": {
+    "apiLines": [
+      {
+        "line": 41,
+        "text": "$apiUrl = \"https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php\";"
+      },
+      {
+        "line": 53,
+        "text": "$curl = curl_init();"
+      },
+      {
+        "line": 54,
+        "text": "curl_setopt_array($curl, array("
+      }
+    ],
+    "formFields": [
+      "submit_pvc",
+      "mobile",
+      "type",
+      "password"
+    ]
+  },
+  "AgrifarmerCard.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "language"
+    ]
+  },
+  "AgrifarmerCardnew.php": {
+    "apiLines": [
+      {
+        "line": 42,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 45,
+        "text": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/AgriStak/farmer-card.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber);"
+      },
+      {
+        "line": 47,
+        "text": "$curl = curl_init();"
+      },
+      {
+        "line": 48,
+        "text": "curl_setopt_array($curl, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "uidNumber"
+    ]
+  },
+  "AgrifarmerCardstate.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "state"
+    ]
+  },
+  "AgrifarmerCard_old.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "language"
+    ]
+  },
+  "AgrifarmerCard_old1.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber"
+    ]
+  },
+  "Agri_farmer_Status.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber"
+    ]
+  },
+  "alldetailsfind.php": {
+    "apiLines": [
+      {
+        "line": 421,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "type",
+      "value"
+    ]
+  },
+  "BharatPeProxy.php": {
+    "apiLines": [
+      {
+        "line": 9,
+        "text": "$input = file_get_contents('php://input');"
+      },
+      {
+        "line": 35,
+        "text": "$verifyUrl = \"https://\" . paymentapi(\"gateway_Url\") . \"/api2/verify.php?redirect_url=\""
+      },
+      {
+        "line": 42,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 43,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 44,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 15); // 15s timeout"
+      },
+      {
+        "line": 45,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // optional, avoid SSL issues"
+      }
+    ],
+    "formFields": []
+  },
+  "callback.php": {
+    "apiLines": [
+      {
+        "line": 41,
+        "text": "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";"
+      },
+      {
+        "line": 54,
+        "text": "$ch = curl_init($api_url);"
+      },
+      {
+        "line": 55,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 56,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 57,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+      },
+      {
+        "line": 58,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);"
+      },
+      {
+        "line": 59,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      }
+    ],
+    "formFields": [
+      "order_id"
+    ]
+  },
+  "callback7inOneold.php": {
+    "apiLines": [
+      {
+        "line": 11,
+        "text": "$api_url = \"https://\".paymentapi(\"gateway_Url\").\"/api/check-order-status\";"
+      },
+      {
+        "line": 18,
+        "text": "$ch = curl_init($api_url);"
+      },
+      {
+        "line": 19,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 20,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 21,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));"
+      }
+    ],
+    "formFields": [
+      "order_id"
+    ]
+  },
+  "certificate.php": {
+    "apiLines": [
+      {
+        "line": 29,
+        "text": "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js\"></script>"
+      },
+      {
+        "line": 30,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js\"></script>"
+      },
+      {
+        "line": 31,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js\"></script>"
+      }
+    ],
+    "formFields": []
+  },
+  "Challan_Find.php": {
+    "apiLines": [
+      {
+        "line": 29,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 30,
+        "text": "$apiUrl = \"https://developer.darkxservices.com/api/v1/RcMobileFind?vehicalNo=\" . urlencode($vehicleNumber) . \"&apiKey=\" . $apiKey;"
+      },
+      {
+        "line": 32,
+        "text": "$ch = curl_init($apiUrl);"
+      },
+      {
+        "line": 33,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "vehicleNumber"
+    ]
+  },
+  "chassis_to_Number_find.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "chassisNumber"
+    ]
+  },
+  "chassis_to_Rc.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit_query",
+      "chasis_number"
+    ]
+  },
+  "check-account-status.php": {
+    "apiLines": [
+      {
+        "line": 17,
+        "text": "<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap\" rel=\"stylesheet\">"
+      },
+      {
+        "line": 18,
+        "text": "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css\">"
+      }
+    ],
+    "formFields": [
+      "checkstatus",
+      "mobile"
+    ]
+  },
+  "createaccount.php": {
+    "apiLines": [
+      {
+        "line": 19,
+        "text": "<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap\" rel=\"stylesheet\">"
+      }
+    ],
+    "formFields": [
+      "createaccount",
+      "name",
+      "password",
+      "company",
+      "mobile",
+      "email",
+      "usertype"
+    ]
+  },
+  "csc_rap.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "applicationNumber",
+      "password"
+    ]
+  },
+  "dashboard.php": {
+    "apiLines": [
+      {
+        "line": 15,
+        "text": "$updateApiUrl = \"https://\".TargetApi(\"cardprintApi_url\").\"/update/update_info.json\";"
+      },
+      {
+        "line": 18,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 19,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 20,
+        "text": "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');"
+      },
+      {
+        "line": 21,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 33,
+        "text": "$currentVersion = file_exists($versionFile) ? trim(file_get_contents($versionFile)) : '1.0.0';"
+      },
+      {
+        "line": 529,
+        "text": "<img src=\"https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png\" alt=\"WhatsApp\" />"
+      },
+      {
+        "line": 535,
+        "text": "<img src=\"https://img.icons8.com/ios-filled/20/25d366/whatsapp.png\" style=\"margin-right:5px;\" /> Join"
+      },
+      {
+        "line": 1147,
+        "text": "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css\">"
+      }
+    ],
+    "formFields": [
+      "check_balance"
+    ]
+  },
+  "dashboard1.php": {
+    "apiLines": [
+      {
+        "line": 161,
+        "text": "<img src=\"https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png\" alt=\"WhatsApp\" />"
+      },
+      {
+        "line": 166,
+        "text": "<a href=\"https://wa.me/91<?php echo isset($main_site_data['mobile']) ? $main_site_data['mobile'] : '0000000000'; ?>\" target=\"_blank\">"
+      },
+      {
+        "line": 167,
+        "text": "<img src=\"https://img.icons8.com/ios-filled/20/25d366/whatsapp.png\" style=\"margin-right:5px;\" /> Join"
+      },
+      {
+        "line": 198,
+        "text": "$updateApiUrl = \"https://\".TargetApi(\"cardprintApi_url\").\"/update/update_info.json\";"
+      },
+      {
+        "line": 201,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 202,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 203,
+        "text": "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');"
+      },
+      {
+        "line": 204,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 216,
+        "text": "$currentVersion = file_exists($versionFile) ? trim(file_get_contents($versionFile)) : '1.0.0';"
+      }
+    ],
+    "formFields": [
+      "check_balance"
+    ]
+  },
+  "dl-download.php": {
+    "apiLines": [
+      {
+        "line": 15,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 23,
+        "text": "$url = \"https://authorized.p4points.co.in/api/v3/dl/dl-print.php?\" . $query;"
+      },
+      {
+        "line": 25,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 26,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "dlNumber",
+      "dobenter"
+    ]
+  },
+  "DL_Find.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "name",
+      "dob"
+    ]
+  },
+  "dl_link.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "applicationNumber",
+      "password",
+      "state"
+    ]
+  },
+  "dl_nub.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "applicationNumber",
+      "state",
+      "mobile"
+    ]
+  },
+  "DL_to_Mobile.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "dlNumber",
+      "dob"
+    ]
+  },
+  "download.php": {
+    "apiLines": [],
+    "formFields": [
+      "url"
+    ]
+  },
+  "downloadReceipt.php": {
+    "apiLines": [
+      {
+        "line": 52,
+        "text": "<link href=\"https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap\" rel=\"stylesheet\">"
+      }
+    ],
+    "formFields": [
+      "order_id"
+    ]
+  },
+  "download_pdf.php": {
+    "apiLines": [],
+    "formFields": [
+      "pdf_base64",
+      "vehicle_number",
+      "order_id"
+    ]
+  },
+  "DRIVING LICENSE UNPAID APPLICATION.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "applicationNumber",
+      "dob",
+      "password",
+      "examsecretpin",
+      "state"
+    ]
+  },
+  "Driving_Licence_Pdf.php": {
+    "apiLines": [
+      {
+        "line": 15,
+        "text": "$base_url = TargetApi(\"TargetApi_url\");"
+      },
+      {
+        "line": 16,
+        "text": "$api_key  = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 19,
+        "text": "$base_url = \"https://\" . $base_url;"
+      },
+      {
+        "line": 29,
+        "text": "$url = $base_url . \"/serviceApi/TargetApiV1/DL/dl_link.php?\" . $query;"
+      },
+      {
+        "line": 31,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 32,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "dlNumber",
+      "dobenter",
+      "dltype"
+    ]
+  },
+  "Driving_Licence_Pdf_2.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "dlNumber",
+      "dob"
+    ]
+  },
+  "Driving_Licence_Pdf_new.php": {
+    "apiLines": [
+      {
+        "line": 14,
+        "text": "$input = file_get_contents('php://input');"
+      },
+      {
+        "line": 108,
+        "text": "$apiUrl = \"https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey=\" . urlencode($apiKey) . \"&dl=\" . urlencode($dlno) . \"&dob=\" . urlencode($dob);"
+      },
+      {
+        "line": 110,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 111,
+        "text": "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+      },
+      {
+        "line": 112,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 113,
+        "text": "curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');"
+      },
+      {
+        "line": 114,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 115,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);"
+      },
+      {
+        "line": 116,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+      },
+      {
+        "line": 125,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js\"></script>"
+      },
+      {
+        "line": 126,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js\"></script>"
+      },
+      {
+        "line": 127,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "action",
+      "submit",
+      "dlNumber",
+      "dobenter",
+      "bg_type"
+    ]
+  },
+  "e-shram_number_link.php": {
+    "apiLines": [
+      {
+        "line": 59,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 60,
+        "text": "$apiUrl = \"https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber) . \"&dob=\" . urlencode($dob) . \"&mobile=\" . urlencode($mobile);"
+      },
+      {
+        "line": 62,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 63,
+        "text": "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+      },
+      {
+        "line": 64,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 65,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 66,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "dob",
+      "mobile"
+    ]
+  },
+  "e-shram_verification.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "dob"
+    ]
+  },
+  "ElectricBill_Details.php": {
+    "apiLines": [
+      {
+        "line": 232,
+        "text": "<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />"
+      },
+      {
+        "line": 233,
+        "text": "<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "caNumber",
+      "operator"
+    ]
+  },
+  "Electric_Bill.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "caNumber"
+    ]
+  },
+  "engine_to_rc.php": {
+    "apiLines": [
+      {
+        "line": 53,
+        "text": "// डेटाबेस TargetApi से API Key और URL प्राप्त करना"
+      },
+      {
+        "line": 54,
+        "text": "$apiKey = function_exists('TargetApi') ? TargetApi(\"TargetApi_apikey\") : \"\";"
+      },
+      {
+        "line": 55,
+        "text": "$apiUrl = function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\";"
+      },
+      {
+        "line": 92,
+        "text": "$requestUrl = \"https://\" . $cleanApiUrl . \"/api/v1/engine_to_rc.php?\" . http_build_query(["
+      },
+      {
+        "line": 98,
+        "text": "$curl = curl_init();"
+      },
+      {
+        "line": 99,
+        "text": "curl_setopt_array($curl, array("
+      }
+    ],
+    "formFields": [
+      "submit_query",
+      "engine_number"
+    ]
+  },
+  "Enrollment_Status.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "search_type",
+      "enrollmentNo",
+      "srnNumber"
+    ]
+  },
+  "epfo-docs.php": {
+    "apiLines": [
+      {
+        "line": 5,
+        "text": "$baseUrl = \"https://\" . paymentapi(\"gateway_Url\") . \"/layouts/members/assets/pdf/epfo\";"
+      }
+    ],
+    "formFields": []
+  },
+  "eshramaadhar.php": {
+    "apiLines": [
+      {
+        "line": 26,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 414,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 424,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 436,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 440,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 448,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 452,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 461,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 465,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 477,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 481,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 489,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 493,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 501,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 505,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 515,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "savedata",
+      "base64Image",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "submit",
+      "uidNumber"
+    ]
+  },
+  "ess.php": {
+    "apiLines": [
+      {
+        "line": 26,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 414,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 424,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 436,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 440,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 448,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 452,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 461,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 465,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 477,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 481,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 489,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 493,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 501,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 505,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 515,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "savedata",
+      "base64Image",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "submit",
+      "uidNumber"
+    ]
+  },
+  "familyID_Verification.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "familyidNumber"
+    ]
+  },
+  "Farmer_Certificate.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber"
+    ]
+  },
+  "forgotpassword.php": {
+    "apiLines": [
+      {
+        "line": 56,
+        "text": "<link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css\" rel=\"stylesheet\">"
+      },
+      {
+        "line": 57,
+        "text": "<link href=\"https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css\" rel=\"stylesheet\">"
+      },
+      {
+        "line": 201,
+        "text": "<script src=\"https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script>"
+      }
+    ],
+    "formFields": [
+      "forgotpassword",
+      "username"
+    ]
+  },
+  "function.php": {
+    "apiLines": [
+      {
+        "line": 91,
+        "text": "<link href=\"https://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css\" rel=\"stylesheet\">"
+      },
+      {
+        "line": 92,
+        "text": "<script src=\"https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js\" ></script>"
+      },
+      {
+        "line": 119,
+        "text": "<link href=\"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css\" rel=\"stylesheet\" />"
+      },
+      {
+        "line": 137,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js\"></script>"
+      },
+      {
+        "line": 166,
+        "text": "return 'data:image/jpg;base64,' . base64_encode(file_get_contents($image));"
+      },
+      {
+        "line": 497,
+        "text": "$curl = curl_init();"
+      },
+      {
+        "line": 498,
+        "text": "curl_setopt_array($curl, array("
+      },
+      {
+        "line": 517,
+        "text": "$curl = curl_init();"
+      },
+      {
+        "line": 518,
+        "text": "curl_setopt_array($curl, array("
+      },
+      {
+        "line": 532,
+        "text": "curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);"
+      },
+      {
+        "line": 533,
+        "text": "curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 680,
+        "text": "function p4pointsapi($type)"
+      },
+      {
+        "line": 683,
+        "text": "return json_decode($main_site_data['p4pointsAPI'], true)[$type];"
+      },
+      {
+        "line": 760,
+        "text": "<div><img src=\"https://panel.rechargepay.lol/layouts/home/download.png\" alt=\"Government Logo\" style=\"height: 50px; border-radius: 5px; max-width: 120%;\"></div>"
+      },
+      {
+        "line": 785,
+        "text": "// $curl = curl_init();"
+      },
+      {
+        "line": 801,
+        "text": "// curl_setopt_array($curl, array("
+      },
+      {
+        "line": 802,
+        "text": "//     CURLOPT_URL => \"https://api.mailazy.com/v1/mail/send\","
+      },
+      {
+        "line": 851,
+        "text": "$message = \"Dear {$members['name']}, Your Login OTP is: {$login_otp} Please do not share this OTP anyone. https://\" . baseurl();"
+      },
+      {
+        "line": 856,
+        "text": "$message = \"Dear {$members['name']}, You have accessed {$members['username']} Account? And Login IP is: {$user_ip}, if not please change your password immediately. https://\" . baseurl();"
+      },
+      {
+        "line": 886,
+        "text": "$message = \"Dear {$members['name']}, You have accessed {$members['username']} Account? And Login IP is: {$user_ip}, if not please change your password immediately. https://\" . baseurl();"
+      }
+    ],
+    "formFields": []
+  },
+  "gst_details.php": {
+    "apiLines": [
+      {
+        "line": 12,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 29,
+        "text": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") ."
+      },
+      {
+        "line": 30,
+        "text": "\"/api/v1/gst_to_pan.php?apiKey=\" ."
+      },
+      {
+        "line": 50,
+        "text": "$response = @file_get_contents($apiUrl, false, $context);"
+      }
+    ],
+    "formFields": [
+      "gst_submit",
+      "gst"
+    ]
+  },
+  "gst_To_pan.php": {
+    "apiLines": [
+      {
+        "line": 12,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 29,
+        "text": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") ."
+      },
+      {
+        "line": 30,
+        "text": "\"/api/v1/gst_to_pan.php?apiKey=\" ."
+      },
+      {
+        "line": 50,
+        "text": "$response = @file_get_contents($apiUrl, false, $context);"
+      }
+    ],
+    "formFields": [
+      "gst_submit",
+      "gst"
+    ]
+  },
+  "gst_verification.php": {
+    "apiLines": [
+      {
+        "line": 12,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 20,
+        "text": "$apiUrl = \"https://\".TargetApi(\"TargetApi_url\").\"/api/v1/pan_to_gst.php?apiKey=\".$apiKey.\"&pan=\".$pan;"
+      },
+      {
+        "line": 30,
+        "text": "$response = @file_get_contents($apiUrl);"
+      }
+    ],
+    "formFields": [
+      "gst_submit",
+      "pan"
+    ]
+  },
+  "ifsc_code_search.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "ifscCode"
+    ]
+  },
+  "importantlinks.php": {
+    "apiLines": [],
+    "formFields": [
+      "addlink",
+      "name",
+      "url",
+      "delete",
+      "id"
+    ]
+  },
+  "incompletePan.php": {
+    "apiLines": [
+      {
+        "line": 47,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\",0);"
+      },
+      {
+        "line": 52,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\",0);"
+      },
+      {
+        "line": 56,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\",0);"
+      },
+      {
+        "line": 60,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\",0);"
+      },
+      {
+        "line": 64,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\",0);"
+      },
+      {
+        "line": 69,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\",0);"
+      }
+    ],
+    "formFields": [
+      "order_id"
+    ]
+  },
+  "instant_voter_link.php": {
+    "apiLines": [
+      {
+        "line": 13,
+        "text": "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";"
+      },
+      {
+        "line": 18,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 35,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 36,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 37,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+      },
+      {
+        "line": 38,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      }
+    ],
+    "formFields": [
+      "link_now",
+      "epic",
+      "mobile"
+    ]
+  },
+  "instant_voter_link1.php": {
+    "apiLines": [
+      {
+        "line": 13,
+        "text": "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";"
+      },
+      {
+        "line": 18,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 35,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 36,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 37,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+      },
+      {
+        "line": 38,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      }
+    ],
+    "formFields": [
+      "link_now",
+      "epic",
+      "mobile"
+    ]
+  },
+  "janaadharFind.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "aadhaar"
+    ]
+  },
+  "janAadhar_Member_Details.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "janaadharNumber"
+    ]
+  },
+  "janAadhar_Pdf.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "janaadharNumber"
+    ]
+  },
+  "janAadhar_Status.php": {
+    "apiLines": [
+      {
+        "line": 199,
+        "text": "<link href=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css\" rel=\"stylesheet\" />"
+      },
+      {
+        "line": 200,
+        "text": "<script src=\"https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "janaadhaar"
+    ]
+  },
+  "jharsewa-docs.php": {
+    "apiLines": [
+      {
+        "line": 3,
+        "text": "$baseUrl = \"https://\" . paymentapi(\"gateway_Url\") . \"/layouts/members/assets/pdf/jharsewa\";"
+      }
+    ],
+    "formFields": []
+  },
+  "listofcomplaint.php": {
+    "apiLines": [],
+    "formFields": [
+      "search",
+      "fromDate",
+      "toDate",
+      "status"
+    ]
+  },
+  "listofmember.php": {
+    "apiLines": [
+      {
+        "line": 278,
+        "text": "$message = \"Dear {$old_member['name']}, Your Login Username: {$old_member['username']} and New Password: {$old_member['password']}, Login https://\".baseurl();"
+      }
+    ],
+    "formFields": [
+      "editMember",
+      "transferBalance",
+      "user_id",
+      "transfertype",
+      "transferamount",
+      "ref_id",
+      "resetpassword",
+      "remove",
+      "search",
+      "limit",
+      "searchInput"
+    ]
+  },
+  "listofpanfind.php": {
+    "apiLines": [],
+    "formFields": [
+      "check_now",
+      "aadhaar",
+      "order_id",
+      "bulk_check",
+      "search",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput"
+    ]
+  },
+  "llexamlist.php": {
+    "apiLines": [],
+    "formFields": [
+      "search",
+      "fromDate",
+      "toDate",
+      "searchInput"
+    ]
+  },
+  "LL_application_find.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "search_by",
+      "appNumber",
+      "licenceNumber",
+      "mobileNumber",
+      "dob"
+    ]
+  },
+  "LL_card.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "idNumber"
+    ]
+  },
+  "ll_exam_Request.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "applicationNumber",
+      "dob",
+      "password",
+      "examsecretpin",
+      "state"
+    ]
+  },
+  "ll_exam_Request1.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "applicationNumber",
+      "dob",
+      "password",
+      "examsecretpin",
+      "state"
+    ]
+  },
+  "ll_exam_request_advance.php": {
+    "apiLines": [
+      {
+        "line": 25,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 26,
+        "text": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/ll/ll_apply.php?\" . http_build_query(["
+      },
+      {
+        "line": 35,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 36,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "applicationNumber",
+      "dob",
+      "password",
+      "examsecretpin",
+      "state"
+    ]
+  },
+  "LL_nub.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "full_name",
+      "state",
+      "aadhaar_link_mobile",
+      "aadhaar_number",
+      "father_name",
+      "blood_group",
+      "qualification",
+      "district",
+      "sub_district",
+      "dl_class",
+      "rto_code"
+    ]
+  },
+  "ll_status_proxy.php": {
+    "apiLines": [
+      {
+        "line": 11,
+        "text": "$url = \"https://a1.allrto.shop/api/v2/ll_status_check.php?token_id=\".$token;"
+      },
+      {
+        "line": 13,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 14,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 15,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);"
+      }
+    ],
+    "formFields": [
+      "token_id"
+    ]
+  },
+  "login.php": {
+    "apiLines": [
+      {
+        "line": 20,
+        "text": "<link href=\"https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap\" rel=\"stylesheet\">"
+      },
+      {
+        "line": 21,
+        "text": "<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css\">"
+      },
+      {
+        "line": 24,
+        "text": "<script src=\"https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script>"
+      }
+    ],
+    "formFields": [
+      "login",
+      "username",
+      "password",
+      "login_verify",
+      "otp",
+      "resend_otp",
+      "go_back"
+    ]
+  },
+  "messageapi.php": {
+    "apiLines": [
+      {
+        "line": 82,
+        "text": "<input type=\"url\" class=\"form-control\" placeholder=\"https://web.mtgekyc.site/send-message?api_key=123456&sender=9195*******&number=91{NUMBER}&message={MSG}\" name=\"url\" value=\"<?=smsapi(\"url\")?>\" required>"
+      }
+    ],
+    "formFields": [
+      "smsapiupdate",
+      "url",
+      "smtpupdate",
+      "username",
+      "password",
+      "sender",
+      "host",
+      "port",
+      "protocol"
+    ]
+  },
+  "mobaileChallan_Find.php": {
+    "apiLines": [
+      {
+        "line": 1561,
+        "text": "$apiKey = TargetApi("
+      },
+      {
+        "line": 1562,
+        "text": "\"TargetApi_apikey\""
+      },
+      {
+        "line": 1593,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/MobileNumberToChallanDetails.php?$params\";"
+      },
+      {
+        "line": 1600,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 1603,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "mobileNumber"
+    ]
+  },
+  "mobaile_to_account.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "mobile"
+    ]
+  },
+  "mobaile_to_multi_bank.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "mobile"
+    ]
+  },
+  "Mobaile_To_RC.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "vehicalNumber"
+    ]
+  },
+  "mobile-pan.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "mobile",
+      "name"
+    ]
+  },
+  "mobiletoMultiupi_Find.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "mobile"
+    ]
+  },
+  "mobiletoupi.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "mobile"
+    ]
+  },
+  "Mobile_Operator_Verify.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "phoneNumber"
+    ]
+  },
+  "new_aadhar.php": {
+    "apiLines": [],
+    "formFields": [
+      "html"
+    ]
+  },
+  "new_Npci_Link_Status.php": {
+    "apiLines": [
+      {
+        "line": 42,
+        "text": "$api_key  = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 43,
+        "text": "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";"
+      },
+      {
+        "line": 45,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 46,
+        "text": "curl_setopt($ch, CURLOPT_URL, $api_url);"
+      },
+      {
+        "line": 47,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 48,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(["
+      },
+      {
+        "line": 52,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 53,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "aadhaar"
+    ]
+  },
+  "NEW_RC.php": {
+    "apiLines": [
+      {
+        "line": 39,
+        "text": "'api_key'    => TargetApi(\"TargetApi_apikey\"),"
+      },
+      {
+        "line": 46,
+        "text": "$url = \"https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?\" . $params;"
+      },
+      {
+        "line": 49,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 50,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "fetch_details",
+      "vehicalNumber",
+      "fatherName",
+      "type"
+    ]
+  },
+  "noticealert.php": {
+    "apiLines": [],
+    "formFields": [
+      "noticeupdate",
+      "noticealert"
+    ]
+  },
+  "Npci_Link_Status.php": {
+    "apiLines": [
+      {
+        "line": 42,
+        "text": "$api_key  = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 43,
+        "text": "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";"
+      },
+      {
+        "line": 45,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 46,
+        "text": "curl_setopt($ch, CURLOPT_URL, $api_url);"
+      },
+      {
+        "line": 47,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 48,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(["
+      },
+      {
+        "line": 52,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 53,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "aadhaar"
+    ]
+  },
+  "nsdlApplicationStatus.php": {
+    "apiLines": [
+      {
+        "line": 187,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\",0);"
+      }
+    ],
+    "formFields": [
+      "order_id"
+    ]
+  },
+  "Number_name_upi.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "upi_id"
+    ]
+  },
+  "opencomplaint.php": {
+    "apiLines": [],
+    "formFields": [
+      "complaint",
+      "complaint_type",
+      "message",
+      "utr_number",
+      "search",
+      "fromDate",
+      "toDate",
+      "status",
+      "close",
+      "complaint_id",
+      "remark",
+      "phonenumber"
+    ]
+  },
+  "pan-aadhaar-link-status.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "aadhaar",
+      "pan"
+    ]
+  },
+  "pan-details.php": {
+    "apiLines": [
+      {
+        "line": 15,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 22,
+        "text": "$url = \"https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?\" . $query;"
+      },
+      {
+        "line": 24,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 25,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "panNumber"
+    ]
+  },
+  "pan-docs.php": {
+    "apiLines": [
+      {
+        "line": 3,
+        "text": "$baseUrl = \"https://\" . paymentapi(\"gateway_Url\");"
+      }
+    ],
+    "formFields": []
+  },
+  "PanDetails.php": {
+    "apiLines": [],
+    "formFields": [
+      "panNumber"
+    ]
+  },
+  "PanDetailsold.php": {
+    "apiLines": [],
+    "formFields": [
+      "panNumber"
+    ]
+  },
+  "panfind.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "aadhaar"
+    ]
+  },
+  "panfindmanualadvance.php": {
+    "apiLines": [
+      {
+        "line": 5,
+        "text": "<script src=\"https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "aadhaar"
+    ]
+  },
+  "panfind_s1.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "aadhaar"
+    ]
+  },
+  "Pantomaskaadhaar.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "panNumber"
+    ]
+  },
+  "PanuidLinkStatuscheck.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "aadhaar",
+      "pan"
+    ]
+  },
+  "PanuidLinkStatuscheck_old.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "aadhaar"
+    ]
+  },
+  "Pan_Advance_print.php": {
+    "apiLines": [
+      {
+        "line": 147,
+        "text": "$base64Image = 'data:' . $imageType . ';base64,' . base64_encode(file_get_contents($imageFile));"
+      },
+      {
+        "line": 157,
+        "text": "$base64Sign = 'data:' . $signType . ';base64,' . base64_encode(file_get_contents($SignFile));"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "panNumber",
+      "savedata",
+      "name",
+      "fathername",
+      "dobadhar",
+      "gender"
+    ]
+  },
+  "Pan_Apply_Correction.php": {
+    "apiLines": [],
+    "formFields": [
+      "generate_psa",
+      "submit",
+      "phoneNumber",
+      "name",
+      "gender",
+      "emailID",
+      "applicationMode",
+      "applicationType",
+      "encrypted_data"
+    ]
+  },
+  "Pan_Card_Print.php": {
+    "apiLines": [
+      {
+        "line": 147,
+        "text": "$base64Image = 'data:' . $imageType . ';base64,' . base64_encode(file_get_contents($imageFile));"
+      },
+      {
+        "line": 157,
+        "text": "$base64Sign = 'data:' . $signType . ';base64,' . base64_encode(file_get_contents($SignFile));"
+      },
+      {
+        "line": 382,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "panNumber",
+      "savedata",
+      "name",
+      "fathername",
+      "dobadhar",
+      "gender"
+    ]
+  },
+  "Pan_Card_Print_band.php": {
+    "apiLines": [
+      {
+        "line": 148,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 157,
+        "text": "$SignData = file_get_contents($SignFile);"
+      },
+      {
+        "line": 378,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "panNumber",
+      "savedata",
+      "name",
+      "fathername",
+      "dobadhar",
+      "gender"
+    ]
+  },
+  "Pan_Card_Print_Manual.php": {
+    "apiLines": [
+      {
+        "line": 115,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 124,
+        "text": "$SignData = file_get_contents($SignFile);"
+      },
+      {
+        "line": 367,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "panNumber",
+      "savedata",
+      "name",
+      "fathername",
+      "dobadhar",
+      "gender"
+    ]
+  },
+  "pan_mannaul.php": {
+    "apiLines": [
+      {
+        "line": 117,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 126,
+        "text": "$SignData = file_get_contents($SignFile);"
+      },
+      {
+        "line": 370,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "panNumber",
+      "savedata",
+      "name",
+      "fathername",
+      "dobadhar",
+      "gender"
+    ]
+  },
+  "pan_Uid_Find.php": {
+    "apiLines": [
+      {
+        "line": 15,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 16,
+        "text": "$baseUrl = TargetApi(\"TargetApi_url\");"
+      },
+      {
+        "line": 17,
+        "text": "$url = \"https://\".$baseUrl.\"/api/v1/panAadhar.php?apiKey=\".$apiKey.\"&panNumber=\".$panNumber;"
+      },
+      {
+        "line": 18,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 19,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "panNumber"
+    ]
+  },
+  "paymentapi.php": {
+    "apiLines": [
+      {
+        "line": 17,
+        "text": "if (isset($_POST['TargetApiupdate'])) {"
+      },
+      {
+        "line": 19,
+        "text": "$TargetApi_apikey = strip_tags($_POST['TargetApi_apikey']);"
+      },
+      {
+        "line": 20,
+        "text": "$TargetApi_url = strip_tags($_POST['TargetApi_url']);"
+      },
+      {
+        "line": 23,
+        "text": "$parsed_url = parse_url($TargetApi_url);"
+      },
+      {
+        "line": 24,
+        "text": "$host = $parsed_url['host'] ?? $TargetApi_url;"
+      },
+      {
+        "line": 29,
+        "text": "if (!empty($TargetApi_apikey) && !empty($host)) {"
+      },
+      {
+        "line": 31,
+        "text": "$TargetApi = json_encode(["
+      },
+      {
+        "line": 32,
+        "text": "\"TargetApi_apikey\" => $TargetApi_apikey,"
+      },
+      {
+        "line": 33,
+        "text": "\"TargetApi_url\" => $host,"
+      },
+      {
+        "line": 37,
+        "text": "$insData = ['TargetApi' => $TargetApi];"
+      },
+      {
+        "line": 113,
+        "text": "<input type=\"hidden\" name=\"TargetApi_url\" value=\"<?=TargetApi(\"TargetApi_url\")?>\">"
+      },
+      {
+        "line": 114,
+        "text": "<input type=\"hidden\" name=\"cardprintApi_url\" value=\"<?=TargetApi(\"cardprintApi_url\")?>\">"
+      },
+      {
+        "line": 119,
+        "text": "name=\"TargetApi_apikey\""
+      },
+      {
+        "line": 120,
+        "text": "value=\"<?=TargetApi(\"TargetApi_apikey\")?>\""
+      },
+      {
+        "line": 125,
+        "text": "<button class=\"btn btn-primary\" name=\"TargetApiupdate\">"
+      },
+      {
+        "line": 192,
+        "text": "<a href=\"https://merchant.razorpay.space/\" target=\"_blank\" class=\"btn btn-outline-primary w-100\">"
+      },
+      {
+        "line": 198,
+        "text": "<a href=\"https://web.whatsappapi.shop/en\" target=\"_blank\" class=\"btn btn-outline-success w-100\">"
+      },
+      {
+        "line": 204,
+        "text": "<a href=\"https://authorized.p4points.co.in/\" target=\"_blank\" class=\"btn btn-outline-dark w-100\">"
+      }
+    ],
+    "formFields": [
+      "TargetApiupdate",
+      "TargetApi_apikey",
+      "TargetApi_url",
+      "cardprintApi_url",
+      "CorexApiupdate",
+      "corex_url",
+      "x_client_username",
+      "x_client_apikey"
+    ]
+  },
+  "paymentResponse.php": {
+    "apiLines": [
+      {
+        "line": 41,
+        "text": "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";"
+      },
+      {
+        "line": 54,
+        "text": "$ch = curl_init($api_url);"
+      },
+      {
+        "line": 55,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 56,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 57,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+      },
+      {
+        "line": 58,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);"
+      },
+      {
+        "line": 59,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      }
+    ],
+    "formFields": [
+      "order_id"
+    ]
+  },
+  "Pincode_Search.php": {
+    "apiLines": [
+      {
+        "line": 22,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 24,
+        "text": "$api_url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/PincodeVerification.php?apiKey=$api_key&pincode={$searchValue}\";"
+      },
+      {
+        "line": 26,
+        "text": "$responseApi = file_get_contents($api_url);"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "search_value"
+    ]
+  },
+  "Pmjay_Verify.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "state_code"
+    ]
+  },
+  "popupalert.php": {
+    "apiLines": [],
+    "formFields": [
+      "popupupdate",
+      "popupalert",
+      "popup_active"
+    ]
+  },
+  "printRecord.php": {
+    "apiLines": [
+      {
+        "line": 32,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 33,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 34,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 35,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);"
+      },
+      {
+        "line": 36,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 37,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      },
+      {
+        "line": 38,
+        "text": "curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);"
+      },
+      {
+        "line": 39,
+        "text": "curl_setopt($ch, CURLOPT_HEADER, false);"
+      },
+      {
+        "line": 40,
+        "text": "curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);"
+      },
+      {
+        "line": 70,
+        "text": "'old_card' => ['url' => 'https://'.$domain.'/members/Aadhar_new/print/', 'label' => 'Old Card'],"
+      },
+      {
+        "line": 71,
+        "text": "'pvc_card' => ['url' => 'https://'.$domain.'/members/download/', 'label' => 'PVC Card']"
+      },
+      {
+        "line": 74,
+        "text": "'old_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/aadhaar', 'label' => 'Old Card'],"
+      },
+      {
+        "line": 75,
+        "text": "'pvc_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/aadhaar-pvc', 'label' => 'PVC Card']"
+      },
+      {
+        "line": 78,
+        "text": "'old_card' => ['url' => 'https://'.$domain.'/members/download/', 'label' => 'Old Card'],"
+      },
+      {
+        "line": 79,
+        "text": "'pvc_card' => ['url' => 'https://'.$domain.'/members/download/', 'label' => 'PVC Card']"
+      },
+      {
+        "line": 82,
+        "text": "'new_card' => ['url' => 'https://'.$domain.'/members/download/New_voter', 'label' => 'New Card'],"
+      },
+      {
+        "line": 83,
+        "text": "'old_card' => ['url' => 'https://'.$domain.'/members/download/New_voter', 'label' => 'Old Card'],"
+      },
+      {
+        "line": 86,
+        "text": "'old_card' => ['url' => 'https://'.$domain.'/members/download/vehicle', 'label' => 'New Card', 'rccardFormate' => 'new_card'],"
+      },
+      {
+        "line": 87,
+        "text": "'new_card' => ['url' => 'https://'.$domain.'/members/download/vehicle', 'label' => 'Chip Card', 'rccardFormate' => 'old_card'],"
+      },
+      {
+        "line": 90,
+        "text": "'old_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/dlPrint', 'label' => 'New Card', 'rccardFormate' => 'new_card'],"
+      }
+    ],
+    "formFields": [
+      "download_proxy",
+      "file_name",
+      "print_option",
+      "service",
+      "option_key",
+      "token",
+      "access_token",
+      "printdata",
+      "id",
+      "check_status_btn",
+      "record_id",
+      "app_number",
+      "order_id",
+      "submit",
+      "status_update",
+      "applicationNumber",
+      "userid",
+      "amount",
+      "reason",
+      "search",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput"
+    ]
+  },
+  "printRecord2.php": {
+    "apiLines": [
+      {
+        "line": 16,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 17,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 18,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 19,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);"
+      },
+      {
+        "line": 20,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 21,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      },
+      {
+        "line": 22,
+        "text": "curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);"
+      },
+      {
+        "line": 23,
+        "text": "curl_setopt($ch, CURLOPT_HEADER, false);"
+      },
+      {
+        "line": 24,
+        "text": "curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);"
+      },
+      {
+        "line": 58,
+        "text": "'aadhar_cardv1' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/genrate', 'label' => 'Server 1'],"
+      },
+      {
+        "line": 61,
+        "text": "'old_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/aadhaar', 'label' => 'Old Card'],"
+      },
+      {
+        "line": 62,
+        "text": "'pvc_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/aadhaar-pvc', 'label' => 'PVC Card']"
+      },
+      {
+        "line": 65,
+        "text": "'old_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/aadhaar', 'label' => 'Old Card'],"
+      },
+      {
+        "line": 66,
+        "text": "'pvc_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/aadhaar-pvc', 'label' => 'PVC Card']"
+      },
+      {
+        "line": 69,
+        "text": "'pvc_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/aadhaar-pvc', 'label' => 'PVC Card'],"
+      },
+      {
+        "line": 72,
+        "text": "'old_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/Voter', 'label' => 'Old Card (HI)'],"
+      },
+      {
+        "line": 73,
+        "text": "'New_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/Voter_Add', 'label' => 'New Card'],"
+      },
+      {
+        "line": 76,
+        "text": "'new_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/Rc-new', 'label' => 'Without Chip Card', 'rccardFormate' => 'new_card'],"
+      },
+      {
+        "line": 77,
+        "text": "'old_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/Rc-old', 'label' => 'Chip Card', 'rccardFormate' => 'old_card'],"
+      },
+      {
+        "line": 78,
+        "text": "'Karnataka_card' => ['url' => 'https://'.TargetApi(\"cardprintApi_url\").'/PrintData/rc-karnatak', 'label' => 'Karnataka Card', 'rccardFormate' => 'Karnataka_card'],"
+      }
+    ],
+    "formFields": [
+      "print_option",
+      "service",
+      "option_key",
+      "token",
+      "access_token",
+      "printdata",
+      "id",
+      "submit",
+      "status_update",
+      "record_id",
+      "applicationNumber",
+      "userid",
+      "amount",
+      "reason",
+      "search",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput"
+    ]
+  },
+  "profile.php": {
+    "apiLines": [],
+    "formFields": [
+      "changepassword",
+      "currentpassword",
+      "newpassword",
+      "confirmpassword",
+      "update_2fa",
+      "is_otp"
+    ]
+  },
+  "proxy.php": {
+    "apiLines": [
+      {
+        "line": 7,
+        "text": "$base_url = \"https://\" . paymentapi(\"gateway_Url\") . \"/api2/\";"
+      },
+      {
+        "line": 13,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 14,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 15,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 16,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));"
+      }
+    ],
+    "formFields": []
+  },
+  "puc.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "vehicle_number",
+      "mobile_number"
+    ]
+  },
+  "rationPdfmitrakendra.php": {
+    "apiLines": [
+      {
+        "line": 16,
+        "text": "$rawInput  = file_get_contents(\"php://input\");"
+      },
+      {
+        "line": 76,
+        "text": "$provider_base_url = \"https://mitrakendra.com/apifast/api/Rationpdf.php\";"
+      },
+      {
+        "line": 88,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 89,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "rationNumber",
+      "ration_no",
+      "apiKey"
+    ]
+  },
+  "ration_full_info_up.php": {
+    "apiLines": [
+      {
+        "line": 8,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js\"></script>"
+      },
+      {
+        "line": 55,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 56,
+        "text": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey=\" . urlencode($apiKey) . \"&rationNumber=\" . urlencode($rationNumber);"
+      },
+      {
+        "line": 58,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 59,
+        "text": "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+      },
+      {
+        "line": 60,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 61,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "rationNumber"
+    ]
+  },
+  "Ration_Pdf.php": {
+    "apiLines": [
+      {
+        "line": 22,
+        "text": "// API Configuration using TargetApi helper functions"
+      },
+      {
+        "line": 24,
+        "text": "'apiKey'       => TargetApi(\"TargetApi_apikey\"),"
+      },
+      {
+        "line": 28,
+        "text": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rationPdf.php?\" . $params;"
+      },
+      {
+        "line": 31,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 32,
+        "text": "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+      },
+      {
+        "line": 33,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 34,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 174,
+        "text": "if (rawData.startsWith(\"http://\") || rawData.startsWith(\"https://\")) {"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "rationNumber"
+    ]
+  },
+  "Ration_Pdf1.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "rationNumber"
+    ]
+  },
+  "Ration_Pdf_by_aadhaar.php": {
+    "apiLines": [
+      {
+        "line": 20,
+        "text": "$apiKey = function_exists('TargetApi') ? TargetApi(\"TargetApi_apikey\") : \"\";"
+      },
+      {
+        "line": 21,
+        "text": "$apiUrl = function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\";"
+      },
+      {
+        "line": 23,
+        "text": "// यदि TargetApi_url में पहले से https:// या ट्रेलिंग स्लैश है तो उसे मैनेज करें"
+      },
+      {
+        "line": 25,
+        "text": "$url = \"https://\" . $apiUrl . \"/api/v1/aadhar_to_Rationpdf.php\";"
+      },
+      {
+        "line": 32,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 33,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "aadhar"
+    ]
+  },
+  "Ration_uid_find.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "rationNumber"
+    ]
+  },
+  "Ration_uid_finder.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "rationNumber"
+    ]
+  },
+  "rcv3.php": {
+    "apiLines": [
+      {
+        "line": 95,
+        "text": "$api_url = \"https://api.invincibleocean.com/invincible/vehicleRcV6\";"
+      },
+      {
+        "line": 101,
+        "text": "$curl = curl_init();"
+      },
+      {
+        "line": 102,
+        "text": "curl_setopt_array($curl, ["
+      }
+    ],
+    "formFields": [
+      "action",
+      "submit",
+      "vehicleNumber"
+    ]
+  },
+  "Rc_Guardian_Find.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "vehicalNumber"
+    ]
+  },
+  "RC_To_Mobaile.php": {
+    "apiLines": [
+      {
+        "line": 99,
+        "text": "// API Key TargetApi se"
+      },
+      {
+        "line": 100,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 103,
+        "text": "// API URL TargetApi se"
+      },
+      {
+        "line": 105,
+        "text": "\"https://\" ."
+      },
+      {
+        "line": 106,
+        "text": "TargetApi(\"TargetApi_url\") ."
+      },
+      {
+        "line": 107,
+        "text": "\"/api/v1/Rc_to_mobaile.php?\" ."
+      },
+      {
+        "line": 116,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 118,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "vehicleNumber"
+    ]
+  },
+  "Rc_Verify.php": {
+    "apiLines": [
+      {
+        "line": 31,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 32,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rc-api/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&vehicleNumber=\" . urlencode($vehicalNumber);"
+      },
+      {
+        "line": 34,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 35,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 36,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 37,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 45);"
+      },
+      {
+        "line": 38,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 136,
+        "text": "$ch2 = curl_init();"
+      },
+      {
+        "line": 137,
+        "text": "curl_setopt_array($ch2, array("
+      },
+      {
+        "line": 138,
+        "text": "CCURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\","
+      }
+    ],
+    "formFields": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype",
+      "generate_pdf",
+      "vrn",
+      "authority",
+      "owner_name",
+      "owner_father_name",
+      "chassis",
+      "engine",
+      "fule_type",
+      "emission_norms",
+      "Address",
+      "class",
+      "maker",
+      "model",
+      "color",
+      "body_type",
+      "seating_capacity",
+      "unladen_weight",
+      "cubic_cap",
+      "cylinders",
+      "wheel_base",
+      "mfg_month_year",
+      "reg_date",
+      "reg_valid_date",
+      "ownership"
+    ]
+  },
+  "Rc_Verify1.php": {
+    "apiLines": [
+      {
+        "line": 31,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 32,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&rcno=\" . urlencode($vehicalNumber);"
+      },
+      {
+        "line": 34,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 35,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 36,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 37,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 45);"
+      },
+      {
+        "line": 38,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 135,
+        "text": "$ch2 = curl_init();"
+      },
+      {
+        "line": 136,
+        "text": "curl_setopt_array($ch2, array("
+      },
+      {
+        "line": 137,
+        "text": "CURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\","
+      }
+    ],
+    "formFields": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype",
+      "generate_pdf",
+      "vrn",
+      "authority",
+      "owner_name",
+      "owner_father_name",
+      "chassis",
+      "engine",
+      "fule_type",
+      "emission_norms",
+      "Address",
+      "class",
+      "maker",
+      "model",
+      "color",
+      "body_type",
+      "seating_capacity",
+      "unladen_weight",
+      "cubic_cap",
+      "cylinders",
+      "wheel_base",
+      "mfg_month_year",
+      "reg_date",
+      "reg_valid_date",
+      "ownership"
+    ]
+  },
+  "Rc_Verifyv2.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "vehicalNumber",
+      "fatherName"
+    ]
+  },
+  "Rc_Verify_server.php": {
+    "apiLines": [
+      {
+        "line": 29,
+        "text": "'apiKey' => TargetApi(\"TargetApi_apikey\"),"
+      },
+      {
+        "line": 34,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc_fast_server.php?\" . $params;"
+      },
+      {
+        "line": 37,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 38,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 39,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 40,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+      },
+      {
+        "line": 41,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      }
+    ],
+    "formFields": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype"
+    ]
+  },
+  "Rc_Verify_server_new.php": {
+    "apiLines": [
+      {
+        "line": 61,
+        "text": "'apiKey' => TargetApi(\"TargetApi_apikey\"),"
+      },
+      {
+        "line": 73,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") ."
+      },
+      {
+        "line": 74,
+        "text": "\"/serviceApi/TargetApiV1/RC/rc_pdfneserver.php?\" . $params;"
+      },
+      {
+        "line": 78,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 80,
+        "text": "curl_setopt_array($ch, ["
+      }
+    ],
+    "formFields": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype"
+    ]
+  },
+  "Recharge.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "phoneNumber",
+      "readAmount",
+      "operatorName",
+      "ajax",
+      "mobileNumber"
+    ]
+  },
+  "RechargeStatus.php": {
+    "apiLines": [
+      {
+        "line": 14,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 25,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 33,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 53,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 60,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 67,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 115,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 122,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 146,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\", 0);"
+      },
+      {
+        "line": 177,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\",0);"
+      },
+      {
+        "line": 181,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/walletledger\",0);"
+      }
+    ],
+    "formFields": [
+      "order_id"
+    ]
+  },
+  "Rtps_Certificate.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "applicationNumber",
+      "name"
+    ]
+  },
+  "selfactivation.php": {
+    "apiLines": [
+      {
+        "line": 48,
+        "text": "$message = \"Dear {$userData['name']}, Your Login Username: {$userData['username']} and Password: {$userData['password']}, Login https://\".baseurl();"
+      },
+      {
+        "line": 66,
+        "text": "// ✅ ADDED /api/v1/ HERE"
+      },
+      {
+        "line": 67,
+        "text": "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";"
+      },
+      {
+        "line": 75,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 76,
+        "text": "curl_setopt($ch, CURLOPT_URL, $api_url);"
+      },
+      {
+        "line": 77,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 78,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 79,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+      },
+      {
+        "line": 80,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);"
+      },
+      {
+        "line": 81,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 101,
+        "text": "$message = \"Dear {$userData['name']}, Your Login Username: {$userData['username']} and Password: {$userData['password']}, Login https://\".baseurl();"
+      },
+      {
+        "line": 132,
+        "text": "// ✅ ADDED /api/v1/ HERE"
+      },
+      {
+        "line": 133,
+        "text": "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";"
+      },
+      {
+        "line": 144,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 145,
+        "text": "curl_setopt($ch, CURLOPT_URL, $api_url);"
+      },
+      {
+        "line": 146,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 147,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 148,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+      },
+      {
+        "line": 149,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);"
+      },
+      {
+        "line": 150,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      }
+    ],
+    "formFields": [
+      "token"
+    ]
+  },
+  "Services_Manage.php": {
+    "apiLines": [],
+    "formFields": [
+      "siteupdate"
+    ]
+  },
+  "sesionupdate.php": {
+    "apiLines": [
+      {
+        "line": 19,
+        "text": "// Updated to authorized.p4points.co.in domain"
+      },
+      {
+        "line": 20,
+        "text": "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=\" . $mobile;"
+      },
+      {
+        "line": 26,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 27,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 28,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 29,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);"
+      },
+      {
+        "line": 30,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 50,
+        "text": "// Updated to authorized.p4points.co.in domain with proper encoding"
+      },
+      {
+        "line": 51,
+        "text": "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=\" . urlencode($mobile) . \"&otp=\" . urlencode($otp);"
+      },
+      {
+        "line": 54,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 55,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 56,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 57,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);"
+      },
+      {
+        "line": 58,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 67,
+        "text": "\"https://p4vps.com/update_session.php\","
+      },
+      {
+        "line": 68,
+        "text": "\"https://authorized.p4points.co.in/update_session.php\""
+      },
+      {
+        "line": 79,
+        "text": "$ch2 = curl_init();"
+      },
+      {
+        "line": 80,
+        "text": "curl_setopt($ch2, CURLOPT_URL, $tUrl);"
+      },
+      {
+        "line": 81,
+        "text": "curl_setopt($ch2, CURLOPT_POST, true);"
+      },
+      {
+        "line": 82,
+        "text": "curl_setopt($ch2, CURLOPT_POSTFIELDS, http_build_query($postData));"
+      }
+    ],
+    "formFields": [
+      "mobile",
+      "sendOtp",
+      "verifyOtp",
+      "otp"
+    ]
+  },
+  "Sharmadhan_Verify.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "registration_no"
+    ]
+  },
+  "tec_exam.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "applicationNumber",
+      "tec_password",
+      "state"
+    ]
+  },
+  "test1.php": {
+    "apiLines": [
+      {
+        "line": 7,
+        "text": "<form method=\"POST\" action=\"https://authorized.p4points.co.in/PrintData/aadhaar\" target=\"_blank\">"
+      }
+    ],
+    "formFields": []
+  },
+  "Uid_to_Details.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "uidNumber"
+    ]
+  },
+  "Uid_to_Details3.php": {
+    "apiLines": [
+      {
+        "line": 19,
+        "text": "$url     = \"http://kakajiho.com/api/v1/eshram/details.php\";"
+      },
+      {
+        "line": 25,
+        "text": "$ch = curl_init($url);"
+      },
+      {
+        "line": 26,
+        "text": "curl_setopt_array($ch, ["
+      },
+      {
+        "line": 425,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 435,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 449,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 453,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 463,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 467,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 476,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 480,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 493,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 497,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 506,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 510,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 519,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 523,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 533,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      },
+      {
+        "line": 632,
+        "text": "$.getScript(\"https://<?php echo p4pointsapi('p4points_url'); ?>/api/v1/uid/printcapture.js?v=\" + ssoauth_ver).done(function (script, textStatus) {"
+      },
+      {
+        "line": 778,
+        "text": "`http://127.0.0.1:${port}`,"
+      }
+    ],
+    "formFields": [
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ]
+  },
+  "Uid_to_Pdf.php": {
+    "apiLines": [
+      {
+        "line": 153,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 474,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 484,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 496,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 500,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 508,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 512,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 521,
+        "text": "url =\"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 525,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 537,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 541,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 549,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 553,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 561,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 565,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 575,
+        "text": "<script src=\"https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "savedata",
+      "base64Image",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal"
+    ]
+  },
+  "Uid_to_Pdf_original.php": {
+    "apiLines": [
+      {
+        "line": 51,
+        "text": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/uidai_original.php?\" . http_build_query(["
+      },
+      {
+        "line": 52,
+        "text": "'apiKey' => TargetApi(\"TargetApi_apikey\"),"
+      },
+      {
+        "line": 68,
+        "text": "$responseApi = file_get_contents($apiUrl);"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "uidNumber",
+      "lang",
+      "type"
+    ]
+  },
+  "Up-E-District-docs.php": {
+    "apiLines": [
+      {
+        "line": 5,
+        "text": "$baseUrl = \"https://\" . paymentapi(\"gateway_Url\") . \"/layouts/members/assets/pdf/Up-E-District\";"
+      }
+    ],
+    "formFields": []
+  },
+  "update_record_status.php": {
+    "apiLines": [],
+    "formFields": [
+      "record_id",
+      "status"
+    ]
+  },
+  "upidetails.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "upi_id"
+    ]
+  },
+  "upi_verify.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "UPI_ID"
+    ]
+  },
+  "vcmRequest.php": {
+    "apiLines": [
+      {
+        "line": 34,
+        "text": "// ðŸ”¹ TargetApi key & URL"
+      },
+      {
+        "line": 35,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 36,
+        "text": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";"
+      },
+      {
+        "line": 46,
+        "text": "$ch = curl_init($apiUrl);"
+      },
+      {
+        "line": 47,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 48,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));"
+      },
+      {
+        "line": 49,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 50,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "voterNumber",
+      "mobileNumber"
+    ]
+  },
+  "vcmStatusCheck.php": {
+    "apiLines": [
+      {
+        "line": 177,
+        "text": "redirect(\"https://\" . $_SERVER['SERVER_NAME'] . \"/members/printRecord\", 0);"
+      }
+    ],
+    "formFields": [
+      "order_id",
+      "voterNumber",
+      "mobileNumber"
+    ]
+  },
+  "vehical.php": {
+    "apiLines": [
+      {
+        "line": 25,
+        "text": "$url = \"https://secure.thenextgenapi.co.in/vehicle_rcpdf_verification?rcno=$rcno&rctype=$rctype&apikey=$apikey\";"
+      },
+      {
+        "line": 27,
+        "text": "$curl = curl_init();"
+      },
+      {
+        "line": 28,
+        "text": "curl_setopt_array($curl, ["
+      }
+    ],
+    "formFields": [
+      "submit",
+      "rcno",
+      "rctype"
+    ]
+  },
+  "verification.php": {
+    "apiLines": [
+      {
+        "line": 4,
+        "text": "$apiKey  = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 25,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 26,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 27,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);"
+      },
+      {
+        "line": 28,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 39,
+        "text": "$url = \"https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}\";"
+      },
+      {
+        "line": 67,
+        "text": "$url = \"https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}\";"
+      }
+    ],
+    "formFields": [
+      "reset",
+      "send_otp",
+      "aadhaar",
+      "verify_otp",
+      "otp"
+    ]
+  },
+  "verify_utr_proxy.php": {
+    "apiLines": [
+      {
+        "line": 14,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 15,
+        "text": "curl_setopt("
+      },
+      {
+        "line": 18,
+        "text": "\"https://razorpay.space/payment/statuspopup?order=\" . urlencode($orderId)"
+      },
+      {
+        "line": 20,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      }
+    ],
+    "formFields": [
+      "order"
+    ]
+  },
+  "VI_sim_photo.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "mobile"
+    ]
+  },
+  "voterbkp.php": {
+    "apiLines": [
+      {
+        "line": 110,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 531,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 554,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 567,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 571,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 579,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 583,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 591,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 595,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 603,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 607,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 615,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 619,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 627,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 631,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 639,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 643,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 651,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 655,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 663,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "voterNumber",
+      "savedata",
+      "name",
+      "namelocal",
+      "dobhkb",
+      "birthtithilocal",
+      "gender",
+      "genderlocal",
+      "sexlocal",
+      "spousename",
+      "spousenamelocal",
+      "fathername",
+      "fathernamelocal",
+      "address",
+      "addresslocal",
+      "patalocal",
+      "kanamelocal",
+      "tahshil",
+      "assemblyconnameno",
+      "assemblyconnamenolocal",
+      "assconnamenolocal",
+      "partno",
+      "partname",
+      "partnamelocal",
+      "partnoandnamelocal",
+      "state",
+      "language",
+      "signlocal"
+    ]
+  },
+  "votermanualprint.php": {
+    "apiLines": [
+      {
+        "line": 111,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 513,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 536,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 549,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 553,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 561,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 565,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 573,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 577,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 585,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 589,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 597,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 601,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 609,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 613,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 621,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 625,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 633,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 637,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 645,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "voterNumber",
+      "savedata",
+      "name",
+      "namelocal",
+      "dobhkb",
+      "birthtithilocal",
+      "gender",
+      "genderlocal",
+      "sexlocal",
+      "spousename",
+      "spousenamelocal",
+      "fathername",
+      "fathernamelocal",
+      "address",
+      "addresslocal",
+      "patalocal",
+      "kanamelocal",
+      "tahshil",
+      "assemblyconnameno",
+      "assemblyconnamenolocal",
+      "assconnamenolocal",
+      "partno",
+      "partname",
+      "partnamelocal",
+      "partnoandnamelocal",
+      "state",
+      "language",
+      "signlocal"
+    ]
+  },
+  "votermo.php": {
+    "apiLines": [
+      {
+        "line": 7,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\"); // आपकी API key"
+      },
+      {
+        "line": 8,
+        "text": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/CheckStatus.php\";"
+      },
+      {
+        "line": 16,
+        "text": "$ch = curl_init($apiUrl);"
+      },
+      {
+        "line": 17,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 18,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));"
+      },
+      {
+        "line": 19,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 20,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+      }
+    ],
+    "formFields": []
+  },
+  "voter_api.php": {
+    "apiLines": [
+      {
+        "line": 34,
+        "text": "$input = json_decode(file_get_contents(\"php://input\"), true);"
+      }
+    ],
+    "formFields": [
+      "action"
+    ]
+  },
+  "Voter_Mobile_Link.php": {
+    "apiLines": [
+      {
+        "line": 8,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 28,
+        "text": "function curlGet($url) {"
+      },
+      {
+        "line": 29,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 30,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 31,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 32,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 33,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      },
+      {
+        "line": 42,
+        "text": "function curlPost($url, $postData) {"
+      },
+      {
+        "line": 43,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 44,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 45,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 46,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 47,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));"
+      },
+      {
+        "line": 48,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 49,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      },
+      {
+        "line": 72,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=send&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile);"
+      },
+      {
+        "line": 73,
+        "text": "$apiResponse = curlGet($url);"
+      },
+      {
+        "line": 115,
+        "text": "$verifyUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=verify&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile) . \"&otp=\" . urlencode($voter_otp) . \"&referenceno=\" . urlencode($refid);"
+      },
+      {
+        "line": 116,
+        "text": "$verifyResponse = curlGet($verifyUrl);"
+      },
+      {
+        "line": 153,
+        "text": "$url = \"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend\";"
+      }
+    ],
+    "formFields": [
+      "epic_no",
+      "mobile",
+      "refid",
+      "send_voter_otp",
+      "verify_voter_otp",
+      "voter_otp",
+      "send_aadhar_otp",
+      "tokenbase64_1",
+      "aadharno",
+      "aadharholder",
+      "verify_aadhar_otp",
+      "tokenbase64_2",
+      "aadhar_otp"
+    ]
+  },
+  "Voter_Mobile_Link2.php": {
+    "apiLines": [
+      {
+        "line": 14,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 39,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);"
+      },
+      {
+        "line": 41,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 42,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 43,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 44,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 45,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      },
+      {
+        "line": 101,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);"
+      },
+      {
+        "line": 103,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 104,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 105,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 106,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 107,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      }
+    ],
+    "formFields": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ]
+  },
+  "Voter_Mobile_Link20.php": {
+    "apiLines": [
+      {
+        "line": 14,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 39,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);"
+      },
+      {
+        "line": 41,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 42,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 43,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 44,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 45,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      },
+      {
+        "line": 101,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);"
+      },
+      {
+        "line": 103,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 104,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 105,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 106,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 107,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      }
+    ],
+    "formFields": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ]
+  },
+  "Voter_Mobile_Link_withoutotp.php": {
+    "apiLines": [
+      {
+        "line": 8,
+        "text": "$api_key = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 33,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);"
+      },
+      {
+        "line": 35,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 36,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 37,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 38,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 39,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      },
+      {
+        "line": 94,
+        "text": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);"
+      },
+      {
+        "line": 96,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 97,
+        "text": "curl_setopt($ch, CURLOPT_URL, $url);"
+      },
+      {
+        "line": 98,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 99,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 100,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 60);"
+      }
+    ],
+    "formFields": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ]
+  },
+  "voter_number_chek.php": {
+    "apiLines": [
+      {
+        "line": 4,
+        "text": "$TargetApi_apikey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 22,
+        "text": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\""
+      },
+      {
+        "line": 23,
+        "text": ". urlencode($TargetApi_apikey)"
+      },
+      {
+        "line": 27,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 29,
+        "text": "curl_setopt_array($ch, ["
+      },
+      {
+        "line": 102,
+        "text": "<script src=\"https://cdn.jsdelivr.net/npm/sweetalert2@11\"></script>"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "epicNumber"
+    ]
+  },
+  "voter_number_instant.php": {
+    "apiLines": [
+      {
+        "line": 27,
+        "text": "// ðŸ”¹ TargetApi key & URL"
+      },
+      {
+        "line": 28,
+        "text": "$apiKey = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 29,
+        "text": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";"
+      },
+      {
+        "line": 39,
+        "text": "$ch = curl_init($apiUrl);"
+      },
+      {
+        "line": 40,
+        "text": "curl_setopt($ch, CURLOPT_POST, true);"
+      },
+      {
+        "line": 41,
+        "text": "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));"
+      },
+      {
+        "line": 42,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 43,
+        "text": "curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "voterNumber",
+      "mobileNumber"
+    ]
+  },
+  "Voter_Original_PDF.php": {
+    "apiLines": [
+      {
+        "line": 3,
+        "text": "$TargetApi_apikey  = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 32,
+        "text": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($epicNumber);"
+      },
+      {
+        "line": 34,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 35,
+        "text": "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+      },
+      {
+        "line": 36,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 37,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 38,
+        "text": "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');"
+      },
+      {
+        "line": 73,
+        "text": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($voterNumber) . \"&otp=\" . urlencode($otp);"
+      },
+      {
+        "line": 75,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 76,
+        "text": "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+      },
+      {
+        "line": 77,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 78,
+        "text": "curl_setopt($ch, CURLOPT_TIMEOUT, 120);"
+      },
+      {
+        "line": 79,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 80,
+        "text": "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "epicNumber",
+      "submitotp",
+      "voterNumber",
+      "otp"
+    ]
+  },
+  "Voter_ORIGINAL_PDF_DOWNLOAD.php": {
+    "apiLines": [
+      {
+        "line": 3,
+        "text": "$TargetApi_apikey  = TargetApi(\"TargetApi_apikey\");"
+      },
+      {
+        "line": 29,
+        "text": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&voter_number=\" . urlencode($epicNumber);"
+      },
+      {
+        "line": 31,
+        "text": "$ch = curl_init();"
+      },
+      {
+        "line": 32,
+        "text": "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+      },
+      {
+        "line": 33,
+        "text": "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+      },
+      {
+        "line": 34,
+        "text": "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+      },
+      {
+        "line": 35,
+        "text": "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "epicNumber"
+    ]
+  },
+  "Voter_Print.php": {
+    "apiLines": [
+      {
+        "line": 146,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 567,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 590,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 603,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 607,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 615,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 619,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 627,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 631,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 639,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 643,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 651,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 655,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 663,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 667,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 675,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 679,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 687,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 691,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 699,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "voterNumber",
+      "savedata",
+      "name",
+      "namelocal",
+      "dobhkb",
+      "birthtithilocal",
+      "gender",
+      "genderlocal",
+      "sexlocal",
+      "spousename",
+      "spousenamelocal",
+      "fathername",
+      "fathernamelocal",
+      "address",
+      "addresslocal",
+      "patalocal",
+      "kanamelocal",
+      "tahshil",
+      "assemblyconnameno",
+      "assemblyconnamenolocal",
+      "assconnamenolocal",
+      "partno",
+      "partname",
+      "partnamelocal",
+      "partnoandnamelocal",
+      "state",
+      "language",
+      "signlocal"
+    ]
+  },
+  "Voter_Print_captcha.php": {
+    "apiLines": [
+      {
+        "line": 120,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 675,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 698,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 711,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 715,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 723,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 727,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 735,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 739,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 747,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 751,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 759,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 763,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 771,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 775,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 783,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 787,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 795,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 799,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 807,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "voterNumber",
+      "captcha",
+      "captchaId",
+      "savedata",
+      "name",
+      "namelocal",
+      "dobhkb",
+      "birthtithilocal",
+      "gender",
+      "genderlocal",
+      "sexlocal",
+      "spousename",
+      "spousenamelocal",
+      "fathername",
+      "fathernamelocal",
+      "address",
+      "addresslocal",
+      "patalocal",
+      "kanamelocal",
+      "tahshil",
+      "assemblyconnameno",
+      "assemblyconnamenolocal",
+      "assconnamenolocal",
+      "partno",
+      "partname",
+      "partnamelocal",
+      "partnoandnamelocal",
+      "state",
+      "language",
+      "signlocal"
+    ]
+  },
+  "Voter_Print_Manual.php": {
+    "apiLines": [
+      {
+        "line": 109,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 490,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 513,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 526,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 530,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 538,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 542,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 550,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 554,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 562,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 566,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 574,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 578,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 586,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 590,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 598,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 602,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 610,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 614,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 622,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "voterNumber",
+      "savedata",
+      "name",
+      "namelocal",
+      "dobhkb",
+      "birthtithilocal",
+      "gender",
+      "genderlocal",
+      "sexlocal",
+      "spousename",
+      "spousenamelocal",
+      "fathername",
+      "fathernamelocal",
+      "address",
+      "addresslocal",
+      "patalocal",
+      "kanamelocal",
+      "tahshil",
+      "assemblyconnameno",
+      "assemblyconnamenolocal",
+      "assconnamenolocal",
+      "partno",
+      "partname",
+      "partnamelocal",
+      "partnoandnamelocal",
+      "state",
+      "language",
+      "signlocal"
+    ]
+  },
+  "Voter_Print_new.php": {
+    "apiLines": [
+      {
+        "line": 175,
+        "text": "$imageData = file_get_contents($imageFile);"
+      },
+      {
+        "line": 596,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:name,address:address}).done(function (data) {"
+      },
+      {
+        "line": 619,
+        "text": "$.post(\"<?php echo \"http://\" . $_SERVER['SERVER_NAME'].'/admin/';?>test\",{lang:lang,name:dob,address:gender}).done(function (data) {"
+      },
+      {
+        "line": 632,
+        "text": "var url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 636,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 644,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 648,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 656,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 660,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 668,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 672,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 680,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 684,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 692,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 696,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 704,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 708,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 716,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      },
+      {
+        "line": 720,
+        "text": "$.get(url, function (data, status) {"
+      },
+      {
+        "line": 728,
+        "text": "url = \"https://translate.googleapis.com/translate_a/single?client=gtx\";"
+      }
+    ],
+    "formFields": [
+      "submit",
+      "voterNumber",
+      "savedata",
+      "name",
+      "namelocal",
+      "dobhkb",
+      "birthtithilocal",
+      "gender",
+      "genderlocal",
+      "sexlocal",
+      "spousename",
+      "spousenamelocal",
+      "fathername",
+      "fathernamelocal",
+      "address",
+      "addresslocal",
+      "patalocal",
+      "kanamelocal",
+      "tahshil",
+      "assemblyconnameno",
+      "assemblyconnamenolocal",
+      "assconnamenolocal",
+      "partno",
+      "partname",
+      "partnamelocal",
+      "partnoandnamelocal",
+      "state",
+      "language",
+      "signlocal"
+    ]
+  },
+  "walletledger.php": {
+    "apiLines": [
+      {
+        "line": 160,
+        "text": "<form method=\"POST\" action=\"https://<?= baseurl() ?>/members/callback\" style=\"display:inline;\">"
+      },
+      {
+        "line": 170,
+        "text": "<form method=\"POST\" action=\"https://<?= baseurl() ?>/members/RechargeStatus\" style=\"display:inline;\">"
+      },
+      {
+        "line": 185,
+        "text": "<form method=\"POST\" action=\"https://<?= baseurl() ?>/members/incompletePan\">"
+      },
+      {
+        "line": 189,
+        "text": "<form method=\"POST\" action=\"https://<?= baseurl() ?>/members/nsdlApplicationStatus\">"
+      }
+    ],
+    "formFields": [
+      "search",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput"
+    ]
+  },
+  "wallettransfer.php": {
+    "apiLines": [],
+    "formFields": [
+      "submit",
+      "user_id",
+      "transfertype",
+      "amount",
+      "ref_id"
+    ]
+  },
+  "webdetails.php": {
+    "apiLines": [
+      {
+        "line": 44,
+        "text": "$whatsapp_chanell = \"https://wa.me/91\".$whatsapp_chanell;"
+      },
+      {
+        "line": 107,
+        "text": "$logo = 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($_FILES['logo']['tmp_name']));"
+      },
+      {
+        "line": 172,
+        "text": "<option <?=$site_data['protocol']==\"http://\" ? 'selected':''?> value=\"http://\">http://</option>"
+      },
+      {
+        "line": 173,
+        "text": "<option <?=$site_data['protocol']==\"https://\" ? 'selected':''?> value=\"https://\">https://</option>"
+      }
+    ],
+    "formFields": [
+      "siteupdate",
+      "protocol",
+      "baseurl",
+      "brand",
+      "title",
+      "mobile",
+      "email",
+      "address",
+      "gateway_service",
+      "whatsaapsms",
+      "whatsaapsmsReport",
+      "emailsms",
+      "self_registertion",
+      "user_charge",
+      "distributor_charge",
+      "master_charge",
+      "self_script",
+      "whatsapp_chanell",
+      "logoupdate"
+    ]
+  }
+}

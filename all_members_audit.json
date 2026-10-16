@@ -1,0 +1,2081 @@
+[
+  {
+    "file": "404.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5097
+  },
+  {
+    "file": "aadhaar-docs.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5183
+  },
+  {
+    "file": "aadhaar_captcha.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 416
+  },
+  {
+    "file": "aadhaar_pdf.php",
+    "curlLines": [
+      "$apiKey    = $user['api_key'] ?? TargetApi(\"TargetApi_apikey\");",
+      "define('P4_API_KEY', $apiKey);",
+      "define('P4_BASE_URL', \"https://{$targetUrl}/api/v1/aadhaar_pdf.php\");",
+      "$sendApiUrl = P4_BASE_URL . \"?action=sendOtp&aadhaar=\" . urlencode($uidNumber) . \"&apiKey=\" . urlencode(P4_API_KEY);",
+      "$ch = curl_init();",
+      "CURLOPT_URL => $sendApiUrl,",
+      "$verifyApiUrl = P4_BASE_URL . \"?action=verifyOtp&otp=\" . urlencode($otp) . \"&apiKey=\" . urlencode(P4_API_KEY);",
+      "$ch = curl_init();",
+      "CURLOPT_URL => $verifyApiUrl,"
+    ],
+    "urlVarLines": [
+      "$targetUrl = TargetApi(\"TargetApi_url\");"
+    ],
+    "hasCurl": true,
+    "contentLength": 11293
+  },
+  {
+    "file": "aadhartomaskpan.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 8926
+  },
+  {
+    "file": "aadhar_auto_robot.php",
+    "curlLines": [
+      "foreach ($map as $formKey => $apiKey) {",
+      "if (isset($data[$apiKey]) && !empty($data[$apiKey]) && empty($formData[$formKey])) {",
+      "$formData[$formKey] = $data[$apiKey];",
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 36044
+  },
+  {
+    "file": "aadhar_Fingerprint.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 31644
+  },
+  {
+    "file": "aadhar_Fingerprint1.php",
+    "curlLines": [
+      "$.getScript(\"https://<?php echo TargetApi('TargetApi_url'); ?>/api/v1/uid/ekyc_Otp/printcapture.js?v=\" + ssoauth_ver).done(function (script, textStatus) {"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 35177
+  },
+  {
+    "file": "aadhar_Fingerprint2.php",
+    "curlLines": [
+      "$.getScript(\"https://<?php echo TargetApi('TargetApi_url'); ?>/api/v1/uid/printcapture_Server2.js?v=\" + ssoauth_ver).done(function (script, textStatus) {"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 35065
+  },
+  {
+    "file": "Aadhar_Manual.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 24007
+  },
+  {
+    "file": "Aadhar_MobileVerify.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 31644
+  },
+  {
+    "file": "aadhar_Otp.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 29042
+  },
+  {
+    "file": "Aadhar_validate.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6115
+  },
+  {
+    "file": "Aadhar_Verify.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6115
+  },
+  {
+    "file": "aasham_uid_find.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9215
+  },
+  {
+    "file": "ABHA-Card-Download.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey'     => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/abha/send_otp.php?\" . $query;",
+      "$ch = curl_init();",
+      "CURLOPT_URL            => $url,",
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey' => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?\" . $query;",
+      "$ch = curl_init();",
+      "CURLOPT_URL            => $url,"
+    ],
+    "urlVarLines": [
+      "$url = \"https://authorized.p4points.co.in/api/v3/abha/send_otp.php?\" . $query;",
+      "$url = \"https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?\" . $query;"
+    ],
+    "hasCurl": true,
+    "contentLength": 15854
+  },
+  {
+    "file": "ABHA-Card-Download_widhoutopt.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey'    => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?\" . $query;",
+      "$ch = curl_init();",
+      "CURLOPT_URL            => $url,"
+    ],
+    "urlVarLines": [
+      "$url = \"https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?\" . $query;"
+    ],
+    "hasCurl": true,
+    "contentLength": 10656
+  },
+  {
+    "file": "addmember.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5972
+  },
+  {
+    "file": "addmemberotp.php",
+    "curlLines": [
+      "$url = \"https://securedesk.in/api/sms/send-message\";",
+      "$ch = curl_init($url);"
+    ],
+    "urlVarLines": [
+      "$url = \"https://securedesk.in/api/sms/send-message\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 12632
+  },
+  {
+    "file": "addmoney.php",
+    "curlLines": [
+      "$x_client_apikey = CorexApi(\"x_client_apikey\");",
+      "if (empty($corex_url) || empty($x_client_username) || empty($x_client_apikey)) {",
+      "\"x-client-apikey: \" . $x_client_apikey",
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 9553
+  },
+  {
+    "file": "addmoney1.php",
+    "curlLines": [
+      "$x_client_apikey = CorexApi(\"x_client_apikey\");",
+      "if (empty($corex_url) || empty($x_client_username) || empty($x_client_apikey)) {",
+      "\"x-client-apikey: \" . $x_client_apikey",
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 24996
+  },
+  {
+    "file": "addmoneyresponse.php",
+    "curlLines": [
+      "$url = \"https://\" . paymentapi(\"gateway_Url\") . \"/api/check-order-status\";",
+      "$ch = curl_init($url);"
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . paymentapi(\"gateway_Url\") . \"/api/check-order-status\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 8712
+  },
+  {
+    "file": "addmoneys.php",
+    "curlLines": [
+      "$ch = curl_init($api_url);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 15646
+  },
+  {
+    "file": "adhar-pvc.php",
+    "curlLines": [
+      "$apiKey = \"\";",
+      "if (empty($apiKey)) {",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php\";",
+      "'apiKey'   => $apiKey,",
+      "$curl = curl_init();",
+      "CURLOPT_URL            => $apiUrl,"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 16097
+  },
+  {
+    "file": "Aditional_Services.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 4249
+  },
+  {
+    "file": "AgrifarmerCard.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 11539
+  },
+  {
+    "file": "AgrifarmerCardnew.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/AgriStak/farmer-card.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber);",
+      "$curl = curl_init();",
+      "CURLOPT_URL => $apiUrl,"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 7893
+  },
+  {
+    "file": "AgrifarmerCardstate.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 14244
+  },
+  {
+    "file": "AgrifarmerCard_old.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 11550
+  },
+  {
+    "file": "AgrifarmerCard_old1.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5919
+  },
+  {
+    "file": "Agri_farmer_Status.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 11493
+  },
+  {
+    "file": "alldetailsfind.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 10972
+  },
+  {
+    "file": "all_details_finding.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3980
+  },
+  {
+    "file": "BharatPeProxy.php",
+    "curlLines": [
+      "$input = file_get_contents('php://input');",
+      "$ch = curl_init($url);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 2271
+  },
+  {
+    "file": "callback.php",
+    "curlLines": [
+      "$x_client_apikey = CorexApi(\"x_client_apikey\");",
+      "if (empty($corex_url) || empty($x_client_username) || empty($x_client_apikey)) {",
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";",
+      "\"x-client-apikey: \" . $x_client_apikey",
+      "$ch = curl_init($api_url);"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 5733
+  },
+  {
+    "file": "callback7inOneold.php",
+    "curlLines": [
+      "$api_url = \"https://\".paymentapi(\"gateway_Url\").\"/api/check-order-status\";",
+      "$ch = curl_init($api_url);"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://\".paymentapi(\"gateway_Url\").\"/api/check-order-status\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 3533
+  },
+  {
+    "file": "certificate.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 2717
+  },
+  {
+    "file": "Challan_Find.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://developer.darkxservices.com/api/v1/RcMobileFind?vehicalNo=\" . urlencode($vehicleNumber) . \"&apiKey=\" . $apiKey;",
+      "$ch = curl_init($apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 9482
+  },
+  {
+    "file": "chassis_to_Number_find.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5994
+  },
+  {
+    "file": "chassis_to_Rc.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 15178
+  },
+  {
+    "file": "check-account-status.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6951
+  },
+  {
+    "file": "check_status_proxy.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 909
+  },
+  {
+    "file": "createaccount.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6378
+  },
+  {
+    "file": "csc_rap.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 7656
+  },
+  {
+    "file": "dashboard.php",
+    "curlLines": [
+      "$ch = curl_init($url);",
+      "$currentVersion = file_exists($versionFile) ? trim(file_get_contents($versionFile)) : '1.0.0';"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 66294
+  },
+  {
+    "file": "dashboard1.php",
+    "curlLines": [
+      "$ch = curl_init($url);",
+      "$currentVersion = file_exists($versionFile) ? trim(file_get_contents($versionFile)) : '1.0.0';"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 52400
+  },
+  {
+    "file": "dl-download.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey' => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/dl/dl-print.php?\" . $query;",
+      "$ch = curl_init();",
+      "CURLOPT_URL            => $url,"
+    ],
+    "urlVarLines": [
+      "$url = \"https://authorized.p4points.co.in/api/v3/dl/dl-print.php?\" . $query;"
+    ],
+    "hasCurl": true,
+    "contentLength": 10653
+  },
+  {
+    "file": "DL_Find.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 8154
+  },
+  {
+    "file": "dl_link.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 8066
+  },
+  {
+    "file": "dl_nub.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 11057
+  },
+  {
+    "file": "DL_to_Mobile.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 13433
+  },
+  {
+    "file": "download.php",
+    "curlLines": [],
+    "urlVarLines": [
+      "$url = urldecode($_GET['url']);"
+    ],
+    "hasCurl": false,
+    "contentLength": 355
+  },
+  {
+    "file": "downloadReceipt.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5422
+  },
+  {
+    "file": "download_pdf.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 948
+  },
+  {
+    "file": "DRIVING LICENSE UNPAID APPLICATION.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 8653
+  },
+  {
+    "file": "Driving_Licence_Pdf.php",
+    "curlLines": [
+      "$api_key  = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey' => $api_key,",
+      "$ch = curl_init();",
+      "CURLOPT_URL => $url,"
+    ],
+    "urlVarLines": [
+      "$url = $base_url . \"/serviceApi/TargetApiV1/DL/dl_link.php?\" . $query;"
+    ],
+    "hasCurl": true,
+    "contentLength": 11444
+  },
+  {
+    "file": "Driving_Licence_Pdf_2.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 13500
+  },
+  {
+    "file": "Driving_Licence_Pdf_new.php",
+    "curlLines": [
+      "$input = file_get_contents('php://input');",
+      "$apiKey = \"16875be354f04c5e8d2ed4664e3e4d0662d09741c815735299e1e3af80344dbf\"; // Apna Actual API Key yahan daalein",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey=\" . urlencode($apiKey) . \"&dl=\" . urlencode($dlno) . \"&dob=\" . urlencode($dob);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 33672
+  },
+  {
+    "file": "e-shram_number_link.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber) . \"&dob=\" . urlencode($dob) . \"&mobile=\" . urlencode($mobile);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 12486
+  },
+  {
+    "file": "e-shram_verification.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 18280
+  },
+  {
+    "file": "ElectricBill_Details.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 11449
+  },
+  {
+    "file": "electricBill_Service.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 2930
+  },
+  {
+    "file": "Electric_Bill.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5881
+  },
+  {
+    "file": "engine_to_rc.php",
+    "curlLines": [
+      "$apiKey = function_exists('TargetApi') ? TargetApi(\"TargetApi_apikey\") : \"\";",
+      "// URL और GET पैरामीटर्स सेट करना (engine_no और apiKey)",
+      "$requestUrl = \"https://\" . $cleanApiUrl . \"/api/v1/engine_to_rc.php?\" . http_build_query([",
+      "'apiKey'    => trim($apiKey),",
+      "$curl = curl_init();",
+      "CURLOPT_URL            => $requestUrl,"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 20610
+  },
+  {
+    "file": "Enrollment_Status.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9093
+  },
+  {
+    "file": "epfo-docs.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3310
+  },
+  {
+    "file": "eshramaadhar.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 30142
+  },
+  {
+    "file": "ess.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 30142
+  },
+  {
+    "file": "familyID_Service.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 2902
+  },
+  {
+    "file": "familyID_Verification.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 11304
+  },
+  {
+    "file": "farmerService.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3682
+  },
+  {
+    "file": "Farmer_Certificate.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 12869
+  },
+  {
+    "file": "forgotpassword.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5611
+  },
+  {
+    "file": "function.php",
+    "curlLines": [
+      "return 'data:image/jpg;base64,' . base64_encode(file_get_contents($image));",
+      "$curl = curl_init();",
+      "CURLOPT_URL => $url,",
+      "$curl = curl_init();",
+      "CURLOPT_URL => $url,",
+      "// $curl = curl_init();",
+      "//     CURLOPT_URL => \"https://api.mailazy.com/v1/mail/send\",",
+      "'apiKey' => p4pointsapi(\"p4points_apikey\"),",
+      "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/getPanNumber?$getData\");",
+      "'apiKey' => p4pointsapi(\"p4points_apikey\"),",
+      "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/panVerificationPremium?$getData\");",
+      "'apiKey' => p4pointsapi(\"p4points_apikey\"),",
+      "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/maskAadharVerification?$getData\");",
+      "'apiKey' => p4pointsapi(\"p4points_apikey\"),",
+      "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/maskPanVerification?$getData\");"
+    ],
+    "urlVarLines": [
+      "$url = StrReplace($smsapi_url, $find, $repls);"
+    ],
+    "hasCurl": true,
+    "contentLength": 43463
+  },
+  {
+    "file": "gst_details.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "\"/api/v1/gst_to_pan.php?apiKey=\" .",
+      "urlencode($apiKey) .",
+      "$response = @file_get_contents($apiUrl, false, $context);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9006
+  },
+  {
+    "file": "gst_To_pan.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "\"/api/v1/gst_to_pan.php?apiKey=\" .",
+      "urlencode($apiKey) .",
+      "$response = @file_get_contents($apiUrl, false, $context);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9005
+  },
+  {
+    "file": "gst_verification.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\".TargetApi(\"TargetApi_url\").\"/api/v1/pan_to_gst.php?apiKey=\".$apiKey.\"&pan=\".$pan;",
+      "$response = @file_get_contents($apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3967
+  },
+  {
+    "file": "helpcenter.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 1292
+  },
+  {
+    "file": "ifsc_code_search.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 10202
+  },
+  {
+    "file": "importantlinks.php",
+    "curlLines": [],
+    "urlVarLines": [
+      "$url = real_escape_string($_POST['url']);"
+    ],
+    "hasCurl": false,
+    "contentLength": 4652
+  },
+  {
+    "file": "incompletePan.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5009
+  },
+  {
+    "file": "index.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 134
+  },
+  {
+    "file": "instant_voter_link.php",
+    "curlLines": [
+      "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";",
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = $apiBase . \"?apiKey=\" . urlencode($api_key) . \"&epic=\" . urlencode($epic) . \"&mobile=\" . urlencode($mobile);",
+      "$ch = curl_init($url);"
+    ],
+    "urlVarLines": [
+      "$url = $apiBase . \"?apiKey=\" . urlencode($api_key) . \"&epic=\" . urlencode($epic) . \"&mobile=\" . urlencode($mobile);"
+    ],
+    "hasCurl": true,
+    "contentLength": 5838
+  },
+  {
+    "file": "instant_voter_link1.php",
+    "curlLines": [
+      "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";",
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = $apiBase . \"?apiKey=\" . urlencode($api_key) . \"&epic=\" . urlencode($epic) . \"&mobile=\" . urlencode($mobile);",
+      "$ch = curl_init($url);"
+    ],
+    "urlVarLines": [
+      "$url = $apiBase . \"?apiKey=\" . urlencode($api_key) . \"&epic=\" . urlencode($epic) . \"&mobile=\" . urlencode($mobile);"
+    ],
+    "hasCurl": true,
+    "contentLength": 6684
+  },
+  {
+    "file": "janaadharFind.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 8201
+  },
+  {
+    "file": "janAadhar_Member_Details.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9037
+  },
+  {
+    "file": "janAadhar_Pdf.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6691
+  },
+  {
+    "file": "janAadhar_Services.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3247
+  },
+  {
+    "file": "janAadhar_Status.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 10023
+  },
+  {
+    "file": "jharsewa-docs.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3820
+  },
+  {
+    "file": "listofcomplaint.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3873
+  },
+  {
+    "file": "listofmember.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 76981
+  },
+  {
+    "file": "listofpanfind.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 14631
+  },
+  {
+    "file": "llexamlist.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 10452
+  },
+  {
+    "file": "LL_application_find.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 12821
+  },
+  {
+    "file": "LL_card.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6769
+  },
+  {
+    "file": "ll_exam_Request.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9026
+  },
+  {
+    "file": "ll_exam_Request1.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9035
+  },
+  {
+    "file": "ll_exam_request_advance.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/ll/ll_apply.php?\" . http_build_query([",
+      "'apiKey'             => $api_key,",
+      "$ch = curl_init();",
+      "CURLOPT_URL            => $apiUrl,"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 12301
+  },
+  {
+    "file": "LL_nub.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 14189
+  },
+  {
+    "file": "ll_service.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 2932
+  },
+  {
+    "file": "ll_status_proxy.php",
+    "curlLines": [
+      "$url = \"https://a1.allrto.shop/api/v2/ll_status_check.php?token_id=\".$token;",
+      "$ch = curl_init($url);"
+    ],
+    "urlVarLines": [
+      "$url = \"https://a1.allrto.shop/api/v2/ll_status_check.php?token_id=\".$token;"
+    ],
+    "hasCurl": true,
+    "contentLength": 600
+  },
+  {
+    "file": "login.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6738
+  },
+  {
+    "file": "logout.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 134
+  },
+  {
+    "file": "messageapi.php",
+    "curlLines": [],
+    "urlVarLines": [
+      "$url = is_valid_url($_POST['url']);"
+    ],
+    "hasCurl": false,
+    "contentLength": 4604
+  },
+  {
+    "file": "mobaileChallan_Find.php",
+    "curlLines": [
+      "$apiKey = TargetApi(",
+      "\"TargetApi_apikey\"",
+      "if (empty($apiKey)) {",
+      "'apiKey' =>",
+      "$apiKey,",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/MobileNumberToChallanDetails.php?$params\";",
+      "$ch = curl_init();",
+      "CURLOPT_URL =>"
+    ],
+    "urlVarLines": [
+      "$url =",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/MobileNumberToChallanDetails.php?$params\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 58052
+  },
+  {
+    "file": "mobaile_to_account.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6095
+  },
+  {
+    "file": "mobaile_to_multi_bank.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6092
+  },
+  {
+    "file": "Mobaile_To_RC.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 7027
+  },
+  {
+    "file": "Mobaile_to_rc_find.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 0
+  },
+  {
+    "file": "mobile-pan.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6411
+  },
+  {
+    "file": "mobiletoMultiupi_Find.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6093
+  },
+  {
+    "file": "mobiletoupi.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5631
+  },
+  {
+    "file": "Mobile_Operator_Verify.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9704
+  },
+  {
+    "file": "new_aadhar.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 376
+  },
+  {
+    "file": "new_Npci_Link_Status.php",
+    "curlLines": [
+      "$api_key  = TargetApi(\"TargetApi_apikey\");",
+      "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);",
+      "'apiKey' => $api_key,"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 7239
+  },
+  {
+    "file": "NEW_RC.php",
+    "curlLines": [
+      "'api_key'    => TargetApi(\"TargetApi_apikey\"),",
+      "$url = \"https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?\" . $params;",
+      "$ch = curl_init();",
+      "CURLOPT_URL            => $url,"
+    ],
+    "urlVarLines": [
+      "$url = \"https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?\" . $params;"
+    ],
+    "hasCurl": true,
+    "contentLength": 12054
+  },
+  {
+    "file": "noticealert.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 1545
+  },
+  {
+    "file": "Npci_Link_Status.php",
+    "curlLines": [
+      "$api_key  = TargetApi(\"TargetApi_apikey\");",
+      "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);",
+      "'apiKey' => $api_key,"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 7239
+  },
+  {
+    "file": "nsdlApplicationStatus.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 13915
+  },
+  {
+    "file": "Number_name_upi.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5403
+  },
+  {
+    "file": "Number_to_account_details.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 0
+  },
+  {
+    "file": "opencomplaint.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 13217
+  },
+  {
+    "file": "pan-aadhaar-link-status.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5487
+  },
+  {
+    "file": "pan-details.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey'  => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?\" . $query;",
+      "$ch = curl_init();",
+      "CURLOPT_URL            => $url,"
+    ],
+    "urlVarLines": [
+      "$url = \"https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?\" . $query;"
+    ],
+    "hasCurl": true,
+    "contentLength": 10039
+  },
+  {
+    "file": "pan-docs.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3540
+  },
+  {
+    "file": "PanDetails.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6360
+  },
+  {
+    "file": "PanDetailsold.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6211
+  },
+  {
+    "file": "panfind.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 8769
+  },
+  {
+    "file": "panfindmanualadvance.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 7408
+  },
+  {
+    "file": "panfind_s1.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 8772
+  },
+  {
+    "file": "panService.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5361
+  },
+  {
+    "file": "Pantomaskaadhaar.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 8069
+  },
+  {
+    "file": "PanuidLinkStatuscheck.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5487
+  },
+  {
+    "file": "PanuidLinkStatuscheck_old.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 7685
+  },
+  {
+    "file": "Pan_Advance_print.php",
+    "curlLines": [
+      "$base64Image = 'data:' . $imageType . ';base64,' . base64_encode(file_get_contents($imageFile));",
+      "$base64Sign = 'data:' . $signType . ';base64,' . base64_encode(file_get_contents($SignFile));"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 20604
+  },
+  {
+    "file": "Pan_Apply_Correction.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 20920
+  },
+  {
+    "file": "Pan_Card_Print.php",
+    "curlLines": [
+      "$base64Image = 'data:' . $imageType . ';base64,' . base64_encode(file_get_contents($imageFile));",
+      "$base64Sign = 'data:' . $signType . ';base64,' . base64_encode(file_get_contents($SignFile));"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 20478
+  },
+  {
+    "file": "Pan_Card_Print_band.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);",
+      "$SignData = file_get_contents($SignFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 21300
+  },
+  {
+    "file": "Pan_Card_Print_Manual.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);",
+      "$SignData = file_get_contents($SignFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 20730
+  },
+  {
+    "file": "pan_mannaul.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);",
+      "$SignData = file_get_contents($SignFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 20687
+  },
+  {
+    "file": "pan_Uid_Find.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\".$baseUrl.\"/api/v1/panAadhar.php?apiKey=\".$apiKey.\"&panNumber=\".$panNumber;",
+      "$ch = curl_init();",
+      "CURLOPT_URL => $url,"
+    ],
+    "urlVarLines": [
+      "$url = \"https://\".$baseUrl.\"/api/v1/panAadhar.php?apiKey=\".$apiKey.\"&panNumber=\".$panNumber;"
+    ],
+    "hasCurl": true,
+    "contentLength": 5442
+  },
+  {
+    "file": "paymentapi.php",
+    "curlLines": [
+      "$TargetApi_apikey = strip_tags($_POST['TargetApi_apikey']);",
+      "if (!empty($TargetApi_apikey) && !empty($host)) {",
+      "\"TargetApi_apikey\" => $TargetApi_apikey,",
+      "$x_client_apikey = strip_tags($_POST['x_client_apikey']);",
+      "if (!empty($host) && !empty($x_client_username) && !empty($x_client_apikey)) {",
+      "\"x_client_apikey\" => $x_client_apikey,",
+      "name=\"TargetApi_apikey\"",
+      "value=\"<?=TargetApi(\"TargetApi_apikey\")?>\"",
+      "name=\"x_client_apikey\"",
+      "value=\"<?=CorexApi(\"x_client_apikey\")?>\"",
+      "<a href=\"https://authorized.p4points.co.in/\" target=\"_blank\" class=\"btn btn-outline-dark w-100\">"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6284
+  },
+  {
+    "file": "paymentResponse.php",
+    "curlLines": [
+      "$x_client_apikey = CorexApi(\"x_client_apikey\");",
+      "if (empty($corex_url) || empty($x_client_username) || empty($x_client_apikey)) {",
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";",
+      "\"x-client-apikey: \" . $x_client_apikey",
+      "$ch = curl_init($api_url);"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 5900
+  },
+  {
+    "file": "pdf-service.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 2207
+  },
+  {
+    "file": "Pincode_Search.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$api_url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/PincodeVerification.php?apiKey=$api_key&pincode={$searchValue}\";",
+      "$responseApi = file_get_contents($api_url);"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/PincodeVerification.php?apiKey=$api_key&pincode={$searchValue}\";"
+    ],
+    "hasCurl": false,
+    "contentLength": 8084
+  },
+  {
+    "file": "Pmjay_Verify.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 10444
+  },
+  {
+    "file": "popupalert.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 1980
+  },
+  {
+    "file": "printRecord.php",
+    "curlLines": [
+      "$ch = curl_init($url);",
+      "$TargetApi_apikey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-api/check_status.php?apiKey=\" . urlencode(TargetApi(\"TargetApi_apikey\")) . \"&order_id=\" . urlencode($order_id) . \"&voter_number=\" . urlencode($voterNumber);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "$ch_file = curl_init();",
+      "curl_setopt($ch_file, CURLOPT_URL, $pdfUrl);",
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$statusUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/ll/cheak-status.php?\" . http_build_query([",
+      "'apiKey' => $api_key,",
+      "$ch = curl_init();",
+      "CURLOPT_URL => $statusUrl,",
+      "$ch_file = curl_init();",
+      "CURLOPT_URL => $actual_file_url,",
+      "$fileData = file_get_contents($_FILES['photo']['tmp_name']);"
+    ],
+    "urlVarLines": [
+      "$url = $printOptions[$service][$optionKey]['url'] ?? null;"
+    ],
+    "hasCurl": true,
+    "contentLength": 77920
+  },
+  {
+    "file": "printRecord2.php",
+    "curlLines": [
+      "$ch = curl_init($url);",
+      "$fileData = file_get_contents($tmpName);"
+    ],
+    "urlVarLines": [
+      "$url = $printOptions[$service][$optionKey]['url'] ?? null;"
+    ],
+    "hasCurl": true,
+    "contentLength": 50722
+  },
+  {
+    "file": "profile.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 11097
+  },
+  {
+    "file": "proxy.php",
+    "curlLines": [
+      "$ch = curl_init($url);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 1262
+  },
+  {
+    "file": "puc.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 8443
+  },
+  {
+    "file": "rationPdfmitrakendra.php",
+    "curlLines": [
+      "$rawInput  = file_get_contents(\"php://input\");",
+      "$apiKey = trim(",
+      "$jsonInput['apiKey']",
+      "?? $_POST['apiKey']",
+      "?? $_GET['apiKey']",
+      "if (!$rationNumber || !$apiKey) {",
+      "$stmt->execute([$apiKey]);",
+      "$provider_base_url = \"https://mitrakendra.com/apifast/api/Rationpdf.php\";",
+      "\"apikey\"     => $provider_key,",
+      "$ch = curl_init();",
+      "CURLOPT_URL => $final_provider_url,"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 4807
+  },
+  {
+    "file": "RationService.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3932
+  },
+  {
+    "file": "ration_full_info_up.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey=\" . urlencode($apiKey) . \"&rationNumber=\" . urlencode($rationNumber);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 14854
+  },
+  {
+    "file": "Ration_Pdf.php",
+    "curlLines": [
+      "'apiKey'       => TargetApi(\"TargetApi_apikey\"),",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rationPdf.php?\" . $params;",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 12241
+  },
+  {
+    "file": "Ration_Pdf1.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 7660
+  },
+  {
+    "file": "Ration_Pdf_by_aadhaar.php",
+    "curlLines": [
+      "$apiKey = function_exists('TargetApi') ? TargetApi(\"TargetApi_apikey\") : \"\";",
+      "$url = \"https://\" . $apiUrl . \"/api/v1/aadhar_to_Rationpdf.php\";",
+      "'apiKey' => trim($apiKey),",
+      "$ch = curl_init($url);"
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . $apiUrl . \"/api/v1/aadhar_to_Rationpdf.php\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 12373
+  },
+  {
+    "file": "Ration_uid_find.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9236
+  },
+  {
+    "file": "Ration_uid_finder.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 7447
+  },
+  {
+    "file": "rcv3.php",
+    "curlLines": [
+      "$curl = curl_init();",
+      "CURLOPT_URL => $api_url,"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://api.invincibleocean.com/invincible/vehicleRcV6\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 10921
+  },
+  {
+    "file": "Rc_Guardian_Find.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6273
+  },
+  {
+    "file": "RC_To_Mobaile.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "\"/api/v1/Rc_to_mobaile.php?\" .",
+      "\"apiKey=\" . urlencode($apiKey) .",
+      "$ch = curl_init();",
+      "CURLOPT_URL            => $apiUrl,"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 31733
+  },
+  {
+    "file": "Rc_Verify.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rc-api/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&vehicleNumber=\" . urlencode($vehicalNumber);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "$ch2 = curl_init();",
+      "CCURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\","
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rc-api/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&vehicleNumber=\" . urlencode($vehicalNumber);"
+    ],
+    "hasCurl": true,
+    "contentLength": 16954
+  },
+  {
+    "file": "Rc_Verify1.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&rcno=\" . urlencode($vehicalNumber);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "$ch2 = curl_init();",
+      "CURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\","
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&rcno=\" . urlencode($vehicalNumber);"
+    ],
+    "hasCurl": true,
+    "contentLength": 16519
+  },
+  {
+    "file": "Rc_Verifyv2.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 7344
+  },
+  {
+    "file": "Rc_Verify_server.php",
+    "curlLines": [
+      "'apiKey' => TargetApi(\"TargetApi_apikey\"),",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);"
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc_fast_server.php?\" . $params;"
+    ],
+    "hasCurl": true,
+    "contentLength": 8172
+  },
+  {
+    "file": "Rc_Verify_server_new.php",
+    "curlLines": [
+      "'apiKey' => TargetApi(\"TargetApi_apikey\"),",
+      "$ch = curl_init();",
+      "CURLOPT_URL            => $url,"
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") ."
+    ],
+    "hasCurl": true,
+    "contentLength": 11322
+  },
+  {
+    "file": "Recharge.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 22797
+  },
+  {
+    "file": "RechargeStatus.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 10602
+  },
+  {
+    "file": "Rtps_Certificate.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5153
+  },
+  {
+    "file": "Rtps_Services.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 2718
+  },
+  {
+    "file": "selfactivation.php",
+    "curlLines": [
+      "$x_client_apikey = \"\";",
+      "$x_client_apikey = isset($c_data['x_client_apikey']) ? $c_data['x_client_apikey'] : \"\";",
+      "// ✅ ADDED /api/v1/ HERE",
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+      "\"x-client-apikey: \" . $x_client_apikey",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);",
+      "// ✅ ADDED /api/v1/ HERE",
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";",
+      "\"x-client-apikey: \" . $x_client_apikey",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);"
+    ],
+    "urlVarLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 15123
+  },
+  {
+    "file": "Services_Manage.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 52736
+  },
+  {
+    "file": "sesionupdate.php",
+    "curlLines": [
+      "// Updated to authorized.p4points.co.in domain",
+      "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=\" . $mobile;",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "// Updated to authorized.p4points.co.in domain with proper encoding",
+      "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=\" . urlencode($mobile) . \"&otp=\" . urlencode($otp);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "\"https://authorized.p4points.co.in/update_session.php\"",
+      "$ch2 = curl_init();",
+      "curl_setopt($ch2, CURLOPT_URL, $tUrl);"
+    ],
+    "urlVarLines": [
+      "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=\" . $mobile;",
+      "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=\" . urlencode($mobile) . \"&otp=\" . urlencode($otp);"
+    ],
+    "hasCurl": true,
+    "contentLength": 7883
+  },
+  {
+    "file": "Sharmadhan_Verify.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 7983
+  },
+  {
+    "file": "tec_exam.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 10324
+  },
+  {
+    "file": "test.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 22
+  },
+  {
+    "file": "test1.php",
+    "curlLines": [
+      "<form method=\"POST\" action=\"https://authorized.p4points.co.in/PrintData/aadhaar\" target=\"_blank\">"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 11769
+  },
+  {
+    "file": "Uid_Hkb-Services.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 4267
+  },
+  {
+    "file": "Uid_to_Details.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 9898
+  },
+  {
+    "file": "Uid_to_Details3.php",
+    "curlLines": [
+      "$url     = \"http://kakajiho.com/api/v1/eshram/details.php\";",
+      "$ch = curl_init($url);",
+      "$.getScript(\"https://<?php echo p4pointsapi('p4points_url'); ?>/api/v1/uid/printcapture.js?v=\" + ssoauth_ver).done(function (script, textStatus) {"
+    ],
+    "urlVarLines": [
+      "$url     = \"http://kakajiho.com/api/v1/eshram/details.php\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 33632
+  },
+  {
+    "file": "Uid_to_Pdf.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 31621
+  },
+  {
+    "file": "Uid_to_Pdf_original.php",
+    "curlLines": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/uidai_original.php?\" . http_build_query([",
+      "'apiKey' => TargetApi(\"TargetApi_apikey\"),",
+      "$responseApi = file_get_contents($apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 13017
+  },
+  {
+    "file": "Uid_Trg-Services.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6841
+  },
+  {
+    "file": "Up-E-District-docs.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3634
+  },
+  {
+    "file": "update_record_status.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 757
+  },
+  {
+    "file": "upidetails.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5403
+  },
+  {
+    "file": "upi_verify.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6360
+  },
+  {
+    "file": "vcmRequest.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";",
+      "'apiKey'       => $apiKey,",
+      "$ch = curl_init($apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 13576
+  },
+  {
+    "file": "vcmStatusCheck.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 10188
+  },
+  {
+    "file": "vehical.php",
+    "curlLines": [
+      "$apikey = 'TNG-API-0060d9-1dcc7e-cb9f8e-dc43fa-4c94f5';",
+      "$url = \"https://secure.thenextgenapi.co.in/vehicle_rcpdf_verification?rcno=$rcno&rctype=$rctype&apikey=$apikey\";",
+      "$curl = curl_init();",
+      "CURLOPT_URL => $url,"
+    ],
+    "urlVarLines": [
+      "$url = \"https://secure.thenextgenapi.co.in/vehicle_rcpdf_verification?rcno=$rcno&rctype=$rctype&apikey=$apikey\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 5438
+  },
+  {
+    "file": "VehicalService.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6423
+  },
+  {
+    "file": "verification.php",
+    "curlLines": [
+      "$apiKey  = TargetApi(\"TargetApi_apikey\");",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "$url = \"https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}\";",
+      "$url = \"https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}\";"
+    ],
+    "urlVarLines": [
+      "$url = \"https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}\";",
+      "$url = \"https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 10098
+  },
+  {
+    "file": "verify_utr_proxy.php",
+    "curlLines": [
+      "$ch = curl_init();",
+      "CURLOPT_URL,"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 631
+  },
+  {
+    "file": "VI_sim_photo.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 6168
+  },
+  {
+    "file": "voterbkp.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 37489
+  },
+  {
+    "file": "votermanualprint.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 37378
+  },
+  {
+    "file": "votermo.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\"); // आपकी API key",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/CheckStatus.php\";",
+      "'apiKey' => $apiKey,",
+      "$ch = curl_init($apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 5363
+  },
+  {
+    "file": "VoterService.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 4740
+  },
+  {
+    "file": "voter_api.php",
+    "curlLines": [
+      "$input = json_decode(file_get_contents(\"php://input\"), true);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 3295
+  },
+  {
+    "file": "Voter_Mobile_Link.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=send&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile);",
+      "$verifyUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=verify&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile) . \"&otp=\" . urlencode($voter_otp) . \"&referenceno=\" . urlencode($refid);",
+      "$url = \"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend\";",
+      "$url = \"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpverify\";"
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=send&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile);",
+      "$url = \"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend\";",
+      "$url = \"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpverify\";"
+    ],
+    "hasCurl": true,
+    "contentLength": 21707
+  },
+  {
+    "file": "Voter_Mobile_Link2.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);"
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);"
+    ],
+    "hasCurl": true,
+    "contentLength": 13748
+  },
+  {
+    "file": "Voter_Mobile_Link20.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);"
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);"
+    ],
+    "hasCurl": true,
+    "contentLength": 13627
+  },
+  {
+    "file": "Voter_Mobile_Link_withoutotp.php",
+    "curlLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $url);"
+    ],
+    "urlVarLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);"
+    ],
+    "hasCurl": true,
+    "contentLength": 12735
+  },
+  {
+    "file": "voter_number_chek.php",
+    "curlLines": [
+      "$TargetApi_apikey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\"",
+      ". urlencode($TargetApi_apikey)",
+      "$ch = curl_init();",
+      "CURLOPT_URL => $apiUrl,"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 5680
+  },
+  {
+    "file": "voter_number_instant.php",
+    "curlLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";",
+      "'apiKey'       => $apiKey,",
+      "$ch = curl_init($apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 11587
+  },
+  {
+    "file": "Voter_Original_PDF.php",
+    "curlLines": [
+      "$TargetApi_apikey  = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($epicNumber);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($voterNumber) . \"&otp=\" . urlencode($otp);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 13100
+  },
+  {
+    "file": "Voter_ORIGINAL_PDF_DOWNLOAD.php",
+    "curlLines": [
+      "$TargetApi_apikey  = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&voter_number=\" . urlencode($epicNumber);",
+      "$ch = curl_init();",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": true,
+    "contentLength": 9250
+  },
+  {
+    "file": "Voter_Print.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 39025
+  },
+  {
+    "file": "Voter_Print_captcha.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 43202
+  },
+  {
+    "file": "Voter_Print_Manual.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 35638
+  },
+  {
+    "file": "Voter_Print_new.php",
+    "curlLines": [
+      "$imageData = file_get_contents($imageFile);"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 40623
+  },
+  {
+    "file": "walletledger.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 15589
+  },
+  {
+    "file": "wallettransfer.php",
+    "curlLines": [],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 5767
+  },
+  {
+    "file": "webdetails.php",
+    "curlLines": [
+      "$logo = 'data:image/' . $ext . ';base64,' . base64_encode(file_get_contents($_FILES['logo']['tmp_name']));"
+    ],
+    "urlVarLines": [],
+    "hasCurl": false,
+    "contentLength": 12105
+  }
+]

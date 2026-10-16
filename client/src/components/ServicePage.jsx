@@ -219,12 +219,12 @@ function ServicePageContent({
       serviceType: currentTool?.serviceType || 'aadhaarCard',
       docTitle: currentTool?.title?.hi || 'आधिकारिक दस्तावेज (OTP सत्यापित)',
       generatedData: {
-        name: verifiedData?.data?.name || customerName || 'राम कुमार शर्मा',
-        fatherName: verifiedData?.data?.fatherName || fatherName || 'श्याम लाल शर्मा',
-        dob: verifiedData?.data?.dob || dobDate || '15/08/1988',
+        name: verifiedData?.data?.name || customerName || 'आवेदक',
+        fatherName: verifiedData?.data?.fatherName || fatherName || '',
+        dob: verifiedData?.data?.dob || (dobDate ? formatDobDisplay(dobDate) : ''),
         gender: verifiedData?.data?.gender || gender || 'MALE',
-        address: verifiedData?.data?.address || addressInput || 'ग्राम - रामपुर, पोस्ट - कल्याणपुर, जिला - अलीगढ़, उत्तर प्रदेश - 202001',
-        aadhaarNo: verifiedData?.data?.aadhaarNo || primaryInput || 'XXXX-XXXX-8921',
+        address: verifiedData?.data?.address || addressInput || '',
+        aadhaarNo: verifiedData?.data?.aadhaarNo || primaryInput || '',
         refNumber: verifiedData?.txnId || `REF-${Date.now()}`,
         photoUrl: photoData,
         signUrl: signData
@@ -379,7 +379,7 @@ function ServicePageContent({
     const cafeId = selectedCafe?.id || (isOperator ? (selectedCafe?.code || 'SMARTCAFE-HQ') : 'SMARTCAFE-HQ');
 
     // Check if service requires Live OTP verification
-    const requiresLiveOtp = currentTool?.id?.includes('otp') || currentTool?.id === 'aadhaar_original_pdf_otp' || currentTool?.id === 'aadhaar_otp_kyc' || currentTool?.id === 'abha_card' || currentTool?.id === 'abha_otp';
+    const requiresLiveOtp = currentTool?.id?.includes('otp') || currentTool?.id === 'aadhaar_original_pdf_otp' || currentTool?.id === 'aadhaar_otp_kyc' || currentTool?.id === 'abha_otp';
     if (requiresLiveOtp) {
       try {
         const otpRes = await authFetch('/api/services/otp/request', {
@@ -388,7 +388,14 @@ function ServicePageContent({
           body: JSON.stringify({
             serviceType: currentTool.id,
             phone: val.length === 10 ? val : (effectivePhone || '8006518960'),
-            aadhaarNo: val
+            aadhaarNo: val,
+            customerName: customerName.trim() || undefined,
+            name: customerName.trim() || undefined,
+            fatherName: fatherName.trim() || undefined,
+            dob: dobDate ? formatDobDisplay(dobDate) : undefined,
+            gender: gender,
+            address: addressInput.trim() || undefined,
+            epicNumber: val
           })
         });
         const otpData = await otpRes.json();
@@ -416,35 +423,72 @@ function ServicePageContent({
       serviceName: currentTool.name
     };
 
-    if (toolKind === 'rc') params.vehicleNumber = val.toUpperCase();
+    if (toolKind === 'rc') {
+      params.vehicleNumber = val.toUpperCase();
+      params.rcno = val.toUpperCase();
+      params.vehicle = val.toUpperCase();
+    }
     if (toolKind === 'pan' || toolKind === 'epan') {
       params.panNo = val.toUpperCase();
+      params.panNumber = val.toUpperCase();
+      params.pan = val.toUpperCase();
       params.name = customerName.trim() || undefined;
     }
     if (toolKind === 'aadhaar') {
       params.aadhaarNo = val;
+      params.uidNumber = val;
       params.name = customerName.trim() || undefined;
       params.address = addressInput.trim() || undefined;
     }
     if (toolKind === 'voter') {
       params.epicNo = val.toUpperCase();
+      params.epicNumber = val.toUpperCase();
+      params.voter_number = val.toUpperCase();
+      params.voterNumber = val.toUpperCase();
       params.name = customerName.trim() || undefined;
     }
     if (toolKind === 'ayushman') {
       params.pmjayId = val.toUpperCase();
+      params.uidNumber = val;
       params.name = customerName.trim() || undefined;
+      if (dobDate) params.dob = formatDobDisplay(dobDate);
     }
     if (toolKind === 'ration') {
       params.rationNo = val;
+      params.ration_no = val;
+      params.uidNumber = val;
+      params.aadhar = val;
       params.headName = customerName.trim() || undefined;
     }
     if (toolKind === 'electricity') {
       params.consumerNo = val;
+      params.caNumber = val;
       params.consumerName = customerName.trim() || undefined;
+      if (secondaryInput) params.operator = secondaryInput.trim();
     }
     if (toolKind === 'dl') {
       params.dlNo = val.toUpperCase();
+      params.dl = val.toUpperCase();
+      params.dl_number = val.toUpperCase();
+      params.dob = dobDate ? formatDobDisplay(dobDate) : (params.dob || '01-01-1990');
       params.name = customerName.trim() || undefined;
+    }
+    if (currentTool?.id?.includes('eshram') || currentTool?.id === 'e_shram' || currentTool?.id === 'e_shram_update' || currentTool?.id === 'e_shram_number_link') {
+      params.uidNumber = val;
+      params.aadhaar = val;
+      if (dobDate) params.dob = formatDobDisplay(dobDate);
+      if (secondaryInput) params.mobile = secondaryInput.trim();
+    }
+    if (currentTool?.id === 'abha_card' || currentTool?.id === 'abha_otp' || currentTool?.id === 'abha_card_instant') {
+      params.uidNumber = val;
+      params.uid_number = val;
+      if (dobDate) params.dob = formatDobDisplay(dobDate);
+    }
+    if (secondaryInput && secondaryInput.trim()) {
+      params.secondaryInput = secondaryInput.trim();
+      if (!params.mobile && /^\d{10}$/.test(secondaryInput.trim())) {
+        params.mobile = secondaryInput.trim();
+      }
     }
     if (toolKind === 'challan') {
       params.vehicleNo = val.toUpperCase();
@@ -1597,9 +1641,11 @@ function ServicePageContent({
               placeholder="Enter 12 Digit Number"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
-            <span className="text-[11px] text-slate-400 block">OTP will be sent to registered mobile.</span>
+            {id === 'abha_otp' && (
+              <span className="text-[11px] text-slate-400 block">OTP will be sent to registered mobile.</span>
+            )}
           </div>
-          {id === 'abha_card_instant' && (
+          {(id === 'abha_card' || id === 'abha_card_instant') && (
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Date of Birth *</label>
               <input
@@ -1642,7 +1688,7 @@ function ServicePageContent({
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs font-bold focus:outline-none cursor-pointer"
             />
           </div>
-          {id.includes('link') && (
+          {(id.includes('link') || id.includes('update')) && (
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-slate-700 dark:text-slate-300">New Mobile Number *</label>
               <input

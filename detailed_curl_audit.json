@@ -1,0 +1,1903 @@
+[
+  {
+    "file": "aadhaar_pdf.php",
+    "postGetVars": [
+      "submit",
+      "uidNumber",
+      "submitotp",
+      "uidNumberResponse",
+      "otp"
+    ],
+    "inputNames": [
+      "uidNumber",
+      "submit",
+      "otp",
+      "uidNumberResponse",
+      "submitotp"
+    ],
+    "relevantLines": [
+      "$apiKey    = $user['api_key'] ?? TargetApi(\"TargetApi_apikey\");",
+      "$targetUrl = TargetApi(\"TargetApi_url\");",
+      "define('P4_API_KEY', $apiKey);",
+      "define('P4_BASE_URL', \"https://{$targetUrl}/api/v1/aadhaar_pdf.php\");",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL => $sendApiUrl,",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL => $verifyApiUrl,"
+    ]
+  },
+  {
+    "file": "ABHA-Card-Download.php",
+    "postGetVars": [
+      "send_otp",
+      "uid_number",
+      "verify_otp",
+      "otp",
+      "reset_form"
+    ],
+    "inputNames": [
+      "uid_number",
+      "send_otp",
+      "otp",
+      "reset_form",
+      "verify_otp"
+    ],
+    "relevantLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey'     => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/abha/send_otp.php?\" . $query;",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL            => $url,",
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey' => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?\" . $query;",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL            => $url,",
+      "$apiResult = ABHA_SEND_OTP($uid_number);",
+      "$otpRes    = json_decode($apiResult, true);",
+      "$apiResult = ABHA_VERIFY_DOWNLOAD($txnid, $otp);",
+      "$response  = json_decode($apiResult, true);"
+    ]
+  },
+  {
+    "file": "ABHA-Card-Download_widhoutopt.php",
+    "postGetVars": [
+      "download_card",
+      "uid_number",
+      "dob"
+    ],
+    "inputNames": [
+      "uid_number",
+      "dob",
+      "download_card"
+    ],
+    "relevantLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey'    => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?\" . $query;",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL            => $url,",
+      "$apiResult = ABHA_CARD_DOWNLOAD($uid_number, $dob);",
+      "$response  = json_decode($apiResult, true);"
+    ]
+  },
+  {
+    "file": "addmemberotp.php",
+    "postGetVars": [
+      "usercreate",
+      "name",
+      "password",
+      "company",
+      "mobile",
+      "email",
+      "aadhaar",
+      "pan",
+      "usertype",
+      "verify_member_otp",
+      "email_otp",
+      "mobile_otp",
+      "resend_member_otp",
+      "cancel_create"
+    ],
+    "inputNames": [
+      "name",
+      "company",
+      "usertype",
+      "mobile",
+      "password",
+      "email",
+      "usercreate",
+      "email_otp",
+      "mobile_otp",
+      "verify_member_otp",
+      "resend_member_otp",
+      "cancel_create"
+    ],
+    "relevantLines": [
+      "$url = \"https://securedesk.in/api/sms/send-message\";",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+    ]
+  },
+  {
+    "file": "addmoney.php",
+    "postGetVars": [
+      "smartpg",
+      "amount"
+    ],
+    "inputNames": [
+      "amount",
+      "smartpg"
+    ],
+    "relevantLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);",
+      "curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+    ]
+  },
+  {
+    "file": "addmoney1.php",
+    "postGetVars": [
+      "smartpg",
+      "amount"
+    ],
+    "inputNames": [
+      "amount",
+      "smartpg"
+    ],
+    "relevantLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);",
+      "curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 30);",
+      "$api_order_id = $res['data']['order_id'] ?? $order_id;",
+      "$api_amount = $res['data']['amount'] ?? $amount;",
+      "(string)$api_amount,",
+      "$api_order_id,"
+    ]
+  },
+  {
+    "file": "addmoneyresponse.php",
+    "postGetVars": [
+      "order_id"
+    ],
+    "inputNames": [],
+    "relevantLines": [
+      "$url = \"https://\" . paymentapi(\"gateway_Url\") . \"/api/check-order-status\";",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));"
+    ]
+  },
+  {
+    "file": "addmoneys.php",
+    "postGetVars": [
+      "smartupi",
+      "amount"
+    ],
+    "inputNames": [
+      "amount",
+      "smartupi"
+    ],
+    "relevantLines": [
+      "$api_urls = [",
+      "foreach ($api_urls as $index => $api_url) {",
+      "$ch = curl_init($api_url);",
+      "curl_setopt_array($ch, ["
+    ]
+  },
+  {
+    "file": "adhar-pvc.php",
+    "postGetVars": [
+      "submit_pvc",
+      "mobile",
+      "type",
+      "password"
+    ],
+    "inputNames": [
+      "file",
+      "password",
+      "type",
+      "mobile",
+      "submit_pvc"
+    ],
+    "relevantLines": [
+      "$apiResponseData = null;",
+      "$apiError = null;",
+      "$apiPassword = $_POST['password'] ?? '';",
+      "if (empty($apiPassword)) {",
+      "$apiError = \"Please enter the PDF password.\";",
+      "$apiError = \"Please upload a valid PDF file.\";",
+      "$apiError = \"Only PDF files are allowed.\";",
+      "$apiKey = \"\";",
+      "if (empty($apiKey)) {",
+      "$apiError = \"API key not configured. Please contact support.\";",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php\";",
+      "'apiKey'   => $apiKey,",
+      "'password' => $apiPassword,",
+      "curl_setopt_array($curl, array(",
+      "CURLOPT_URL            => $apiUrl,",
+      "CURLOPT_POSTFIELDS     => $postData,",
+      "$apiError = \"cURL Error: \" . $err;",
+      "$apiError = \"API returned HTTP code: \" . $httpCode;",
+      "$apiResponseData = json_decode($response, true);",
+      "$apiError = \"Invalid Response format from API! Received raw data instead of JSON.\";",
+      "$statusMsg = strtolower((string)($apiResponseData['statusMessage'] ?? ''));",
+      "$status = (string)($apiResponseData['status'] ?? '');",
+      "$apiSuccess = true;",
+      "$apiError = \"Transaction saved but report insert failed. Contact support!\";",
+      "$apiError = \"Balance debit failed. Contact support!\";",
+      "$apiError = $apiResponseData['error'] ?? ($apiResponseData['statusMessage'] ?? ($apiResponseData['message'] ?? 'API responded with Error Status'));",
+      "$apiError = \"Insufficient Wallet Balance! Required: {$amount}, Available: {$old_balance}\";",
+      "<?php if (isset($apiError)): ?>",
+      "<strong>Error!</strong> <?= htmlspecialchars($apiError) ?>",
+      "<?php if (isset($apiSuccess) && $apiSuccess === true && $apiResponseData): ?>",
+      "<?php if (!empty($apiResponseData['front'])): ?>",
+      "<img src=\"<?= htmlspecialchars($apiResponseData['front']) ?>\" class=\"preview-image mb-2\" alt=\"Front Side\">",
+      "<button onclick=\"downloadImage('<?= htmlspecialchars($apiResponseData['front']) ?>', 'front_<?= $order_id ?>.png')\" class=\"download-btn btn-image\">",
+      "<?php if (!empty($apiResponseData['back'])): ?>",
+      "<img src=\"<?= htmlspecialchars($apiResponseData['back']) ?>\" class=\"preview-image mb-2\" alt=\"Back Side\">",
+      "<button onclick=\"downloadImage('<?= htmlspecialchars($apiResponseData['back']) ?>', 'back_<?= $order_id ?>.png')\" class=\"download-btn btn-image\">",
+      "<?php if (!empty($apiResponseData['pdf'])): ?>",
+      "<button onclick=\"downloadPDF('<?= htmlspecialchars($apiResponseData['pdf']) ?>', 'pvc_card_<?= $order_id ?>.pdf')\" class=\"download-btn btn-pdf\">"
+    ]
+  },
+  {
+    "file": "AgrifarmerCardnew.php",
+    "postGetVars": [
+      "submit",
+      "uidNumber"
+    ],
+    "inputNames": [
+      "uidNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/AgriStak/farmer-card.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber);",
+      "curl_setopt_array($curl, [",
+      "CURLOPT_URL => $apiUrl,"
+    ]
+  },
+  {
+    "file": "BharatPeProxy.php",
+    "postGetVars": [],
+    "inputNames": [],
+    "relevantLines": [
+      "$input = file_get_contents('php://input');",
+      "function call_payment_api($url) {",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 15); // 15s timeout",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // optional, avoid SSL issues"
+    ]
+  },
+  {
+    "file": "callback.php",
+    "postGetVars": [
+      "order_id"
+    ],
+    "inputNames": [],
+    "relevantLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";",
+      "$ch = curl_init($api_url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+    ]
+  },
+  {
+    "file": "callback7inOneold.php",
+    "postGetVars": [
+      "order_id"
+    ],
+    "inputNames": [],
+    "relevantLines": [
+      "$api_url = \"https://\".paymentapi(\"gateway_Url\").\"/api/check-order-status\";",
+      "$ch = curl_init($api_url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));"
+    ]
+  },
+  {
+    "file": "Challan_Find.php",
+    "postGetVars": [
+      "submit",
+      "vehicleNumber"
+    ],
+    "inputNames": [
+      "vehicleNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://developer.darkxservices.com/api/v1/RcMobileFind?vehicalNo=\" . urlencode($vehicleNumber) . \"&apiKey=\" . $apiKey;",
+      "$ch = curl_init($apiUrl);",
+      "curl_setopt_array($ch, [",
+      "$apiResponse = json_decode($responseApi, true);",
+      "$apiResponse = is_array($apiResponse) ? $apiResponse : [];",
+      "isset($apiResponse['status']) &&",
+      "$apiResponse['status'] == \"100\" &&",
+      "isset($apiResponse['statusMessage']) &&",
+      "strtolower($apiResponse['statusMessage']) === \"success\"",
+      "$response = $apiResponse;",
+      "$response = $apiResponse;",
+      "$msg      = $apiResponse['message'] ?? \"No Record Found\";"
+    ]
+  },
+  {
+    "file": "dashboard.php",
+    "postGetVars": [
+      "check_balance"
+    ],
+    "inputNames": [
+      "check_balance"
+    ],
+    "relevantLines": [
+      "function fetchUpdateInfo($url) {",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$currentVersion = file_exists($versionFile) ? trim(file_get_contents($versionFile)) : '1.0.0';"
+    ]
+  },
+  {
+    "file": "dashboard1.php",
+    "postGetVars": [
+      "check_balance"
+    ],
+    "inputNames": [
+      "check_balance"
+    ],
+    "relevantLines": [
+      "function fetchUpdateInfo($url) {",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0');",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$currentVersion = file_exists($versionFile) ? trim(file_get_contents($versionFile)) : '1.0.0';"
+    ]
+  },
+  {
+    "file": "dl-download.php",
+    "postGetVars": [
+      "submit",
+      "dlNumber",
+      "dobenter"
+    ],
+    "inputNames": [
+      "dlNumber",
+      "dobenter",
+      "submit"
+    ],
+    "relevantLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey' => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/dl/dl-print.php?\" . $query;",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL            => $url,",
+      "$apiResponse = DL_PDF_TNG_API($dlNumber, $dob);",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "Driving_Licence_Pdf.php",
+    "postGetVars": [
+      "submit",
+      "dlNumber",
+      "dobenter",
+      "dltype"
+    ],
+    "inputNames": [
+      "dlNumber",
+      "dobenter",
+      "dltype",
+      "submit"
+    ],
+    "relevantLines": [
+      "$api_key  = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey' => $api_key,",
+      "$url = $base_url . \"/serviceApi/TargetApiV1/DL/dl_link.php?\" . $query;",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL => $url,",
+      "$apiResponse = DL_PDF_TNG_API($dlNumber, $dob, $dltype);",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "Driving_Licence_Pdf_new.php",
+    "postGetVars": [
+      "action",
+      "submit",
+      "dlNumber",
+      "dobenter",
+      "bg_type"
+    ],
+    "inputNames": [
+      "dlNumber",
+      "dobenter",
+      "bg_type",
+      "submit"
+    ],
+    "relevantLines": [
+      "$input = file_get_contents('php://input');",
+      "$apiKey = \"16875be354f04c5e8d2ed4664e3e4d0662d09741c815735299e1e3af80344dbf\"; // Apna Actual API Key yahan daalein",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey=\" . urlencode($apiKey) . \"&dl=\" . urlencode($dlno) . \"&dob=\" . urlencode($dob);",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 30);",
+      "$apiResponse = FETCH_DL_API($dlNumber, $dob);",
+      "if (isset($apiResponse['status'])) {",
+      "if ($apiResponse['status'] === true || strtolower($apiResponse['status']) == 'success' || (isset($apiResponse['status_code']) && $apiResponse['status_code'] == 200)) {",
+      "if ($isSuccess && !empty($apiResponse['data'])) {",
+      "'description'    => $apiResponse['message'] ?? \"DL Print Deducted\"",
+      "$dl_data = $apiResponse['data'];",
+      "awal_alert_msg($apiResponse['message'] ?? \"DL Details Not Found or API Failed!\", \"error\");"
+    ]
+  },
+  {
+    "file": "e-shram_number_link.php",
+    "postGetVars": [
+      "submit",
+      "uidNumber",
+      "dob",
+      "mobile"
+    ],
+    "inputNames": [
+      "uidNumber",
+      "dob",
+      "mobile",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber) . \"&dob=\" . urlencode($dob) . \"&mobile=\" . urlencode($mobile);",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 30);"
+    ]
+  },
+  {
+    "file": "engine_to_rc.php",
+    "postGetVars": [
+      "submit_query",
+      "engine_number"
+    ],
+    "inputNames": [
+      "engine_number",
+      "submit_query"
+    ],
+    "relevantLines": [
+      "$apiResponseData = null;",
+      "$apiError = null;",
+      "$apiSuccess = false;",
+      "$apiKey = function_exists('TargetApi') ? TargetApi(\"TargetApi_apikey\") : \"\";",
+      "$apiUrl = function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\";",
+      "$apiError = \"कृपया एक वैध इंजन नंबर दर्ज करें।\";",
+      "$apiError = \"अमान्य इंजन नंबर प्रारूप। कृपया सही इंजन नंबर दर्ज करें।\";",
+      "$apiError = \"अपर्याप्त वॉलेट बैलेंस! आवश्यक: ₹{$amount}, उपलब्ध: ₹{$old_balance}\";",
+      "$apiError = \"Database Helper Function (db_update) नहीं मिला।\";",
+      "$cleanApiUrl = rtrim(preg_replace('#^https?://#', '', $apiUrl), '/');",
+      "'apiKey'    => trim($apiKey),",
+      "curl_setopt_array($curl, array(",
+      "CURLOPT_URL            => $requestUrl,",
+      "$apiError = \"cURL Error: \" . htmlspecialchars($err) . \" - आपका बैलेंस रिफंड कर दिया गया है।\";",
+      "$apiError = \"API Server Error (HTTP Code: {$httpCode}) - आपका बैलेंस रिफंड कर दिया गया है।\";",
+      "$apiResponseData = json_decode($response, true);",
+      "$apiError = \"API से अमान्य JSON प्राप्त हुआ। शुल्क रिफंड कर दिया गया है।\";",
+      "} elseif (!isset($apiResponseData['status']) || $apiResponseData['status'] != 100) {",
+      "$apiError = $apiResponseData['message'] ?? ($apiResponseData['statusMessage'] ?? 'वाहन की जानकारी नहीं मिली। शुल्क रिफंड कर दिया गया है।');",
+      "if (isset($apiResponseData['api_response']) && is_array($apiResponseData['api_response'])) {",
+      "$apiResponseData = $apiResponseData['api_response'];",
+      "$apiSuccess = true;",
+      "<?php if (!empty($apiError)): ?>",
+      "<strong>त्रुटि!</strong> <?= htmlspecialchars($apiError) ?>",
+      "<?php if ($apiSuccess && $apiResponseData): ?>",
+      "<?= htmlspecialchars($apiResponseData['rc_number'] ?? $apiResponseData['reg_no'] ?? 'N/A') ?>",
+      "RC Status: <?= htmlspecialchars($apiResponseData['rc_status'] ?? 'ACTIVE') ?>",
+      "<?= htmlspecialchars($apiResponseData['blacklist_status'] ?? 'No Blacklist') ?>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['owner_name'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['father_name'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['manufacturer'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['model'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['fuel_type'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['color'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['rto'] ?? 'N/A') ?> (<?= htmlspecialchars($apiResponseData['rto_code'] ?? '') ?>)</div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['registration_date'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['registration_valid_upto'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['vehicle_class'] ?? $apiResponseData['vehicle_category'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['body_type'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['engine_number'] ?? $apiResponseData['enginenumber'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['chassis_number'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['insurance_company'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['insurance_valid_upto'] ?? 'N/A') ?></div>",
+      "<div class=\"info-value\"><?= htmlspecialchars($apiResponseData['present_address'] ?? 'N/A') ?></div>"
+    ]
+  },
+  {
+    "file": "function.php",
+    "postGetVars": [],
+    "inputNames": [],
+    "relevantLines": [
+      "return 'data:image/jpg;base64,' . base64_encode(file_get_contents($image));",
+      "function is_valid_url($url)",
+      "if (filter_var($url, FILTER_VALIDATE_URL)) {",
+      "return $url;",
+      "function redirect($url, $time)",
+      "window.location = \"' . $url . '\"",
+      "function redirect_blank($url, $time)",
+      "window.open(\"' . $url . '\");",
+      "function http_post($url, $post_data, $header = array())",
+      "curl_setopt_array($curl, array(",
+      "CURLOPT_URL => $url,",
+      "CURLOPT_POSTFIELDS => $post_data,",
+      "function http_get($url, $header = array(), $timeout = 0, $ssl = false)",
+      "curl_setopt_array($curl, array(",
+      "CURLOPT_URL => $url,",
+      "curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);",
+      "curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);",
+      "$url = StrReplace($smsapi_url, $find, $repls);",
+      "$response = http_get($url, [], 30, true);",
+      "// curl_setopt_array($curl, array(",
+      "//     CURLOPT_URL => \"https://api.mailazy.com/v1/mail/send\",",
+      "//     CURLOPT_POSTFIELDS => $data_string,",
+      "curl_setopt_array($curl, array(",
+      "CURLOPT_URL => \"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/uid/ekycVerification\",",
+      "CURLOPT_POSTFIELDS => array('apiKey' => p4pointsapi(\"p4points_apikey\"), 'bioenc' => $bioenc, 'aadhar' => $aadhar, 'bioenc' => $bioenc),",
+      "curl_setopt_array($curl, array(",
+      "CURLOPT_URL => \"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/uid/ekycVerification_Server2\",",
+      "CURLOPT_POSTFIELDS => array('apiKey' => p4pointsapi(\"p4points_apikey\"), 'aadhar' => $aadhar, 'bioenc' => $bioenc),"
+    ]
+  },
+  {
+    "file": "instant_voter_link.php",
+    "postGetVars": [
+      "link_now",
+      "epic",
+      "mobile"
+    ],
+    "inputNames": [
+      "epic",
+      "mobile",
+      "link_now"
+    ],
+    "relevantLines": [
+      "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";",
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = $apiBase . \"?apiKey=\" . urlencode($api_key) . \"&epic=\" . urlencode($epic) . \"&mobile=\" . urlencode($mobile);",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 30);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$apiResponse = curl_exec($ch);",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "instant_voter_link1.php",
+    "postGetVars": [
+      "link_now",
+      "epic",
+      "mobile"
+    ],
+    "inputNames": [
+      "epic",
+      "mobile",
+      "link_now"
+    ],
+    "relevantLines": [
+      "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";",
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = $apiBase . \"?apiKey=\" . urlencode($api_key) . \"&epic=\" . urlencode($epic) . \"&mobile=\" . urlencode($mobile);",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 30);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$apiResponse = curl_exec($ch);",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "ll_exam_request_advance.php",
+    "postGetVars": [
+      "submit",
+      "applicationNumber",
+      "dob",
+      "password",
+      "examsecretpin",
+      "state"
+    ],
+    "inputNames": [
+      "applicationNumber",
+      "dob",
+      "password",
+      "examsecretpin",
+      "state",
+      "submit"
+    ],
+    "relevantLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/ll/ll_apply.php?\" . http_build_query([",
+      "'apiKey'             => $api_key,",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL            => $apiUrl,",
+      "$apiData = json_decode($response, true);",
+      "if (isset($apiData['status']) && ($apiData['status'] === 'success' || $apiData['status'] === 'pending')) {",
+      "$error_msg = $apiData['message'] ?? \"API Error: Unable to process LL request\";"
+    ]
+  },
+  {
+    "file": "ll_status_proxy.php",
+    "postGetVars": [
+      "token_id"
+    ],
+    "inputNames": [],
+    "relevantLines": [
+      "$url = \"https://a1.allrto.shop/api/v2/ll_status_check.php?token_id=\".$token;",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);"
+    ]
+  },
+  {
+    "file": "mobaileChallan_Find.php",
+    "postGetVars": [
+      "submit",
+      "mobileNumber"
+    ],
+    "inputNames": [
+      "mobileNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiResponse  = [];",
+      "$apiResponse = $response;",
+      "$apiStatus = $response['status'] ?? false;",
+      "$apiStatus === true &&",
+      "!empty($apiResponse) &&",
+      "($apiResponse['status'] ?? false) === true",
+      "$apiResponse['mobile']",
+      "$apiResponse['vehicleNumber']",
+      "$apiResponse['ownerName']",
+      "$apiResponse['applicationNo']",
+      "!empty($apiResponse['billable'])",
+      "$apiResponse['provider']",
+      "$apiResponse['raw_api_data']['Status']",
+      "$apiResponse['raw_api_data']['Message']",
+      "$apiResponse['raw_api_data']['Errorcode']",
+      "$apiResponse['raw_api_data']['Data']['Data']",
+      "$apiKey = TargetApi(",
+      "if (empty($apiKey)) {",
+      "$apiKey,",
+      "$url =",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/MobileNumberToChallanDetails.php?$params\";",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL =>",
+      "$url,"
+    ]
+  },
+  {
+    "file": "new_Npci_Link_Status.php",
+    "postGetVars": [
+      "submit",
+      "aadhaar"
+    ],
+    "inputNames": [
+      "aadhaar",
+      "submit"
+    ],
+    "relevantLines": [
+      "$api_key  = TargetApi(\"TargetApi_apikey\");",
+      "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([",
+      "'apiKey' => $api_key,",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$api_result = json_decode($responseApi, true);",
+      "isset($api_result['status']) &&",
+      "$api_result['status'] === true &&",
+      "isset($api_result['StatusCode']) &&",
+      "$api_result['StatusCode'] == 100 &&",
+      "isset($api_result['data'])",
+      "$npci_data = $api_result['data'];",
+      "$error_msg = $api_result['message'] ?? 'NPCI Failed';"
+    ]
+  },
+  {
+    "file": "NEW_RC.php",
+    "postGetVars": [
+      "fetch_details",
+      "vehicalNumber",
+      "fatherName",
+      "type"
+    ],
+    "inputNames": [
+      "type",
+      "vehicalNumber",
+      "fatherName",
+      "fetch_details"
+    ],
+    "relevantLines": [
+      "$url = \"https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?\" . $params;",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL            => $url,",
+      "$apiResponse = curl_exec($ch);",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "Npci_Link_Status.php",
+    "postGetVars": [
+      "submit",
+      "aadhaar"
+    ],
+    "inputNames": [
+      "aadhaar",
+      "submit"
+    ],
+    "relevantLines": [
+      "$api_key  = TargetApi(\"TargetApi_apikey\");",
+      "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([",
+      "'apiKey' => $api_key,",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$api_result = json_decode($responseApi, true);",
+      "isset($api_result['status']) &&",
+      "$api_result['status'] === true &&",
+      "isset($api_result['StatusCode']) &&",
+      "$api_result['StatusCode'] == 100 &&",
+      "isset($api_result['data'])",
+      "$npci_data = $api_result['data'];",
+      "$error_msg = $api_result['message'] ?? 'NPCI Failed';"
+    ]
+  },
+  {
+    "file": "pan-details.php",
+    "postGetVars": [
+      "submit",
+      "panNumber"
+    ],
+    "inputNames": [
+      "panNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey'  => $api_key,",
+      "$url = \"https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?\" . $query;",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL            => $url,",
+      "$apiResponse = PAN_DETAILS_API($panNumber);",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "pan_Uid_Find.php",
+    "postGetVars": [
+      "submit",
+      "panNumber"
+    ],
+    "inputNames": [
+      "panNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\".$baseUrl.\"/api/v1/panAadhar.php?apiKey=\".$apiKey.\"&panNumber=\".$panNumber;",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL => $url,"
+    ]
+  },
+  {
+    "file": "paymentapi.php",
+    "postGetVars": [
+      "TargetApiupdate",
+      "TargetApi_apikey",
+      "TargetApi_url",
+      "cardprintApi_url",
+      "CorexApiupdate",
+      "corex_url",
+      "x_client_username",
+      "x_client_apikey"
+    ],
+    "inputNames": [
+      "TargetApi_url",
+      "cardprintApi_url",
+      "TargetApi_apikey",
+      "TargetApiupdate",
+      "corex_url",
+      "x_client_username",
+      "x_client_apikey",
+      "CorexApiupdate"
+    ],
+    "relevantLines": [
+      "$TargetApi_apikey = strip_tags($_POST['TargetApi_apikey']);",
+      "$TargetApi_url = strip_tags($_POST['TargetApi_url']);",
+      "$parsed_url = parse_url($TargetApi_url);",
+      "$host = $parsed_url['host'] ?? $TargetApi_url;",
+      "if (!empty($TargetApi_apikey) && !empty($host)) {",
+      "$TargetApi = json_encode([",
+      "\"TargetApi_apikey\" => $TargetApi_apikey,",
+      "$insData = ['TargetApi' => $TargetApi];",
+      "<a href=\"https://authorized.p4points.co.in/\" target=\"_blank\" class=\"btn btn-outline-dark w-100\">"
+    ]
+  },
+  {
+    "file": "paymentResponse.php",
+    "postGetVars": [
+      "order_id"
+    ],
+    "inputNames": [],
+    "relevantLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";",
+      "$ch = curl_init($api_url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+    ]
+  },
+  {
+    "file": "printRecord.php",
+    "postGetVars": [
+      "download_proxy",
+      "file_name",
+      "print_option",
+      "service",
+      "option_key",
+      "token",
+      "access_token",
+      "printdata",
+      "id",
+      "check_status_btn",
+      "record_id",
+      "app_number",
+      "order_id",
+      "submit",
+      "status_update",
+      "applicationNumber",
+      "userid",
+      "amount",
+      "reason",
+      "search",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput"
+    ],
+    "inputNames": [
+      "{$uname}",
+      "{$userid}",
+      "{$user_data[",
+      "{$owner_username}",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput",
+      "search",
+      "verify_key",
+      "print_options",
+      "printdata",
+      "print_option",
+      "option_key",
+      "token",
+      "access_token",
+      "record_id",
+      "app_number",
+      "order_id",
+      "check_status_btn",
+      "userid",
+      "applicationNumber",
+      "amount",
+      "service",
+      "status_update",
+      "photo",
+      "reason",
+      "submit",
+      "id",
+      " . $fileName . ",
+      "voterNumber",
+      "mobileNumber"
+    ],
+    "relevantLines": [
+      "function execute_curl_request($url, $postData) {",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_HEADER, false);",
+      "curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);",
+      "$url = $printOptions[$service][$optionKey]['url'] ?? null;",
+      "if (!$url) { echo \"<div class='alert alert-danger'>Invalid print option selected.</div>\"; exit; }",
+      "$result = execute_curl_request($url, $postData);",
+      "$apiJson  = $cfg['runner']($idNumber);",
+      "$result   = json_decode($apiJson, true) ?? [];",
+      "$TargetApi_apikey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-api/check_status.php?apiKey=\" . urlencode(TargetApi(\"TargetApi_apikey\")) . \"&order_id=\" . urlencode($order_id) . \"&voter_number=\" . urlencode($voterNumber);",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 15);",
+      "$apiStatus = isset($res['status']) ? strtolower($res['status']) : '';",
+      "if ($apiStatus === 'success') {",
+      "curl_setopt($ch_file, CURLOPT_URL, $pdfUrl);",
+      "curl_setopt($ch_file, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch_file, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch_file, CURLOPT_TIMEOUT, 30);",
+      "curl_setopt($ch_file, CURLOPT_FOLLOWLOCATION, true);",
+      "} elseif (in_array($apiStatus, ['failed', 'rejected'])) {",
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "'apiKey' => $api_key,",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL => $statusUrl,",
+      "$apiRes = json_decode($resJson, true);",
+      "if (isset($apiRes['status']) && $apiRes['status'] === 'success' && isset($apiRes['data']['request_status'])) {",
+      "$req_status = strtolower($apiRes['data']['request_status']);",
+      "$raw_doc_link = $apiRes['data']['document_link'] ?? '';",
+      "curl_setopt_array($ch_file, [",
+      "CURLOPT_URL => $actual_file_url,",
+      "$msg_err = $apiRes['message'] ?? \"Unable to fetch exact status. Try again.\";",
+      "$fileData = file_get_contents($_FILES['photo']['tmp_name']);"
+    ]
+  },
+  {
+    "file": "printRecord2.php",
+    "postGetVars": [
+      "print_option",
+      "service",
+      "option_key",
+      "token",
+      "access_token",
+      "printdata",
+      "id",
+      "submit",
+      "status_update",
+      "record_id",
+      "applicationNumber",
+      "userid",
+      "amount",
+      "reason",
+      "search",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput"
+    ],
+    "inputNames": [
+      "{$uname}",
+      "{$userid}",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput",
+      "search",
+      "service",
+      "option_key",
+      "token",
+      "access_token",
+      "printdata",
+      "print_option",
+      "userid",
+      "record_id",
+      "applicationNumber",
+      "amount",
+      "order_id",
+      "status_update",
+      "photo",
+      "reason",
+      "submit",
+      "aadhar",
+      "epicnumber",
+      "MobileNumber"
+    ],
+    "relevantLines": [
+      "function execute_curl_request($url, $postData) {",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_HEADER, false);",
+      "curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);",
+      "$url = $printOptions[$service][$optionKey]['url'] ?? null;",
+      "if (!$url) {",
+      "$result = execute_curl_request($url, $postData);",
+      "$apiJson  = $cfg['runner']($idNumber);",
+      "$result   = json_decode($apiJson, true) ?? [];",
+      "$fileData = file_get_contents($tmpName);"
+    ]
+  },
+  {
+    "file": "proxy.php",
+    "postGetVars": [],
+    "inputNames": [],
+    "relevantLines": [
+      "function call_payment_api($url, $post_data) {",
+      "$ch = curl_init($url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));"
+    ]
+  },
+  {
+    "file": "rationPdfmitrakendra.php",
+    "postGetVars": [
+      "rationNumber",
+      "ration_no",
+      "apiKey"
+    ],
+    "inputNames": [],
+    "relevantLines": [
+      "$rawInput  = file_get_contents(\"php://input\");",
+      "$apiKey = trim(",
+      "if (!$rationNumber || !$apiKey) {",
+      "$stmt->execute([$apiKey]);",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL => $final_provider_url,"
+    ]
+  },
+  {
+    "file": "ration_full_info_up.php",
+    "postGetVars": [
+      "submit",
+      "rationNumber"
+    ],
+    "inputNames": [
+      "rationNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey=\" . urlencode($apiKey) . \"&rationNumber=\" . urlencode($rationNumber);",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+    ]
+  },
+  {
+    "file": "Ration_Pdf.php",
+    "postGetVars": [
+      "submit",
+      "rationNumber"
+    ],
+    "inputNames": [
+      "rationNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiData = [",
+      "$params = http_build_query($apiData);",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rationPdf.php?\" . $params;",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+    ]
+  },
+  {
+    "file": "Ration_Pdf_by_aadhaar.php",
+    "postGetVars": [
+      "submit",
+      "aadhar"
+    ],
+    "inputNames": [
+      "aadhar",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiKey = function_exists('TargetApi') ? TargetApi(\"TargetApi_apikey\") : \"\";",
+      "$apiUrl = function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\";",
+      "$apiUrl = rtrim(preg_replace('#^https?://#', '', $apiUrl), '/');",
+      "$url = \"https://\" . $apiUrl . \"/api/v1/aadhar_to_Rationpdf.php\";",
+      "'apiKey' => trim($apiKey),",
+      "$ch = curl_init($url);",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_POSTFIELDS     => $data,",
+      "$apiResponse = aadhar_to_rationpdf_api_run($aadhar);",
+      "$response    = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "rcv3.php",
+    "postGetVars": [
+      "action",
+      "submit",
+      "vehicleNumber"
+    ],
+    "inputNames": [
+      "vehicleNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$api_url = \"https://api.invincibleocean.com/invincible/vehicleRcV6\";",
+      "curl_setopt_array($curl, [",
+      "CURLOPT_URL => $api_url,",
+      "CURLOPT_POSTFIELDS => $payload,"
+    ]
+  },
+  {
+    "file": "RC_To_Mobaile.php",
+    "postGetVars": [
+      "submit",
+      "vehicleNumber"
+    ],
+    "inputNames": [
+      "vehicleNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl =",
+      "\"apiKey=\" . urlencode($apiKey) .",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL            => $apiUrl,",
+      "$apiResponse = json_decode(",
+      "!is_array($apiResponse)",
+      "$response = $apiResponse;",
+      "$apiStatus =",
+      "$apiResponse['status'] ?? false;",
+      "$apiStatus === true ||",
+      "$apiStatus === \"true\" ||",
+      "$apiStatus === 1 ||",
+      "$apiStatus === \"1\" ||",
+      "$apiStatus === 100 ||",
+      "$apiStatus === \"100\"",
+      "$apiResponse['message']",
+      "$apiResponse['statusMessage']",
+      "$apiResponse['msg']",
+      "$apiResponse['mobile_number']",
+      "$apiResponse['mobileNumber']",
+      "$apiResponse['mobile']"
+    ]
+  },
+  {
+    "file": "Rc_Verify.php",
+    "postGetVars": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype",
+      "generate_pdf",
+      "vrn",
+      "authority",
+      "owner_name",
+      "owner_father_name",
+      "chassis",
+      "engine",
+      "fule_type",
+      "emission_norms",
+      "Address",
+      "class",
+      "maker",
+      "model",
+      "color",
+      "body_type",
+      "seating_capacity",
+      "unladen_weight",
+      "cubic_cap",
+      "cylinders",
+      "wheel_base",
+      "mfg_month_year",
+      "reg_date",
+      "reg_valid_date",
+      "ownership"
+    ],
+    "inputNames": [
+      "rctype",
+      "vehicalNumber",
+      "fetch_details",
+      "Address",
+      "generate_pdf"
+    ],
+    "relevantLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rc-api/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&vehicleNumber=\" . urlencode($vehicalNumber);",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 45);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$apiResponse = curl_exec($ch);",
+      "$result = json_decode($apiResponse, true);",
+      "curl_setopt_array($ch2, array(",
+      "CCURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\",",
+      "CURLOPT_POSTFIELDS => http_build_query($pdfData),"
+    ]
+  },
+  {
+    "file": "Rc_Verify1.php",
+    "postGetVars": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype",
+      "generate_pdf",
+      "vrn",
+      "authority",
+      "owner_name",
+      "owner_father_name",
+      "chassis",
+      "engine",
+      "fule_type",
+      "emission_norms",
+      "Address",
+      "class",
+      "maker",
+      "model",
+      "color",
+      "body_type",
+      "seating_capacity",
+      "unladen_weight",
+      "cubic_cap",
+      "cylinders",
+      "wheel_base",
+      "mfg_month_year",
+      "reg_date",
+      "reg_valid_date",
+      "ownership"
+    ],
+    "inputNames": [
+      "rctype",
+      "vehicalNumber",
+      "fetch_details",
+      "Address",
+      "generate_pdf"
+    ],
+    "relevantLines": [
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&rcno=\" . urlencode($vehicalNumber);",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 45);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$apiResponse = curl_exec($ch);",
+      "$result = json_decode($apiResponse, true);",
+      "curl_setopt_array($ch2, array(",
+      "CURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\",",
+      "CURLOPT_POSTFIELDS => http_build_query($pdfData),"
+    ]
+  },
+  {
+    "file": "Rc_Verify_server.php",
+    "postGetVars": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype"
+    ],
+    "inputNames": [
+      "rctype",
+      "vehicalNumber",
+      "fetch_details"
+    ],
+    "relevantLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc_fast_server.php?\" . $params;",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 30);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$apiResponse = curl_exec($ch);",
+      "$apiResponse = false;",
+      "if ($apiResponse) {",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "Rc_Verify_server_new.php",
+    "postGetVars": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype"
+    ],
+    "inputNames": [
+      "rctype",
+      "vehicalNumber",
+      "fetch_details"
+    ],
+    "relevantLines": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") .",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL            => $url,",
+      "$apiResponse = curl_exec($ch);",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "selfactivation.php",
+    "postGetVars": [
+      "token"
+    ],
+    "inputNames": [
+      "viewport"
+    ],
+    "relevantLines": [
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";",
+      "curl_setopt($ch, CURLOPT_URL, $api_url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);"
+    ]
+  },
+  {
+    "file": "sesionupdate.php",
+    "postGetVars": [
+      "mobile",
+      "sendOtp",
+      "verifyOtp",
+      "otp"
+    ],
+    "inputNames": [
+      "mobile",
+      "sendOtp",
+      "otp",
+      "verifyOtp"
+    ],
+    "relevantLines": [
+      "// Updated to authorized.p4points.co.in domain",
+      "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=\" . $mobile;",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "// Updated to authorized.p4points.co.in domain with proper encoding",
+      "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=\" . urlencode($mobile) . \"&otp=\" . urlencode($otp);",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$targetUrls = [",
+      "\"https://authorized.p4points.co.in/update_session.php\"",
+      "foreach ($targetUrls as $tUrl) {",
+      "curl_setopt($ch2, CURLOPT_URL, $tUrl);",
+      "curl_setopt($ch2, CURLOPT_POST, true);",
+      "curl_setopt($ch2, CURLOPT_POSTFIELDS, http_build_query($postData));",
+      "curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);"
+    ]
+  },
+  {
+    "file": "test1.php",
+    "postGetVars": [],
+    "inputNames": [
+      "printdata"
+    ],
+    "relevantLines": [
+      "<form method=\"POST\" action=\"https://authorized.p4points.co.in/PrintData/aadhaar\" target=\"_blank\">"
+    ]
+  },
+  {
+    "file": "Uid_to_Details3.php",
+    "postGetVars": [
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ],
+    "inputNames": [
+      "aadhar",
+      "f1",
+      "bioenc",
+      "name",
+      "orderID",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "genderlocal",
+      "birthtithilocal",
+      "namelocal",
+      "addresslocal",
+      "language",
+      "imgdata",
+      "ddate",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "enrollment",
+      "enrollmentlocal",
+      "savedata"
+    ],
+    "relevantLines": [
+      "$api_key = \"177d8d18666d53c7a54ca16246e57129422acd6a2879bfd608b973b50e3ee8a7\";",
+      "$url     = \"http://kakajiho.com/api/v1/eshram/details.php\";",
+      "$ch = curl_init($url);",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_POSTFIELDS => json_encode($payload),",
+      "\"API-Key: $api_key\","
+    ]
+  },
+  {
+    "file": "vcmRequest.php",
+    "postGetVars": [
+      "submit",
+      "voterNumber",
+      "mobileNumber"
+    ],
+    "inputNames": [
+      "voterNumber",
+      "mobileNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiResponseData = null;",
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";",
+      "'apiKey'       => $apiKey,",
+      "$ch = curl_init($apiUrl);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);",
+      "$apiResponseData = $response;",
+      "<?php if ($apiResponseData && isset($apiResponseData['voterNumber'])): ?>",
+      "<?php if (!empty($apiResponseData[$key])): ?>",
+      "<input type=\"text\" value=\"<?= htmlspecialchars($apiResponseData[$key]) ?>\" class=\"form-control\" readonly>",
+      "<?php if ($apiResponseData && isset($apiResponseData['voterNumber'])): ?>"
+    ]
+  },
+  {
+    "file": "vehical.php",
+    "postGetVars": [
+      "submit",
+      "rcno",
+      "rctype"
+    ],
+    "inputNames": [
+      "rcno",
+      "rctype",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apikey = 'TNG-API-0060d9-1dcc7e-cb9f8e-dc43fa-4c94f5';",
+      "$url = \"https://secure.thenextgenapi.co.in/vehicle_rcpdf_verification?rcno=$rcno&rctype=$rctype&apikey=$apikey\";",
+      "curl_setopt_array($curl, [",
+      "CURLOPT_URL => $url,"
+    ]
+  },
+  {
+    "file": "verification.php",
+    "postGetVars": [
+      "reset",
+      "send_otp",
+      "aadhaar",
+      "verify_otp",
+      "otp"
+    ],
+    "inputNames": [
+      "aadhaar",
+      "send_otp",
+      "otp",
+      "verify_otp"
+    ],
+    "relevantLines": [
+      "$apiKey  = TargetApi(\"TargetApi_apikey\");",
+      "$api_user_data = [];",
+      "function call_p4_api($url) {",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "$url = \"https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}\";",
+      "$response = call_p4_api($url);",
+      "$url = \"https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}\";",
+      "$response = call_p4_api($url);",
+      "$api_user_data = $response;",
+      "$api_user_data['image_src'] = $final_image_url; // Update array so the modal shows the new local file",
+      "<?php if ($show_modal && !empty($api_user_data)) { ?>",
+      "<img src=\"<?= $api_user_data['image_src'] ?>\" alt=\"User Photo\" class=\"img-thumbnail rounded-circle\" style=\"width: 120px; height: 120px; object-fit: cover; border: 3px solid #28a745;\">",
+      "<h4 class=\"font-weight-bold\"><?= $api_user_data['name'] ?></h4>",
+      "<p><strong><i class=\"fas fa-calendar-alt text-primary\"></i> DOB:</strong> <?= $api_user_data['dob'] ?></p>",
+      "<p><strong><i class=\"fas fa-venus-mars text-primary\"></i> Gender:</strong> <?= $api_user_data['gender'] ?></p>",
+      "<p><strong><i class=\"fas fa-map-marker-alt text-primary\"></i> Address:</strong> <?= $api_user_data['address'] ?></p>"
+    ]
+  },
+  {
+    "file": "verify_utr_proxy.php",
+    "postGetVars": [
+      "order"
+    ],
+    "inputNames": [],
+    "relevantLines": [
+      "curl_setopt(",
+      "CURLOPT_URL,",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);"
+    ]
+  },
+  {
+    "file": "votermo.php",
+    "postGetVars": [],
+    "inputNames": [],
+    "relevantLines": [
+      "$apiResponseData = [];",
+      "$apiKey = TargetApi(\"TargetApi_apikey\"); // आपकी API key",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/CheckStatus.php\";",
+      "'apiKey' => $apiKey,",
+      "$ch = curl_init($apiUrl);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 30);",
+      "$apiResponseData = $response['data'];",
+      "<?php if(!empty($apiResponseData)): ?>",
+      "<?php foreach($apiResponseData as $index => $row): ?>"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link.php",
+    "postGetVars": [
+      "epic_no",
+      "mobile",
+      "refid",
+      "send_voter_otp",
+      "verify_voter_otp",
+      "voter_otp",
+      "send_aadhar_otp",
+      "tokenbase64_1",
+      "aadharno",
+      "aadharholder",
+      "verify_aadhar_otp",
+      "tokenbase64_2",
+      "aadhar_otp"
+    ],
+    "inputNames": [
+      "epic_no",
+      "mobile",
+      "refid",
+      "send_voter_otp",
+      "voter_otp",
+      "verify_voter_otp",
+      "tokenbase64_1",
+      "aadharno",
+      "aadharholder",
+      "send_aadhar_otp",
+      "tokenbase64_2",
+      "aadhar_otp",
+      "verify_aadhar_otp"
+    ],
+    "relevantLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "function curlGet($url) {",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "function curlPost($url, $postData) {",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=send&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile);",
+      "$apiResponse = curlGet($url);",
+      "//echo $apiResponse;",
+      "if ($apiResponse !== false) {",
+      "$response = json_decode($apiResponse, true);",
+      "$error_msg = isset($response['message']) && !empty($response['message']) ? $response['message'] : $apiResponse;",
+      "$verifyUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=verify&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile) . \"&otp=\" . urlencode($voter_otp) . \"&referenceno=\" . urlencode($refid);",
+      "$url = \"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend\";",
+      "$apiResponse = curlPost($url, $postData);",
+      "if ($apiResponse !== false) {",
+      "$response = json_decode($apiResponse, true);",
+      "$tokenbase64_2 = base64_encode($apiResponse);",
+      "$message = \"Aadhaar Error: \" . strip_tags($response['message'] ?? $apiResponse);",
+      "$url = \"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpverify\";",
+      "$apiResponse = curlPost($url, $postData);",
+      "if ($apiResponse !== false) {",
+      "if (strpos(strtolower($apiResponse), 'success') !== false) {",
+      "$response = json_decode($apiResponse, true);",
+      "$message = \"Aadhaar Verify Failed: \" . strip_tags($response['message'] ?? $apiResponse);"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link2.php",
+    "postGetVars": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ],
+    "inputNames": [
+      "step",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "submit_link",
+      "verify_token",
+      "otp",
+      "verify_otp"
+    ],
+    "relevantLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "$apiResponse = curl_exec($ch);",
+      "if ($apiResponse !== false) {",
+      "$response = json_decode($apiResponse, true);",
+      "$apiStatus = strtolower($response['status'] ?? '');",
+      "if ($apiStatus === \"success\" || $apiStatus === \"partial_success\") {",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "$apiResponse = curl_exec($ch);",
+      "if ($apiResponse !== false) {",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link20.php",
+    "postGetVars": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ],
+    "inputNames": [
+      "step",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "submit_link",
+      "verify_token",
+      "otp",
+      "verify_otp"
+    ],
+    "relevantLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "$apiResponse = curl_exec($ch);",
+      "if ($apiResponse !== false) {",
+      "$response = json_decode($apiResponse, true);",
+      "$apiStatus = strtolower($response['status'] ?? '');",
+      "if ($apiStatus === \"success\" || $apiStatus === \"partial_success\") {",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "$apiResponse = curl_exec($ch);",
+      "if ($apiResponse !== false) {",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link_withoutotp.php",
+    "postGetVars": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ],
+    "inputNames": [
+      "step",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "submit_link",
+      "verify_token",
+      "otp",
+      "verify_otp"
+    ],
+    "relevantLines": [
+      "$api_key = TargetApi(\"TargetApi_apikey\");",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "$apiResponse = curl_exec($ch);",
+      "if ($apiResponse !== false) {",
+      "$response = json_decode($apiResponse, true);",
+      "$apiStatus = strtolower($response['status'] ?? '');",
+      "if ($apiStatus === \"success\" || $apiStatus === \"partial_success\") {",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);",
+      "curl_setopt($ch, CURLOPT_URL, $url);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 60);",
+      "$apiResponse = curl_exec($ch);",
+      "if ($apiResponse !== false) {",
+      "$response = json_decode($apiResponse, true);"
+    ]
+  },
+  {
+    "file": "voter_number_chek.php",
+    "postGetVars": [
+      "submit",
+      "epicNumber"
+    ],
+    "inputNames": [
+      "epicNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$TargetApi_apikey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\"",
+      ". urlencode($TargetApi_apikey)",
+      "curl_setopt_array($ch, [",
+      "CURLOPT_URL => $apiUrl,"
+    ]
+  },
+  {
+    "file": "voter_number_instant.php",
+    "postGetVars": [
+      "submit",
+      "voterNumber",
+      "mobileNumber"
+    ],
+    "inputNames": [
+      "voterNumber",
+      "mobileNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$apiResponseData = null;",
+      "$apiKey = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";",
+      "'apiKey'       => $apiKey,",
+      "$ch = curl_init($apiUrl);",
+      "curl_setopt($ch, CURLOPT_POST, true);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/x-www-form-urlencoded']);",
+      "$apiResponseData = $response;",
+      "<?php if ($apiResponseData && isset($apiResponseData['voterNumber'])): ?>",
+      "<?php if (!empty($apiResponseData[$key])): ?>",
+      "<input type=\"text\" value=\"<?= htmlspecialchars($apiResponseData[$key]) ?>\" class=\"form-control\" readonly>",
+      "<?php if ($apiResponseData && isset($apiResponseData['voterNumber'])): ?>"
+    ]
+  },
+  {
+    "file": "Voter_Original_PDF.php",
+    "postGetVars": [
+      "submit",
+      "epicNumber",
+      "submitotp",
+      "voterNumber",
+      "otp"
+    ],
+    "inputNames": [
+      "epicNumber",
+      "submit",
+      "otp",
+      "voterNumber",
+      "submitotp"
+    ],
+    "relevantLines": [
+      "$TargetApi_apikey  = TargetApi(\"TargetApi_apikey\");",
+      "$apiResponseData = null;",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($epicNumber);",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($voterNumber) . \"&otp=\" . urlencode($otp);",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_TIMEOUT, 120);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');"
+    ]
+  },
+  {
+    "file": "Voter_ORIGINAL_PDF_DOWNLOAD.php",
+    "postGetVars": [
+      "submit",
+      "epicNumber"
+    ],
+    "inputNames": [
+      "epicNumber",
+      "submit"
+    ],
+    "relevantLines": [
+      "$TargetApi_apikey  = TargetApi(\"TargetApi_apikey\");",
+      "$apiUrl = \"https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&voter_number=\" . urlencode($epicNumber);",
+      "curl_setopt($ch, CURLOPT_URL, $apiUrl);",
+      "curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);",
+      "curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);",
+      "curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)');",
+      "$api_order_id = $response['order_id'] ?? order_txn_id();",
+      "'txn_id'        => $api_order_id,",
+      "'order_id'     => $api_order_id,",
+      "'order_id'      => $api_order_id, // Saved API Order ID here for Check Status",
+      "alert('Request Submitted Successfully! Order ID: \" . $api_order_id . \"');"
+    ]
+  }
+]

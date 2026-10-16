@@ -280,7 +280,7 @@ export default function PvcTraySheetModal({
                                   <div className="flex-1 space-y-0.5 text-[8px]">
                                     <div>
                                       <span className="text-[6.5px] text-slate-500 block">नाम / NAME</span>
-                                      <span className="font-black text-slate-900 block leading-tight">{cardData?.name || cardData?.ownerName || 'राम कुमार'}</span>
+                                      <span className="font-black text-slate-900 block leading-tight">{cardData?.name || cardData?.ownerName || '-'}</span>
                                     </div>
                                     <div>
                                       <span className="text-[6.5px] text-slate-500 block">पिता / FATHER'S NAME</span>

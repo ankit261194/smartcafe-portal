@@ -1,0 +1,1323 @@
+[
+  {
+    "file": "aadhaar_pdf.php",
+    "urls": [
+      "$targetUrl = TargetApi(\"TargetApi_url\");",
+      "https://{$targetUrl}/api/v1/aadhaar_pdf.php"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "uidNumber",
+      "submit",
+      "otp",
+      "uidNumberResponse",
+      "submitotp"
+    ]
+  },
+  {
+    "file": "aadhar_Fingerprint1.php",
+    "urls": [
+      "https://translate.googleapis.com/translate_a/single?client=gtx",
+      "https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js",
+      "https://<?php",
+      "$.getScript(\"https://<?php echo TargetApi('TargetApi_url'); ?>/api/v1/uid/ekyc_Otp/printcapture.js?v=\" + ssoauth_ver).done(function (script, textStatus) {",
+      "http://127.0.0.1:${port}`,",
+      "https://127.0.0.1:${port}`,",
+      "https://localhost:${port}`"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "client",
+      "php",
+      "php echo TargetApi(TargetApi_url); ?>/api/v1/uid/ekyc_Otp/printcapture.js?v"
+    ],
+    "formInputs": [
+      "ctl00$ContentPlaceHolder1$txtUID",
+      "collapsible-address-type",
+      "f1",
+      "aadhar",
+      "bioenc",
+      "name",
+      "orderID",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "genderlocal",
+      "birthtithilocal",
+      "namelocal",
+      "addresslocal",
+      "language",
+      "imgdata",
+      "ddate",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "enrollment",
+      "enrollmentlocal",
+      "savedata"
+    ]
+  },
+  {
+    "file": "aadhar_Fingerprint2.php",
+    "urls": [
+      "https://translate.googleapis.com/translate_a/single?client=gtx",
+      "https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js",
+      "https://<?php",
+      "$.getScript(\"https://<?php echo TargetApi('TargetApi_url'); ?>/api/v1/uid/printcapture_Server2.js?v=\" + ssoauth_ver).done(function (script, textStatus) {",
+      "http://127.0.0.1:${port}`,",
+      "https://127.0.0.1:${port}`,",
+      "https://localhost:${port}`"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "client",
+      "php",
+      "php echo TargetApi(TargetApi_url); ?>/api/v1/uid/printcapture_Server2.js?v"
+    ],
+    "formInputs": [
+      "ctl00$ContentPlaceHolder1$txtUID",
+      "collapsible-address-type",
+      "f1",
+      "aadhar",
+      "bioenc",
+      "name",
+      "orderID",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "genderlocal",
+      "birthtithilocal",
+      "namelocal",
+      "addresslocal",
+      "language",
+      "imgdata",
+      "ddate",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "enrollment",
+      "enrollmentlocal",
+      "savedata"
+    ]
+  },
+  {
+    "file": "ABHA-Card-Download.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/abha/send_otp.php?",
+      "https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "uid_number",
+      "send_otp",
+      "otp",
+      "reset_form",
+      "verify_otp"
+    ]
+  },
+  {
+    "file": "ABHA-Card-Download_widhoutopt.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "uid_number",
+      "dob",
+      "download_card"
+    ]
+  },
+  {
+    "file": "addmemberotp.php",
+    "urls": [
+      "https://securedesk.in/api/sms/send-message"
+    ],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));"
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "name",
+      "company",
+      "usertype",
+      "mobile",
+      "password",
+      "email",
+      "usercreate",
+      "email_otp",
+      "mobile_otp",
+      "verify_member_otp",
+      "resend_member_otp",
+      "cancel_create"
+    ]
+  },
+  {
+    "file": "addmoney.php",
+    "urls": [],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "amount",
+      "smartpg"
+    ]
+  },
+  {
+    "file": "addmoney1.php",
+    "urls": [],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "amount",
+      "smartpg"
+    ]
+  },
+  {
+    "file": "addmoneyresponse.php",
+    "urls": [],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));"
+    ],
+    "queryParams": [],
+    "formInputs": []
+  },
+  {
+    "file": "addmoneys.php",
+    "urls": [
+      "https://code.jquery.com/jquery-3.6.0.min.js",
+      "https://cdn.jsdelivr.net/npm/sweetalert2@11",
+      "http://www.w3.org/2000/svg",
+      "https://cdn.jsdelivr.net/npm/disable-devtool@x.x.x",
+      "https://cdn.jsdelivr.net/npm/disable-devtool@latest"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "amount",
+      "smartupi"
+    ]
+  },
+  {
+    "file": "adhar-pvc.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php"
+    ],
+    "method": "POST",
+    "postFields": [
+      "CURLOPT_POSTFIELDS     => $postData,"
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "file",
+      "password",
+      "type",
+      "mobile",
+      "submit_pvc"
+    ]
+  },
+  {
+    "file": "AgrifarmerCardnew.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/AgriStak/farmer-card.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber);"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apiKey",
+      "uidNumber"
+    ],
+    "formInputs": [
+      "uidNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "BharatPeProxy.php",
+    "urls": [],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": []
+  },
+  {
+    "file": "callback.php",
+    "urls": [],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+    ],
+    "queryParams": [],
+    "formInputs": []
+  },
+  {
+    "file": "callback7inOneold.php",
+    "urls": [],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));"
+    ],
+    "queryParams": [],
+    "formInputs": []
+  },
+  {
+    "file": "Challan_Find.php",
+    "urls": [
+      "https://developer.darkxservices.com/api/v1/RcMobileFind?vehicalNo="
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "vehicalNo"
+    ],
+    "formInputs": [
+      "vehicleNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "dashboard.php",
+    "urls": [
+      "https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png",
+      "https://img.icons8.com/ios-filled/20/25d366/whatsapp.png",
+      "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "check_balance"
+    ]
+  },
+  {
+    "file": "dashboard1.php",
+    "urls": [
+      "https://img.icons8.com/ios-filled/50/ffffff/whatsapp.png",
+      "https://wa.me/91<?php",
+      "https://img.icons8.com/ios-filled/20/25d366/whatsapp.png"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "php"
+    ],
+    "formInputs": [
+      "check_balance"
+    ]
+  },
+  {
+    "file": "dl-download.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/dl/dl-print.php?"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "dlNumber",
+      "dobenter",
+      "submit"
+    ]
+  },
+  {
+    "file": "Driving_Licence_Pdf.php",
+    "urls": [
+      "$base_url = TargetApi(\"TargetApi_url\");"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "dlNumber",
+      "dobenter",
+      "dltype",
+      "submit"
+    ]
+  },
+  {
+    "file": "Driving_Licence_Pdf_new.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey=",
+      "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apikey"
+    ],
+    "formInputs": [
+      "dlNumber",
+      "dobenter",
+      "bg_type",
+      "submit"
+    ]
+  },
+  {
+    "file": "e-shram_number_link.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php?apiKey="
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apiKey"
+    ],
+    "formInputs": [
+      "uidNumber",
+      "dob",
+      "mobile",
+      "submit"
+    ]
+  },
+  {
+    "file": "engine_to_rc.php",
+    "urls": [
+      "$apiUrl = function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\";"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "TargetApi(TargetApi_url) : ;"
+    ],
+    "formInputs": [
+      "engine_number",
+      "submit_query"
+    ]
+  },
+  {
+    "file": "function.php",
+    "urls": [
+      "https://code.jquery.com/ui/1.12.1/themes/cupertino/jquery-ui.css",
+      "https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+      "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/css/select2.min.css",
+      "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.2/js/select2.min.js",
+      "https://panel.rechargepay.lol/layouts/home/download.png",
+      "https://api.mailazy.com/v1/mail/send"
+    ],
+    "method": "POST",
+    "postFields": [
+      "CURLOPT_POSTFIELDS => $post_data,",
+      "//     CURLOPT_POSTFIELDS => $data_string,",
+      "CURLOPT_POSTFIELDS => array('apiKey' => p4pointsapi(\"p4points_apikey\"), 'bioenc' => $bioenc, 'aadhar' => $aadhar, 'bioenc' => $bioenc),",
+      "CURLOPT_POSTFIELDS => array('apiKey' => p4pointsapi(\"p4points_apikey\"), 'aadhar' => $aadhar, 'bioenc' => $bioenc),"
+    ],
+    "queryParams": [],
+    "formInputs": []
+  },
+  {
+    "file": "gst_details.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") ."
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "gst",
+      "gst_submit"
+    ]
+  },
+  {
+    "file": "gst_To_pan.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") ."
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "gst",
+      "gst_submit"
+    ]
+  },
+  {
+    "file": "gst_verification.php",
+    "urls": [
+      "$apiUrl = \"https://\".TargetApi(\"TargetApi_url\").\"/api/v1/pan_to_gst.php?apiKey=\".$apiKey.\"&pan=\".$pan;"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apiKey",
+      "pan"
+    ],
+    "formInputs": [
+      "pan",
+      "gst_submit"
+    ]
+  },
+  {
+    "file": "instant_voter_link.php",
+    "urls": [
+      "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "epic",
+      "mobile",
+      "link_now"
+    ]
+  },
+  {
+    "file": "instant_voter_link1.php",
+    "urls": [
+      "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "epic",
+      "mobile",
+      "link_now"
+    ]
+  },
+  {
+    "file": "ll_exam_request_advance.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/ll/ll_apply.php?\" . http_build_query(["
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      ". http_build_query(["
+    ],
+    "formInputs": [
+      "applicationNumber",
+      "dob",
+      "password",
+      "examsecretpin",
+      "state",
+      "submit"
+    ]
+  },
+  {
+    "file": "ll_status_proxy.php",
+    "urls": [
+      "https://a1.allrto.shop/api/v2/ll_status_check.php?token_id="
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "token_id"
+    ],
+    "formInputs": []
+  },
+  {
+    "file": "mobaileChallan_Find.php",
+    "urls": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/MobileNumberToChallanDetails.php?$params\";"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "$params;"
+    ],
+    "formInputs": [
+      "mobileNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "new_Npci_Link_Status.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php"
+    ],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(["
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "aadhaar",
+      "submit"
+    ]
+  },
+  {
+    "file": "NEW_RC.php",
+    "urls": [
+      "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "type",
+      "vehicalNumber",
+      "fatherName",
+      "fetch_details"
+    ]
+  },
+  {
+    "file": "Npci_Link_Status.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php"
+    ],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(["
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "aadhaar",
+      "submit"
+    ]
+  },
+  {
+    "file": "pan-details.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "panNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "pan_Uid_Find.php",
+    "urls": [
+      "$baseUrl = TargetApi(\"TargetApi_url\");"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "panNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "paymentapi.php",
+    "urls": [
+      "<input type=\"hidden\" name=\"TargetApi_url\" value=\"<?=TargetApi(\"TargetApi_url\")?>\">",
+      "https://merchant.razorpay.space/",
+      "https://web.whatsappapi.shop/en",
+      "https://authorized.p4points.co.in/"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "TargetApi_url",
+      "cardprintApi_url",
+      "TargetApi_apikey",
+      "TargetApiupdate",
+      "corex_url",
+      "x_client_username",
+      "x_client_apikey",
+      "CorexApiupdate"
+    ]
+  },
+  {
+    "file": "paymentResponse.php",
+    "urls": [],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+    ],
+    "queryParams": [],
+    "formInputs": []
+  },
+  {
+    "file": "Pincode_Search.php",
+    "urls": [
+      "$api_url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/PincodeVerification.php?apiKey=$api_key&pincode={$searchValue}\";"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apiKey",
+      "pincode"
+    ],
+    "formInputs": [
+      "search_value",
+      "submit"
+    ]
+  },
+  {
+    "file": "printRecord.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-api/check_status.php?apiKey=\" . urlencode(TargetApi(\"TargetApi_apikey\")) . \"&order_id=\" . urlencode($order_id) . \"&voter_number=\" . urlencode($voterNumber);",
+      "$pdfUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/\" . ltrim($res['pdf'], '/');",
+      "$statusUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/ll/cheak-status.php?\" . http_build_query([",
+      "$actual_file_url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/\" . ltrim($clean_path, '/');"
+    ],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);"
+    ],
+    "queryParams": [
+      "apiKey",
+      "order_id",
+      "voter_number",
+      ". http_build_query(["
+    ],
+    "formInputs": [
+      "{$uname}",
+      "{$userid}",
+      "{$user_data[",
+      "{$owner_username}",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput",
+      "search",
+      "verify_key",
+      "print_options",
+      "printdata",
+      "print_option",
+      "option_key",
+      "token",
+      "access_token",
+      "record_id",
+      "app_number",
+      "order_id",
+      "check_status_btn",
+      "userid",
+      "applicationNumber",
+      "amount",
+      "service",
+      "status_update",
+      "photo",
+      "reason",
+      "submit",
+      "id",
+      " . $fileName . ",
+      "voterNumber",
+      "mobileNumber"
+    ]
+  },
+  {
+    "file": "printRecord2.php",
+    "urls": [],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);"
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "{$uname}",
+      "{$userid}",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput",
+      "search",
+      "service",
+      "option_key",
+      "token",
+      "access_token",
+      "printdata",
+      "print_option",
+      "userid",
+      "record_id",
+      "applicationNumber",
+      "amount",
+      "order_id",
+      "status_update",
+      "photo",
+      "reason",
+      "submit",
+      "aadhar",
+      "epicnumber",
+      "MobileNumber"
+    ]
+  },
+  {
+    "file": "proxy.php",
+    "urls": [],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));"
+    ],
+    "queryParams": [],
+    "formInputs": []
+  },
+  {
+    "file": "rationPdfmitrakendra.php",
+    "urls": [
+      "https://mitrakendra.com/apifast/api/Rationpdf.php"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": []
+  },
+  {
+    "file": "ration_full_info_up.php",
+    "urls": [
+      "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js",
+      "https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey="
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apiKey"
+    ],
+    "formInputs": [
+      "rationNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "Ration_Pdf.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rationPdf.php?\" . $params;"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      ". $params;"
+    ],
+    "formInputs": [
+      "rationNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "Ration_Pdf_by_aadhaar.php",
+    "urls": [
+      "$apiUrl = function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\";"
+    ],
+    "method": "POST",
+    "postFields": [
+      "CURLOPT_POSTFIELDS     => $data,"
+    ],
+    "queryParams": [
+      "TargetApi(TargetApi_url) : ;"
+    ],
+    "formInputs": [
+      "aadhar",
+      "submit"
+    ]
+  },
+  {
+    "file": "rcv3.php",
+    "urls": [
+      "https://api.invincibleocean.com/invincible/vehicleRcV6"
+    ],
+    "method": "POST",
+    "postFields": [
+      "CURLOPT_POSTFIELDS => $payload,"
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "vehicleNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "RC_To_Mobaile.php",
+    "urls": [
+      "TargetApi(\"TargetApi_url\") ."
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "vehicleNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "Rc_Verify.php",
+    "urls": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rc-api/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&vehicleNumber=\" . urlencode($vehicalNumber);",
+      "CCURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\","
+    ],
+    "method": "POST",
+    "postFields": [
+      "CURLOPT_POSTFIELDS => http_build_query($pdfData),"
+    ],
+    "queryParams": [
+      "apiKey",
+      "vehicleNumber"
+    ],
+    "formInputs": [
+      "rctype",
+      "vehicalNumber",
+      "fetch_details",
+      "Address",
+      "generate_pdf"
+    ]
+  },
+  {
+    "file": "Rc_Verify1.php",
+    "urls": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&rcno=\" . urlencode($vehicalNumber);",
+      "CURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\","
+    ],
+    "method": "POST",
+    "postFields": [
+      "CURLOPT_POSTFIELDS => http_build_query($pdfData),"
+    ],
+    "queryParams": [
+      "apiKey",
+      "rcno"
+    ],
+    "formInputs": [
+      "rctype",
+      "vehicalNumber",
+      "fetch_details",
+      "Address",
+      "generate_pdf"
+    ]
+  },
+  {
+    "file": "Rc_Verify_server.php",
+    "urls": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc_fast_server.php?\" . $params;"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      ". $params;"
+    ],
+    "formInputs": [
+      "rctype",
+      "vehicalNumber",
+      "fetch_details"
+    ]
+  },
+  {
+    "file": "Rc_Verify_server_new.php",
+    "urls": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") ."
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "rctype",
+      "vehicalNumber",
+      "fetch_details"
+    ]
+  },
+  {
+    "file": "selfactivation.php",
+    "urls": [],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);",
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);"
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "viewport"
+    ]
+  },
+  {
+    "file": "sesionupdate.php",
+    "urls": [
+      "https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=",
+      "https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=",
+      "https://p4vps.com/update_session.php",
+      "https://authorized.p4points.co.in/update_session.php"
+    ],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch2, CURLOPT_POSTFIELDS, http_build_query($postData));"
+    ],
+    "queryParams": [
+      "mobile"
+    ],
+    "formInputs": [
+      "mobile",
+      "sendOtp",
+      "otp",
+      "verifyOtp"
+    ]
+  },
+  {
+    "file": "test1.php",
+    "urls": [
+      "https://authorized.p4points.co.in/PrintData/aadhaar"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [],
+    "formInputs": [
+      "printdata"
+    ]
+  },
+  {
+    "file": "Uid_to_Details3.php",
+    "urls": [
+      "http://kakajiho.com/api/v1/eshram/details.php",
+      "https://translate.googleapis.com/translate_a/single?client=gtx",
+      "https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.js",
+      "https://<?php",
+      "http://127.0.0.1:${port}`,",
+      "https://127.0.0.1:${port}`,",
+      "https://localhost:${port}`"
+    ],
+    "method": "POST",
+    "postFields": [
+      "CURLOPT_POSTFIELDS => json_encode($payload),"
+    ],
+    "queryParams": [
+      "client",
+      "php"
+    ],
+    "formInputs": [
+      "aadhar",
+      "f1",
+      "bioenc",
+      "name",
+      "orderID",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "genderlocal",
+      "birthtithilocal",
+      "namelocal",
+      "addresslocal",
+      "language",
+      "imgdata",
+      "ddate",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "enrollment",
+      "enrollmentlocal",
+      "savedata"
+    ]
+  },
+  {
+    "file": "Uid_to_Pdf_original.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/uidai_original.php?\" . http_build_query(["
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      ". http_build_query(["
+    ],
+    "formInputs": [
+      "uidNumber",
+      "lang",
+      "type",
+      "submit"
+    ]
+  },
+  {
+    "file": "vcmRequest.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";"
+    ],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));"
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "voterNumber",
+      "mobileNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "vehical.php",
+    "urls": [
+      "https://secure.thenextgenapi.co.in/vehicle_rcpdf_verification?rcno=$rcno&rctype=$rctype&apikey=$apikey"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "rcno",
+      "rctype",
+      "apikey"
+    ],
+    "formInputs": [
+      "rcno",
+      "rctype",
+      "submit"
+    ]
+  },
+  {
+    "file": "verification.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}",
+      "https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apiKey",
+      "aadhar",
+      "otp",
+      "txn_id"
+    ],
+    "formInputs": [
+      "aadhaar",
+      "send_otp",
+      "otp",
+      "verify_otp"
+    ]
+  },
+  {
+    "file": "verify_utr_proxy.php",
+    "urls": [
+      "https://razorpay.space/payment/statuspopup?order="
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "order"
+    ],
+    "formInputs": []
+  },
+  {
+    "file": "votermo.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/CheckStatus.php\";"
+    ],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));"
+    ],
+    "queryParams": [],
+    "formInputs": []
+  },
+  {
+    "file": "Voter_Mobile_Link.php",
+    "urls": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=send&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile);",
+      "$verifyUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=verify&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile) . \"&otp=\" . urlencode($voter_otp) . \"&referenceno=\" . urlencode($refid);",
+      "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend",
+      "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpverify"
+    ],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));"
+    ],
+    "queryParams": [
+      "apiKey",
+      "action",
+      "epic",
+      "phone",
+      "otp",
+      "referenceno"
+    ],
+    "formInputs": [
+      "epic_no",
+      "mobile",
+      "refid",
+      "send_voter_otp",
+      "voter_otp",
+      "verify_voter_otp",
+      "tokenbase64_1",
+      "aadharno",
+      "aadharholder",
+      "send_aadhar_otp",
+      "tokenbase64_2",
+      "aadhar_otp",
+      "verify_aadhar_otp"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link2.php",
+    "urls": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apikey",
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "otp",
+      "token"
+    ],
+    "formInputs": [
+      " . urlencode($aadhar_name);\r\n\r\n                    $ch = curl_init();\r\n                    curl_setopt($ch, CURLOPT_URL, $url);\r\n                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\r\n                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);\r\n                    curl_setopt($ch, CURLOPT_TIMEOUT, 60);\r\n                    $apiResponse = curl_exec($ch);\r\n                    curl_close($ch);\r\n\r\n                    if ($apiResponse !== false) {\r\n                        $response = json_decode($apiResponse, true);\r\n                        $apiStatus = strtolower($response[",
+      "step",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "submit_link",
+      "verify_token",
+      "otp",
+      "verify_otp"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link20.php",
+    "urls": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apikey",
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "otp",
+      "token"
+    ],
+    "formInputs": [
+      " . urlencode($aadhar_name);\r\n\r\n                    $ch = curl_init();\r\n                    curl_setopt($ch, CURLOPT_URL, $url);\r\n                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\r\n                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);\r\n                    curl_setopt($ch, CURLOPT_TIMEOUT, 60);\r\n                    $apiResponse = curl_exec($ch);\r\n                    curl_close($ch);\r\n\r\n                    if ($apiResponse !== false) {\r\n                        $response = json_decode($apiResponse, true);\r\n                        $apiStatus = strtolower($response[",
+      "step",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "submit_link",
+      "verify_token",
+      "otp",
+      "verify_otp"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link_withoutotp.php",
+    "urls": [
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+      "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apikey",
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "otp",
+      "token"
+    ],
+    "formInputs": [
+      " . urlencode($aadhar_name);\n\n                    $ch = curl_init();\n                    curl_setopt($ch, CURLOPT_URL, $url);\n                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);\n                    curl_setopt($ch, CURLOPT_TIMEOUT, 60);\n                    $apiResponse = curl_exec($ch);\n                    curl_close($ch);\n\n                    if ($apiResponse !== false) {\n                        $response = json_decode($apiResponse, true);\n                        $apiStatus = strtolower($response[",
+      "step",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "submit_link",
+      "verify_token",
+      "otp",
+      "verify_otp"
+    ]
+  },
+  {
+    "file": "voter_number_chek.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=",
+      "https://cdn.jsdelivr.net/npm/sweetalert2@11"
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apiKey"
+    ],
+    "formInputs": [
+      "epicNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "voter_number_instant.php",
+    "urls": [
+      "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";"
+    ],
+    "method": "POST",
+    "postFields": [
+      "curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));"
+    ],
+    "queryParams": [],
+    "formInputs": [
+      "voterNumber",
+      "mobileNumber",
+      "submit"
+    ]
+  },
+  {
+    "file": "Voter_Original_PDF.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=",
+      "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey="
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apiKey"
+    ],
+    "formInputs": [
+      "epicNumber",
+      "submit",
+      "otp",
+      "voterNumber",
+      "submitotp"
+    ]
+  },
+  {
+    "file": "Voter_ORIGINAL_PDF_DOWNLOAD.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey="
+    ],
+    "method": "GET",
+    "postFields": [],
+    "queryParams": [
+      "apiKey"
+    ],
+    "formInputs": [
+      "epicNumber",
+      "submit"
+    ]
+  }
+]

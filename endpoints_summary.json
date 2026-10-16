@@ -1,0 +1,1126 @@
+[
+  {
+    "file": "aadhaar_pdf.php",
+    "urls": [
+      "$targetUrl = TargetApi(\"TargetApi_url\");",
+      "\"https://{$targetUrl}/api/v1/aadhaar_pdf.php\""
+    ],
+    "postParams": [
+      "submit",
+      "uidNumber",
+      "submitotp",
+      "uidNumberResponse",
+      "otp"
+    ],
+    "queryParamKeys": [
+      "action",
+      "aadhaar",
+      "otp"
+    ]
+  },
+  {
+    "file": "aadhar_Fingerprint1.php",
+    "urls": [
+      "\"https://<?php echo TargetApi('"
+    ],
+    "postParams": [
+      "bioenc",
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ],
+    "queryParamKeys": [
+      "client",
+      "sl",
+      "tl",
+      "dt",
+      "q",
+      "v"
+    ]
+  },
+  {
+    "file": "aadhar_Fingerprint2.php",
+    "urls": [
+      "\"https://<?php echo TargetApi('"
+    ],
+    "postParams": [
+      "bioenc",
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ],
+    "queryParamKeys": [
+      "client",
+      "sl",
+      "tl",
+      "dt",
+      "q",
+      "v"
+    ]
+  },
+  {
+    "file": "ABHA-Card-Download.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v3/abha/send_otp.php?\"",
+      "\"https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?\""
+    ],
+    "postParams": [
+      "send_otp",
+      "uid_number",
+      "verify_otp",
+      "otp",
+      "reset_form"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "ABHA-Card-Download_widhoutopt.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?\""
+    ],
+    "postParams": [
+      "download_card",
+      "uid_number",
+      "dob"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "addmemberotp.php",
+    "urls": [
+      "\"https://securedesk.in/api/sms/send-message\""
+    ],
+    "postParams": [
+      "usercreate",
+      "name",
+      "password",
+      "company",
+      "mobile",
+      "email",
+      "aadhaar",
+      "pan",
+      "usertype",
+      "verify_member_otp",
+      "email_otp",
+      "mobile_otp",
+      "resend_member_otp",
+      "cancel_create"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "addmoney.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/create_order.php\""
+    ],
+    "postParams": [
+      "smartpg",
+      "amount"
+    ],
+    "queryParamKeys": [
+      "order_id"
+    ]
+  },
+  {
+    "file": "addmoney1.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/create_order.php\""
+    ],
+    "postParams": [
+      "smartpg",
+      "amount"
+    ],
+    "queryParamKeys": [
+      "order_id"
+    ]
+  },
+  {
+    "file": "addmoneyresponse.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/check-order-status\""
+    ],
+    "postParams": [
+      "order_id"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "adhar-pvc.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php\""
+    ],
+    "postParams": [
+      "submit_pvc",
+      "mobile",
+      "type",
+      "password"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "AgrifarmerCardnew.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/AgriStak/farmer-card.php?apiKey=\""
+    ],
+    "postParams": [
+      "submit",
+      "uidNumber"
+    ],
+    "queryParamKeys": [
+      "uidNumber"
+    ]
+  },
+  {
+    "file": "callback.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/check_status.php\""
+    ],
+    "postParams": [
+      "order_id"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "callback7inOneold.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/check-order-status\""
+    ],
+    "postParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Challan_Find.php",
+    "urls": [
+      "\"https://developer.darkxservices.com/api/v1/RcMobileFind?vehicalNo=\""
+    ],
+    "postParams": [
+      "submit",
+      "vehicleNumber"
+    ],
+    "queryParamKeys": [
+      "vehicalNo"
+    ]
+  },
+  {
+    "file": "dl-download.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v3/dl/dl-print.php?\""
+    ],
+    "postParams": [
+      "submit",
+      "dlNumber",
+      "dobenter"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Driving_Licence_Pdf.php",
+    "urls": [
+      "$base_url = TargetApi(\"TargetApi_url\");",
+      "\"/serviceApi/TargetApiV1/DL/dl_link.php?\""
+    ],
+    "postParams": [
+      "submit",
+      "dlNumber",
+      "dobenter",
+      "dltype"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Driving_Licence_Pdf_new.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey=\""
+    ],
+    "postParams": [
+      "submit",
+      "dlNumber",
+      "dobenter",
+      "bg_type"
+    ],
+    "queryParamKeys": [
+      "dl",
+      "dob",
+      "action"
+    ]
+  },
+  {
+    "file": "e-shram_number_link.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php?apiKey=\""
+    ],
+    "postParams": [
+      "submit",
+      "uidNumber",
+      "dob",
+      "mobile"
+    ],
+    "queryParamKeys": [
+      "uidNumber",
+      "dob",
+      "mobile"
+    ]
+  },
+  {
+    "file": "engine_to_rc.php",
+    "urls": [
+      "function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\"",
+      "\"https://\"",
+      "\"/api/v1/engine_to_rc.php?\""
+    ],
+    "postParams": [
+      "submit_query",
+      "engine_number"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "function.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/getPanNumber?$getData\"",
+      "\"/api/v1/panVerificationPremium?$getData\"",
+      "\"/api/v1/maskAadharVerification?$getData\"",
+      "\"/api/v1/maskPanVerification?$getData\"",
+      "\"/api/v1/pan-aadhaar-status?$getData\"",
+      "\"/api/v1/RcVerification?$getData\"",
+      "\"/api/v1/dlVerificationPDF?$getData\"",
+      "\"/api/v1/dlVerification?$getData\"",
+      "\"/api/v1/challanVerification?$getData\"",
+      "\"/api/v1/Ration2Uid-up?$getData\"",
+      "\"/api/v1/dlFind?$getData\"",
+      "\"/api/v1/RationVerification?$getData\"",
+      "\"/api/v1/RationVerification_uid?$getData\"",
+      "\"/api/v1/v-Addition/captcha\"",
+      "\"/api/v1/voterVerification?$getData\"",
+      "\"/api/v1/v-Addition/data-fetch?$getData\"",
+      "\"/api/v1/v-Addition/send-otp?nmobile=phoneNumber&epic=voterNumber\"",
+      "\"/api/v1/v-Addition/verify-otp?$getData\"",
+      "\"/api/v1/v-Addition/Pdf-Download/send-otp?$getData\"",
+      "\"/serviceApi/V1/Voter-pdf.php?$getData\"",
+      "\"/api/v1/ifscVerification?$getData\"",
+      "\"/api/v1/PincodeVerification?$getData\"",
+      "\"/api/v1/mobileLookup?$getData\"",
+      "\"/api/v1/eid/captcha?$getData\"",
+      "\"/api/v1/eid/verifyUid?$getData\"",
+      "\"/api/v1/eid/enrollment-Status?$getData\"",
+      "\"/api/v1/Balance_info?$getData\"",
+      "\"/api/v1/eshramVerification?$getData\"",
+      "\"/api/v2/sharmadhan_card_details?$getData\"",
+      "\"/api/v1/PmjayVerification?$getData\"",
+      "\"/api/v1/uid/ekycVerification\"",
+      "\"/api/v1/RtpsCertificate-Br?$getData\"",
+      "\"/api/v1/Hr_Services/familyVerification?$getData\"",
+      "\"/api/v1/janadharFind?$getData\"",
+      "\"/api/v1/dbtAgricultureVerification?$getData\"",
+      "\"/api/v1/elctricBillPDF?$getData\"",
+      "\"/api/v1/electricBill_Operator\"",
+      "\"/api/v1/electricBillFetch?$getData\"",
+      "\"/api/v1/janadharPdf?$getData\"",
+      "\"/api/v1/AgriStak/approvedFarmers?$getData\"",
+      "\"/api/v1/AgriStak/checkStatus?$getData\"",
+      "\"/api/v1/uid/otp/send_otp?$getData\"",
+      "\"/api/v1/uid/otp/Verify_otp?$getData\"",
+      "\"/api/v1/uid/ekycVerification_Server2\""
+    ],
+    "postParams": [],
+    "queryParamKeys": [
+      "nmobile",
+      "epic"
+    ]
+  },
+  {
+    "file": "gst_details.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/gst_to_pan.php?apiKey=\""
+    ],
+    "postParams": [
+      "gst_submit",
+      "gst"
+    ],
+    "queryParamKeys": [
+      "gst"
+    ]
+  },
+  {
+    "file": "gst_To_pan.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/gst_to_pan.php?apiKey=\""
+    ],
+    "postParams": [
+      "gst_submit",
+      "gst"
+    ],
+    "queryParamKeys": [
+      "gst"
+    ]
+  },
+  {
+    "file": "gst_verification.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/pan_to_gst.php?apiKey=\""
+    ],
+    "postParams": [
+      "gst_submit",
+      "pan"
+    ],
+    "queryParamKeys": [
+      "pan"
+    ]
+  },
+  {
+    "file": "instant_voter_link.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v4/instant_voter_link.php\""
+    ],
+    "postParams": [
+      "link_now",
+      "epic",
+      "mobile"
+    ],
+    "queryParamKeys": [
+      "epic",
+      "mobile"
+    ]
+  },
+  {
+    "file": "instant_voter_link1.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v4/instant_voter_link.php\""
+    ],
+    "postParams": [
+      "link_now",
+      "epic",
+      "mobile"
+    ],
+    "queryParamKeys": [
+      "epic",
+      "mobile"
+    ]
+  },
+  {
+    "file": "ll_exam_request_advance.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/ll/ll_apply.php?\""
+    ],
+    "postParams": [
+      "submit",
+      "applicationNumber",
+      "dob",
+      "password",
+      "examsecretpin",
+      "state"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "ll_status_proxy.php",
+    "urls": [
+      "\"https://a1.allrto.shop/api/v2/ll_status_check.php?token_id=\""
+    ],
+    "postParams": [],
+    "queryParamKeys": [
+      "token_id"
+    ]
+  },
+  {
+    "file": "mobaileChallan_Find.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v2/MobileNumberToChallanDetails.php?$params\""
+    ],
+    "postParams": [
+      "submit",
+      "mobileNumber"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "new_Npci_Link_Status.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\""
+    ],
+    "postParams": [
+      "submit",
+      "aadhaar"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "NEW_RC.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?\""
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "fatherName",
+      "type"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Npci_Link_Status.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\""
+    ],
+    "postParams": [
+      "submit",
+      "aadhaar"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "pan-details.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?\""
+    ],
+    "postParams": [
+      "submit",
+      "panNumber"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "pan_Uid_Find.php",
+    "urls": [
+      "$baseUrl = TargetApi(\"TargetApi_url\");",
+      "\"https://\"",
+      "\"/api/v1/panAadhar.php?apiKey=\""
+    ],
+    "postParams": [
+      "submit",
+      "panNumber"
+    ],
+    "queryParamKeys": [
+      "panNumber"
+    ]
+  },
+  {
+    "file": "paymentapi.php",
+    "urls": [
+      "$TargetApi_url = strip_tags($_POST['TargetApi_url']);",
+      "$parsed_url = parse_url($TargetApi_url);",
+      "$host = $parsed_url['host'] ?? $TargetApi_url;",
+      "\"TargetApi_url\" => $host,",
+      "<input type=\"hidden\" name=\"TargetApi_url\" value=\"<?=TargetApi(\"TargetApi_url\")?>\">",
+      "\"https://authorized.p4points.co.in/\""
+    ],
+    "postParams": [
+      "TargetApiupdate",
+      "TargetApi_apikey",
+      "TargetApi_url",
+      "cardprintApi_url",
+      "CorexApiupdate",
+      "corex_url",
+      "x_client_username",
+      "x_client_apikey"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "paymentResponse.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/check_status.php\""
+    ],
+    "postParams": [
+      "order_id"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Pincode_Search.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/PincodeVerification.php?apiKey=$api_key&pincode={$searchValue}\""
+    ],
+    "postParams": [
+      "submit",
+      "search_value"
+    ],
+    "queryParamKeys": [
+      "pincode"
+    ]
+  },
+  {
+    "file": "printRecord.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/voter-api/check_status.php?apiKey=\"",
+      "\"/api/v1/ll/cheak-status.php?\""
+    ],
+    "postParams": [
+      "print_option",
+      "service",
+      "option_key",
+      "token",
+      "access_token",
+      "printdata",
+      "id",
+      "check_status_btn",
+      "record_id",
+      "app_number",
+      "order_id",
+      "submit",
+      "status_update",
+      "applicationNumber",
+      "userid",
+      "amount",
+      "reason",
+      "search",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput"
+    ],
+    "queryParamKeys": [
+      "order_id",
+      "voter_number",
+      "download_proxy",
+      "file_name"
+    ]
+  },
+  {
+    "file": "rationPdfmitrakendra.php",
+    "urls": [
+      "\"https://mitrakendra.com/apifast/api/Rationpdf.php\""
+    ],
+    "postParams": [
+      "rationNumber",
+      "ration_no",
+      "apiKey"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "ration_full_info_up.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey=\""
+    ],
+    "postParams": [
+      "submit",
+      "rationNumber"
+    ],
+    "queryParamKeys": [
+      "rationNumber"
+    ]
+  },
+  {
+    "file": "Ration_Pdf.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/rationPdf.php?\""
+    ],
+    "postParams": [
+      "submit",
+      "rationNumber"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Ration_Pdf_by_aadhaar.php",
+    "urls": [
+      "function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\"",
+      "// यदि TargetApi_url में पहले से https:// या ट्रेलिंग स्लैश है तो उसे मैनेज करें",
+      "\"https://\"",
+      "\"/api/v1/aadhar_to_Rationpdf.php\""
+    ],
+    "postParams": [
+      "submit",
+      "aadhar"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "RC_To_Mobaile.php",
+    "urls": [
+      "TargetApi(\"TargetApi_url\") .",
+      "\"/api/v1/Rc_to_mobaile.php?\""
+    ],
+    "postParams": [
+      "submit",
+      "vehicleNumber"
+    ],
+    "queryParamKeys": [
+      "vehicle"
+    ]
+  },
+  {
+    "file": "Rc_Verify.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/rc-api/rc-details.php?apiKey=\"",
+      "\"/serviceApi/TargetApiV1/RC/rc-api/index.php\""
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype",
+      "generate_pdf",
+      "vrn",
+      "authority",
+      "owner_name",
+      "owner_father_name",
+      "chassis",
+      "engine",
+      "fule_type",
+      "emission_norms",
+      "Address",
+      "class",
+      "maker",
+      "model",
+      "color",
+      "body_type",
+      "seating_capacity",
+      "unladen_weight",
+      "cubic_cap",
+      "cylinders",
+      "wheel_base",
+      "mfg_month_year",
+      "reg_date",
+      "reg_valid_date",
+      "ownership"
+    ],
+    "queryParamKeys": [
+      "vehicleNumber"
+    ]
+  },
+  {
+    "file": "Rc_Verify1.php",
+    "urls": [
+      "\"https://\"",
+      "\"/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=\"",
+      "\"/serviceApi/TargetApiV1/RC/rc-api/index.php\""
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype",
+      "generate_pdf",
+      "vrn",
+      "authority",
+      "owner_name",
+      "owner_father_name",
+      "chassis",
+      "engine",
+      "fule_type",
+      "emission_norms",
+      "Address",
+      "class",
+      "maker",
+      "model",
+      "color",
+      "body_type",
+      "seating_capacity",
+      "unladen_weight",
+      "cubic_cap",
+      "cylinders",
+      "wheel_base",
+      "mfg_month_year",
+      "reg_date",
+      "reg_valid_date",
+      "ownership"
+    ],
+    "queryParamKeys": [
+      "rcno"
+    ]
+  },
+  {
+    "file": "Rc_Verify_server.php",
+    "urls": [
+      "\"https://\"",
+      "\"/serviceApi/TargetApiV1/RC/rc_fast_server.php?\""
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype"
+    ],
+    "queryParamKeys": [
+      "order_id"
+    ]
+  },
+  {
+    "file": "Rc_Verify_server_new.php",
+    "urls": [
+      "\"https://\"",
+      "\"/serviceApi/TargetApiV1/RC/rc_pdfneserver.php?\""
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype"
+    ],
+    "queryParamKeys": [
+      "order_id"
+    ]
+  },
+  {
+    "file": "selfactivation.php",
+    "urls": [
+      "// ✅ ADDED /api/v1/ HERE",
+      "\"https://\"",
+      "\"/api/v1/create_order.php\"",
+      "\"/api/v1/check_status.php\""
+    ],
+    "postParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "sesionupdate.php",
+    "urls": [
+      "// Updated to authorized.p4points.co.in domain",
+      "\"https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=\"",
+      "// Updated to authorized.p4points.co.in domain with proper encoding",
+      "\"https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=\"",
+      "\"https://authorized.p4points.co.in/update_session.php\""
+    ],
+    "postParams": [
+      "mobile",
+      "sendOtp",
+      "verifyOtp",
+      "otp"
+    ],
+    "queryParamKeys": [
+      "mobile",
+      "otp"
+    ]
+  },
+  {
+    "file": "test1.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/PrintData/aadhaar\""
+    ],
+    "postParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Uid_to_Details3.php",
+    "urls": [
+      "\"http://kakajiho.com/api/v1/eshram/details.php\"",
+      "\"https://<?php echo p4pointsapi('"
+    ],
+    "postParams": [
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ],
+    "queryParamKeys": [
+      "client",
+      "sl",
+      "tl",
+      "dt",
+      "q",
+      "v"
+    ]
+  },
+  {
+    "file": "Uid_to_Pdf_original.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/uidai_original.php?\""
+    ],
+    "postParams": [
+      "submit",
+      "uidNumber",
+      "lang",
+      "type"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "vcmRequest.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v2/VoterMobile/Apply\""
+    ],
+    "postParams": [
+      "submit",
+      "voterNumber",
+      "mobileNumber"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "verification.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}\"",
+      "\"https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}\""
+    ],
+    "postParams": [
+      "send_otp",
+      "aadhaar",
+      "verify_otp",
+      "otp"
+    ],
+    "queryParamKeys": [
+      "aadhar",
+      "otp",
+      "txn_id",
+      "reset"
+    ]
+  },
+  {
+    "file": "votermo.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v2/VoterMobile/CheckStatus.php\""
+    ],
+    "postParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Voter_Mobile_Link.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/voter-link/mobile-link-api.php?apiKey=\"",
+      "\"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend\"",
+      "\"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpverify\""
+    ],
+    "postParams": [
+      "epic_no",
+      "mobile",
+      "refid",
+      "send_voter_otp",
+      "verify_voter_otp",
+      "voter_otp",
+      "send_aadhar_otp",
+      "tokenbase64_1",
+      "aadharno",
+      "aadharholder",
+      "verify_aadhar_otp",
+      "tokenbase64_2",
+      "aadhar_otp"
+    ],
+    "queryParamKeys": [
+      "action",
+      "epic",
+      "phone",
+      "otp",
+      "referenceno"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link2.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\""
+    ],
+    "postParams": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ],
+    "queryParamKeys": [
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "step",
+      "otp",
+      "token"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link20.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\""
+    ],
+    "postParams": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ],
+    "queryParamKeys": [
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "step",
+      "otp",
+      "token"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link_withoutotp.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\""
+    ],
+    "postParams": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ],
+    "queryParamKeys": [
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "step",
+      "otp",
+      "token"
+    ]
+  },
+  {
+    "file": "voter_number_chek.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\""
+    ],
+    "postParams": [
+      "submit",
+      "epicNumber"
+    ],
+    "queryParamKeys": [
+      "epic_number"
+    ]
+  },
+  {
+    "file": "voter_number_instant.php",
+    "urls": [
+      "\"https://\"",
+      "\"/api/v2/VoterMobile/Apply\""
+    ],
+    "postParams": [
+      "submit",
+      "voterNumber",
+      "mobileNumber"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Voter_Original_PDF.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\"",
+      "\"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey=\""
+    ],
+    "postParams": [
+      "submit",
+      "epicNumber",
+      "submitotp",
+      "voterNumber",
+      "otp"
+    ],
+    "queryParamKeys": [
+      "epic_number",
+      "otp"
+    ]
+  },
+  {
+    "file": "Voter_ORIGINAL_PDF_DOWNLOAD.php",
+    "urls": [
+      "\"https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey=\""
+    ],
+    "postParams": [
+      "submit",
+      "epicNumber"
+    ],
+    "queryParamKeys": [
+      "voter_number"
+    ]
+  }
+]

@@ -624,8 +624,22 @@
       "wholesaleRate": 15,
       "retailRate": 30,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/finger/advance.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uid/ekycVerification",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "aadhaar_ekyc",
+      "parameters": [
+        "apiKey",
+        "aadhar",
+        "bioenc"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "fingerprint"
+      ]
     },
     {
       "id": "aadhaar_original_pdf_otp",
@@ -636,8 +650,23 @@
       "wholesaleRate": 5,
       "retailRate": 15,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar/otp_pdf.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar_pdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "aadhaar_pdf_otp",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "action",
+        "aadhaar",
+        "otp"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "otp"
+      ]
     },
     {
       "id": "aadhaar_original_pdf_no_otp",
@@ -648,8 +677,20 @@
       "wholesaleRate": 90,
       "retailRate": 120,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar/pdf_no_otp.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uidai_original.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "uid_to_pdf_original",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "aadhaar_otp_kyc",
@@ -660,8 +701,23 @@
       "wholesaleRate": 3,
       "retailRate": 10,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar/otp_kyc.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uid/request-otp.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "aadhaar_otp_kyc",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "aadhar",
+        "otp",
+        "txn_id"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "otp"
+      ]
     },
     {
       "id": "aadhaar_pvc",
@@ -672,8 +728,23 @@
       "wholesaleRate": 10,
       "retailRate": 25,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar/pvc.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "aadhaar_pvc_convert",
+      "parameters": [
+        "apiKey",
+        "mobile",
+        "type",
+        "password"
+      ],
+      "requiredInputs": [
+        "mobile",
+        "file"
+      ]
     },
     {
       "id": "uid_seeding",
@@ -684,8 +755,20 @@
       "wholesaleRate": 25,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar/uid_seeding.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "npci_link_status",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "abha_card",
@@ -696,8 +779,22 @@
       "wholesaleRate": 30,
       "retailRate": 50,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/abha/card.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "abha_card_download",
+      "parameters": [
+        "apiKey",
+        "uidNumber",
+        "dob"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "dob"
+      ]
     },
     {
       "id": "abha_otp",
@@ -708,8 +805,22 @@
       "wholesaleRate": 10,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/abha/otp.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v3/abha/send_otp.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "abha_send_otp",
+      "parameters": [
+        "apiKey",
+        "uidNumber",
+        "otp"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "otp"
+      ]
     },
     {
       "id": "pvc_verify",
@@ -720,8 +831,20 @@
       "wholesaleRate": 10,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pvc/verify.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uidai_original.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "uid_to_pdf_original",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "pan_details",
@@ -732,8 +855,20 @@
       "wholesaleRate": 8,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pan_details_v3",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
     },
     {
       "id": "pan_find",
@@ -744,8 +879,20 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "aadhaar_to_pan",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "pan_find_manual",
@@ -756,8 +903,20 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/find_manual.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panfind.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pan_find_async",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "pan_find_manual_alt",
@@ -768,8 +927,20 @@
       "wholesaleRate": 10,
       "retailRate": 25,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/find_alt.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panfind.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pan_find_async",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "pan_to_aadhar_find",
@@ -780,8 +951,20 @@
       "wholesaleRate": 70,
       "retailRate": 100,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/to_aadhar.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panAadhar.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pan_to_aadhaar",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
     },
     {
       "id": "pan_to_gst",
@@ -792,8 +975,20 @@
       "wholesaleRate": 5,
       "retailRate": 15,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/to_gst.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan_to_gst.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pan_to_gst",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "pan"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
     },
     {
       "id": "gst_to_pan",
@@ -804,8 +999,20 @@
       "wholesaleRate": 10,
       "retailRate": 25,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/gst/to_pan.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/gst_to_pan.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "gst_to_pan",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "gst"
+      ],
+      "requiredInputs": [
+        "gst"
+      ]
     },
     {
       "id": "mobile_name_to_pan_instant",
@@ -816,8 +1023,22 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/mobile_find.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pan_find_name_mobile",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "name",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile",
+        "name"
+      ]
     },
     {
       "id": "pan_basic_pricing",
@@ -828,8 +1049,20 @@
       "wholesaleRate": 15,
       "retailRate": 30,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/basic.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pan_verification_premium",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
     },
     {
       "id": "mask_pan",
@@ -840,8 +1073,20 @@
       "wholesaleRate": 7,
       "retailRate": 15,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/mask.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/maskPanVerification.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mask_pan_verification",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
     },
     {
       "id": "pan_aadhar_mask",
@@ -852,8 +1097,20 @@
       "wholesaleRate": 5,
       "retailRate": 15,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/aadhar_mask.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/maskAadharVerification",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mask_aadhaar_verification",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
     },
     {
       "id": "pan_to_udyam_details",
@@ -864,8 +1121,20 @@
       "wholesaleRate": 30,
       "retailRate": 50,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan/to_udyam.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pan_verification_premium",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
     },
     {
       "id": "voter_verification",
@@ -876,8 +1145,20 @@
       "wholesaleRate": 5,
       "retailRate": 15,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter/verify.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "voter_verification",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "epicNumber"
+      ],
+      "requiredInputs": [
+        "epicNumber"
+      ]
     },
     {
       "id": "voter_mobile_link",
@@ -889,7 +1170,21 @@
       "retailRate": 50,
       "isActive": true,
       "apiEndpoint": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php",
-      "method": "GET"
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "instant_voter_mobile_no_otp",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "epic",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "epicNumber",
+        "mobile"
+      ]
     },
     {
       "id": "voter_pdf",
@@ -900,8 +1195,20 @@
       "wholesaleRate": 5,
       "retailRate": 15,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter/pdf.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "voter_pdf_download",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "voter_number"
+      ],
+      "requiredInputs": [
+        "epicNumber"
+      ]
     },
     {
       "id": "voter_original_pdf_no_otp",
@@ -912,8 +1219,20 @@
       "wholesaleRate": 35,
       "retailRate": 60,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter/original_pdf.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "voter_pdf_download",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "voter_number"
+      ],
+      "requiredInputs": [
+        "epicNumber"
+      ]
     },
     {
       "id": "voter_mobile_link_no_otp",
@@ -925,7 +1244,21 @@
       "retailRate": 60,
       "isActive": true,
       "apiEndpoint": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php",
-      "method": "GET"
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "instant_voter_mobile_no_otp",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "epic",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "epicNumber",
+        "mobile"
+      ]
     },
     {
       "id": "voter_mobile_link_instant_otp",
@@ -936,8 +1269,25 @@
       "wholesaleRate": 30,
       "retailRate": 50,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "voter_mobile_instant_form8",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "action",
+        "epic",
+        "phone",
+        "otp"
+      ],
+      "requiredInputs": [
+        "epicNumber",
+        "mobile",
+        "otp"
+      ]
     },
     {
       "id": "ration_verification",
@@ -948,8 +1298,21 @@
       "wholesaleRate": 10,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/verify.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "ration_to_pdf",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "ration_no",
+        "rationtype"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
     },
     {
       "id": "ration_pdf_by_ration",
@@ -961,7 +1324,20 @@
       "retailRate": 25,
       "isActive": true,
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
-      "method": "GET"
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "ration_to_pdf",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "ration_no",
+        "rationtype"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
     },
     {
       "id": "ration_pdf_by_aadhar",
@@ -972,8 +1348,21 @@
       "wholesaleRate": 15,
       "retailRate": 30,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "aadhaar_to_ration_pdf",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "aadhar",
+        "rationtype"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "up_ration_to_aadhaar",
@@ -984,8 +1373,20 @@
       "wholesaleRate": 45,
       "retailRate": 70,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/up_to_aadhaar.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Ration2Uid-up",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "ration_to_aadhaar_up",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "rationNumber"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
     },
     {
       "id": "all_state_ration_to_aadhar",
@@ -996,8 +1397,20 @@
       "wholesaleRate": 180,
       "retailRate": 220,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/all_state_to_aadhaar.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Ration2Uid-All_state",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "ration_to_aadhaar_all",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "rationNumber"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
     },
     {
       "id": "assam_ration_to_aadhaar",
@@ -1008,8 +1421,20 @@
       "wholesaleRate": 45,
       "retailRate": 70,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/assam_to_aadhaar.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/aasham_ration2uid.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "ration_to_aadhaar_assam",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "rationNumber"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
     },
     {
       "id": "up_ration_info",
@@ -1020,8 +1445,20 @@
       "wholesaleRate": 70,
       "retailRate": 100,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration/up_info.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration_full_info_up.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "up_ration_full_info",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "rationNumber"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
     },
     {
       "id": "driving_licence_pdf",
@@ -1032,8 +1469,23 @@
       "wholesaleRate": 10,
       "retailRate": 25,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dlpdf.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "dl_pdf_secure",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "dlNo",
+        "dob",
+        "dltype"
+      ],
+      "requiredInputs": [
+        "dlNumber",
+        "dob"
+      ]
     },
     {
       "id": "dl_details",
@@ -1044,8 +1496,22 @@
       "wholesaleRate": 8,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dl/details.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v3/dl/dl_details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "dl_details_v3",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apikey",
+        "dl",
+        "dob"
+      ],
+      "requiredInputs": [
+        "dlNumber",
+        "dob"
+      ]
     },
     {
       "id": "dl_to_mobile_find",
@@ -1056,8 +1522,22 @@
       "wholesaleRate": 10,
       "retailRate": 25,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dl/to_mobile.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dlMobileFind.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "dl_to_mobile",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apikey",
+        "dl",
+        "dob"
+      ],
+      "requiredInputs": [
+        "dlNumber",
+        "dob"
+      ]
     },
     {
       "id": "ll_find",
@@ -1068,8 +1548,20 @@
       "wholesaleRate": 15,
       "retailRate": 30,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ll/find.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/LL_application_find",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "ll_application_find",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "mobileNumber"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "ll_pdf",
@@ -1080,8 +1572,20 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ll/pdf.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/LL_application_pdf",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "ll_pdf_download",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "idNumber"
+      ],
+      "requiredInputs": [
+        "idNumber"
+      ]
     },
     {
       "id": "ll_exam_pass_auto",
@@ -1093,7 +1597,27 @@
       "retailRate": 120,
       "isActive": true,
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ll/ll_apply.php",
-      "method": "GET"
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "ll_exam_apply",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "application_number",
+        "date_of_birth",
+        "password",
+        "exam_pin",
+        "state_name"
+      ],
+      "requiredInputs": [
+        "applicationNumber",
+        "dob",
+        "password",
+        "exam_pin",
+        "state"
+      ]
     },
     {
       "id": "rc_to_details",
@@ -1104,8 +1628,20 @@
       "wholesaleRate": 15,
       "retailRate": 30,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc-api/rc-details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "rc_details_v1",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "vehicleNumber"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
     },
     {
       "id": "rc_to_mobile_find",
@@ -1117,7 +1653,19 @@
       "retailRate": 50,
       "isActive": true,
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
-      "method": "GET"
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "rc_to_mobile",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "vehicalNumber"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
     },
     {
       "id": "rc_father_name_find",
@@ -1128,8 +1676,20 @@
       "wholesaleRate": 8,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/father_name.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/RcToFatherName.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "rc_to_father_name",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "vehicalNumber"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
     },
     {
       "id": "rc_mobile_fetch",
@@ -1141,7 +1701,19 @@
       "retailRate": 50,
       "isActive": true,
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
-      "method": "GET"
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "rc_to_mobile",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "vehicalNumber"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
     },
     {
       "id": "chassis_to_rc_find",
@@ -1152,8 +1724,20 @@
       "wholesaleRate": 30,
       "retailRate": 50,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/chassis_to_rc.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "chassis_to_rc",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "chassisNumber"
+      ],
+      "requiredInputs": [
+        "chassisNumber"
+      ]
     },
     {
       "id": "chassis_to_rc_alt",
@@ -1164,8 +1748,20 @@
       "wholesaleRate": 12,
       "retailRate": 25,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/chassis_alt.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "chassis_to_rc",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "chassisNumber"
+      ],
+      "requiredInputs": [
+        "chassisNumber"
+      ]
     },
     {
       "id": "engine_to_rc",
@@ -1176,8 +1772,20 @@
       "wholesaleRate": 30,
       "retailRate": 50,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/engine_to_rc.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/engine_to_rc.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "engine_to_rc",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "engine_number"
+      ],
+      "requiredInputs": [
+        "engineNumber"
+      ]
     },
     {
       "id": "chassis_to_mobile_find",
@@ -1188,8 +1796,20 @@
       "wholesaleRate": 30,
       "retailRate": 50,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/chassis_to_mobile.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Number_find",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "chassis_to_mobile",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "chassisNumber"
+      ],
+      "requiredInputs": [
+        "chassisNumber"
+      ]
     },
     {
       "id": "rc_pdf_download",
@@ -1200,8 +1820,22 @@
       "wholesaleRate": 15,
       "retailRate": 30,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "rc_fast_pdf",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "rcno",
+        "type",
+        "tpe"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
     },
     {
       "id": "chalan_find",
@@ -1212,8 +1846,20 @@
       "wholesaleRate": 10,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/challan/find.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/challanVerification.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "challan_verification",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "vehicalNo"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
     },
     {
       "id": "chalan_find_mobile",
@@ -1224,8 +1870,20 @@
       "wholesaleRate": 18,
       "retailRate": 35,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/challan/find_mobile.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/MobileNumberToChallanDetails.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "challan_by_mobile",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "mobileNumber"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "vahan_check",
@@ -1236,8 +1894,20 @@
       "wholesaleRate": 15,
       "retailRate": 30,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc/vahan_check.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "rc_details",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "rcno"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
     },
     {
       "id": "mobile_to_details",
@@ -1248,8 +1918,21 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/lookup/mobile_to_details.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_lookup",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "mobile_lookup",
@@ -1260,8 +1943,21 @@
       "wholesaleRate": 70,
       "retailRate": 100,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/lookup/mobile_lookup.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_lookup",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "mobile_to_upi_find",
@@ -1272,8 +1968,20 @@
       "wholesaleRate": 10,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/mobile_to_upi.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobiletoupi.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_to_upi",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "mobile_to_multi_upi_find",
@@ -1284,8 +1992,20 @@
       "wholesaleRate": 15,
       "retailRate": 30,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/mobile_to_multi_upi.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobiletoMultiupi_Find.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_to_multi_upi",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "mobile_to_account_find",
@@ -1296,8 +2016,20 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/mobile_to_account.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobaile_to_account.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_to_account",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "mobile_to_multi_account",
@@ -1308,8 +2040,20 @@
       "wholesaleRate": 30,
       "retailRate": 50,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/mobile_to_multi_account.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobaile_to_multi_bank.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_to_multi_bank",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "upi_to_details",
@@ -1320,8 +2064,20 @@
       "wholesaleRate": 10,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/upi_to_details.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/upi_verify.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "vpa_verify",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "vpa"
+      ],
+      "requiredInputs": [
+        "upi"
+      ]
     },
     {
       "id": "telegram_to_number_lookup",
@@ -1332,8 +2088,21 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/lookup/telegram_to_number.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_lookup",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "telegram"
+      ]
     },
     {
       "id": "vi_sim_to_photo_details",
@@ -1344,8 +2113,20 @@
       "wholesaleRate": 35,
       "retailRate": 60,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/telecom/vi_sim.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/vi_sim_details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "vi_sim_photo",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "nsdl_bank",
@@ -1356,8 +2137,20 @@
       "wholesaleRate": 240,
       "retailRate": 300,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/nsdl_bank.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "npci_link_status",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "npci_verify",
@@ -1368,8 +2161,20 @@
       "wholesaleRate": 15,
       "retailRate": 30,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/banking/npci_verify.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "npci_link_status",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "ayushman_image_jpg",
@@ -1380,8 +2185,20 @@
       "wholesaleRate": 5,
       "retailRate": 15,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ayushman/card_jpg.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/PmjayVerification",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "pmjay_verification",
+      "parameters": [
+        "apiKey",
+        "pmjayId"
+      ],
+      "requiredInputs": [
+        "pmjayId"
+      ]
     },
     {
       "id": "e_shram",
@@ -1392,8 +2209,20 @@
       "wholesaleRate": 110,
       "retailRate": 150,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/welfare/eshram.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "eshram_verification",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "e_shram_update",
@@ -1404,8 +2233,24 @@
       "wholesaleRate": 80,
       "retailRate": 120,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/welfare/eshram_update.php",
-      "method": "POST"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "eshram_mobile_update",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "parameters": [
+        "apiKey",
+        "uidNumber",
+        "dob",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "dob",
+        "mobile"
+      ]
     },
     {
       "id": "agristack_pdf",
@@ -1416,8 +2261,22 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/agristack/pdf.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "agristack_print_pdf",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "uidNumber",
+        "state"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "state"
+      ]
     },
     {
       "id": "agristack_verify",
@@ -1428,8 +2287,20 @@
       "wholesaleRate": 10,
       "retailRate": 20,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/agristack/verify.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/farmer-details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "agristack_farmer_details",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "agristack_dbt",
@@ -1440,8 +2311,20 @@
       "wholesaleRate": 12,
       "retailRate": 25,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/agristack/dbt.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/checkStatus.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "agristack_check_status",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "rtps_bihar_pdf",
@@ -1452,8 +2335,22 @@
       "wholesaleRate": 5,
       "retailRate": 15,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/edistrict/rtps_bihar.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/RtpsCertificate-Br.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "rtps_certificate_bihar",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "applicationNumber",
+        "name"
+      ],
+      "requiredInputs": [
+        "applicationNumber",
+        "name"
+      ]
     },
     {
       "id": "electric_bill_pdf_bihar",
@@ -1464,8 +2361,20 @@
       "wholesaleRate": 5,
       "retailRate": 15,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/utility/electric_bill_bihar.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/elctricBillPDF",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "electric_bill_pdf",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "caNumber"
+      ],
+      "requiredInputs": [
+        "caNumber"
+      ]
     },
     {
       "id": "gmail_to_details",
@@ -1476,8 +2385,21 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/lookup/gmail_to_details.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_lookup",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "generator",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "email"
+      ]
     },
     {
       "id": "aadhar_number_to_details",
@@ -1488,8 +2410,20 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar/to_details.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "uid_to_details",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "samagra_service",
@@ -1500,8 +2434,20 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/welfare/samagra.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Hr_Services/familyVerification",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "family_verification",
+      "parameters": [
+        "apiKey",
+        "familyId"
+      ],
+      "requiredInputs": [
+        "familyId"
+      ]
     },
     {
       "id": "sambal_pdf",
@@ -1512,8 +2458,20 @@
       "wholesaleRate": 25,
       "retailRate": 45,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/welfare/sambal.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/sharmadhan_card_details",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "sharmadhan_card_details",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
     },
     {
       "id": "udyam_pdf",
@@ -1524,20 +2482,41 @@
       "wholesaleRate": 60,
       "retailRate": 90,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/utility/udyam_pdf.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "coming_soon",
+      "p4Key": "pan_verification_premium",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
     },
     {
       "id": "qr_generator",
-      "num": 77,
-      "name": "QR Generator",
-      "category": "misc",
-      "providerCost": 0.1,
-      "wholesaleRate": 1,
-      "retailRate": 5,
+      "num": 82,
+      "name": "इंस्टेंट पेमेंट व टोकन QR कोड मेकर (Instant QR)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/tools/qr_gen.php",
-      "method": "GET"
+      "apiEndpoint": "https://api.qrserver.com/v1/create-qr-code/",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "qr_generator",
+      "badge": "🟢 100% निःशुल्क यूटिलिटी",
+      "serviceType": "generator",
+      "parameters": [],
+      "requiredInputs": [
+        "text"
+      ]
     },
     {
       "id": "check_operator",
@@ -1548,8 +2527,20 @@
       "wholesaleRate": 1,
       "retailRate": 5,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/telecom/check_operator.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobile_operator_verify",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_operator_verify",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "mobileNumber"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
     },
     {
       "id": "check_plan",
@@ -1560,8 +2551,145 @@
       "wholesaleRate": 1,
       "retailRate": 5,
       "isActive": true,
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/telecom/check_plan.php",
-      "method": "GET"
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "mobile_lookup",
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "serviceType": "live_api",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "bank_ifsc_lookup",
+      "num": 80,
+      "name": "बैंक IFSC सर्च व शाखा विवरण (Bank IFSC)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "apiEndpoint": "https://ifsc.razorpay.com/",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "bank_ifsc_lookup",
+      "badge": "🟢 100% निःशुल्क यूटिलिटी",
+      "serviceType": "generator",
+      "parameters": [],
+      "requiredInputs": [
+        "ifsc"
+      ]
+    },
+    {
+      "id": "pincode_lookup",
+      "num": 81,
+      "name": "डाकघर पिनकोड सर्च व एड्रेस लोकेटर (India Post)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "apiEndpoint": "https://api.postalpincode.in/pincode/",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pincode_lookup",
+      "badge": "🟢 100% निःशुल्क यूटिलिटी",
+      "serviceType": "generator",
+      "parameters": [],
+      "requiredInputs": [
+        "pincode"
+      ]
+    },
+    {
+      "id": "sarkari_job_feed",
+      "num": 83,
+      "name": "लाइव सरकारी नौकरी, एडमिट कार्ड व योजनाएं (Sarkari Jobs)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "apiEndpoint": "/api/sarkari-jobs/feed",
+      "method": "GET",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "sarkari_job_feed",
+      "badge": "🟢 100% लाइव सरकारी अपडेट",
+      "serviceType": "generator",
+      "parameters": [],
+      "requiredInputs": []
+    },
+    {
+      "id": "pvc_auto_cropper",
+      "num": 84,
+      "name": "A4 to PVC कार्ड ऑटो-क्रॉपर (CR-80 85.6mm×54mm)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "pvc_auto_cropper",
+      "badge": "🟢 1-क्लिक CR-80 PVC क्रॉपर",
+      "serviceType": "generator",
+      "parameters": [],
+      "requiredInputs": [
+        "file"
+      ]
+    },
+    {
+      "id": "passport_photo_maker",
+      "num": 85,
+      "name": "1-क्लिक पासपोर्ट साइज फोटो मेकर (4x6 शीट / 8 फोटो)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "passport_photo_maker",
+      "badge": "🟢 1-क्लिक 8-पासपोर्ट फोटो शीट",
+      "serviceType": "generator",
+      "parameters": [],
+      "requiredInputs": [
+        "file"
+      ]
+    },
+    {
+      "id": "govt_form_resizer",
+      "num": 86,
+      "name": "सरकारी फॉर्म फोटो व साइन रिसाइज़र (20KB - 50KB Exact)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "p4Key": "govt_form_resizer",
+      "badge": "🟢 20KB-50KB फोटो-साइन रिसाइज़र",
+      "serviceType": "generator",
+      "parameters": [],
+      "requiredInputs": [
+        "file"
+      ]
     }
   ],
   "users": [

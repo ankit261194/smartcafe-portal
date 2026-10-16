@@ -1,0 +1,135 @@
+[
+  {
+    "file": "aadhaar_pdf.php",
+    "urls": [
+      "https://{$targetUrl}/api/v1/aadhaar_pdf.php"
+    ]
+  },
+  {
+    "file": "ABHA-Card-Download.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/abha/send_otp.php?",
+      "https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?"
+    ]
+  },
+  {
+    "file": "ABHA-Card-Download_widhoutopt.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?"
+    ]
+  },
+  {
+    "file": "adhar-pvc.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php"
+    ]
+  },
+  {
+    "file": "dl-download.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/dl/dl-print.php?"
+    ]
+  },
+  {
+    "file": "Driving_Licence_Pdf_new.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey="
+    ]
+  },
+  {
+    "file": "e-shram_number_link.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php?apiKey="
+    ]
+  },
+  {
+    "file": "ll_status_proxy.php",
+    "urls": [
+      "https://a1.allrto.shop/api/v2/ll_status_check.php?token_id="
+    ]
+  },
+  {
+    "file": "new_Npci_Link_Status.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php"
+    ]
+  },
+  {
+    "file": "NEW_RC.php",
+    "urls": [
+      "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?"
+    ]
+  },
+  {
+    "file": "Npci_Link_Status.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php"
+    ]
+  },
+  {
+    "file": "pan-details.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?"
+    ]
+  },
+  {
+    "file": "rationPdfmitrakendra.php",
+    "urls": [
+      "https://mitrakendra.com/apifast/api/Rationpdf.php"
+    ]
+  },
+  {
+    "file": "ration_full_info_up.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey="
+    ]
+  },
+  {
+    "file": "sesionupdate.php",
+    "urls": [
+      "https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=",
+      "https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=",
+      "https://p4vps.com/update_session.php",
+      "https://authorized.p4points.co.in/update_session.php"
+    ]
+  },
+  {
+    "file": "Uid_to_Details3.php",
+    "urls": [
+      "http://kakajiho.com/api/v1/eshram/details.php"
+    ]
+  },
+  {
+    "file": "verification.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}",
+      "https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend",
+      "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpverify"
+    ]
+  },
+  {
+    "file": "voter_number_chek.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey="
+    ]
+  },
+  {
+    "file": "Voter_Original_PDF.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=",
+      "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey="
+    ]
+  },
+  {
+    "file": "Voter_ORIGINAL_PDF_DOWNLOAD.php",
+    "urls": [
+      "https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey="
+    ]
+  }
+]

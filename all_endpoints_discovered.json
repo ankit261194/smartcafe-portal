@@ -1,0 +1,2235 @@
+[
+  {
+    "file": "aadhaar_pdf.php",
+    "endpoints": [
+      {
+        "lineNum": 6,
+        "raw": "$targetUrl = TargetApi(\"TargetApi_url\");",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 9,
+        "raw": "define('P4_BASE_URL', \"https://{$targetUrl}/api/v1/aadhaar_pdf.php\");",
+        "strMatches": [
+          "\"https://{$targetUrl}/api/v1/aadhaar_pdf.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "submit",
+      "uidNumber",
+      "submitotp",
+      "uidNumberResponse",
+      "otp"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "action",
+      "aadhaar",
+      "otp"
+    ]
+  },
+  {
+    "file": "aadhar_Fingerprint1.php",
+    "endpoints": [
+      {
+        "lineNum": 621,
+        "raw": "$.getScript(\"https://<?php echo TargetApi('TargetApi_url'); ?>/api/v1/uid/ekyc_Otp/printcapture.js?v=\" + ssoauth_ver).done(function (script, textStatus) {",
+        "strMatches": [
+          "\"https://<?php echo TargetApi('"
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "bioenc",
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "client",
+      "sl",
+      "tl",
+      "dt",
+      "q",
+      "v"
+    ]
+  },
+  {
+    "file": "aadhar_Fingerprint2.php",
+    "endpoints": [
+      {
+        "lineNum": 619,
+        "raw": "$.getScript(\"https://<?php echo TargetApi('TargetApi_url'); ?>/api/v1/uid/printcapture_Server2.js?v=\" + ssoauth_ver).done(function (script, textStatus) {",
+        "strMatches": [
+          "\"https://<?php echo TargetApi('"
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "bioenc",
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "client",
+      "sl",
+      "tl",
+      "dt",
+      "q",
+      "v"
+    ]
+  },
+  {
+    "file": "ABHA-Card-Download.php",
+    "endpoints": [
+      {
+        "lineNum": 23,
+        "raw": "$url = \"https://authorized.p4points.co.in/api/v3/abha/send_otp.php?\" . $query;",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v3/abha/send_otp.php?\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v3/abha/send_otp.php?\" . $query"
+      },
+      {
+        "lineNum": 47,
+        "raw": "$url = \"https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?\" . $query;",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v3/abha/verify_and_download.php?\" . $query"
+      }
+    ],
+    "postParams": [
+      "send_otp",
+      "uid_number",
+      "verify_otp",
+      "otp",
+      "reset_form"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "ABHA-Card-Download_widhoutopt.php",
+    "endpoints": [
+      {
+        "lineNum": 24,
+        "raw": "$url = \"https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?\" . $query;",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php?\" . $query"
+      }
+    ],
+    "postParams": [
+      "download_card",
+      "uid_number",
+      "dob"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "addmemberotp.php",
+    "endpoints": [
+      {
+        "lineNum": 21,
+        "raw": "$url = \"https://securedesk.in/api/sms/send-message\";",
+        "strMatches": [
+          "\"https://securedesk.in/api/sms/send-message\""
+        ],
+        "varConcat": "\"https://securedesk.in/api/sms/send-message\""
+      }
+    ],
+    "postParams": [
+      "usercreate",
+      "name",
+      "password",
+      "company",
+      "mobile",
+      "email",
+      "aadhaar",
+      "pan",
+      "usertype",
+      "verify_member_otp",
+      "email_otp",
+      "mobile_otp",
+      "resend_member_otp",
+      "cancel_create"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "addmoney.php",
+    "endpoints": [
+      {
+        "lineNum": 70,
+        "raw": "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/create_order.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "smartpg",
+      "amount"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "order_id"
+    ]
+  },
+  {
+    "file": "addmoney1.php",
+    "endpoints": [
+      {
+        "lineNum": 70,
+        "raw": "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/create_order.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "smartpg",
+      "amount"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "order_id"
+    ]
+  },
+  {
+    "file": "addmoneyresponse.php",
+    "endpoints": [
+      {
+        "lineNum": 48,
+        "raw": "$url = \"https://\" . paymentapi(\"gateway_Url\") . \"/api/check-order-status\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/check-order-status\""
+        ],
+        "varConcat": "\"https://\" . paymentapi(\"gateway_Url\") . \"/api/check-order-status\""
+      }
+    ],
+    "postParams": [
+      "order_id"
+    ],
+    "getParams": [
+      "order_id"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "adhar-pvc.php",
+    "endpoints": [
+      {
+        "lineNum": 41,
+        "raw": "$apiUrl = \"https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php\";",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php\""
+      }
+    ],
+    "postParams": [
+      "submit_pvc",
+      "mobile",
+      "type",
+      "password"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "AgrifarmerCardnew.php",
+    "endpoints": [
+      {
+        "lineNum": 45,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/AgriStak/farmer-card.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/AgriStak/farmer-card.php?apiKey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/AgriStak/farmer-card.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber)"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "uidNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "uidNumber"
+    ]
+  },
+  {
+    "file": "callback.php",
+    "endpoints": [
+      {
+        "lineNum": 41,
+        "raw": "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/check_status.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "order_id"
+    ],
+    "getParams": [
+      "order_id"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "callback7inOneold.php",
+    "endpoints": [
+      {
+        "lineNum": 11,
+        "raw": "$api_url = \"https://\".paymentapi(\"gateway_Url\").\"/api/check-order-status\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/check-order-status\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [],
+    "getParams": [
+      "order_id"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Challan_Find.php",
+    "endpoints": [
+      {
+        "lineNum": 30,
+        "raw": "$apiUrl = \"https://developer.darkxservices.com/api/v1/RcMobileFind?vehicalNo=\" . urlencode($vehicleNumber) . \"&apiKey=\" . $apiKey;",
+        "strMatches": [
+          "\"https://developer.darkxservices.com/api/v1/RcMobileFind?vehicalNo=\""
+        ],
+        "varConcat": "\"https://developer.darkxservices.com/api/v1/RcMobileFind?vehicalNo=\" . urlencode($vehicleNumber) . \"&apiKey=\" . $apiKey"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "vehicleNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "vehicalNo"
+    ]
+  },
+  {
+    "file": "dl-download.php",
+    "endpoints": [
+      {
+        "lineNum": 23,
+        "raw": "$url = \"https://authorized.p4points.co.in/api/v3/dl/dl-print.php?\" . $query;",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v3/dl/dl-print.php?\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v3/dl/dl-print.php?\" . $query"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "dlNumber",
+      "dobenter"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Driving_Licence_Pdf.php",
+    "endpoints": [
+      {
+        "lineNum": 15,
+        "raw": "$base_url = TargetApi(\"TargetApi_url\");",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 29,
+        "raw": "$url = $base_url . \"/serviceApi/TargetApiV1/DL/dl_link.php?\" . $query;",
+        "strMatches": [
+          "\"/serviceApi/TargetApiV1/DL/dl_link.php?\""
+        ],
+        "varConcat": "$base_url . \"/serviceApi/TargetApiV1/DL/dl_link.php?\" . $query"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "dlNumber",
+      "dobenter",
+      "dltype"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Driving_Licence_Pdf_new.php",
+    "endpoints": [
+      {
+        "lineNum": 108,
+        "raw": "$apiUrl = \"https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey=\" . urlencode($apiKey) . \"&dl=\" . urlencode($dlno) . \"&dob=\" . urlencode($dob);",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey=\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey=\" . urlencode($apiKey) . \"&dl=\" . urlencode($dlno) . \"&dob=\" . urlencode($dob)"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "dlNumber",
+      "dobenter",
+      "bg_type"
+    ],
+    "getParams": [
+      "action"
+    ],
+    "queryParamKeys": [
+      "dl",
+      "dob",
+      "action"
+    ]
+  },
+  {
+    "file": "e-shram_number_link.php",
+    "endpoints": [
+      {
+        "lineNum": 60,
+        "raw": "$apiUrl = \"https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber) . \"&dob=\" . urlencode($dob) . \"&mobile=\" . urlencode($mobile);",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php?apiKey=\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php?apiKey=\" . urlencode($apiKey) . \"&uidNumber=\" . urlencode($uidNumber) . \"&dob=\" . urlencode($dob) . \"&mobile=\" . urlencode($mobile)"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "uidNumber",
+      "dob",
+      "mobile"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "uidNumber",
+      "dob",
+      "mobile"
+    ]
+  },
+  {
+    "file": "engine_to_rc.php",
+    "endpoints": [
+      {
+        "lineNum": 55,
+        "raw": "$apiUrl = function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\";",
+        "strMatches": [],
+        "varConcat": "function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\""
+      },
+      {
+        "lineNum": 92,
+        "raw": "$requestUrl = \"https://\" . $cleanApiUrl . \"/api/v1/engine_to_rc.php?\" . http_build_query([",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/engine_to_rc.php?\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "submit_query",
+      "engine_number"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "function.php",
+    "endpoints": [
+      {
+        "lineNum": 935,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/getPanNumber?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/getPanNumber?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 946,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/panVerificationPremium?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/panVerificationPremium?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 957,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/maskAadharVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/maskAadharVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 968,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/maskPanVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/maskPanVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 979,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/pan-aadhaar-status?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/pan-aadhaar-status?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 991,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/RcVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/RcVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1004,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/dlVerificationPDF?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/dlVerificationPDF?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1017,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/dlVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/dlVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1028,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/challanVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/challanVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1039,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/Ration2Uid-up?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/Ration2Uid-up?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1051,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/dlFind?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/dlFind?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1063,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/RationVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/RationVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1074,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/RationVerification_uid?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/RationVerification_uid?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1081,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/v-Addition/captcha\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/v-Addition/captcha\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1092,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/voterVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voterVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1103,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/v-Addition/data-fetch?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/v-Addition/data-fetch?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1114,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/v-Addition/send-otp?nmobile=phoneNumber&epic=voterNumber\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/v-Addition/send-otp?nmobile=phoneNumber&epic=voterNumber\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1127,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/v-Addition/verify-otp?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/v-Addition/verify-otp?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1138,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/v-Addition/Pdf-Download/send-otp?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/v-Addition/Pdf-Download/send-otp?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1151,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/serviceApi/V1/Voter-pdf.php?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/serviceApi/V1/Voter-pdf.php?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1162,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/ifscVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/ifscVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1173,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/PincodeVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/PincodeVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1184,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/mobileLookup?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/mobileLookup?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1194,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/eid/captcha?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/eid/captcha?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1207,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/eid/verifyUid?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/eid/verifyUid?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1220,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/eid/enrollment-Status?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/eid/enrollment-Status?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1230,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/Balance_info?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/Balance_info?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1241,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/eshramVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/eshramVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1253,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v2/sharmadhan_card_details?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v2/sharmadhan_card_details?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1265,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/PmjayVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/PmjayVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1276,
+        "raw": "CURLOPT_URL => \"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/uid/ekycVerification\",",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/uid/ekycVerification\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1297,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/RtpsCertificate-Br?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/RtpsCertificate-Br?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1307,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/Hr_Services/familyVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/Hr_Services/familyVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1318,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/janadharFind?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/janadharFind?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1329,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/dbtAgricultureVerification?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/dbtAgricultureVerification?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1340,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/elctricBillPDF?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/elctricBillPDF?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1347,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/electricBill_Operator\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/electricBill_Operator\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1359,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/electricBillFetch?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/electricBillFetch?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1370,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/janadharPdf?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/janadharPdf?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1384,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/AgriStak/approvedFarmers?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/AgriStak/approvedFarmers?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1395,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/AgriStak/checkStatus?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/AgriStak/checkStatus?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1408,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/uid/otp/send_otp?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/uid/otp/send_otp?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1421,
+        "raw": "$resJson = http_get(\"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/uid/otp/Verify_otp?$getData\");",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/uid/otp/Verify_otp?$getData\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 1432,
+        "raw": "CURLOPT_URL => \"https://\" . p4pointsapi(\"p4points_url\") . \"/api/v1/uid/ekycVerification_Server2\",",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/uid/ekycVerification_Server2\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [],
+    "getParams": [],
+    "queryParamKeys": [
+      "nmobile",
+      "epic"
+    ]
+  },
+  {
+    "file": "gst_details.php",
+    "endpoints": [
+      {
+        "lineNum": 29,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") .",
+        "strMatches": [
+          "\"https://\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 30,
+        "raw": "\"/api/v1/gst_to_pan.php?apiKey=\" .",
+        "strMatches": [
+          "\"/api/v1/gst_to_pan.php?apiKey=\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "gst_submit",
+      "gst"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "gst"
+    ]
+  },
+  {
+    "file": "gst_To_pan.php",
+    "endpoints": [
+      {
+        "lineNum": 29,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") .",
+        "strMatches": [
+          "\"https://\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 30,
+        "raw": "\"/api/v1/gst_to_pan.php?apiKey=\" .",
+        "strMatches": [
+          "\"/api/v1/gst_to_pan.php?apiKey=\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "gst_submit",
+      "gst"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "gst"
+    ]
+  },
+  {
+    "file": "gst_verification.php",
+    "endpoints": [
+      {
+        "lineNum": 20,
+        "raw": "$apiUrl = \"https://\".TargetApi(\"TargetApi_url\").\"/api/v1/pan_to_gst.php?apiKey=\".$apiKey.\"&pan=\".$pan;",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/pan_to_gst.php?apiKey=\""
+        ],
+        "varConcat": "\"https://\".TargetApi(\"TargetApi_url\").\"/api/v1/pan_to_gst.php?apiKey=\".$apiKey.\"&pan=\".$pan"
+      }
+    ],
+    "postParams": [
+      "gst_submit",
+      "pan"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "pan"
+    ]
+  },
+  {
+    "file": "instant_voter_link.php",
+    "endpoints": [
+      {
+        "lineNum": 13,
+        "raw": "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v4/instant_voter_link.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "link_now",
+      "epic",
+      "mobile"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "epic",
+      "mobile"
+    ]
+  },
+  {
+    "file": "instant_voter_link1.php",
+    "endpoints": [
+      {
+        "lineNum": 13,
+        "raw": "$apiBase = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v4/instant_voter_link.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v4/instant_voter_link.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "link_now",
+      "epic",
+      "mobile"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "epic",
+      "mobile"
+    ]
+  },
+  {
+    "file": "ll_exam_request_advance.php",
+    "endpoints": [
+      {
+        "lineNum": 26,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/ll/ll_apply.php?\" . http_build_query([",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/ll/ll_apply.php?\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "submit",
+      "applicationNumber",
+      "dob",
+      "password",
+      "examsecretpin",
+      "state"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "ll_status_proxy.php",
+    "endpoints": [
+      {
+        "lineNum": 11,
+        "raw": "$url = \"https://a1.allrto.shop/api/v2/ll_status_check.php?token_id=\".$token;",
+        "strMatches": [
+          "\"https://a1.allrto.shop/api/v2/ll_status_check.php?token_id=\""
+        ],
+        "varConcat": "\"https://a1.allrto.shop/api/v2/ll_status_check.php?token_id=\".$token"
+      }
+    ],
+    "postParams": [],
+    "getParams": [
+      "token_id"
+    ],
+    "queryParamKeys": [
+      "token_id"
+    ]
+  },
+  {
+    "file": "mobaileChallan_Find.php",
+    "endpoints": [
+      {
+        "lineNum": 1593,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/MobileNumberToChallanDetails.php?$params\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v2/MobileNumberToChallanDetails.php?$params\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/MobileNumberToChallanDetails.php?$params\""
+      }
+    ],
+    "postParams": [
+      "submit",
+      "mobileNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "new_Npci_Link_Status.php",
+    "endpoints": [
+      {
+        "lineNum": 43,
+        "raw": "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "submit",
+      "aadhaar"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "NEW_RC.php",
+    "endpoints": [
+      {
+        "lineNum": 46,
+        "raw": "$url = \"https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?\" . $params;",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-pdf1.php?\" . $params"
+      }
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "fatherName",
+      "type"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Npci_Link_Status.php",
+    "endpoints": [
+      {
+        "lineNum": 43,
+        "raw": "$api_url = \"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\";",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "submit",
+      "aadhaar"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "pan-details.php",
+    "endpoints": [
+      {
+        "lineNum": 22,
+        "raw": "$url = \"https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?\" . $query;",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php?\" . $query"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "panNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "pan_Uid_Find.php",
+    "endpoints": [
+      {
+        "lineNum": 16,
+        "raw": "$baseUrl = TargetApi(\"TargetApi_url\");",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 17,
+        "raw": "$url = \"https://\".$baseUrl.\"/api/v1/panAadhar.php?apiKey=\".$apiKey.\"&panNumber=\".$panNumber;",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/panAadhar.php?apiKey=\""
+        ],
+        "varConcat": "\"https://\".$baseUrl.\"/api/v1/panAadhar.php?apiKey=\".$apiKey.\"&panNumber=\".$panNumber"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "panNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "panNumber"
+    ]
+  },
+  {
+    "file": "paymentapi.php",
+    "endpoints": [
+      {
+        "lineNum": 20,
+        "raw": "$TargetApi_url = strip_tags($_POST['TargetApi_url']);",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 23,
+        "raw": "$parsed_url = parse_url($TargetApi_url);",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 24,
+        "raw": "$host = $parsed_url['host'] ?? $TargetApi_url;",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 33,
+        "raw": "\"TargetApi_url\" => $host,",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 113,
+        "raw": "<input type=\"hidden\" name=\"TargetApi_url\" value=\"<?=TargetApi(\"TargetApi_url\")?>\">",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 204,
+        "raw": "<a href=\"https://authorized.p4points.co.in/\" target=\"_blank\" class=\"btn btn-outline-dark w-100\">",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "TargetApiupdate",
+      "TargetApi_apikey",
+      "TargetApi_url",
+      "cardprintApi_url",
+      "CorexApiupdate",
+      "corex_url",
+      "x_client_username",
+      "x_client_apikey"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "paymentResponse.php",
+    "endpoints": [
+      {
+        "lineNum": 41,
+        "raw": "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/check_status.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "order_id"
+    ],
+    "getParams": [
+      "order_id"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Pincode_Search.php",
+    "endpoints": [
+      {
+        "lineNum": 24,
+        "raw": "$api_url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/PincodeVerification.php?apiKey=$api_key&pincode={$searchValue}\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/PincodeVerification.php?apiKey=$api_key&pincode={$searchValue}\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "submit",
+      "search_value"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "pincode"
+    ]
+  },
+  {
+    "file": "printRecord.php",
+    "endpoints": [
+      {
+        "lineNum": 278,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-api/check_status.php?apiKey=\" . urlencode(TargetApi(\"TargetApi_apikey\")) . \"&order_id=\" . urlencode($order_id) . \"&voter_number=\" . urlencode($voterNumber);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voter-api/check_status.php?apiKey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-api/check_status.php?apiKey=\" . urlencode(TargetApi(\"TargetApi_apikey\")) . \"&order_id=\" . urlencode($order_id) . \"&voter_number=\" . urlencode($voterNumber)"
+      },
+      {
+        "lineNum": 292,
+        "raw": "$pdfUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/\" . ltrim($res['pdf'], '/');",
+        "strMatches": [
+          "\"https://\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 376,
+        "raw": "$statusUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/ll/cheak-status.php?\" . http_build_query([",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/ll/cheak-status.php?\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 405,
+        "raw": "$actual_file_url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/\" . ltrim($clean_path, '/');",
+        "strMatches": [
+          "\"https://\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "print_option",
+      "service",
+      "option_key",
+      "token",
+      "access_token",
+      "printdata",
+      "id",
+      "check_status_btn",
+      "record_id",
+      "app_number",
+      "order_id",
+      "submit",
+      "status_update",
+      "applicationNumber",
+      "userid",
+      "amount",
+      "reason",
+      "search",
+      "fromDate",
+      "toDate",
+      "status",
+      "searchInput"
+    ],
+    "getParams": [
+      "download_proxy",
+      "file_name"
+    ],
+    "queryParamKeys": [
+      "order_id",
+      "voter_number",
+      "download_proxy",
+      "file_name"
+    ]
+  },
+  {
+    "file": "rationPdfmitrakendra.php",
+    "endpoints": [
+      {
+        "lineNum": 76,
+        "raw": "$provider_base_url = \"https://mitrakendra.com/apifast/api/Rationpdf.php\";",
+        "strMatches": [
+          "\"https://mitrakendra.com/apifast/api/Rationpdf.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "rationNumber",
+      "ration_no",
+      "apiKey"
+    ],
+    "getParams": [
+      "rationNumber",
+      "ration_no",
+      "apiKey"
+    ],
+    "queryParamKeys": []
+  },
+  {
+    "file": "ration_full_info_up.php",
+    "endpoints": [
+      {
+        "lineNum": 56,
+        "raw": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey=\" . urlencode($apiKey) . \"&rationNumber=\" . urlencode($rationNumber);",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey=\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey=\" . urlencode($apiKey) . \"&rationNumber=\" . urlencode($rationNumber)"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "rationNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "rationNumber"
+    ]
+  },
+  {
+    "file": "Ration_Pdf.php",
+    "endpoints": [
+      {
+        "lineNum": 28,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rationPdf.php?\" . $params;",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/rationPdf.php?\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rationPdf.php?\" . $params"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "rationNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Ration_Pdf_by_aadhaar.php",
+    "endpoints": [
+      {
+        "lineNum": 21,
+        "raw": "$apiUrl = function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\";",
+        "strMatches": [],
+        "varConcat": "function_exists('TargetApi') ? TargetApi(\"TargetApi_url\") : \"\""
+      },
+      {
+        "lineNum": 23,
+        "raw": "// यदि TargetApi_url में पहले से https:// या ट्रेलिंग स्लैश है तो उसे मैनेज करें",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 25,
+        "raw": "$url = \"https://\" . $apiUrl . \"/api/v1/aadhar_to_Rationpdf.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/aadhar_to_Rationpdf.php\""
+        ],
+        "varConcat": "\"https://\" . $apiUrl . \"/api/v1/aadhar_to_Rationpdf.php\""
+      }
+    ],
+    "postParams": [
+      "submit",
+      "aadhar"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "RC_To_Mobaile.php",
+    "endpoints": [
+      {
+        "lineNum": 106,
+        "raw": "TargetApi(\"TargetApi_url\") .",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 107,
+        "raw": "\"/api/v1/Rc_to_mobaile.php?\" .",
+        "strMatches": [
+          "\"/api/v1/Rc_to_mobaile.php?\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "submit",
+      "vehicleNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "vehicle"
+    ]
+  },
+  {
+    "file": "Rc_Verify.php",
+    "endpoints": [
+      {
+        "lineNum": 32,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rc-api/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&vehicleNumber=\" . urlencode($vehicalNumber);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/rc-api/rc-details.php?apiKey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/rc-api/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&vehicleNumber=\" . urlencode($vehicalNumber)"
+      },
+      {
+        "lineNum": 138,
+        "raw": "CCURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\",",
+        "strMatches": [
+          "\"https://\"",
+          "\"/serviceApi/TargetApiV1/RC/rc-api/index.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype",
+      "generate_pdf",
+      "vrn",
+      "authority",
+      "owner_name",
+      "owner_father_name",
+      "chassis",
+      "engine",
+      "fule_type",
+      "emission_norms",
+      "Address",
+      "class",
+      "maker",
+      "model",
+      "color",
+      "body_type",
+      "seating_capacity",
+      "unladen_weight",
+      "cubic_cap",
+      "cylinders",
+      "wheel_base",
+      "mfg_month_year",
+      "reg_date",
+      "reg_valid_date",
+      "ownership"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "vehicleNumber"
+    ]
+  },
+  {
+    "file": "Rc_Verify1.php",
+    "endpoints": [
+      {
+        "lineNum": 32,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&rcno=\" . urlencode($vehicalNumber);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=\" . urlencode($apiKey) . \"&rcno=\" . urlencode($vehicalNumber)"
+      },
+      {
+        "lineNum": 137,
+        "raw": "CURLOPT_URL => \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc-api/index.php\",",
+        "strMatches": [
+          "\"https://\"",
+          "\"/serviceApi/TargetApiV1/RC/rc-api/index.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype",
+      "generate_pdf",
+      "vrn",
+      "authority",
+      "owner_name",
+      "owner_father_name",
+      "chassis",
+      "engine",
+      "fule_type",
+      "emission_norms",
+      "Address",
+      "class",
+      "maker",
+      "model",
+      "color",
+      "body_type",
+      "seating_capacity",
+      "unladen_weight",
+      "cubic_cap",
+      "cylinders",
+      "wheel_base",
+      "mfg_month_year",
+      "reg_date",
+      "reg_valid_date",
+      "ownership"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "rcno"
+    ]
+  },
+  {
+    "file": "Rc_Verify_server.php",
+    "endpoints": [
+      {
+        "lineNum": 34,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc_fast_server.php?\" . $params;",
+        "strMatches": [
+          "\"https://\"",
+          "\"/serviceApi/TargetApiV1/RC/rc_fast_server.php?\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/serviceApi/TargetApiV1/RC/rc_fast_server.php?\" . $params"
+      }
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "order_id"
+    ]
+  },
+  {
+    "file": "Rc_Verify_server_new.php",
+    "endpoints": [
+      {
+        "lineNum": 73,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") .",
+        "strMatches": [
+          "\"https://\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 74,
+        "raw": "\"/serviceApi/TargetApiV1/RC/rc_pdfneserver.php?\" . $params;",
+        "strMatches": [
+          "\"/serviceApi/TargetApiV1/RC/rc_pdfneserver.php?\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "fetch_details",
+      "vehicalNumber",
+      "rctype"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "order_id"
+    ]
+  },
+  {
+    "file": "selfactivation.php",
+    "endpoints": [
+      {
+        "lineNum": 66,
+        "raw": "// ✅ ADDED /api/v1/ HERE",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 67,
+        "raw": "$api_url = \"https://\" . $corex_url . \"/api/v1/create_order.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/create_order.php\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 132,
+        "raw": "// ✅ ADDED /api/v1/ HERE",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 133,
+        "raw": "$api_url = \"https://\" . $corex_url . \"/api/v1/check_status.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/check_status.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "sesionupdate.php",
+    "endpoints": [
+      {
+        "lineNum": 19,
+        "raw": "// Updated to authorized.p4points.co.in domain",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 20,
+        "raw": "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=\" . $mobile;",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/voter-login-api/resend_otp.php?mobile=\" . $mobile"
+      },
+      {
+        "lineNum": 50,
+        "raw": "// Updated to authorized.p4points.co.in domain with proper encoding",
+        "strMatches": [],
+        "varConcat": null
+      },
+      {
+        "lineNum": 51,
+        "raw": "$url = \"https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=\" . urlencode($mobile) . \"&otp=\" . urlencode($otp);",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/voter-login-api/resend_verify_otp.php?mobile=\" . urlencode($mobile) . \"&otp=\" . urlencode($otp)"
+      },
+      {
+        "lineNum": 68,
+        "raw": "\"https://authorized.p4points.co.in/update_session.php\"",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/update_session.php\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "mobile",
+      "sendOtp",
+      "verifyOtp",
+      "otp"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "mobile",
+      "otp"
+    ]
+  },
+  {
+    "file": "test1.php",
+    "endpoints": [
+      {
+        "lineNum": 7,
+        "raw": "<form method=\"POST\" action=\"https://authorized.p4points.co.in/PrintData/aadhaar\" target=\"_blank\">",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/PrintData/aadhaar\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Uid_to_Details3.php",
+    "endpoints": [
+      {
+        "lineNum": 19,
+        "raw": "$url     = \"http://kakajiho.com/api/v1/eshram/details.php\";",
+        "strMatches": [
+          "\"http://kakajiho.com/api/v1/eshram/details.php\""
+        ],
+        "varConcat": "\"http://kakajiho.com/api/v1/eshram/details.php\""
+      },
+      {
+        "lineNum": 632,
+        "raw": "$.getScript(\"https://<?php echo p4pointsapi('p4points_url'); ?>/api/v1/uid/printcapture.js?v=\" + ssoauth_ver).done(function (script, textStatus) {",
+        "strMatches": [
+          "\"https://<?php echo p4pointsapi('"
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "aadhar",
+      "savedata",
+      "name",
+      "address",
+      "aadharno",
+      "username",
+      "dobadhar",
+      "houseno",
+      "street",
+      "pincode",
+      "vtcandpost",
+      "dist",
+      "statename",
+      "language",
+      "imgdata",
+      "ddate",
+      "namelocal",
+      "birthtithilocal",
+      "gender",
+      "birthtithi",
+      "pata",
+      "patalocal",
+      "genderlocal",
+      "addresslocal",
+      "enrollmentlocal",
+      "orderID"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "client",
+      "sl",
+      "tl",
+      "dt",
+      "q",
+      "v"
+    ]
+  },
+  {
+    "file": "Uid_to_Pdf_original.php",
+    "endpoints": [
+      {
+        "lineNum": 51,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/uidai_original.php?\" . http_build_query([",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/uidai_original.php?\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "submit",
+      "uidNumber",
+      "lang",
+      "type"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "vcmRequest.php",
+    "endpoints": [
+      {
+        "lineNum": 36,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v2/VoterMobile/Apply\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\""
+      }
+    ],
+    "postParams": [
+      "submit",
+      "voterNumber",
+      "mobileNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "verification.php",
+    "endpoints": [
+      {
+        "lineNum": 39,
+        "raw": "$url = \"https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}\";",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v1/uid/request-otp.php?apiKey={$apiKey}&aadhar={$input_aadhaar}\""
+      },
+      {
+        "lineNum": 67,
+        "raw": "$url = \"https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}\";",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v1/uid/validate-otp.php?apiKey={$apiKey}&aadhar={$aadhaar_no}&otp={$otp}&txn_id={$txn_id}\""
+      }
+    ],
+    "postParams": [
+      "send_otp",
+      "aadhaar",
+      "verify_otp",
+      "otp"
+    ],
+    "getParams": [
+      "reset"
+    ],
+    "queryParamKeys": [
+      "aadhar",
+      "otp",
+      "txn_id",
+      "reset"
+    ]
+  },
+  {
+    "file": "votermo.php",
+    "endpoints": [
+      {
+        "lineNum": 8,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/CheckStatus.php\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v2/VoterMobile/CheckStatus.php\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/CheckStatus.php\""
+      }
+    ],
+    "postParams": [],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Voter_Mobile_Link.php",
+    "endpoints": [
+      {
+        "lineNum": 72,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=send&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voter-link/mobile-link-api.php?apiKey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=send&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile)"
+      },
+      {
+        "lineNum": 115,
+        "raw": "$verifyUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link/mobile-link-api.php?apiKey=\" . urlencode($api_key) . \"&action=verify&epic=\" . urlencode($epic_no) . \"&phone=\" . urlencode($mobile) . \"&otp=\" . urlencode($voter_otp) . \"&referenceno=\" . urlencode($refid);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voter-link/mobile-link-api.php?apiKey=\""
+        ],
+        "varConcat": null
+      },
+      {
+        "lineNum": 153,
+        "raw": "$url = \"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend\";",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpsend\""
+      },
+      {
+        "lineNum": 201,
+        "raw": "$url = \"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpverify\";",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpverify\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php?apiKey=$api_key&action=aadharotpverify\""
+      }
+    ],
+    "postParams": [
+      "epic_no",
+      "mobile",
+      "refid",
+      "send_voter_otp",
+      "verify_voter_otp",
+      "voter_otp",
+      "send_aadhar_otp",
+      "tokenbase64_1",
+      "aadharno",
+      "aadharholder",
+      "verify_aadhar_otp",
+      "tokenbase64_2",
+      "aadhar_otp"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "action",
+      "epic",
+      "phone",
+      "otp",
+      "referenceno"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link2.php",
+    "endpoints": [
+      {
+        "lineNum": 39,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name)"
+      },
+      {
+        "lineNum": 101,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token)"
+      }
+    ],
+    "postParams": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ],
+    "getParams": [
+      "step"
+    ],
+    "queryParamKeys": [
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "step",
+      "otp",
+      "token"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link20.php",
+    "endpoints": [
+      {
+        "lineNum": 39,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name)"
+      },
+      {
+        "lineNum": 101,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token)"
+      }
+    ],
+    "postParams": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ],
+    "getParams": [
+      "step"
+    ],
+    "queryParamKeys": [
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "step",
+      "otp",
+      "token"
+    ]
+  },
+  {
+    "file": "Voter_Mobile_Link_withoutotp.php",
+    "endpoints": [
+      {
+        "lineNum": 33,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=submit&epic=\" . urlencode($epic_no) . \"&mobile=\" . urlencode($mobile) . \"&aadhar_no=\" . urlencode($aadhar_no) . \"&aadhar_name=\" . urlencode($aadhar_name)"
+      },
+      {
+        "lineNum": 94,
+        "raw": "$url = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token);",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v1/voter-link_widhout_otp/voter-link.php?apikey=\" . urlencode($api_key) . \"&action=verify&otp=\" . urlencode($otp) . \"&token=\" . urlencode($verify_token)"
+      }
+    ],
+    "postParams": [
+      "step",
+      "verify_token",
+      "otp",
+      "submit_link",
+      "epic_no",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "verify_otp"
+    ],
+    "getParams": [
+      "step"
+    ],
+    "queryParamKeys": [
+      "action",
+      "epic",
+      "mobile",
+      "aadhar_no",
+      "aadhar_name",
+      "step",
+      "otp",
+      "token"
+    ]
+  },
+  {
+    "file": "voter_number_chek.php",
+    "endpoints": [
+      {
+        "lineNum": 22,
+        "raw": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\"",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\""
+        ],
+        "varConcat": null
+      }
+    ],
+    "postParams": [
+      "submit",
+      "epicNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "epic_number"
+    ]
+  },
+  {
+    "file": "voter_number_instant.php",
+    "endpoints": [
+      {
+        "lineNum": 29,
+        "raw": "$apiUrl = \"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\";",
+        "strMatches": [
+          "\"https://\"",
+          "\"/api/v2/VoterMobile/Apply\""
+        ],
+        "varConcat": "\"https://\" . TargetApi(\"TargetApi_url\") . \"/api/v2/VoterMobile/Apply\""
+      }
+    ],
+    "postParams": [
+      "submit",
+      "voterNumber",
+      "mobileNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": []
+  },
+  {
+    "file": "Voter_Original_PDF.php",
+    "endpoints": [
+      {
+        "lineNum": 32,
+        "raw": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($epicNumber);",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($epicNumber)"
+      },
+      {
+        "lineNum": 73,
+        "raw": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($voterNumber) . \"&otp=\" . urlencode($otp);",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey=\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&epic_number=\" . urlencode($voterNumber) . \"&otp=\" . urlencode($otp)"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "epicNumber",
+      "submitotp",
+      "voterNumber",
+      "otp"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "epic_number",
+      "otp"
+    ]
+  },
+  {
+    "file": "Voter_ORIGINAL_PDF_DOWNLOAD.php",
+    "endpoints": [
+      {
+        "lineNum": 29,
+        "raw": "$apiUrl = \"https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&voter_number=\" . urlencode($epicNumber);",
+        "strMatches": [
+          "\"https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey=\""
+        ],
+        "varConcat": "\"https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey=\" . urlencode($TargetApi_apikey) . \"&voter_number=\" . urlencode($epicNumber)"
+      }
+    ],
+    "postParams": [
+      "submit",
+      "epicNumber"
+    ],
+    "getParams": [],
+    "queryParamKeys": [
+      "voter_number"
+    ]
+  }
+]
