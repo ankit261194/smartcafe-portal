@@ -1,0 +1,187 @@
+/* Smart Cafe Floating Extension Widget CSS */
+
+#smartcafe-bot-root {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999999;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+#smartcafe-bot-panel {
+  width: 320px;
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 16px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  border: 2px solid #3b82f6;
+  overflow: hidden;
+}
+
+.sc-header {
+  background: #1e293b;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #334155;
+}
+
+.sc-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #f8fafc;
+}
+
+.sc-pulse {
+  width: 8px;
+  height: 8px;
+  background: #10b981;
+  border-radius: 50%;
+  animation: sc-pulse-anim 1.5s infinite;
+}
+
+@keyframes sc-pulse-anim {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+#sc-toggle-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+#sc-toggle-btn:hover {
+  color: #ffffff;
+}
+
+.sc-body {
+  padding: 14px;
+}
+
+.sc-status-pill {
+  background: #1e293b;
+  color: #34d399;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 12px;
+  border: 1px solid #064e3b;
+}
+
+.sc-otp-card {
+  background: #064e3b;
+  border: 1px solid #10b981;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.sc-otp-label {
+  font-size: 11px;
+  font-weight: bold;
+  color: #a7f3d0;
+  margin-bottom: 4px;
+}
+
+.sc-otp-val {
+  font-size: 26px;
+  font-weight: 900;
+  font-family: monospace;
+  color: #ffffff;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+.sc-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sc-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.sc-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.sc-input:focus {
+  outline: none;
+  border-color: #3b82f6;
+}
+
+.sc-btn {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.sc-btn:active {
+  transform: scale(0.98);
+}
+
+.sc-btn-primary {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.sc-btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.sc-btn-secondary {
+  background: #334155;
+  color: #e2e8f0;
+}
+
+.sc-btn-secondary:hover {
+  background: #475569;
+}
+
+.sc-btn-otp {
+  background: #10b981;
+  color: #022c22;
+}
+
+.sc-btn-otp:hover {
+  background: #059669;
+  color: #ffffff;
+}
+
+.sc-feedback {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #94a3b8;
+  padding: 6px;
+  background: #020617;
+  border-radius: 6px;
+  text-align: center;
+}

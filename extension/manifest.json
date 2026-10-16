@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Cafe e-District 1-Click Auto-Filler Bot",
+  "version": "1.0.0",
+  "description": "e-District UP form 25+ fields auto-type, 100KB doc attach, and silent live Aadhaar OTP auto-injector for Cyber Cafe VLEs.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "*://edistrict.up.gov.in/*",
+    "https://smartcafe.sbs/*",
+    "http://localhost:5000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://edistrict.up.gov.in/*"
+      ],
+      "js": [
+        "content_script.js"
+      ],
+      "css": [
+        "content_style.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Smart Cafe e-District Helper"
+  }
+}

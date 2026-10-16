@@ -1526,7 +1526,21 @@ if ($endpoint === 'applications') {
 // Route: /api/prints
 if ($endpoint === 'prints') {
     if ($method === 'GET') {
-        echo json_encode($store['prints'] ?? []);
+        $reqCafeId = trim($_GET['cafeId'] ?? '');
+        $allPrints = $store['prints'] ?? [];
+        if ($reqCafeId) {
+            $filtered = [];
+            foreach ($allPrints as $p) {
+                $pCafe = trim($p['cafeId'] ?? '');
+                if ($pCafe === $reqCafeId || $pCafe === "CAFE-{$reqCafeId}" || str_replace('CAFE-', '', $pCafe) === str_replace('CAFE-', '', $reqCafeId)) {
+                    $filtered[] = $p;
+                }
+            }
+            echo json_encode(array_values($filtered));
+        } else {
+            // Super Admin or global overview
+            echo json_encode(array_values($allPrints));
+        }
         exit;
     }
     if ($method === 'POST') {
@@ -1543,30 +1557,152 @@ if ($endpoint === 'prints') {
         }
 
         $token = 'PRN-' . rand(1000, 9999);
+        $pages = (int)($_POST['pagesCount'] ?? ($_POST['pages'] ?? 1));
+        $copies = (int)($_POST['copies'] ?? 1);
+        $colorMode = $_POST['colorType'] ?? ($_POST['colorMode'] ?? 'bw');
+        $sideType = $_POST['sideType'] ?? 'single';
+        $paperSize = $_POST['paperSize'] ?? 'A4';
+        $pageRange = $_POST['pageRange'] ?? 'All';
+        $totalAmt = (float)($_POST['totalAmount'] ?? 5);
+        $targetCafe = trim($_POST['cafeId'] ?? '');
+
         $printItem = [
             'id' => $token,
-            'cafeId' => $_POST['cafeId'] ?? '',
-            'customerName' => $_POST['customerName'] ?? 'नागरिक',
-            'phone' => $_POST['phone'] ?? '',
+            'cafeId' => $targetCafe,
+            'customerName' => trim($_POST['customerName'] ?? 'नागरिक'),
+            'phone' => trim($_POST['phone'] ?? ''),
             'fileName' => $fileName,
             'filePath' => $filePath,
-            'pages' => (int)($_POST['pages'] ?? 1),
-            'copies' => (int)($_POST['copies'] ?? 1),
-            'colorMode' => $_POST['colorMode'] ?? 'bw',
-            'paperSize' => $_POST['paperSize'] ?? 'a4',
-            'doubleSided' => !empty($_POST['doubleSided']),
-            'totalAmount' => (float)($_POST['totalAmount'] ?? 5),
+            'pagesCount' => $pages,
+            'pages' => $pages,
+            'copies' => $copies,
+            'colorType' => $colorMode,
+            'colorMode' => $colorMode,
+            'sideType' => $sideType,
+            'paperSize' => $paperSize,
+            'pageRange' => $pageRange,
+            'totalAmount' => $totalAmt,
+            'paymentStatus' => $_POST['paymentStatus'] ?? 'pending_counter',
+            'printStatus' => 'pending',
             'status' => 'pending',
+            'notes' => trim($_POST['notes'] ?? ''),
             'fileShredded' => false,
             'createdAt' => date('c')
         ];
 
-        $store['prints'][] = $printItem;
+        if (!isset($store['prints'])) $store['prints'] = [];
+        array_unshift($store['prints'], $printItem);
         saveStore($dataFile, $store);
 
         echo json_encode(['success' => true, 'print' => $printItem]);
         exit;
     }
+}
+
+// ==========================================
+// Phase 3: Silent Background OTP Sync Bridge
+// ==========================================
+
+// Route: POST /api/otp/sync-bridge
+if ($endpoint === 'otp/sync-bridge' && $method === 'POST') {
+    $cafeId = trim($body['cafeId'] ?? ($_POST['cafeId'] ?? ''));
+    $customerPhone = trim($body['customerPhone'] ?? ($_POST['customerPhone'] ?? ''));
+    $otp = trim($body['otp'] ?? ($_POST['otp'] ?? ''));
+    $sender = trim($body['sender'] ?? ($_POST['sender'] ?? 'GOVT-SMS'));
+    $serviceType = trim($body['serviceType'] ?? ($_POST['serviceType'] ?? 'general'));
+    $rawSms = trim($body['rawSms'] ?? ($_POST['rawSms'] ?? ''));
+
+    if (empty($otp)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'OTP is required']);
+        exit;
+    }
+
+    if (!isset($store['activeOtps']) || !is_array($store['activeOtps'])) {
+        $store['activeOtps'] = [];
+    }
+
+    // Auto-purge OTPs older than 3 minutes (180 seconds)
+    $now = time();
+    $store['activeOtps'] = array_values(array_filter($store['activeOtps'], function($item) use ($now) {
+        $createdAt = isset($item['timestamp']) ? strtotime($item['timestamp']) : 0;
+        return ($now - $createdAt) < 180;
+    }));
+
+    $otpId = 'OTP-' . substr(time(), -5) . rand(10, 99);
+    $otpRecord = [
+        'id' => $otpId,
+        'cafeId' => $cafeId,
+        'customerPhone' => $customerPhone,
+        'otp' => $otp,
+        'sender' => $sender,
+        'serviceType' => $serviceType,
+        'rawSms' => $rawSms,
+        'consumed' => false,
+        'timestamp' => date('c'),
+        'createdAt' => date('c')
+    ];
+
+    array_unshift($store['activeOtps'], $otpRecord);
+    saveStore($dataFile, $store);
+
+    echo json_encode(['success' => true, 'message' => 'OTP synced to bridge', 'otp' => $otpRecord]);
+    exit;
+}
+
+// Route: GET /api/otp/live-bridge/:cafeId
+if (preg_match('#^otp/live-bridge/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
+    $cafeId = $m[1];
+    $activeOtps = $store['activeOtps'] ?? [];
+    $now = time();
+
+    $validOtps = [];
+    foreach ($activeOtps as $item) {
+        $createdAt = isset($item['timestamp']) ? strtotime($item['timestamp']) : 0;
+        $age = $now - $createdAt;
+        if ($age < 180 && empty($item['consumed'])) {
+            $itemCafe = trim($item['cafeId'] ?? '');
+            if (!$cafeId || $itemCafe === $cafeId || $itemCafe === "CAFE-{$cafeId}" || str_replace('CAFE-', '', $itemCafe) === str_replace('CAFE-', '', $cafeId) || $cafeId === 'ALL') {
+                $itemCopy = $item;
+                $itemCopy['expiresInSec'] = max(0, 180 - $age);
+                $validOtps[] = $itemCopy;
+            }
+        }
+    }
+
+    echo json_encode(['success' => true, 'count' => count($validOtps), 'otps' => array_values($validOtps)]);
+    exit;
+}
+
+// Route: POST /api/otp/mark-consumed
+if ($endpoint === 'otp/mark-consumed' && $method === 'POST') {
+    $otpId = trim($body['otpId'] ?? ($_POST['otpId'] ?? ''));
+    if (!empty($store['activeOtps']) && is_array($store['activeOtps'])) {
+        foreach ($store['activeOtps'] as &$item) {
+            if (($item['id'] ?? '') === $otpId) {
+                $item['consumed'] = true;
+                $item['consumedAt'] = date('c');
+                break;
+            }
+        }
+        saveStore($dataFile, $store);
+    }
+    echo json_encode(['success' => true, 'message' => 'OTP marked as consumed']);
+    exit;
+}
+
+// Route: /api/app/version (In-App APK Auto-Updater)
+if ($endpoint === 'app/version' && $method === 'GET') {
+    echo json_encode([
+        'success' => true,
+        'versionCode' => 2,
+        'versionName' => '2.0.0',
+        'apkUrl' => 'https://smartcafe.sbs/CyberCafe_Portal.apk',
+        'forceUpdate' => false,
+        'releaseNotes' => '1-क्लिक साइलेंट प्रिंट, काउंटर स्टेंडी जनरेटर, लाइव OTP सिंक ब्रिज एवं e-District ऑटो-फिलर',
+        'releaseDate' => date('Y-m-d')
+    ]);
+    exit;
 }
 
 // Route: /api/prints/:id (Status update & WhatsApp Auto-Dispatcher)
@@ -2933,6 +3069,49 @@ if (preg_match('#^cafes/([^/]+)/service-status/([^/]+)$#', $endpoint, $m) && $me
         'currentBalance' => $currentBalance,
         'wholesaleCost' => $wholesaleCost
     ]);
+    exit;
+}
+
+// Route: /api/cafes/:id/standee-data
+if (preg_match('#^cafes/([^/]+)/standee-data$#', $endpoint, $m) && $method === 'GET') {
+    $cafeId = $m[1];
+    $cafe = null;
+    foreach ($store['cafes'] ?? [] as $c) {
+        if ($c['id'] === $cafeId || ($c['code'] ?? '') === $cafeId || ($c['slug'] ?? '') === $cafeId) {
+            $cafe = $c;
+            break;
+        }
+    }
+    if (!$cafe && !empty($store['cafes'][0])) {
+        $cafe = $store['cafes'][0];
+    }
+
+    $shopId = $cafe['id'] ?? $cafeId;
+    $standeeData = [
+        'success' => true,
+        'cafe' => [
+            'id' => $shopId,
+            'shopName' => $cafe['shopName'] ?? ($store['settings']['shopName'] ?? 'डिजिटल जन सेवा केंद्र'),
+            'ownerName' => $cafe['ownerName'] ?? 'कैफे संचालक',
+            'phone' => $cafe['phone'] ?? ($store['settings']['phone'] ?? ''),
+            'address' => $cafe['address'] ?? ($store['settings']['address'] ?? 'मुख्य बाजार, सेवा केंद्र'),
+            'cscVleId' => $cafe['vleId'] ?? ($cafe['code'] ?? $shopId),
+            'qrDeepLink' => "https://smartcafe.sbs/?cafe={$shopId}",
+            'tagline' => '★ अधिकृत डिजिटल सेवा केंद्र एवं जन सुविधा केंद्र ★',
+            'rates' => $cafe['rates'] ?? ($store['settings']['rates'] ?? ['bwPage' => 3, 'colorPage' => 10]),
+            'services' => [
+                ['name' => 'आधार कार्ड PVC प्रिंट व e-KYC', 'category' => 'Aadhaar', 'icon' => 'Fingerprint'],
+                ['name' => 'नया पैन कार्ड व PVC स्मार्ट कार्ड', 'category' => 'PAN', 'icon' => 'CreditCard'],
+                ['name' => 'डिजिटल वोटर स्मार्ट कार्ड', 'category' => 'Voter', 'icon' => 'Vote'],
+                ['name' => 'वाहन RC स्मार्ट कार्ड व चालान', 'category' => 'RTO', 'icon' => 'Car'],
+                ['name' => 'आय, जाति, निवास व राशन पर्ची', 'category' => 'Revenue', 'icon' => 'FileText'],
+                ['name' => 'बिजली बिल भुगतान व रसीद', 'category' => 'Utility', 'icon' => 'Zap'],
+                ['name' => 'आयुष्मान भारत ₹5 लाख कार्ड', 'category' => 'Health', 'icon' => 'HeartPulse'],
+                ['name' => '1-मिनट डायरेक्ट साइलेंट प्रिंट', 'category' => 'Print', 'icon' => 'Printer']
+            ]
+        ]
+    ];
+    echo json_encode($standeeData);
     exit;
 }
 

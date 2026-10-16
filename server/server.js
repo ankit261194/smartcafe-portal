@@ -1346,6 +1346,99 @@ app.get('/api/applications/:id/live-otp', (req, res) => {
     otpRequestedAt: a.otpRequestedAt || null,
     otpReceivedAt: a.otpReceivedAt || null
   });
+// ==========================================
+// Phase 3: Silent Background OTP Sync Bridge
+// ==========================================
+
+// Route: POST /api/otp/sync-bridge
+app.post('/api/otp/sync-bridge', (req, res) => {
+  const store = getStore();
+  const { cafeId, customerPhone, otp, sender, serviceType, rawSms } = req.body;
+  if (!otp || !String(otp).trim()) {
+    return res.status(400).json({ error: 'OTP is required' });
+  }
+
+  if (!Array.isArray(store.activeOtps)) {
+    store.activeOtps = [];
+  }
+
+  // Auto-purge OTPs older than 3 minutes (180 seconds)
+  const now = Date.now();
+  store.activeOtps = store.activeOtps.filter(item => {
+    const age = now - new Date(item.timestamp || item.createdAt).getTime();
+    return age < 180000;
+  });
+
+  const otpId = `OTP-${String(Date.now()).slice(-5)}${Math.floor(10 + Math.random() * 90)}`;
+  const otpRecord = {
+    id: otpId,
+    cafeId: (cafeId || '').trim(),
+    customerPhone: (customerPhone || '').trim(),
+    otp: String(otp).trim(),
+    sender: (sender || 'GOVT-SMS').trim(),
+    serviceType: (serviceType || 'general').trim(),
+    rawSms: (rawSms || '').trim(),
+    consumed: false,
+    timestamp: new Date().toISOString(),
+    createdAt: new Date().toISOString()
+  };
+
+  store.activeOtps.unshift(otpRecord);
+  saveStore(store);
+
+  res.json({ success: true, message: 'OTP synced to bridge', otp: otpRecord });
+});
+
+// Route: GET /api/otp/live-bridge/:cafeId
+app.get('/api/otp/live-bridge/:cafeId', (req, res) => {
+  const store = getStore();
+  const cafeId = (req.params.cafeId || '').trim();
+  const activeOtps = Array.isArray(store.activeOtps) ? store.activeOtps : [];
+  const now = Date.now();
+
+  const validOtps = activeOtps.filter(item => {
+    const age = now - new Date(item.timestamp || item.createdAt).getTime();
+    if (age >= 180000 || item.consumed) return false;
+    if (!cafeId || cafeId === 'ALL') return true;
+    const itemCafe = (item.cafeId || '').trim();
+    return itemCafe === cafeId || itemCafe === `CAFE-${cafeId}` || itemCafe.replace('CAFE-', '') === cafeId.replace('CAFE-', '');
+  }).map(item => {
+    const ageSec = Math.floor((now - new Date(item.timestamp || item.createdAt).getTime()) / 1000);
+    return {
+      ...item,
+      expiresInSec: Math.max(0, 180 - ageSec)
+    };
+  });
+
+  res.json({ success: true, count: validOtps.length, otps: validOtps });
+});
+
+// Route: POST /api/otp/mark-consumed
+app.post('/api/otp/mark-consumed', (req, res) => {
+  const store = getStore();
+  const { otpId } = req.body;
+  if (Array.isArray(store.activeOtps) && otpId) {
+    const target = store.activeOtps.find(o => o.id === otpId);
+    if (target) {
+      target.consumed = true;
+      target.consumedAt = new Date().toISOString();
+      saveStore(store);
+    }
+  }
+  res.json({ success: true, message: 'OTP marked as consumed' });
+});
+
+// Route: GET /api/app/version (In-App APK Auto-Updater)
+app.get('/api/app/version', (req, res) => {
+  res.json({
+    success: true,
+    versionCode: 2,
+    versionName: '2.0.0',
+    apkUrl: 'https://smartcafe.sbs/CyberCafe_Portal.apk',
+    forceUpdate: false,
+    releaseNotes: '1-क्लिक साइलेंट प्रिंट, काउंटर स्टेंडी जनरेटर, लाइव OTP सिंक ब्रिज एवं e-District ऑटो-फिलर',
+    releaseDate: new Date().toISOString().split('T')[0]
+  });
 });
 
 // Multi-Tenant Cafes & SuperAdmin APIs
@@ -1378,6 +1471,39 @@ app.get('/api/cafes/:id', (req, res) => {
   const cafe = (store.cafes || []).find(c => c.id === req.params.id || c.code === req.params.id || c.slug === req.params.id);
   if (!cafe) return res.status(404).json({ error: 'Cyber Cafe not found' });
   res.json(cafe);
+});
+
+app.get('/api/cafes/:id/standee-data', (req, res) => {
+  const store = getStore();
+  let cafe = (store.cafes || []).find(c => c.id === req.params.id || c.code === req.params.id || c.slug === req.params.id);
+  if (!cafe && store.cafes && store.cafes.length > 0) {
+    cafe = store.cafes[0];
+  }
+  const shopId = cafe?.id || req.params.id;
+  res.json({
+    success: true,
+    cafe: {
+      id: shopId,
+      shopName: cafe?.shopName || store.settings?.shopName || 'डिजिटल जन सेवा केंद्र',
+      ownerName: cafe?.ownerName || 'कैफे संचालक',
+      phone: cafe?.phone || store.settings?.phone || '',
+      address: cafe?.address || store.settings?.address || 'मुख्य बाजार, सेवा केंद्र',
+      cscVleId: cafe?.vleId || cafe?.code || shopId,
+      qrDeepLink: `https://smartcafe.sbs/?cafe=${shopId}`,
+      tagline: '★ अधिकृत डिजिटल सेवा केंद्र एवं जन सुविधा केंद्र ★',
+      rates: cafe?.rates || store.settings?.rates || { bwPage: 3, colorPage: 10 },
+      services: [
+        { name: 'आधार कार्ड PVC प्रिंट व e-KYC', category: 'Aadhaar', icon: 'Fingerprint' },
+        { name: 'नया पैन कार्ड व PVC स्मार्ट कार्ड', category: 'PAN', icon: 'CreditCard' },
+        { name: 'डिजिटल वोटर स्मार्ट कार्ड', category: 'Voter', icon: 'Vote' },
+        { name: 'वाहन RC स्मार्ट कार्ड व चालान', category: 'RTO', icon: 'Car' },
+        { name: 'आय, जाति, निवास व राशन पर्ची', category: 'Revenue', icon: 'FileText' },
+        { name: 'बिजली बिल भुगतान व रसीद', category: 'Utility', icon: 'Zap' },
+        { name: 'आयुष्मान भारत ₹5 लाख कार्ड', category: 'Health', icon: 'HeartPulse' },
+        { name: '1-मिनट डायरेक्ट साइलेंट प्रिंट', category: 'Print', icon: 'Printer' }
+      ]
+    }
+  });
 });
 
 app.post('/api/cafes', (req, res) => {

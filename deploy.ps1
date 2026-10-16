@@ -206,6 +206,9 @@ if (-not (Test-Path "$PSScriptRoot\client\dist\api\data\store.json")) {
 if (Test-Path "$PSScriptRoot\client\public\CyberCafe_Portal.apk") {
     Copy-Item -Path "$PSScriptRoot\client\public\CyberCafe_Portal.apk" -Destination "$PSScriptRoot\client\dist\CyberCafe_Portal.apk" -Force
 }
+if (Test-Path "$PSScriptRoot\client\public\SmartCafe_eDistrict_Extension.zip") {
+    Copy-Item -Path "$PSScriptRoot\client\public\SmartCafe_eDistrict_Extension.zip" -Destination "$PSScriptRoot\client\dist\SmartCafe_eDistrict_Extension.zip" -Force
+}
 Copy-Item -Path "$PSScriptRoot\client\public\robots.txt" -Destination "$PSScriptRoot\client\dist\robots.txt" -Force
 Copy-Item -Path "$PSScriptRoot\client\public\sitemap.xml" -Destination "$PSScriptRoot\client\dist\sitemap.xml" -Force
 if (Test-Path "$PSScriptRoot\client\public\services") {

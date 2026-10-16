@@ -963,38 +963,53 @@ export default function EDistrictSuite({ initialSubTab = 'verify', onBack }) {
 
               {/* Polished Chrome Extension / Automation Helper Guide Card */}
               <div className="pt-4 border-t border-slate-200 space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 font-black shrink-0">
-                    🧩
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-orange-100 flex items-center justify-center text-orange-600 font-black shrink-0">
+                      🧩
+                    </div>
+                    <div>
+                      <h5 className="font-extrabold text-slate-900 text-xs">
+                        स्मार्ट कैफे e-District 1-क्लिक क्रोम एक्सटेंशन
+                      </h5>
+                      <p className="text-[11px] text-slate-500">
+                        25+ फील्ड्स ऑटो-टाइप, 100KB डॉक अटैच व लाइव आधार OTP ऑटो-इंजेक्टर
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h5 className="font-extrabold text-slate-900 text-xs">
-                      1-क्लिक क्रोम एक्सटेंशन / ऑटोमेशन गाइड
-                    </h5>
-                    <p className="text-[11px] text-slate-500">
-                      आधिकारिक सरकारी पोर्टल्स के साथ सुरक्षित इंटीग्रेशन
-                    </p>
-                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
+                    Manifest V3
+                  </span>
                 </div>
+
+                {/* Direct Download Button */}
+                <a
+                  href="/SmartCafe_eDistrict_Extension.zip"
+                  download="SmartCafe_eDistrict_Extension.zip"
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black px-4 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md shadow-indigo-600/30 transition active:scale-95 cursor-pointer no-underline"
+                >
+                  <Download className="w-4 h-4 text-white" />
+                  <span>📥 1-क्लिक क्रोम एक्सटेंशन डाउनलोड करें (ZIP)</span>
+                </a>
 
                 <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5 text-[11px] text-slate-700">
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>चरण 1:</strong> ऊपर आवेदक का विवरण दर्ज करें अथवा ग्राहक बैंक से चुनें।</span>
+                    <span><strong>1. इंस्टॉल:</strong> ZIP डाउनलोड करके एक्सट्रैक्ट करें, Chrome में <code className="bg-slate-200 px-1 rounded font-bold">chrome://extensions</code> खोलें, 'Developer mode' ऑन करके 'Load unpacked' से फोल्डर चुनें।</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>चरण 2:</strong> ई-डिस्ट्रिक्ट पोर्टल पर आवेदन फॉर्म खोलें।</span>
+                    <span><strong>2. 1-क्लिक फॉर्म फिल:</strong> e-District UP पर जाकर फॉर्म खोलें, तैरते हुए विजेट पर <strong>'⚡ 1-क्लिक में 25+ फील्ड्स भरें'</strong> दबाएं।</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                    <span><strong>चरण 3:</strong> स्मार्ट ऑटो-फ़िलर 0.3 सेकंड में सभी अनिवार्य फ़ील्ड्स को शुद्धतापूर्वक भर देगा।</span>
+                    <span><strong>3. लाइव OTP ऑटो-इंजेक्टर:</strong> ग्राहक के फोन से आया आधार/फीस OTP एक्सटेंशन सीधे सरकारी OTP बॉक्स में भर देगा।</span>
                   </div>
                 </div>
 
                 <div className="p-3 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-2 text-amber-900 text-[11px]">
                   <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>सुरक्षा गारंटी: यह हेल्पर कोई भी संवेदनशील पासवर्ड या क्रेडेंशियल स्टोर नहीं करता।</span>
+                  <span>सुरक्षा गारंटी: यह एक्सटेंशन कोई भी पासवर्ड सेव नहीं करता; यह केवल सुरक्षित लोकल ब्रिज से कार्य करता है।</span>
                 </div>
               </div>
 

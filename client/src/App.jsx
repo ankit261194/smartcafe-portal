@@ -28,6 +28,8 @@ import LicenseCertificateModal from './components/LicenseCertificateModal';
 import VleKycModal from './components/VleKycModal';
 import RoleAuthModal from './components/RoleAuthModal';
 import UserProfileModal from './components/UserProfileModal';
+import LiveOtpBridgeListener from './components/LiveOtpBridgeListener';
+import InAppUpdater from './components/InAppUpdater';
 import OperatorGateway from './components/OperatorGateway';
 import SuperAdminGateway from './components/SuperAdminGateway';
 import JanSevaModal from './components/JanSevaModal';
@@ -1104,6 +1106,11 @@ export default function App() {
               <QuickPrint
                 settings={settings}
                 selectedCafe={selectedCafe}
+                cafes={cafes}
+                onSelectCafe={(c) => {
+                  setSelectedCafe(c);
+                  localStorage.setItem('selectedCafeId', c.id);
+                }}
                 onPrintSubmitted={fetchPendingCounts}
               />
             )}
@@ -1448,6 +1455,15 @@ export default function App() {
         </div>
       </footer>
       </div>
+
+      {/* Phase 3: Silent Background OTP Sync Bridge Listener */}
+      <LiveOtpBridgeListener
+        cafeId={selectedCafe?.id || (cafes && cafes[0] ? cafes[0].id : 'CAFE-101')}
+        isOperator={currentRole === 'operator' || currentRole === 'superadmin'}
+      />
+
+      {/* Phase 6: Android APK In-App Auto-Updater */}
+      <InAppUpdater />
 
       {/* Standee Poster Modal */}
       <ShopStandeeModal

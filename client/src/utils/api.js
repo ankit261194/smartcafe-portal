@@ -7,9 +7,12 @@ export function getServerBaseUrl() {
     return custom.trim().replace(/\/+$/, '');
   }
   // If running inside Capacitor Native or file/capacitor protocol
-  if (window.Capacitor?.isNativePlatform?.() || window.location.protocol === 'capacitor:') {
-    const mobileIp = localStorage.getItem('cybercafe_mobile_server_ip');
-    if (mobileIp) return mobileIp.trim().replace(/\/+$/, '');
+  if (
+    window.Capacitor?.isNativePlatform?.() || 
+    window.location.protocol === 'capacitor:' || 
+    window.location.protocol === 'file:'
+  ) {
+    return 'https://smartcafe.sbs';
   }
   return '';
 }

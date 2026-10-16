@@ -951,51 +951,19 @@ export default function AdminSettings({
       </div>
 
       {/* Mobile APK & Remote Server Endpoint Configuration Card */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+      <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h3 className="font-extrabold text-slate-900 text-sm flex items-center gap-2">
-            <Globe className="w-4 h-4 text-blue-600" />
-            <span>मोबाइल ऐप व रिमोट सर्वर सेटिंग्स (Configurable Server Endpoint)</span>
+            <Globe className="w-4 h-4 text-emerald-600" />
+            <span>क्लाउड सर्वर कनेक्शन (Official Production Cloud)</span>
           </h3>
           <p className="text-xs text-slate-500 mt-0.5">
-            Android APK या रिमोट डिवाइस को सर्वर से जोड़ने के लिए सर्वर IP या डोमेन सेट करें (जैसे http://192.168.1.5:5000)।
+            आपका पोर्टल और Android APK सीधे आधिकारिक हाई-स्पीड सर्वर <code className="text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded">https://smartcafe.sbs</code> से स्वचालित कनेक्टेड है।
           </p>
         </div>
-
-        <div className="space-y-3">
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="text"
-              value={customServerUrl}
-              onChange={(e) => {
-                setCustomServerUrl(e.target.value);
-                setServerTestStatus(null);
-              }}
-              placeholder="http://192.168.1.X:5000 या https://portal.example.com"
-              className="flex-1 px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-mono font-bold focus:outline-hidden focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="button"
-              onClick={handleTestServer}
-              disabled={testingServer}
-              className="bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shrink-0"
-            >
-              <span>{testingServer ? 'जांच हो रही है...' : 'कनेक्शन टेस्ट करें'}</span>
-            </button>
-            <button
-              type="button"
-              onClick={handleSaveServerUrl}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs transition flex items-center justify-center gap-1.5 shrink-0"
-            >
-              <span>सहेजें (Save)</span>
-            </button>
-          </div>
-
-          {serverTestStatus && (
-            <div className={`p-2.5 rounded-xl text-xs font-bold ${serverTestStatus.success ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
-              {serverTestStatus.msg}
-            </div>
-          )}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-300 rounded-xl text-emerald-800 text-xs font-black shrink-0">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>🟢 100% ऑनलाइन व सुरक्षित</span>
         </div>
       </div>
 

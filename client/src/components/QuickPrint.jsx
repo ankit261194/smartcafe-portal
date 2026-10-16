@@ -11,7 +11,7 @@ import PrintTokenModal from './PrintTokenModal';
 import PvcTraySheetModal from './PvcTraySheetModal';
 import { useLanguage } from '../context/LanguageContext';
 
-export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted }) {
+export default function QuickPrint({ settings, selectedCafe, cafes = [], onSelectCafe, onPrintSubmitted }) {
   const { language, t } = useLanguage();
   const [showPvcTrayModal, setShowPvcTrayModal] = useState(false);
   const [file, setFile] = useState(null);
@@ -170,6 +170,54 @@ export default function QuickPrint({ settings, selectedCafe, onPrintSubmitted })
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Target Shop Selection & Delivery Banner */}
+      <div className="bg-white dark:bg-[#0f1d36] rounded-2xl p-4 sm:p-5 border-2 border-indigo-200 dark:border-indigo-900/60 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+            <Printer className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-black uppercase tracking-wider text-indigo-600 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-950 px-2 py-0.5 rounded-full">
+                {language === 'hi' ? 'दुकान डिलीवरी काउंटर' : 'Delivery Counter'}
+              </span>
+              {selectedCafe?.id && (
+                <span className="text-[10px] font-mono font-bold text-slate-400">
+                  {selectedCafe.id}
+                </span>
+              )}
+            </div>
+            <h3 className="font-extrabold text-slate-900 dark:text-white text-sm sm:text-base mt-0.5">
+              {selectedCafe?.shopName || settings?.shopName || (language === 'hi' ? 'डिजिटल सेवा केंद्र (मुख्य काउंटर)' : 'Main Cyber Counter')}
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {selectedCafe?.address || (language === 'hi' ? 'आपके दस्तावेज़ केवल इसी दुकान के ऑपरेटर काउंटर पर सुरक्षित पहुंचेंगे।' : 'Documents delivered strictly to this shopkeeper.')}
+            </p>
+          </div>
+        </div>
+
+        {/* Cafe Dropdown Picker if multiple cafes exist */}
+        {Array.isArray(cafes) && cafes.length > 1 && (
+          <div className="w-full sm:w-auto">
+            <select
+              value={selectedCafe?.id || ''}
+              onChange={(e) => {
+                const found = cafes.find(c => c.id === e.target.value);
+                if (found && onSelectCafe) onSelectCafe(found);
+              }}
+              className="w-full sm:w-auto text-xs font-bold px-3 py-2 bg-slate-50 dark:bg-[#0b1528] border border-indigo-300 dark:border-indigo-800 rounded-xl text-slate-900 dark:text-white focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="">{language === 'hi' ? 'दुकान बदलें...' : 'Change Shop...'}</option>
+              {cafes.map(c => (
+                <option key={c.id} value={c.id}>
+                  🏪 {c.shopName || c.ownerName} ({c.id})
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {error && (
