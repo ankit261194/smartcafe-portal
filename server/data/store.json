@@ -133,7 +133,25 @@
   "customerVault": [],
   "complaints": [],
   "rcOrders": [],
-  "utrRequests": [],
+  "utrRequests": [
+    {
+      "id": "UTR-CUST-1792125257-861",
+      "tier": "customer_to_sanchalak",
+      "cafeId": "",
+      "cafeShopName": "डिजिटल साइबर कैफे",
+      "customerPhone": "8006518960",
+      "customerName": "ankit kumar",
+      "amount": 10,
+      "utr": "717839573483",
+      "screenshotUrl": "",
+      "upiTarget": "shop@upi",
+      "status": "approved",
+      "autoVerified": false,
+      "approvedAt": "2026-10-16T04:54:07+00:00",
+      "rejectReason": "",
+      "createdAt": "2026-10-16T04:34:17+00:00"
+    }
+  ],
   "vleKycApplications": [],
   "wallets": [
     {

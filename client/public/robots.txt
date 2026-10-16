@@ -3,8 +3,11 @@
 
 User-agent: *
 Allow: /
+Allow: /services/
 Allow: /assets/
+Allow: /images/
 Allow: /CyberCafe_Portal.apk
+Allow: /sitemap.xml
 Disallow: /api/
 Disallow: /superadmin
 
@@ -13,7 +16,9 @@ User-agent: Googlebot
 Allow: /
 
 User-agent: Googlebot-Image
+Allow: /
 Allow: /assets/
+Allow: /images/
 Allow: /og-image.png
 Allow: /favicon.svg
 

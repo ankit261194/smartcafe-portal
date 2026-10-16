@@ -6,116 +6,156 @@
   <!-- 1. Home / Main B2B Portal -->
   <url>
     <loc>https://smartcafe.sbs/</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="hi" href="https://smartcafe.sbs/?lang=hi" />
     <xhtml:link rel="alternate" hreflang="en" href="https://smartcafe.sbs/?lang=en" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://smartcafe.sbs/" />
+    <image:image>
+      <image:loc>https://smartcafe.sbs/og-image.png</image:loc>
+      <image:title>Smart Cafe B2B जन सेवा केंद्र व साइबर कैफे पोर्टल</image:title>
+      <image:caption>भारत का #1 जन सेवा केंद्र, CSC VLE व साइबर कैफे B2B पोर्टल</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://smartcafe.sbs/favicon.svg</image:loc>
+      <image:title>Smart Cafe Logo</image:title>
+    </image:image>
   </url>
 
-  <!-- 2. Cyber Cafe Operator & VLE Registration Gateway -->
+  <!-- 2. Dedicated SEO Landing Pages (High Keyword Authority) -->
   <url>
-    <loc>https://smartcafe.sbs/?portal=operator</loc>
-    <lastmod>2026-10-13</lastmod>
+    <loc>https://smartcafe.sbs/services/rc-download.html</loc>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.95</priority>
   </url>
 
-  <!-- 3. Parivahan Vehicle RC to PDF / CR-80 PVC Smart Card -->
+  <url>
+    <loc>https://smartcafe.sbs/services/pan-card-pvc.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/aadhaar-advance.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/voter-id-print.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/ayushman-golden-card.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/ration-card-pdf.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/electricity-bill-slip.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/edistrict-verification.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/cybercafe-software.html</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- 3. Web App Service Deep Links -->
   <url>
     <loc>https://smartcafe.sbs/?service=rc</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- 4. NSDL / UTI Instant PAN Card CR-80 PVC Print -->
   <url>
     <loc>https://smartcafe.sbs/?service=pan</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- 5. Advance Aadhaar Card CR-80 PVC Smart Card Maker -->
   <url>
     <loc>https://smartcafe.sbs/?service=aadhaar</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
-  <!-- 6. Digital Voter ID Smart Card (EPIC) -->
   <url>
     <loc>https://smartcafe.sbs/?service=voter</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
-  <!-- 7. Ayushman Bharat PM-JAY Golden Card Print -->
   <url>
     <loc>https://smartcafe.sbs/?service=ayushman</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
-  <!-- 8. NFSA Ration Card Parchaa to PDF -->
   <url>
     <loc>https://smartcafe.sbs/?service=ration</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
-  <!-- 9. Electricity Discom Bill Payment Receipt Maker -->
   <url>
     <loc>https://smartcafe.sbs/?service=electricity</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
-  <!-- 10. e-District Income, Caste, Niwas Verification Slip -->
   <url>
     <loc>https://smartcafe.sbs/?service=edistrict</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
 
-  <!-- 11. Driving Licence (DL) PVC Card -->
   <url>
-    <loc>https://smartcafe.sbs/?service=dl</loc>
-    <lastmod>2026-10-13</lastmod>
+    <loc>https://smartcafe.sbs/?portal=operator</loc>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
 
-  <!-- 12. MoRTH e-Challan Search & Receipt -->
   <url>
-    <loc>https://smartcafe.sbs/?service=challan</loc>
-    <lastmod>2026-10-13</lastmod>
+    <loc>https://smartcafe.sbs/?portal=vle-reg</loc>
+    <lastmod>2026-10-16</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- 13. Instant e-PAN Download -->
-  <url>
-    <loc>https://smartcafe.sbs/?service=epan</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- 14. Jan Seva Kendra Bill & Cash Receipt -->
-  <url>
-    <loc>https://smartcafe.sbs/?service=receipt</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.85</priority>
   </url>
 
 </urlset>
