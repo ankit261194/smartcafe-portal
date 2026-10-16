@@ -100,7 +100,7 @@ function ServicePageContent({
     if (['pan', 'pan_find', 'pan_details'].includes(id) || cat === 'pan' || id.includes('pan_')) return 'pan';
     if (id === 'epan') return 'epan';
     if (['aadhaar', 'aadhaar_advance', 'aadhaar_original_pdf_otp', 'aadhaar_original_pdf_no_otp', 'aadhaar_otp_kyc', 'aadhaar_pvc'].includes(id) || cat === 'aadhaar' || id.includes('aadhaar_') || id.includes('uid_') || id.includes('pvc_')) return 'aadhaar';
-    if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp'].includes(id) || cat === 'voter' || id.includes('voter_')) return 'voter';
+    if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp'].includes(id) || cat === 'voter' || id.includes('voter_')) return 'voter';
     if (['dl', 'driving_licence_pdf', 'dl_details'].includes(id) || cat === 'dl' || id.includes('driving_licence') || id.includes('dl_')) return 'dl';
     if (['ayushman', 'ayushman_card', 'abha_card', 'abha_otp'].includes(id) || cat === 'health' || id.includes('ayushman') || id.includes('abha')) return 'ayushman';
     if (['ration', 'ration_pdf_by_ration'].includes(id) || cat === 'ration' || id.includes('ration_')) return 'ration';
@@ -379,7 +379,7 @@ function ServicePageContent({
     const cafeId = selectedCafe?.id || (isOperator ? (selectedCafe?.code || 'SMARTCAFE-HQ') : 'SMARTCAFE-HQ');
 
     // Check if service requires Live OTP verification
-    const requiresLiveOtp = currentTool?.id?.includes('otp') || currentTool?.id === 'aadhaar_original_pdf_otp' || currentTool?.id === 'aadhaar_otp_kyc' || currentTool?.id === 'abha_otp';
+    const requiresLiveOtp = currentTool?.id?.includes('otp') || currentTool?.id === 'aadhaar_original_pdf_otp' || currentTool?.id === 'aadhaar_otp_kyc' || currentTool?.id === 'abha_otp' || currentTool?.id === 'voter_original_pdf_otp';
     if (requiresLiveOtp) {
       try {
         const otpRes = await authFetch('/api/services/otp/request', {
@@ -427,12 +427,37 @@ function ServicePageContent({
       params.vehicleNumber = val.toUpperCase();
       params.rcno = val.toUpperCase();
       params.vehicle = val.toUpperCase();
+      if (currentTool?.id?.includes('chassis')) {
+        params.chassisNumber = val.toUpperCase();
+        params.chassis = val.toUpperCase();
+        params.chasis_number = val.toUpperCase();
+      }
+      if (currentTool?.id?.includes('engine')) {
+        params.engineNumber = val.toUpperCase();
+        params.engine_number = val.toUpperCase();
+        params.engine = val.toUpperCase();
+      }
     }
     if (toolKind === 'pan' || toolKind === 'epan') {
       params.panNo = val.toUpperCase();
       params.panNumber = val.toUpperCase();
       params.pan = val.toUpperCase();
       params.name = customerName.trim() || undefined;
+      if (currentTool?.id === 'pan_find' || currentTool?.id?.includes('panfind') || currentTool?.id?.includes('pan_find')) {
+        params.aadhaarNo = val;
+        params.uidNumber = val;
+        params.aadhaar = val;
+        params.aadhar = val;
+      }
+      if (currentTool?.id?.includes('gst')) {
+        params.gst = val.toUpperCase();
+        params.gstNumber = val.toUpperCase();
+      }
+    }
+    if (currentTool?.id?.includes('upi')) {
+      params.UPI_ID = val.trim();
+      params.upi_id = val.trim();
+      params.upi = val.trim();
     }
     if (toolKind === 'aadhaar') {
       params.aadhaarNo = val;
@@ -1881,7 +1906,7 @@ function ServicePageContent({
     }
 
     // 28. VOTER CARD / EPIC
-    if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_verification'].includes(id) || cat === 'voter') {
+    if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_verification', 'voter_original_pdf_otp'].includes(id) || cat === 'voter') {
       return (
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300">

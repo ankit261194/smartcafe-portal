@@ -2074,5 +2074,31 @@
     "requiredInputs": [
       "file"
     ]
+  },
+  {
+    "id": "voter_original_pdf_otp",
+    "num": 86,
+    "name": "Voter Original PDF With OTP",
+    "category": "voter",
+    "providerCost": 5,
+    "wholesaleRate": 10,
+    "retailRate": 25,
+    "isActive": true,
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php",
+    "method": "GET",
+    "isComingSoon": false,
+    "status": "live",
+    "p4Key": "voter_pdf_otp",
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api",
+    "parameters": [
+      "apiKey",
+      "epic_number",
+      "otp"
+    ],
+    "requiredInputs": [
+      "epicNumber",
+      "otp"
+    ]
   }
 ]

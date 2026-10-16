@@ -3567,8 +3567,8 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
 
   const val = String(params?.query || params?.vehicleNumber || params?.rcno || params?.regNo || params?.panNo || params?.panNumber || params?.aadhaarNo || params?.uidNumber || params?.epicNo || params?.epicNumber || params?.caNumber || params?.consumerNo || params?.rationNo || params?.ration_no || params?.dlNo || params?.idNumber || params?.mobile || params?.mobileNumber || params?.val || '').trim();
 
-  if (matchedService && matchedService.apiEndpoint) {
-    const endpointUrl = matchedService.apiEndpoint;
+  if (matchedService && (matchedService.apiEndpoint || matchedService.endpoint)) {
+    let endpointUrl = matchedService.apiEndpoint || matchedService.endpoint;
     const httpMethod = String(matchedService.method || 'GET').toUpperCase();
 
     const p4Params = {
@@ -3577,7 +3577,11 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       apikey: p4ApiKey
     };
 
-    const lowerUrl = endpointUrl.toLowerCase();
+    if (!endpointUrl.startsWith('http')) {
+      endpointUrl = 'https://authorized.p4points.co.in' + (endpointUrl.startsWith('/') ? '' : '/') + endpointUrl;
+    }
+    let targetUrl = endpointUrl;
+    const lowerUrl = targetUrl.toLowerCase();
 
     if (lowerUrl.includes('rc') || lowerUrl.includes('vahan')) {
       const regClean = String(params?.rcno || params?.vehicle || params?.vehicleNumber || params?.vehicalNumber || params?.regNo || val).replace(/[\s-]+/g, '').toUpperCase();
@@ -3592,13 +3596,33 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       p4Params.chiptype = '1';
       if (params?.fatherName) p4Params.fatherName = params.fatherName;
     }
-    if (lowerUrl.includes('pan') || lowerUrl.includes('gst')) {
+    if (lowerUrl.includes('gst')) {
+      const cleanGst = String(params?.gst || params?.gstNumber || params?.gstNo || val).toUpperCase().trim();
+      p4Params.gst = cleanGst;
+      p4Params.gstNumber = cleanGst;
+      p4Params.gstNo = cleanGst;
+    }
+    if (lowerUrl.includes('getpan') || lowerUrl.includes('panfind')) {
+      const cleanUid = String(params?.aadhaar || params?.aadhaarNo || params?.uidNumber || params?.aadhar || val).replace(/\D/g, '');
+      p4Params.aadhaar = cleanUid;
+      p4Params.aadhar = cleanUid;
+      p4Params.uidNumber = cleanUid;
+      p4Params.aadhar_number = cleanUid;
+      if (params?.name || params?.customerName) {
+        p4Params.name = params?.name || params?.customerName;
+      }
+      if (params?.mobile || params?.phone) {
+        p4Params.mobile = params?.mobile || params?.phone;
+      }
+    } else if (lowerUrl.includes('pan')) {
       const panClean = String(params?.panNumber || params?.panNo || params?.pan || val).toUpperCase().trim();
       p4Params.pan = panClean;
       p4Params.panNumber = panClean;
       p4Params.panNo = panClean;
       if (panClean.length === 12 && /^\d+$/.test(panClean)) {
         p4Params.uidNumber = panClean;
+        p4Params.aadhaar = panClean;
+        p4Params.aadhar = panClean;
       }
       if (params?.name || params?.customerName) {
         p4Params.name = params?.name || params?.customerName;
@@ -3606,18 +3630,30 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       if (params?.mobile || params?.phone) {
         p4Params.mobile = params?.mobile || params?.phone;
       }
-      if (lowerUrl.includes('gst')) p4Params.gst = val;
     }
-    if (lowerUrl.includes('aadhaar_pdf')) {
-      p4Params.aadhaar = val.replace(/\D/g, '');
-      if (!p4Params.action) p4Params.action = 'sendOtp';
-    }
-    if (lowerUrl.includes('ekyc')) {
-      p4Params.aadhar = val.replace(/\D/g, '');
+    if (lowerUrl.includes('uid') || lowerUrl.includes('aadhar') || lowerUrl.includes('aadhaar')) {
+      const cleanAadhaar = String(params?.aadhaar || params?.aadhaarNo || params?.uidNumber || params?.aadhar || val).replace(/\D/g, '');
+      if (cleanAadhaar) {
+        p4Params.aadhar = cleanAadhaar;
+        p4Params.aadhaar = cleanAadhaar;
+        p4Params.uidNumber = cleanAadhaar;
+        p4Params.uid_number = cleanAadhaar;
+      }
       if (params?.bioenc) p4Params.bioenc = params.bioenc;
+      if (params?.otp) {
+        p4Params.otp = String(params.otp).trim();
+        p4Params.action = 'verify_otp';
+        if (targetUrl.includes('request-otp.php')) {
+          targetUrl = targetUrl.replace('request-otp.php', 'validate-otp.php');
+        }
+      } else {
+        if (lowerUrl.includes('aadhaar_pdf') && !p4Params.action) {
+          p4Params.action = 'sendOtp';
+        }
+      }
     }
-    if (lowerUrl.includes('voter') || lowerUrl.includes('epic')) {
-      const epicClean = String(params?.epicNumber || params?.epic_number || params?.voterNumber || params?.voter_number || params?.epic || val).toUpperCase().trim();
+    if (lowerUrl.includes('voter') || lowerUrl.includes('epic') || lowerUrl.includes('v-addition')) {
+      const epicClean = String(params?.epicNumber || params?.epic_number || params?.voterNumber || params?.voter_number || params?.epic || params?.epicNo || val).toUpperCase().trim();
       p4Params.epicNumber = epicClean;
       p4Params.epic = epicClean;
       p4Params.epic_number = epicClean;
@@ -3626,32 +3662,44 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       p4Params.mobile = String(params?.mobile || params?.phone || '9876543210').replace(/\D/g, '');
       if (params?.otp) {
         p4Params.otp = String(params.otp).trim();
+        if (targetUrl.includes('send-otp.php')) {
+          targetUrl = targetUrl.replace('send-otp.php', 'verify-otp.php');
+        }
       }
       if (!p4Params.action) p4Params.action = 'status';
     }
     if (lowerUrl.includes('ration')) {
-      const cleanRation = String(params?.ration_no || params?.rationNo || params?.aadhar || params?.uidNumber || val).trim();
+      const cleanRation = String(params?.ration_no || params?.rationNo || params?.rationNumber || params?.aadhar || params?.uidNumber || val).trim();
       p4Params.ration_no = cleanRation;
       p4Params.rationNo = cleanRation;
+      p4Params.rationNumber = cleanRation;
       p4Params.aadhar = cleanRation;
       p4Params.aadhaar = cleanRation;
       p4Params.uidNumber = cleanRation;
       p4Params.rationtype = params?.rationtype || 'new';
     }
-    if (lowerUrl.includes('dl')) {
-      const dlVal = String(params?.dl || params?.dlNo || params?.dl_number || val).toUpperCase().trim();
+    if (lowerUrl.includes('dl') || lowerUrl.includes('licence') || lowerUrl.includes('license')) {
+      const dlVal = String(params?.dl || params?.dlNo || params?.dl_number || params?.dlNumber || val).toUpperCase().trim();
       p4Params.dl = dlVal;
       p4Params.dlNo = dlVal;
       p4Params.dl_number = dlVal;
-      p4Params.dob = params?.dob || params?.date_of_birth || '01-01-1990';
+      p4Params.dlNumber = dlVal;
+      const rawDob = params?.dob || params?.date_of_birth || params?.dobenter || '01-01-1990';
+      p4Params.dob = rawDob;
+      p4Params.date_of_birth = rawDob;
+      p4Params.dobenter = rawDob;
       p4Params.dltype = params?.dltype || '1';
     }
-    if (lowerUrl.includes('ll')) {
-      p4Params.idNumber = val;
-      p4Params.application_number = val;
-      p4Params.date_of_birth = params?.dob || params?.date_of_birth || '01-01-1990';
-      p4Params.dob = params?.dob || params?.date_of_birth || '01-01-1990';
-      p4Params.state_name = params?.state || 'UP';
+    if (lowerUrl.includes('ll') || lowerUrl.includes('learner')) {
+      const llVal = String(params?.applicationNumber || params?.application_number || params?.idNumber || val).trim();
+      p4Params.idNumber = llVal;
+      p4Params.application_number = llVal;
+      p4Params.applicationNumber = llVal;
+      const rawDob = params?.dob || params?.date_of_birth || '01-01-1990';
+      p4Params.date_of_birth = rawDob;
+      p4Params.dob = rawDob;
+      p4Params.state_name = params?.state || params?.state_name || 'UP';
+      p4Params.state = params?.state || params?.state_name || 'UP';
     }
     if (lowerUrl.includes('electric') || lowerUrl.includes('elctric') || lowerUrl.includes('bill')) {
       const caClean = String(params?.caNumber || params?.consumerNo || params?.ca_number || params?.consumer_number || val).replace(/\D/g, '');
@@ -3671,38 +3719,79 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     if (lowerUrl.includes('npci')) {
       const cleanAadhaar = val.replace(/\D/g, '');
       p4Params.aadhar = cleanAadhaar;
+      p4Params.aadhaar = cleanAadhaar;
       p4Params.uidNumber = cleanAadhaar;
     }
     if (lowerUrl.includes('agristak') || lowerUrl.includes('agristack')) {
-      p4Params.uidNumber = val.replace(/\D/g, '');
+      const cleanUid = val.replace(/\D/g, '');
+      p4Params.uidNumber = cleanUid;
+      p4Params.aadhar = cleanUid;
+      p4Params.aadhaar = cleanUid;
       p4Params.state = params?.state || 'UP';
     }
     if (lowerUrl.includes('rtps')) {
-      p4Params.applicationNumber = val;
-      p4Params.name = params?.name || params?.applicantName || 'Applicant';
+      const appClean = String(params?.applicationNumber || params?.application_number || params?.appNo || val).trim();
+      p4Params.applicationNumber = appClean;
+      p4Params.application_number = appClean;
+      p4Params.name = params?.name || params?.applicantName || params?.customerName || 'Applicant';
     }
-    if (lowerUrl.includes('eshram')) {
-      p4Params.uidNumber = String(params?.uidNumber || params?.aadhaar || params?.aadhaarNo || val).replace(/\D/g, '');
-      if (params?.dob || params?.date_of_birth) {
-        p4Params.dob = params.dob || params.date_of_birth;
+    if (lowerUrl.includes('eshram') || lowerUrl.includes('shram')) {
+      const cleanUid = String(params?.uidNumber || params?.aadhaar || params?.aadhaarNo || params?.aadhar || val).replace(/\D/g, '');
+      p4Params.uidNumber = cleanUid;
+      p4Params.aadhar = cleanUid;
+      p4Params.aadhaar = cleanUid;
+      const rawDob = params?.dob || params?.date_of_birth || '';
+      if (rawDob) {
+        p4Params.dob = rawDob;
+        p4Params.date_of_birth = rawDob;
       }
-      if (params?.mobile || params?.phone || params?.secondaryInput) {
-        p4Params.mobile = String(params.mobile || params.phone || params.secondaryInput).replace(/\D/g, '');
+      const rawMob = String(params?.mobile || params?.phone || params?.secondaryInput || '').replace(/\D/g, '');
+      if (rawMob) {
+        p4Params.mobile = rawMob;
+        p4Params.phone = rawMob;
       }
     }
     if (lowerUrl.includes('abha')) {
-      const cleanUid = String(params?.uidNumber || params?.uid_number || params?.aadhaar || params?.aadhaarNo || val).replace(/\D/g, '');
+      const cleanUid = String(params?.uidNumber || params?.uid_number || params?.aadhaar || params?.aadhaarNo || params?.aadhar || val).replace(/\D/g, '');
       p4Params.uidNumber = cleanUid;
       p4Params.uid_number = cleanUid;
-      if (params?.dob || params?.date_of_birth) {
-        p4Params.dob = params.dob || params.date_of_birth;
+      p4Params.aadhar = cleanUid;
+      p4Params.aadhaar = cleanUid;
+      const rawDob = params?.dob || params?.date_of_birth || '';
+      if (rawDob) {
+        p4Params.dob = rawDob;
+        p4Params.date_of_birth = rawDob;
       }
       if (params?.otp) {
         p4Params.otp = String(params.otp).trim();
+        if (targetUrl.includes('send_otp.php')) {
+          targetUrl = targetUrl.replace('send_otp.php', 'verify_and_download.php');
+        }
       }
     }
-    if (lowerUrl.includes('chassis')) {
-      p4Params.chassisNumber = String(params?.chassisNumber || params?.chassis || val).toUpperCase().trim();
+    if (lowerUrl.includes('chassis') || lowerUrl.includes('chasis')) {
+      const cleanChassis = String(params?.chassisNumber || params?.chasis_number || params?.chassis_number || params?.chassis || val).toUpperCase().trim();
+      p4Params.chassisNumber = cleanChassis;
+      p4Params.chassis_number = cleanChassis;
+      p4Params.chasis_number = cleanChassis;
+      p4Params.chassis = cleanChassis;
+    }
+    if (lowerUrl.includes('engine')) {
+      const cleanEngine = String(params?.engineNumber || params?.engine_number || params?.engine || val).toUpperCase().trim();
+      p4Params.engineNumber = cleanEngine;
+      p4Params.engine_number = cleanEngine;
+      p4Params.engine = cleanEngine;
+    }
+    if (lowerUrl.includes('upi')) {
+      const cleanUpi = String(params?.UPI_ID || params?.upi_id || params?.upi || val).trim();
+      p4Params.UPI_ID = cleanUpi;
+      p4Params.upi_id = cleanUpi;
+      p4Params.upi = cleanUpi;
+    }
+    if (lowerUrl.includes('familyverification') || lowerUrl.includes('hr_services')) {
+      const famClean = String(params?.familyId || params?.family_id || val).trim();
+      p4Params.familyId = famClean;
+      p4Params.family_id = famClean;
     }
 
     if (params && typeof params === 'object') {
@@ -3714,7 +3803,7 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
 
     try {
-      let finalUrl = endpointUrl;
+      let finalUrl = targetUrl;
       const queryStr = new URLSearchParams(p4Params).toString();
       const options = {
         rejectUnauthorized: false,
@@ -4686,6 +4775,13 @@ app.post('/api/services/execute-automated', async (req, res) => {
   }
 
   // Universal Fallback Generator for all 79 services (Strictly Zero Dummy Strings)
+  if (!generatedData && liveP4) {
+    const rawData = (liveP4.data && typeof liveP4.data === 'object') ? liveP4.data : {};
+    generatedData = { ...liveP4, ...rawData };
+    docTitle = service79?.name || serviceTitles[normServiceType] || normServiceType;
+    refNumber = refNumber || (params?.query || params?.primaryInput || params?.vehicleNumber || params?.panNo || params?.aadhaarNo || params?.epicNo || params?.consumerNo || params?.rationNo || params?.dlNo || 'DOC').toString().trim();
+  }
+
   if (!generatedData) {
     const kind = ((service79 && (service79.group || service79.category)) || serviceType || '').toLowerCase();
     const rawVal = (params?.query || params?.primaryInput || params?.vehicleNumber || params?.panNo || params?.aadhaarNo || params?.epicNo || params?.consumerNo || params?.rationNo || params?.dlNo || '').toString().trim();

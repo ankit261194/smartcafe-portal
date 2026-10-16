@@ -557,16 +557,19 @@ export function registerEnterpriseRoutes(app, { getStore, saveStore, JWT_SECRET,
   });
 
   // D. Live Government OTP Bridge Endpoints
-  app.post('/api/services/otp/request', (req, res) => {
+  app.post('/api/services/otp/request', async (req, res) => {
     const store = getStore();
     const { serviceType, phone, mobile, aadhaarNo, uidNumber, cafeId, customerName, name, fatherName, dob, gender, address, epicNumber, epic_number, voter_number } = req.body;
     const txnId = `TXN-OTP-${Date.now()}-${Math.floor(Math.random() * 9000 + 1000)}`;
     const mockOtp = String(Math.floor(100000 + Math.random() * 900000));
 
+    const sType = serviceType || '';
+    const epicVal = epicNumber || epic_number || voter_number || '';
+
     if (!store.activeOtpSessions) store.activeOtpSessions = {};
     store.activeOtpSessions[txnId] = {
       txnId,
-      serviceType: serviceType || '',
+      serviceType: sType,
       phone: phone || mobile || '',
       aadhaarNo: aadhaarNo || uidNumber || '',
       uidNumber: aadhaarNo || uidNumber || '',
@@ -576,7 +579,7 @@ export function registerEnterpriseRoutes(app, { getStore, saveStore, JWT_SECRET,
       dob: dob || '',
       gender: gender || '',
       address: address || '',
-      epicNumber: epicNumber || epic_number || voter_number || '',
+      epicNumber: epicVal,
       cafeId: cafeId || '',
       otp: mockOtp,
       expiresAt: Date.now() + 5 * 60 * 1000,
@@ -584,11 +587,30 @@ export function registerEnterpriseRoutes(app, { getStore, saveStore, JWT_SECRET,
     };
     saveStore(store);
 
+    let otpMsg = `आधार से लिंक पंजीकृत मोबाइल नंबर पर 6-अंकीय OTP भेजा गया है। (परीक्षण OTP: ${mockOtp})`;
+    if (sType.toLowerCase().includes('voter') || sType.toLowerCase().includes('epic')) {
+      otpMsg = `मतदाता पहचान पत्र (EPIC${epicVal ? ': ' + epicVal : ''}) से पंजीकृत मोबाइल नंबर पर 6-अंकीय OTP भेजा गया है। (परीक्षण OTP: ${mockOtp})`;
+    } else if (sType.toLowerCase().includes('abha')) {
+      otpMsg = `ABHA स्वास्थ्य पहचान पत्र से पंजीकृत मोबाइल पर 6-अंकीय OTP भेजा गया है। (परीक्षण OTP: ${mockOtp})`;
+    }
+
+    const p4ApiKey = store.apiGateway?.apiKey || 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
+    if (sType && p4ApiKey && typeof dispatchLiveP4Points === 'function') {
+      try {
+        const liveOtpRes = await dispatchLiveP4Points(sType, { ...store.activeOtpSessions[txnId], action: 'send_otp' }, p4ApiKey);
+        if (liveOtpRes?.data?.message) {
+          otpMsg = `${liveOtpRes.data.message} (परीक्षण OTP: ${mockOtp})`;
+        }
+      } catch (e) {
+        // Fallback gracefully
+      }
+    }
+
     res.json({
       success: true,
       requiresOtp: true,
       txnId,
-      message: `आधार से लिंक पंजीकृत मोबाइल नंबर पर 6-अंकीय OTP भेजा गया है। (परीक्षण OTP: ${mockOtp})`
+      message: otpMsg
     });
   });
 

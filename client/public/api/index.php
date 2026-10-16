@@ -4139,7 +4139,11 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             'apikey' => $p4ApiKey
         ];
 
-        $lowerUrl = strtolower($endpointUrl);
+        $targetUrl = $endpointUrl;
+        if (strpos($targetUrl, 'http') !== 0) {
+            $targetUrl = 'https://authorized.p4points.co.in' . (strpos($targetUrl, '/') === 0 ? '' : '/') . $targetUrl;
+        }
+        $lowerUrl = strtolower($targetUrl);
 
         if (strpos($lowerUrl, 'rc') !== false || strpos($lowerUrl, 'vahan') !== false) {
             $regClean = strtoupper(preg_replace('/[\s-]+/', '', $params['rcno'] ?? ($params['vehicle'] ?? ($params['vehicleNumber'] ?? ($params['vehicalNumber'] ?? ($params['regNo'] ?? $val))))));
@@ -4156,13 +4160,33 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
                 $p4Params['fatherName'] = $params['fatherName'];
             }
         }
-        if (strpos($lowerUrl, 'pan') !== false || strpos($lowerUrl, 'gst') !== false) {
+        if (strpos($lowerUrl, 'gst') !== false) {
+            $cleanGst = strtoupper(trim($params['gst'] ?? ($params['gstNumber'] ?? ($params['gstNo'] ?? $val))));
+            $p4Params['gst'] = $cleanGst;
+            $p4Params['gstNumber'] = $cleanGst;
+            $p4Params['gstNo'] = $cleanGst;
+        }
+        if (strpos($lowerUrl, 'getpan') !== false || strpos($lowerUrl, 'panfind') !== false) {
+            $cleanUid = preg_replace('/[^0-9]/', '', $params['aadhaar'] ?? ($params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['aadhar'] ?? $val))));
+            $p4Params['aadhaar'] = $cleanUid;
+            $p4Params['aadhar'] = $cleanUid;
+            $p4Params['uidNumber'] = $cleanUid;
+            $p4Params['aadhar_number'] = $cleanUid;
+            if (!empty($params['name']) || !empty($params['customerName'])) {
+                $p4Params['name'] = $params['name'] ?? $params['customerName'];
+            }
+            if (!empty($params['mobile']) || !empty($params['phone'])) {
+                $p4Params['mobile'] = $params['mobile'] ?? $params['phone'];
+            }
+        } elseif (strpos($lowerUrl, 'pan') !== false) {
             $panClean = strtoupper(trim($params['panNumber'] ?? ($params['panNo'] ?? ($params['pan'] ?? $val))));
             $p4Params['pan'] = $panClean;
             $p4Params['panNumber'] = $panClean;
             $p4Params['panNo'] = $panClean;
             if (strlen($panClean) === 12 && ctype_digit($panClean)) {
                 $p4Params['uidNumber'] = $panClean;
+                $p4Params['aadhaar'] = $panClean;
+                $p4Params['aadhar'] = $panClean;
             }
             if (!empty($params['name']) || !empty($params['customerName'])) {
                 $p4Params['name'] = $params['name'] ?? $params['customerName'];
@@ -4170,20 +4194,30 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             if (!empty($params['mobile']) || !empty($params['phone'])) {
                 $p4Params['mobile'] = $params['mobile'] ?? $params['phone'];
             }
-            if (strpos($lowerUrl, 'gst') !== false) {
-                $p4Params['gst'] = $val;
+        }
+        if (strpos($lowerUrl, 'uid') !== false || strpos($lowerUrl, 'aadhar') !== false || strpos($lowerUrl, 'aadhaar') !== false) {
+            $cleanAadhaar = preg_replace('/[^0-9]/', '', $params['aadhaar'] ?? ($params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['aadhar'] ?? $val))));
+            if (!empty($cleanAadhaar)) {
+                $p4Params['aadhar'] = $cleanAadhaar;
+                $p4Params['aadhaar'] = $cleanAadhaar;
+                $p4Params['uidNumber'] = $cleanAadhaar;
+                $p4Params['uid_number'] = $cleanAadhaar;
+            }
+            if (!empty($params['bioenc'])) $p4Params['bioenc'] = $params['bioenc'];
+            if (!empty($params['otp'])) {
+                $p4Params['otp'] = trim($params['otp']);
+                $p4Params['action'] = 'verify_otp';
+                if (strpos($targetUrl, 'request-otp.php') !== false) {
+                    $targetUrl = str_replace('request-otp.php', 'validate-otp.php', $targetUrl);
+                }
+            } else {
+                if (strpos($lowerUrl, 'aadhaar_pdf') !== false && !isset($p4Params['action'])) {
+                    $p4Params['action'] = 'sendOtp';
+                }
             }
         }
-        if (strpos($lowerUrl, 'aadhaar_pdf') !== false) {
-            $p4Params['aadhaar'] = preg_replace('/[^0-9]/', '', $val);
-            if (!isset($p4Params['action'])) $p4Params['action'] = 'sendOtp';
-        }
-        if (strpos($lowerUrl, 'ekyc') !== false) {
-            $p4Params['aadhar'] = preg_replace('/[^0-9]/', '', $val);
-            if (!empty($params['bioenc'])) $p4Params['bioenc'] = $params['bioenc'];
-        }
-        if (strpos($lowerUrl, 'voter') !== false || strpos($lowerUrl, 'epic') !== false) {
-            $epicClean = strtoupper(trim($params['epicNumber'] ?? ($params['epic_number'] ?? ($params['voterNumber'] ?? ($params['voter_number'] ?? ($params['epic'] ?? $val))))));
+        if (strpos($lowerUrl, 'voter') !== false || strpos($lowerUrl, 'epic') !== false || strpos($lowerUrl, 'v-addition') !== false) {
+            $epicClean = strtoupper(trim($params['epicNumber'] ?? ($params['epic_number'] ?? ($params['voterNumber'] ?? ($params['voter_number'] ?? ($params['epic'] ?? ($params['epicNo'] ?? $val)))))));
             $p4Params['epicNumber'] = $epicClean;
             $p4Params['epic'] = $epicClean;
             $p4Params['epic_number'] = $epicClean;
@@ -4192,32 +4226,44 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             $p4Params['mobile'] = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['phone'] ?? '9876543210'));
             if (!empty($params['otp'])) {
                 $p4Params['otp'] = trim($params['otp']);
+                if (strpos($targetUrl, 'send-otp.php') !== false) {
+                    $targetUrl = str_replace('send-otp.php', 'verify-otp.php', $targetUrl);
+                }
             }
             if (!isset($p4Params['action'])) $p4Params['action'] = 'status';
         }
         if (strpos($lowerUrl, 'ration') !== false) {
-            $cleanRation = trim($params['ration_no'] ?? ($params['rationNo'] ?? ($params['aadhar'] ?? ($params['uidNumber'] ?? $val))));
+            $cleanRation = trim($params['ration_no'] ?? ($params['rationNo'] ?? ($params['rationNumber'] ?? ($params['aadhar'] ?? ($params['uidNumber'] ?? $val)))));
             $p4Params['ration_no'] = $cleanRation;
             $p4Params['rationNo'] = $cleanRation;
+            $p4Params['rationNumber'] = $cleanRation;
             $p4Params['aadhar'] = $cleanRation;
             $p4Params['aadhaar'] = $cleanRation;
             $p4Params['uidNumber'] = $cleanRation;
             $p4Params['rationtype'] = $params['rationtype'] ?? 'new';
         }
-        if (strpos($lowerUrl, 'dl') !== false) {
-            $dlVal = strtoupper(trim($params['dl'] ?? ($params['dlNo'] ?? ($params['dl_number'] ?? $val))));
+        if (strpos($lowerUrl, 'dl') !== false || strpos($lowerUrl, 'licence') !== false || strpos($lowerUrl, 'license') !== false) {
+            $dlVal = strtoupper(trim($params['dl'] ?? ($params['dlNo'] ?? ($params['dl_number'] ?? ($params['dlNumber'] ?? $val)))));
             $p4Params['dl'] = $dlVal;
             $p4Params['dlNo'] = $dlVal;
             $p4Params['dl_number'] = $dlVal;
-            $p4Params['dob'] = $params['dob'] ?? ($params['date_of_birth'] ?? '01-01-1990');
+            $p4Params['dlNumber'] = $dlVal;
+            $rawDob = $params['dob'] ?? ($params['date_of_birth'] ?? ($params['dobenter'] ?? '01-01-1990'));
+            $p4Params['dob'] = $rawDob;
+            $p4Params['date_of_birth'] = $rawDob;
+            $p4Params['dobenter'] = $rawDob;
             $p4Params['dltype'] = $params['dltype'] ?? '1';
         }
-        if (strpos($lowerUrl, 'll') !== false) {
-            $p4Params['idNumber'] = $val;
-            $p4Params['application_number'] = $val;
-            $p4Params['date_of_birth'] = $params['dob'] ?? ($params['date_of_birth'] ?? '01-01-1990');
-            $p4Params['dob'] = $params['dob'] ?? ($params['date_of_birth'] ?? '01-01-1990');
-            $p4Params['state_name'] = $params['state'] ?? 'UP';
+        if (strpos($lowerUrl, 'll') !== false || strpos($lowerUrl, 'learner') !== false) {
+            $llVal = trim($params['applicationNumber'] ?? ($params['application_number'] ?? ($params['idNumber'] ?? $val)));
+            $p4Params['idNumber'] = $llVal;
+            $p4Params['application_number'] = $llVal;
+            $p4Params['applicationNumber'] = $llVal;
+            $rawDob = $params['dob'] ?? ($params['date_of_birth'] ?? '01-01-1990');
+            $p4Params['date_of_birth'] = $rawDob;
+            $p4Params['dob'] = $rawDob;
+            $p4Params['state_name'] = $params['state'] ?? ($params['state_name'] ?? 'UP');
+            $p4Params['state'] = $params['state'] ?? ($params['state_name'] ?? 'UP');
         }
         if (strpos($lowerUrl, 'electric') !== false || strpos($lowerUrl, 'elctric') !== false || strpos($lowerUrl, 'bill') !== false) {
             $caClean = preg_replace('/[^0-9]/', '', $params['caNumber'] ?? ($params['consumerNo'] ?? ($params['ca_number'] ?? ($params['consumer_number'] ?? $val))));
@@ -4237,38 +4283,79 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         if (strpos($lowerUrl, 'npci') !== false) {
             $cleanAadhaar = preg_replace('/[^0-9]/', '', $val);
             $p4Params['aadhar'] = $cleanAadhaar;
+            $p4Params['aadhaar'] = $cleanAadhaar;
             $p4Params['uidNumber'] = $cleanAadhaar;
         }
         if (strpos($lowerUrl, 'agristak') !== false || strpos($lowerUrl, 'agristack') !== false) {
-            $p4Params['uidNumber'] = preg_replace('/[^0-9]/', '', $val);
+            $cleanUid = preg_replace('/[^0-9]/', '', $val);
+            $p4Params['uidNumber'] = $cleanUid;
+            $p4Params['aadhar'] = $cleanUid;
+            $p4Params['aadhaar'] = $cleanUid;
             $p4Params['state'] = $params['state'] ?? 'UP';
         }
         if (strpos($lowerUrl, 'rtps') !== false) {
-            $p4Params['applicationNumber'] = trim($val);
-            $p4Params['name'] = $params['name'] ?? ($params['applicantName'] ?? 'Applicant');
+            $appClean = trim($params['applicationNumber'] ?? ($params['application_number'] ?? ($params['appNo'] ?? $val)));
+            $p4Params['applicationNumber'] = $appClean;
+            $p4Params['application_number'] = $appClean;
+            $p4Params['name'] = $params['name'] ?? ($params['applicantName'] ?? ($params['customerName'] ?? 'Applicant'));
         }
-        if (strpos($lowerUrl, 'eshram') !== false) {
-            $p4Params['uidNumber'] = preg_replace('/[^0-9]/', '', $params['uidNumber'] ?? ($params['aadhaar'] ?? ($params['aadhaarNo'] ?? $val)));
-            if (!empty($params['dob']) || !empty($params['date_of_birth'])) {
-                $p4Params['dob'] = $params['dob'] ?? $params['date_of_birth'];
+        if (strpos($lowerUrl, 'eshram') !== false || strpos($lowerUrl, 'shram') !== false) {
+            $cleanUid = preg_replace('/[^0-9]/', '', $params['uidNumber'] ?? ($params['aadhaar'] ?? ($params['aadhaarNo'] ?? ($params['aadhar'] ?? $val))));
+            $p4Params['uidNumber'] = $cleanUid;
+            $p4Params['aadhar'] = $cleanUid;
+            $p4Params['aadhaar'] = $cleanUid;
+            $rawDob = $params['dob'] ?? ($params['date_of_birth'] ?? '');
+            if (!empty($rawDob)) {
+                $p4Params['dob'] = $rawDob;
+                $p4Params['date_of_birth'] = $rawDob;
             }
-            if (!empty($params['mobile']) || !empty($params['phone']) || !empty($params['secondaryInput'])) {
-                $p4Params['mobile'] = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['phone'] ?? $params['secondaryInput']));
+            $rawMob = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['phone'] ?? ($params['secondaryInput'] ?? '')));
+            if (!empty($rawMob)) {
+                $p4Params['mobile'] = $rawMob;
+                $p4Params['phone'] = $rawMob;
             }
         }
         if (strpos($lowerUrl, 'abha') !== false) {
-            $cleanUid = preg_replace('/[^0-9]/', '', $params['uidNumber'] ?? ($params['uid_number'] ?? ($params['aadhaar'] ?? ($params['aadhaarNo'] ?? $val))));
+            $cleanUid = preg_replace('/[^0-9]/', '', $params['uidNumber'] ?? ($params['uid_number'] ?? ($params['aadhaar'] ?? ($params['aadhaarNo'] ?? ($params['aadhar'] ?? $val)))));
             $p4Params['uidNumber'] = $cleanUid;
             $p4Params['uid_number'] = $cleanUid;
-            if (!empty($params['dob']) || !empty($params['date_of_birth'])) {
-                $p4Params['dob'] = $params['dob'] ?? $params['date_of_birth'];
+            $p4Params['aadhar'] = $cleanUid;
+            $p4Params['aadhaar'] = $cleanUid;
+            $rawDob = $params['dob'] ?? ($params['date_of_birth'] ?? '');
+            if (!empty($rawDob)) {
+                $p4Params['dob'] = $rawDob;
+                $p4Params['date_of_birth'] = $rawDob;
             }
             if (!empty($params['otp'])) {
                 $p4Params['otp'] = trim($params['otp']);
+                if (strpos($targetUrl, 'send_otp.php') !== false) {
+                    $targetUrl = str_replace('send_otp.php', 'verify_and_download.php', $targetUrl);
+                }
             }
         }
-        if (strpos($lowerUrl, 'chassis') !== false) {
-            $p4Params['chassisNumber'] = strtoupper(trim($params['chassisNumber'] ?? ($params['chassis'] ?? $val)));
+        if (strpos($lowerUrl, 'chassis') !== false || strpos($lowerUrl, 'chasis') !== false) {
+            $cleanChassis = strtoupper(trim($params['chassisNumber'] ?? ($params['chasis_number'] ?? ($params['chassis_number'] ?? ($params['chassis'] ?? $val)))));
+            $p4Params['chassisNumber'] = $cleanChassis;
+            $p4Params['chassis_number'] = $cleanChassis;
+            $p4Params['chasis_number'] = $cleanChassis;
+            $p4Params['chassis'] = $cleanChassis;
+        }
+        if (strpos($lowerUrl, 'engine') !== false) {
+            $cleanEngine = strtoupper(trim($params['engineNumber'] ?? ($params['engine_number'] ?? ($params['engine'] ?? $val))));
+            $p4Params['engineNumber'] = $cleanEngine;
+            $p4Params['engine_number'] = $cleanEngine;
+            $p4Params['engine'] = $cleanEngine;
+        }
+        if (strpos($lowerUrl, 'upi') !== false) {
+            $cleanUpi = trim($params['UPI_ID'] ?? ($params['upi_id'] ?? ($params['upi'] ?? $val)));
+            $p4Params['UPI_ID'] = $cleanUpi;
+            $p4Params['upi_id'] = $cleanUpi;
+            $p4Params['upi'] = $cleanUpi;
+        }
+        if (strpos($lowerUrl, 'familyverification') !== false || strpos($lowerUrl, 'hr_services') !== false) {
+            $famClean = trim($params['familyId'] ?? ($params['family_id'] ?? $val));
+            $p4Params['familyId'] = $famClean;
+            $p4Params['family_id'] = $famClean;
         }
 
         foreach ($params as $k => $v) {
@@ -5379,6 +5466,9 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             $refNumber = $aid ?: 'NPCI';
         } else {
             $generatedData = $liveP4;
+            if (!empty($liveP4['data']) && is_array($liveP4['data'])) {
+                $generatedData = array_merge($liveP4, $liveP4['data']);
+            }
             $docTitle = ($service79['name'] ?? ($serviceTitles[$normServiceType] ?? $normServiceType));
             $refNumber = $userVal ?: 'DOC';
         }
@@ -6490,11 +6580,31 @@ if ($endpoint === 'services/otp/request' && $method === 'POST') {
     ];
     saveStore($dataFile, $store);
 
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
+    $otpMsg = 'आधार से लिंक पंजीकृत मोबाइल नंबर पर 6-अंकीय OTP भेजा गया है। (परीक्षण OTP: ' . $mockOtp . ')';
+    if (strpos(strtolower($serviceType), 'voter') !== false || strpos(strtolower($serviceType), 'epic') !== false) {
+        $otpMsg = 'मतदाता पहचान पत्र (EPIC' . ($epicNumber ? ': ' . $epicNumber : '') . ') से पंजीकृत मोबाइल नंबर पर 6-अंकीय OTP भेजा गया है। (परीक्षण OTP: ' . $mockOtp . ')';
+    } elseif (strpos(strtolower($serviceType), 'abha') !== false) {
+        $otpMsg = 'ABHA स्वास्थ्य पहचान पत्र से पंजीकृत मोबाइल पर 6-अंकीय OTP भेजा गया है। (परीक्षण OTP: ' . $mockOtp . ')';
+    }
+
+    if (!empty($serviceType) && !empty($p4ApiKey)) {
+        try {
+            $otpParams = array_merge($store['activeOtpSessions'][$txnId], ['action' => 'send_otp', 'mobile' => $phone]);
+            $liveOtpRes = dispatchLiveP4Points($serviceType, $otpParams, $p4ApiKey);
+            if (!empty($liveOtpRes['data']) && is_array($liveOtpRes['data']) && !empty($liveOtpRes['data']['message'])) {
+                $otpMsg = $liveOtpRes['data']['message'] . ' (परीक्षण OTP: ' . $mockOtp . ')';
+            }
+        } catch (Exception $e) {
+            // Graceful fallback to verified session
+        }
+    }
+
     echo json_encode([
         'success' => true,
         'requiresOtp' => true,
         'txnId' => $txnId,
-        'message' => 'आधार से लिंक पंजीकृत मोबाइल नंबर पर 6-अंकीय OTP भेजा गया है। (परीक्षण OTP: ' . $mockOtp . ')'
+        'message' => $otpMsg
     ]);
     exit;
 }
