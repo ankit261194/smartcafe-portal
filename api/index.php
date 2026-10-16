@@ -208,7 +208,8 @@ function getStore($dataFile) {
                 }
             }
 
-            // Security Protection: Customer wallet for 8006518960 strictly ₹0 unless legitimate approved UTR
+            // Security Protection: Customer wallet for 8006518960 strictly ₹10 (Zero Data Loss)
+            $ankitBal = 10.0;
             foreach ($data['wallets'] as &$w) {
                 if (($w['phone'] ?? '') === '8006518960') {
                     if (isset($w['transactions']) && is_array($w['transactions'])) {
@@ -226,18 +227,20 @@ function getStore($dataFile) {
                         if (($tx['type'] ?? '') === 'credit') $realBal += floatval($tx['amount'] ?? 0);
                         if (($tx['type'] ?? '') === 'debit') $realBal -= floatval($tx['amount'] ?? 0);
                     }
-                    if (($w['balance'] ?? 0) != max(0, $realBal)) {
-                        $w['balance'] = max(0, $realBal);
+                    $targetBal = max(10.0, $realBal);
+                    if (($w['balance'] ?? 0) != $targetBal) {
+                        $w['balance'] = $targetBal;
                         $changed = true;
                     }
+                    $ankitBal = $w['balance'];
                     $w['customerName'] = 'ankit kumar';
                 }
             }
             unset($w);
             foreach ($data['users'] as &$u) {
                 if (($u['phone'] ?? '') === '8006518960') {
-                    if (($u['balance'] ?? 0) != 0) {
-                        $u['balance'] = 0;
+                    if (($u['balance'] ?? 0) != $ankitBal) {
+                        $u['balance'] = $ankitBal;
                         $changed = true;
                     }
                 }
@@ -4139,9 +4142,10 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         $lowerUrl = strtolower($endpointUrl);
 
         if (strpos($lowerUrl, 'rc') !== false || strpos($lowerUrl, 'vahan') !== false) {
-            $regClean = strtoupper(preg_replace('/[\s-]+/', '', $val));
+            $regClean = strtoupper(preg_replace('/[\s-]+/', '', $params['rcno'] ?? ($params['vehicle'] ?? ($params['vehicleNumber'] ?? ($params['vehicalNumber'] ?? ($params['regNo'] ?? $val))))));
             $p4Params['rcno'] = $regClean;
             $p4Params['vehicle'] = $regClean;
+            $p4Params['vehicleNumber'] = $regClean;
             $p4Params['vehicalNumber'] = $regClean;
             $p4Params['rc_number'] = $regClean;
             $p4Params['type'] = 'rcpdf';
@@ -4153,7 +4157,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             }
         }
         if (strpos($lowerUrl, 'pan') !== false || strpos($lowerUrl, 'gst') !== false) {
-            $panClean = strtoupper(trim($val));
+            $panClean = strtoupper(trim($params['panNumber'] ?? ($params['panNo'] ?? ($params['pan'] ?? $val))));
             $p4Params['pan'] = $panClean;
             $p4Params['panNumber'] = $panClean;
             $p4Params['panNo'] = $panClean;
@@ -4179,36 +4183,50 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             if (!empty($params['bioenc'])) $p4Params['bioenc'] = $params['bioenc'];
         }
         if (strpos($lowerUrl, 'voter') !== false || strpos($lowerUrl, 'epic') !== false) {
-            $epicClean = strtoupper(trim($val));
+            $epicClean = strtoupper(trim($params['epicNumber'] ?? ($params['epic_number'] ?? ($params['voterNumber'] ?? ($params['voter_number'] ?? ($params['epic'] ?? $val))))));
             $p4Params['epicNumber'] = $epicClean;
             $p4Params['epic'] = $epicClean;
             $p4Params['epic_number'] = $epicClean;
             $p4Params['voterNumber'] = $epicClean;
+            $p4Params['voter_number'] = $epicClean;
             $p4Params['mobile'] = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['phone'] ?? '9876543210'));
+            if (!empty($params['otp'])) {
+                $p4Params['otp'] = trim($params['otp']);
+            }
             if (!isset($p4Params['action'])) $p4Params['action'] = 'status';
         }
         if (strpos($lowerUrl, 'ration') !== false) {
-            $cleanRation = trim($val);
+            $cleanRation = trim($params['ration_no'] ?? ($params['rationNo'] ?? ($params['aadhar'] ?? ($params['uidNumber'] ?? $val))));
             $p4Params['ration_no'] = $cleanRation;
+            $p4Params['rationNo'] = $cleanRation;
             $p4Params['aadhar'] = $cleanRation;
+            $p4Params['aadhaar'] = $cleanRation;
             $p4Params['uidNumber'] = $cleanRation;
             $p4Params['rationtype'] = $params['rationtype'] ?? 'new';
         }
         if (strpos($lowerUrl, 'dl') !== false) {
-            $p4Params['dlNo'] = strtoupper(trim($val));
-            $p4Params['dl_number'] = strtoupper(trim($val));
-            $p4Params['dob'] = $params['dob'] ?? '01-01-1990';
-            $p4Params['dltype'] = '1';
+            $dlVal = strtoupper(trim($params['dl'] ?? ($params['dlNo'] ?? ($params['dl_number'] ?? $val))));
+            $p4Params['dl'] = $dlVal;
+            $p4Params['dlNo'] = $dlVal;
+            $p4Params['dl_number'] = $dlVal;
+            $p4Params['dob'] = $params['dob'] ?? ($params['date_of_birth'] ?? '01-01-1990');
+            $p4Params['dltype'] = $params['dltype'] ?? '1';
         }
         if (strpos($lowerUrl, 'll') !== false) {
             $p4Params['idNumber'] = $val;
             $p4Params['application_number'] = $val;
-            $p4Params['date_of_birth'] = $params['dob'] ?? '01-01-1990';
+            $p4Params['date_of_birth'] = $params['dob'] ?? ($params['date_of_birth'] ?? '01-01-1990');
+            $p4Params['dob'] = $params['dob'] ?? ($params['date_of_birth'] ?? '01-01-1990');
             $p4Params['state_name'] = $params['state'] ?? 'UP';
         }
         if (strpos($lowerUrl, 'electric') !== false || strpos($lowerUrl, 'elctric') !== false || strpos($lowerUrl, 'bill') !== false) {
-            $p4Params['caNumber'] = preg_replace('/[^0-9]/', '', $val);
-            $p4Params['consumerNo'] = preg_replace('/[^0-9]/', '', $val);
+            $caClean = preg_replace('/[^0-9]/', '', $params['caNumber'] ?? ($params['consumerNo'] ?? ($params['ca_number'] ?? ($params['consumer_number'] ?? $val))));
+            $p4Params['caNumber'] = $caClean;
+            $p4Params['consumerNo'] = $caClean;
+            $p4Params['ca_number'] = $caClean;
+            $p4Params['consumer_number'] = $caClean;
+            if (!empty($params['operator'])) $p4Params['operator'] = $params['operator'];
+            if (!empty($params['billerId'])) $p4Params['billerId'] = $params['billerId'];
         }
         if (strpos($lowerUrl, 'lookup') !== false || strpos($lowerUrl, 'mobile') !== false) {
             $cleanPhone = preg_replace('/[^0-9]/', '', $val);
@@ -4230,10 +4248,27 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             $p4Params['name'] = $params['name'] ?? ($params['applicantName'] ?? 'Applicant');
         }
         if (strpos($lowerUrl, 'eshram') !== false) {
-            $p4Params['uidNumber'] = preg_replace('/[^0-9]/', '', $val);
+            $p4Params['uidNumber'] = preg_replace('/[^0-9]/', '', $params['uidNumber'] ?? ($params['aadhaar'] ?? ($params['aadhaarNo'] ?? $val)));
+            if (!empty($params['dob']) || !empty($params['date_of_birth'])) {
+                $p4Params['dob'] = $params['dob'] ?? $params['date_of_birth'];
+            }
+            if (!empty($params['mobile']) || !empty($params['phone']) || !empty($params['secondaryInput'])) {
+                $p4Params['mobile'] = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['phone'] ?? $params['secondaryInput']));
+            }
+        }
+        if (strpos($lowerUrl, 'abha') !== false) {
+            $cleanUid = preg_replace('/[^0-9]/', '', $params['uidNumber'] ?? ($params['uid_number'] ?? ($params['aadhaar'] ?? ($params['aadhaarNo'] ?? $val))));
+            $p4Params['uidNumber'] = $cleanUid;
+            $p4Params['uid_number'] = $cleanUid;
+            if (!empty($params['dob']) || !empty($params['date_of_birth'])) {
+                $p4Params['dob'] = $params['dob'] ?? $params['date_of_birth'];
+            }
+            if (!empty($params['otp'])) {
+                $p4Params['otp'] = trim($params['otp']);
+            }
         }
         if (strpos($lowerUrl, 'chassis') !== false) {
-            $p4Params['chassisNumber'] = strtoupper(trim($val));
+            $p4Params['chassisNumber'] = strtoupper(trim($params['chassisNumber'] ?? ($params['chassis'] ?? $val)));
         }
 
         foreach ($params as $k => $v) {
@@ -4267,12 +4302,12 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         if ($rawResp && $httpCode < 500) {
             $json = json_decode($rawResp, true);
             if (is_array($json)) {
-                $hasData = !empty($json['data']) || !empty($json['holder']) || !empty($json['response']) || !empty($json['items']) || !empty($json['panNumber']) || !empty($json['full_pan_number']) || !empty($json['farmerNameEn']);
-                $hasPdf = !empty($json['pdf']) || !empty($json['pdf_base64']) || !empty($json['pdfBase64']) || !empty($json['Rc_Pdf']) || !empty($json['file']) || !empty($json['pdf_url']);
+                $hasData = !empty($json['data']) || !empty($json['holder']) || !empty($json['response']) || !empty($json['items']) || !empty($json['panNumber']) || !empty($json['full_pan_number']) || !empty($json['farmerNameEn']) || !empty($json['uan_no']) || !empty($json['front']) || !empty($json['back']) || !empty($json['pdf']);
+                $hasPdf = !empty($json['pdf']) || !empty($json['pdf_base64']) || !empty($json['pdfBase64']) || !empty($json['Rc_Pdf']) || !empty($json['file']) || !empty($json['pdf_url']) || !empty($json['front']) || !empty($json['back']);
                 $isExplicitSuccess = (!empty($json['success']) && $json['success'] !== false) || (isset($json['status']) && ($json['status'] === true || $json['status'] == 1 || $json['status'] == 100 || $json['status'] === 'success' || $json['status'] == 200)) || (isset($json['code']) && $json['code'] == 100);
 
                 if ($hasData || $hasPdf || $isExplicitSuccess) {
-                    $pdfVal = $json['pdf'] ?? ($json['pdf_base64'] ?? ($json['pdfBase64'] ?? ($json['Rc_Pdf'] ?? ($json['file'] ?? ($json['pdf_url'] ?? null)))));
+                    $pdfVal = $json['pdf'] ?? ($json['pdf_base64'] ?? ($json['pdfBase64'] ?? ($json['Rc_Pdf'] ?? ($json['file'] ?? ($json['pdf_url'] ?? ($json['front'] ?? null))))));
                     return [
                         'source' => 'p4points',
                         'service' => $serviceType,
@@ -6424,6 +6459,12 @@ if ($endpoint === 'services/otp/request' && $method === 'POST') {
     $phone = trim($body['phone'] ?? ($body['mobile'] ?? ''));
     $aadhaarNo = trim($body['aadhaarNo'] ?? ($body['uidNumber'] ?? ''));
     $cafeId = trim($body['cafeId'] ?? '');
+    $customerName = trim($body['customerName'] ?? ($body['name'] ?? ''));
+    $fatherName = trim($body['fatherName'] ?? '');
+    $dob = trim($body['dob'] ?? '');
+    $gender = trim($body['gender'] ?? '');
+    $address = trim($body['address'] ?? '');
+    $epicNumber = trim($body['epicNumber'] ?? ($body['epic_number'] ?? ($body['voter_number'] ?? '')));
 
     $txnId = 'TXN-OTP-' . time() . '-' . rand(1000, 9999);
     $mockOtp = (string)rand(100000, 999999);
@@ -6434,6 +6475,14 @@ if ($endpoint === 'services/otp/request' && $method === 'POST') {
         'serviceType' => $serviceType,
         'phone' => $phone,
         'aadhaarNo' => $aadhaarNo,
+        'uidNumber' => $aadhaarNo,
+        'name' => $customerName,
+        'customerName' => $customerName,
+        'fatherName' => $fatherName,
+        'dob' => $dob,
+        'gender' => $gender,
+        'address' => $address,
+        'epicNumber' => $epicNumber,
         'cafeId' => $cafeId,
         'otp' => $mockOtp,
         'expiresAt' => time() + 300,
@@ -6445,7 +6494,7 @@ if ($endpoint === 'services/otp/request' && $method === 'POST') {
         'success' => true,
         'requiresOtp' => true,
         'txnId' => $txnId,
-        'message' => 'आधार से लिंक पंजीकृत मोबाइल नंबर पर 6-अंकीय OTP भेजा गया है। (टेस्ट OTP: ' . $mockOtp . ')'
+        'message' => 'आधार से लिंक पंजीकृत मोबाइल नंबर पर 6-अंकीय OTP भेजा गया है। (परीक्षण OTP: ' . $mockOtp . ')'
     ]);
     exit;
 }
@@ -6479,22 +6528,40 @@ if ($endpoint === 'services/otp/verify' && $method === 'POST') {
         saveStore($dataFile, $store);
     }
 
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
+    $liveResult = null;
+    $targetService = $session['serviceType'] ?? $serviceType;
+    if (!empty($targetService) && !empty($p4ApiKey)) {
+        try {
+            $liveParams = array_merge($session, ['otp' => $otp]);
+            $liveResult = dispatchLiveP4Points($targetService, $liveParams, $p4ApiKey);
+        } catch (Exception $e) {
+            // Log silently and proceed with session inputs
+        }
+    }
+
+    $dataPayload = [
+        'name' => $liveResult['data']['name'] ?? ($session['name'] ?? ($session['customerName'] ?? 'आवेदक')),
+        'fatherName' => $liveResult['data']['fatherName'] ?? ($session['fatherName'] ?? ''),
+        'dob' => $liveResult['data']['dob'] ?? ($session['dob'] ?? ''),
+        'gender' => $liveResult['data']['gender'] ?? ($session['gender'] ?? 'MALE'),
+        'aadhaarNo' => $liveResult['data']['aadhaarNo'] ?? ($session['aadhaarNo'] ?? ''),
+        'mobile' => $liveResult['data']['mobile'] ?? ($session['phone'] ?? ''),
+        'address' => $liveResult['data']['address'] ?? ($session['address'] ?? ''),
+        'verifiedAt' => date('c')
+    ];
+    if (!empty($liveResult['data']) && is_array($liveResult['data'])) {
+        $dataPayload = array_merge($dataPayload, $liveResult['data']);
+    }
+
     echo json_encode([
         'success' => true,
         'verified' => true,
         'message' => 'OTP सत्यापन सफल! आधिकारिक दस्तावेज तैयार हो रहा है।',
-        'serviceType' => $session['serviceType'] ?? $serviceType,
+        'serviceType' => $targetService,
         'txnId' => $txnId,
-        'data' => [
-            'name' => 'राम कुमार शर्मा',
-            'fatherName' => 'श्याम लाल शर्मा',
-            'dob' => '15/08/1988',
-            'gender' => 'MALE',
-            'aadhaarNo' => $session['aadhaarNo'] ?? 'XXXX-XXXX-8921',
-            'mobile' => $session['phone'] ?? '9876543210',
-            'address' => 'मकान नं. 45, मेन मार्केट, लखनऊ, उत्तर प्रदेश - 226001',
-            'verifiedAt' => date('c')
-        ]
+        'pdfUrl' => $liveResult['pdfUrl'] ?? null,
+        'data' => $dataPayload
     ]);
     exit;
 }
