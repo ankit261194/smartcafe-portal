@@ -103,33 +103,6 @@ const allWalletsMap = new Map();
 (liveSync.wallets || []).forEach(w => {
   if (w && w.phone) allWalletsMap.set(w.phone, w);
 });
-mergedUsers.forEach(u => {
-  if (u && u.phone) {
-    if (!allWalletsMap.has(u.phone)) {
-      allWalletsMap.set(u.phone, {
-        phone: u.phone,
-        customerName: u.name || 'ग्राहक',
-        balance: (u.balance !== undefined ? u.balance : 0),
-        transactions: []
-      });
-    } else {
-      const existing = allWalletsMap.get(u.phone);
-      if (existing) {
-        if (u.balance !== undefined && u.balance === 0) {
-          existing.balance = 0;
-        }
-        if (Array.isArray(existing.transactions)) {
-          existing.transactions = existing.transactions.filter(t => t.id !== 'TXN-INIT-500' && t.description !== 'Opening Balance');
-        }
-      }
-    }
-  }
-});
-const mergedWallets = Array.from(allWalletsMap.values());
-s1.wallets = mergedWallets;
-s2.wallets = mergedWallets;
-s3.wallets = mergedWallets;
-
 // Protect UTR requests (Merging live pending and past requests)
 const allUtrsMap = new Map();
 [...(s1.utrRequests||[]), ...(s2.utrRequests||[]), ...(s3.utrRequests||[])].forEach(u => {
@@ -142,6 +115,68 @@ const mergedUtrs = Array.from(allUtrsMap.values());
 s1.utrRequests = mergedUtrs;
 s2.utrRequests = mergedUtrs;
 s3.utrRequests = mergedUtrs;
+
+mergedUsers.forEach(u => {
+  if (u && u.phone) {
+    if (!allWalletsMap.has(u.phone)) {
+      allWalletsMap.set(u.phone, {
+        phone: u.phone,
+        customerName: u.name || 'ग्राहक',
+        balance: (u.balance !== undefined ? u.balance : 0),
+        transactions: []
+      });
+    } else {
+      const existing = allWalletsMap.get(u.phone);
+      if (existing) {
+        if (Array.isArray(existing.transactions)) {
+          existing.transactions = existing.transactions.filter(t => t.id !== 'TXN-INIT-500' && t.description !== 'Opening Balance');
+        }
+      }
+    }
+  }
+});
+const mergedWallets = Array.from(allWalletsMap.values());
+
+// Auto-reconcile approved UTRs with wallet transactions (Zero-loss ledger)
+mergedWallets.forEach(w => {
+  if (!Array.isArray(w.transactions)) w.transactions = [];
+  mergedUtrs.forEach(u => {
+    if (u && u.customerPhone === w.phone && u.status === 'approved') {
+      const uAmt = parseFloat(u.amount || 0);
+      if (uAmt > 0) {
+        const exists = w.transactions.some(t => t.utr === u.utr || t.id === 'TXN-' + u.id);
+        if (!exists) {
+          w.transactions.push({
+            id: 'TXN-' + u.id,
+            type: 'credit',
+            amount: uAmt,
+            utr: u.utr || '',
+            note: 'सुपर एडमिन स्वीकृत UTR (' + (u.utr || '') + ') वॉलेट टॉप-अप',
+            createdAt: u.approvedAt || u.createdAt || new Date().toISOString()
+          });
+        }
+      }
+    }
+  });
+  let realBal = 0;
+  w.transactions.forEach(t => {
+    if (t.type === 'credit') realBal += parseFloat(t.amount || 0);
+    if (t.type === 'debit') realBal -= parseFloat(t.amount || 0);
+  });
+  w.balance = Math.max(0, realBal);
+});
+
+// Sync users balance to match reconciled wallet balance
+mergedUsers.forEach(u => {
+  const w = allWalletsMap.get(u.phone);
+  if (w) {
+    u.balance = w.balance;
+  }
+});
+
+s1.wallets = mergedWallets;
+s2.wallets = mergedWallets;
+s3.wallets = mergedWallets;
 
 fs.mkdirSync('client/dist/api/data', { recursive: true });
 fs.writeFileSync(p1, JSON.stringify(s1, null, 2));

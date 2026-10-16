@@ -32,7 +32,7 @@ export default function Services79RatesManager({ onRatesUpdated }) {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [saveSuccessMsg, setSaveSuccessMsg] = useState('');
   const [unsavedCount, setUnsavedCount] = useState(0);
-  const [liveOnly, setLiveOnly] = useState(false);
+  const [filterTab, setFilterTab] = useState('all'); // 'all', 'live', 'generator', 'coming_soon'
 
   const fetchRates = async () => {
     setLoading(true);
@@ -148,17 +148,21 @@ export default function Services79RatesManager({ onRatesUpdated }) {
     }
   };
 
-  const isServiceLive = (s) => Boolean(
-    (s.status === 'live' || s.status === 'active' || s.isLive === true || s.isActive === true) && 
-    !s.isComingSoon && 
-    s.status !== 'coming_soon'
-  );
-
-  const liveServicesCount = services.filter(isServiceLive).length;
+  const liveServicesCount = services.filter(s => s.serviceType === 'live_api' || (s.status === 'live' && !s.isComingSoon)).length;
+  const generatorServicesCount = services.filter(s => s.serviceType === 'generator' || s.status === 'generator').length;
+  const comingSoonServicesCount = services.filter(s => s.serviceType === 'coming_soon' || s.status === 'coming_soon' || s.isComingSoon).length;
 
   const filteredServices = services.filter(s => {
-    const isLive = isServiceLive(s);
-    if (liveOnly && !isLive) return false;
+    if (filterTab === 'live') {
+      const isLive = s.serviceType === 'live_api' || (s.status === 'live' && !s.isComingSoon);
+      if (!isLive) return false;
+    } else if (filterTab === 'generator') {
+      const isGen = s.serviceType === 'generator' || s.status === 'generator';
+      if (!isGen) return false;
+    } else if (filterTab === 'coming_soon') {
+      const isCS = s.serviceType === 'coming_soon' || s.status === 'coming_soon' || s.isComingSoon;
+      if (!isCS) return false;
+    }
     const matchesCategory = selectedCategory === 'all' || s.category === selectedCategory;
     const matchesSearch = !search.trim() || 
       s.name.toLowerCase().includes(search.toLowerCase()) || 
@@ -228,30 +232,52 @@ export default function Services79RatesManager({ onRatesUpdated }) {
           />
         </div>
 
-        {/* Live vs All 79 Toggle Switch */}
-        <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl text-xs font-black shrink-0 border border-slate-200 dark:border-slate-700">
+        {/* Service Classification Filter Tabs */}
+        <div className="flex flex-wrap bg-slate-100 dark:bg-slate-800 p-1 rounded-2xl text-xs font-black shrink-0 border border-slate-200 dark:border-slate-700 gap-1">
           <button
             type="button"
-            onClick={() => setLiveOnly(false)}
+            onClick={() => setFilterTab('all')}
             className={`px-3 py-1.5 rounded-xl transition cursor-pointer ${
-              !liveOnly 
+              filterTab === 'all' 
                 ? 'bg-white dark:bg-[#0f1d36] text-slate-900 dark:text-white shadow-xs font-black' 
                 : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
-            📋 सभी 79 सेवाएं ({services.length})
+            📋 सभी सेवाएं ({services.length})
           </button>
           <button
             type="button"
-            onClick={() => setLiveOnly(true)}
+            onClick={() => setFilterTab('live')}
             className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
-              liveOnly 
+              filterTab === 'live' 
                 ? 'bg-emerald-600 text-white shadow-xs font-black' 
                 : 'text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40'
             }`}
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>🟢 केवल लाइव सेवाएं ({liveServicesCount})</span>
+            <span>🟢 लाइव P4 API ({liveServicesCount})</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterTab('generator')}
+            className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+              filterTab === 'generator' 
+                ? 'bg-blue-600 text-white shadow-xs font-black' 
+                : 'text-blue-700 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/40'
+            }`}
+          >
+            <span>🖨️ PVC जनरेटर ({generatorServicesCount})</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterTab('coming_soon')}
+            className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+              filterTab === 'coming_soon' 
+                ? 'bg-amber-600 text-white shadow-xs font-black' 
+                : 'text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40'
+            }`}
+          >
+            <span>⏳ आगामी सेवाएं ({comingSoonServicesCount})</span>
           </button>
         </div>
 
@@ -332,16 +358,30 @@ export default function Services79RatesManager({ onRatesUpdated }) {
                       {service.num}
                     </td>
 
-                    {/* Service Name & Category */}
+                    {/* Service Name & Category & Transparent Badges */}
                     <td className="py-3 px-3">
                       <div className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
                         <span>{service.name}</span>
                       </div>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+                      <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                        <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                           {service.category}
                         </span>
-                        <span className="text-[10px] font-mono text-slate-400 truncate max-w-[150px]">
+                        {(service.serviceType === 'live_api' || (service.status === 'live' && !service.isComingSoon)) ? (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            🟢 लाइव P4 API
+                          </span>
+                        ) : (service.serviceType === 'generator' || service.status === 'generator') ? (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 dark:bg-blue-950/70 dark:text-blue-300 border border-blue-300 dark:border-blue-800 flex items-center gap-1">
+                            🖨️ स्मार्ट जनरेटर
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-50 text-amber-700 dark:bg-amber-950/70 dark:text-amber-300 border border-amber-300 dark:border-amber-800 flex items-center gap-1">
+                            ⏳ आगामी सेवा
+                          </span>
+                        )}
+                        <span className="text-[10px] font-mono text-slate-400 truncate max-w-[140px]">
                           {service.id}
                         </span>
                       </div>

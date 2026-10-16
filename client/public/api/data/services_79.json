@@ -12,7 +12,8 @@
     "method": "POST",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "aadhaar_original_pdf_otp",
@@ -28,7 +29,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "aadhaar_pdf_otp",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "aadhaar_original_pdf_no_otp",
@@ -43,7 +45,8 @@
     "method": "POST",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "aadhaar_otp_kyc",
@@ -59,7 +62,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "aadhaar_ekyc",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "aadhaar_pvc",
@@ -74,7 +78,8 @@
     "method": "POST",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "uid_seeding",
@@ -90,7 +95,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "npci_link_status",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "abha_card",
@@ -105,7 +111,8 @@
     "method": "POST",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "abha_otp",
@@ -120,7 +127,8 @@
     "method": "POST",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "pvc_verify",
@@ -135,7 +143,8 @@
     "method": "POST",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "pan_details",
@@ -151,7 +160,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "pan_verification_premium",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "pan_find",
@@ -167,7 +177,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "aadhaar_to_pan",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "pan_find_manual",
@@ -183,7 +194,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "pan_find_async",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "pan_find_manual_alt",
@@ -199,7 +211,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "pan_find_async",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "pan_to_aadhar_find",
@@ -215,7 +228,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "aadhaar_to_pan",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "pan_to_gst",
@@ -231,7 +245,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "pan_to_gst",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "gst_to_pan",
@@ -247,7 +262,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "gst_to_pan",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "mobile_name_to_pan_instant",
@@ -263,7 +279,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "pan_find_name_mobile",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "pan_basic_pricing",
@@ -277,9 +294,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "pan_verification_premium",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "mask_pan",
@@ -293,9 +311,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "pan_verification_premium",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "pan_aadhar_mask",
@@ -309,9 +328,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "pan_verification_premium",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "pan_to_udyam_details",
@@ -325,9 +345,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "pan_verification_premium",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "voter_verification",
@@ -343,7 +364,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "voter_verification",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "voter_mobile_link",
@@ -359,7 +381,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "instant_voter_mobile_no_otp",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "voter_pdf",
@@ -375,7 +398,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "voter_verification",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "voter_original_pdf_no_otp",
@@ -391,7 +415,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "voter_verification",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "voter_mobile_link_no_otp",
@@ -407,7 +432,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "instant_voter_mobile_no_otp",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "voter_mobile_link_instant_otp",
@@ -423,7 +449,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "voter_mobile_instant_form8",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "ration_verification",
@@ -439,7 +466,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "ration_to_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "ration_pdf_by_ration",
@@ -455,7 +483,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "ration_to_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "ration_pdf_by_aadhar",
@@ -471,7 +500,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "aadhaar_to_ration_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "up_ration_to_aadhaar",
@@ -487,7 +517,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "aadhaar_to_ration_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "all_state_ration_to_aadhar",
@@ -503,7 +534,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "aadhaar_to_ration_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "assam_ration_to_aadhaar",
@@ -519,7 +551,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "aadhaar_to_ration_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "up_ration_info",
@@ -535,7 +568,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "ration_to_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "driving_licence_pdf",
@@ -551,7 +585,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "dl_pdf_secure",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "dl_details",
@@ -567,7 +602,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "dl_pdf_secure",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "dl_to_mobile_find",
@@ -583,7 +619,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "dl_pdf_secure",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "ll_find",
@@ -599,7 +636,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "ll_pdf_download",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "ll_pdf",
@@ -615,7 +653,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "ll_pdf_download",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "ll_exam_pass_auto",
@@ -631,7 +670,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "ll_exam_apply",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "rc_to_details",
@@ -647,7 +687,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_details",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "rc_to_mobile_find",
@@ -663,7 +704,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_to_mobile",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "rc_father_name_find",
@@ -679,7 +721,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_to_father_name",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "rc_mobile_fetch",
@@ -695,7 +738,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_to_mobile",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "chassis_to_rc_find",
@@ -711,7 +755,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "chassis_to_rc",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "chassis_to_rc_alt",
@@ -727,7 +772,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "chassis_to_rc",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "engine_to_rc",
@@ -743,7 +789,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_details",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "chassis_to_mobile_find",
@@ -759,7 +806,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_to_mobile",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "rc_pdf_download",
@@ -775,7 +823,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_fast_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "chalan_find",
@@ -791,7 +840,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_details",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "chalan_find_mobile",
@@ -807,7 +857,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_to_mobile",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "vahan_check",
@@ -823,7 +874,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rc_details",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "mobile_to_details",
@@ -839,7 +891,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "mobile_lookup",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "mobile_lookup",
@@ -855,7 +908,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "mobile_lookup",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "mobile_to_upi_find",
@@ -869,9 +923,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "pan_find_name_mobile",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "mobile_to_multi_upi_find",
@@ -885,9 +940,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "pan_find_name_mobile",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "mobile_to_account_find",
@@ -901,9 +957,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "npci_link_status",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "mobile_to_multi_account",
@@ -917,9 +974,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "npci_link_status",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "upi_to_details",
@@ -933,9 +991,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "pan_find_name_mobile",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "telegram_to_number_lookup",
@@ -949,9 +1008,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "mobile_lookup",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "vi_sim_to_photo_details",
@@ -965,9 +1025,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "mobile_lookup",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "nsdl_bank",
@@ -981,9 +1042,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "npci_link_status",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "npci_verify",
@@ -997,9 +1059,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "npci_link_status",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "ayushman_image_jpg",
@@ -1014,7 +1077,8 @@
     "method": "GET",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "e_shram",
@@ -1027,10 +1091,11 @@
     "isActive": true,
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification.php",
     "method": "GET",
-    "isComingSoon": false,
-    "status": "live",
+    "isComingSoon": true,
+    "status": "coming_soon",
     "p4Key": "eshram_verification",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "e_shram_update",
@@ -1043,10 +1108,11 @@
     "isActive": true,
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification.php",
     "method": "GET",
-    "isComingSoon": false,
-    "status": "live",
+    "isComingSoon": true,
+    "status": "coming_soon",
     "p4Key": "eshram_verification",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "agristack_pdf",
@@ -1062,7 +1128,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "agristack_print_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "agristack_verify",
@@ -1078,7 +1145,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "agristack_farmer_details",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "agristack_dbt",
@@ -1094,7 +1162,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "agristack_check_status",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "rtps_bihar_pdf",
@@ -1110,7 +1179,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "rtps_certificate_bihar",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "electric_bill_pdf_bihar",
@@ -1126,7 +1196,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "electric_bill_pdf",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "gmail_to_details",
@@ -1140,9 +1211,10 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "generator",
     "p4Key": "mobile_lookup",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "aadhar_number_to_details",
@@ -1157,7 +1229,8 @@
     "method": "GET",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "samagra_service",
@@ -1172,7 +1245,8 @@
     "method": "GET",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "sambal_pdf",
@@ -1187,7 +1261,8 @@
     "method": "GET",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "udyam_pdf",
@@ -1202,7 +1277,8 @@
     "method": "GET",
     "isComingSoon": true,
     "status": "coming_soon",
-    "badge": "⏳ आगामी सेवा (Coming Soon)"
+    "badge": "⏳ आगामी API (Coming Soon)",
+    "serviceType": "coming_soon"
   },
   {
     "id": "qr_generator",
@@ -1216,9 +1292,10 @@
     "apiEndpoint": "https://api.qrserver.com/v1/create-qr-code/",
     "method": "GET",
     "isComingSoon": false,
-    "status": "active",
+    "status": "generator",
     "p4Key": "qr_generator",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "check_operator",
@@ -1234,7 +1311,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "mobile_lookup",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "check_plan",
@@ -1250,7 +1328,8 @@
     "isComingSoon": false,
     "status": "live",
     "p4Key": "mobile_lookup",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🟢 लाइव P4 API (Verified)",
+    "serviceType": "live_api"
   },
   {
     "id": "bank_ifsc_lookup",
@@ -1264,9 +1343,10 @@
     "apiEndpoint": "https://ifsc.razorpay.com/",
     "method": "GET",
     "isComingSoon": false,
-    "status": "active",
+    "status": "generator",
     "p4Key": "bank_ifsc_lookup",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "pincode_lookup",
@@ -1280,9 +1360,10 @@
     "apiEndpoint": "https://api.postalpincode.in/pincode/",
     "method": "GET",
     "isComingSoon": false,
-    "status": "active",
+    "status": "generator",
     "p4Key": "pincode_lookup",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "sarkari_job_feed",
@@ -1296,9 +1377,10 @@
     "apiEndpoint": "/api/sarkari-jobs/feed",
     "method": "GET",
     "isComingSoon": false,
-    "status": "active",
+    "status": "generator",
     "p4Key": "sarkari_job_feed",
-    "badge": "🟢 100% लाइव आधिकारिक API"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "pvc_auto_cropper",
@@ -1312,9 +1394,10 @@
     "apiEndpoint": "/api/services/execute-automated",
     "method": "POST",
     "isComingSoon": false,
-    "status": "active",
+    "status": "generator",
     "p4Key": "pvc_auto_cropper",
-    "badge": "🟢 100% फ्री इंस्टेंट टूल"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "passport_photo_maker",
@@ -1328,9 +1411,10 @@
     "apiEndpoint": "/api/services/execute-automated",
     "method": "POST",
     "isComingSoon": false,
-    "status": "active",
+    "status": "generator",
     "p4Key": "passport_photo_maker",
-    "badge": "🟢 100% फ्री इंस्टेंट टूल"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   },
   {
     "id": "govt_form_resizer",
@@ -1344,8 +1428,9 @@
     "apiEndpoint": "/api/services/execute-automated",
     "method": "POST",
     "isComingSoon": false,
-    "status": "active",
+    "status": "generator",
     "p4Key": "govt_form_resizer",
-    "badge": "🟢 100% फ्री इंस्टेंट टूल"
+    "badge": "🖨️ स्मार्ट जनरेटर (Instant Tool)",
+    "serviceType": "generator"
   }
 ]

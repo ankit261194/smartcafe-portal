@@ -1974,20 +1974,43 @@ app.get('/api/wallet/:phone', (req, res) => {
       transactions: []
     };
     store.wallets.push(wallet);
-    saveStore(store);
-  } else if (phone === '8006518960' || wallet.balance === 500) {
-    if (Array.isArray(wallet.transactions)) {
-      wallet.transactions = wallet.transactions.filter(t => t.id !== 'TXN-INIT-500' && t.description !== 'Opening Balance');
-    }
-    let realBal = 0;
-    (wallet.transactions || []).forEach(t => {
-      if (t.type === 'credit') realBal += Number(t.amount || 0);
-      if (t.type === 'debit') realBal -= Number(t.amount || 0);
-    });
-    wallet.balance = Math.max(0, realBal);
-    if (phone === '8006518960') wallet.customerName = 'ankit kumar';
-    saveStore(store);
   }
+
+  if (Array.isArray(wallet.transactions)) {
+    wallet.transactions = wallet.transactions.filter(t => t.id !== 'TXN-INIT-500' && t.description !== 'Opening Balance');
+  } else {
+    wallet.transactions = [];
+  }
+
+  // Auto-reconcile approved UTR requests
+  (store.utrRequests || []).forEach(u => {
+    if (u && u.customerPhone === phone && u.status === 'approved') {
+      const uAmt = Number(u.amount || 0);
+      if (uAmt > 0) {
+        const exists = wallet.transactions.some(t => t.utr === u.utr || t.id === 'TXN-' + u.id);
+        if (!exists) {
+          wallet.transactions.push({
+            id: 'TXN-' + (u.id || Date.now()),
+            type: 'credit',
+            amount: uAmt,
+            utr: u.utr || '',
+            note: `सुपर एडमिन स्वीकृत UTR (${u.utr}) वॉलेट टॉप-अप`,
+            createdAt: u.approvedAt || u.createdAt || new Date().toISOString()
+          });
+        }
+      }
+    }
+  });
+
+  let realBal = 0;
+  (wallet.transactions || []).forEach(t => {
+    if (t.type === 'credit') realBal += Number(t.amount || 0);
+    if (t.type === 'debit') realBal -= Number(t.amount || 0);
+  });
+  wallet.balance = Math.max(0, realBal);
+  if (phone === '8006518960') wallet.customerName = 'ankit kumar';
+
+  saveStore(store);
 
   res.json({
     phone: wallet.phone,

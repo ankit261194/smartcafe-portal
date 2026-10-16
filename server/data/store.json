@@ -157,8 +157,17 @@
     {
       "phone": "8006518960",
       "customerName": "ankit kumar",
-      "balance": 0,
-      "transactions": []
+      "balance": 10,
+      "transactions": [
+        {
+          "id": "TXN-UTR-CUST-1792125257-861",
+          "type": "credit",
+          "amount": 10,
+          "utr": "717839573483",
+          "note": "à¤¸à¥à¤ªà¤° à¤à¤¡à¤®à¤¿à¤¨ à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤ UTR (717839573483) à¤µà¥‰à¤²à¥‡à¤Ÿ à¤Ÿà¥‰à¤ª-à¤…à¤ª",
+          "createdAt": "2026-10-16T04:54:07+00:00"
+        }
+      ]
     }
   ],
   "cafes": [],
@@ -1563,7 +1572,7 @@
       "phone": "8006518960",
       "password": "Aa@910010025",
       "role": "citizen",
-      "balance": 0,
+      "balance": 10,
       "isBlocked": false,
       "createdAt": "2026-10-15T00:00:00.000Z"
     }
