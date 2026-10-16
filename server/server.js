@@ -1346,6 +1346,7 @@ app.get('/api/applications/:id/live-otp', (req, res) => {
     otpRequestedAt: a.otpRequestedAt || null,
     otpReceivedAt: a.otpReceivedAt || null
   });
+});
 // ==========================================
 // Phase 3: Silent Background OTP Sync Bridge
 // ==========================================
@@ -1428,8 +1429,8 @@ app.post('/api/otp/mark-consumed', (req, res) => {
   res.json({ success: true, message: 'OTP marked as consumed' });
 });
 
-// Route: GET /api/app/version (In-App APK Auto-Updater)
-app.get('/api/app/version', (req, res) => {
+// Route: GET /api/app/version and /api/system/app-version (In-App APK Auto-Updater)
+app.get(['/api/app/version', '/api/system/app-version', '/api/app-version'], (req, res) => {
   res.json({
     success: true,
     versionCode: 2,
@@ -1439,6 +1440,236 @@ app.get('/api/app/version', (req, res) => {
     releaseNotes: '1-क्लिक साइलेंट प्रिंट, काउंटर स्टेंडी जनरेटर, लाइव OTP सिंक ब्रिज एवं e-District ऑटो-फिलर',
     releaseDate: new Date().toISOString().split('T')[0]
   });
+});
+
+// Route: GET /api/cafes/:id/customers (Strict Tenant-Isolated Customer Directory)
+app.get('/api/cafes/:id/customers', (req, res) => {
+  const store = getStore();
+  const cafeId = (req.params.id || '').trim();
+  const customersMap = {};
+
+  // 1. Scan store.users
+  (store.users || []).forEach(u => {
+    const uCafe = (u.registeredCafeId || u.lastCafeId || '').trim();
+    const uRole = u.role || 'customer';
+    if (uRole !== 'superadmin' && (!cafeId || uCafe === cafeId || uCafe === `CAFE-${cafeId}` || uCafe.replace('CAFE-', '') === cafeId.replace('CAFE-', ''))) {
+      const phone = (u.phone || '').trim();
+      if (phone) {
+        customersMap[phone] = {
+          phone,
+          name: u.name || 'ग्राहक',
+          role: uRole,
+          totalOrders: 0,
+          lastService: 'सामान्य खाता',
+          lastActive: u.createdAt || new Date().toISOString(),
+          appInstalled: true,
+          walletBalance: store.wallets?.[phone]?.balance || 0
+        };
+      }
+    }
+  });
+
+  // 2. Scan store.orders
+  (store.orders || []).forEach(ord => {
+    const targetCafe = (ord.targetCafeId || ord.cafeId || '').trim();
+    if (!cafeId || targetCafe === cafeId || targetCafe === `CAFE-${cafeId}` || targetCafe.replace('CAFE-', '') === cafeId.replace('CAFE-', '')) {
+      const phone = (ord.customerPhone || ord.phone || '').trim();
+      if (phone) {
+        if (!customersMap[phone]) {
+          customersMap[phone] = {
+            phone,
+            name: ord.customerName || ord.name || 'ग्राहक',
+            role: 'customer',
+            totalOrders: 0,
+            lastService: ord.serviceName || ord.serviceType || 'सरकारी सेवा',
+            lastActive: ord.createdAt || new Date().toISOString(),
+            appInstalled: true,
+            walletBalance: store.wallets?.[phone]?.balance || 0
+          };
+        }
+        customersMap[phone].totalOrders++;
+        if (ord.serviceName) customersMap[phone].lastService = ord.serviceName;
+        if (ord.createdAt && new Date(ord.createdAt) > new Date(customersMap[phone].lastActive)) {
+          customersMap[phone].lastActive = ord.createdAt;
+        }
+      }
+    }
+  });
+
+  // 3. Scan store.prints
+  (store.prints || []).forEach(pr => {
+    const targetCafe = (pr.targetCafeId || pr.cafeId || '').trim();
+    if (!cafeId || targetCafe === cafeId || targetCafe === `CAFE-${cafeId}` || targetCafe.replace('CAFE-', '') === cafeId.replace('CAFE-', '')) {
+      const phone = (pr.customerPhone || pr.phone || '').trim();
+      if (phone) {
+        if (!customersMap[phone]) {
+          customersMap[phone] = {
+            phone,
+            name: pr.customerName || 'ग्राहक',
+            role: 'customer',
+            totalOrders: 0,
+            lastService: `साइलेंट प्रिंट (${pr.fileName || 'दस्तावेज़'})`,
+            lastActive: pr.createdAt || new Date().toISOString(),
+            appInstalled: true,
+            walletBalance: store.wallets?.[phone]?.balance || 0
+          };
+        }
+        customersMap[phone].totalOrders++;
+      }
+    }
+  });
+
+  // 4. Scan store.applications
+  (store.applications || []).forEach(app => {
+    const appCafe = (app.cafeId || '').trim();
+    if (!cafeId || appCafe === cafeId || appCafe === `CAFE-${cafeId}` || appCafe.replace('CAFE-', '') === cafeId.replace('CAFE-', '')) {
+      const phone = (app.applicantPhone || app.phone || '').trim();
+      if (phone) {
+        if (!customersMap[phone]) {
+          customersMap[phone] = {
+            phone,
+            name: app.applicantName || 'ग्राहक',
+            role: 'customer',
+            totalOrders: 0,
+            lastService: app.serviceName || 'e-District आवेदन',
+            lastActive: app.createdAt || new Date().toISOString(),
+            appInstalled: true,
+            walletBalance: store.wallets?.[phone]?.balance || 0
+          };
+        }
+        customersMap[phone].totalOrders++;
+      }
+    }
+  });
+
+  const customerList = Object.values(customersMap).sort((a, b) => new Date(b.lastActive) - new Date(a.lastActive));
+  res.json({ success: true, count: customerList.length, customers: customerList });
+});
+
+// Route: GET /api/superadmin/all-customers (Universal Customer Directory)
+app.get('/api/superadmin/all-customers', (req, res) => {
+  const store = getStore();
+  const customersMap = {};
+
+  (store.users || []).forEach(u => {
+    const uRole = u.role || 'customer';
+    if (uRole !== 'superadmin') {
+      const phone = (u.phone || '').trim();
+      if (phone) {
+        customersMap[phone] = {
+          phone,
+          name: u.name || 'ग्राहक',
+          role: uRole,
+          associatedCafeId: u.registeredCafeId || u.lastCafeId || 'General',
+          totalOrders: 0,
+          lastService: 'सामान्य खाता',
+          lastActive: u.createdAt || new Date().toISOString(),
+          walletBalance: store.wallets?.[phone]?.balance || 0,
+          appInstalled: true
+        };
+      }
+    }
+  });
+
+  (store.orders || []).forEach(ord => {
+    const phone = (ord.customerPhone || ord.phone || '').trim();
+    if (phone) {
+      if (!customersMap[phone]) {
+        customersMap[phone] = {
+          phone,
+          name: ord.customerName || 'ग्राहक',
+          role: 'customer',
+          associatedCafeId: ord.targetCafeId || ord.cafeId || 'General',
+          totalOrders: 0,
+          lastService: ord.serviceName || 'सरकारी सेवा',
+          lastActive: ord.createdAt || new Date().toISOString(),
+          walletBalance: store.wallets?.[phone]?.balance || 0,
+          appInstalled: true
+        };
+      }
+      customersMap[phone].totalOrders++;
+      if (ord.serviceName) customersMap[phone].lastService = ord.serviceName;
+      if (ord.createdAt && new Date(ord.createdAt) > new Date(customersMap[phone].lastActive)) {
+        customersMap[phone].lastActive = ord.createdAt;
+      }
+    }
+  });
+
+  const customerList = Object.values(customersMap).sort((a, b) => new Date(b.lastActive) - new Date(a.lastActive));
+  res.json({ success: true, count: customerList.length, customers: customerList });
+});
+
+// Route: POST /api/otp/request-fetch (Trigger on-demand listening for customer OTP)
+app.post('/api/otp/request-fetch', (req, res) => {
+  const store = getStore();
+  const { customerPhone, cafeId, requestedBy } = req.body;
+  if (!customerPhone || !String(customerPhone).trim()) {
+    return res.status(400).json({ error: 'Customer phone is required' });
+  }
+
+  if (!store.activeOtpRequests) store.activeOtpRequests = {};
+
+  const cleanPhone = String(customerPhone).trim();
+  const requestId = `REQ-${String(Date.now()).slice(-5)}${Math.floor(10 + Math.random() * 90)}`;
+  store.activeOtpRequests[cleanPhone] = {
+    id: requestId,
+    customerPhone: cleanPhone,
+    cafeId: (cafeId || '').trim(),
+    requestedBy: requestedBy || 'operator',
+    requestedAt: new Date().toISOString(),
+    expiresAt: new Date(Date.now() + 180000).toISOString(),
+    status: 'listening'
+  };
+
+  saveStore(store);
+  res.json({ success: true, message: 'Active OTP listening session started', requestId });
+});
+
+// Route: GET /api/otp/poll-latest (Poll for latest government OTP of a specific customer)
+app.get('/api/otp/poll-latest', (req, res) => {
+  const store = getStore();
+  const phone = (req.query.phone || '').trim();
+  const cafeId = (req.query.cafeId || '').trim();
+
+  const now = Date.now();
+  let matchedOtp = null;
+
+  for (const otpItem of (store.activeOtps || [])) {
+    const itemPhone = (otpItem.customerPhone || '').trim();
+    const itemAge = now - new Date(otpItem.timestamp || otpItem.createdAt).getTime();
+
+    if (itemAge < 180000 && !otpItem.consumed) {
+      if (phone && (itemPhone === phone || itemPhone.endsWith(phone.slice(-10)))) {
+        matchedOtp = otpItem;
+        break;
+      } else if (!phone && cafeId) {
+        const itemCafe = (otpItem.cafeId || '').trim();
+        if (itemCafe === cafeId || itemCafe === `CAFE-${cafeId}` || itemCafe.replace('CAFE-', '') === cafeId.replace('CAFE-', '')) {
+          matchedOtp = otpItem;
+          break;
+        }
+      }
+    }
+  }
+
+  if (matchedOtp) {
+    res.json({
+      success: true,
+      status: 'received',
+      otp: matchedOtp.otp,
+      sender: matchedOtp.sender || 'GOVT-SMS',
+      rawSms: matchedOtp.rawSms || '',
+      serviceType: matchedOtp.serviceType || 'general',
+      receivedAt: matchedOtp.timestamp || new Date().toISOString(),
+      otpId: matchedOtp.id
+    });
+  } else {
+    res.json({
+      success: true,
+      status: 'waiting',
+      message: 'Waiting for government SMS...'
+    });
+  }
 });
 
 // Multi-Tenant Cafes & SuperAdmin APIs

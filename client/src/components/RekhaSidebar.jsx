@@ -2,7 +2,8 @@ import React from 'react';
 import { 
   LayoutDashboard, Printer, Search, Wallet, User, 
   HelpCircle, LogOut, X, ShieldCheck, Sparkles,
-  FileText, BookOpen, Layers, Settings, QrCode
+  FileText, BookOpen, Layers, Settings, QrCode,
+  Users, Puzzle
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -40,6 +41,18 @@ export default function RekhaSidebar({
       id: 'dashboard',
       label: { hi: 'थोक डैशबोर्ड', en: 'B2B Dashboard' },
       icon: LayoutDashboard
+    },
+    {
+      id: 'customers',
+      label: { hi: '👥 मेरे ग्राहक व OTP', en: 'My Customers & OTP' },
+      icon: Users,
+      badge: { hi: 'लाइव OTP', en: 'Live OTP' }
+    },
+    {
+      id: 'extension',
+      label: { hi: '🧩 e-District एक्सटेंशन', en: 'e-District Extension' },
+      icon: Puzzle,
+      badge: { hi: 'ऑटो-फ़िल', en: 'Auto-Fill' }
     },
     {
       id: 'prints',

@@ -21,7 +21,11 @@ export default function InAppUpdater() {
         const res = await fetch(`${baseUrl}/api/app/version`);
         if (res.ok) {
           const data = await res.json();
-          if (data && data.versionCode > CURRENT_VERSION_CODE) {
+          // Detect installed version code if inside SmartCafeApp
+          const match = typeof navigator !== 'undefined' ? navigator.userAgent.match(/versionCode:(\d+)/) : null;
+          const installedCode = match ? parseInt(match[1], 10) : CURRENT_VERSION_CODE;
+          
+          if (data && data.versionCode > installedCode) {
             setUpdateInfo(data);
           }
         }

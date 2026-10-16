@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
-export default function EDistrictSuite({ initialSubTab = 'verify', onBack }) {
+export default function EDistrictSuite({ initialSubTab = 'verify', onBack, isOperator = false }) {
   const { language } = useLanguage();
   const [activeSubTab, setActiveSubTab] = useState(initialSubTab || 'verify');
 
@@ -207,17 +207,19 @@ export default function EDistrictSuite({ initialSubTab = 'verify', onBack }) {
           <span>{language === 'hi' ? 'प्रमाण पत्र सत्यापन' : 'Certificate Verification'}</span>
         </button>
 
-        <button
-          onClick={() => setActiveSubTab('bot')}
-          className={`px-4 py-2 rounded-xl transition flex items-center gap-2 ${
-            activeSubTab === 'bot'
-              ? 'bg-orange-600 text-white shadow-sm'
-              : 'text-slate-600 hover:bg-slate-100'
-          }`}
-        >
-          <Sparkles className="w-4 h-4 text-yellow-300" />
-          <span>{language === 'hi' ? '1-क्लिक ऑटो-फ़िलर बॉट' : '1-Click Auto-Filler Bot'}</span>
-        </button>
+        {isOperator && (
+          <button
+            onClick={() => setActiveSubTab('bot')}
+            className={`px-4 py-2 rounded-xl transition flex items-center gap-2 ${
+              activeSubTab === 'bot'
+                ? 'bg-orange-600 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 text-yellow-300" />
+            <span>{language === 'hi' ? '1-क्लिक ऑटो-फ़िलर बॉट' : '1-Click Auto-Filler Bot'}</span>
+          </button>
+        )}
 
         <button
           onClick={() => setActiveSubTab('bhulekh')}
@@ -837,8 +839,8 @@ export default function EDistrictSuite({ initialSubTab = 'verify', onBack }) {
         </div>
       )}
 
-      {/* TAB 5: 1-CLICK AUTOMATION HELPER & CHROME EXTENSION SUITE */}
-      {activeSubTab === 'bot' && (
+      {/* TAB 5: 1-CLICK AUTOMATION HELPER & CHROME EXTENSION SUITE (OPERATOR / ADMIN ONLY) */}
+      {isOperator && activeSubTab === 'bot' && (
         <div className="space-y-6">
           <div className="bg-gradient-to-r from-amber-600 via-orange-600 to-indigo-700 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="space-y-2">

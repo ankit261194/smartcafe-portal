@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Cafe e-District Auto-Filler & Live OTP Extension - A to Z Master Guide</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #10b981;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans Devanagari", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 24px 16px;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+      border: 1px solid #3b82f6;
+      border-radius: 20px;
+      padding: 30px 24px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .header::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, #f97316 33%, #ffffff 33% 66%, #16a34a 66%);
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid #059669;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 26px; font-weight: 900; margin-bottom: 8px; color: #ffffff; }
+    p.subtitle { font-size: 14px; color: var(--text-muted); }
+
+    /* Step Card */
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+    }
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+    .step-number {
+      background: var(--primary);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 14px;
+    }
+    .step-title { font-size: 18px; font-weight: 800; color: #38bdf8; }
+
+    /* Visual Mockups */
+    .visual-mockup {
+      background: #090d16;
+      border: 1px solid #475569;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 16px 0;
+      font-family: monospace;
+      font-size: 13px;
+    }
+    .browser-bar {
+      background: #1e293b;
+      padding: 6px 12px;
+      border-radius: 8px;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .browser-dots { display: flex; gap: 4px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .feature-box {
+      background: #0f172a;
+      border: 1px solid var(--border);
+      padding: 14px;
+      border-radius: 10px;
+    }
+    .feature-box h4 { color: #38bdf8; font-size: 14px; margin-bottom: 6px; }
+    .feature-box p { font-size: 12px; color: var(--text-muted); }
+
+    .alert-tip {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid #f59e0b;
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+      font-size: 13px;
+      color: #fbbf24;
+    }
+    .code-pill {
+      background: #334155;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #38bdf8;
+      font-family: monospace;
+    }
+    ul.instructions {
+      padding-left: 20px;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+    ul.instructions li { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Header -->
+    <div class="header">
+      <div class="badge">👑 ऑपरेटर व एडमिन विशेष ऑटोमेशन टूल</div>
+      <h1>Smart Cafe e-District 1-क्लिक ऑटो-फ़िलर एवं लाइव OTP एक्सटेंशन</h1>
+      <p class="subtitle">A to Z संपूर्ण मार्गदर्शिका — स्थापना (Installation), दुकान से सिंक, एवं सरकारी e-District पोर्टल पर त्वरित उपयोग।</p>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-title">Chrome ब्राउज़र में एक्सटेंशन इंस्टॉल करना (Load Unpacked)</div>
+      </div>
+      <ul class="instructions">
+        <li>अपने कंप्यूटर में <strong>Google Chrome</strong> (अथवा Brave / Microsoft Edge) ब्राउज़र खोलें।</li>
+        <li>एड्रेस बार में <span class="code-pill">chrome://extensions</span> टाइप करें और Enter दबाएं।</li>
+        <li>ऊपरी-दाएँ कोने में <strong>'Developer mode'</strong> टॉगल को चालू (ON) करें।</li>
+        <li>ऊपरी-बाएँ कोने में <strong>'Load unpacked'</strong> बटन पर क्लिक करें।</li>
+        <li>डाउनलोड किए गए <span class="code-pill">extension</span> अनजिप फ़ोल्डर को चुनें और 'Select Folder' दबाएं।</li>
+      </ul>
+
+      <div class="visual-mockup">
+        <div class="browser-bar">
+          <div class="browser-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <span>chrome://extensions</span>
+        </div>
+        <div style="color: #34d399; font-weight: bold;">[Load unpacked] &nbsp;&nbsp; [Pack extension] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Developer mode: [🔘 ON]</div>
+        <div style="margin-top: 10px; color: #cbd5e1;">➔ Smart Cafe e-District 1-Click Auto-Filler Bot v1.0.0 (सक्रिय हो गया)</div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <div class="step-title">दुकान की ID से एक्सटेंशन जोड़ना (One-Time Setup)</div>
+      </div>
+      <p style="font-size: 14px; color: #cbd5e1; margin-bottom: 12px;">
+        ताकि एक्सटेंशन केवल आपकी दुकान के ग्राहकों और आपके काउंटर पर आने वाले OTP से सिंक रहे:
+      </p>
+      <ul class="instructions">
+        <li>Chrome के ऊपरी-दाएँ एक्सटेंशन बार में <strong>Smart Cafe</strong> लोगो पर क्लिक करें।</li>
+        <li>अपनी दुकान की ID (जैसे: <span class="code-pill">CAFE-101</span> या आपकी VLE ID) दर्ज करें।</li>
+        <li>सर्वर URL में <span class="code-pill">https://smartcafe.sbs</span> रहने दें और <strong>[सेटिंग्स सुरक्षित करें]</strong> दबाएं।</li>
+      </ul>
+
+      <div class="alert-tip">
+        💡 <strong>टिप:</strong> यदि आप सुपर एडमिन हैं, तो आप कैफे ID में <span class="code-pill">ALL</span> डालकर पूरे भारत के सभी लाइव OTP की निगरानी कर सकते हैं।
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <div class="step-title">e-District पोर्टल पर 1-क्लिक ऑटो-फ़िलर का उपयोग</div>
+      </div>
+      <ul class="instructions">
+        <li><span class="code-pill">edistrict.up.gov.in</span> पोर्टल पर अपनी ऑपरेटर आईडी से लॉगिन करें।</li>
+        <li>कोई भी प्रमाण पत्र सेवा खोलें (जैसे: आय प्रमाण पत्र, जाति प्रमाण पत्र, अथवा निवास प्रमाण पत्र)।</li>
+        <li>स्क्रीन के दाएँ कोने में <strong>'⚡ स्मार्ट कैफे बॉट v1.0'</strong> का फ्लोटिंग विजेट अपने आप प्रकट हो जाएगा।</li>
+        <li>ग्राहक का 10-अंकों का मोबाइल नंबर दर्ज करें और <strong>[⚡ 1-क्लिक में 25+ फील्ड्स भरें]</strong> बटन दबाएं।</li>
+      </ul>
+
+      <div class="feature-grid">
+        <div class="feature-box">
+          <h4>✍️ 25+ फील्ड्स ऑटो-टाइप</h4>
+          <p>आवेदक का नाम (हिंदी/अंग्रेजी), पिता का नाम, माता का नाम, आधार, पूरा पता, तहसील, ब्लॉक, व ग्राम 0.5 सेकंड में सटीक भर जाते हैं।</p>
+        </div>
+        <div class="feature-box">
+          <h4>🔔 लाइव सरकारी OTP सिंक</h4>
+          <p>जैसे ही सरकारी पोर्टल ग्राहक के फोन पर OTP भेजता है, ग्राहक के फोन से वह OTP बिना फोन छुए एक्सटेंशन में चमक जाता है।</p>
+        </div>
+        <div class="feature-box">
+          <h4>⚡ 1-क्लिक OTP ऑटो-इंजेक्टर</h4>
+          <p>[Fill OTP] बटन दबाते ही 6-अंकों का आधार/फीस OTP सरकारी इनपुट बॉक्स में खुद टाइप हो जाता है।</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card">
+      <div class="step-header">
+        <div class="step-number">4</div>
+        <div class="step-title">यह एक्सटेंशन क्या-क्या काम कर सकता है? (Full Capabilities)</div>
+      </div>
+      <ul class="instructions">
+        <li><strong>e-District UP:</strong> आय, जाति, निवास, दिव्यांग, हैसियत प्रमाण पत्र, राशन कार्ड आवेदन।</li>
+        <li><strong>Parivahan / Vahan:</strong> वाहन ट्रांसफर, RC विवरण, चालान रसीद।</li>
+        <li><strong>Income Tax / NSDL:</strong> पैन कार्ड आवेदन व e-PAN आधार ऑथेंटिकेशन।</li>
+        <li><strong>साइलेंट OTP ब्रिज:</strong> ग्राहक द्वारा दी गई वन-टाइम सहमति से सरकारी सेवाओं के सत्यापन कोड स्वतः प्राप्त करना।</li>
+      </ul>
+    </div>
+
+  </div>
+</body>
+</html>

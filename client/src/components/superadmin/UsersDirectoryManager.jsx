@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { 
   Users, Search, RefreshCw, KeyRound, ShieldAlert, ShieldCheck, 
   Trash2, MessageSquare, IndianRupee, Edit3, CheckCircle2, 
-  AlertCircle, Plus, Minus, Copy, Eye, EyeOff, Store, UserCheck
+  AlertCircle, Plus, Minus, Copy, Eye, EyeOff, Store, UserCheck,
+  Sparkles, Radio, Clock, Check
 } from 'lucide-react';
 import { authFetch } from '../../utils/api';
+import { playChime } from '../../utils/audio';
 
 export default function UsersDirectoryManager() {
   const [users, setUsers] = useState([]);
@@ -13,6 +15,13 @@ export default function UsersDirectoryManager() {
   const [roleFilter, setRoleFilter] = useState('all'); // 'all', 'cafe', 'customer'
   const [statusFilter, setStatusFilter] = useState('all'); // 'all', 'active', 'blocked'
   
+  // OTP Fetch State
+  const [otpModalUser, setOtpModalUser] = useState(null);
+  const [otpStatus, setOtpStatus] = useState('listening');
+  const [latestOtpData, setLatestOtpData] = useState(null);
+  const [countdown, setCountdown] = useState(90);
+  const [copiedOtp, setCopiedOtp] = useState(false);
+
   // Modals state
   const [passwordModalUser, setPasswordModalUser] = useState(null);
   const [newPassword, setNewPassword] = useState('');
@@ -47,6 +56,70 @@ export default function UsersDirectoryManager() {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  const handleStartOtpFetch = async (user) => {
+    setOtpModalUser(user);
+    setOtpStatus('listening');
+    setLatestOtpData(null);
+    setCountdown(90);
+    setCopiedOtp(false);
+
+    try {
+      await fetch('/api/otp/request-fetch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerPhone: user.phone,
+          cafeId: 'ALL',
+          requestedBy: 'admin'
+        })
+      });
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    if (!otpModalUser || otpStatus !== 'listening') return;
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          setOtpStatus('expired');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/otp/poll-latest?phone=${otpModalUser.phone}&cafeId=ALL`);
+        const data = await res.json();
+        if (data.success && data.status === 'received' && data.otp) {
+          setLatestOtpData(data);
+          setOtpStatus('received');
+          playChime();
+          clearInterval(pollInterval);
+          clearInterval(timer);
+        }
+      } catch (err) {
+        // silent retry
+      }
+    }, 1500);
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(pollInterval);
+    };
+  }, [otpModalUser, otpStatus]);
+
+  const handleCopyOtp = (otpText) => {
+    navigator.clipboard.writeText(otpText);
+    setCopiedOtp(true);
+    setTimeout(() => setCopiedOtp(false), 2500);
+  };
 
   const handleCopyPassword = (id, text) => {
     navigator.clipboard.writeText(text);
@@ -458,6 +531,17 @@ export default function UsersDirectoryManager() {
                           <IndianRupee className="w-3.5 h-3.5" />
                         </button>
 
+                        {/* ⚡ Fetch Live OTP */}
+                        <button
+                          type="button"
+                          onClick={() => handleStartOtpFetch(user)}
+                          className="px-2 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] flex items-center gap-1 shadow-sm transition active:scale-95 cursor-pointer shrink-0"
+                          title="लाइव सरकारी OTP निकालें"
+                        >
+                          <Sparkles className="w-3 h-3 text-yellow-300" />
+                          <span>⚡ OTP</span>
+                        </button>
+
                         {/* 1-Click WhatsApp */}
                         <button
                           type="button"
@@ -665,6 +749,135 @@ export default function UsersDirectoryManager() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* LIVE OTP LISTENING MODAL (SUPER ADMIN UNIVERSAL OTP BRIDGE) */}
+      {otpModalUser && (
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-6 sm:p-7 max-w-md w-full border border-slate-200 dark:border-slate-800 shadow-2xl space-y-5 animate-in zoom-in-95">
+            
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-black">
+                  ⚡
+                </div>
+                <div>
+                  <h3 className="font-black text-slate-900 dark:text-white text-base">
+                    सुपर एडमिन यूनिवर्सल OTP सिंक
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    उपयोगकर्ता: <strong className="text-slate-900 dark:text-white">{otpModalUser.name}</strong> ({otpModalUser.phone})
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOtpModalUser(null)}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer font-black text-lg p-1"
+              >
+                ✕
+              </button>
+            </div>
+
+            {otpStatus === 'listening' && (
+              <div className="py-6 text-center space-y-4">
+                <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
+                  <div className="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping"></div>
+                  <div className="absolute inset-2 rounded-full bg-emerald-500/30 animate-pulse"></div>
+                  <div className="relative w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-lg">
+                    <Radio className="w-6 h-6 animate-spin" />
+                  </div>
+                </div>
+
+                <div className="space-y-1">
+                  <h4 className="font-black text-slate-900 dark:text-white text-sm">
+                    सरकारी SMS OTP की प्रतीक्षा कर रहे हैं...
+                  </h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 max-w-xs mx-auto">
+                    Aadhaar, e-District अथवा आयकर सर्वर द्वारा ग्राहक के फोन पर भेजे गए OTP की लाइव लिसनिंग सक्रिय है।
+                  </p>
+                </div>
+
+                <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 px-3.5 py-1.5 rounded-full text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
+                  <Clock className="w-3.5 h-3.5 text-amber-500" />
+                  <span>शेष समय: <strong>{countdown}s</strong></span>
+                </div>
+              </div>
+            )}
+
+            {otpStatus === 'received' && latestOtpData && (
+              <div className="py-4 text-center space-y-4 animate-in zoom-in-95">
+                <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto shadow-md">
+                  <Check className="w-8 h-8 stroke-[3]" />
+                </div>
+
+                <div>
+                  <span className="text-[10px] uppercase font-black tracking-wider text-emerald-600 dark:text-emerald-400">
+                    सरकारी OTP प्राप्त हुआ ({latestOtpData.sender})
+                  </span>
+                  <div className="my-3 py-3 px-6 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 border-2 border-emerald-500 text-3xl sm:text-4xl font-mono font-black text-emerald-600 dark:text-emerald-300 tracking-widest shadow-inner">
+                    {latestOtpData.otp}
+                  </div>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                    प्राप्त समय: {new Date(latestOtpData.receivedAt).toLocaleTimeString('hi-IN')}
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleCopyOtp(latestOtpData.otp)}
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition active:scale-95 cursor-pointer"
+                  >
+                    {copiedOtp ? <CheckCircle2 className="w-4 h-4 text-yellow-300" /> : <Copy className="w-4 h-4" />}
+                    <span>{copiedOtp ? 'कॉपी हो गया! (Copied)' : '📋 1-क्लिक में OTP कॉपी करें'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setOtpModalUser(null)}
+                    className="bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 text-slate-700 dark:text-slate-200 font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer"
+                  >
+                    पूर्ण
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {otpStatus === 'expired' && (
+              <div className="py-6 text-center space-y-4">
+                <AlertCircle className="w-12 h-12 text-amber-500 mx-auto" />
+                <div className="space-y-1">
+                  <h4 className="font-black text-slate-900 dark:text-white text-sm">
+                    समय समाप्त (Timeout)
+                  </h4>
+                  <p className="text-xs text-slate-500 max-w-xs mx-auto">
+                    90 सेकंड में कोई नया सरकारी OTP प्राप्त नहीं हुआ।
+                  </p>
+                </div>
+
+                <div className="flex gap-2 justify-center">
+                  <button
+                    type="button"
+                    onClick={() => handleStartOtpFetch(otpModalUser)}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    <span>पुनः प्रयास करें</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOtpModalUser(null)}
+                    className="bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer"
+                  >
+                    बंद करें
+                  </button>
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       )}

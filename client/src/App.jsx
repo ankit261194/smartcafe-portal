@@ -40,6 +40,8 @@ import ServicePage from './components/ServicePage';
 import CategoryPage from './components/CategoryPage';
 import RekhaOrders from './components/RekhaOrders';
 import PanFindList from './components/PanFindList';
+import ShopkeeperCustomerDirectory from './components/ShopkeeperCustomerDirectory';
+import ShopkeeperExtensionDesk from './components/ShopkeeperExtensionDesk';
 import IndianFlagBackdrop from './components/IndianFlagBackdrop';
 import ScrollToTopWidget from './components/ScrollToTopWidget';
 import { authFetch, getServerBaseUrl, setServerBaseUrl } from './utils/api';
@@ -1267,6 +1269,18 @@ export default function App() {
                 />
               )}
 
+              {adminTab === 'customers' && (
+                <ShopkeeperCustomerDirectory
+                  selectedCafe={selectedCafe}
+                />
+              )}
+
+              {adminTab === 'extension' && (
+                <ShopkeeperExtensionDesk
+                  selectedCafe={selectedCafe}
+                />
+              )}
+
               {adminTab === 'prints' && (
                 <AdminPrintQueue
                   selectedCafe={selectedCafe}
@@ -1425,17 +1439,6 @@ export default function App() {
               title={language === 'hi' ? 'केंद्रीय सुपर एडमिन रूट लॉगिन' : 'Super Admin Root Login'}
             >
               <span>{language === 'hi' ? '🛡️ सुपर एडमिन' : '🛡️ Super Admin'}</span>
-            </button>
-
-            <span className="text-slate-300 dark:text-slate-700">|</span>
-
-            <button
-              type="button"
-              onClick={() => setShowServerConfigModal(true)}
-              className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-[11px] transition cursor-pointer"
-              title="मोबाइल ऐप सर्वर IP कॉन्फ़िगर करें"
-            >
-              📱 मोबाइल सेटिंग्स
             </button>
 
             {settings?.phone && (

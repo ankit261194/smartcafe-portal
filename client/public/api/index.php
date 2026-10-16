@@ -1691,8 +1691,8 @@ if ($endpoint === 'otp/mark-consumed' && $method === 'POST') {
     exit;
 }
 
-// Route: /api/app/version (In-App APK Auto-Updater)
-if ($endpoint === 'app/version' && $method === 'GET') {
+// Route: /api/app/version and /api/system/app-version (In-App APK Auto-Updater)
+if (($endpoint === 'app/version' || $endpoint === 'system/app-version' || $endpoint === 'app-version') && $method === 'GET') {
     echo json_encode([
         'success' => true,
         'versionCode' => 2,
@@ -1702,6 +1702,254 @@ if ($endpoint === 'app/version' && $method === 'GET') {
         'releaseNotes' => '1-क्लिक साइलेंट प्रिंट, काउंटर स्टेंडी जनरेटर, लाइव OTP सिंक ब्रिज एवं e-District ऑटो-फिलर',
         'releaseDate' => date('Y-m-d')
     ]);
+    exit;
+}
+
+// Route: GET /api/cafes/:id/customers (Strict Tenant-Isolated Customer Directory)
+if (preg_match('#^cafes/([^/]+)/customers$#', $endpoint, $m) && $method === 'GET') {
+    $cafeId = $m[1];
+    $customersMap = [];
+
+    // 1. Scan store['users']
+    foreach ($store['users'] ?? [] as $u) {
+        $uCafe = $u['registeredCafeId'] ?? ($u['lastCafeId'] ?? '');
+        $uRole = $u['role'] ?? 'customer';
+        if ($uRole !== 'superadmin' && ($uCafe === $cafeId || $uCafe === "CAFE-{$cafeId}" || str_replace('CAFE-', '', $uCafe) === str_replace('CAFE-', '', $cafeId))) {
+            $phone = $u['phone'] ?? '';
+            if ($phone) {
+                $customersMap[$phone] = [
+                    'phone' => $phone,
+                    'name' => $u['name'] ?? 'ग्राहक',
+                    'role' => $uRole,
+                    'totalOrders' => 0,
+                    'lastService' => 'सामान्य खाता',
+                    'lastActive' => $u['createdAt'] ?? date('c'),
+                    'appInstalled' => true,
+                    'walletBalance' => $store['wallets'][$phone]['balance'] ?? 0
+                ];
+            }
+        }
+    }
+
+    // 2. Scan store['orders']
+    foreach ($store['orders'] ?? [] as $ord) {
+        $targetCafe = $ord['targetCafeId'] ?? ($ord['cafeId'] ?? '');
+        if ($targetCafe === $cafeId || $targetCafe === "CAFE-{$cafeId}" || str_replace('CAFE-', '', $targetCafe) === str_replace('CAFE-', '', $cafeId)) {
+            $phone = $ord['customerPhone'] ?? ($ord['phone'] ?? '');
+            if ($phone) {
+                if (!isset($customersMap[$phone])) {
+                    $customersMap[$phone] = [
+                        'phone' => $phone,
+                        'name' => $ord['customerName'] ?? ($ord['name'] ?? 'ग्राहक'),
+                        'role' => 'customer',
+                        'totalOrders' => 0,
+                        'lastService' => $ord['serviceName'] ?? ($ord['serviceType'] ?? 'सरकारी सेवा'),
+                        'lastActive' => $ord['createdAt'] ?? date('c'),
+                        'appInstalled' => true,
+                        'walletBalance' => $store['wallets'][$phone]['balance'] ?? 0
+                    ];
+                }
+                $customersMap[$phone]['totalOrders']++;
+                if (isset($ord['serviceName'])) {
+                    $customersMap[$phone]['lastService'] = $ord['serviceName'];
+                }
+                if (isset($ord['createdAt']) && strtotime($ord['createdAt']) > strtotime($customersMap[$phone]['lastActive'])) {
+                    $customersMap[$phone]['lastActive'] = $ord['createdAt'];
+                }
+            }
+        }
+    }
+
+    // 3. Scan store['prints']
+    foreach ($store['prints'] ?? [] as $pr) {
+        $targetCafe = $pr['targetCafeId'] ?? ($pr['cafeId'] ?? '');
+        if ($targetCafe === $cafeId || $targetCafe === "CAFE-{$cafeId}" || str_replace('CAFE-', '', $targetCafe) === str_replace('CAFE-', '', $cafeId)) {
+            $phone = $pr['customerPhone'] ?? ($pr['phone'] ?? '');
+            if ($phone) {
+                if (!isset($customersMap[$phone])) {
+                    $customersMap[$phone] = [
+                        'phone' => $phone,
+                        'name' => $pr['customerName'] ?? 'ग्राहक',
+                        'role' => 'customer',
+                        'totalOrders' => 0,
+                        'lastService' => 'साइलेंट प्रिंट (' . ($pr['fileName'] ?? 'दस्तावेज़') . ')',
+                        'lastActive' => $pr['createdAt'] ?? date('c'),
+                        'appInstalled' => true,
+                        'walletBalance' => $store['wallets'][$phone]['balance'] ?? 0
+                    ];
+                }
+                $customersMap[$phone]['totalOrders']++;
+            }
+        }
+    }
+
+    // 4. Scan store['applications']
+    foreach ($store['applications'] ?? [] as $app) {
+        $appCafe = $app['cafeId'] ?? '';
+        if ($appCafe === $cafeId || $appCafe === "CAFE-{$cafeId}" || str_replace('CAFE-', '', $appCafe) === str_replace('CAFE-', '', $cafeId)) {
+            $phone = $app['applicantPhone'] ?? ($app['phone'] ?? '');
+            if ($phone) {
+                if (!isset($customersMap[$phone])) {
+                    $customersMap[$phone] = [
+                        'phone' => $phone,
+                        'name' => $app['applicantName'] ?? 'ग्राहक',
+                        'role' => 'customer',
+                        'totalOrders' => 0,
+                        'lastService' => $app['serviceName'] ?? 'e-District आवेदन',
+                        'lastActive' => $app['createdAt'] ?? date('c'),
+                        'appInstalled' => true,
+                        'walletBalance' => $store['wallets'][$phone]['balance'] ?? 0
+                    ];
+                }
+                $customersMap[$phone]['totalOrders']++;
+            }
+        }
+    }
+
+    $customerList = array_values($customersMap);
+    usort($customerList, function($a, $b) {
+        return strtotime($b['lastActive']) - strtotime($a['lastActive']);
+    });
+
+    echo json_encode(['success' => true, 'count' => count($customerList), 'customers' => $customerList]);
+    exit;
+}
+
+// Route: GET /api/superadmin/all-customers (Master Universal Customer Directory)
+if ($endpoint === 'superadmin/all-customers' && $method === 'GET') {
+    $customersMap = [];
+    $allUsers = $store['users'] ?? [];
+
+    foreach ($allUsers as $u) {
+        $uRole = $u['role'] ?? 'customer';
+        if ($uRole !== 'superadmin') {
+            $phone = $u['phone'] ?? '';
+            if ($phone) {
+                $customersMap[$phone] = [
+                    'phone' => $phone,
+                    'name' => $u['name'] ?? 'ग्राहक',
+                    'role' => $uRole,
+                    'associatedCafeId' => $u['registeredCafeId'] ?? ($u['lastCafeId'] ?? 'General'),
+                    'totalOrders' => 0,
+                    'lastService' => 'सामान्य खाता',
+                    'lastActive' => $u['createdAt'] ?? date('c'),
+                    'walletBalance' => $store['wallets'][$phone]['balance'] ?? 0,
+                    'appInstalled' => true
+                ];
+            }
+        }
+    }
+
+    foreach ($store['orders'] ?? [] as $ord) {
+        $phone = $ord['customerPhone'] ?? ($ord['phone'] ?? '');
+        if ($phone) {
+            if (!isset($customersMap[$phone])) {
+                $customersMap[$phone] = [
+                    'phone' => $phone,
+                    'name' => $ord['customerName'] ?? 'ग्राहक',
+                    'role' => 'customer',
+                    'associatedCafeId' => $ord['targetCafeId'] ?? ($ord['cafeId'] ?? 'General'),
+                    'totalOrders' => 0,
+                    'lastService' => $ord['serviceName'] ?? 'सरकारी सेवा',
+                    'lastActive' => $ord['createdAt'] ?? date('c'),
+                    'walletBalance' => $store['wallets'][$phone]['balance'] ?? 0,
+                    'appInstalled' => true
+                ];
+            }
+            $customersMap[$phone]['totalOrders']++;
+            if (isset($ord['serviceName'])) $customersMap[$phone]['lastService'] = $ord['serviceName'];
+            if (isset($ord['createdAt']) && strtotime($ord['createdAt']) > strtotime($customersMap[$phone]['lastActive'])) {
+                $customersMap[$phone]['lastActive'] = $ord['createdAt'];
+            }
+        }
+    }
+
+    $customerList = array_values($customersMap);
+    usort($customerList, function($a, $b) {
+        return strtotime($b['lastActive']) - strtotime($a['lastActive']);
+    });
+
+    echo json_encode(['success' => true, 'count' => count($customerList), 'customers' => $customerList]);
+    exit;
+}
+
+// Route: POST /api/otp/request-fetch (Trigger on-demand listening for customer OTP)
+if ($endpoint === 'otp/request-fetch' && $method === 'POST') {
+    $customerPhone = trim($body['customerPhone'] ?? ($_POST['customerPhone'] ?? ''));
+    $cafeId = trim($body['cafeId'] ?? ($_POST['cafeId'] ?? ''));
+    $requestedBy = trim($body['requestedBy'] ?? ($_POST['requestedBy'] ?? 'operator'));
+
+    if (empty($customerPhone)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Customer phone is required']);
+        exit;
+    }
+
+    if (!isset($store['activeOtpRequests']) || !is_array($store['activeOtpRequests'])) {
+        $store['activeOtpRequests'] = [];
+    }
+
+    $requestId = 'REQ-' . substr(time(), -5) . rand(10, 99);
+    $store['activeOtpRequests'][$customerPhone] = [
+        'id' => $requestId,
+        'customerPhone' => $customerPhone,
+        'cafeId' => $cafeId,
+        'requestedBy' => $requestedBy,
+        'requestedAt' => date('c'),
+        'expiresAt' => date('c', time() + 180),
+        'status' => 'listening'
+    ];
+    saveStore($dataFile, $store);
+
+    echo json_encode(['success' => true, 'message' => 'Active OTP listening session started', 'requestId' => $requestId]);
+    exit;
+}
+
+// Route: GET /api/otp/poll-latest (Poll for latest government OTP of a specific customer)
+if ($endpoint === 'otp/poll-latest' && $method === 'GET') {
+    $phone = trim($_GET['phone'] ?? '');
+    $cafeId = trim($_GET['cafeId'] ?? '');
+
+    $now = time();
+    $matchedOtp = null;
+
+    foreach ($store['activeOtps'] ?? [] as $otpItem) {
+        $itemPhone = trim($otpItem['customerPhone'] ?? '');
+        $itemCreatedAt = isset($otpItem['timestamp']) ? strtotime($otpItem['timestamp']) : 0;
+        $age = $now - $itemCreatedAt;
+
+        if ($age < 180 && empty($otpItem['consumed'])) {
+            if ($phone && ($itemPhone === $phone || str_ends_with($itemPhone, substr($phone, -10)))) {
+                $matchedOtp = $otpItem;
+                break;
+            } elseif (!$phone && $cafeId) {
+                $itemCafe = trim($otpItem['cafeId'] ?? '');
+                if ($itemCafe === $cafeId || $itemCafe === "CAFE-{$cafeId}" || str_replace('CAFE-', '', $itemCafe) === str_replace('CAFE-', '', $cafeId)) {
+                    $matchedOtp = $otpItem;
+                    break;
+                }
+            }
+        }
+    }
+
+    if ($matchedOtp) {
+        echo json_encode([
+            'success' => true,
+            'status' => 'received',
+            'otp' => $matchedOtp['otp'],
+            'sender' => $matchedOtp['sender'] ?? 'GOVT-SMS',
+            'rawSms' => $matchedOtp['rawSms'] ?? '',
+            'serviceType' => $matchedOtp['serviceType'] ?? 'general',
+            'receivedAt' => $matchedOtp['timestamp'] ?? date('c'),
+            'otpId' => $matchedOtp['id']
+        ]);
+    } else {
+        echo json_encode([
+            'success' => true,
+            'status' => 'waiting',
+            'message' => 'Waiting for government SMS...'
+        ]);
+    }
     exit;
 }
 

@@ -6,7 +6,7 @@ import {
   Lock, Unlock, Eye, EyeOff, Save, Check, X, FileText, QrCode,
   Megaphone, Trash2, Radio, Activity, HardDrive, Cpu, Server, KeyRound,
   Power, Car, CreditCard, Zap, Download, ArrowLeft, LogOut,
-  AlertTriangle, Database
+  AlertTriangle, Database, Puzzle
 } from 'lucide-react';
 import { authFetch, getServerBaseUrl } from '../utils/api';
 import Services79RatesManager from './superadmin/Services79RatesManager';
@@ -2447,6 +2447,26 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
               >
                 <Trash2 className={`w-4 h-4 ${runningShredder ? 'animate-spin' : ''}`} />
                 <span>{runningShredder ? 'फ़ाइलें हटा रहे हैं...' : '⚡ तुरंत फ़ाइल श्रेडर चलाएं'}</span>
+              </button>
+
+              <a
+                href="/downloads/SmartCafe_Chrome_Extension_Package.zip"
+                download="SmartCafe_Chrome_Extension_Package.zip"
+                className="bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition shadow-xs cursor-pointer no-underline"
+                title="e-District ऑटो-फ़िलर एवं लाइव OTP एक्सटेंशन ZIP डाउनलोड करें"
+              >
+                <Puzzle className="w-4 h-4 text-yellow-300" />
+                <span>🧩 एक्सटेंशन पैकेज (ZIP)</span>
+              </a>
+
+              <button
+                type="button"
+                onClick={() => window.open('/downloads/EXTENSION_USER_GUIDE.html', '_blank')}
+                className="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 transition border border-slate-700 cursor-pointer"
+                title="सचित्र A to Z गाइड खोलें"
+              >
+                <ExternalLink className="w-4 h-4 text-emerald-400" />
+                <span>📖 एक्सटेंशन गाइड</span>
               </button>
 
               <button

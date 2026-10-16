@@ -57,18 +57,52 @@ public class OtpSmsReceiver extends BroadcastReceiver {
 
                 Log.d(TAG, "Incoming SMS from: " + sender);
 
-                // Check for OTP keywords or Government service identifiers
+                // Strict Privacy Guarantee: Message MUST contain an OTP keyword AND a cybercafe/service identifier
                 String lowerMsg = messageBody.toLowerCase();
-                boolean isOtp = lowerMsg.contains("otp") || 
-                               lowerMsg.contains("code") || 
-                               lowerMsg.contains("verification") || 
-                               lowerMsg.contains("aadhaar") || 
-                               lowerMsg.contains("edistrict") || 
-                               lowerMsg.contains("vahan") || 
-                               lowerMsg.contains("uidai") || 
-                               lowerMsg.contains("one time password");
+                boolean hasOtpWord = lowerMsg.contains("otp") || 
+                                     lowerMsg.contains("one time password") || 
+                                     lowerMsg.contains("verification code") || 
+                                     lowerMsg.contains("सत्यापन कोड") || 
+                                     lowerMsg.contains("ओटीपी") || 
+                                     lowerMsg.contains("pin");
 
-                if (!isOtp) continue;
+                boolean hasServiceWord = lowerMsg.contains("aadhaar") || 
+                                         lowerMsg.contains("uidai") || 
+                                         lowerMsg.contains("edistrict") || 
+                                         lowerMsg.contains("e-district") || 
+                                         lowerMsg.contains("vahan") || 
+                                         lowerMsg.contains("parivahan") || 
+                                         lowerMsg.contains("pan") || 
+                                         lowerMsg.contains("incometax") || 
+                                         lowerMsg.contains("rto") || 
+                                         lowerMsg.contains("sarathi") || 
+                                         lowerMsg.contains("ration") || 
+                                         lowerMsg.contains("samagra") || 
+                                         lowerMsg.contains("smartcafe") || 
+                                         lowerMsg.contains("cybercafe") || 
+                                         lowerMsg.contains("csc") || 
+                                         lowerMsg.contains("digilocker") || 
+                                         lowerMsg.contains("epfo") || 
+                                         lowerMsg.contains("pmkisan") || 
+                                         lowerMsg.contains("dbt") || 
+                                         lowerMsg.contains("bank") || 
+                                         lowerMsg.contains("sbi") || 
+                                         lowerMsg.contains("pnb") || 
+                                         lowerMsg.contains("hdfc") || 
+                                         lowerMsg.contains("icici") || 
+                                         lowerMsg.contains("bob") || 
+                                         lowerMsg.contains("axis") || 
+                                         lowerMsg.contains("gov") || 
+                                         lowerMsg.contains("nic") || 
+                                         lowerMsg.contains("login") || 
+                                         lowerMsg.contains("auth") ||
+                                         (sender != null && (sender.toLowerCase().contains("gov") || sender.toLowerCase().contains("uidai") || sender.toLowerCase().contains("edist") || sender.toLowerCase().contains("vahan") || sender.toLowerCase().contains("pan")));
+
+                // Strictly ignore personal messages or non-cybercafe SMS
+                if (!hasOtpWord || !hasServiceWord) {
+                    Log.d(TAG, "Ignoring non-cybercafe message for privacy protection.");
+                    continue;
+                }
 
                 // Extract 4 to 6 digit OTP
                 Pattern pattern = Pattern.compile("\\b([0-9]{4,6})\\b");
