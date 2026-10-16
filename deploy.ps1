@@ -134,15 +134,37 @@ s2.utrRequests = mergedUtrs;
 s3.utrRequests = mergedUtrs;
 
 // Protect and merge services_79 custom rates (live rates take highest priority)
+const baseServices79 = readJsonSafe('client/src/data/services_79.json');
 const allRatesMap = new Map();
+(Array.isArray(baseServices79) ? baseServices79 : []).forEach(s => {
+  if (s && s.id) allRatesMap.set(s.id, { ...s });
+});
 [...(s1.services_79||[]), ...(s2.services_79||[]), ...(s3.services_79||[])].forEach(r => {
-  if (r && r.id) allRatesMap.set(r.id, r);
+  if (r && r.id) {
+    const existing = allRatesMap.get(r.id) || {};
+    allRatesMap.set(r.id, Object.assign({}, existing, r));
+  }
 });
 (liveSync.services_79 || []).forEach(r => {
   if (r && r.id) {
-    const existing = allRatesMap.get(r.id);
-    allRatesMap.set(r.id, Object.assign({}, existing || {}, r));
+    const existing = allRatesMap.get(r.id) || {};
+    allRatesMap.set(r.id, Object.assign({}, existing, r));
   }
+});
+const relayMeta = {
+  'll_exam_pass_auto': { upstreamService: 'LL_Request', upstreamFile: 'll_exam_Request.php' },
+  'dl_to_mobile_find': { upstreamService: 'DL Mobile Link', upstreamFile: 'dl_link.php' },
+  'ayushman_image_jpg': { upstreamService: 'Ayushman Download', upstreamFile: 'Pmjay_Verify.php' },
+  'e_shram_update': { upstreamService: 'Mobile_Update', upstreamFile: 'e-shram_number_link.php' },
+  'puc_certificate_download': { upstreamService: 'puc_services', upstreamFile: 'puc_services.php' },
+  'agristack_pdf': { upstreamService: 'Land Seeding', upstreamFile: 'AgrifarmerCardstate.php' },
+  'samagra_service': { upstreamService: 'Samagra Print', upstreamFile: 'familyID_Service.php' },
+  'sambal_pdf': { upstreamService: 'Samagra Print', upstreamFile: 'familyID_Service.php' },
+  'pan_aadhaar_link_manual': { upstreamService: 'Pan_Number_Link', upstreamFile: 'panAadharNumber_Link.php' },
+  'dob_update_service': { upstreamService: 'Dob_Update', upstreamFile: 'dob_update.php' }
+};
+allRatesMap.forEach((v, k) => {
+  if (relayMeta[k]) Object.assign(v, relayMeta[k]);
 });
 const mergedServices79 = Array.from(allRatesMap.values());
 if (mergedServices79.length > 0) {
