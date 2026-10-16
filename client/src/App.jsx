@@ -1462,7 +1462,7 @@ export default function App() {
       {/* Phase 3: Silent Background OTP Sync Bridge Listener */}
       <LiveOtpBridgeListener
         cafeId={selectedCafe?.id || (cafes && cafes[0] ? cafes[0].id : 'CAFE-101')}
-        isOperator={currentRole === 'operator' || currentRole === 'superadmin'}
+        isOperator={mode === 'admin' || isSuperAdminAuth}
       />
 
       {/* Phase 6: Android APK In-App Auto-Updater */}
