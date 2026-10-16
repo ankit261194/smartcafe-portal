@@ -28,13 +28,23 @@ const fs = require('fs');
 const p1 = 'server/data/store.json';
 const p2 = 'client/public/api/data/store.json';
 const p3 = 'client/dist/api/data/store.json';
-let s1 = fs.existsSync(p1) ? JSON.parse(fs.readFileSync(p1)) : {};
-let s2 = fs.existsSync(p2) ? JSON.parse(fs.readFileSync(p2)) : {};
-let s3 = fs.existsSync(p3) ? JSON.parse(fs.readFileSync(p3)) : {};
+function readJsonSafe(p) {
+  if (!fs.existsSync(p)) return {};
+  try {
+    const raw = fs.readFileSync(p, 'utf8').replace(/^\uFEFF/, '').trim();
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) { return {}; }
+}
+let s1 = readJsonSafe(p1);
+let s2 = readJsonSafe(p2);
+let s3 = readJsonSafe(p3);
 
 let liveSync = {};
 if (fs.existsSync('server/data/live_sync_temp.json')) {
-  try { liveSync = JSON.parse(fs.readFileSync('server/data/live_sync_temp.json')); } catch (e) {}
+  try {
+    const raw = fs.readFileSync('server/data/live_sync_temp.json', 'utf8').replace(/^\uFEFF/, '').trim();
+    liveSync = JSON.parse(raw);
+  } catch (e) { console.error('liveSync parse error:', e.message); }
 }
 
 const mPath = 'server/data/users_master.json';
