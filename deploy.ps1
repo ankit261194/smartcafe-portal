@@ -131,7 +131,10 @@ if (Test-Path "$PSScriptRoot\client\public\CyberCafe_Portal.apk") {
 Copy-Item -Path "$PSScriptRoot\client\public\robots.txt" -Destination "$PSScriptRoot\client\dist\robots.txt" -Force
 Copy-Item -Path "$PSScriptRoot\client\public\sitemap.xml" -Destination "$PSScriptRoot\client\dist\sitemap.xml" -Force
 if (Test-Path "$PSScriptRoot\client\public\services") {
-    Copy-Item -Path "$PSScriptRoot\client\public\services" -Destination "$PSScriptRoot\client\dist\services" -Recurse -Force
+    if (-not (Test-Path "$PSScriptRoot\client\dist\services")) {
+        New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\services" -Force
+    }
+    Copy-Item -Path "$PSScriptRoot\client\public\services\*" -Destination "$PSScriptRoot\client\dist\services" -Recurse -Force
 }
 
 $nowStr = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
