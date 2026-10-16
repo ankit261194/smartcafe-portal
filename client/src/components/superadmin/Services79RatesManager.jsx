@@ -4,6 +4,7 @@ import {
   ToggleRight, IndianRupee, Layers, ShieldCheck, Zap, Filter, ArrowUp
 } from 'lucide-react';
 import { authFetch } from '../../utils/api';
+import DEFAULT_SERVICES_79 from '../../data/services_79.json';
 
 const CATEGORY_NAMES = {
   all: 'सभी 79 सेवाएं',
@@ -24,8 +25,8 @@ const CATEGORY_NAMES = {
 };
 
 export default function Services79RatesManager({ onRatesUpdated }) {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState(DEFAULT_SERVICES_79);
+  const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [savingId, setSavingId] = useState(null);
   const [search, setSearch] = useState('');
@@ -40,8 +41,18 @@ export default function Services79RatesManager({ onRatesUpdated }) {
       const res = await authFetch('/api/services/rates');
       if (res.ok) {
         const data = await res.json();
-        if (data.services && Array.isArray(data.services)) {
-          setServices(data.services);
+        if (data.services && Array.isArray(data.services) && data.services.length > 0) {
+          const merged = DEFAULT_SERVICES_79.map(base => {
+            const override = data.services.find(o => o.id === base.id || o.num === base.num);
+            if (!override) return base;
+            return {
+              ...base,
+              wholesaleRate: override.wholesaleRate !== undefined ? override.wholesaleRate : base.wholesaleRate,
+              retailRate: override.retailRate !== undefined ? override.retailRate : base.retailRate,
+              isActive: override.isActive !== undefined ? override.isActive : base.isActive
+            };
+          });
+          setServices(merged);
           setUnsavedCount(0);
         }
       }
@@ -148,23 +159,20 @@ export default function Services79RatesManager({ onRatesUpdated }) {
     }
   };
 
-  const liveServicesCount = services.filter(s => s.serviceType === 'live_api' || (s.status === 'live' && !s.isComingSoon && s.fulfillmentType !== 'manual_relay')).length;
-  const manualRelayServicesCount = services.filter(s => s.fulfillmentType === 'manual_relay').length;
-  const generatorServicesCount = services.filter(s => s.serviceType === 'generator' || s.status === 'generator').length;
-  const comingSoonServicesCount = services.filter(s => s.serviceType === 'coming_soon' || s.status === 'coming_soon' || s.isComingSoon).length;
+  const liveServicesCount = services.filter(s => s.serviceType === 'live_api' && s.fulfillmentType !== 'manual_relay').length;
+  const manualRelayServicesCount = services.filter(s => s.serviceType === 'manual_relay' || s.fulfillmentType === 'manual_relay').length;
+  const generatorServicesCount = services.filter(s => s.serviceType === 'generator').length;
+  const comingSoonServicesCount = services.filter(s => s.serviceType === 'coming_soon' || (s.isComingSoon && s.fulfillmentType !== 'manual_relay')).length;
 
   const filteredServices = services.filter(s => {
     if (filterTab === 'live') {
-      const isLive = (s.serviceType === 'live_api' || (s.status === 'live' && !s.isComingSoon)) && s.fulfillmentType !== 'manual_relay';
-      if (!isLive) return false;
+      if (s.serviceType !== 'live_api' || s.fulfillmentType === 'manual_relay') return false;
     } else if (filterTab === 'manual_relay') {
-      if (s.fulfillmentType !== 'manual_relay') return false;
+      if (s.serviceType !== 'manual_relay' && s.fulfillmentType !== 'manual_relay') return false;
     } else if (filterTab === 'generator') {
-      const isGen = s.serviceType === 'generator' || s.status === 'generator';
-      if (!isGen) return false;
+      if (s.serviceType !== 'generator') return false;
     } else if (filterTab === 'coming_soon') {
-      const isCS = s.serviceType === 'coming_soon' || s.status === 'coming_soon' || s.isComingSoon;
-      if (!isCS) return false;
+      if (s.serviceType !== 'coming_soon' && !s.isComingSoon) return false;
     }
     const matchesCategory = selectedCategory === 'all' || s.category === selectedCategory;
     const matchesSearch = !search.trim() || 

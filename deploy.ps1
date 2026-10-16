@@ -75,7 +75,24 @@ const allUsersMap = new Map();
     }
   }
 });
-const mergedUsers = Array.from(allUsersMap.values());
+const mergedUsers = Array.from(allUsersMap.values()).map(u => {
+  if (u.phone === '8006518960') {
+    return { ...u, password: 'Aa@910010025' };
+  }
+  return u;
+});
+const rekhaCreds = {
+  loginUrl: 'https://rekhaprint.info/members/login',
+  username: '8006518960',
+  password: '012323',
+  isActive: true
+};
+[s1, s2, s3].forEach(s => {
+  if (!s.settings) s.settings = {};
+  s.settings.rekhaPrint = rekhaCreds;
+  if (!s.apiGateway) s.apiGateway = {};
+  s.apiGateway.rekhaPrint = rekhaCreds;
+});
 s1.users = mergedUsers;
 s2.users = mergedUsers;
 s3.users = mergedUsers;

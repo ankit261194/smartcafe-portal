@@ -1,6 +1,6 @@
 ﻿{
     "success":  true,
-    "timestamp":  "2026-10-16T15:15:23+00:00",
+    "timestamp":  "2026-10-16T16:25:21+00:00",
     "users":  [
                   {
                       "id":  "USR-8006518960",
@@ -16,24 +16,25 @@
               ],
     "wallets":  [
                     {
-                        "phone":  "8006518960",
-                        "customerName":  "ankit kumar",
-                        "balance":  10,
-                        "transactions":  [
-                                             {
-                                                 "id":  "TXN-UTR-CUST-1792125257-861",
-                                                 "type":  "credit",
-                                                 "amount":  10,
-                                                 "utr":  "717839573483",
-                                                 "note":  "à¤¸à¥à¤ªà¤° à¤à¤¡à¤®à¤¿à¤¨ à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤ UTR (717839573483) à¤µà¥‰à¤²à¥‡à¤Ÿ à¤Ÿà¥‰à¤ª-à¤…à¤ª",
-                                                 "createdAt":  "2026-10-16T04:54:07+00:00"
-                                             }
-                                         ]
-                    },
-                    {
                         "phone":  "9999999999",
                         "customerName":  "ग्राहक",
                         "balance":  0,
+                        "transactions":  [
+
+                                         ]
+                    },
+                    {
+                        "phone":  "0000000000",
+                        "customerName":  "ग्राहक",
+                        "balance":  0,
+                        "transactions":  [
+
+                                         ]
+                    },
+                    {
+                        "phone":  "8006518960",
+                        "customerName":  "ankit kumar",
+                        "balance":  10,
                         "transactions":  [
 
                                          ]

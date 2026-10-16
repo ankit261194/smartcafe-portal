@@ -906,7 +906,27 @@ app.delete('/api/superadmin/users/:id', (req, res) => {
 // 79 Services Dynamic Rates APIs
 app.get('/api/services/rates', (req, res) => {
   const store = getStore();
-  res.json({ success: true, services: store.services_79 || [] });
+  const s79Path = path.join(__dirname, 'data', 'services_79.json');
+  let baseServices = [];
+  if (fs.existsSync(s79Path)) {
+    try {
+      baseServices = JSON.parse(fs.readFileSync(s79Path, 'utf8'));
+    } catch(e) {}
+  }
+  const overrides = store.services_79 || [];
+  if (Array.isArray(overrides) && overrides.length > 0) {
+    baseServices = baseServices.map(base => {
+      const ov = overrides.find(o => o.id === base.id || o.num === base.num);
+      if (!ov) return base;
+      return {
+        ...base,
+        wholesaleRate: ov.wholesaleRate !== undefined ? ov.wholesaleRate : base.wholesaleRate,
+        retailRate: ov.retailRate !== undefined ? ov.retailRate : base.retailRate,
+        isActive: ov.isActive !== undefined ? ov.isActive : base.isActive
+      };
+    });
+  }
+  res.json({ success: true, count: baseServices.length, services: baseServices });
 });
 
 const handleSaveRates = (req, res) => {
@@ -924,6 +944,14 @@ const handleSaveRates = (req, res) => {
           retailRate: updated.retailRate !== undefined ? parseFloat(updated.retailRate) : store.services_79[idx].retailRate,
           isActive: updated.isActive !== undefined ? Boolean(updated.isActive) : store.services_79[idx].isActive
         };
+      } else {
+        store.services_79.push({
+          id: updated.id,
+          num: updated.num,
+          wholesaleRate: updated.wholesaleRate !== undefined ? parseFloat(updated.wholesaleRate) : 10,
+          retailRate: updated.retailRate !== undefined ? parseFloat(updated.retailRate) : 20,
+          isActive: updated.isActive !== undefined ? Boolean(updated.isActive) : true
+        });
       }
     });
   } else if ((service && service.id) || req.body.serviceId) {
