@@ -656,7 +656,9 @@
       "isActive": true,
       "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "DL Mobile Link",
+      "upstreamFile": "dl_link.php"
     },
     {
       "id": "ll_find",
@@ -695,7 +697,9 @@
       "isActive": true,
       "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "LL_Request",
+      "upstreamFile": "ll_exam_Request.php"
     },
     {
       "id": "rc_to_details",
@@ -1007,7 +1011,9 @@
       "isActive": true,
       "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Ayushman Download",
+      "upstreamFile": "Pmjay_Verify.php"
     },
     {
       "id": "e_shram",
@@ -1033,7 +1039,9 @@
       "isActive": true,
       "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Mobile_Update",
+      "upstreamFile": "e-shram_number_link.php"
     },
     {
       "id": "agristack_pdf",
@@ -1046,7 +1054,9 @@
       "isActive": true,
       "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Land Seeding",
+      "upstreamFile": "AgrifarmerCardstate.php"
     },
     {
       "id": "agristack_verify",
@@ -1137,7 +1147,9 @@
       "isActive": true,
       "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Samagra Print",
+      "upstreamFile": "familyID_Service.php"
     },
     {
       "id": "sambal_pdf",
@@ -1150,7 +1162,9 @@
       "isActive": true,
       "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Samagra Print",
+      "upstreamFile": "familyID_Service.php"
     },
     {
       "id": "udyam_pdf",
@@ -1304,7 +1318,9 @@
       "retailRate": 50,
       "isActive": true,
       "serviceType": "manual_relay",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "puc_services",
+      "upstreamFile": "puc_services.php"
     },
     {
       "id": "pan_aadhaar_link_manual",
@@ -1315,7 +1331,9 @@
       "retailRate": 100,
       "isActive": true,
       "serviceType": "manual_relay",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Pan_Number_Link",
+      "upstreamFile": "panAadharNumber_Link.php"
     },
     {
       "id": "dob_update_service",
@@ -1326,7 +1344,9 @@
       "retailRate": 150,
       "isActive": true,
       "serviceType": "manual_relay",
-      "fulfillmentType": "manual_relay"
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Dob_Update",
+      "upstreamFile": "dob_update.php"
     }
   ],
   "users": [
