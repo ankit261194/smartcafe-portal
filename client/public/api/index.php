@@ -5234,24 +5234,44 @@ function getRekhaPrintAuthCookie(&$store, $forceRefresh = false) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     curl_setopt($ch, CURLOPT_REFERER, $loginUrl);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
     $resp = curl_exec($ch);
     $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlErr = curl_error($ch);
     curl_close($ch);
+
+    if (!isset($store['systemSettings'])) $store['systemSettings'] = [];
+    $store['systemSettings']['lastRekhaAuthDebug'] = [
+        'httpCode' => $httpCode,
+        'curlErr' => $curlErr,
+        'respLen' => strlen((string)$resp),
+        'timestamp' => date('c')
+    ];
 
     if (!$resp) return null;
     $headers = substr($resp, 0, $headerSize);
-    preg_match_all('/^Set-Cookie:\s*([^;]+)/mi', $headers, $matches);
+    
+    // Support HTTP/1.1 and HTTP/2 lowercase set-cookie headers
+    preg_match_all('/set-cookie:\s*([^;\r\n]+)/i', $headers, $matches);
     if (!empty($matches[1])) {
         $cookieStr = implode('; ', $matches[1]);
-        if (!isset($store['systemSettings'])) $store['systemSettings'] = [];
         if (!isset($store['systemSettings']['rekhaPrint'])) $store['systemSettings']['rekhaPrint'] = [];
         $store['systemSettings']['rekhaPrint']['cachedCookie'] = $cookieStr;
         $store['systemSettings']['rekhaPrint']['cookieExpiresAt'] = time() + 7200; // 2 hour cache
         return $cookieStr;
     }
+
+    // Direct PHPSESSID extraction fallback
+    if (preg_match('/PHPSESSID=([a-zA-Z0-9,-]+)/i', $headers, $sm)) {
+        $cookieStr = 'PHPSESSID=' . $sm[1];
+        if (!isset($store['systemSettings']['rekhaPrint'])) $store['systemSettings']['rekhaPrint'] = [];
+        $store['systemSettings']['rekhaPrint']['cachedCookie'] = $cookieStr;
+        $store['systemSettings']['rekhaPrint']['cookieExpiresAt'] = time() + 7200;
+        return $cookieStr;
+    }
+
     return null;
 }
 
@@ -5333,7 +5353,11 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
 
 function pollRekhaPrintRecords(&$store, $targetOrderId = null) {
     $cookie = getRekhaPrintAuthCookie($store);
-    if (!$cookie) return ['success' => false, 'error' => 'Rekha login failed'];
+    if (!$cookie) return [
+        'success' => false, 
+        'error' => 'Rekha login failed',
+        'debug' => $store['systemSettings']['lastRekhaAuthDebug'] ?? null
+    ];
 
     $rekhaConfig = $store['systemSettings']['rekhaPrint'] ?? ['baseUrl' => 'https://rekhaprint.info'];
     $recordsUrl = rtrim($rekhaConfig['baseUrl'] ?? 'https://rekhaprint.info', '/') . '/members/printRecord.php';
