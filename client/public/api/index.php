@@ -952,6 +952,34 @@ if ($endpoint === 'auth/change-password' && $method === 'POST') {
     }
 
     saveStore($dataFile, $store);
+
+    // Immune Vault: Permanently write changed password to users_master.json
+    $masterUsersFile = dirname($dataFile) . '/users_master.json';
+    if (file_exists($masterUsersFile)) {
+        $mUsers = json_decode(file_get_contents($masterUsersFile), true);
+        if (is_array($mUsers)) {
+            foreach ($mUsers as &$mu) {
+                if (($mu['phone'] ?? '') === $phone) {
+                    $mu['password'] = $newPass;
+                    break;
+                }
+            }
+            unset($mu);
+            @file_put_contents($masterUsersFile, json_encode($mUsers, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+        }
+    }
+
+    // Immune Vault: Permanently update password in SQL database
+    try {
+        $pdo = getPdoConnection();
+        if ($pdo) {
+            $uStmt = $pdo->prepare("UPDATE users SET password = :password WHERE phone = :phone");
+            $uStmt->execute([':password' => $newPass, ':phone' => $phone]);
+        }
+    } catch (Throwable $e) {
+        error_log("SQL Password Update Warning: " . $e->getMessage());
+    }
+
     echo json_encode(['success' => true, 'message' => 'पासवर्ड सफलतापूर्वक बदल दिया गया है।']);
     exit;
 }
@@ -1126,12 +1154,41 @@ if (preg_match('#^superadmin/users/([^/]+)/password$#', $endpoint, $m) && $metho
     foreach ($store['users'] as &$u) {
         if ($u['id'] === $userId || $u['phone'] === $userId) {
             $u['password'] = $newPass;
+            $targetPhone = $u['phone'] ?? '';
             if (($u['role'] ?? '') === 'cafe') {
                 foreach ($store['cafes'] as &$c) {
-                    if ($c['phone'] === $u['phone']) $c['pin'] = password_hash($newPass, PASSWORD_BCRYPT);
+                    if ($c['phone'] === $targetPhone) $c['pin'] = password_hash($newPass, PASSWORD_BCRYPT);
                 }
             }
             saveStore($dataFile, $store);
+
+            // Immune Vault: Permanently write to users_master.json
+            $masterUsersFile = dirname($dataFile) . '/users_master.json';
+            if (file_exists($masterUsersFile)) {
+                $mUsers = json_decode(file_get_contents($masterUsersFile), true);
+                if (is_array($mUsers)) {
+                    foreach ($mUsers as &$mu) {
+                        if (($mu['phone'] ?? '') === $targetPhone || ($mu['id'] ?? '') === $userId) {
+                            $mu['password'] = $newPass;
+                            break;
+                        }
+                    }
+                    unset($mu);
+                    @file_put_contents($masterUsersFile, json_encode($mUsers, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+                }
+            }
+
+            // Immune Vault: Permanently update SQL table
+            try {
+                $pdo = getPdoConnection();
+                if ($pdo && $targetPhone) {
+                    $uStmt = $pdo->prepare("UPDATE users SET password = :password WHERE phone = :phone");
+                    $uStmt->execute([':password' => $newPass, ':phone' => $targetPhone]);
+                }
+            } catch (Throwable $e) {
+                error_log("SQL Admin Password Update Warning: " . $e->getMessage());
+            }
+
             echo json_encode(['success' => true, 'message' => 'पासवर्ड सफलतापूर्वक बदल दिया गया।']);
             exit;
         }
@@ -2838,12 +2895,77 @@ if ($endpoint === 'superadmin/stats' && $method === 'GET') {
         'totalComplaintsCount' => count($store['complaints'] ?? []),
         'broadcastNotice' => $store['broadcastNotice'] ?? null,
         'cafes' => $cafes,
+        'users' => $store['users'] ?? [],
+        'wallets' => $store['wallets'] ?? [],
         'utrRequests' => $store['utrRequests'] ?? [],
         'kycApplications' => $store['vleKycApplications'] ?? [],
         'complaints' => $store['complaints'] ?? [],
         'rcOrders' => $store['rcOrders'] ?? [],
         'auditLogs' => $store['superAdminAuditLogs'] ?? []
     ]);
+    exit;
+}
+
+// Route: /api/superadmin/live-vault (100% Authoritative Database Backup & Deployment Vault)
+if ($endpoint === 'superadmin/live-vault' && $method === 'GET') {
+    // Collect all persistent users from SQL, users_master, and store
+    $allUsersMap = [];
+    $dataDir = dirname($dataFile);
+    $masterUsersFile = $dataDir . '/users_master.json';
+    if (file_exists($masterUsersFile)) {
+        $mUsers = json_decode(file_get_contents($masterUsersFile), true) ?: [];
+        foreach ($mUsers as $u) { if (!empty($u['phone'])) $allUsersMap[$u['phone']] = $u; }
+    }
+    foreach (($store['users'] ?? []) as $u) {
+        if (!empty($u['phone'])) {
+            if (isset($allUsersMap[$u['phone']]) && !empty($allUsersMap[$u['phone']]['password']) && empty($u['password'])) {
+                $u['password'] = $allUsersMap[$u['phone']]['password'];
+            }
+            $allUsersMap[$u['phone']] = $u;
+        }
+    }
+    try {
+        $pdo = getPdoConnection();
+        if ($pdo) {
+            $sqlUsers = $pdo->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($sqlUsers as $su) {
+                $sp = $su['phone'] ?? '';
+                if ($sp) {
+                    if (!isset($allUsersMap[$sp])) {
+                        $allUsersMap[$sp] = [
+                            'id' => $su['id'] ?? ('USR-' . $sp),
+                            'phone' => $sp,
+                            'name' => $su['name'] ?? 'ग्राहक',
+                            'shopName' => $su['shop_name'] ?? '',
+                            'password' => $su['password'] ?? 'password123',
+                            'role' => $su['role'] ?? 'citizen',
+                            'balance' => floatval($su['balance'] ?? 0),
+                            'isBlocked' => !empty($su['is_blocked']),
+                            'createdAt' => $su['created_at'] ?? date('c')
+                        ];
+                    } else {
+                        if (!empty($su['password'])) $allUsersMap[$sp]['password'] = $su['password'];
+                        if (!empty($su['name'])) $allUsersMap[$sp]['name'] = $su['name'];
+                    }
+                }
+            }
+        }
+    } catch (Throwable $e) {}
+
+    echo json_encode([
+        'success' => true,
+        'timestamp' => date('c'),
+        'users' => array_values($allUsersMap),
+        'wallets' => $store['wallets'] ?? [],
+        'cafes' => $store['cafes'] ?? [],
+        'utrRequests' => $store['utrRequests'] ?? [],
+        'vleKycApplications' => $store['vleKycApplications'] ?? [],
+        'complaints' => $store['complaints'] ?? [],
+        'rcOrders' => $store['rcOrders'] ?? [],
+        'applications' => $store['applications'] ?? [],
+        'prints' => $store['prints'] ?? [],
+        'superAdminRates' => $store['superAdminRates'] ?? []
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
 

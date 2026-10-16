@@ -689,6 +689,21 @@ app.post('/api/auth/change-password', (req, res) => {
   }
 
   saveStore(store);
+
+  // Immune Vault: Permanently write changed password to users_master.json
+  try {
+    const fs = require('fs');
+    const mPath = path.join(__dirname, 'data', 'users_master.json');
+    if (fs.existsSync(mPath)) {
+      const mUsers = JSON.parse(fs.readFileSync(mPath, 'utf8') || '[]');
+      const found = mUsers.find(mu => mu.phone === cleanPhone);
+      if (found) {
+        found.password = cleanNew;
+        fs.writeFileSync(mPath, JSON.stringify(mUsers, null, 2));
+      }
+    }
+  } catch (e) {}
+
   res.json({ success: true, message: 'पासवर्ड सफलतापूर्वक बदल दिया गया है।' });
 });
 
@@ -1576,11 +1591,37 @@ app.get('/api/superadmin/stats', (req, res) => {
       status: isToolDisabled(store, tool.id, tool.serviceType) ? 'disabled' : 'active'
     })),
     cafes,
+    users: store.users || [],
+    wallets: store.wallets || [],
     utrRequests: store.utrRequests || [],
     kycApplications: store.vleKycApplications || [],
     complaints: store.complaints || [],
     rcOrders: store.rcOrders || [],
     auditLogs: store.superAdminAuditLogs || []
+  });
+});
+
+app.get('/api/superadmin/live-vault', (req, res) => {
+  const store = getStore();
+  const mPath = path.join(__dirname, 'data', 'users_master.json');
+  let masterUsers = fs.existsSync(mPath) ? JSON.parse(fs.readFileSync(mPath, 'utf8') || '[]') : [];
+  const allUsersMap = new Map();
+  masterUsers.forEach(u => { if (u && u.phone) allUsersMap.set(u.phone, u); });
+  (store.users || []).forEach(u => { if (u && u.phone) allUsersMap.set(u.phone, u); });
+
+  res.json({
+    success: true,
+    timestamp: new Date().toISOString(),
+    users: Array.from(allUsersMap.values()),
+    wallets: store.wallets || [],
+    cafes: store.cafes || [],
+    utrRequests: store.utrRequests || [],
+    vleKycApplications: store.vleKycApplications || [],
+    complaints: store.complaints || [],
+    rcOrders: store.rcOrders || [],
+    applications: store.applications || [],
+    prints: store.prints || [],
+    superAdminRates: store.superAdminRates || {}
   });
 });
 

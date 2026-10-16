@@ -345,12 +345,23 @@ function migrateJsonStoreToSql(PDO $pdo, array $store) {
         if (!empty($store['users']) && is_array($store['users'])) {
             // Note: Pruning DELETE statements permanently removed to guarantee account persistence
             if ($isSqlite) {
-                $stmt = $pdo->prepare("INSERT OR REPLACE INTO users (id, phone, name, shop_name, password, role, balance, is_blocked, created_at)
-                    VALUES (:id, :phone, :name, :shop_name, :password, :role, :balance, :is_blocked, :created_at)");
+                $stmt = $pdo->prepare("INSERT INTO users (id, phone, name, shop_name, password, role, balance, is_blocked, created_at)
+                    VALUES (:id, :phone, :name, :shop_name, :password, :role, :balance, :is_blocked, :created_at)
+                    ON CONFLICT(phone) DO UPDATE SET
+                        name = excluded.name,
+                        shop_name = excluded.shop_name,
+                        role = excluded.role,
+                        balance = excluded.balance,
+                        is_blocked = excluded.is_blocked");
             } else {
                 $stmt = $pdo->prepare("INSERT INTO users (id, phone, name, shop_name, password, role, balance, is_blocked, created_at)
                     VALUES (:id, :phone, :name, :shop_name, :password, :role, :balance, :is_blocked, :created_at)
-                    ON DUPLICATE KEY UPDATE name = VALUES(name), shop_name = VALUES(shop_name), balance = VALUES(balance), is_blocked = VALUES(is_blocked)");
+                    ON DUPLICATE KEY UPDATE 
+                        name = VALUES(name), 
+                        shop_name = VALUES(shop_name), 
+                        role = VALUES(role),
+                        balance = VALUES(balance), 
+                        is_blocked = VALUES(is_blocked)");
             }
             foreach ($store['users'] as $u) {
                 if (empty($u['phone'])) continue;

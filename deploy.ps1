@@ -14,10 +14,13 @@ Set-Location -Path "$PSScriptRoot"
 
 Write-Host "[2/5] Synchronizing Production Assets, Live Database & PHP API (Preserving User Accounts)..." -ForegroundColor Cyan
 try {
-  $liveStats = Invoke-RestMethod -Uri "https://smartcafe.sbs/api/index.php?endpoint=superadmin/stats" -Headers @{"Authorization"="Bearer Aa@910010025123343"} -TimeoutSec 10 -ErrorAction SilentlyContinue
+  $liveStats = Invoke-RestMethod -Uri "https://smartcafe.sbs/api/index.php?endpoint=superadmin/live-vault" -Headers @{"Authorization"="Bearer Aa@910010025123343"} -TimeoutSec 15 -ErrorAction SilentlyContinue
+  if (-not $liveStats) {
+    $liveStats = Invoke-RestMethod -Uri "https://smartcafe.sbs/api/index.php?endpoint=superadmin/stats" -Headers @{"Authorization"="Bearer Aa@910010025123343"} -TimeoutSec 15 -ErrorAction SilentlyContinue
+  }
   if ($liveStats) {
-    $liveStats | ConvertTo-Json -Depth 5 | Out-File -FilePath "$PSScriptRoot\server\data\live_sync_temp.json" -Encoding utf8
-    Write-Host "  -> Successfully fetched live Hostinger database sync ($($liveStats.utrRequests.Count) UTRs)" -ForegroundColor Green
+    $liveStats | ConvertTo-Json -Depth 6 | Out-File -FilePath "$PSScriptRoot\server\data\live_sync_temp.json" -Encoding utf8
+    Write-Host "  -> Successfully fetched live Hostinger database sync ($($liveStats.users.Count) Users, $($liveStats.cafes.Count) Cafes, $($liveStats.utrRequests.Count) UTRs)" -ForegroundColor Green
   }
 } catch {
   Write-Host "  -> Live fetch notice: $($_.Exception.Message) (Continuing with local vault)" -ForegroundColor DarkGray
@@ -48,19 +51,56 @@ if (fs.existsSync('server/data/live_sync_temp.json')) {
 }
 
 const mPath = 'server/data/users_master.json';
-let masterUsers = fs.existsSync(mPath) ? JSON.parse(fs.readFileSync(mPath)) : [];
+let masterUsers = fs.existsSync(mPath) ? (readJsonSafe(mPath) || []) : [];
+if (!Array.isArray(masterUsers)) masterUsers = [];
+
+// 1. Populate local accounts first (lowest priority)
 const allUsersMap = new Map();
-[...masterUsers, ...(liveSync.users||[]), ...(s3.users||[]), ...(s2.users||[]), ...(s1.users||[])].forEach(u => {
+[...masterUsers, ...(s1.users||[]), ...(s2.users||[]), ...(s3.users||[])].forEach(u => {
   if (u && u.phone) allUsersMap.set(u.phone, u);
+});
+
+// 2. OVERLAY LIVE HOSTINGER USERS (LIVE TAKES HIGHEST PRIORITY - NEVER OVERWRITTEN BY LOCAL DATA!)
+(liveSync.users || []).forEach(u => {
+  if (u && u.phone) {
+    if (allUsersMap.has(u.phone)) {
+      const existing = allUsersMap.get(u.phone);
+      const merged = Object.assign({}, existing, u);
+      if (u.password && u.password.trim()) {
+        merged.password = u.password;
+      }
+      allUsersMap.set(u.phone, merged);
+    } else {
+      allUsersMap.set(u.phone, u);
+    }
+  }
 });
 const mergedUsers = Array.from(allUsersMap.values());
 s1.users = mergedUsers;
 s2.users = mergedUsers;
 s3.users = mergedUsers;
 
-// Also protect wallets
+// Protect Registered Cafes
+const allCafesMap = new Map();
+[...(s1.cafes||[]), ...(s2.cafes||[]), ...(s3.cafes||[])].forEach(c => {
+  if (c && (c.id || c.phone)) allCafesMap.set(c.phone || c.id, c);
+});
+(liveSync.cafes || []).forEach(c => {
+  if (c && (c.id || c.phone)) {
+    allCafesMap.set(c.phone || c.id, c);
+  }
+});
+const mergedCafes = Array.from(allCafesMap.values());
+s1.cafes = mergedCafes;
+s2.cafes = mergedCafes;
+s3.cafes = mergedCafes;
+
+// Protect wallets
 const allWalletsMap = new Map();
-[...(s3.wallets||[]), ...(s2.wallets||[]), ...(s1.wallets||[])].forEach(w => {
+[...(s1.wallets||[]), ...(s2.wallets||[]), ...(s3.wallets||[])].forEach(w => {
+  if (w && w.phone) allWalletsMap.set(w.phone, w);
+});
+(liveSync.wallets || []).forEach(w => {
   if (w && w.phone) allWalletsMap.set(w.phone, w);
 });
 mergedUsers.forEach(u => {
@@ -92,7 +132,10 @@ s3.wallets = mergedWallets;
 
 // Protect UTR requests (Merging live pending and past requests)
 const allUtrsMap = new Map();
-[...(liveSync.utrRequests||[]), ...(s3.utrRequests||[]), ...(s2.utrRequests||[]), ...(s1.utrRequests||[])].forEach(u => {
+[...(s1.utrRequests||[]), ...(s2.utrRequests||[]), ...(s3.utrRequests||[])].forEach(u => {
+  if (u && u.id) allUtrsMap.set(u.id, u);
+});
+(liveSync.utrRequests || []).forEach(u => {
   if (u && u.id) allUtrsMap.set(u.id, u);
 });
 const mergedUtrs = Array.from(allUtrsMap.values());
@@ -107,7 +150,7 @@ fs.writeFileSync(p3, JSON.stringify(s3, null, 2));
 fs.writeFileSync('server/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
 fs.writeFileSync('client/public/api/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
 fs.writeFileSync('client/dist/api/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
-console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts, ' + mergedWallets.length + ' wallets, & ' + mergedUtrs.length + ' UTRs.');
+console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts, ' + mergedCafes.length + ' cafes, ' + mergedWallets.length + ' wallets, & ' + mergedUtrs.length + ' UTRs.');
 "
 Copy-Item -Path "$PSScriptRoot\client\public\.htaccess" -Destination "$PSScriptRoot\client\dist\.htaccess" -Force
 if (-not (Test-Path "$PSScriptRoot\client\dist\api")) {
