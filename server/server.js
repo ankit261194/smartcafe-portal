@@ -695,7 +695,68 @@ app.post('/api/auth/change-password', (req, res) => {
 // Super Admin User Directory Management APIs
 app.get('/api/superadmin/users', (req, res) => {
   const store = getStore();
-  const users = (store.users || []).map(u => {
+  const usersMap = new Map();
+
+  // 1. Existing store users
+  (store.users || []).forEach(u => {
+    if (u && u.phone) usersMap.set(u.phone, { ...u });
+  });
+
+  // 2. Master users vault
+  try {
+    const fs = require('fs');
+    const mPath = 'server/data/users_master.json';
+    if (fs.existsSync(mPath)) {
+      const mList = JSON.parse(fs.readFileSync(mPath, 'utf8'));
+      if (Array.isArray(mList)) {
+        mList.forEach(mu => {
+          if (mu && mu.phone) {
+            if (!usersMap.has(mu.phone)) {
+              usersMap.set(mu.phone, { ...mu });
+            } else if (mu.password && (!usersMap.get(mu.phone).password || usersMap.get(mu.phone).password === 'password123')) {
+              usersMap.get(mu.phone).password = mu.password;
+            }
+          }
+        });
+      }
+    }
+  } catch (e) {}
+
+  // 3. Cafes
+  (store.cafes || []).forEach(c => {
+    if (c && c.phone && !usersMap.has(c.phone)) {
+      usersMap.set(c.phone, {
+        id: c.id,
+        name: c.ownerName || 'संचालक',
+        shopName: c.shopName || 'डिजिटल सेवा केंद्र',
+        phone: c.phone,
+        password: '1234',
+        role: 'cafe',
+        balance: c.b2bWallet?.balance || 0,
+        isBlocked: !!c.isFrozen,
+        createdAt: c.createdAt || new Date().toISOString()
+      });
+    }
+  });
+
+  // 4. Wallets
+  (store.wallets || []).forEach(w => {
+    if (w && w.phone && !usersMap.has(w.phone)) {
+      usersMap.set(w.phone, {
+        id: `USR-${w.phone}`,
+        name: w.customerName || 'ग्राहक',
+        shopName: '',
+        phone: w.phone,
+        password: 'password123',
+        role: 'citizen',
+        balance: w.balance || 0,
+        isBlocked: false,
+        createdAt: new Date().toISOString()
+      });
+    }
+  });
+
+  const users = Array.from(usersMap.values()).map(u => {
     let bal = u.balance || 0;
     if (u.role === 'cafe') {
       const c = (store.cafes || []).find(c => c.phone === u.phone || c.id === u.id);
@@ -709,6 +770,7 @@ app.get('/api/superadmin/users', (req, res) => {
       balance: bal
     };
   });
+
   res.json({ success: true, users });
 });
 
@@ -5060,53 +5122,100 @@ app.post('/api/cafes/:id/b2b-wallet/submit-utr', upload.single('paymentSlip'), (
   res.status(201).json({ success: true, utrRequest: newReq });
 });
 
+app.get('/api/superadmin/utr-requests', (req, res) => {
+  const store = getStore();
+  res.json(store.utrRequests || []);
+});
+
 app.get('/api/superadmin/b2b-utr-requests', (req, res) => {
   const store = getStore();
   const list = (store.utrRequests || []).filter(u => u.tier === 'sanchalak_to_superadmin');
   res.json(list);
 });
 
-app.post('/api/superadmin/b2b-utr-requests/:utrId/action', (req, res) => {
+app.get('/api/superadmin/customer-utr-requests', (req, res) => {
+  const store = getStore();
+  const list = (store.utrRequests || []).filter(u => u.tier === 'customer_to_sanchalak' || (!u.tier && u.customerPhone));
+  res.json(list);
+});
+
+const handleSuperAdminUtrAction = (req, res) => {
   const store = getStore();
   const { action, rejectReason } = req.body;
   const idx = (store.utrRequests || []).findIndex(u => u.id === req.params.utrId);
-  if (idx === -1) return res.status(404).json({ error: 'B2B UTR अनुरोध नहीं मिला।' });
+  if (idx === -1) return res.status(404).json({ error: 'UTR अनुरोध नहीं मिला।' });
 
   const utrReq = store.utrRequests[idx];
   if (utrReq.status !== 'pending') {
     return res.status(400).json({ 
-      error: `यह B2B UTR अनुरोध पहले ही ${utrReq.status === 'approved' ? 'स्वीकृत' : 'अस्वीकृत'} किया जा चुका है।` 
+      error: `यह UTR अनुरोध पहले ही ${utrReq.status === 'approved' ? 'स्वीकृत' : 'अस्वीकृत'} किया जा चुका है।` 
     });
   }
+
+  const isCustomer = (utrReq.tier === 'customer_to_sanchalak' || (!utrReq.tier && utrReq.customerPhone));
 
   if (action === 'approve') {
     utrReq.status = 'approved';
     utrReq.approvedAt = new Date().toISOString();
 
-    const cafeIdx = (store.cafes || []).findIndex(c => c.id === utrReq.cafeId);
-    if (cafeIdx !== -1) {
-      if (!store.cafes[cafeIdx].b2bWallet) {
-        store.cafes[cafeIdx].b2bWallet = { balance: 0, minThreshold: 200, transactions: [] };
+    if (isCustomer) {
+      const cPhone = utrReq.customerPhone;
+      const amt = Number(utrReq.amount) || 0;
+      if (!store.wallets) store.wallets = [];
+      let w = store.wallets.find(w => w.phone === cPhone);
+      if (!w) {
+        w = {
+          phone: cPhone,
+          customerName: utrReq.customerName || 'ग्राहक',
+          balance: amt,
+          transactions: []
+        };
+        store.wallets.push(w);
+      } else {
+        w.balance = (Number(w.balance) || 0) + amt;
       }
-      store.cafes[cafeIdx].b2bWallet.balance += utrReq.amount;
-      store.cafes[cafeIdx].b2bWallet.transactions.unshift({
-        id: `B2B-TXN-${Date.now()}`,
+      if (!Array.isArray(w.transactions)) w.transactions = [];
+      w.transactions.unshift({
+        id: `TXN-${Date.now()}`,
         type: 'credit',
-        amount: utrReq.amount,
+        amount: amt,
         utr: utrReq.utr,
-        note: `सुपर एडमिन द्वारा स्वीकृत UTR (${utrReq.utr}) B2B वॉलेट टॉप-अप`,
+        note: `सुपर एडमिन द्वारा स्वीकृत UTR (${utrReq.utr}) वॉलेट टॉप-अप`,
         createdAt: new Date().toISOString()
       });
+
+      // Sync user balance
+      const u = (store.users || []).find(u => u.phone === cPhone);
+      if (u) u.balance = (Number(u.balance) || 0) + amt;
+    } else {
+      const cafeIdx = (store.cafes || []).findIndex(c => c.id === utrReq.cafeId);
+      if (cafeIdx !== -1) {
+        if (!store.cafes[cafeIdx].b2bWallet) {
+          store.cafes[cafeIdx].b2bWallet = { balance: 0, minThreshold: 200, transactions: [] };
+        }
+        store.cafes[cafeIdx].b2bWallet.balance += utrReq.amount;
+        store.cafes[cafeIdx].b2bWallet.transactions.unshift({
+          id: `B2B-TXN-${Date.now()}`,
+          type: 'credit',
+          amount: utrReq.amount,
+          utr: utrReq.utr,
+          note: `सुपर एडमिन द्वारा स्वीकृत UTR (${utrReq.utr}) B2B वॉलेट टॉप-अप`,
+          createdAt: new Date().toISOString()
+        });
+      }
     }
   } else if (action === 'reject') {
     utrReq.status = 'rejected';
-    utrReq.rejectReason = rejectReason || 'केंद्रीय बैंक खाते में UTR क्रेडिट नहीं मिला।';
+    utrReq.rejectReason = rejectReason || (isCustomer ? 'बैंक खाते में UTR क्रेडिट नहीं मिला।' : 'केंद्रीय बैंक खाते में UTR क्रेडिट नहीं मिला।');
     utrReq.rejectedAt = new Date().toISOString();
   }
 
   saveStore(store);
   res.json({ success: true, utrRequest: utrReq });
-});
+};
+
+app.post('/api/superadmin/utr-requests/:utrId/action', handleSuperAdminUtrAction);
+app.post('/api/superadmin/b2b-utr-requests/:utrId/action', handleSuperAdminUtrAction);
 
 // 6. Complaints & Secret Shadow Audit (गुप्त निगरानी) APIs
 app.post('/api/complaints', (req, res) => {

@@ -1,0 +1,58 @@
+﻿{
+    "totalCafes":  0,
+    "activeCafes":  0,
+    "totalRevenue":  0,
+    "wholesaleServiceRevenue":  0,
+    "totalPlatformEarnings":  0,
+    "totalAutomatedOrders":  0,
+    "subscriptionPrice":  299,
+    "totalApplications":  0,
+    "totalPrints":  0,
+    "superAdminRates":  {
+                            "rcDownload":  200,
+                            "panCard":  107,
+                            "incomeCert":  50,
+                            "casteCert":  50,
+                            "niwasCert":  50,
+                            "drivingLicence":  150,
+                            "pvcCard":  40
+                        },
+    "pendingB2bUtrsCount":  0,
+    "pendingKycsCount":  0,
+    "totalComplaintsCount":  0,
+    "broadcastNotice":  null,
+    "cafes":  [
+
+              ],
+    "utrRequests":  [
+                        {
+                            "id":  "UTR-CUST-1792123194-988",
+                            "tier":  "customer_to_sanchalak",
+                            "cafeId":  "",
+                            "cafeShopName":  "डिजिटल साइबर कैफे",
+                            "customerPhone":  "8006518960",
+                            "customerName":  "ग्राहक",
+                            "amount":  10,
+                            "utr":  "717839573483",
+                            "screenshotUrl":  "",
+                            "upiTarget":  "shop@upi",
+                            "status":  "pending",
+                            "autoVerified":  false,
+                            "approvedAt":  null,
+                            "rejectReason":  "",
+                            "createdAt":  "2026-10-16T03:59:54+00:00"
+                        }
+                    ],
+    "kycApplications":  [
+
+                        ],
+    "complaints":  [
+
+                   ],
+    "rcOrders":  [
+
+                 ],
+    "auditLogs":  [
+
+                  ]
+}

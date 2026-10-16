@@ -87,12 +87,14 @@ function getStore($dataFile) {
             }
 
             // Immune Vault: Restore and merge all persistent users & passwords from users_master.json
+            $dataDir = dirname($dataFile);
             $masterUsersFile = $dataDir . '/users_master.json';
             if (file_exists($masterUsersFile)) {
                 $masterUsers = json_decode(file_get_contents($masterUsersFile), true);
                 if (is_array($masterUsers)) {
                     foreach ($masterUsers as $mu) {
                         $mPhone = $mu['phone'] ?? '';
+                        if (!$mPhone) continue;
                         $foundIdx = -1;
                         foreach ($data['users'] as $idx => $u) {
                             if (($u['phone'] ?? '') === $mPhone) {
@@ -111,6 +113,46 @@ function getStore($dataFile) {
                         }
                     }
                 }
+            }
+
+            // Immune Vault 2: Restore and merge all registered users from active Relational SQL Database
+            try {
+                $pdo = getPdoConnection();
+                if ($pdo) {
+                    $sqlUsers = $pdo->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
+                    if (!empty($sqlUsers) && is_array($sqlUsers)) {
+                        foreach ($sqlUsers as $su) {
+                            $sPhone = $su['phone'] ?? '';
+                            if (!$sPhone) continue;
+                            $found = false;
+                            foreach ($data['users'] as &$u) {
+                                if (($u['phone'] ?? '') === $sPhone) {
+                                    $found = true;
+                                    if (empty($u['name']) && !empty($su['name'])) { $u['name'] = $su['name']; $changed = true; }
+                                    if (empty($u['password']) && !empty($su['password'])) { $u['password'] = $su['password']; $changed = true; }
+                                    break;
+                                }
+                            }
+                            unset($u);
+                            if (!$found) {
+                                $data['users'][] = [
+                                    'id' => $su['id'] ?? ('USR-' . $sPhone),
+                                    'name' => $su['name'] ?? 'ग्राहक',
+                                    'shopName' => $su['shop_name'] ?? '',
+                                    'phone' => $sPhone,
+                                    'password' => $su['password'] ?? 'password123',
+                                    'role' => $su['role'] ?? 'citizen',
+                                    'balance' => floatval($su['balance'] ?? 0),
+                                    'isBlocked' => !empty($su['is_blocked']),
+                                    'createdAt' => $su['created_at'] ?? date('c')
+                                ];
+                                $changed = true;
+                            }
+                        }
+                    }
+                }
+            } catch (Throwable $e) {
+                // non-fatal SQL probe
             }
             if (!empty($data['cafes'])) {
                 foreach ($data['cafes'] as $c) {
@@ -703,6 +745,61 @@ if ($endpoint === 'auth/register' && $method === 'POST') {
     }
 
     saveStore($dataFile, $store);
+
+    // Immune Vault: Direct permanent write to users_master.json
+    $masterUsersFile = dirname($dataFile) . '/users_master.json';
+    $mUsers = file_exists($masterUsersFile) ? json_decode(file_get_contents($masterUsersFile), true) : [];
+    if (!is_array($mUsers)) $mUsers = [];
+    $mFound = false;
+    foreach ($mUsers as &$mu) {
+        if (($mu['phone'] ?? '') === $phone) {
+            $mFound = true;
+            $mu['password'] = $password;
+            break;
+        }
+    }
+    unset($mu);
+    if (!$mFound) {
+        $mUsers[] = $newUser;
+    }
+    @file_put_contents($masterUsersFile, json_encode($mUsers, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+
+    // Immune Vault: Direct permanent insert into SQL Database (MySQL / SQLite)
+    try {
+        $pdo = getPdoConnection();
+        if ($pdo) {
+            $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+            if ($driver === 'sqlite') {
+                $stmt = $pdo->prepare("INSERT OR REPLACE INTO users (id, phone, name, shop_name, password, role, balance, is_blocked, created_at)
+                    VALUES (:id, :phone, :name, :shop_name, :password, :role, :balance, 0, :created_at)");
+                $wStmt = $pdo->prepare("INSERT OR REPLACE INTO wallets (phone, customer_name, balance, updated_at)
+                    VALUES (:phone, :customer_name, 0, :updated_at)");
+            } else {
+                $stmt = $pdo->prepare("INSERT INTO users (id, phone, name, shop_name, password, role, balance, is_blocked, created_at)
+                    VALUES (:id, :phone, :name, :shop_name, :password, :role, :balance, 0, :created_at)
+                    ON DUPLICATE KEY UPDATE name = VALUES(name), password = VALUES(password)");
+                $wStmt = $pdo->prepare("INSERT INTO wallets (phone, customer_name, balance, updated_at)
+                    VALUES (:phone, :customer_name, 0, NOW())
+                    ON DUPLICATE KEY UPDATE customer_name = VALUES(customer_name)");
+            }
+            $stmt->execute([
+                ':id' => $newUser['id'],
+                ':phone' => $phone,
+                ':name' => $name,
+                ':shop_name' => $body['shopName'] ?? $name,
+                ':password' => $password,
+                ':role' => $role,
+                ':balance' => 0.0,
+                ':created_at' => date('Y-m-d H:i:s')
+            ]);
+            $wParams = [':phone' => $phone, ':customer_name' => $name];
+            if ($driver === 'sqlite') $wParams[':updated_at'] = date('Y-m-d H:i:s');
+            $wStmt->execute($wParams);
+        }
+    } catch (Throwable $e) {
+        error_log("SQL Register Direct Error: " . $e->getMessage());
+    }
+
     $token = createToken(['id' => $newUser['id'], 'role' => $newUser['role'], 'phone' => $newUser['phone']]);
     http_response_code(201);
     echo json_encode(['success' => true, 'token' => $token, 'user' => $newUser]);
@@ -898,7 +995,98 @@ if (($endpoint === 'superadmin/services/rates' || $endpoint === 'services/rates'
 // Route: /api/superadmin/users
 if ($endpoint === 'superadmin/users') {
     if ($method === 'GET') {
-        $users = array_map(function($u) use ($store) {
+        $usersMap = [];
+
+        // 1. From in-memory / store users
+        foreach (($store['users'] ?? []) as $u) {
+            if (!empty($u['phone'])) $usersMap[$u['phone']] = $u;
+        }
+
+        // 2. From users_master.json (Immune Vault)
+        $masterFile = dirname($dataFile) . '/users_master.json';
+        if (file_exists($masterFile)) {
+            $mList = json_decode(file_get_contents($masterFile), true);
+            if (is_array($mList)) {
+                foreach ($mList as $mu) {
+                    $mPhone = $mu['phone'] ?? '';
+                    if (!$mPhone) continue;
+                    if (!isset($usersMap[$mPhone])) {
+                        $usersMap[$mPhone] = $mu;
+                    } else if (!empty($mu['password']) && (empty($usersMap[$mPhone]['password']) || $usersMap[$mPhone]['password'] === 'password123')) {
+                        $usersMap[$mPhone]['password'] = $mu['password'];
+                    }
+                }
+            }
+        }
+
+        // 3. From active Relational SQL Database table `users`
+        try {
+            $pdo = getPdoConnection();
+            if ($pdo) {
+                $sqlUsers = $pdo->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
+                if (!empty($sqlUsers) && is_array($sqlUsers)) {
+                    foreach ($sqlUsers as $su) {
+                        $sPhone = $su['phone'] ?? '';
+                        if (!$sPhone) continue;
+                        if (!isset($usersMap[$sPhone])) {
+                            $usersMap[$sPhone] = [
+                                'id' => $su['id'] ?? ('USR-' . $sPhone),
+                                'name' => $su['name'] ?? 'ग्राहक',
+                                'shopName' => $su['shop_name'] ?? '',
+                                'phone' => $sPhone,
+                                'password' => $su['password'] ?? 'password123',
+                                'role' => $su['role'] ?? 'citizen',
+                                'balance' => floatval($su['balance'] ?? 0),
+                                'isBlocked' => !empty($su['is_blocked']),
+                                'createdAt' => $su['created_at'] ?? date('c')
+                            ];
+                        } else if (!empty($su['password']) && empty($usersMap[$sPhone]['password'])) {
+                            $usersMap[$sPhone]['password'] = $su['password'];
+                        }
+                    }
+                }
+            }
+        } catch (Throwable $e) {}
+
+        // 4. From registered cafes
+        foreach (($store['cafes'] ?? []) as $c) {
+            $cPhone = $c['phone'] ?? '';
+            if ($cPhone && !isset($usersMap[$cPhone])) {
+                $usersMap[$cPhone] = [
+                    'id' => $c['id'],
+                    'name' => $c['ownerName'] ?? 'संचालक',
+                    'shopName' => $c['shopName'] ?? 'डिजिटल सेवा केंद्र',
+                    'phone' => $cPhone,
+                    'password' => '1234',
+                    'role' => 'cafe',
+                    'balance' => $c['b2bWallet']['balance'] ?? 0,
+                    'isBlocked' => !empty($c['isFrozen']),
+                    'createdAt' => $c['createdAt'] ?? date('c')
+                ];
+            }
+        }
+
+        // 5. From wallets
+        foreach (($store['wallets'] ?? []) as $w) {
+            $wPhone = $w['phone'] ?? '';
+            if ($wPhone && !isset($usersMap[$wPhone])) {
+                $usersMap[$wPhone] = [
+                    'id' => 'USR-' . $wPhone,
+                    'name' => $w['customerName'] ?? 'ग्राहक',
+                    'shopName' => '',
+                    'phone' => $wPhone,
+                    'password' => 'password123',
+                    'role' => 'citizen',
+                    'balance' => floatval($w['balance'] ?? 0),
+                    'isBlocked' => false,
+                    'createdAt' => date('c')
+                ];
+            }
+        }
+
+        // Map real-time wallet balances
+        $allUsers = array_values($usersMap);
+        $finalList = array_map(function($u) use ($store) {
             $bal = $u['balance'] ?? 0;
             if (($u['role'] ?? '') === 'cafe') {
                 foreach (($store['cafes'] ?? []) as $c) {
@@ -917,9 +1105,11 @@ if ($endpoint === 'superadmin/users') {
             }
             $u['balance'] = $bal;
             return $u;
-        }, $store['users'] ?? []);
+        }, $allUsers);
 
-        echo json_encode(['success' => true, 'users' => array_values($users)]);
+        $store['users'] = $finalList;
+
+        echo json_encode(['success' => true, 'users' => $finalList]);
         exit;
     }
 }
@@ -2361,7 +2551,13 @@ if (preg_match('#^cafes/([^/]+)/utr-requests/([^/]+)/action$#', $endpoint, $m) &
     exit;
 }
 
-// Route: /api/superadmin/b2b-utr-requests
+// Route: /api/superadmin/utr-requests (GET all UTR requests)
+if ($endpoint === 'superadmin/utr-requests' && $method === 'GET') {
+    echo json_encode($store['utrRequests'] ?? []);
+    exit;
+}
+
+// Route: /api/superadmin/b2b-utr-requests (GET B2B UTR requests)
 if ($endpoint === 'superadmin/b2b-utr-requests' && $method === 'GET') {
     $list = [];
     foreach ($store['utrRequests'] ?? [] as $u) {
@@ -2373,9 +2569,21 @@ if ($endpoint === 'superadmin/b2b-utr-requests' && $method === 'GET') {
     exit;
 }
 
-// Route: /api/superadmin/b2b-utr-requests/:utrId/action
-if (preg_match('#^superadmin/b2b-utr-requests/([^/]+)/action$#', $endpoint, $m) && $method === 'POST') {
-    $utrId = $m[1];
+// Route: /api/superadmin/customer-utr-requests (GET Customer UTR requests)
+if ($endpoint === 'superadmin/customer-utr-requests' && $method === 'GET') {
+    $list = [];
+    foreach ($store['utrRequests'] ?? [] as $u) {
+        if (($u['tier'] ?? '') === 'customer_to_sanchalak' || !empty($u['customerPhone'])) {
+            $list[] = $u;
+        }
+    }
+    echo json_encode($list);
+    exit;
+}
+
+// Route: /api/superadmin/utr-requests/:utrId/action OR /api/superadmin/b2b-utr-requests/:utrId/action
+if (preg_match('#^superadmin/(b2b-)?utr-requests/([^/]+)/action$#', $endpoint, $m) && $method === 'POST') {
+    $utrId = $m[2];
     $action = $body['action'] ?? '';
     $rejectReason = $body['rejectReason'] ?? '';
 
@@ -2389,46 +2597,152 @@ if (preg_match('#^superadmin/b2b-utr-requests/([^/]+)/action$#', $endpoint, $m) 
 
     if ($targetReqIdx === -1) {
         http_response_code(404);
-        echo json_encode(['error' => 'B2B UTR अनुरोध नहीं मिला।']);
+        echo json_encode(['error' => 'UTR अनुरोध नहीं मिला।']);
         exit;
     }
 
     $utrReq = &$store['utrRequests'][$targetReqIdx];
     if (($utrReq['status'] ?? '') !== 'pending') {
         http_response_code(400);
-        echo json_encode(['error' => 'यह B2B UTR अनुरोध पहले ही संसाधित किया जा चुका है।']);
+        echo json_encode(['error' => 'यह UTR अनुरोध पहले ही संसाधित किया जा चुका है।']);
         exit;
     }
+
+    $isCustomer = (($utrReq['tier'] ?? '') === 'customer_to_sanchalak' || !empty($utrReq['customerPhone']));
 
     if ($action === 'approve') {
         $utrReq['status'] = 'approved';
         $utrReq['approvedAt'] = date('c');
 
-        // Credit Cafe B2B Wallet
-        foreach ($store['cafes'] ?? [] as $idx => $c) {
-            if ($c['id'] === $utrReq['cafeId']) {
-                if (!isset($store['cafes'][$idx]['b2bWallet'])) {
-                    $store['cafes'][$idx]['b2bWallet'] = ['balance' => 0, 'minThreshold' => 200, 'transactions' => []];
+        if ($isCustomer) {
+            $cPhone = $utrReq['customerPhone'] ?? '';
+            $amt = floatval($utrReq['amount'] ?? 0);
+
+            // 1. Credit Customer Wallet in $store['wallets']
+            if (!isset($store['wallets'])) $store['wallets'] = [];
+            $wFound = false;
+            foreach ($store['wallets'] as &$w) {
+                if (($w['phone'] ?? '') === $cPhone) {
+                    $wFound = true;
+                    $w['balance'] = floatval($w['balance'] ?? 0) + $amt;
+                    if (!isset($w['transactions'])) $w['transactions'] = [];
+                    array_unshift($w['transactions'], [
+                        'id' => 'TXN-' . time() . '-' . rand(100, 999),
+                        'type' => 'credit',
+                        'amount' => $amt,
+                        'utr' => $utrReq['utr'] ?? '',
+                        'note' => "सुपर एडमिन द्वारा स्वीकृत UTR ({$utrReq['utr']}) वॉलेट टॉप-अप",
+                        'createdAt' => date('c')
+                    ]);
+                    break;
                 }
-                $store['cafes'][$idx]['b2bWallet']['balance'] += $utrReq['amount'];
-                if (!isset($store['cafes'][$idx]['b2bWallet']['transactions'])) {
-                    $store['cafes'][$idx]['b2bWallet']['transactions'] = [];
-                }
-                array_unshift($store['cafes'][$idx]['b2bWallet']['transactions'], [
-                    'id' => 'B2B-TXN-' . time() . '-' . rand(100, 999),
-                    'type' => 'credit',
-                    'amount' => $utrReq['amount'],
-                    'utr' => $utrReq['utr'] ?? '',
-                    'note' => "सुपर एडमिन द्वारा स्वीकृत UTR ({$utrReq['utr']}) B2B वॉलेट टॉप-अप",
-                    'createdAt' => date('c')
-                ]);
-                break;
             }
+            unset($w);
+
+            if (!$wFound && $cPhone) {
+                $store['wallets'][] = [
+                    'phone' => $cPhone,
+                    'customerName' => $utrReq['customerName'] ?? 'ग्राहक',
+                    'balance' => $amt,
+                    'transactions' => [[
+                        'id' => 'TXN-' . time() . '-' . rand(100, 999),
+                        'type' => 'credit',
+                        'amount' => $amt,
+                        'utr' => $utrReq['utr'] ?? '',
+                        'note' => "सुपर एडमिन द्वारा स्वीकृत UTR ({$utrReq['utr']}) वॉलेट टॉप-अप",
+                        'createdAt' => date('c')
+                    ]]
+                ];
+            }
+
+            // 2. Sync balance to $store['users']
+            foreach ($store['users'] as &$u) {
+                if (($u['phone'] ?? '') === $cPhone) {
+                    $u['balance'] = floatval($u['balance'] ?? 0) + $amt;
+                    break;
+                }
+            }
+            unset($u);
+
+            // 3. Mirror directly into SQL tables
+            try {
+                $pdo = getPdoConnection();
+                if ($pdo) {
+                    $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+                    if ($driver === 'sqlite') {
+                        $pdo->prepare("INSERT OR IGNORE INTO wallets (phone, customer_name, balance, updated_at) VALUES (?, ?, 0, ?)")
+                            ->execute([$cPhone, $utrReq['customerName'] ?? 'ग्राहक', date('Y-m-d H:i:s')]);
+                    } else {
+                        $pdo->prepare("INSERT INTO wallets (phone, customer_name, balance, updated_at) VALUES (?, ?, 0, NOW()) ON DUPLICATE KEY UPDATE updated_at = NOW()")
+                            ->execute([$cPhone, $utrReq['customerName'] ?? 'ग्राहक']);
+                    }
+                    $stmtW = $pdo->prepare("UPDATE wallets SET balance = balance + :amt WHERE phone = :phone");
+                    $stmtW->execute([':amt' => $amt, ':phone' => $cPhone]);
+
+                    $stmtU = $pdo->prepare("UPDATE users SET balance = balance + :amt WHERE phone = :phone");
+                    $stmtU->execute([':amt' => $amt, ':phone' => $cPhone]);
+
+                    $stmtTx = $pdo->prepare("INSERT INTO transactions (id, phone, type, amount, note, description, created_at) VALUES (:id, :phone, 'credit', :amt, :note, 'Wallet Recharge', :created_at)");
+                    $stmtTx->execute([
+                        ':id' => 'TXN-' . time() . '-' . rand(100, 999),
+                        ':phone' => $cPhone,
+                        ':amt' => $amt,
+                        ':note' => "सुपर एडमिन स्वीकृत UTR: {$utrReq['utr']}",
+                        ':created_at' => date('Y-m-d H:i:s')
+                    ]);
+
+                    $stmtUr = $pdo->prepare("UPDATE utr_requests SET status = 'approved', approved_at = :approved_at WHERE id = :id");
+                    $stmtUr->execute([':approved_at' => date('Y-m-d H:i:s'), ':id' => $utrId]);
+                }
+            } catch (Throwable $e) {
+                error_log("SQL mirror error on UTR approval: " . $e->getMessage());
+            }
+
+        } else {
+            // Sanchalak B2B Wholesale UTR
+            foreach ($store['cafes'] ?? [] as $idx => $c) {
+                if ($c['id'] === $utrReq['cafeId']) {
+                    if (!isset($store['cafes'][$idx]['b2bWallet'])) {
+                        $store['cafes'][$idx]['b2bWallet'] = ['balance' => 0, 'minThreshold' => 200, 'transactions' => []];
+                    }
+                    $store['cafes'][$idx]['b2bWallet']['balance'] += $utrReq['amount'];
+                    if (!isset($store['cafes'][$idx]['b2bWallet']['transactions'])) {
+                        $store['cafes'][$idx]['b2bWallet']['transactions'] = [];
+                    }
+                    array_unshift($store['cafes'][$idx]['b2bWallet']['transactions'], [
+                        'id' => 'B2B-TXN-' . time() . '-' . rand(100, 999),
+                        'type' => 'credit',
+                        'amount' => $utrReq['amount'],
+                        'utr' => $utrReq['utr'] ?? '',
+                        'note' => "सुपर एडमिन द्वारा स्वीकृत UTR ({$utrReq['utr']}) B2B वॉलेट टॉप-अप",
+                        'createdAt' => date('c')
+                    ]);
+                    break;
+                }
+            }
+            try {
+                $pdo = getPdoConnection();
+                if ($pdo) {
+                    $stmt = $pdo->prepare("UPDATE cafes SET b2b_balance = b2b_balance + :amt WHERE id = :id");
+                    $stmt->execute([':amt' => $utrReq['amount'], ':id' => $utrReq['cafeId']]);
+                    $stmtUr = $pdo->prepare("UPDATE utr_requests SET status = 'approved', approved_at = :approved_at WHERE id = :id");
+                    $stmtUr->execute([':approved_at' => date('Y-m-d H:i:s'), ':id' => $utrId]);
+                }
+            } catch (Throwable $e) {}
         }
+
     } else if ($action === 'reject') {
         $utrReq['status'] = 'rejected';
-        $utrReq['rejectReason'] = $rejectReason ?: 'केंद्रीय बैंक खाते में UTR क्रेडिट नहीं मिला।';
+        $utrReq['rejectReason'] = $rejectReason ?: ($isCustomer ? 'बैंक खाते में UTR क्रेडिट नहीं मिला।' : 'केंद्रीय बैंक खाते में UTR क्रेडिट नहीं मिला।');
         $utrReq['rejectedAt'] = date('c');
+
+        try {
+            $pdo = getPdoConnection();
+            if ($pdo) {
+                $stmtUr = $pdo->prepare("UPDATE utr_requests SET status = 'rejected', approved_at = NULL WHERE id = :id");
+                $stmtUr->execute([':id' => $utrId]);
+            }
+        } catch (Throwable $e) {}
     }
 
     saveStore($dataFile, $store);
@@ -2496,6 +2810,9 @@ if ($endpoint === 'superadmin/stats' && $method === 'GET') {
     $pendingB2bUtrs = array_filter($store['utrRequests'] ?? [], function($u) {
         return ($u['tier'] ?? '') === 'sanchalak_to_superadmin' && ($u['status'] ?? '') === 'pending';
     });
+    $pendingCustomerUtrs = array_filter($store['utrRequests'] ?? [], function($u) {
+        return (($u['tier'] ?? '') === 'customer_to_sanchalak' || !empty($u['customerPhone'])) && ($u['status'] ?? '') === 'pending';
+    });
     $pendingKycs = array_filter($store['vleKycApplications'] ?? [], function($k) {
         return ($k['status'] ?? '') === 'pending_approval';
     });
@@ -2515,6 +2832,8 @@ if ($endpoint === 'superadmin/stats' && $method === 'GET') {
         'totalPrints' => count($store['prints'] ?? []),
         'superAdminRates' => $store['superAdminRates'] ?? ['rcDownload' => 200, 'panCard' => 107],
         'pendingB2bUtrsCount' => count($pendingB2bUtrs),
+        'pendingCustomerUtrsCount' => count($pendingCustomerUtrs),
+        'totalPendingUtrsCount' => count($pendingB2bUtrs) + count($pendingCustomerUtrs),
         'pendingKycsCount' => count($pendingKycs),
         'totalComplaintsCount' => count($store['complaints'] ?? []),
         'broadcastNotice' => $store['broadcastNotice'] ?? null,

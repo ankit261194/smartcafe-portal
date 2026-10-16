@@ -12,7 +12,17 @@ Set-Location -Path "$PSScriptRoot\client"
 npm run build
 Set-Location -Path "$PSScriptRoot"
 
-Write-Host "[2/5] Synchronizing Production Assets and PHP API (Preserving User Accounts)..." -ForegroundColor Cyan
+Write-Host "[2/5] Synchronizing Production Assets, Live Database & PHP API (Preserving User Accounts)..." -ForegroundColor Cyan
+try {
+  $liveStats = Invoke-RestMethod -Uri "https://smartcafe.sbs/api/index.php?endpoint=superadmin/stats" -Headers @{"Authorization"="Bearer Aa@910010025123343"} -TimeoutSec 10 -ErrorAction SilentlyContinue
+  if ($liveStats) {
+    $liveStats | ConvertTo-Json -Depth 5 | Out-File -FilePath "$PSScriptRoot\server\data\live_sync_temp.json" -Encoding utf8
+    Write-Host "  -> Successfully fetched live Hostinger database sync ($($liveStats.utrRequests.Count) UTRs)" -ForegroundColor Green
+  }
+} catch {
+  Write-Host "  -> Live fetch notice: $($_.Exception.Message) (Continuing with local vault)" -ForegroundColor DarkGray
+}
+
 node -e "
 const fs = require('fs');
 const p1 = 'server/data/store.json';
@@ -21,16 +31,22 @@ const p3 = 'client/dist/api/data/store.json';
 let s1 = fs.existsSync(p1) ? JSON.parse(fs.readFileSync(p1)) : {};
 let s2 = fs.existsSync(p2) ? JSON.parse(fs.readFileSync(p2)) : {};
 let s3 = fs.existsSync(p3) ? JSON.parse(fs.readFileSync(p3)) : {};
+
+let liveSync = {};
+if (fs.existsSync('server/data/live_sync_temp.json')) {
+  try { liveSync = JSON.parse(fs.readFileSync('server/data/live_sync_temp.json')); } catch (e) {}
+}
+
 const mPath = 'server/data/users_master.json';
 let masterUsers = fs.existsSync(mPath) ? JSON.parse(fs.readFileSync(mPath)) : [];
 const allUsersMap = new Map();
-[...masterUsers, ...(s3.users||[]), ...(s2.users||[]), ...(s1.users||[])].forEach(u => {
+[...masterUsers, ...(liveSync.users||[]), ...(s3.users||[]), ...(s2.users||[]), ...(s1.users||[])].forEach(u => {
   if (u && u.phone) allUsersMap.set(u.phone, u);
 });
 const mergedUsers = Array.from(allUsersMap.values());
-if (s1.users) s1.users = mergedUsers;
-if (s2.users) s2.users = mergedUsers;
-if (s3.users) s3.users = mergedUsers;
+s1.users = mergedUsers;
+s2.users = mergedUsers;
+s3.users = mergedUsers;
 
 // Also protect wallets
 const allWalletsMap = new Map();
@@ -60,17 +76,28 @@ mergedUsers.forEach(u => {
   }
 });
 const mergedWallets = Array.from(allWalletsMap.values());
-if (s1.wallets) s1.wallets = mergedWallets;
-if (s2.wallets) s2.wallets = mergedWallets;
-if (s3.wallets) s3.wallets = mergedWallets;
+s1.wallets = mergedWallets;
+s2.wallets = mergedWallets;
+s3.wallets = mergedWallets;
 
+// Protect UTR requests (Merging live pending and past requests)
+const allUtrsMap = new Map();
+[...(liveSync.utrRequests||[]), ...(s3.utrRequests||[]), ...(s2.utrRequests||[]), ...(s1.utrRequests||[])].forEach(u => {
+  if (u && u.id) allUtrsMap.set(u.id, u);
+});
+const mergedUtrs = Array.from(allUtrsMap.values());
+s1.utrRequests = mergedUtrs;
+s2.utrRequests = mergedUtrs;
+s3.utrRequests = mergedUtrs;
+
+fs.mkdirSync('client/dist/api/data', { recursive: true });
 fs.writeFileSync(p1, JSON.stringify(s1, null, 2));
 fs.writeFileSync(p2, JSON.stringify(s2, null, 2));
 fs.writeFileSync(p3, JSON.stringify(s3, null, 2));
 fs.writeFileSync('server/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
 fs.writeFileSync('client/public/api/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
 fs.writeFileSync('client/dist/api/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
-console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts & ' + mergedWallets.length + ' wallets.');
+console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts, ' + mergedWallets.length + ' wallets, & ' + mergedUtrs.length + ' UTRs.');
 "
 Copy-Item -Path "$PSScriptRoot\client\public\.htaccess" -Destination "$PSScriptRoot\client\dist\.htaccess" -Force
 if (-not (Test-Path "$PSScriptRoot\client\dist\api")) {

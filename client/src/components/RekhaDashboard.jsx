@@ -455,6 +455,41 @@ export default function RekhaDashboard({
       </div>
 
       {/* =================================================================== */}
+      {/* 2.1 ANDROID MOBILE APP (APK) DOWNLOAD BANNER */}
+      {/* =================================================================== */}
+      <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 rounded-2xl p-3 sm:p-4 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-emerald-500/30">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shrink-0 text-xl shadow-xs">
+            📲
+          </div>
+          <div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-500/30 text-emerald-200 border border-emerald-400/30 px-2.5 py-0.5 rounded-full">
+                {language === 'hi' ? 'ऑफिशियल एंड्रॉइड ऐप' : 'Official Android App'}
+              </span>
+              <span className="text-[10px] bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full font-black">
+                v2.0 • 18.5 MB
+              </span>
+            </div>
+            <h3 className="text-xs sm:text-sm font-black text-white mt-1">
+              {language === 'hi' 
+                ? 'स्मार्ट कैफे मोबाइल ऐप — 1-क्लिक में अपने फोन में डाउनलोड व इंस्टॉल करें' 
+                : 'Smart Cafe Android App — Download & install directly on your phone'}
+            </h3>
+          </div>
+        </div>
+
+        <a
+          href="/CyberCafe_Portal.apk"
+          download="CyberCafe_Portal.apk"
+          className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-slate-950 font-black px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition active:scale-95 shrink-0"
+        >
+          <Smartphone className="w-4 h-4 text-slate-950" />
+          <span>{language === 'hi' ? '📥 APK डाउनलोड करें' : '📥 Download APK'}</span>
+        </a>
+      </div>
+
+      {/* =================================================================== */}
       {/* 3. CATEGORY QUICK-SWITCH HORIZONTAL FILTER PILLS BAR */}
       {/* =================================================================== */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">

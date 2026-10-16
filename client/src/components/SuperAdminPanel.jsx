@@ -34,6 +34,7 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('cafes'); // 'cafes', 'api_hub', 'api_gateway', 'rates', 'b2b_utr', 'kyc', 'shadow_audit', 'broadcast', 'system_health'
   const [filterStatus, setFilterStatus] = useState('all'); // 'all', 'active', 'expired'
+  const [utrSubTab, setUtrSubTab] = useState('all'); // 'all', 'customer', 'b2b'
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [togglingTool, setTogglingTool] = useState({});
 
@@ -608,22 +609,34 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
     }
   };
 
-  // Pillar 2: Approve / Reject Sanchalak B2B UTR
-  const handleB2bUtrAction = async (utrId, action) => {
+  // Approve / Reject ANY UTR (Citizen Wallet or Shopkeeper B2B)
+  const handleUtrAction = async (utrId, action, amount = 0) => {
     try {
-      const res = await authFetch(`/api/superadmin/b2b-utr-requests/${utrId}/action`, {
+      let res = await authFetch(`/api/superadmin/utr-requests/${utrId}/action`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action })
       });
+      if (!res.ok) {
+        res = await authFetch(`/api/superadmin/b2b-utr-requests/${utrId}/action`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action })
+        });
+      }
       if (res.ok) {
-        alert(action === 'approve' ? '✅ B2B UTR स्वीकृत! संचालक B2B वॉलेट में बैलेंस जुड़ गया।' : 'B2B UTR अस्वीकृत कर दिया गया।');
+        alert(action === 'approve' ? `✅ UTR स्वीकृत! संबंधित वॉलेट में ₹${amount || ''} बैलेंस जुड़ गया है।` : '❌ UTR अनुरोध अस्वीकृत कर दिया गया।');
         fetchStats();
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'UTR कार्रवाई करने में त्रुटि आई।');
       }
     } catch (err) {
-      console.error(err);
+      console.error('UTR action error:', err);
+      alert('सर्वर से संपर्क नहीं हो सका।');
     }
   };
+  const handleB2bUtrAction = handleUtrAction;
 
   // Pillar 7: Approve / Reject VLE KYC Application
   const handleKycAction = async (kycId, action) => {
@@ -760,8 +773,12 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
   };
 
   const cafes = stats?.cafes || [];
-  const b2bUtrList = stats?.utrRequests?.filter(u => u.tier === 'sanchalak_to_superadmin') || [];
+  const allUtrList = stats?.utrRequests || [];
+  const customerUtrList = allUtrList.filter(u => u.tier === 'customer_to_sanchalak' || (!u.tier && u.customerPhone));
+  const b2bUtrList = allUtrList.filter(u => u.tier === 'sanchalak_to_superadmin');
+  const pendingCustomerCount = customerUtrList.filter(u => u.status === 'pending').length;
   const pendingB2bCount = b2bUtrList.filter(u => u.status === 'pending').length;
+  const totalPendingUtrs = pendingCustomerCount + pendingB2bCount;
   const kycList = stats?.kycApplications || [];
   const pendingKycCount = kycList.filter(k => k.status === 'pending_approval').length;
   const complaintsList = stats?.complaints || [];
@@ -1077,11 +1094,11 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
             activeTab === 'b2b_utr' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
           }`}
         >
-          <QrCode className="w-4 h-4" />
-          <span>B2B UTR अप्रूवल</span>
-          {pendingB2bCount > 0 && (
-            <span className="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black">
-              {pendingB2bCount}
+          <QrCode className="w-4 h-4 text-amber-400" />
+          <span>UTR सत्यापन कतार</span>
+          {totalPendingUtrs > 0 && (
+            <span className="bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full text-[10px] font-black animate-pulse">
+              {totalPendingUtrs}
             </span>
           )}
         </button>
@@ -1758,105 +1775,195 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
         </div>
       )}
 
-      {/* TAB 3: B2B UTR APPROVAL QUEUE (स्तंभ 2) */}
-      {activeTab === 'b2b_utr' && (
-        <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-black text-slate-900 dark:text-white text-lg flex items-center gap-2">
-                <QrCode className="w-5 h-5 text-orange-500" />
-                <span>संचालक B2B वॉलेट UTR सत्यापन कतार (Super Admin UTR Approvals)</span>
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                कैफे संचालकों द्वारा सुपर एडमिन QR (superadmin@upi) पर भेजे गए 12-अंकीय UTR की पुष्टि करें और B2B बैलेंस क्रेडिट करें।
-              </p>
-            </div>
+      {/* TAB 3: UTR APPROVAL QUEUE (Citizen & Shopkeeper B2B Dual Queue) */}
+      {activeTab === 'b2b_utr' && (() => {
+        const displayedUtrList = utrSubTab === 'customer' 
+          ? customerUtrList 
+          : utrSubTab === 'b2b' 
+            ? b2bUtrList 
+            : allUtrList;
 
-            <button onClick={fetchStats} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer">
-              <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-            </button>
-          </div>
-
-          {b2bUtrList.length === 0 ? (
-            <div className="p-12 text-center text-slate-400 text-xs">
-              कोई B2B UTR अनुरोध नहीं है।
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {b2bUtrList.map((req) => (
-                <div 
-                  key={req.id} 
-                  className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs ${
-                    req.status === 'pending' 
-                      ? 'bg-amber-50/70 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800/60' 
-                      : 'bg-slate-50 dark:bg-[#0b1528] border-slate-200 dark:border-slate-800'
-                  }`}
-                >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-extrabold text-slate-900 dark:text-white text-sm">{req.cafeShopName}</span>
-                      <span className="font-mono text-slate-400 dark:text-slate-500">({req.phone})</span>
-                    </div>
-
-                    <div className="flex items-center gap-2">
-                      <span className="text-slate-600 dark:text-slate-400">जमा 12-अंकीय UTR:</span>
-                      <span className="font-mono font-black text-xs text-indigo-900 dark:text-amber-400 bg-white dark:bg-slate-900 px-2 py-0.5 rounded border border-indigo-200 dark:border-slate-700 tracking-wider">
-                        {req.utr}
-                      </span>
-                      {req.screenshotUrl && (
-                        <button
-                          type="button"
-                          onClick={() => setViewingSlipUrl(req.screenshotUrl)}
-                          className="bg-indigo-100 dark:bg-indigo-950/60 hover:bg-indigo-200 dark:hover:bg-indigo-900/60 text-indigo-900 dark:text-indigo-300 font-bold px-2.5 py-0.5 rounded-lg text-[10px] flex items-center gap-1 transition cursor-pointer"
-                        >
-                          <span>📸 रसीद पर्ची देखें</span>
-                        </button>
-                      )}
-                    </div>
-
-                    <span className="text-[10px] text-slate-400 dark:text-slate-500 block">
-                      समय: {new Date(req.createdAt).toLocaleString('hi-IN')}
+        return (
+          <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h3 className="font-black text-slate-900 dark:text-white text-lg flex items-center gap-2">
+                  <QrCode className="w-5 h-5 text-orange-500" />
+                  <span>UPI 12-अंकीय UTR सत्यापन व अप्रूवल कतार (Master UTR Control)</span>
+                  {totalPendingUtrs > 0 && (
+                    <span className="bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full text-xs font-black animate-pulse">
+                      {totalPendingUtrs} पेंडिंग
                     </span>
-                  </div>
+                  )}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  नागरिकों और कैफे संचालकों द्वारा QR कोड पर भेजे गए 12-अंकीय UTR नंबर की पुष्टि करें और तुरंत वॉलेट में बैलेंस क्रेडिट (Approve) या रिजेक्ट करें।
+                </p>
+              </div>
 
-                  <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
-                    <div className="text-right">
-                      <span className="text-[10px] text-slate-500 dark:text-slate-400 block">B2B रिचार्ज राशि</span>
-                      <span className="text-xl font-black text-emerald-700 dark:text-emerald-400">₹{req.amount}</span>
-                    </div>
-
-                    {req.status === 'pending' ? (
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          onClick={() => handleB2bUtrAction(req.id, 'approve')}
-                          className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1 shadow-sm transition cursor-pointer"
-                        >
-                          <Check className="w-3.5 h-3.5" />
-                          <span>स्वीकारें (Approve)</span>
-                        </button>
-
-                        <button
-                          onClick={() => handleB2bUtrAction(req.id, 'reject')}
-                          className="bg-red-100 dark:bg-red-950/60 hover:bg-red-200 dark:hover:bg-red-900/60 text-red-800 dark:text-red-300 font-bold px-3 py-2 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                          <span>अस्वीकार</span>
-                        </button>
-                      </div>
-                    ) : (
-                      <span className={`px-3 py-1 rounded-full text-xs font-black ${
-                        req.status === 'approved' ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300' : 'bg-red-100 dark:bg-red-950/60 text-red-800 dark:text-red-300'
-                      }`}>
-                        {req.status === 'approved' ? 'स्वीकृत (B2B Credited)' : 'अस्वीकृत'}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              ))}
+              <button 
+                onClick={fetchStats} 
+                className="self-start sm:self-auto p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer flex items-center gap-1.5 text-xs font-bold"
+              >
+                <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                <span>ताज़ा करें</span>
+              </button>
             </div>
-          )}
-        </div>
-      )}
+
+            {/* Sub-Tabs: All vs Customer vs B2B */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+              <button
+                type="button"
+                onClick={() => setUtrSubTab('all')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  utrSubTab === 'all'
+                    ? 'bg-slate-900 dark:bg-indigo-600 text-white shadow-sm'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }`}
+              >
+                <span>📋 सभी UTR अनुरोध ({allUtrList.length})</span>
+                {totalPendingUtrs > 0 && (
+                  <span className="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black">
+                    {totalPendingUtrs}
+                  </span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setUtrSubTab('customer')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  utrSubTab === 'customer'
+                    ? 'bg-emerald-600 text-white shadow-sm'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }`}
+              >
+                <span>👤 नागरिक / कस्टमर वॉलेट UTR ({customerUtrList.length})</span>
+                {pendingCustomerCount > 0 && (
+                  <span className="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black animate-pulse">
+                    {pendingCustomerCount} पेंडिंग
+                  </span>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setUtrSubTab('b2b')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  utrSubTab === 'b2b'
+                    ? 'bg-indigo-600 text-white shadow-sm'
+                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
+                }`}
+              >
+                <span>🏪 दुकानदार B2B वॉलेट UTR ({b2bUtrList.length})</span>
+                {pendingB2bCount > 0 && (
+                  <span className="bg-amber-400 text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black animate-pulse">
+                    {pendingB2bCount} पेंडिंग
+                  </span>
+                )}
+              </button>
+            </div>
+
+            {displayedUtrList.length === 0 ? (
+              <div className="p-12 text-center text-slate-400 text-xs bg-slate-50 dark:bg-[#0b1528] rounded-2xl border border-dashed border-slate-200 dark:border-slate-800">
+                कोई UTR अनुरोध नहीं मिला।
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {displayedUtrList.map((req) => {
+                  const isCust = req.tier === 'customer_to_sanchalak' || (!req.tier && req.customerPhone);
+                  const isPending = req.status === 'pending';
+                  const titleName = isCust ? (req.customerName || 'नागरिक ग्राहक') : (req.cafeShopName || 'दुकानदार');
+                  const phoneNum = req.customerPhone || req.phone;
+
+                  return (
+                    <div 
+                      key={req.id} 
+                      className={`p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs transition ${
+                        isPending 
+                          ? 'bg-amber-50/80 dark:bg-amber-950/30 border-amber-300 dark:border-amber-800/60 shadow-sm' 
+                          : 'bg-slate-50 dark:bg-[#0b1528] border-slate-200 dark:border-slate-800'
+                      }`}
+                    >
+                      <div className="space-y-1.5">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className={`px-2 py-0.5 rounded-full font-black text-[10px] ${
+                            isCust 
+                              ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60' 
+                              : 'bg-indigo-100 dark:bg-indigo-950/60 text-indigo-800 dark:text-indigo-300 border border-indigo-300/60'
+                          }`}>
+                            {isCust ? '👤 नागरिक वॉलेट रिचार्ज' : '🏪 दुकानदार B2B वॉलेट'}
+                          </span>
+
+                          <span className="font-black text-slate-900 dark:text-white text-sm">{titleName}</span>
+                          <span className="font-mono text-slate-500 dark:text-slate-400 font-bold">({phoneNum})</span>
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="text-slate-600 dark:text-slate-400 font-bold">12-अंकीय UTR:</span>
+                          <span className="font-mono font-black text-xs text-indigo-950 dark:text-amber-400 bg-white dark:bg-slate-900 px-2.5 py-1 rounded-lg border border-indigo-200 dark:border-slate-700 tracking-wider shadow-xs">
+                            {req.utr}
+                          </span>
+                          {req.screenshotUrl && (
+                            <button
+                              type="button"
+                              onClick={() => setViewingSlipUrl(req.screenshotUrl)}
+                              className="bg-indigo-100 dark:bg-indigo-950/60 hover:bg-indigo-200 dark:hover:bg-indigo-900/60 text-indigo-900 dark:text-indigo-300 font-bold px-2.5 py-1 rounded-lg text-[10px] flex items-center gap-1 transition cursor-pointer"
+                            >
+                              <span>📸 रसीद पर्ची देखें</span>
+                            </button>
+                          )}
+                        </div>
+
+                        <span className="text-[10px] text-slate-400 dark:text-slate-500 block">
+                          समय: {req.createdAt ? new Date(req.createdAt).toLocaleString('hi-IN') : 'हाल ही में'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end">
+                        <div className="text-right">
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 block font-bold">रिचार्ज राशि</span>
+                          <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">₹{req.amount}</span>
+                        </div>
+
+                        {isPending ? (
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleUtrAction(req.id, 'approve', req.amount)}
+                              className="bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-black px-4 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md shadow-emerald-600/20 transition cursor-pointer active:scale-95"
+                            >
+                              <Check className="w-4 h-4 stroke-[3]" />
+                              <span>स्वीकारें (Approve)</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleUtrAction(req.id, 'reject')}
+                              className="bg-rose-100 dark:bg-rose-950/60 hover:bg-rose-200 dark:hover:bg-rose-900/60 text-rose-800 dark:text-rose-300 font-bold px-3 py-2.5 rounded-xl text-xs flex items-center gap-1 transition cursor-pointer active:scale-95"
+                            >
+                              <X className="w-4 h-4" />
+                              <span>अस्वीकार</span>
+                            </button>
+                          </div>
+                        ) : (
+                          <span className={`px-3 py-1.5 rounded-full text-xs font-black ${
+                            req.status === 'approved' 
+                              ? 'bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border border-emerald-300/60' 
+                              : 'bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border border-rose-300/60'
+                          }`}>
+                            {req.status === 'approved' ? `✅ स्वीकृत (₹${req.amount} क्रेडिट)` : '❌ अस्वीकृत'}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* TAB 4: VLE KYC APPLICATIONS QUEUE (स्तंभ 7) */}
       {activeTab === 'kyc' && (

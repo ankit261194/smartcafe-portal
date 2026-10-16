@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  Printer, Wallet, Crown, User, Menu, Sun, Moon, LogOut
+  Printer, Wallet, Crown, User, Menu, Sun, Moon, LogOut, Smartphone, Download
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -228,6 +228,18 @@ export default function Navbar({
               <Moon className="w-4 h-4 text-amber-200 shrink-0" />
             )}
           </button>
+
+          {/* Direct Android APK Download Button */}
+          <a
+            href="/CyberCafe_Portal.apk"
+            download="CyberCafe_Portal.apk"
+            className="bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-black px-2 sm:px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shadow-sm transition shrink-0 border border-emerald-300/40 active:scale-95"
+            title="एंड्रॉइड मोबाइल ऐप डाउनलोड करें (Direct Android APK 18.5 MB)"
+          >
+            <Smartphone className="w-3.5 h-3.5 text-yellow-300" />
+            <span className="hidden sm:inline">ऐप डाउनलोड</span>
+            <span className="sm:hidden">APK</span>
+          </a>
 
           {/* =============================================================== */}
           {/* DEDICATED PROMINENT LOGOUT BUTTONS (FOR ALL LOGGED IN ACCOUNTS) */}

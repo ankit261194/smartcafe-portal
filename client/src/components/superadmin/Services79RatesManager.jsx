@@ -148,10 +148,16 @@ export default function Services79RatesManager({ onRatesUpdated }) {
     }
   };
 
-  const liveServicesCount = services.filter(s => (s.status === 'active' || s.isLive === true) && !s.isComingSoon && s.status !== 'coming_soon').length;
+  const isServiceLive = (s) => Boolean(
+    (s.status === 'live' || s.status === 'active' || s.isLive === true || s.isActive === true) && 
+    !s.isComingSoon && 
+    s.status !== 'coming_soon'
+  );
+
+  const liveServicesCount = services.filter(isServiceLive).length;
 
   const filteredServices = services.filter(s => {
-    const isLive = (s.status === 'active' || s.isLive === true) && !s.isComingSoon && s.status !== 'coming_soon';
+    const isLive = isServiceLive(s);
     if (liveOnly && !isLive) return false;
     const matchesCategory = selectedCategory === 'all' || s.category === selectedCategory;
     const matchesSearch = !search.trim() || 
