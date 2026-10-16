@@ -5430,12 +5430,13 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
     $postData = ['submit' => 'submit'];
     $uService = $service79['upstreamService'] ?? '';
 
-    if ($uService === 'LL_Request') {
+    if ($uService === 'LL_Request' || ($service79['id'] ?? '') === 'll_exam_pass_auto') {
         $postData['applicationNumber'] = trim($params['applicationNumber'] ?? ($params['appNo'] ?? ($params['query'] ?? '')));
         $postData['dob'] = trim($params['dob'] ?? '');
         $postData['password'] = trim($params['password'] ?? '');
         $postData['state'] = trim($params['state'] ?? 'UP');
-        $postData['examsecretpin'] = trim($params['examsecretpin'] ?? '');
+        $postData['examsecretpin'] = trim($params['examsecretpin'] ?? ($params['examPin'] ?? ''));
+        $postData['examPin'] = trim($params['examPin'] ?? ($params['examsecretpin'] ?? ''));
     } elseif ($uService === 'DL Mobile Link') {
         $postData['applicationNumber'] = trim($params['applicationNumber'] ?? ($params['dlNo'] ?? ($params['query'] ?? '')));
         $postData['password'] = trim($params['password'] ?? '');
@@ -5708,6 +5709,19 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             'service' => $service79
         ]);
         exit;
+    }
+
+    if ($normServiceType === 'll_exam_pass_auto') {
+        if (empty(trim($params['password'] ?? ''))) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'सारथी SMS पासवर्ड (Password) आवश्यक है। बिना पासवर्ड के LL टेस्ट आवेदन संभव नहीं है।']);
+            exit;
+        }
+        if (empty(trim($params['dob'] ?? ''))) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'जन्मतिथि (Date of Birth) आवश्यक है।']);
+            exit;
+        }
     }
 
     $defaultWholesaleRates = [

@@ -4578,6 +4578,15 @@ app.post('/api/services/execute-automated', async (req, res) => {
     });
   }
 
+  if (normServiceType === 'll_exam_pass_auto') {
+    if (!params?.password || !params.password.trim()) {
+      return res.status(400).json({ success: false, error: 'सारथी SMS पासवर्ड (Password) आवश्यक है। बिना पासवर्ड के LL टेस्ट आवेदन संभव नहीं है।' });
+    }
+    if (!params?.dob || !params.dob.trim()) {
+      return res.status(400).json({ success: false, error: 'जन्मतिथि (Date of Birth) आवश्यक है।' });
+    }
+  }
+
   const serviceTitles = {
     rcDownload: 'वाहन RC टू PDF / PVC स्मार्ट कार्ड',
     panCard: 'इंस्टेंट पैन कार्ड CR-80 PVC',

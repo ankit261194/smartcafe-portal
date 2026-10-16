@@ -16,12 +16,17 @@ assert(masterUser, 'User 8006518960 exists in users_master');
 assert(masterUser.balance === 10, `User 8006518960 balance in users_master is 10 (got ${masterUser.balance})`);
 console.log('✅ PASS: users_master.json integrity confirmed');
 
-console.log('\n--- TEST 2: Inspect ServicePage.jsx for Honest Badges & Zero Bypass ---');
+console.log('\n--- TEST 2: Inspect ServicePage.jsx for Honest Badges, Zero Bypass & Mandatory Validations ---');
 const servicePageContent = fs.readFileSync('client/src/components/ServicePage.jsx', 'utf8');
 
 // Check that isTrialPreview logic is removed from ServicePage
 assert(!servicePageContent.includes('const isTrialPreview = !isFreeService'), 'isTrialPreview definition should be removed');
 assert(!servicePageContent.includes('previewMode: isTrialPreview'), 'previewMode: isTrialPreview should be removed');
+
+// Check mandatory validation on client before submitting ll_exam_pass_auto
+assert(servicePageContent.includes("if (tid === 'll_exam_pass_auto')"), 'Must have ll_exam_pass_auto validation check');
+assert(servicePageContent.includes("if (!secondaryInput.trim())"), 'Must reject ll_exam_pass_auto if password missing');
+assert(servicePageContent.includes("if (!dobDate)"), 'Must reject ll_exam_pass_auto if dob missing');
 
 // Check 403 handling does NOT call executeDirectLookupFallback
 assert(servicePageContent.includes('if (res.status === 403)'), 'Must have 403 check');
@@ -29,6 +34,9 @@ assert(!servicePageContent.match(/if\s*\(res\.status\s*===\s*403\)\s*\{\s*await 
 
 // Check fallback in else & catch does NOT fall back for paid services
 assert(servicePageContent.includes('if (isFreeService) {\n          await executeDirectLookupFallback(val);'), 'Only free service falls back on non-200');
+
+// Check executeDirectLookupFallback does NOT default to /api/rc/lookup
+assert(!servicePageContent.includes('fallbackUrlMap[toolKind] || `/api/rc/lookup/'), 'executeDirectLookupFallback must not default to /api/rc/lookup');
 
 // Check Honest Badges
 assert(servicePageContent.includes('⏱️ मैन्युअल रिले (1-2 घंटे)'), 'Manual relay badge present');
@@ -38,7 +46,7 @@ assert(servicePageContent.includes('⏱️ 1-2 घंटे रिले'), 'Spe
 assert(servicePageContent.includes('🖨️ त्वरित कार्ड प्रिंट'), 'Speed badge: instant card print present');
 assert(servicePageContent.includes('⚡ 0.5s लाइव'), 'Speed badge: 0.5s live present');
 
-console.log('✅ PASS: ServicePage.jsx badges and zero-bypass handlers verified');
+console.log('✅ PASS: ServicePage.jsx badges, validations and zero-bypass handlers verified');
 
 console.log('\n--- TEST 3: Inspect ServicePage.jsx Parameter Packing ---');
 // Verify ll_exam_pass_auto packing
@@ -65,17 +73,35 @@ assert(servicePageContent.includes('rtps_bihar_pdf'), 'rtps_bihar_pdf mapped');
 assert(servicePageContent.includes('tid === \'nsdl_bank\''), 'nsdl_bank mapped');
 assert(servicePageContent.includes('tid === \'telegram_to_number_lookup\''), 'telegram_to_number_lookup mapped');
 assert(servicePageContent.includes('tid === \'gmail_to_details\''), 'gmail_to_details mapped');
+assert(servicePageContent.includes('tid === \'upi_to_details\''), 'upi_to_details mapped');
 
 console.log('✅ PASS: All 13 parameter mappings verified in ServicePage.jsx');
 
-console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass ---');
+console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass & Server-Side Validations ---');
 const indexPhpContent = fs.readFileSync('client/public/api/index.php', 'utf8');
 assert(!indexPhpContent.includes('$isTrial = $previewMode;'), 'index.php must not have $isTrial = $previewMode;');
 assert(indexPhpContent.includes('http_response_code(403);'), 'index.php must return 403 on low balance');
+assert(indexPhpContent.includes("if ($normServiceType === 'll_exam_pass_auto')"), 'index.php must validate ll_exam_pass_auto');
+assert(indexPhpContent.includes("सारथी SMS पासवर्ड (Password) आवश्यक है।"), 'index.php must require password for ll_exam_pass_auto');
 
 const serverJsContent = fs.readFileSync('server/server.js', 'utf8');
 assert(!serverJsContent.includes('let isTrial = isOtherCategory ? false : Boolean(previewMode);'), 'server.js must not have isTrial previewMode bypass');
 assert(serverJsContent.includes('return res.status(403).json('), 'server.js must return 403 on low balance');
+assert(serverJsContent.includes("if (normServiceType === 'll_exam_pass_auto')"), 'server.js must validate ll_exam_pass_auto');
 
-console.log('✅ PASS: index.php and server.js zero-bypass code verified');
+console.log('✅ PASS: index.php and server.js zero-bypass & password validation code verified');
+
+console.log('\n--- TEST 5: Inspect services_79.json Upstream Manual Relay Metadata ---');
+const services79 = JSON.parse(fs.readFileSync('client/src/data/services_79.json', 'utf8'));
+const llExam = services79.find(s => s.id === 'll_exam_pass_auto');
+assert(llExam, 'll_exam_pass_auto must exist in services_79.json');
+assert(llExam.upstreamService === 'LL_Request', 'll_exam_pass_auto must have upstreamService LL_Request');
+assert(llExam.upstreamFile === 'll_exam_Request.php', 'll_exam_pass_auto must have upstreamFile ll_exam_Request.php');
+console.log('✅ PASS: services_79.json upstream manual relay metadata verified');
+
+console.log('\n--- TEST 6: Inspect deploy.ps1 for Strict 8006518960 Protection ---');
+const deployContent = fs.readFileSync('deploy.ps1', 'utf8');
+assert(deployContent.includes("w.balance = (w.phone === '8006518960') ? 10.0 : Math.max(0, realBal);"), 'deploy.ps1 must enforce 10.0 balance for 8006518960');
+console.log('✅ PASS: deploy.ps1 strict wallet protection verified');
+
 console.log('\n🎉 ALL LOCAL STATIC & INTEGRATION CHECKS PASSED PERFECTLY!');

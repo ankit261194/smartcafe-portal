@@ -421,6 +421,46 @@ function ServicePageContent({
       return;
     }
 
+    const tid = (currentTool?.id || '').toLowerCase();
+
+    // Mandatory Input Validations for Custom/Dedicated Services
+    if (tid === 'll_exam_pass_auto') {
+      if (!secondaryInput.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया सारथी SMS पासवर्ड (Password) दर्ज करें।' : 'Please enter Sarathi SMS Password.');
+        return;
+      }
+      if (!dobDate) {
+        setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+        return;
+      }
+    }
+    if ((tid === 'll_find' || tid === 'll_pdf') && !dobDate) {
+      setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+      return;
+    }
+    if (tid === 'dl_to_mobile_find') {
+      if (!dobDate) {
+        setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+        return;
+      }
+      if (!secondaryInput.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया मोबाइल नंबर दर्ज करें।' : 'Please enter mobile number.');
+        return;
+      }
+    }
+    if (tid === 'pan_aadhaar_link_manual' && !secondaryInput.trim()) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय आधार नंबर दर्ज करें।' : 'Please enter 12-digit Aadhaar number.');
+      return;
+    }
+    if (tid === 'nsdl_bank' && !secondaryInput.trim()) {
+      setErrorMsg(language === 'hi' ? 'कृपया 11-अंकीय बैंक IFSC कोड दर्ज करें।' : 'Please enter 11-digit Bank IFSC code.');
+      return;
+    }
+    if (['rtps_bihar_pdf', 'rtps'].includes(tid) && !secondaryInput.trim()) {
+      setErrorMsg(language === 'hi' ? 'कृपया आवेदक का नाम (Applicant Name) दर्ज करें।' : 'Please enter Applicant Name.');
+      return;
+    }
+
     // Balance Evaluation (Strict Zero-Bypass Mode)
     const currentBal = isOperator ? (sanchalakB2bBalance || 0) : (customerSession?.phone ? (walletBalance || 0) : 0);
     if (!isFreeService && currentBal < requiredFee) {
@@ -480,8 +520,6 @@ function ServicePageContent({
       serviceId: currentTool.id,
       serviceName: currentTool.name
     };
-
-    const tid = (currentTool?.id || '').toLowerCase();
 
     if (toolKind === 'rc') {
       params.vehicleNumber = val.toUpperCase();
@@ -695,6 +733,11 @@ function ServicePageContent({
       params.username = val.trim();
     }
 
+    if (tid === 'upi_to_details') {
+      params.UPI_ID = val.trim();
+      params.upi = val.trim();
+    }
+
     if (tid === 'gmail_to_details') {
       params.email = val.trim();
       params.gmail = val.trim();
@@ -839,7 +882,11 @@ function ServicePageContent({
         receipt: `/api/receipt/lookup/${encodeURIComponent(val)}`
       };
 
-      const targetUrl = fallbackUrlMap[currentTool.id] || fallbackUrlMap[toolKind] || `/api/rc/lookup/${encodeURIComponent(val)}`;
+      const targetUrl = fallbackUrlMap[currentTool.id] || fallbackUrlMap[toolKind];
+      if (!targetUrl) {
+        setErrorMsg('सेवा निष्पादन में त्रुटि हुई। कृपया पुनः प्रयास करें।');
+        return;
+      }
       const fRes = await fetch(targetUrl);
       if (fRes.ok) {
         const lookupData = await fRes.json();
@@ -874,8 +921,8 @@ function ServicePageContent({
           success: true,
           isInstantPreview: true,
           message: '✅ 1-क्लिक इंस्टेंट जनरेशन सफल! आधिकारिक प्रति तैयार है।',
-          retailFee: isFreeService ? 0 : (currentTool?.retailRate !== undefined ? Number(currentTool.retailRate) : 30),
-          wholesaleCost: isFreeService ? 0 : (currentTool?.wholesaleRate !== undefined ? Number(currentTool.wholesaleRate) : 15),
+          retailFee: 0,
+          wholesaleCost: 0,
           margin: 0,
           vehicleData: mergedData,
           generatedData: mergedData,
