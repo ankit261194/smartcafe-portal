@@ -134,6 +134,31 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
   const [auditNoteInputs, setAuditNoteInputs] = useState({});
   const [viewingSlipUrl, setViewingSlipUrl] = useState('');
 
+  // Manual Relay Desk state
+  const [manualOrders, setManualOrders] = useState([]);
+  const [loadingManualOrders, setLoadingManualOrders] = useState(false);
+  const [pollingRekha, setPollingRekha] = useState(false);
+  const [pollRekhaFeedback, setPollRekhaFeedback] = useState(null);
+  const [manualOrdersFilter, setManualOrdersFilter] = useState('all'); // 'all', 'pending', 'completed', 'rejected'
+  const [manualOrdersSearch, setManualOrdersSearch] = useState('');
+  const [fulfillingOrder, setFulfillingOrder] = useState(null);
+  const [fulfillPdfInput, setFulfillPdfInput] = useState('');
+  const [submittingFulfill, setSubmittingFulfill] = useState(false);
+  const [rejectingOrder, setRejectingOrder] = useState(null);
+  const [rejectReasonInput, setRejectReasonInput] = useState('');
+  const [submittingReject, setSubmittingReject] = useState(false);
+
+  // Rekha Print Gateway Configuration
+  const [rekhaGatewayConfig, setRekhaGatewayConfig] = useState({
+    username: '8006518960',
+    password: '',
+    baseUrl: 'https://rekhaprint.info',
+    enabled: true
+  });
+  const [savingRekhaGateway, setSavingRekhaGateway] = useState(false);
+  const [rekhaGatewaySavedMsg, setRekhaGatewaySavedMsg] = useState(false);
+  const [showRekhaPass, setShowRekhaPass] = useState(false);
+
   const handleToggleTool = async (apiItem, currentActive) => {
     const key = apiItem.id || apiItem.serviceType;
     setTogglingTool(prev => ({ ...prev, [key]: true }));
@@ -517,11 +542,155 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
     }
   };
 
+  const fetchManualOrders = async () => {
+    setLoadingManualOrders(true);
+    try {
+      const res = await authFetch('/api/orders');
+      if (res.ok) {
+        const list = await res.json();
+        setManualOrders(Array.isArray(list) ? list : []);
+      }
+    } catch (err) {
+      console.error('Error fetching manual orders:', err);
+    } finally {
+      setLoadingManualOrders(false);
+    }
+  };
+
+  const handlePollRekha = async () => {
+    setPollingRekha(true);
+    setPollRekhaFeedback(null);
+    try {
+      const res = await authFetch('/api/services/manual-relay/poll', { method: 'POST' });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setPollRekhaFeedback(`✅ रेखा प्रिंट रिकॉर्ड्स स्कैन पूर्ण: ${data.scannedRekhaRecords || 0} रिकॉर्ड्स पढ़े गए, ${data.updatedSmartCafeOrders || 0} ऑर्डर्स अपडेट हुए।`);
+        fetchManualOrders();
+      } else {
+        setPollRekhaFeedback(`⚠️ रेखा प्रिंट स्कैन: ${data.error || 'असमर्थ'}`);
+      }
+    } catch (err) {
+      setPollRekhaFeedback('सर्वर से संपर्क करने में समस्या आई।');
+    } finally {
+      setPollingRekha(false);
+      setTimeout(() => setPollRekhaFeedback(null), 6000);
+    }
+  };
+
+  const handleFulfillOrder = async (orderId) => {
+    if (!orderId || !fulfillPdfInput.trim()) {
+      alert('कृपया वैध PDF लिंक या डेटा दर्ज करें!');
+      return;
+    }
+    setSubmittingFulfill(true);
+    try {
+      const res = await authFetch('/api/superadmin/manual-orders/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          key: 'Aa@910010025123343',
+          orderId,
+          status: 'completed',
+          pdfUrl: fulfillPdfInput.trim()
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert('✅ ऑर्डर सफलतापूर्वक पूर्ण किया गया और ग्राहक को सूचित कर दिया गया!');
+        setFulfillingOrder(null);
+        setFulfillPdfInput('');
+        fetchManualOrders();
+      } else {
+        alert(data.error || 'ऑर्डर अपडेट विफल');
+      }
+    } catch (err) {
+      alert('सर्वर त्रुटि');
+    } finally {
+      setSubmittingFulfill(false);
+    }
+  };
+
+  const handleRejectOrder = async (orderId) => {
+    if (!orderId) return;
+    const reason = rejectReasonInput.trim() || 'प्रशासनिक निरस्तीकरण (विवरण अमान्य)';
+    setSubmittingReject(true);
+    try {
+      const res = await authFetch('/api/superadmin/manual-orders/update-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          key: 'Aa@910010025123343',
+          orderId,
+          status: 'rejected',
+          rejectionReason: reason
+        })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert('✅ ऑर्डर निरस्त कर दिया गया और ग्राहक के वॉलेट में शुल्क वापस रिफंड हो गया!');
+        setRejectingOrder(null);
+        setRejectReasonInput('');
+        fetchManualOrders();
+      } else {
+        alert(data.error || 'ऑर्डर रिजेक्ट विफल');
+      }
+    } catch (err) {
+      alert('सर्वर त्रुटि');
+    } finally {
+      setSubmittingReject(false);
+    }
+  };
+
+  const fetchRekhaGatewayConfig = async () => {
+    try {
+      const res = await authFetch('/api/superadmin/rekha-gateway/config');
+      if (res.ok) {
+        const data = await res.json();
+        setRekhaGatewayConfig(prev => ({
+          ...prev,
+          username: data.username || '8006518960',
+          baseUrl: data.baseUrl || 'https://rekhaprint.info',
+          enabled: data.enabled !== undefined ? data.enabled : true
+        }));
+      }
+    } catch (err) {
+      console.warn('Error fetching rekha gateway config:', err);
+    }
+  };
+
+  const handleSaveRekhaGatewayConfig = async (e) => {
+    if (e) e.preventDefault();
+    setSavingRekhaGateway(true);
+    try {
+      const res = await authFetch('/api/superadmin/rekha-gateway/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          key: 'Aa@910010025123343',
+          ...rekhaGatewayConfig
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setRekhaGatewaySavedMsg(true);
+        setTimeout(() => setRekhaGatewaySavedMsg(false), 3500);
+      } else {
+        alert(data.error || 'सेव विफल');
+      }
+    } catch (err) {
+      alert('सर्वर त्रुटि');
+    } finally {
+      setSavingRekhaGateway(false);
+    }
+  };
+
   useEffect(() => {
     fetchStats();
     fetchApiGateway();
     fetchGatewayHealth();
     fetchDbStatus();
+    fetchManualOrders();
+    fetchRekhaGatewayConfig();
   }, []);
 
   useEffect(() => {
@@ -531,6 +700,10 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
     } else if (activeTab === 'api_gateway') {
       fetchApiGateway();
       fetchGatewayHealth();
+      fetchRekhaGatewayConfig();
+    } else if (activeTab === 'manual_orders') {
+      fetchManualOrders();
+      fetchRekhaGatewayConfig();
     }
   }, [activeTab]);
 
@@ -779,6 +952,9 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
   const pendingCustomerCount = customerUtrList.filter(u => u.status === 'pending').length;
   const pendingB2bCount = b2bUtrList.filter(u => u.status === 'pending').length;
   const totalPendingUtrs = pendingCustomerCount + pendingB2bCount;
+  const pendingManualOrdersCount = manualOrders.filter(o => 
+    (o.fulfillmentType === 'manual_relay' || o.relayDispatched || o.serviceId?.includes('ll') || o.serviceId?.includes('samagra') || o.serviceId?.includes('mobile')) && o.status === 'pending'
+  ).length;
   const kycList = stats?.kycApplications || [];
   const pendingKycCount = kycList.filter(k => k.status === 'pending_approval').length;
   const complaintsList = stats?.complaints || [];
@@ -1086,6 +1262,23 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
         >
           <IndianRupee className="w-4 h-4" />
           <span>थोक रेट कार्ड (Wholesale Engine)</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('manual_orders')}
+          className={`px-4 py-2.5 rounded-xl transition flex items-center gap-2 ${
+            activeTab === 'manual_orders' 
+              ? 'bg-purple-600 text-white shadow-sm' 
+              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          <RefreshCw className="w-4 h-4 text-amber-300" />
+          <span>मैन्युअल रिले डेस्क (Rekha Relay)</span>
+          {pendingManualOrdersCount > 0 && (
+            <span className="bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full text-[10px] font-black animate-pulse">
+              {pendingManualOrdersCount}
+            </span>
+          )}
         </button>
 
         <button
@@ -1594,6 +1787,104 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                     <span>{savingWhatsapp ? 'सहेज रहे हैं...' : '💾 सेटिंग्स सहेजें'}</span>
                   </button>
                 </div>
+              </div>
+            </form>
+          </div>
+
+          {/* REKHA PRINT B2B RELAY GATEWAY CONFIG CARD */}
+          <div className="bg-white dark:bg-[#0f1d36] rounded-3xl p-6 sm:p-7 border-2 border-purple-300 dark:border-purple-900/60 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <div className="inline-flex items-center gap-2 bg-purple-100 dark:bg-purple-950/70 border border-purple-300 dark:border-purple-800 px-3 py-1 rounded-full text-xs font-black text-purple-800 dark:text-purple-300 mb-2">
+                  <RefreshCw className="w-3.5 h-3.5 text-amber-500" />
+                  <span>रेखा प्रिंट रिले इंजन (Rekha Print B2B Relay Gateway)</span>
+                </div>
+                <h3 className="text-lg font-black text-slate-900 dark:text-white flex items-center gap-2">
+                  <span>रेखा प्रिंट ऑटोमेशन व क्रेडेंशियल सेटिंग्स</span>
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
+                  यह गेटवे उन 10 सेवाओं (LL परीक्षा, मोबाइल लिंक, समग्र, लैंड सीडिंग, आयुष्मान आदि) को रेखा प्रिंट पोर्टल (<a href="https://rekhaprint.info" target="_blank" rel="noreferrer" className="text-blue-500 underline">rekhaprint.info</a>) पर ऑटो-फॉरवर्ड व बैकग्राउंड में पोल करने हेतु उपयोग होता है।
+                </p>
+              </div>
+
+              {rekhaGatewaySavedMsg && (
+                <div className="p-3 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-500 text-emerald-800 dark:text-emerald-300 rounded-xl text-xs font-bold flex items-center gap-2 animate-in fade-in">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span>✅ रेखा क्रेडेंशियल्स सुरक्षित सहेजे गए!</span>
+                </div>
+              )}
+            </div>
+
+            <form onSubmit={handleSaveRekhaGatewayConfig} className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    रेखा प्रिंट मोबाइल / यूज़रनेम: *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={rekhaGatewayConfig.username}
+                    onChange={(e) => setRekhaGatewayConfig(prev => ({ ...prev, username: e.target.value }))}
+                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-hidden focus:border-purple-500"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    रेखा प्रिंट पासवर्ड: *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showRekhaPass ? 'text' : 'password'}
+                      required
+                      value={rekhaGatewayConfig.password}
+                      onChange={(e) => setRekhaGatewayConfig(prev => ({ ...prev, password: e.target.value }))}
+                      placeholder="••••••••"
+                      className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-hidden focus:border-purple-500 pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowRekhaPass(!showRekhaPass)}
+                      className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
+                    >
+                      {showRekhaPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    पोर्टल URL:
+                  </label>
+                  <input
+                    type="text"
+                    value={rekhaGatewayConfig.baseUrl}
+                    onChange={(e) => setRekhaGatewayConfig(prev => ({ ...prev, baseUrl: e.target.value }))}
+                    className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-slate-900 dark:text-white focus:outline-hidden focus:border-purple-500"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 flex items-center justify-between">
+                <label className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={rekhaGatewayConfig.enabled}
+                    onChange={(e) => setRekhaGatewayConfig(prev => ({ ...prev, enabled: e.target.checked }))}
+                    className="w-4 h-4 text-purple-600 rounded"
+                  />
+                  <span>रेखा रिले इंजन सक्रिय रखें (Auto Relay Active)</span>
+                </label>
+
+                <button
+                  type="submit"
+                  disabled={savingRekhaGateway}
+                  className="bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-black px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-md shadow-purple-600/30 transition cursor-pointer disabled:opacity-50"
+                >
+                  <Save className="w-4 h-4" />
+                  <span>{savingRekhaGateway ? 'सहेज रहे हैं...' : '💾 रेखा रिले सेटिंग्स सहेजें'}</span>
+                </button>
               </div>
             </form>
           </div>
@@ -2407,6 +2698,391 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
               </div>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* TAB: MANUAL ORDERS DESK (REKHA PRINT RELAY DESK) */}
+      {activeTab === 'manual_orders' && (
+        <div className="space-y-6">
+          {/* Header Banner */}
+          <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 text-white p-6 sm:p-8 shadow-xl border border-purple-500/30">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <div className="inline-flex items-center gap-2 bg-purple-500/20 border border-purple-400/40 px-3.5 py-1.5 rounded-full text-xs font-bold text-purple-300 mb-3">
+                  <RefreshCw className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+                  <span>रेखा प्रिंट B2B रिले एवं बैकएंड ऑपरेटर कंट्रोल रूम</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-black tracking-tight flex items-center gap-3">
+                  <span>मैन्युअल रिले ऑर्डर डेस्क (Manual Fulfillment Desk)</span>
+                </h2>
+                <p className="text-slate-300 text-xs sm:text-sm mt-2 max-w-3xl leading-relaxed">
+                  जो 10 सेवाएं रेखा प्रिंट द्वारा बैकएंड पर हाथ से पूरी की जाती हैं (LL टेस्ट, मोबाइल लिंक, समग्र, लैंड सीडिंग, आयुष्मान आदि), उनके सभी आवेदन यहाँ एकत्रित होते हैं। आप यहाँ से रेखा प्रिंट स्टेटस सिंक कर सकते हैं, पूर्ण होने पर PDF जोड़ सकते हैं या निरस्त करके ग्राहक को रिफंड कर सकते हैं।
+                </p>
+                <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
+                  <span className="bg-purple-900/60 border border-purple-700/50 px-2.5 py-1 rounded-lg text-purple-200">
+                    रेखा प्रिंट खाता: <strong>8006518960</strong>
+                  </span>
+                  <span className="bg-emerald-950/60 border border-emerald-700/50 px-2.5 py-1 rounded-lg text-emerald-300">
+                    रेखा बैलेंस: <strong>₹197.00</strong>
+                  </span>
+                  <span className="bg-amber-950/60 border border-amber-700/50 px-2.5 py-1 rounded-lg text-amber-300">
+                    पेंडिंग ऑर्डर्स: <strong>{pendingManualOrdersCount}</strong>
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2 self-start md:self-auto shrink-0">
+                <button
+                  type="button"
+                  onClick={handlePollRekha}
+                  disabled={pollingRekha}
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 active:scale-95 text-white font-black px-4 py-3 rounded-2xl text-xs flex items-center gap-2 shadow-lg shadow-purple-600/30 transition cursor-pointer disabled:opacity-50"
+                >
+                  <RefreshCw className={`w-4 h-4 ${pollingRekha ? 'animate-spin' : ''}`} />
+                  <span>{pollingRekha ? 'रेखा प्रिंट से सिंक जारी...' : '🔄 रेखा स्टेटस लाइव सिंक करें'}</span>
+                </button>
+
+                <a
+                  href="https://rekhaprint.info/members/printRecord.php"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-4 py-3 rounded-2xl text-xs flex items-center gap-1.5 transition border border-slate-700 cursor-pointer"
+                >
+                  <span>🌐 रेखा पोर्टल खोलें ➔</span>
+                </a>
+              </div>
+            </div>
+
+            {pollRekhaFeedback && (
+              <div className="mt-4 p-3 bg-purple-900/80 border border-purple-400 rounded-xl text-xs font-bold text-purple-100 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>{pollRekhaFeedback}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Filter Bar */}
+          <div className="bg-white dark:bg-[#0f1d36] p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2 text-xs font-bold">
+              <button
+                type="button"
+                onClick={() => setManualOrdersFilter('all')}
+                className={`px-3 py-1.5 rounded-xl transition cursor-pointer ${
+                  manualOrdersFilter === 'all'
+                    ? 'bg-purple-600 text-white shadow-xs'
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                सभी रिले ऑर्डर्स ({manualOrders.filter(o => o.fulfillmentType === 'manual_relay').length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setManualOrdersFilter('pending')}
+                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+                  manualOrdersFilter === 'pending'
+                    ? 'bg-amber-600 text-white shadow-xs'
+                    : 'text-amber-700 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/40'
+                }`}
+              >
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span>पेंडिंग ({pendingManualOrdersCount})</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setManualOrdersFilter('completed')}
+                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+                  manualOrdersFilter === 'completed'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40'
+                }`}
+              >
+                पूर्ण ({manualOrders.filter(o => o.fulfillmentType === 'manual_relay' && (o.status === 'completed' || o.upstreamStatus === 'Success')).length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setManualOrdersFilter('rejected')}
+                className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+                  manualOrdersFilter === 'rejected'
+                    ? 'bg-rose-600 text-white shadow-xs'
+                    : 'text-rose-700 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40'
+                }`}
+              >
+                निरस्त/रिफंडेड ({manualOrders.filter(o => o.fulfillmentType === 'manual_relay' && (o.status === 'rejected' || o.upstreamStatus === 'Failed')).length})
+              </button>
+            </div>
+
+            <div className="relative w-full md:w-72">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              <input
+                type="text"
+                value={manualOrdersSearch}
+                onChange={(e) => setManualOrdersSearch(e.target.value)}
+                placeholder="फोन, ऑर्डर आईडी, संदर्भ खोजें..."
+                className="w-full pl-9 pr-3.5 py-2 text-xs border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#0b1528] text-slate-900 dark:text-white rounded-xl focus:outline-hidden font-bold"
+              />
+            </div>
+          </div>
+
+          {/* Orders Table */}
+          <div className="bg-white dark:bg-[#0f1d36] rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-black uppercase text-slate-500 dark:text-slate-400">
+                    <th className="py-3 px-4">#</th>
+                    <th className="py-3 px-4">ऑर्डर आईडी</th>
+                    <th className="py-3 px-4">सेवा</th>
+                    <th className="py-3 px-4">इनपुट / संदर्भ सं.</th>
+                    <th className="py-3 px-4">ग्राहक / फोन</th>
+                    <th className="py-3 px-4 text-center">शुल्क (थोक / खुदरा)</th>
+                    <th className="py-3 px-4 text-center">स्थिति</th>
+                    <th className="py-3 px-4 text-right">कार्यवाही</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                  {manualOrders
+                    .filter(o => o.fulfillmentType === 'manual_relay')
+                    .filter(o => {
+                      if (manualOrdersFilter === 'pending') return o.status === 'pending';
+                      if (manualOrdersFilter === 'completed') return o.status === 'completed' || o.upstreamStatus === 'Success';
+                      if (manualOrdersFilter === 'rejected') return o.status === 'rejected' || o.upstreamStatus === 'Failed';
+                      return true;
+                    })
+                    .filter(o => {
+                      if (!manualOrdersSearch.trim()) return true;
+                      const q = manualOrdersSearch.toLowerCase().trim();
+                      return (
+                        (o.id && o.id.toLowerCase().includes(q)) ||
+                        (o.customerPhone && o.customerPhone.includes(q)) ||
+                        (o.refNumber && o.refNumber.toLowerCase().includes(q)) ||
+                        (o.serviceName && o.serviceName.toLowerCase().includes(q))
+                      );
+                    })
+                    .map((order, idx) => {
+                      const isPending = order.status === 'pending';
+                      const isCompleted = order.status === 'completed' || order.upstreamStatus === 'Success';
+                      const isRejected = order.status === 'rejected' || order.upstreamStatus === 'Failed';
+
+                      return (
+                        <tr key={order.id || idx} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+                          <td className="py-3.5 px-4 font-mono text-slate-400">{idx + 1}</td>
+                          <td className="py-3.5 px-4 font-mono font-bold text-slate-900 dark:text-white">
+                            <div>{order.id}</div>
+                            <div className="text-[10px] text-slate-400">{order.createdAt ? new Date(order.createdAt).toLocaleString('hi-IN', { dateStyle: 'short', timeStyle: 'short' }) : '-'}</div>
+                          </td>
+                          <td className="py-3.5 px-4 font-bold text-purple-700 dark:text-purple-300">
+                            <div>{order.serviceName || order.docTitle || order.serviceId}</div>
+                            <span className="text-[10px] bg-purple-100 dark:bg-purple-950/60 text-purple-800 dark:text-purple-300 px-1.5 py-0.2 rounded font-mono">
+                              {order.serviceId}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 font-mono font-black text-blue-600 dark:text-blue-400">
+                            {order.refNumber || order.inputs?.primaryInput || '-'}
+                          </td>
+                          <td className="py-3.5 px-4 text-slate-700 dark:text-slate-300">
+                            <div className="font-semibold">{order.customerName || '-'}</div>
+                            <div className="font-mono text-[11px] text-slate-400">{order.customerPhone || ''}</div>
+                          </td>
+                          <td className="py-3.5 px-4 text-center font-mono font-bold">
+                            <span className="text-emerald-600 dark:text-emerald-400">₹{order.retailFee || 0}</span>
+                            <span className="text-slate-400 text-[10px] block">थोक: ₹{order.wholesaleCost || 0}</span>
+                          </td>
+                          <td className="py-3.5 px-4 text-center">
+                            {isPending ? (
+                              <span className="inline-flex items-center gap-1 bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full text-[10px] font-black border border-amber-300 dark:border-amber-700">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                पेंडिंग (2-4h)
+                              </span>
+                            ) : isCompleted ? (
+                              <span className="inline-flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-300 dark:border-emerald-700">
+                                ✓ पूर्ण
+                              </span>
+                            ) : isRejected ? (
+                              <span className="inline-flex items-center gap-1 bg-rose-100 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 px-2 py-0.5 rounded-full text-[10px] font-black border border-rose-300 dark:border-rose-700">
+                                ✕ निरस्त/रिफंड
+                              </span>
+                            ) : (
+                              <span className="font-bold text-slate-500">{order.status}</span>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4 text-right">
+                            <div className="flex items-center justify-end gap-1.5">
+                              {isPending ? (
+                                <>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setFulfillingOrder(order);
+                                      setFulfillPdfInput(order.pdfUrl || '');
+                                    }}
+                                    className="bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
+                                    title="पूर्ण करें व PDF जोड़ें"
+                                  >
+                                    📤 पूर्ण करें
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setRejectingOrder(order);
+                                      setRejectReasonInput('');
+                                    }}
+                                    className="bg-rose-50 dark:bg-rose-950/60 hover:bg-rose-100 text-rose-700 dark:text-rose-300 border border-rose-300 dark:border-rose-800 px-2 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
+                                    title="निरस्त करें व ग्राहक को रिफंड दें"
+                                  >
+                                    ✕ रिफंड
+                                  </button>
+                                </>
+                              ) : isCompleted && order.pdfUrl ? (
+                                <a
+                                  href={order.pdfUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="bg-blue-50 dark:bg-blue-950 hover:bg-blue-100 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2.5 py-1 rounded-lg text-xs font-bold transition inline-flex items-center gap-1"
+                                >
+                                  <Download className="w-3 h-3" />
+                                  <span>PDF</span>
+                                </a>
+                              ) : isRejected ? (
+                                <span className="text-[10px] text-rose-500 font-bold">
+                                  रिफंड किया गया
+                                </span>
+                              ) : null}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                </tbody>
+              </table>
+              {manualOrders.filter(o => o.fulfillmentType === 'manual_relay').length === 0 && (
+                <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">
+                  वर्तमान में कोई मैन्युअल रिले ऑर्डर दर्ज नहीं है।
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Modal: Manual Fulfillment (PDF Upload / Complete) */}
+          {fulfillingOrder && (
+            <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-[#0c162c] rounded-3xl max-w-lg w-full p-6 space-y-4 border border-slate-200 dark:border-slate-800 shadow-2xl animate-in zoom-in-95">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                  <h3 className="font-black text-slate-900 dark:text-white text-base flex items-center gap-2">
+                    <span>📤 ऑर्डर पूर्ण करें (Manual Fulfillment)</span>
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setFulfillingOrder(null)}
+                    className="p-1 rounded-lg text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl space-y-1 text-xs">
+                  <div><strong>ऑर्डर आईडी:</strong> {fulfillingOrder.id}</div>
+                  <div><strong>सेवा:</strong> {fulfillingOrder.serviceName || fulfillingOrder.serviceId}</div>
+                  <div><strong>ग्राहक:</strong> {fulfillingOrder.customerName} ({fulfillingOrder.customerPhone})</div>
+                  <div><strong>संदर्भ सं.:</strong> {fulfillingOrder.refNumber}</div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    पूर्ण किए गए दस्तावेज़ का PDF URL / डाउनलोड लिंक दर्ज करें: *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={fulfillPdfInput}
+                    onChange={(e) => setFulfillPdfInput(e.target.value)}
+                    placeholder="https://rekhaprint.info/... या PDF डाउनलोड लिंक"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-mono font-bold text-slate-900 dark:text-white"
+                  />
+                  <p className="text-[11px] text-slate-500">
+                    रेखा प्रिंट से डाउनलोड की गई फाइल का लिंक या यूआरएल यहाँ पेस्ट करें। ग्राहक को तुरंत SMS/व्हाट्सएप सूचना और डाउनलोड बटन मिल जाएगा।
+                  </p>
+                </div>
+
+                <div className="pt-2 flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setFulfillingOrder(null)}
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                  >
+                    रद्द करें
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleFulfillOrder(fulfillingOrder.id)}
+                    disabled={submittingFulfill || !fulfillPdfInput.trim()}
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-md cursor-pointer disabled:opacity-50"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>{submittingFulfill ? 'सहेज रहे हैं...' : 'ऑर्डर पूर्ण करें व सूचित करें'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal: Rejection & Refund */}
+          {rejectingOrder && (
+            <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+              <div className="bg-white dark:bg-[#0c162c] rounded-3xl max-w-lg w-full p-6 space-y-4 border border-rose-200 dark:border-rose-900 shadow-2xl animate-in zoom-in-95">
+                <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+                  <h3 className="font-black text-rose-600 text-base flex items-center gap-2">
+                    <span>❌ ऑर्डर निरस्त व रिफंड करें</span>
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setRejectingOrder(null)}
+                    className="p-1 rounded-lg text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="bg-rose-50 dark:bg-rose-950/40 p-3 rounded-xl space-y-1 text-xs text-rose-900 dark:text-rose-200 border border-rose-200 dark:border-rose-800">
+                  <div><strong>ऑर्डर आईडी:</strong> {rejectingOrder.id}</div>
+                  <div><strong>सेवा:</strong> {rejectingOrder.serviceName || rejectingOrder.serviceId}</div>
+                  <div><strong>ग्राहक:</strong> {rejectingOrder.customerName} ({rejectingOrder.customerPhone})</div>
+                  <div><strong>रिफंड राशि:</strong> ₹{rejectingOrder.retailFee || 0} (वॉलेट में वापस जुड़ेगी)</div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                    अस्वीकृति का कारण दर्ज करें:
+                  </label>
+                  <input
+                    type="text"
+                    value={rejectReasonInput}
+                    onChange={(e) => setRejectReasonInput(e.target.value)}
+                    placeholder="उदा. सर्वर पर रिकॉर्ड नहीं मिला अथवा विवरण गलत है"
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-xs font-bold text-slate-900 dark:text-white"
+                  />
+                </div>
+
+                <div className="pt-2 flex items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setRejectingOrder(null)}
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                  >
+                    रद्द करें
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleRejectOrder(rejectingOrder.id)}
+                    disabled={submittingReject}
+                    className="bg-rose-600 hover:bg-rose-500 text-white font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-md cursor-pointer disabled:opacity-50"
+                  >
+                    <Check className="w-4 h-4" />
+                    <span>{submittingReject ? 'रिफंड हो रहा है...' : 'तुरंत रिफंड करें व निरस्त करें'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

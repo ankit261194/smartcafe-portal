@@ -18,7 +18,7 @@ export default function CustomerWalletModal({
 }) {
   const { language } = useLanguage();
   const [step, setStep] = useState(1); // 1: Amount, 2: Locked QR + UTR, 3: Pending / Approved
-  const [phone, setPhone] = useState(currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '');
+  const [phone, setPhone] = useState(currentPhone || localStorage.getItem('customer_phone') || '');
   const [wallet, setWallet] = useState(null);
   const [amount, setAmount] = useState('200');
   const [utrNumber, setUtrNumber] = useState('');
@@ -50,7 +50,7 @@ export default function CustomerWalletModal({
       setUtrNumber('');
       setIsApproved(false);
       setSubmittedTxn(null);
-      const p = currentPhone || localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || '';
+      const p = currentPhone || localStorage.getItem('customer_phone') || '';
       setPhone(p);
       if (p) fetchWallet(p);
     }

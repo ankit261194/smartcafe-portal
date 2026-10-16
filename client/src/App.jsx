@@ -105,7 +105,7 @@ export default function App() {
     return false;
   });
   const [sidebarSearchTerm, setSidebarSearchTerm] = useState('');
-  const [activeInstantToolId, setActiveInstantToolId] = useState('aadhaar_advance');
+  const [activeInstantToolId, setActiveInstantToolId] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [broadcastNotice, setBroadcastNotice] = useState(null);
@@ -412,10 +412,16 @@ export default function App() {
     localStorage.removeItem('cybercafe_customer');
     localStorage.removeItem('smartcafe_user');
     localStorage.removeItem('smartcafe_token');
+    localStorage.removeItem('customer_phone');
+    localStorage.removeItem('last_wallet_phone');
+    localStorage.removeItem('smartcafe_customer_wallet');
     setIsSuperAdminAuth(false);
     setIsCafeAuth(false);
     setIsStaffAuth(false);
     setCustomerSession(null);
+    setWalletBalance(0);
+    setActiveInstantToolId(null);
+    setSelectedCategory(null);
     navigateToTier('customer');
   };
 
@@ -493,15 +499,14 @@ export default function App() {
 
   // Fetch wallet balance (Authentic to logged-in user or guest session)
   const fetchWalletBalance = async (forcedPhone) => {
-    const targetPhone = forcedPhone || customerSession?.phone || localStorage.getItem('last_wallet_phone');
+    // Zero-Leakage: Only fetch if explicitly authenticated or forced. Unauthenticated guests are strictly ₹0.
+    const targetPhone = forcedPhone || customerSession?.phone;
     if (!targetPhone) {
       setWalletBalance(0);
       return;
     }
     try {
-      if (forcedPhone || customerSession?.phone) {
-        localStorage.setItem('last_wallet_phone', targetPhone);
-      }
+      localStorage.setItem('last_wallet_phone', targetPhone);
       const res = await authFetch(`/api/wallet/${targetPhone}?_t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       if (data && data.balance !== undefined) {
@@ -677,8 +682,9 @@ export default function App() {
                  adminTab)
           }
           onSelectTab={(tabId) => {
-            if (tabId === 'dashboard') {
+            if (tabId === 'dashboard' || tabId === 'all_services') {
               setSelectedCategory(null);
+              setActiveInstantToolId(null);
               if (mode === 'customer') setCustomerTab('home');
               else setAdminTab('dashboard');
             } else if (tabId === 'prints') {
@@ -1049,7 +1055,7 @@ export default function App() {
               />
             )}
 
-            {(customerTab === 'tool' || customerTab.startsWith('tool-')) && (
+            {(customerTab === 'tool' || customerTab.startsWith('tool-')) && (Boolean(activeInstantToolId) || customerTab.startsWith('tool-')) && (
               <ServicePage
                 activeToolId={customerTab.startsWith('tool-') ? customerTab.replace('tool-', '') : activeInstantToolId}
                 onSelectTool={(toolId) => {
@@ -1215,7 +1221,7 @@ export default function App() {
                 />
               )}
 
-              {(adminTab === 'tool' || adminTab.startsWith('tool-')) && (
+              {(adminTab === 'tool' || adminTab.startsWith('tool-')) && (Boolean(activeInstantToolId) || adminTab.startsWith('tool-')) && (
                 <ServicePage
                   activeToolId={adminTab.startsWith('tool-') ? adminTab.replace('tool-', '') : activeInstantToolId}
                   onSelectTool={(toolId) => {

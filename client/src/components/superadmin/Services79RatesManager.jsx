@@ -148,14 +148,17 @@ export default function Services79RatesManager({ onRatesUpdated }) {
     }
   };
 
-  const liveServicesCount = services.filter(s => s.serviceType === 'live_api' || (s.status === 'live' && !s.isComingSoon)).length;
+  const liveServicesCount = services.filter(s => s.serviceType === 'live_api' || (s.status === 'live' && !s.isComingSoon && s.fulfillmentType !== 'manual_relay')).length;
+  const manualRelayServicesCount = services.filter(s => s.fulfillmentType === 'manual_relay').length;
   const generatorServicesCount = services.filter(s => s.serviceType === 'generator' || s.status === 'generator').length;
   const comingSoonServicesCount = services.filter(s => s.serviceType === 'coming_soon' || s.status === 'coming_soon' || s.isComingSoon).length;
 
   const filteredServices = services.filter(s => {
     if (filterTab === 'live') {
-      const isLive = s.serviceType === 'live_api' || (s.status === 'live' && !s.isComingSoon);
+      const isLive = (s.serviceType === 'live_api' || (s.status === 'live' && !s.isComingSoon)) && s.fulfillmentType !== 'manual_relay';
       if (!isLive) return false;
+    } else if (filterTab === 'manual_relay') {
+      if (s.fulfillmentType !== 'manual_relay') return false;
     } else if (filterTab === 'generator') {
       const isGen = s.serviceType === 'generator' || s.status === 'generator';
       if (!isGen) return false;
@@ -256,6 +259,17 @@ export default function Services79RatesManager({ onRatesUpdated }) {
           >
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span>🟢 लाइव P4 API ({liveServicesCount})</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setFilterTab('manual_relay')}
+            className={`px-3 py-1.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 ${
+              filterTab === 'manual_relay' 
+                ? 'bg-purple-600 text-white shadow-xs font-black' 
+                : 'text-purple-700 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/40'
+            }`}
+          >
+            <span>🔄 रेखा रिले (2-4h) ({manualRelayServicesCount})</span>
           </button>
           <button
             type="button"
@@ -367,7 +381,12 @@ export default function Services79RatesManager({ onRatesUpdated }) {
                         <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
                           {service.category}
                         </span>
-                        {(service.serviceType === 'live_api' || (service.status === 'live' && !service.isComingSoon)) ? (
+                        {service.fulfillmentType === 'manual_relay' ? (
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 dark:bg-purple-950/70 dark:text-purple-300 border border-purple-300 dark:border-purple-800 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse"></span>
+                            🔄 रेखा रिले (2-4h)
+                          </span>
+                        ) : (service.serviceType === 'live_api' || (service.status === 'live' && !service.isComingSoon)) ? (
                           <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 dark:bg-emerald-950/70 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                             🟢 लाइव P4 API

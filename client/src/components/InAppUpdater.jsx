@@ -10,6 +10,20 @@ export default function InAppUpdater() {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
+    // Strictly show ONLY inside the native Android APK environment! Never show on web browsers!
+    const isNativeApp = typeof window !== 'undefined' && (
+      Boolean(window.Capacitor?.isNativePlatform?.()) ||
+      Boolean(window.AndroidBridge) ||
+      (typeof navigator !== 'undefined' && (
+        navigator.userAgent.includes('SmartCafeApp') ||
+        navigator.userAgent.includes('versionCode:') ||
+        (navigator.userAgent.includes('Android') && navigator.userAgent.includes('wv'))
+      ))
+    );
+    if (!isNativeApp) {
+      return; // Never show to website/desktop/mobile web visitors!
+    }
+
     // Check if dismissed in this session
     if (sessionStorage.getItem('smartcafe_update_dismissed') === 'true') {
       return;

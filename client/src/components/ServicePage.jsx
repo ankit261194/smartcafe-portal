@@ -277,6 +277,59 @@ function ServicePageContent({
     }
   };
 
+  const [pollingSingleOrder, setPollingSingleOrder] = useState(false);
+  const [pollOrderMessage, setPollOrderMessage] = useState('');
+
+  const handlePollSingleOrder = async (targetOrderId) => {
+    if (!targetOrderId) return;
+    setPollingSingleOrder(true);
+    setPollOrderMessage('');
+    try {
+      const res = await fetch(`/api/services/manual-relay/poll-order?orderId=${encodeURIComponent(targetOrderId)}`);
+      if (res.ok) {
+        const data = await res.json();
+        const o = data.order;
+        if (o) {
+          if (o.status === 'completed' || o.upstreamStatus === 'Success') {
+            setPollOrderMessage('🎉 बधाई! रेखा प्रिंट ऑपरेटर डेस्क द्वारा आवेदन पूर्ण कर दिया गया है। दस्तावेज़ तैयार है!');
+            setCurrentResult(prev => ({
+              ...prev,
+              status: 'completed',
+              isPendingRelay: false,
+              pdfUrl: o.pdfUrl,
+              generatedData: {
+                ...(prev?.generatedData || {}),
+                pdfUrl: o.pdfUrl,
+                status: 'completed'
+              }
+            }));
+            fetchOrderHistory();
+            if (onBalanceUpdated) onBalanceUpdated();
+          } else if (o.status === 'rejected' || o.upstreamStatus === 'Failed') {
+            setPollOrderMessage('❌ रेखा प्रिंट द्वारा आवेदन निरस्त कर दिया गया है। शुल्क वॉलेट में रिफंड कर दिया गया है।');
+            setCurrentResult(prev => ({
+              ...prev,
+              status: 'rejected',
+              isPendingRelay: false,
+              rejectionReason: o.rejectionReason || 'आवेदन निरस्त'
+            }));
+            fetchOrderHistory();
+            if (onBalanceUpdated) onBalanceUpdated();
+          } else {
+            setPollOrderMessage('⏳ आवेदन अभी रेखा प्रिंट ऑपरेटर डेस्क पर प्रक्रियाधीन (Pending) है। (2-4 घंटे)');
+          }
+        } else {
+          setPollOrderMessage('ℹ️ स्थिति की जांच की गई: आवेदन प्रक्रियाधीन है।');
+        }
+      }
+    } catch (err) {
+      console.error('Error polling order:', err);
+      setPollOrderMessage('सर्वर से संपर्क करने में असमर्थ।');
+    } finally {
+      setPollingSingleOrder(false);
+    }
+  };
+
   // Convert HTML5 YYYY-MM-DD to Indian DD/MM/YYYY
   const formatDobDisplay = (isoStr) => {
     if (!isoStr) return '-';
@@ -369,13 +422,13 @@ function ServicePageContent({
     }
 
     // Balance Evaluation (Zero Hard-Block Frictionless Mode)
-    const currentBal = isOperator ? (sanchalakB2bBalance || 0) : (walletBalance || 0);
+    const currentBal = isOperator ? (sanchalakB2bBalance || 0) : (customerSession?.phone ? (walletBalance || 0) : 0);
     const isTrialPreview = !isFreeService && (currentBal < requiredFee);
 
     setErrorMsg('');
     setLoading(true);
 
-    const effectivePhone = customerSession?.phone || (isOperator ? (selectedCafe?.phone || '') : (localStorage.getItem('customer_phone') || localStorage.getItem('last_wallet_phone') || ''));
+    const effectivePhone = customerSession?.phone || (isOperator ? (selectedCafe?.phone || '') : (localStorage.getItem('customer_phone') || ''));
     const cafeId = selectedCafe?.id || (isOperator ? (selectedCafe?.code || 'SMARTCAFE-HQ') : 'SMARTCAFE-HQ');
 
     // Check if service requires Live OTP verification
@@ -598,6 +651,27 @@ function ServicePageContent({
       }
 
       if (res.ok && data.success) {
+        if (data.status === 'pending' || data.fulfillmentType === 'manual_relay') {
+          setCurrentResult({
+            ...data,
+            isPendingRelay: true,
+            status: 'pending',
+            orderId: data.orderId || data.order?.id || `ORD-${Date.now()}`,
+            order: data.order || { id: data.orderId, refNumber: val, serviceName: currentTool?.name },
+            submittedParams: params,
+            serviceTitle: currentTool?.title_hi || currentTool?.title || currentTool?.name,
+            submittedAt: new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' })
+          });
+          confetti({ particleCount: 50, spread: 60, origin: { y: 0.6 } });
+          fetchOrderHistory();
+          if (onBalanceUpdated) onBalanceUpdated();
+          setTimeout(() => {
+            const el = document.getElementById('cr80-preview-anchor');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+          return;
+        }
+
         // Overlay user real inputs strictly
         const rawGen = data.generatedData || data.vehicleData || data.data || {};
         const officialPdf = rawGen.pdfUrl || rawGen.pdf || rawGen.pdf_base64 || rawGen.pdfBase64 || rawGen.Rc_Pdf || data.pdfUrl || null;
@@ -732,6 +806,20 @@ function ServicePageContent({
 
   // 1-Click Free Reprint from History
   const handleFreeReprint = (orderItem) => {
+    if (orderItem.fulfillmentType === 'manual_relay' && orderItem.status === 'pending') {
+      setCurrentResult({
+        success: true,
+        isPendingRelay: true,
+        status: 'pending',
+        orderId: orderItem.id || orderItem.orderId,
+        order: orderItem,
+        submittedParams: orderItem.params || orderItem.inputs || {},
+        serviceTitle: orderItem.serviceName || orderItem.docTitle || currentTool?.name,
+        submittedAt: orderItem.submittedAt || orderItem.createdAt
+      });
+      window.scrollTo({ top: 120, behavior: 'smooth' });
+      return;
+    }
     const genData = orderItem.generatedData || orderItem.vehicleData || orderItem;
     setCurrentResult({
       success: true,
@@ -740,6 +828,7 @@ function ServicePageContent({
       retailFee: 0,
       wholesaleCost: 0,
       margin: 0,
+      pdfUrl: orderItem.pdfUrl || genData?.pdfUrl,
       vehicleData: genData,
       generatedData: genData,
       order: orderItem
@@ -2081,10 +2170,25 @@ function ServicePageContent({
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <button
             type="button"
-            onClick={isOperator ? onOpenB2bWallet : onOpenWallet}
-            className="bg-slate-900 dark:bg-white hover:bg-slate-800 text-white dark:text-slate-900 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer"
+            onClick={() => {
+              if (isOperator) {
+                if (onOpenB2bWallet) onOpenB2bWallet();
+              } else {
+                if (customerSession?.phone) {
+                  if (onOpenWallet) onOpenWallet();
+                } else {
+                  if (onOpenAuthModal) onOpenAuthModal();
+                  else if (onOpenWallet) onOpenWallet();
+                }
+              }
+            }}
+            className="bg-slate-900 dark:bg-white hover:bg-slate-800 text-white dark:text-slate-900 font-bold px-3 py-2 rounded-xl text-xs transition cursor-pointer flex items-center gap-1.5"
           >
-            {language === 'hi' ? `+ वॉलेट (शेष: ₹${isOperator ? sanchalakB2bBalance : walletBalance})` : `+ Wallet (Bal: ₹${isOperator ? sanchalakB2bBalance : walletBalance})`}
+            {isOperator 
+              ? `+ B2B (₹${sanchalakB2bBalance || 0})` 
+              : customerSession?.phone 
+              ? `+ ${language === 'hi' ? 'वॉलेट (शेष: ₹' : 'Wallet (Bal: ₹'}${walletBalance || 0})` 
+              : `👤 ${language === 'hi' ? 'लॉगिन करें' : 'Login'}`}
           </button>
         </div>
 
@@ -2190,7 +2294,7 @@ function ServicePageContent({
                 <div className="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs font-bold flex items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5">
                     <IndianRupee className="w-3.5 h-3.5 text-amber-600" />
-                    <span>उपलब्ध बैलेंस: ₹{isOperator ? (sanchalakB2bBalance || 0) : (walletBalance || 0)}</span>
+                    <span>{language === 'hi' ? 'उपलब्ध बैलेंस: ₹' : 'Available Balance: ₹'}{isOperator ? (sanchalakB2bBalance || 0) : (customerSession?.phone ? (walletBalance || 0) : 0)}</span>
                   </div>
                   <button
                     type="button"
@@ -2271,15 +2375,126 @@ function ServicePageContent({
             {/* Blue Header Banner */}
             <div className="bg-[#1d4ed8] dark:bg-[#1e40af] text-white px-4 py-3.5 flex items-center justify-between shadow-xs">
               <span className="font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-2">
-                <span>{activeData ? (language === 'hi' ? '✅ आधिकारिक दस्तावेज़ / कार्ड' : '✅ Official Document / Card') : (language === 'hi' ? 'ℹ️ दिशानिर्देश / जानकारी' : 'ℹ️ Information & Guidelines')}</span>
+                <span>
+                  {currentResult?.status === 'pending' || currentResult?.isPendingRelay 
+                    ? (language === 'hi' ? '🕒 आवेदन प्रक्रियाधीन (Order Pending)' : '🕒 Application Pending')
+                    : currentResult?.status === 'rejected'
+                    ? (language === 'hi' ? '❌ आवेदन निरस्त / रिफंडेड' : '❌ Rejected / Refunded')
+                    : activeData 
+                    ? (language === 'hi' ? '✅ आधिकारिक दस्तावेज़ / कार्ड' : '✅ Official Document / Card') 
+                    : (language === 'hi' ? 'ℹ️ दिशानिर्देश / जानकारी' : 'ℹ️ Information & Guidelines')}
+                </span>
               </span>
               <span className="text-[11px] bg-white/20 text-white font-mono font-bold px-2.5 py-0.5 rounded-full">
-                ⚡ 0.5s Fast
+                {currentResult?.status === 'pending' || currentResult?.isPendingRelay ? '⏱️ 2-4 घंटे' : '⚡ 0.5s Fast'}
               </span>
             </div>
 
-            {/* When Idle: EXACT Rekha Print Guidance box */}
-            {!activeData ? (
+            {/* When Order is Pending in Rekha Manual Relay */}
+            {currentResult && (currentResult.isPendingRelay || currentResult.status === 'pending') ? (
+              <div className="p-6 sm:p-8 space-y-6">
+                {/* Amber Status Card Header */}
+                <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-2 border-amber-500/40 rounded-2xl p-5 space-y-3">
+                  <div className="flex items-center justify-between flex-wrap gap-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="relative flex h-3.5 w-3.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500"></span>
+                      </span>
+                      <span className="text-xs font-black uppercase tracking-wider text-amber-700 dark:text-amber-400">
+                        {language === 'hi' ? 'आवेदन प्रक्रियाधीन (Order Pending)' : 'Application Pending'}
+                      </span>
+                    </div>
+                    <span className="text-[11px] font-mono font-bold bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-300 dark:border-amber-700">
+                      ⏱️ 2-4 घंटे में निष्पादन
+                    </span>
+                  </div>
+
+                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                    {currentResult.serviceTitle || currentTool?.name || 'सेवा आवेदन'}
+                  </h3>
+
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {currentResult.message || (language === 'hi' 
+                      ? 'आपका आवेदन सफलतापूर्वक दर्ज हो गया है और रेखा प्रिंट ऑपरेटर डेस्क पर प्रोसेस होने हेतु प्रेषित कर दिया गया है।'
+                      : 'Your application has been received and forwarded for manual fulfillment.')}
+                  </p>
+                </div>
+
+                {/* Order Details Grid */}
+                <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 space-y-3">
+                  <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200 dark:border-slate-800">
+                    <span className="text-slate-500 font-bold">{language === 'hi' ? 'ऑर्डर संदर्भ सं.' : 'Order Ref'}</span>
+                    <span className="font-mono font-black text-slate-900 dark:text-white">{currentResult.orderId || currentResult.order?.id || '-'}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200 dark:border-slate-800">
+                    <span className="text-slate-500 font-bold">{language === 'hi' ? 'आवेदन संदर्भ / नंबर' : 'Primary Input'}</span>
+                    <span className="font-mono font-black text-blue-600 dark:text-blue-400">{primaryInput || currentResult.order?.refNumber || '-'}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200 dark:border-slate-800">
+                    <span className="text-slate-500 font-bold">{language === 'hi' ? 'दर्ज करने का समय' : 'Submitted At'}</span>
+                    <span className="font-mono text-slate-700 dark:text-slate-300">{currentResult.submittedAt || new Date().toLocaleTimeString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-slate-500 font-bold">{language === 'hi' ? 'कार्य प्रगति' : 'Status'}</span>
+                    <span className="font-black text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                      {language === 'hi' ? 'रेखा ऑपरेटर डेस्क पर प्रक्रियाधीन' : 'Processing by Operator'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Poll Feedback Message */}
+                {pollOrderMessage && (
+                  <div className="p-3.5 bg-blue-50 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-800 rounded-xl text-xs font-bold text-blue-800 dark:text-blue-300 flex items-center gap-2">
+                    <RefreshCw className="w-4 h-4 shrink-0 text-blue-500" />
+                    <span>{pollOrderMessage}</span>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => handlePollSingleOrder(currentResult.orderId || currentResult.order?.id)}
+                    disabled={pollingSingleOrder}
+                    className="w-full sm:w-auto flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black px-4 py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition cursor-pointer disabled:opacity-50"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${pollingSingleOrder ? 'animate-spin' : ''}`} />
+                    <span>{pollingSingleOrder ? (language === 'hi' ? 'जांच जारी है...' : 'Checking...') : (language === 'hi' ? '🔄 रेखा प्रिंट से लाइव स्टेटस जांचें' : 'Check Live Status')}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="w-full sm:w-auto px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold text-xs transition cursor-pointer"
+                  >
+                    {language === 'hi' ? '⚡ नया आवेदन करें' : 'New Application'}
+                  </button>
+                </div>
+              </div>
+            ) : currentResult?.status === 'rejected' ? (
+              <div className="p-6 sm:p-8 space-y-5 text-center">
+                <div className="w-14 h-14 rounded-2xl bg-rose-100 dark:bg-rose-950/60 text-rose-600 mx-auto flex items-center justify-center">
+                  <AlertCircle className="w-7 h-7" />
+                </div>
+                <div className="space-y-1.5 max-w-md mx-auto">
+                  <h4 className="text-base font-black text-rose-600 dark:text-rose-400">
+                    {language === 'hi' ? 'आवेदन अस्वीकृत / निरस्त किया गया' : 'Application Rejected'}
+                  </h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300">
+                    {currentResult.rejectionReason || (language === 'hi' ? 'रेखा प्रिंट ऑपरेटर द्वारा यह आवेदन अस्वीकृत किया गया है। पूरी राशि आपके वॉलेट में वापस रिफंड कर दी गई है।' : 'Application was rejected. Amount has been refunded.')}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer"
+                >
+                  {language === 'hi' ? 'पुनः प्रयास करें' : 'Try Again'}
+                </button>
+              </div>
+            ) : !activeData ? (
               <div className="p-8 sm:p-14 flex flex-col items-center justify-center text-center space-y-4">
                 <div className="w-16 h-16 rounded-2xl bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                   <ServiceIconComponent className="w-8 h-8" />
@@ -3593,6 +3808,124 @@ function ServicePageContent({
         cardData={activeData}
         toolKind={toolKind}
       />
+
+      {/* ================================================================= */}
+      {/* RECENT APPLICATIONS & ORDER HISTORY (EXACT REKHA PRINT ORDER DESK) */}
+      {/* ================================================================= */}
+      <div className="bg-white dark:bg-[#0c162c] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md overflow-hidden mt-6">
+        <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <History className="w-4 h-4 text-amber-400" />
+            <h3 className="font-black text-xs sm:text-sm uppercase tracking-wider">
+              {language === 'hi' ? '📋 हाल ही के आवेदन व प्रिंट इतिहास' : '📋 Recent Applications & Order History'}
+            </h3>
+            <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+              {toolOrders.length > 0 ? toolOrders.length : orderHistory.length}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={fetchOrderHistory}
+            disabled={loadingHistory}
+            className="text-xs text-slate-300 hover:text-white flex items-center gap-1.5 transition cursor-pointer"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loadingHistory ? 'animate-spin' : ''}`} />
+            <span>{language === 'hi' ? 'रिफ्रेश' : 'Refresh'}</span>
+          </button>
+        </div>
+
+        <div className="overflow-x-auto">
+          {(!Array.isArray(orderHistory) || (toolOrders.length === 0 && orderHistory.length === 0)) ? (
+            <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">
+              {language === 'hi' ? 'वर्तमान में कोई पिछला आवेदन दर्ज नहीं है।' : 'No recent orders found.'}
+            </div>
+          ) : (
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 text-[11px] font-black uppercase text-slate-500 dark:text-slate-400">
+                  <th className="py-2.5 px-4">#</th>
+                  <th className="py-2.5 px-4">{language === 'hi' ? 'सेवा का नाम' : 'Service'}</th>
+                  <th className="py-2.5 px-4">{language === 'hi' ? 'संदर्भ सं. / इनपुट' : 'Ref / Input'}</th>
+                  <th className="py-2.5 px-4">{language === 'hi' ? 'ग्राहक / फोन' : 'Customer'}</th>
+                  <th className="py-2.5 px-4">{language === 'hi' ? 'दिनांक व समय' : 'Date & Time'}</th>
+                  <th className="py-2.5 px-4 text-center">{language === 'hi' ? 'स्थिति' : 'Status'}</th>
+                  <th className="py-2.5 px-4 text-right">{language === 'hi' ? 'कार्यवाही' : 'Action'}</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {(toolOrders.length > 0 ? toolOrders : orderHistory.slice(0, 10)).map((orderItem, idx) => {
+                  const isPending = orderItem.status === 'pending';
+                  const isCompleted = orderItem.status === 'completed' || orderItem.upstreamStatus === 'Success';
+                  const isRejected = orderItem.status === 'rejected' || orderItem.upstreamStatus === 'Failed';
+                  const ref = orderItem.refNumber || orderItem.vehicleNumber || orderItem.panNo || orderItem.aadhaarNo || orderItem.orderId || '-';
+                  
+                  return (
+                    <tr key={orderItem.id || orderItem.orderId || idx} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/40 transition">
+                      <td className="py-3 px-4 font-mono text-slate-400">{idx + 1}</td>
+                      <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
+                        {orderItem.serviceName || orderItem.docTitle || currentTool?.name || 'सेवा'}
+                        {orderItem.fulfillmentType === 'manual_relay' && (
+                          <span className="ml-1.5 text-[9px] bg-purple-100 dark:bg-purple-950/60 text-purple-700 dark:text-purple-300 px-1.5 py-0.2 rounded font-bold">
+                            रेखा रिले
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 font-mono font-bold text-blue-600 dark:text-blue-400">
+                        {ref}
+                      </td>
+                      <td className="py-3 px-4 text-slate-700 dark:text-slate-300">
+                        <div className="font-semibold">{orderItem.customerName || '-'}</div>
+                        <div className="font-mono text-[10px] text-slate-400">{orderItem.customerPhone || ''}</div>
+                      </td>
+                      <td className="py-3 px-4 text-slate-500 font-mono text-[11px]">
+                        {orderItem.createdAt ? new Date(orderItem.createdAt).toLocaleString('hi-IN', { dateStyle: 'short', timeStyle: 'short' }) : '-'}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        {isPending ? (
+                          <span className="inline-flex items-center gap-1 bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full text-[10px] font-black border border-amber-300 dark:border-amber-700">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                            {language === 'hi' ? 'पेंडिंग (2-4h)' : 'Pending'}
+                          </span>
+                        ) : isCompleted ? (
+                          <span className="inline-flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-black border border-emerald-300 dark:border-emerald-700">
+                            ✓ {language === 'hi' ? 'पूर्ण' : 'Completed'}
+                          </span>
+                        ) : isRejected ? (
+                          <span className="inline-flex items-center gap-1 bg-rose-100 dark:bg-rose-950/70 text-rose-800 dark:text-rose-300 px-2 py-0.5 rounded-full text-[10px] font-black border border-rose-300 dark:border-rose-700">
+                            ✕ {language === 'hi' ? 'निरस्त/रिफंड' : 'Refunded'}
+                          </span>
+                        ) : (
+                          <span className="font-bold text-slate-500">{orderItem.status || '-'}</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-4 text-right">
+                        {isPending ? (
+                          <button
+                            type="button"
+                            onClick={() => handlePollSingleOrder(orderItem.id || orderItem.orderId)}
+                            disabled={pollingSingleOrder}
+                            className="bg-blue-50 dark:bg-blue-950 hover:bg-blue-100 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
+                          >
+                            🔄 {language === 'hi' ? 'स्टेटस जांचें' : 'Check'}
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => handleFreeReprint(orderItem)}
+                            className="bg-emerald-50 dark:bg-emerald-950 hover:bg-emerald-100 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
+                          >
+                            🖨️ {language === 'hi' ? 'रिप्रिंट / लोड' : 'Reprint'}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
 
     </div>
   );

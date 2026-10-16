@@ -23,7 +23,8 @@
     "requiredInputs": [
       "aadhaar",
       "fingerprint"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "aadhaar_original_pdf_otp",
@@ -50,7 +51,8 @@
     "requiredInputs": [
       "aadhaar",
       "otp"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "aadhaar_original_pdf_no_otp",
@@ -74,7 +76,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "aadhaar_otp_kyc",
@@ -101,7 +104,8 @@
     "requiredInputs": [
       "aadhaar",
       "otp"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "aadhaar_pvc",
@@ -128,7 +132,8 @@
     "requiredInputs": [
       "mobile",
       "file"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "uid_seeding",
@@ -152,7 +157,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "abha_card",
@@ -178,7 +184,8 @@
     "requiredInputs": [
       "aadhaar",
       "dob"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "abha_otp",
@@ -204,7 +211,8 @@
     "requiredInputs": [
       "aadhaar",
       "otp"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pvc_verify",
@@ -228,7 +236,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pan_details",
@@ -252,7 +261,8 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pan_find",
@@ -276,7 +286,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pan_find_manual",
@@ -300,7 +311,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pan_find_manual_alt",
@@ -324,7 +336,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pan_to_aadhar_find",
@@ -348,7 +361,8 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pan_to_gst",
@@ -372,7 +386,8 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "gst_to_pan",
@@ -396,7 +411,8 @@
     ],
     "requiredInputs": [
       "gst"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "mobile_name_to_pan_instant",
@@ -422,7 +438,8 @@
     "requiredInputs": [
       "mobile",
       "name"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pan_basic_pricing",
@@ -446,7 +463,8 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "mask_pan",
@@ -470,7 +488,8 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pan_aadhar_mask",
@@ -494,7 +513,8 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pan_to_udyam_details",
@@ -518,7 +538,8 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "voter_verification",
@@ -542,7 +563,8 @@
     ],
     "requiredInputs": [
       "epicNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "voter_mobile_link",
@@ -568,7 +590,8 @@
     "requiredInputs": [
       "epicNumber",
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "voter_pdf",
@@ -592,7 +615,8 @@
     ],
     "requiredInputs": [
       "epicNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "voter_original_pdf_no_otp",
@@ -616,7 +640,8 @@
     ],
     "requiredInputs": [
       "epicNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "voter_mobile_link_no_otp",
@@ -642,7 +667,8 @@
     "requiredInputs": [
       "epicNumber",
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "voter_mobile_link_instant_otp",
@@ -671,7 +697,8 @@
       "epicNumber",
       "mobile",
       "otp"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "ration_verification",
@@ -696,7 +723,8 @@
     ],
     "requiredInputs": [
       "rationNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "ration_pdf_by_ration",
@@ -721,7 +749,8 @@
     ],
     "requiredInputs": [
       "rationNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "ration_pdf_by_aadhar",
@@ -746,7 +775,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "up_ration_to_aadhaar",
@@ -770,7 +800,8 @@
     ],
     "requiredInputs": [
       "rationNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "all_state_ration_to_aadhar",
@@ -794,7 +825,8 @@
     ],
     "requiredInputs": [
       "rationNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "assam_ration_to_aadhaar",
@@ -818,7 +850,8 @@
     ],
     "requiredInputs": [
       "rationNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "up_ration_info",
@@ -842,7 +875,8 @@
     ],
     "requiredInputs": [
       "rationNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "driving_licence_pdf",
@@ -869,7 +903,8 @@
     "requiredInputs": [
       "dlNumber",
       "dob"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "dl_details",
@@ -895,12 +930,13 @@
     "requiredInputs": [
       "dlNumber",
       "dob"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "dl_to_mobile_find",
     "num": 37,
-    "name": "DL To Mobile Number Find",
+    "name": "DL Mobile Number Link / Find (DL मोबाइल लिंक)",
     "category": "dl",
     "providerCost": 3,
     "wholesaleRate": 10,
@@ -909,9 +945,9 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dlMobileFind.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "manual_relay",
     "p4Key": "dl_to_mobile",
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "badge": "⏳ पेंडिंग रिले (2-4 घंटे)",
     "serviceType": "live_api",
     "parameters": [
       "apikey",
@@ -919,9 +955,50 @@
       "dob"
     ],
     "requiredInputs": [
-      "dlNumber",
-      "dob"
-    ]
+      "applicationNumber",
+      "password",
+      "state",
+      "mobile"
+    ],
+    "fulfillmentType": "manual_relay",
+    "upstreamFile": "dl_link.php",
+    "upstreamService": "DL Mobile Link",
+    "inputMeta": {
+      "applicationNumber": {
+        "label": {
+          "hi": "DL / आवेदन संख्या",
+          "en": "DL / Application Number"
+        },
+        "placeholder": "DL नंबर",
+        "type": "text"
+      },
+      "password": {
+        "label": {
+          "hi": "सारथी पासवर्ड",
+          "en": "Password"
+        },
+        "placeholder": "पासवर्ड",
+        "type": "password"
+      },
+      "state": {
+        "label": {
+          "hi": "राज्य (State)",
+          "en": "State"
+        },
+        "placeholder": "राज्य",
+        "type": "state_select"
+      },
+      "mobile": {
+        "label": {
+          "hi": "लिंक करने हेतु मोबाइल नंबर",
+          "en": "Mobile Number"
+        },
+        "placeholder": "10-अंकीय मोबाइल",
+        "type": "text"
+      }
+    },
+    "defaultWholesaleRate": 25,
+    "defaultRetailRate": 60
   },
   {
     "id": "ll_find",
@@ -945,7 +1022,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "ll_pdf",
@@ -969,12 +1047,13 @@
     ],
     "requiredInputs": [
       "idNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "ll_exam_pass_auto",
     "num": 40,
-    "name": "LL Exam Pass Auto",
+    "name": "LL Exam Pass / Request (सारथी टेस्ट आवेदन)",
     "category": "dl",
     "providerCost": 50,
     "wholesaleRate": 75,
@@ -983,9 +1062,9 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ll/ll_apply.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "manual_relay",
     "p4Key": "ll_exam_apply",
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "badge": "⏳ पेंडिंग रिले (2-4 घंटे)",
     "serviceType": "live_api",
     "parameters": [
       "apiKey",
@@ -999,9 +1078,47 @@
       "applicationNumber",
       "dob",
       "password",
-      "exam_pin",
       "state"
-    ]
+    ],
+    "fulfillmentType": "manual_relay",
+    "upstreamFile": "ll_exam_Request.php",
+    "upstreamService": "LL_Request",
+    "inputMeta": {
+      "applicationNumber": {
+        "label": {
+          "hi": "आवेदन / LL संख्या",
+          "en": "Application / LL Number"
+        },
+        "placeholder": "उदा. 12345678/2026",
+        "type": "text"
+      },
+      "dob": {
+        "label": {
+          "hi": "जन्म तिथि (DOB)",
+          "en": "Date of Birth"
+        },
+        "placeholder": "YYYY-MM-DD",
+        "type": "date"
+      },
+      "password": {
+        "label": {
+          "hi": "सारथी पोर्टल पासवर्ड",
+          "en": "Portal Password"
+        },
+        "placeholder": "सारथी पासवर्ड",
+        "type": "password"
+      },
+      "state": {
+        "label": {
+          "hi": "राज्य (State)",
+          "en": "State"
+        },
+        "placeholder": "उत्तर प्रदेश / बिहार / अन्य",
+        "type": "state_select"
+      }
+    },
+    "defaultWholesaleRate": 30,
+    "defaultRetailRate": 80
   },
   {
     "id": "rc_to_details",
@@ -1025,7 +1142,8 @@
     ],
     "requiredInputs": [
       "vehicleNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "rc_to_mobile_find",
@@ -1049,7 +1167,8 @@
     ],
     "requiredInputs": [
       "vehicleNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "rc_father_name_find",
@@ -1073,7 +1192,8 @@
     ],
     "requiredInputs": [
       "vehicleNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "rc_mobile_fetch",
@@ -1097,7 +1217,8 @@
     ],
     "requiredInputs": [
       "vehicleNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "chassis_to_rc_find",
@@ -1121,7 +1242,8 @@
     ],
     "requiredInputs": [
       "chassisNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "chassis_to_rc_alt",
@@ -1145,7 +1267,8 @@
     ],
     "requiredInputs": [
       "chassisNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "engine_to_rc",
@@ -1169,7 +1292,8 @@
     ],
     "requiredInputs": [
       "engineNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "chassis_to_mobile_find",
@@ -1193,7 +1317,8 @@
     ],
     "requiredInputs": [
       "chassisNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "rc_pdf_download",
@@ -1219,7 +1344,8 @@
     ],
     "requiredInputs": [
       "vehicleNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "chalan_find",
@@ -1243,7 +1369,8 @@
     ],
     "requiredInputs": [
       "vehicleNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "chalan_find_mobile",
@@ -1267,7 +1394,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "vahan_check",
@@ -1291,7 +1419,8 @@
     ],
     "requiredInputs": [
       "vehicleNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "mobile_to_details",
@@ -1316,7 +1445,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "mobile_lookup",
@@ -1341,7 +1471,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "mobile_to_upi_find",
@@ -1365,7 +1496,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "mobile_to_multi_upi_find",
@@ -1389,7 +1521,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "mobile_to_account_find",
@@ -1413,7 +1546,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "mobile_to_multi_account",
@@ -1437,7 +1571,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "upi_to_details",
@@ -1461,7 +1596,8 @@
     ],
     "requiredInputs": [
       "upi"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "telegram_to_number_lookup",
@@ -1486,7 +1622,8 @@
     ],
     "requiredInputs": [
       "telegram"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "vi_sim_to_photo_details",
@@ -1510,7 +1647,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "nsdl_bank",
@@ -1534,7 +1672,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "npci_verify",
@@ -1558,12 +1697,13 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "ayushman_image_jpg",
     "num": 64,
-    "name": "Ayushman Image JPG",
+    "name": "Ayushman PM-JAY Golden Card (आयुष्मान कार्ड)",
     "category": "health",
     "providerCost": 2,
     "wholesaleRate": 5,
@@ -1572,8 +1712,8 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/PmjayVerification",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "status": "manual_relay",
+    "badge": "⏳ पेंडिंग रिले (2-4 घंटे)",
     "serviceType": "coming_soon",
     "p4Key": "pmjay_verification",
     "parameters": [
@@ -1581,8 +1721,32 @@
       "pmjayId"
     ],
     "requiredInputs": [
-      "pmjayId"
-    ]
+      "uidNumber",
+      "stateCode"
+    ],
+    "fulfillmentType": "manual_relay",
+    "upstreamFile": "Pmjay_Verify.php",
+    "upstreamService": "Ayushman Download",
+    "inputMeta": {
+      "uidNumber": {
+        "label": {
+          "hi": "आधार नंबर / PM-JAY आईडी / राशन कार्ड",
+          "en": "Aadhaar / PM-JAY ID / Ration"
+        },
+        "placeholder": "12-अंकीय आधार या राशन नंबर",
+        "type": "text"
+      },
+      "stateCode": {
+        "label": {
+          "hi": "राज्य (State)",
+          "en": "State"
+        },
+        "placeholder": "राज्य चुनें",
+        "type": "state_select"
+      }
+    },
+    "defaultWholesaleRate": 20,
+    "defaultRetailRate": 50
   },
   {
     "id": "e_shram",
@@ -1606,12 +1770,13 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "e_shram_update",
     "num": 66,
-    "name": "E-Shram Update",
+    "name": "e-Shram / Aadhaar Mobile Number Link (मोबाइल लिंक)",
     "category": "welfare",
     "providerCost": 60,
     "wholesaleRate": 80,
@@ -1620,9 +1785,9 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "manual_relay",
     "p4Key": "eshram_mobile_update",
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "badge": "⏳ पेंडिंग रिले (2-4 घंटे)",
     "serviceType": "coming_soon",
     "parameters": [
       "apiKey",
@@ -1631,15 +1796,46 @@
       "mobile"
     ],
     "requiredInputs": [
-      "aadhaar",
+      "uidNumber",
       "dob",
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "manual_relay",
+    "upstreamFile": "e-shram_number_link.php",
+    "upstreamService": "Mobile_Update",
+    "inputMeta": {
+      "uidNumber": {
+        "label": {
+          "hi": "12-अंकीय आधार नंबर",
+          "en": "12-Digit Aadhaar Number"
+        },
+        "placeholder": "आधार नंबर",
+        "type": "text"
+      },
+      "dob": {
+        "label": {
+          "hi": "जन्म तिथि (DOB)",
+          "en": "Date of Birth"
+        },
+        "placeholder": "YYYY-MM-DD",
+        "type": "date"
+      },
+      "mobile": {
+        "label": {
+          "hi": "नया मोबाइल नंबर जो लिंक करना है",
+          "en": "New 10-Digit Mobile Number"
+        },
+        "placeholder": "10-अंकीय मोबाइल नंबर",
+        "type": "text"
+      }
+    },
+    "defaultWholesaleRate": 25,
+    "defaultRetailRate": 60
   },
   {
     "id": "agristack_pdf",
     "num": 67,
-    "name": "AgriStack PDF",
+    "name": "AgriStack Farmer Card / Land Seeding (भूलेख / किसान कार्ड)",
     "category": "agriculture",
     "providerCost": 10,
     "wholesaleRate": 20,
@@ -1648,9 +1844,9 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf.php",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
+    "status": "manual_relay",
     "p4Key": "agristack_print_pdf",
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "badge": "⏳ पेंडिंग रिले (2-4 घंटे)",
     "serviceType": "live_api",
     "parameters": [
       "apiKey",
@@ -1658,9 +1854,32 @@
       "state"
     ],
     "requiredInputs": [
-      "aadhaar",
+      "farmerId",
       "state"
-    ]
+    ],
+    "fulfillmentType": "manual_relay",
+    "upstreamFile": "AgrifarmerCardstate.php",
+    "upstreamService": "Land Seeding",
+    "inputMeta": {
+      "farmerId": {
+        "label": {
+          "hi": "किसान आईडी / खसरा / आधार संख्या",
+          "en": "Farmer ID / Khasra / Aadhaar"
+        },
+        "placeholder": "किसान आईडी / खसरा संख्या",
+        "type": "text"
+      },
+      "state": {
+        "label": {
+          "hi": "राज्य (State)",
+          "en": "State"
+        },
+        "placeholder": "राज्य चुनें",
+        "type": "state_select"
+      }
+    },
+    "defaultWholesaleRate": 30,
+    "defaultRetailRate": 80
   },
   {
     "id": "agristack_verify",
@@ -1684,7 +1903,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "agristack_dbt",
@@ -1708,7 +1928,8 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "rtps_bihar_pdf",
@@ -1734,7 +1955,8 @@
     "requiredInputs": [
       "applicationNumber",
       "name"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "electric_bill_pdf_bihar",
@@ -1758,7 +1980,8 @@
     ],
     "requiredInputs": [
       "caNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "gmail_to_details",
@@ -1783,7 +2006,8 @@
     ],
     "requiredInputs": [
       "email"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "aadhar_number_to_details",
@@ -1807,12 +2031,13 @@
     ],
     "requiredInputs": [
       "aadhaar"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "samagra_service",
     "num": 74,
-    "name": "Samagra Service",
+    "name": "Samagra Social Security ID (समग्र आईडी पर्ची)",
     "category": "welfare",
     "providerCost": 10,
     "wholesaleRate": 20,
@@ -1821,8 +2046,8 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Hr_Services/familyVerification",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "status": "manual_relay",
+    "badge": "⏳ पेंडिंग रिले (2-4 घंटे)",
     "serviceType": "coming_soon",
     "p4Key": "family_verification",
     "parameters": [
@@ -1830,13 +2055,28 @@
       "familyId"
     ],
     "requiredInputs": [
-      "familyId"
-    ]
+      "samagraId"
+    ],
+    "fulfillmentType": "manual_relay",
+    "upstreamFile": "familyID_Service.php",
+    "upstreamService": "Samagra Print",
+    "inputMeta": {
+      "samagraId": {
+        "label": {
+          "hi": "9-अंकीय समग्र सदस्य / परिवार आईडी",
+          "en": "9-Digit Samagra Member / Family ID"
+        },
+        "placeholder": "9-अंकीय समग्र आईडी",
+        "type": "text"
+      }
+    },
+    "defaultWholesaleRate": 15,
+    "defaultRetailRate": 35
   },
   {
     "id": "sambal_pdf",
     "num": 75,
-    "name": "Sambal PDF",
+    "name": "Sambal Card PDF (संबल कार्ड डाउनलोड)",
     "category": "welfare",
     "providerCost": 15,
     "wholesaleRate": 25,
@@ -1845,8 +2085,8 @@
     "apiEndpoint": "https://authorized.p4points.co.in/api/v2/sharmadhan_card_details",
     "method": "GET",
     "isComingSoon": false,
-    "status": "live",
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "status": "manual_relay",
+    "badge": "⏳ पेंडिंग रिले (2-4 घंटे)",
     "serviceType": "coming_soon",
     "p4Key": "sharmadhan_card_details",
     "parameters": [
@@ -1854,8 +2094,23 @@
       "uidNumber"
     ],
     "requiredInputs": [
-      "aadhaar"
-    ]
+      "samagraId"
+    ],
+    "fulfillmentType": "manual_relay",
+    "upstreamFile": "familyID_Service.php",
+    "upstreamService": "Samagra Print",
+    "inputMeta": {
+      "samagraId": {
+        "label": {
+          "hi": "समग्र आईडी या संबल नंबर",
+          "en": "Samagra ID or Sambal Number"
+        },
+        "placeholder": "9-अंकीय आईडी",
+        "type": "text"
+      }
+    },
+    "defaultWholesaleRate": 20,
+    "defaultRetailRate": 50
   },
   {
     "id": "udyam_pdf",
@@ -1879,7 +2134,8 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "qr_generator",
@@ -1900,7 +2156,8 @@
     "parameters": [],
     "requiredInputs": [
       "text"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "check_operator",
@@ -1924,7 +2181,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "check_plan",
@@ -1949,7 +2207,8 @@
     ],
     "requiredInputs": [
       "mobile"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "bank_ifsc_lookup",
@@ -1970,7 +2229,8 @@
     "parameters": [],
     "requiredInputs": [
       "ifsc"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pincode_lookup",
@@ -1991,7 +2251,8 @@
     "parameters": [],
     "requiredInputs": [
       "pincode"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "sarkari_job_feed",
@@ -2010,7 +2271,8 @@
     "badge": "🟢 100% लाइव सरकारी अपडेट",
     "serviceType": "generator",
     "parameters": [],
-    "requiredInputs": []
+    "requiredInputs": [],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "pvc_auto_cropper",
@@ -2031,7 +2293,8 @@
     "parameters": [],
     "requiredInputs": [
       "file"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "passport_photo_maker",
@@ -2052,7 +2315,8 @@
     "parameters": [],
     "requiredInputs": [
       "file"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "govt_form_resizer",
@@ -2073,7 +2337,8 @@
     "parameters": [],
     "requiredInputs": [
       "file"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
   },
   {
     "id": "voter_original_pdf_otp",
@@ -2099,6 +2364,111 @@
     "requiredInputs": [
       "epicNumber",
       "otp"
-    ]
+    ],
+    "fulfillmentType": "instant_api"
+  },
+  {
+    "id": "puc_certificate_download",
+    "num": 87,
+    "name": "PUC Pollution Certificate (वाहन प्रदूषण प्रमाण पत्र)",
+    "category": "rc",
+    "group": "rc",
+    "wholesaleRate": 25,
+    "retailRate": 50,
+    "isActive": true,
+    "isComingSoon": false,
+    "serviceType": "manual_relay",
+    "fulfillmentType": "manual_relay",
+    "upstreamService": "puc_services",
+    "upstreamFile": "puc.php",
+    "requiredInputs": [
+      "vehicleNumber"
+    ],
+    "inputMeta": {
+      "vehicleNumber": {
+        "label": "गाड़ी नंबर (Vehicle Reg No)",
+        "placeholder": "उदा. UP32AB1234",
+        "type": "text"
+      }
+    },
+    "eta": "2-4 घंटे",
+    "description": "वाहन प्रदूषण (PUC) जांच प्रमाण पत्र रेखा B2B रिले द्वारा जारी।"
+  },
+  {
+    "id": "pan_aadhaar_link_manual",
+    "num": 88,
+    "name": "PAN Aadhaar Link Service (पैन-आधार लिंक अनुरोध)",
+    "category": "pan",
+    "group": "pan",
+    "wholesaleRate": 50,
+    "retailRate": 100,
+    "isActive": true,
+    "isComingSoon": false,
+    "serviceType": "manual_relay",
+    "fulfillmentType": "manual_relay",
+    "upstreamService": "Pan_Number_Link",
+    "upstreamFile": "Pan_Number_Link.php",
+    "requiredInputs": [
+      "panNo",
+      "aadhaarNo",
+      "mobile"
+    ],
+    "inputMeta": {
+      "panNo": {
+        "label": "10-अंकीय पैन नंबर (PAN Number)",
+        "placeholder": "उदा. ABCDE1234F",
+        "type": "text"
+      },
+      "aadhaarNo": {
+        "label": "12-अंकीय आधार नंबर (Aadhaar Number)",
+        "placeholder": "उदा. 123456789012",
+        "type": "text"
+      },
+      "mobile": {
+        "label": "मोबाइल नंबर (Mobile No)",
+        "placeholder": "उदा. 9876543210",
+        "type": "tel"
+      }
+    },
+    "eta": "2-4 घंटे",
+    "description": "आयकर विभाग पोर्टल पर पैन-आधार लिंक आवेदन B2B रिले द्वारा।"
+  },
+  {
+    "id": "dob_update_service",
+    "num": 89,
+    "name": "DOB Update / Correction (जन्मतिथि सुधार आवेदन)",
+    "category": "aadhaar",
+    "group": "aadhaar",
+    "wholesaleRate": 80,
+    "retailRate": 150,
+    "isActive": true,
+    "isComingSoon": false,
+    "serviceType": "manual_relay",
+    "fulfillmentType": "manual_relay",
+    "upstreamService": "Dob_Update",
+    "upstreamFile": "Dob_Update.php",
+    "requiredInputs": [
+      "aadhaarNo",
+      "dob",
+      "mobile"
+    ],
+    "inputMeta": {
+      "aadhaarNo": {
+        "label": "आधार नंबर (Aadhaar Number)",
+        "placeholder": "उदा. 123456789012",
+        "type": "text"
+      },
+      "dob": {
+        "label": "सही जन्म तिथि (Correct DOB)",
+        "type": "date"
+      },
+      "mobile": {
+        "label": "मोबाइल नंबर (Mobile No)",
+        "placeholder": "उदा. 9876543210",
+        "type": "tel"
+      }
+    },
+    "eta": "2-4 घंटे",
+    "description": "UIDAI पोर्टल पर जन्मतिथि सुधार/अपडेट अनुरोध B2B रिले द्वारा।"
   }
 ]

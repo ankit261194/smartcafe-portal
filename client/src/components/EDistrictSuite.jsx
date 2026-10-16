@@ -10,6 +10,16 @@ export default function EDistrictSuite({ initialSubTab = 'verify', onBack, isOpe
   const { language } = useLanguage();
   const [activeSubTab, setActiveSubTab] = useState(initialSubTab || 'verify');
 
+  const isNativeApp = typeof window !== 'undefined' && (
+    Boolean(window.Capacitor?.isNativePlatform?.()) ||
+    Boolean(window.AndroidBridge) ||
+    (typeof navigator !== 'undefined' && (
+      navigator.userAgent.includes('SmartCafeApp') ||
+      navigator.userAgent.includes('versionCode:') ||
+      (navigator.userAgent.includes('Android') && navigator.userAgent.includes('wv'))
+    ))
+  );
+
   React.useEffect(() => {
     if (initialSubTab) {
       setActiveSubTab(initialSubTab);
@@ -168,6 +178,36 @@ export default function EDistrictSuite({ initialSubTab = 'verify', onBack, isOpe
           </a>
         </div>
       </div>
+
+      {/* Web-to-APK Gate Banner (When visiting via Web Browser) */}
+      {!isNativeApp && (
+        <div className="bg-gradient-to-r from-amber-500/15 via-rose-500/15 to-amber-500/15 border-2 border-rose-500/40 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm no-print">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center shrink-0 shadow-sm text-lg">
+              📱
+            </div>
+            <div>
+              <h4 className="text-xs sm:text-sm font-black text-rose-900 dark:text-rose-200">
+                {language === 'hi'
+                  ? 'महत्वपूर्ण सूचना: e-District फॉर्म आवेदन केवल मोबाइल ऐप से ही मान्य है'
+                  : 'Notice: e-District Form Submission is Only Supported in the Mobile App'}
+              </h4>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 font-medium mt-0.5">
+                {language === 'hi'
+                  ? 'वेबसाइट से सीधा ऑनलाइन आवेदन समर्थित नहीं है (क्योंकि ऑटो-OTP सिंक व दस्तावेज़ स्कैनर केवल मोबाइल ऐप में समर्थित है)। कृपया आवेदन के लिए आधिकारिक Android APK डाउनलोड करें।'
+                  : 'Direct web submission is not supported. Please download the official Android APK for background OTP sync & document scanning.'}
+              </p>
+            </div>
+          </div>
+          <a
+            href="/CyberCafe_Portal.apk"
+            download="CyberCafe_Portal.apk"
+            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-black px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-md transition active:scale-95 shrink-0 cursor-pointer"
+          >
+            <span>📲 {language === 'hi' ? 'मोबाइल ऐप (APK) डाउनलोड करें' : 'Download Mobile APK'}</span>
+          </a>
+        </div>
+      )}
 
       {/* Sub Tabs */}
       <div className="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap gap-2 text-xs font-bold no-print">
