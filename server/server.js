@@ -4629,28 +4629,33 @@ app.post('/api/services/execute-automated', async (req, res) => {
   if (!store.wallets) store.wallets = [];
   let customerWallet = store.wallets.find(w => w.phone === effectiveCustomerPhone);
 
-  let isTrial = isOtherCategory ? false : Boolean(previewMode);
-  if (!previewMode && !isOtherCategory) {
-    if (cafe.b2bWallet.balance < wholesaleCost) {
-      return res.status(403).json({
-        error: `संचालक B2B बैलेंस अपर्याप्त है (वर्तमान: ₹${cafe.b2bWallet.balance}, आवश्यक: ₹${wholesaleCost})। कृपया वॉलेट रिचार्ज करें।`,
-        insufficientRole: 'sanchalak_b2b',
-        requiredAmount: wholesaleCost,
-        currentBalance: cafe.b2bWallet.balance
-      });
+  // Strict Zero-Bypass Balance Check (No Free Generation / No Trial Bypass)
+  if (!isOtherCategory) {
+    if (isOperatorB2bDirect || cafe.id !== 'SMARTCAFE-HQ') {
+      if (cafe.b2bWallet.balance < wholesaleCost) {
+        return res.status(403).json({
+          success: false,
+          error: `संचालक B2B बैलेंस अपर्याप्त है (वर्तमान: ₹${cafe.b2bWallet.balance}, आवश्यक: ₹${wholesaleCost})। कृपया वॉलेट रिचार्ज करें।`,
+          insufficientRole: 'sanchalak_b2b',
+          requiredAmount: wholesaleCost,
+          currentBalance: cafe.b2bWallet.balance
+        });
+      }
     }
     if (!isOperatorB2bDirect && (!customerWallet || customerWallet.balance < retailFee)) {
+      const currentCustBal = customerWallet ? customerWallet.balance : 0;
       return res.status(403).json({
-        error: `ग्राहक वॉलेट बैलेंस अपर्याप्त है (वर्तमान: ₹${customerWallet ? customerWallet.balance : 0}, आवश्यक: ₹${retailFee})। कृपया वॉलेट रिचार्ज करें।`,
+        success: false,
+        error: `ग्राहक वॉलेट बैलेंस अपर्याप्त है (वर्तमान: ₹${currentCustBal}, आवश्यक: ₹${retailFee})। कृपया वॉलेट रिचार्ज करें।`,
         insufficientRole: 'customer',
         requiredAmount: retailFee,
-        currentBalance: customerWallet ? customerWallet.balance : 0
+        currentBalance: currentCustBal
       });
     }
   }
 
   // If funded, execute double-entry ledger deduction
-  if (!isTrial) {
+  if (!isOtherCategory) {
     // 1. Debit Customer Wallet (if citizen flow)
     if (!isOperatorB2bDirect && customerWallet) {
       customerWallet.balance -= retailFee;
@@ -4727,9 +4732,9 @@ app.post('/api/services/execute-automated', async (req, res) => {
       status: 'pending',
       fulfillmentType: 'manual_relay',
       message: '✅ आवेदन सफलतापूर्वक दर्ज हुआ! रेखा प्रिंट B2B बैकएंड को अग्रसारित (Forwarded)। परिणाम 2-4 घंटे में स्वतः उपलब्ध होगा। (स्टेटस ऑर्डर हिस्ट्री में चेक करें)',
-      retailFee: isTrial ? 0 : retailFee,
-      wholesaleCost: isTrial ? 0 : wholesaleCost,
-      margin: isTrial ? 0 : margin,
+      retailFee,
+      wholesaleCost,
+      margin,
       customerBalance: customerWallet ? customerWallet.balance : 0,
       sanchalakB2bBalance: cafe.b2bWallet ? cafe.b2bWallet.balance : 0,
       order: newOrder
@@ -5122,13 +5127,10 @@ app.post('/api/services/execute-automated', async (req, res) => {
 
   res.json({
     success: true,
-    isTrialPreview: isTrial,
-    message: isTrial
-      ? '✅ 1-क्लिक इंस्टेंट जनरेशन सफल! आधिकारिक प्रति तैयार है। (लाइव प्रीव्यू / डेमो मोड)'
-      : `✅ सफलता! ग्राहक वॉलेट से ₹${retailFee} व संचालक B2B से ₹${wholesaleCost} कटे। संचालक को शुद्ध लाभ +₹${margin} प्राप्त हुआ।`,
-    retailFee: isTrial ? 0 : retailFee,
-    wholesaleCost: isTrial ? 0 : wholesaleCost,
-    margin: isTrial ? 0 : margin,
+    message: `✅ सफलता! ग्राहक वॉलेट से ₹${retailFee} व संचालक B2B से ₹${wholesaleCost} कटे। संचालक को शुद्ध लाभ +₹${margin} प्राप्त हुआ।`,
+    retailFee,
+    wholesaleCost,
+    margin,
     customerBalance: customerWallet ? customerWallet.balance : 0,
     sanchalakB2bBalance: cafe.b2bWallet ? cafe.b2bWallet.balance : 0,
     vehicleData: normServiceType === 'rcDownload' ? vehicleData : undefined,

@@ -5755,18 +5755,33 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         }
     }
 
-    $availCust = ($custWalletIdx !== -1) ? $store['wallets'][$custWalletIdx]['balance'] : 0;
-    $isTrial = $previewMode;
-    if ($isOtherCategory) {
-        $isTrial = false;
-    } else {
+    $availCust = ($custWalletIdx !== -1) ? floatval($store['wallets'][$custWalletIdx]['balance'] ?? 0) : 0.0;
+    
+    // Strict Zero-Bypass Balance Check (No Free Generation / No Trial Bypass)
+    if (!$isOtherCategory) {
         if ($isOperatorB2bDirect) {
-            if ($cafe['b2bWallet']['balance'] < $wholesaleCost) {
-                $isTrial = true;
+            if (floatval($cafe['b2bWallet']['balance'] ?? 0) < $wholesaleCost) {
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'error' => "संचालक B2B बैलेंस अपर्याप्त है (वर्तमान: ₹" . floatval($cafe['b2bWallet']['balance'] ?? 0) . ", आवश्यक: ₹{$wholesaleCost})। कृपया वॉलेट रिचार्ज करें।",
+                    'insufficientRole' => 'sanchalak_b2b',
+                    'requiredAmount' => $wholesaleCost,
+                    'currentBalance' => floatval($cafe['b2bWallet']['balance'] ?? 0)
+                ]);
+                exit;
             }
         } else {
             if ($availCust < $retailFee) {
-                $isTrial = true;
+                http_response_code(403);
+                echo json_encode([
+                    'success' => false,
+                    'error' => "ग्राहक वॉलेट बैलेंस अपर्याप्त है (वर्तमान: ₹{$availCust}, आवश्यक: ₹{$retailFee})। कृपया वॉलेट रिचार्ज करें।",
+                    'insufficientRole' => 'customer',
+                    'requiredAmount' => $retailFee,
+                    'currentBalance' => $availCust
+                ]);
+                exit;
             }
         }
     }
@@ -5788,14 +5803,14 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         'receiptMaker' => 'साइबर कैफे / जन सेवा केंद्र अधिकृत बिल रसीद'
     ];
 
-    if (!$isTrial) {
+    if (!$isOtherCategory) {
         if (!$isOperatorB2bDirect && $custWalletIdx !== -1) {
             $store['wallets'][$custWalletIdx]['balance'] -= $retailFee;
             array_unshift($store['wallets'][$custWalletIdx]['transactions'], [
                 'id' => 'TXN-' . time(),
                 'type' => 'debit',
                 'amount' => $retailFee,
-                'note' => 'ऑनलाइन सेवा शुल्क: ' . ($serviceTitles[$normServiceType] ?? $normServiceType),
+                'note' => 'ऑनलाइन सेवा शुल्क: ' . ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)),
                 'createdAt' => date('c')
             ]);
         }
@@ -5805,7 +5820,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             'id' => 'B2B-TXN-' . time(),
             'type' => 'debit',
             'amount' => $wholesaleCost,
-            'note' => 'थोक एडमिन सेवा कटौती: ' . ($serviceTitles[$normServiceType] ?? $normServiceType),
+            'note' => 'थोक एडमिन सेवा कटौती: ' . ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)),
             'createdAt' => date('c')
         ]);
 
@@ -5813,7 +5828,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         array_unshift($store['cashbook'], [
             'id' => 'CB-' . time(),
             'cafeId' => $cafe['id'],
-            'title' => ($serviceTitles[$normServiceType] ?? $normServiceType) . " नेट मार्जिन (+₹{$margin})",
+            'title' => ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)) . " नेट मार्जिन (+₹{$margin})",
             'category' => 'Automated Service',
             'amount' => $margin,
             'paymentMode' => $isOperatorB2bDirect ? 'cash' : 'wallet',
@@ -5873,9 +5888,9 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             'status' => 'pending',
             'fulfillmentType' => 'manual_relay',
             'message' => '✅ आवेदन सफलतापूर्वक दर्ज हुआ! रेखा प्रिंट B2B बैकएंड को अग्रसारित। परिणाम 2-4 घंटे में स्वतः उपलब्ध होगा (स्टेटस ऑर्डर हिस्ट्री में चेक करें)।',
-            'retailFee' => $isTrial ? 0 : $retailFee,
-            'wholesaleCost' => $isTrial ? 0 : $wholesaleCost,
-            'margin' => $isTrial ? 0 : $margin,
+            'retailFee' => $retailFee,
+            'wholesaleCost' => $wholesaleCost,
+            'margin' => $margin,
             'customerBalance' => ($custWalletIdx !== -1) ? $store['wallets'][$custWalletIdx]['balance'] : 0,
             'sanchalakB2bBalance' => $cafe['b2bWallet']['balance'] ?? 0,
             'order' => $newOrder
@@ -6273,13 +6288,10 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
 
     echo json_encode([
         'success' => true,
-        'isTrialPreview' => $isTrial,
-        'message' => $isTrial
-            ? '✅ 1-क्लिक इंस्टेंट जनरेशन सफल! आधिकारिक प्रति तैयार है। (लाइव प्रीव्यू / डेमो मोड)'
-            : "✅ सफलता! ग्राहक वॉलेट से ₹{$retailFee} व संचालक B2B से ₹{$wholesaleCost} कटे। संचालक को शुद्ध लाभ +₹{$margin} प्राप्त हुआ।",
-        'retailFee' => $isTrial ? 0 : $retailFee,
-        'wholesaleCost' => $isTrial ? 0 : $wholesaleCost,
-        'margin' => $isTrial ? 0 : $margin,
+        'message' => "✅ सफलता! ग्राहक वॉलेट से ₹{$retailFee} व संचालक B2B से ₹{$wholesaleCost} कटे। संचालक को शुद्ध लाभ +₹{$margin} प्राप्त हुआ।",
+        'retailFee' => $retailFee,
+        'wholesaleCost' => $wholesaleCost,
+        'margin' => $margin,
         'customerBalance' => ($custWalletIdx !== -1) ? $store['wallets'][$custWalletIdx]['balance'] : 0,
         'sanchalakB2bBalance' => $cafe['b2bWallet']['balance'] ?? 0,
         'vehicleData' => ($normServiceType === 'rcDownload') ? $vehicleData : null,

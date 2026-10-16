@@ -421,9 +421,14 @@ function ServicePageContent({
       return;
     }
 
-    // Balance Evaluation (Zero Hard-Block Frictionless Mode)
+    // Balance Evaluation (Strict Zero-Bypass Mode)
     const currentBal = isOperator ? (sanchalakB2bBalance || 0) : (customerSession?.phone ? (walletBalance || 0) : 0);
-    const isTrialPreview = !isFreeService && (currentBal < requiredFee);
+    if (!isFreeService && currentBal < requiredFee) {
+      setErrorMsg(language === 'hi'
+        ? `अपर्याप्त वॉलेट बैलेंस! (वर्तमान: ₹${currentBal}, आवश्यक: ₹${requiredFee})। कृपया सेवा का उपयोग करने के लिए वॉलेट रिचार्ज करें।`
+        : `Insufficient wallet balance! (Current: ₹${currentBal}, Required: ₹${requiredFee}). Please recharge wallet.`);
+      return;
+    }
 
     setErrorMsg('');
     setLoading(true);
@@ -476,6 +481,8 @@ function ServicePageContent({
       serviceName: currentTool.name
     };
 
+    const tid = (currentTool?.id || '').toLowerCase();
+
     if (toolKind === 'rc') {
       params.vehicleNumber = val.toUpperCase();
       params.rcno = val.toUpperCase();
@@ -491,23 +498,17 @@ function ServicePageContent({
         params.engine = val.toUpperCase();
       }
     }
-    if (toolKind === 'pan' || toolKind === 'epan') {
+    if ((toolKind === 'pan' || toolKind === 'epan') && !['pan_find', 'pan_find_manual', 'pan_find_manual_alt'].includes(tid)) {
       params.panNo = val.toUpperCase();
       params.panNumber = val.toUpperCase();
       params.pan = val.toUpperCase();
       params.name = customerName.trim() || undefined;
-      if (currentTool?.id === 'pan_find' || currentTool?.id?.includes('panfind') || currentTool?.id?.includes('pan_find')) {
-        params.aadhaarNo = val;
-        params.uidNumber = val;
-        params.aadhaar = val;
-        params.aadhar = val;
-      }
       if (currentTool?.id?.includes('gst')) {
         params.gst = val.toUpperCase();
         params.gstNumber = val.toUpperCase();
       }
     }
-    if (currentTool?.id?.includes('upi')) {
+    if (currentTool?.id?.includes('upi') || tid === 'upi_to_details') {
       params.UPI_ID = val.trim();
       params.upi_id = val.trim();
       params.upi = val.trim();
@@ -531,7 +532,7 @@ function ServicePageContent({
       params.name = customerName.trim() || undefined;
       if (dobDate) params.dob = formatDobDisplay(dobDate);
     }
-    if (toolKind === 'ration') {
+    if (toolKind === 'ration' && tid !== 'ration_pdf_by_aadhar') {
       params.rationNo = val;
       params.ration_no = val;
       params.uidNumber = val;
@@ -615,6 +616,90 @@ function ServicePageContent({
       params.query = val;
     }
 
+    // Specific Service Parameter Mapping (Screenshot & Dedicated Form Inputs)
+    if (tid === 'll_exam_pass_auto') {
+      params.applicationNumber = val;
+      params.dob = dobDate ? formatDobDisplay(dobDate) : '';
+      params.password = secondaryInput.trim();
+      params.examPin = thirdInput.trim();
+      params.examsecretpin = thirdInput.trim();
+      params.state = selectState || 'UP';
+    }
+
+    if (tid === 'll_find' || tid === 'll_pdf') {
+      params.applicationNumber = val;
+      params.idNumber = val;
+      params.dob = dobDate ? formatDobDisplay(dobDate) : '';
+    }
+
+    if (tid === 'dl_to_mobile_find') {
+      params.dlNo = val;
+      params.dl = val;
+      params.dob = dobDate ? formatDobDisplay(dobDate) : '';
+      params.mobile = secondaryInput.trim();
+    }
+
+    if (['pan_find', 'pan_find_manual', 'pan_find_manual_alt'].includes(tid)) {
+      params.aadhaarNo = val;
+      params.uidNumber = val;
+      params.aadhar = val;
+      params.name = customerName.trim();
+      params.fatherName = fatherName.trim();
+      params.dob = dobDate ? formatDobDisplay(dobDate) : undefined;
+      delete params.panNo;
+      delete params.panNumber;
+      delete params.pan;
+    }
+
+    if (tid === 'pan_to_aadhar_find') {
+      params.panNo = val.toUpperCase();
+      params.dob = dobDate ? formatDobDisplay(dobDate) : undefined;
+    }
+
+    if (tid === 'pan_aadhaar_link_manual') {
+      params.panNo = val.toUpperCase();
+      params.aadhaarNo = secondaryInput.trim();
+      params.mobile = thirdInput.trim() || secondaryInput.trim();
+    }
+
+    if (tid === 'ration_pdf_by_aadhar') {
+      params.aadhaarNo = val;
+      params.uidNumber = val;
+      params.aadhar = val;
+      params.state = selectState || 'UP';
+      params.rationtype = 'new';
+      delete params.rationNo;
+      delete params.ration_no;
+    }
+
+    if (['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar'].includes(tid)) {
+      params.rationNo = val;
+      params.state = selectState || 'UP';
+    }
+
+    if (['rtps_bihar_pdf', 'rtps'].includes(tid)) {
+      params.applicationNumber = val;
+      params.appNo = val;
+      params.name = secondaryInput.trim().toUpperCase();
+      params.applicantName = secondaryInput.trim().toUpperCase();
+    }
+
+    if (tid === 'nsdl_bank') {
+      params.accountNo = val;
+      params.ifsc = secondaryInput.trim().toUpperCase();
+      params.bankName = 'NSDL Payments Bank';
+    }
+
+    if (tid === 'telegram_to_number_lookup') {
+      params.telegram = val.trim();
+      params.username = val.trim();
+    }
+
+    if (tid === 'gmail_to_details') {
+      params.email = val.trim();
+      params.gmail = val.trim();
+    }
+
     try {
       const startTime = Date.now();
       const res = await fetch('/api/services/execute-automated', {
@@ -626,7 +711,7 @@ function ServicePageContent({
           serviceType: currentTool.id,
           serviceId: currentTool.id,
           operatorB2bDirect: isOperator,
-          previewMode: isTrialPreview,
+          previewMode: false,
           params
         })
       });
@@ -645,7 +730,7 @@ function ServicePageContent({
       }
 
       if (res.status === 403) {
-        await executeDirectLookupFallback(val);
+        setErrorMsg(data.error || 'अपर्याप्त वॉलेट बैलेंस! कृपया सेवा का उपयोग करने के लिए वॉलेट रिचार्ज करें।');
         setLoading(false);
         return;
       }
@@ -718,11 +803,19 @@ function ServicePageContent({
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }, 100);
       } else {
-        await executeDirectLookupFallback(val);
+        if (isFreeService) {
+          await executeDirectLookupFallback(val);
+        } else {
+          setErrorMsg(data.error || 'सेवा निष्पादन में त्रुटि हुई। कृपया पुनः प्रयास करें।');
+        }
       }
     } catch (err) {
-      console.warn('execute-automated fallback triggered:', err);
-      await executeDirectLookupFallback(val);
+      console.warn('execute-automated error:', err);
+      if (isFreeService) {
+        await executeDirectLookupFallback(val);
+      } else {
+        setErrorMsg('सर्वर से संपर्क करने में असमर्थ। कृपया बाद में प्रयास करें।');
+      }
     } finally {
       setLoading(false);
     }
@@ -1223,8 +1316,173 @@ function ServicePageContent({
       );
     }
 
-    // 5. DRIVING LICENCE CARD PRINT (Screenshot 250)
-    if (['dl', 'driving_licence_pdf', 'dl_details', 'dl_to_mobile_find'].includes(id) || cat === 'dl') {
+    // 5. LL EXAM REQUEST / PASS (Screenshot 234)
+    if (id === 'll_exam_pass_auto') {
+      return (
+        <div className="space-y-3.5">
+          <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-900 dark:text-amber-200 text-xs flex items-start gap-2">
+            <span className="text-base leading-none">💡</span>
+            <div>
+              <p className="font-bold">परिवहन सारथी ऑनलाइन टेस्ट आवेदन (Manual Relay)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                आवेदन संख्या, जन्मतिथि और परिवहन विभाग द्वारा मोबाइल पर भेजा गया <b>SMS पासवर्ड</b> दर्ज करें। यह आवेदन रेखा ऑपरेटर द्वारा 1 से 2 घंटे में प्रोसेस किया जाता है।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Application Number (आवेदन संख्या) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
+              placeholder="आवेदन संख्या दर्ज करें (जैसे 12345678/2026)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Date Of Birth (जन्मतिथि) *
+            </label>
+            <input
+              type="date"
+              required
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Parivahan SMS Password (सारथी एग्जाम पासवर्ड) *
+            </label>
+            <input
+              type="password"
+              required
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value)}
+              placeholder="मोबाइल पर प्राप्त सारथी SMS पासवर्ड दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-sm font-bold focus:outline-none"
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Exam Pin <span className="text-slate-400 font-normal">(Optional)</span>
+              </label>
+              <input
+                type="text"
+                value={thirdInput}
+                onChange={(e) => setThirdInput(e.target.value)}
+                placeholder="एग्जाम पिन (यदि उपलब्ध हो)"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Select State (राज्य) *
+              </label>
+              <select
+                value={selectState}
+                onChange={(e) => setSelectState(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
+              >
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Haryana">Haryana</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 6. LL FIND & LL PDF DOWNLOAD (Screenshot 230)
+    if (['ll_find', 'll_pdf'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Application / Learning Number (आवेदन या लर्नर नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
+              placeholder="आवेदन या लर्निंग नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Date Of Birth (जन्मतिथि) *
+            </label>
+            <input
+              type="date"
+              required
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 7. DL TO MOBILE FIND / LINK
+    if (id === 'dl_to_mobile_find') {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Driving Licence (DL) Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 18))}
+              placeholder="DL नंबर दर्ज करें (जैसे UP32 20180012345)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Date Of Birth (जन्मतिथि) *
+            </label>
+            <input
+              type="date"
+              required
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Registered / New Mobile Number *
+            </label>
+            <input
+              type="text"
+              required
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+              placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 8. GENUINE DRIVING LICENCE (DL) CARD PRINT (Screenshot 250)
+    if (['dl', 'driving_licence_pdf', 'dl_details', 'drivingLicence'].includes(id)) {
       return (
         <div className="space-y-3">
           <div className="space-y-1.5">
@@ -1269,45 +1527,95 @@ function ServicePageContent({
       );
     }
 
-    // 6. LL CARD DOWNLOAD (Screenshot 230)
-    if (['ll_find', 'll_pdf'].includes(id)) {
+    // 9. LOST PAN CARD FIND (Aadhaar No OR Name + Father Name + DOB - NO PAN NUMBER NEEDED!)
+    if (['pan_find', 'pan_find_manual', 'pan_find_manual_alt'].includes(id)) {
       return (
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            Application / Learning Number *
-          </label>
-          <input
-            type="text"
-            required
-            value={primaryInput}
-            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
-            placeholder="Enter Application / Learning Number"
-            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
-          />
+        <div className="space-y-3">
+          <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2">
+            <span className="text-base leading-none">🔍</span>
+            <div>
+              <p className="font-bold">गुमशुदा पैन कार्ड खोज (Lost PAN Search)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                यदि आपके पास पैन नंबर नहीं है, तो कृपया 12-अंकीय आधार नंबर अथवा आधार अनुसार नाम व जन्मतिथि दर्ज करें।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Aadhaar Number (12-अंकीय आधार नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={12}
+              inputMode="numeric"
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+              placeholder="12-अंकीय आधार नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Full Name (आधार अनुसार पूरा नाम)
+              </label>
+              <input
+                type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value.toUpperCase())}
+                placeholder="पूरा नाम दर्ज करें"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm uppercase focus:outline-none"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Father Name (पिता का नाम)
+              </label>
+              <input
+                type="text"
+                value={fatherName}
+                onChange={(e) => setFatherName(e.target.value.toUpperCase())}
+                placeholder="पिता का नाम दर्ज करें"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm uppercase focus:outline-none"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Date Of Birth (जन्मतिथि)
+            </label>
+            <input
+              type="date"
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
+            />
+          </div>
         </div>
       );
     }
 
-    // 7. LL EXAM REQUEST (Screenshot 234)
-    if (id === 'll_exam_pass_auto') {
+    // 10. PAN TO AADHAAR FIND
+    if (id === 'pan_to_aadhar_find') {
       return (
         <div className="space-y-3">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Application Number: *
+              10-Digit PAN Number *
             </label>
             <input
               type="text"
               required
               value={primaryInput}
-              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
-              placeholder="आवेदन संख्या दर्ज करें"
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono text-sm focus:outline-none uppercase"
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10))}
+              placeholder="पैन कार्ड नंबर दर्ज करें (जैसे ABCDE1234F)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
             />
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Date Of Birth: *
+              Date Of Birth (जन्मतिथि) *
             </label>
             <input
               type="date"
@@ -1317,52 +1625,60 @@ function ServicePageContent({
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
             />
           </div>
+        </div>
+      );
+    }
+
+    // 11. PAN AADHAAR LINK MANUAL
+    if (id === 'pan_aadhaar_link_manual') {
+      return (
+        <div className="space-y-3">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Password: *
-            </label>
-            <input
-              type="password"
-              value={secondaryInput}
-              onChange={(e) => setSecondaryInput(e.target.value)}
-              placeholder="Enter Password"
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Exam Pin <span className="text-rose-500 font-bold">Optional</span>
+              PAN Number (पैन नंबर) *
             </label>
             <input
               type="text"
-              value={thirdInput}
-              onChange={(e) => setThirdInput(e.target.value)}
-              placeholder="Enter Exam Pin"
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10))}
+              placeholder="10-अंकीय पैन नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
             />
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Select State: *
+              Aadhaar Number (12-अंकीय आधार नंबर) *
             </label>
-            <select
-              value={selectState}
-              onChange={(e) => setSelectState(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
-            >
-              <option value="Uttar Pradesh">Uttar Pradesh</option>
-              <option value="Bihar">Bihar</option>
-              <option value="Madhya Pradesh">Madhya Pradesh</option>
-              <option value="Rajasthan">Rajasthan</option>
-              <option value="Delhi">Delhi</option>
-              <option value="Haryana">Haryana</option>
-            </select>
+            <input
+              type="text"
+              required
+              maxLength={12}
+              inputMode="numeric"
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+              placeholder="12-अंकीय आधार नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Mobile Number (मोबाइल नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={thirdInput}
+              onChange={(e) => setThirdInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+              placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
           </div>
         </div>
       );
     }
 
-    // 8. PAN TO GST (Screenshot 227)
+    // 12. PAN TO GST (Screenshot 227)
     if (id === 'pan_to_gst') {
       return (
         <div className="space-y-1.5">
@@ -1381,7 +1697,7 @@ function ServicePageContent({
       );
     }
 
-    // 9. GST TO PAN / GST VERIFICATION (Screenshot 228)
+    // 13. GST TO PAN / GST VERIFICATION (Screenshot 228)
     if (['gst_to_pan', 'gst_verification'].includes(id)) {
       return (
         <div className="space-y-1.5">
@@ -1400,7 +1716,7 @@ function ServicePageContent({
       );
     }
 
-    // 10. PAN TO MASK AADHAAR / MASK PAN (Screenshot 196)
+    // 14. PAN TO MASK AADHAAR / MASK PAN (Screenshot 196)
     if (['mask_pan', 'pan_aadhar_mask', 'pantomaaskaadhaar'].includes(id)) {
       return (
         <div className="space-y-1.5">
@@ -1419,8 +1735,8 @@ function ServicePageContent({
       );
     }
 
-    // 11. GENERAL PAN / PAN DETAILS (Screenshot 220)
-    if (['pan', 'pan_details', 'pan_basic_pricing', 'panCard', 'pan_to_aadhar_find', 'pan_to_udyam_details'].includes(id) || cat === 'pan') {
+    // 15. GENERAL PAN / PAN DETAILS (Screenshot 220)
+    if (['pan', 'pan_details', 'pan_basic_pricing', 'panCard', 'pan_to_udyam_details'].includes(id)) {
       return (
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -1669,8 +1985,90 @@ function ServicePageContent({
       );
     }
 
-    // 17. RATION CARD (Screenshot 255)
-    if (['ration', 'ration_pdf_by_ration', 'ration_verification', 'rationCard', 'up_ration_info'].includes(id) || cat === 'ration') {
+    // 17A. RATION CARD BY AADHAAR (Screenshot 255 - Must ask for Aadhaar Number, NOT Ration Number!)
+    if (id === 'ration_pdf_by_aadhar') {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs text-emerald-900 dark:text-emerald-200 flex items-start gap-2">
+            <span className="text-base leading-none">🌾</span>
+            <div>
+              <p className="font-bold">आधार से राशन कार्ड खोज व पर्ची डाउनलोड</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                परिवार के मुखिया अथवा किसी भी राशन कार्ड सदस्य का 12-अंकीय आधार नंबर दर्ज करें।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Aadhaar Number (12-अंकीय आधार नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={12}
+              inputMode="numeric"
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+              placeholder="12-अंकीय आधार नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select State (राज्य) *</label>
+            <select
+              value={selectState}
+              onChange={(e) => setSelectState(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="Uttar Pradesh">Uttar Pradesh (उत्तर प्रदेश)</option>
+              <option value="Bihar">Bihar (बिहार)</option>
+              <option value="Madhya Pradesh">Madhya Pradesh (मध्य प्रदेश)</option>
+              <option value="Rajasthan">Rajasthan (राजस्थान)</option>
+              <option value="Haryana">Haryana (हरियाणा)</option>
+              <option value="Delhi">Delhi (दिल्ली)</option>
+              <option value="All India">All India (समस्त भारत)</option>
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 17B. RATION TO AADHAAR SEARCH
+    if (['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Ration Card Number (राशन कार्ड नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9A-Z]/g, '').slice(0, 15))}
+              placeholder="राशन कार्ड संख्या दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select State (राज्य)</label>
+            <select
+              value={selectState}
+              onChange={(e) => setSelectState(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Assam">Assam</option>
+              <option value="All State">All State</option>
+            </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 17C. REGULAR RATION CARD / PARCHAA PRINT
+    if (['ration', 'ration_pdf_by_ration', 'ration_verification', 'rationCard', 'up_ration_info'].includes(id)) {
       return (
         <div className="space-y-3">
           <div className="space-y-1.5">
@@ -1698,6 +2096,140 @@ function ServicePageContent({
               <option value="All State NFSA Slip">All State NFSA Slip</option>
             </select>
           </div>
+        </div>
+      );
+    }
+
+    // 17D. RTPS BIHAR CERTIFICATE (Application Number + Applicant Name required by RtpsCertificate-Br.php)
+    if (id === 'rtps_bihar_pdf' || id.includes('rtps')) {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs text-emerald-900 dark:text-emerald-200 flex items-start gap-2">
+            <span className="text-base leading-none">📜</span>
+            <div>
+              <p className="font-bold">बिहार RTPS प्रमाण पत्र डाउनलोड (Live P4Points API)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                RTPS पावती रसीद से <b>आवेदन संख्या (Application Number)</b> और <b>आवेदक का नाम</b> दर्ज करें।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Application Reference Number (आवेदन संख्या) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.trim())}
+              placeholder="जैसे BIPCO/2026/123456 या BICC/..."
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Applicant Name (आवेदक का नाम, अंग्रेजी में) *
+            </label>
+            <input
+              type="text"
+              required
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value.toUpperCase())}
+              placeholder="आवेदक का नाम दर्ज करें (जैसे RAMESH KUMAR)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none uppercase"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 17E. NSDL BANK DETAILS
+    if (id === 'nsdl_bank') {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Bank Account Number (बैंक खाता संख्या) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, ''))}
+              placeholder="खाता संख्या दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Bank IFSC Code (शाखा IFSC कोड) *
+            </label>
+            <input
+              type="text"
+              required
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11))}
+              placeholder="11-अंकीय IFSC कोड"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 17F. UPI TO DETAILS
+    if (id === 'upi_to_details') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            UPI ID / VPA (वर्चुअल पेमेंट एड्रेस) *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.trim().toLowerCase())}
+            placeholder="जैसे user@okhdfcbank या 9876543210@paytm"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+          />
+        </div>
+      );
+    }
+
+    // 17G. TELEGRAM TO NUMBER LOOKUP
+    if (id === 'telegram_to_number_lookup') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Telegram Username / User ID *
+          </label>
+          <input
+            type="text"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.trim())}
+            placeholder="जैसे @username या 123456789"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+          />
+        </div>
+      );
+    }
+
+    // 17H. GMAIL TO DETAILS
+    if (id === 'gmail_to_details') {
+      return (
+        <div className="space-y-1.5">
+          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+            Gmail / Google Email Address *
+          </label>
+          <input
+            type="email"
+            required
+            value={primaryInput}
+            onChange={(e) => setPrimaryInput(e.target.value.trim().toLowerCase())}
+            placeholder="जैसे user@gmail.com"
+            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
+          />
         </div>
       );
     }
@@ -2225,11 +2757,23 @@ function ServicePageContent({
                   </span>
                 ) : isFreeService ? (
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
-                    🎉 {language === 'hi' ? '100% मुफ़्त सेवा' : '100% Free Tool'}
+                    🎉 100% मुफ़्त सेवा
+                  </span>
+                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'll_find', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)) ? (
+                  <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
+                    ⏱️ मैन्युअल रिले (1-2 घंटे)
+                  </span>
+                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'aadhaar_pdf_otp'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
+                  <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
+                    🟢 लाइव सरकारी API
+                  </span>
+                ) : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id)) ? (
+                  <span className="px-2 py-0.5 bg-sky-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
+                    🖨️ CR-80 PVC स्मार्ट कार्ड
                   </span>
                 ) : (
-                  <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
-                    🟢 Live API
+                  <span className="px-2 py-0.5 bg-sky-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
+                    ⚡ डिजिटल सेवा
                   </span>
                 )}
                 <button
@@ -2386,7 +2930,11 @@ function ServicePageContent({
                 </span>
               </span>
               <span className="text-[11px] bg-white/20 text-white font-mono font-bold px-2.5 py-0.5 rounded-full">
-                {currentResult?.status === 'pending' || currentResult?.isPendingRelay ? '⏱️ 2-4 घंटे' : '⚡ 0.5s Fast'}
+                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'll_find', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)
+                  ? '⏱️ 1-2 घंटे रिले'
+                  : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id))
+                  ? '🖨️ त्वरित कार्ड प्रिंट'
+                  : '⚡ 0.5s लाइव'}
               </span>
             </div>
 
@@ -2406,7 +2954,7 @@ function ServicePageContent({
                       </span>
                     </div>
                     <span className="text-[11px] font-mono font-bold bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-300 dark:border-amber-700">
-                      ⏱️ 2-4 घंटे में निष्पादन
+                      ⏱️ 1-2 घंटे में निष्पादन
                     </span>
                   </div>
 
