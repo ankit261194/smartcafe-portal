@@ -369,125 +369,104 @@ export default function RekhaDashboard({
         </div>
       ) : (
         /* ------------------------------------------------------------------- */
-        /* TIER C: PUBLIC CITIZEN WELCOMING BANNER (GUEST / UNAUTHENTICATED) */
+        /* SINGLE COMPACT FULL-HD 3D HERO BANNER (REPLACES 3 STACKED BANNERS) */
         /* ------------------------------------------------------------------- */
-        <div className="bg-gradient-to-r from-[#064e3b] via-[#047857] to-[#065f46] text-white border border-emerald-500/40 rounded-3xl p-4 sm:p-5 shadow-lg relative overflow-hidden">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0 text-2xl shadow-sm">
-                🇮🇳
+        <div className="bg-gradient-to-r from-[#0b172a] via-[#0f2744] to-[#042f2e] text-white border border-emerald-500/30 rounded-3xl p-3.5 sm:p-4.5 shadow-xl relative overflow-hidden group">
+          {/* Subtle Ambient Radial Glow */}
+          <div className="absolute -right-16 -top-16 w-56 h-56 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute right-1/3 -bottom-16 w-56 h-56 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 relative z-10">
+            {/* Left Content Column */}
+            <div className="flex items-center gap-3 sm:gap-4 w-full md:w-auto">
+              {/* 3D App Icon / Emblem with subtle float animation */}
+              <div className="relative shrink-0">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden shadow-2xl border-2 border-amber-400/60 bg-slate-900 group-hover:scale-105 transition-transform duration-300">
+                  <img
+                    src="/images/smart_cafe_3d_badge.jpg"
+                    alt="Smart Cafe 3D"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.parentElement.innerHTML = '<span class="text-3xl flex items-center justify-center h-full">👑</span>';
+                    }}
+                  />
+                </div>
+                {/* 3D badge chip */}
+                <div className="absolute -bottom-1 -right-1 bg-amber-400 text-slate-950 font-black text-[9px] px-1.5 py-0.2 rounded-md shadow-xs">
+                  3D HD
+                </div>
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-black uppercase tracking-wider bg-white/25 px-2.5 py-0.5 rounded-full">
-                    {language === 'hi' ? 'डिजिटल नागरिक सेवा केंद्र' : 'Citizen Digital Service Hub'}
+
+              {/* Text Highlights */}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2.5 py-0.5 rounded-full">
+                    🇮🇳 {language === 'hi' ? 'भारत का #1 डिजिटल सेवा केंद्र' : "India's #1 Digital Seva Portal"}
                   </span>
-                  <span className="text-[10px] text-emerald-200 font-bold hidden sm:inline">
-                    {language === 'hi' ? '100% सुरक्षित • तेज़ • 0% कमीशन' : '100% Secure • Fast • 0% Commission'}
+                  <span className="text-[10px] font-bold text-amber-300 hidden sm:inline">
+                    ★ 86+ {language === 'hi' ? 'लाइव सरकारी सेवाएं' : 'Live Govt Services'}
                   </span>
                 </div>
-                <h2 className="text-base sm:text-lg font-black tracking-tight text-white mt-1">
+
+                <h2 className="text-sm sm:text-base font-black tracking-tight text-white mt-1 leading-snug">
                   {language === 'hi' 
-                    ? 'घर बैठे 1-क्लिक में सरकारी प्रमाण पत्र, PVC कार्ड, बिजली बिल व प्रिंट सेवाएं' 
-                    : '1-Click Govt Certificates, PVC Cards, Electricity Bill & Print Services'}
+                    ? '1-क्लिक में सरकारी प्रमाण पत्र, CR-80 PVC स्मार्ट कार्ड, वाहन RC व प्रिंट सेवाएं' 
+                    : '1-Click Govt Certificates, CR-80 PVC Smart Cards, Vehicle RC & Live Prints'}
                 </h2>
+
+                {/* Compact Interactive Live Job Alerts Pill */}
+                <div
+                  onClick={() => {
+                    if (onSelectTool) {
+                      onSelectTool({ id: 'sarkari_job_feed', name: 'लाइव सरकारी नौकरी, एडमिट कार्ड व योजनाएं', category: 'other' });
+                    } else if (onSelectCategory) {
+                      onSelectCategory({ id: 'other', title: { hi: 'अन्य सेवाएं', en: 'Other Services' } });
+                    }
+                  }}
+                  className="mt-1.5 inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/15 border border-white/15 text-slate-200 hover:text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full cursor-pointer transition active:scale-98"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping inline-block shrink-0" />
+                  <span className="text-amber-300 font-black">📢 {language === 'hi' ? 'लाइव अलर्ट:' : 'Alert:'}</span>
+                  <span className="truncate max-w-[260px] sm:max-w-[420px]">UIIC AO • SSC GD • RPF SI • UP Police Result</span>
+                  <ChevronRight className="w-3 h-3 text-white/70 shrink-0" />
+                </div>
               </div>
             </div>
 
-            {/* Quick Public Action Buttons */}
-            <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+            {/* Right Action Buttons */}
+            <div className="flex items-center gap-2 shrink-0 w-full md:w-auto justify-end">
+              <a
+                href="/CyberCafe_Portal.apk"
+                download="CyberCafe_Portal.apk"
+                className="flex-1 md:flex-initial bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-950/40 transition active:scale-95 shrink-0 cursor-pointer"
+                title="Android APK v2.0 (18.5 MB)"
+              >
+                <Smartphone className="w-3.5 h-3.5 text-slate-950" />
+                <span>{language === 'hi' ? 'ऐप डाउनलोड' : 'App (APK)'}</span>
+              </a>
+
               <button
                 type="button"
                 onClick={onOpenShopkeeperLogin}
-                className="flex-1 sm:flex-initial bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs shadow-md transition active:scale-95 cursor-pointer flex items-center justify-center gap-1"
+                className="flex-1 md:flex-initial bg-amber-400 hover:bg-amber-300 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs shadow-md transition active:scale-95 cursor-pointer flex items-center justify-center gap-1 shrink-0"
               >
                 <span>🏪</span>
-                <span>{language === 'hi' ? 'दुकानदार लॉगिन' : 'Operator Login'}</span>
+                <span>{language === 'hi' ? 'दुकानदार' : 'Operator'}</span>
               </button>
+
               <button
                 type="button"
                 onClick={onOpenCustomerLogin}
-                className="flex-1 sm:flex-initial bg-white/20 hover:bg-white/30 text-white border border-white/30 font-black px-3.5 py-2 rounded-xl text-xs transition active:scale-95 cursor-pointer flex items-center justify-center gap-1"
+                className="flex-1 md:flex-initial bg-white/15 hover:bg-white/25 text-white border border-white/20 font-black px-3.5 py-2 rounded-xl text-xs transition active:scale-95 cursor-pointer flex items-center justify-center gap-1 shrink-0"
               >
-                <User className="w-3.5 h-3.5 text-emerald-200" />
-                <span>{language === 'hi' ? 'नागरिक लॉगिन' : 'Citizen Login'}</span>
+                <User className="w-3.5 h-3.5 text-emerald-300" />
+                <span>{language === 'hi' ? 'नागरिक' : 'Citizen'}</span>
               </button>
             </div>
           </div>
         </div>
       )}
-
-      {/* =================================================================== */}
-      {/* 2. 24x7 LIVE SARKARI JOB & EXAM ALERTS BANNER */}
-      {/* =================================================================== */}
-      <div 
-        onClick={() => {
-          if (onSelectTool) {
-            onSelectTool({ id: 'sarkari_job_feed', name: 'लाइव सरकारी नौकरी, एडमिट कार्ड व योजनाएं', category: 'other' });
-          } else if (onSelectCategory) {
-            onSelectCategory({ id: 'other', title: { hi: 'अन्य सेवाएं', en: 'Other Services' } });
-          }
-        }}
-        className="bg-gradient-to-r from-amber-500 via-orange-500 to-rose-600 rounded-2xl p-3 sm:p-3.5 text-white shadow-sm flex items-center justify-between gap-3 cursor-pointer hover:shadow-md transition-all active:scale-99"
-      >
-        <div className="flex items-center gap-2.5 overflow-hidden">
-          <div className="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shrink-0">
-            <Sparkles className="w-4 h-4 text-white animate-pulse" />
-          </div>
-          <div className="overflow-hidden">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black uppercase tracking-wider bg-white/25 px-2 py-0.5 rounded-full">
-                {language === 'hi' ? '📢 लाइव सरकारी अलर्ट 24x7' : '📢 Live Govt Alerts'}
-              </span>
-              <span className="text-[10px] text-amber-100 font-bold hidden sm:inline">
-                {language === 'hi' ? 'रोज़ाना नए फॉर्म व एडमिट कार्ड' : 'Daily New Forms & Results'}
-              </span>
-            </div>
-            <p className="text-xs sm:text-sm font-black truncate text-white/95 mt-0.5">
-              UIIC AO Admit Card 2026 • SSC Constable GD 2026 • RPF SI Exam City • UP Police Result
-            </p>
-          </div>
-        </div>
-        <div className="shrink-0 flex items-center gap-1 bg-white text-orange-600 font-black px-3 py-1.5 rounded-xl text-xs hover:bg-orange-50 transition shadow-xs">
-          <span>{language === 'hi' ? 'सभी देखें' : 'View All'}</span>
-          <ChevronRight className="w-3.5 h-3.5" />
-        </div>
-      </div>
-
-      {/* =================================================================== */}
-      {/* 2.1 ANDROID MOBILE APP (APK) DOWNLOAD BANNER */}
-      {/* =================================================================== */}
-      <div className="bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 rounded-2xl p-3 sm:p-4 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-emerald-500/30">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shrink-0 text-xl shadow-xs">
-            📲
-          </div>
-          <div>
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] font-black uppercase tracking-wider bg-emerald-500/30 text-emerald-200 border border-emerald-400/30 px-2.5 py-0.5 rounded-full">
-                {language === 'hi' ? 'ऑफिशियल एंड्रॉइड ऐप' : 'Official Android App'}
-              </span>
-              <span className="text-[10px] bg-amber-400 text-slate-950 px-2 py-0.5 rounded-full font-black">
-                v2.0 • 18.5 MB
-              </span>
-            </div>
-            <h3 className="text-xs sm:text-sm font-black text-white mt-1">
-              {language === 'hi' 
-                ? 'स्मार्ट कैफे मोबाइल ऐप — 1-क्लिक में अपने फोन में डाउनलोड व इंस्टॉल करें' 
-                : 'Smart Cafe Android App — Download & install directly on your phone'}
-            </h3>
-          </div>
-        </div>
-
-        <a
-          href="/CyberCafe_Portal.apk"
-          download="CyberCafe_Portal.apk"
-          className="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-slate-950 font-black px-4 py-2 rounded-xl text-xs flex items-center justify-center gap-2 shadow-md transition active:scale-95 shrink-0"
-        >
-          <Smartphone className="w-4 h-4 text-slate-950" />
-          <span>{language === 'hi' ? '📥 APK डाउनलोड करें' : '📥 Download APK'}</span>
-        </a>
-      </div>
 
       {/* =================================================================== */}
       {/* 3. CATEGORY QUICK-SWITCH HORIZONTAL FILTER PILLS BAR */}
