@@ -5207,7 +5207,14 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
 // REKHA PRINT B2B MANUAL RELAY & ASYNC FULFILLMENT ENGINE
 // ===========================================================================
 
-function getRekhaPrintAuthCookie(&$store) {
+function getRekhaPrintAuthCookie(&$store, $forceRefresh = false) {
+    if (!$forceRefresh &&
+        !empty($store['systemSettings']['rekhaPrint']['cachedCookie']) &&
+        !empty($store['systemSettings']['rekhaPrint']['cookieExpiresAt']) &&
+        time() < $store['systemSettings']['rekhaPrint']['cookieExpiresAt']) {
+        return $store['systemSettings']['rekhaPrint']['cachedCookie'];
+    }
+
     $rekhaConfig = $store['systemSettings']['rekhaPrint'] ?? [
         'username' => '8006518960',
         'password' => '012323',
@@ -5217,7 +5224,7 @@ function getRekhaPrintAuthCookie(&$store) {
     $postFields = http_build_query([
         'username' => $rekhaConfig['username'] ?? '8006518960',
         'password' => $rekhaConfig['password'] ?? '012323',
-        'login' => 'Login'
+        'login' => 'Login Now'
     ]);
 
     $ch = curl_init($loginUrl);
@@ -5227,8 +5234,9 @@ function getRekhaPrintAuthCookie(&$store) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
     curl_setopt($ch, CURLOPT_REFERER, $loginUrl);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
     $resp = curl_exec($ch);
     $headerSize = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
     curl_close($ch);
@@ -5237,7 +5245,12 @@ function getRekhaPrintAuthCookie(&$store) {
     $headers = substr($resp, 0, $headerSize);
     preg_match_all('/^Set-Cookie:\s*([^;]+)/mi', $headers, $matches);
     if (!empty($matches[1])) {
-        return implode('; ', $matches[1]);
+        $cookieStr = implode('; ', $matches[1]);
+        if (!isset($store['systemSettings'])) $store['systemSettings'] = [];
+        if (!isset($store['systemSettings']['rekhaPrint'])) $store['systemSettings']['rekhaPrint'] = [];
+        $store['systemSettings']['rekhaPrint']['cachedCookie'] = $cookieStr;
+        $store['systemSettings']['rekhaPrint']['cookieExpiresAt'] = time() + 7200; // 2 hour cache
+        return $cookieStr;
     }
     return null;
 }
@@ -5325,17 +5338,29 @@ function pollRekhaPrintRecords(&$store, $targetOrderId = null) {
     $rekhaConfig = $store['systemSettings']['rekhaPrint'] ?? ['baseUrl' => 'https://rekhaprint.info'];
     $recordsUrl = rtrim($rekhaConfig['baseUrl'] ?? 'https://rekhaprint.info', '/') . '/members/printRecord.php';
 
-    $ch = curl_init($recordsUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Cookie: ' . $cookie,
-        'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        'Referer: ' . $recordsUrl
-    ]);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    $html = curl_exec($ch);
-    curl_close($ch);
+    $fetchRecordsHtml = function($c) use ($recordsUrl) {
+        $ch = curl_init($recordsUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Cookie: ' . $c,
+            'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer: ' . $recordsUrl
+        ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        $res = curl_exec($ch);
+        curl_close($ch);
+        return $res;
+    };
+
+    $html = $fetchRecordsHtml($cookie);
+    if (!$html || stripos($html, 'login.php') !== false || stripos($html, 'Please Login') !== false) {
+        $cookie = getRekhaPrintAuthCookie($store, true);
+        if ($cookie) {
+            $html = $fetchRecordsHtml($cookie);
+        }
+    }
 
     if (!$html) return ['success' => false, 'error' => 'Empty response from printRecord.php'];
 
