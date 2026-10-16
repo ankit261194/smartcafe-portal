@@ -784,7 +784,7 @@ function generateExportSql($pdo = null, array $store = []) {
         foreach ($store['wallets'] as $w) {
             $phone = addslashes($w['phone'] ?? '');
             $name = addslashes($w['customerName'] ?? 'ग्राहक');
-            $bal = ($phone === '8006518960') ? 0.00 : floatval($w['balance'] ?? 0);
+            $bal = floatval($w['balance'] ?? 0);
             $sql .= "INSERT INTO wallets (phone, customer_name, balance) VALUES ('$phone', '$name', $bal) ON DUPLICATE KEY UPDATE customer_name=VALUES(customer_name), balance=VALUES(balance);\n";
         }
         $sql .= "\n";
