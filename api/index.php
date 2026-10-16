@@ -64,6 +64,39 @@ function getStore($dataFile) {
                 $data['cafes'] = [];
             }
 
+            // Absolute Zero Dummy Data Purge (Applications, Cashbook, Audit Logs)
+            if (!empty($data['applications'])) {
+                $filteredApps = array_values(array_filter($data['applications'], function($a) {
+                    $cName = $a['customerName'] ?? '';
+                    $phone = $a['phone'] ?? '';
+                    return !in_array($cName, ['RAMESH KUMAR', 'रमेश कुमार', 'आवेदक']) && $phone !== '9876543210';
+                }));
+                if (count($filteredApps) !== count($data['applications'])) {
+                    $data['applications'] = $filteredApps;
+                    $changed = true;
+                }
+            }
+            if (!empty($data['cashbook'])) {
+                $filteredCb = array_values(array_filter($data['cashbook'], function($c) {
+                    $cName = $c['customer'] ?? '';
+                    return !in_array($cName, ['RAMESH KUMAR', 'रमेश कुमार', 'आवेदक']);
+                }));
+                if (count($filteredCb) !== count($data['cashbook'])) {
+                    $data['cashbook'] = $filteredCb;
+                    $changed = true;
+                }
+            }
+            if (!empty($data['superAdminAuditLogs'])) {
+                $filteredAudit = array_values(array_filter($data['superAdminAuditLogs'], function($l) {
+                    $det = $l['details'] ?? '';
+                    return strpos($det, 'टेस्ट कैफे') === false && strpos($det, 'CAFE-101') === false && strpos($det, 'CAFE-102') === false;
+                }));
+                if (count($filteredAudit) !== count($data['superAdminAuditLogs'])) {
+                    $data['superAdminAuditLogs'] = $filteredAudit;
+                    $changed = true;
+                }
+            }
+
             // Ensure Super Admin Phone, WhatsApp, Suman Devi UPI & QR
             $data['settings']['superAdminPhone'] = '8533955333';
             $data['settings']['superAdminWhatsapp'] = '8533955333';
@@ -106,9 +139,13 @@ function getStore($dataFile) {
                             $data['users'][] = $mu;
                             $changed = true;
                         } else {
-                            if (!empty($mu['password']) && (empty($data['users'][$foundIdx]['password']) || $data['users'][$foundIdx]['password'] === '1234')) {
-                                $data['users'][$foundIdx]['password'] = $mu['password'];
-                                $changed = true;
+                            if (!empty($mu['password'])) {
+                                if ($mPhone === '8006518960' || empty($data['users'][$foundIdx]['password']) || $data['users'][$foundIdx]['password'] === '1234' || $data['users'][$foundIdx]['password'] === 'password123' || $data['users'][$foundIdx]['password'] === '012323') {
+                                    if ($data['users'][$foundIdx]['password'] !== $mu['password']) {
+                                        $data['users'][$foundIdx]['password'] = $mu['password'];
+                                        $changed = true;
+                                    }
+                                }
                             }
                         }
                     }
@@ -990,7 +1027,24 @@ if ($endpoint === 'auth/change-password' && $method === 'POST') {
 // Route: /api/services/rates
 if ($endpoint === 'services/rates') {
     if ($method === 'GET') {
-        echo json_encode(['success' => true, 'services' => $store['services_79'] ?? []]);
+        $sFile = __DIR__ . '/data/services_79.json';
+        $baseServices = file_exists($sFile) ? json_decode(file_get_contents($sFile), true) : [];
+        if (!is_array($baseServices)) $baseServices = [];
+
+        $overrides = $store['services_79'] ?? [];
+        if (!empty($overrides) && is_array($overrides)) {
+            foreach ($baseServices as &$base) {
+                foreach ($overrides as $ov) {
+                    if (($ov['id'] ?? '') === ($base['id'] ?? '') || ($ov['num'] ?? -1) === ($base['num'] ?? -2)) {
+                        if (isset($ov['wholesaleRate'])) $base['wholesaleRate'] = floatval($ov['wholesaleRate']);
+                        if (isset($ov['retailRate'])) $base['retailRate'] = floatval($ov['retailRate']);
+                        if (isset($ov['isActive'])) $base['isActive'] = (bool)$ov['isActive'];
+                        break;
+                    }
+                }
+            }
+        }
+        echo json_encode(['success' => true, 'count' => count($baseServices), 'services' => $baseServices]);
         exit;
     }
 }
@@ -1000,26 +1054,50 @@ if (($endpoint === 'superadmin/services/rates' || $endpoint === 'services/rates'
     if (!isset($store['services_79'])) $store['services_79'] = [];
     if (isset($body['services']) && is_array($body['services'])) {
         foreach ($body['services'] as $updated) {
+            $found = false;
             foreach ($store['services_79'] as &$s) {
                 if (($s['id'] ?? '') === ($updated['id'] ?? '') || ($s['num'] ?? 0) === ($updated['num'] ?? -1)) {
                     if (isset($updated['wholesaleRate'])) $s['wholesaleRate'] = floatval($updated['wholesaleRate']);
                     if (isset($updated['retailRate'])) $s['retailRate'] = floatval($updated['retailRate']);
                     if (isset($updated['isActive'])) $s['isActive'] = (bool)$updated['isActive'];
+                    $found = true;
+                    break;
                 }
+            }
+            if (!$found) {
+                $store['services_79'][] = [
+                    'id' => $updated['id'] ?? '',
+                    'num' => $updated['num'] ?? 0,
+                    'wholesaleRate' => floatval($updated['wholesaleRate'] ?? 10),
+                    'retailRate' => floatval($updated['retailRate'] ?? 20),
+                    'isActive' => $updated['isActive'] ?? true
+                ];
             }
         }
     } elseif (isset($body['service']) && is_array($body['service'])) {
         $u = $body['service'];
+        $found = false;
         foreach ($store['services_79'] as &$s) {
             if (($s['id'] ?? '') === ($u['id'] ?? '') || ($s['num'] ?? 0) === ($u['num'] ?? -1)) {
                 if (isset($u['wholesaleRate'])) $s['wholesaleRate'] = floatval($u['wholesaleRate']);
                 if (isset($u['retailRate'])) $s['retailRate'] = floatval($u['retailRate']);
                 if (isset($u['isActive'])) $s['isActive'] = (bool)$u['isActive'];
+                $found = true;
+                break;
             }
+        }
+        if (!$found) {
+            $store['services_79'][] = [
+                'id' => $u['id'] ?? '',
+                'num' => $u['num'] ?? 0,
+                'wholesaleRate' => floatval($u['wholesaleRate'] ?? 10),
+                'retailRate' => floatval($u['retailRate'] ?? 20),
+                'isActive' => $u['isActive'] ?? true
+            ];
         }
     }
     saveStore($dataFile, $store);
-    echo json_encode(['success' => true, 'services' => $store['services_79'], 'message' => '79-सर्विसेज रेट्स सफलतापूर्वक अपडेट और लाइव कर दिए गए।']);
+    echo json_encode(['success' => true, 'services' => $store['services_79'], 'message' => '79-सर्विस रेट्स सफलतापूर्वक अपडेट और लाइव कर दिए गए।']);
     exit;
 }
 
