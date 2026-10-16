@@ -891,6 +891,42 @@ const verifiedCatalog = {
     badge: '🟢 20KB-50KB फोटो-साइन रिसाइज़र',
     serviceType: 'utility',
     inputs: ['file']
+  },
+  'puc_certificate_download': {
+    endpoint: '/api/services/execute-automated',
+    method: 'POST',
+    isActive: true,
+    status: 'live',
+    badge: '⏱️ मैन्युअल रिले (1-2 घंटे)',
+    serviceType: 'manual_relay',
+    fulfillmentType: 'manual_relay',
+    upstreamService: 'puc_services',
+    upstreamFile: 'puc_services.php',
+    inputs: ['vehicleNumber']
+  },
+  'pan_aadhaar_link_manual': {
+    endpoint: '/api/services/execute-automated',
+    method: 'POST',
+    isActive: true,
+    status: 'live',
+    badge: '⏱️ मैन्युअल रिले (1-2 घंटे)',
+    serviceType: 'manual_relay',
+    fulfillmentType: 'manual_relay',
+    upstreamService: 'Pan_Number_Link',
+    upstreamFile: 'panAadharNumber_Link.php',
+    inputs: ['panNumber', 'aadhaarNumber']
+  },
+  'dob_update_service': {
+    endpoint: '/api/services/execute-automated',
+    method: 'POST',
+    isActive: true,
+    status: 'live',
+    badge: '⏱️ मैन्युअल रिले (1-2 घंटे)',
+    serviceType: 'manual_relay',
+    fulfillmentType: 'manual_relay',
+    upstreamService: 'Dob_Update',
+    upstreamFile: 'dob_update.php',
+    inputs: ['aadhaarNumber', 'dob']
   }
 };
 
@@ -909,7 +945,9 @@ const updatedServices = s79.map(s => {
       badge: v.badge || s.badge,
       p4Key: v.p4Key || s.p4Key,
       parameters: v.params || s.parameters || [],
-      requiredInputs: v.inputs || s.requiredInputs || []
+      requiredInputs: v.inputs || s.requiredInputs || [],
+      upstreamService: v.upstreamService || s.upstreamService,
+      upstreamFile: v.upstreamFile || s.upstreamFile
     };
   }
   return s;
@@ -920,4 +958,8 @@ console.log('Updated services with verified P4 mappings:', updatedCount);
 
 fs.writeFileSync('server/data/services_79.json', JSON.stringify(updatedServices, null, 2));
 fs.writeFileSync('client/public/api/data/services_79.json', JSON.stringify(updatedServices, null, 2));
-console.log('Synchronized services_79.json in both server/data/ and client/public/api/data/');
+fs.writeFileSync('client/src/data/services_79.json', JSON.stringify(updatedServices, null, 2));
+if (fs.existsSync('client/dist/api/data')) {
+  fs.writeFileSync('client/dist/api/data/services_79.json', JSON.stringify(updatedServices, null, 2));
+}
+console.log('Synchronized services_79.json in server/data/, client/public/api/data/, and client/src/data/');

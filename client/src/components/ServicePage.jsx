@@ -197,12 +197,9 @@ function ServicePageContent({
     setIsScanningFingerprint(true);
     setErrorMsg('');
     try {
-      const res = await rdService.captureFingerprint({ allowSimulated: true });
+      const res = await rdService.captureFingerprint({ allowSimulated: false });
       if (res.success) {
         setBiometricScore(res.qScore);
-        if (!primaryInput && (toolKind === 'aadhaar' || currentTool?.id?.includes('aadhaar'))) {
-          setPrimaryInput('853395533312');
-        }
       } else {
         setErrorMsg(res.error || 'बायोमेट्रिक फिंगरप्रिंट स्कैन विफल हुआ।');
       }

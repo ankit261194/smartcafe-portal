@@ -133,22 +133,59 @@ s1.utrRequests = mergedUtrs;
 s2.utrRequests = mergedUtrs;
 s3.utrRequests = mergedUtrs;
 
-// Protect and merge services_79 custom rates (live rates take highest priority)
+// Protect and merge services_79 custom rates (live rates take highest priority, but API integration schema is strictly preserved)
 const baseServices79 = readJsonSafe('client/src/data/services_79.json');
 const allRatesMap = new Map();
 (Array.isArray(baseServices79) ? baseServices79 : []).forEach(s => {
   if (s && s.id) allRatesMap.set(s.id, { ...s });
 });
+
+const preserveSchemaFields = (base, override) => {
+  if (!base || !override) return Object.assign({}, base, override);
+  const res = Object.assign({}, base, override);
+  if (base.apiEndpoint && (!override.apiEndpoint || typeof override.apiEndpoint !== 'string' || !override.apiEndpoint.trim())) {
+    res.apiEndpoint = base.apiEndpoint;
+  }
+  if (base.method && (!override.method || typeof override.method !== 'string' || !override.method.trim())) {
+    res.method = base.method;
+  }
+  if (base.p4Key && (!override.p4Key || typeof override.p4Key !== 'string' || !override.p4Key.trim())) {
+    res.p4Key = base.p4Key;
+  }
+  if (Array.isArray(base.parameters) && base.parameters.length > 0 && (!Array.isArray(override.parameters) || override.parameters.length === 0)) {
+    res.parameters = base.parameters;
+  }
+  if (Array.isArray(base.requiredInputs) && base.requiredInputs.length > 0 && (!Array.isArray(override.requiredInputs) || override.requiredInputs.length === 0)) {
+    res.requiredInputs = base.requiredInputs;
+  }
+  if (base.upstreamService && (!override.upstreamService || !override.upstreamService.trim())) {
+    res.upstreamService = base.upstreamService;
+  }
+  if (base.upstreamFile && (!override.upstreamFile || !override.upstreamFile.trim())) {
+    res.upstreamFile = base.upstreamFile;
+  }
+  if (base.fulfillmentType && (!override.fulfillmentType || !override.fulfillmentType.trim())) {
+    res.fulfillmentType = base.fulfillmentType;
+  }
+  if (base.serviceType && (!override.serviceType || !override.serviceType.trim())) {
+    res.serviceType = base.serviceType;
+  }
+  if (base.badge && (!override.badge || !override.badge.trim())) {
+    res.badge = base.badge;
+  }
+  return res;
+};
+
 [...(s1.services_79||[]), ...(s2.services_79||[]), ...(s3.services_79||[])].forEach(r => {
   if (r && r.id) {
     const existing = allRatesMap.get(r.id) || {};
-    allRatesMap.set(r.id, Object.assign({}, existing, r));
+    allRatesMap.set(r.id, preserveSchemaFields(existing, r));
   }
 });
 (liveSync.services_79 || []).forEach(r => {
   if (r && r.id) {
     const existing = allRatesMap.get(r.id) || {};
-    allRatesMap.set(r.id, Object.assign({}, existing, r));
+    allRatesMap.set(r.id, preserveSchemaFields(existing, r));
   }
 });
 const relayMeta = {

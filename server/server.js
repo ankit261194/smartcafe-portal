@@ -4765,213 +4765,114 @@ app.post('/api/services/execute-automated', async (req, res) => {
   let docTitle = serviceDisplayName;
   let refNumber = params?.vehicleNumber || params?.panNo || params?.aadhaarNo || params?.epicNo || params?.consumerNo || params?.rationNo || params?.appNo || params?.dlNo || params?.challanNo || 'DOC';
 
-  if (normServiceType === 'rcDownload' || (liveP4 && liveP4.service === 'rc')) {
-    const regNo = (params?.vehicleNumber || liveP4?.regNo || params?.query || '').replace(/[\s-]+/g, '').toUpperCase();
-    if (liveP4 && liveP4.service === 'rc') {
-      vehicleData = {
-        ...getVehicleDetails(liveP4.regNo || regNo, params),
-        ...liveP4,
-        regNo: liveP4.regNo || regNo
-      };
-    } else if (params?.customVehicleData && params.customVehicleData.ownerName) {
-      vehicleData = {
-        ...getVehicleDetails(regNo, params),
-        ...params.customVehicleData,
-        regNo
-      };
-    } else {
-      vehicleData = getVehicleDetails(regNo, params);
-    }
-    generatedData = vehicleData;
-    docTitle = `वाहन RC (${vehicleData.regNo}) - ${vehicleData.makerModel}`;
-    refNumber = vehicleData.regNo;
-
-    const newRcOrder = {
-      id: `RC-ORD-${Math.floor(1000 + Math.random() * 9000)}`,
-      cafeId: cafe.id,
-      cafeShopName: cafe.shopName,
-      customerPhone,
-      customerName: customerWallet?.customerName || 'ग्राहक',
-      vehicleNumber: vehicleData.regNo,
-      retailFee,
-      wholesaleCost,
-      margin,
-      status: 'completed',
-      vehicleData,
-      createdAt: new Date().toISOString()
-    };
-    if (!store.rcOrders) store.rcOrders = [];
-    store.rcOrders.unshift(newRcOrder);
-  } else if (normServiceType === 'panCard' || (liveP4 && liveP4.service === 'panCard')) {
-    if (liveP4 && liveP4.service === 'panCard') {
-      generatedData = { ...getPanCardDetails(liveP4.panNo, params), ...liveP4 };
-    } else {
-      generatedData = getPanCardDetails(params?.panNo, params);
-    }
-    docTitle = `पैन कार्ड (${generatedData.panNo}) - ${generatedData.name}`;
-    refNumber = generatedData.panNo;
-  } else if (liveP4 && liveP4.service === 'aadhaarToPan') {
-    generatedData = { ...getPanCardDetails(liveP4.panNo, params), ...liveP4 };
-    docTitle = `आधार से पैन खोज (${liveP4.panNo})`;
-    refNumber = liveP4.panNo;
-  } else if (normServiceType === 'aadhaarCard' || (liveP4 && liveP4.service === 'npci')) {
-    const aid = (liveP4?.aadhaarNo || params?.aadhaarNo || '').replace(/[^0-9]/g, '');
-    generatedData = { ...getAadhaarDetails(aid, params), ...(liveP4 || {}) };
-    docTitle = liveP4 ? `NPCI डीबीटी लिंक स्थिति (${liveP4.bankName})` : `आधार PVC (${generatedData.maskedAadhaar}) - ${generatedData.name}`;
-    refNumber = generatedData.aadhaarNo;
-  } else if (normServiceType === 'voterCard' || (liveP4 && liveP4.service === 'voter')) {
-    const epic = liveP4?.epicNo || params?.epicNo;
-    generatedData = { ...getVoterDetails(epic, params), ...(liveP4 || {}) };
-    docTitle = `वोटर स्मार्ट कार्ड (${generatedData.epicNo}) - ${generatedData.name}`;
-    refNumber = generatedData.epicNo;
-  } else if (normServiceType === 'ayushmanCard') {
-    generatedData = getAyushmanDetails(params?.pmjayId || params?.id, params);
-    docTitle = `आयुष्मान कार्ड (${generatedData.pmjayId}) - ${generatedData.name}`;
-    refNumber = generatedData.pmjayId;
-  } else if (normServiceType === 'rationCard' || (liveP4 && liveP4.service === 'ration')) {
-    const rat = liveP4?.rationNo || params?.rationNo;
-    generatedData = { ...getRationDetails(rat, params), ...(liveP4 || {}) };
-    docTitle = `राशन पर्ची (${generatedData.rationNo}) - ${generatedData.headName}`;
-    refNumber = generatedData.rationNo;
-  } else if (normServiceType === 'electricityBill' || (liveP4 && liveP4.service === 'electricity')) {
-    const ca = liveP4?.consumerNo || params?.consumerNo;
-    generatedData = { ...getElectricityBillDetails(ca, params), ...(liveP4 || {}) };
-    docTitle = `बिजली रसीद (${generatedData.consumerNo}) - ₹${generatedData.netPayable}`;
-    refNumber = generatedData.consumerNo;
-  } else if (normServiceType === 'edistrictSlip') {
-    generatedData = getEdistrictDetails(params?.appNo, params?.certNo, params);
-    docTitle = `e-District सत्यापन (${generatedData.certNo}) - ${generatedData.applicantName}`;
-    refNumber = generatedData.certNo;
-  } else if (normServiceType === 'drivingLicence' || normServiceType === 'dl' || (liveP4 && liveP4.service === 'dl')) {
-    const dl = liveP4?.dlNo || params?.dlNo;
-    generatedData = { ...getDrivingLicenceDetails(dl, params), ...(liveP4 || {}) };
-    docTitle = `ड्राइविंग लाइसेंस (${generatedData.dlNo}) - ${generatedData.name}`;
-    refNumber = generatedData.dlNo;
-  } else if (normServiceType === 'challanSearch' || normServiceType === 'challan') {
-    generatedData = getChallanDetails(params?.vehicleNo || params?.challanNo, params);
-    docTitle = `ई-चालान रसीद (${generatedData.vehicleNo}) - ₹${generatedData.amount}`;
-    refNumber = generatedData.challanNo;
-  } else if (normServiceType === 'ePan' || normServiceType === 'epan') {
-    generatedData = getEpanDetails(params?.panNo, params);
-    docTitle = `e-PAN डाउनलोड (${generatedData.panNo}) - ${generatedData.name}`;
-    refNumber = generatedData.panNo;
-  } else if (normServiceType === 'findPan' || normServiceType === 'findpan') {
-    return res.status(410).json({ success: false, error: 'यह टूल हटा दिया गया है। बिना आधिकारिक API के फर्जी डेटा स्क्रैपिंग की अनुमति नहीं है।', deprecated: true });
-  } else if (normServiceType === 'searchEpic' || normServiceType === 'searchepic') {
-    return res.status(410).json({ success: false, error: 'यह टूल हटा दिया गया है। बिना आधिकारिक API के फर्जी डेटा स्क्रैपिंग की अनुमति नहीं है।', deprecated: true });
-  } else if (normServiceType === 'receiptMaker' || normServiceType === 'receipt') {
-    generatedData = getReceiptDetails(params?.query || customerPhone, { ...params, shopName: cafe.shopName, shopAddress: cafe.address, shopPhone: cafe.phone });
-    docTitle = `कैफे बिल रसीद (${generatedData.receiptNo}) - ₹${generatedData.amount}`;
-    refNumber = generatedData.receiptNo;
-  }
-
-  // Universal Fallback Generator for all 79 services (Strictly Zero Dummy Strings)
-  if (!generatedData && liveP4) {
+  if (liveP4) {
     const rawData = (liveP4.data && typeof liveP4.data === 'object') ? liveP4.data : {};
+    const pdfUrl = liveP4.pdfUrl || liveP4.raw?.pdf || liveP4.raw?.pdf_base64 || liveP4.raw?.pdfBase64 || liveP4.raw?.Rc_Pdf || liveP4.raw?.file || liveP4.raw?.pdf_url || null;
     generatedData = { ...liveP4, ...rawData };
-    docTitle = service79?.name || serviceTitles[normServiceType] || normServiceType;
-    refNumber = refNumber || (params?.query || params?.primaryInput || params?.vehicleNumber || params?.panNo || params?.aadhaarNo || params?.epicNo || params?.consumerNo || params?.rationNo || params?.dlNo || 'DOC').toString().trim();
+    if (pdfUrl) generatedData.pdfUrl = pdfUrl;
+
+    if (liveP4.service === 'rc' || normServiceType === 'rcDownload' || normServiceType.includes('rc') || normServiceType.includes('vehicle')) {
+      const regNo = (liveP4.regNo || rawData.regNo || rawData.vehicle_number || rawData.rcno || params?.vehicleNumber || params?.regNo || params?.query || '').replace(/[\s-]+/g, '').toUpperCase();
+      generatedData.regNo = regNo;
+      const makerModel = rawData.maker_model || rawData.model || rawData.makerModel || liveP4.makerModel || 'वाहन RC';
+      generatedData.makerModel = makerModel;
+      vehicleData = generatedData;
+      docTitle = `वाहन RC (${regNo}) - ${makerModel}`;
+      refNumber = regNo;
+
+      const newRcOrder = {
+        id: `RC-ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+        cafeId: cafe.id,
+        cafeShopName: cafe.shopName,
+        customerPhone,
+        customerName: customerWallet?.customerName || params?.customerName || rawData.owner_name || rawData.owner || 'ग्राहक',
+        vehicleNumber: regNo,
+        retailFee,
+        wholesaleCost,
+        margin,
+        status: 'completed',
+        vehicleData,
+        createdAt: new Date().toISOString()
+      };
+      if (!store.rcOrders) store.rcOrders = [];
+      store.rcOrders.unshift(newRcOrder);
+    } else if (liveP4.service === 'panCard' || liveP4.service === 'aadhaarToPan' || normServiceType.includes('pan')) {
+      const panNo = String(liveP4.panNo || rawData.panNumber || rawData.panNo || rawData.pan || params?.panNo || '').toUpperCase().trim();
+      generatedData.panNo = panNo;
+      const panName = rawData.name || rawData.full_name || params?.customerName || 'PAN धारक';
+      docTitle = `पैन कार्ड (${panNo}) - ${panName}`;
+      refNumber = panNo;
+    } else if (liveP4.service === 'voter' || normServiceType.includes('voter') || normServiceType.includes('epic')) {
+      const epic = String(liveP4.epicNo || rawData.epicNumber || rawData.epicNo || rawData.epic_number || params?.epicNo || '').toUpperCase().trim();
+      generatedData.epicNo = epic;
+      const voterName = rawData.name || rawData.applicant_name || params?.customerName || 'मतदाता';
+      docTitle = `वोटर स्मार्ट कार्ड (${epic}) - ${voterName}`;
+      refNumber = epic;
+    } else if (liveP4.service === 'ration' || normServiceType.includes('ration')) {
+      const rat = String(liveP4.rationNo || rawData.ration_no || rawData.rationNo || params?.rationNo || '').trim();
+      generatedData.rationNo = rat;
+      const headName = rawData.headName || rawData.head_name || params?.customerName || 'राशन कार्ड';
+      docTitle = `राशन पर्ची (${rat}) - ${headName}`;
+      refNumber = rat;
+    } else if (liveP4.service === 'electricity' || normServiceType.includes('electric') || normServiceType.includes('bill')) {
+      const ca = String(liveP4.consumerNo || rawData.consumer_no || rawData.caNumber || params?.consumerNo || '').trim();
+      generatedData.consumerNo = ca;
+      const payable = rawData.netPayable || rawData.amount || '0';
+      docTitle = `बिजली रसीद (${ca}) - ₹${payable}`;
+      refNumber = ca;
+    } else if (liveP4.service === 'dl' || normServiceType.includes('dl') || normServiceType.includes('licence')) {
+      const dl = String(liveP4.dlNo || rawData.dl_number || rawData.dlNo || params?.dlNo || '').toUpperCase().trim();
+      generatedData.dlNo = dl;
+      const dlName = rawData.name || params?.customerName || 'चालक';
+      docTitle = `ड्राइविंग लाइसेंस (${dl}) - ${dlName}`;
+      refNumber = dl;
+    } else if (liveP4.service === 'npci') {
+      const aid = String(liveP4.aadhaarNo || rawData.aadhaarNo || params?.aadhaarNo || '').replace(/\D/g, '');
+      const bankName = liveP4.bankName || rawData.bankName || 'बैंक';
+      docTitle = `NPCI डीबीटी लिंक स्थिति (${bankName})`;
+      refNumber = aid || 'NPCI';
+    } else {
+      docTitle = service79?.name || serviceDisplayName;
+      refNumber = refNumber || 'DOC';
+    }
   }
 
+  // Local Utilities
   if (!generatedData) {
-    const kind = ((service79 && (service79.group || service79.category)) || serviceType || '').toLowerCase();
-    const rawVal = (params?.query || params?.primaryInput || params?.vehicleNumber || params?.panNo || params?.aadhaarNo || params?.epicNo || params?.consumerNo || params?.rationNo || params?.dlNo || '').toString().trim();
-
-    if (kind.includes('pan')) {
-      generatedData = getPanCardDetails(params?.panNo || rawVal, params);
-      docTitle = `पैन कार्ड (${generatedData.panNo}) - ${generatedData.name}`;
-      refNumber = generatedData.panNo;
-    } else if (kind.includes('aadhaar')) {
-      const aid = (params?.aadhaarNo || rawVal).replace(/[^0-9]/g, '');
-      generatedData = getAadhaarDetails(aid, params);
-      docTitle = `आधार PVC (${generatedData.maskedAadhaar}) - ${generatedData.name}`;
-      refNumber = generatedData.aadhaarNo;
-    } else if (kind.includes('voter') || kind.includes('epic')) {
-      generatedData = getVoterDetails(params?.epicNo || rawVal, params);
-      docTitle = `वोटर स्मार्ट कार्ड (${generatedData.epicNo}) - ${generatedData.name}`;
-      refNumber = generatedData.epicNo;
-    } else if (kind.includes('rc') || kind.includes('vehicle')) {
-      const regNo = (params?.regNo || params?.vehicleNumber || rawVal).toUpperCase().replace(/[\s-]+/g, '');
-      generatedData = getVehicleDetails(regNo, params);
-      vehicleData = generatedData;
-      docTitle = `वाहन RC (${generatedData.regNo}) - ${generatedData.makerModel}`;
-      refNumber = generatedData.regNo;
-    } else if (kind.includes('dl') || kind.includes('licence')) {
-      generatedData = getDrivingLicenceDetails(params?.dlNo || rawVal, params);
-      docTitle = `ड्राइविंग लाइसेंस (${generatedData.dlNo}) - ${generatedData.name}`;
-      refNumber = generatedData.dlNo;
-    } else if (kind.includes('ayushman') || kind.includes('health') || kind.includes('pmjay') || kind.includes('abha')) {
-      generatedData = getAyushmanDetails(params?.pmjayId || params?.id || rawVal, params);
-      docTitle = `आयुष्मान कार्ड (${generatedData.pmjayId}) - ${generatedData.name}`;
-      refNumber = generatedData.pmjayId;
-    } else if (kind.includes('ration')) {
-      generatedData = getRationDetails(params?.rationNo || rawVal, params);
-      docTitle = `राशन पर्ची (${generatedData.rationNo}) - ${generatedData.headName}`;
-      refNumber = generatedData.rationNo;
-    } else if (kind.includes('electric') || kind.includes('bill') || kind.includes('utility')) {
-      generatedData = getElectricityBillDetails(params?.consumerNo || rawVal, params);
-      docTitle = `बिजली रसीद (${generatedData.consumerNo}) - ₹${generatedData.netPayable}`;
-      refNumber = generatedData.consumerNo;
-    } else if (kind.includes('challan')) {
-      generatedData = getChallanDetails(params?.challanNo || params?.vehicleNo || rawVal, params);
-      docTitle = `ई-चालान रसीद (${generatedData.vehicleNo}) - ₹${generatedData.amount}`;
-      refNumber = generatedData.challanNo;
-    } else if (kind.includes('edistrict')) {
-      generatedData = getEdistrictDetails(params?.appNo || rawVal, params?.certNo || '', params);
-      docTitle = `e-District सत्यापन (${generatedData.certNo}) - ${generatedData.applicantName}`;
-      refNumber = generatedData.certNo;
-    } else if (normServiceType === 'bank_ifsc_lookup' || kind.includes('ifsc')) {
-      const ifsc = (params?.ifscCode || params?.ifsc || rawVal || '').toString().toUpperCase().trim().replace(/[^A-Z0-9]/g, '');
+    if (normServiceType === 'bank_ifsc_lookup' || normServiceType.includes('ifsc')) {
+      const ifsc = String(params?.ifscCode || params?.ifsc || params?.query || '').toUpperCase().trim().replace(/[^A-Z0-9]/g, '');
       try {
         const fetch = (await import('node-fetch')).default || globalThis.fetch;
         const resp = await fetch(`https://ifsc.razorpay.com/${ifsc}`);
         if (resp.ok) {
           const bankJson = await resp.json();
-          generatedData = {
-            bank: bankJson.BANK,
-            bankName: bankJson.BANK,
-            branch: bankJson.BRANCH || '',
-            address: bankJson.ADDRESS || '',
-            city: bankJson.CITY || '',
-            district: bankJson.DISTRICT || '',
-            state: bankJson.STATE || '',
-            ifsc: bankJson.IFSC || ifsc,
-            micr: bankJson.MICR || '',
-            rtgs: Boolean(bankJson.RTGS),
-            neft: Boolean(bankJson.NEFT),
-            imps: Boolean(bankJson.IMPS),
-            upi: Boolean(bankJson.UPI),
-            refNumber: ifsc,
-            name: params?.customerName || 'खाताधारक'
-          };
-          docTitle = `बैंक IFSC विवरण (${ifsc}) - ${bankJson.BANK}`;
-          refNumber = ifsc;
+          if (bankJson && bankJson.BANK) {
+            generatedData = {
+              bank: bankJson.BANK,
+              bankName: bankJson.BANK,
+              branch: bankJson.BRANCH || '',
+              address: bankJson.ADDRESS || '',
+              city: bankJson.CITY || '',
+              district: bankJson.DISTRICT || '',
+              state: bankJson.STATE || '',
+              ifsc: bankJson.IFSC || ifsc,
+              micr: bankJson.MICR || '',
+              rtgs: Boolean(bankJson.RTGS),
+              neft: Boolean(bankJson.NEFT),
+              imps: Boolean(bankJson.IMPS),
+              upi: Boolean(bankJson.UPI),
+              refNumber: ifsc,
+              name: params?.customerName || 'खाताधारक'
+            };
+            docTitle = `बैंक IFSC विवरण (${ifsc}) - ${bankJson.BANK}`;
+            refNumber = ifsc;
+          }
         }
       } catch (e) {
         console.warn('Node IFSC fetch error:', e.message);
       }
-      if (!generatedData) {
-        generatedData = {
-          bank: 'State Bank of India',
-          bankName: 'State Bank of India',
-          branch: 'MAIN BRANCH',
-          address: 'NEAR HEAD POST OFFICE',
-          city: 'NEW DELHI',
-          district: 'CENTRAL DELHI',
-          state: 'DELHI',
-          ifsc: ifsc || 'SBIN0000123',
-          micr: '110002001',
-          rtgs: true,
-          neft: true,
-          imps: true,
-          upi: true,
-          refNumber: ifsc || 'SBIN0000123'
-        };
-        docTitle = `बैंक IFSC विवरण (${generatedData.ifsc})`;
-        refNumber = generatedData.ifsc;
-      }
-    } else if (normServiceType === 'pincode_lookup' || kind.includes('pincode')) {
-      const pin = (params?.pincode || params?.pin || rawVal || '').toString().trim().replace(/[^0-9]/g, '');
+    } else if (normServiceType === 'pincode_lookup' || normServiceType.includes('pincode')) {
+      const pin = String(params?.pincode || params?.pin || params?.query || '').trim().replace(/[^0-9]/g, '');
       try {
         const fetch = (await import('node-fetch')).default || globalThis.fetch;
         const resp = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
@@ -5002,22 +4903,8 @@ app.post('/api/services/execute-automated', async (req, res) => {
       } catch (e) {
         console.warn('Node Pincode fetch error:', e.message);
       }
-      if (!generatedData) {
-        generatedData = {
-          pincode: pin || '110001',
-          district: 'Central Delhi',
-          state: 'Delhi',
-          totalOffices: 1,
-          postOffices: [
-            { name: 'Connaught Place', branchType: 'Head Post Office', deliveryStatus: 'Delivery' }
-          ],
-          refNumber: pin || '110001'
-        };
-        docTitle = `डाकघर पिनकोड पर्ची (${generatedData.pincode})`;
-        refNumber = generatedData.pincode;
-      }
-    } else if (normServiceType === 'qr_generator' || kind.includes('qr')) {
-      const qrText = (params?.text || params?.upi || rawVal || 'https://smartcafe.sbs').toString().trim();
+    } else if (normServiceType === 'qr_generator' || normServiceType.includes('qr')) {
+      const qrText = String(params?.text || params?.upi || params?.query || 'https://smartcafe.sbs').trim();
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=350x350&data=${encodeURIComponent(qrText)}`;
       generatedData = {
         qrUrl,
@@ -5028,7 +4915,7 @@ app.post('/api/services/execute-automated', async (req, res) => {
       };
       docTitle = 'डिजिटल पेमेंट QR कोड स्टिकर';
       refNumber = generatedData.refNumber;
-    } else if (normServiceType === 'sarkari_job_feed' || kind.includes('sarkari')) {
+    } else if (normServiceType === 'sarkari_job_feed' || normServiceType.includes('sarkari')) {
       let items = [];
       try {
         const fetch = (await import('node-fetch')).default || globalThis.fetch;
@@ -5093,8 +4980,8 @@ app.post('/api/services/execute-automated', async (req, res) => {
       };
       docTitle = `सरकारी फॉर्म फोटो व साइन रिसाइज़र (${generatedData.targetKb})`;
       refNumber = generatedData.refNumber;
-    } else {
-      generatedData = getReceiptDetails(rawVal || customerPhone, {
+    } else if (normServiceType === 'receiptMaker' || normServiceType === 'receipt') {
+      generatedData = getReceiptDetails(params?.query || customerPhone, {
         ...params,
         serviceName: serviceDisplayName,
         customerName: params?.customerName || params?.name || 'नागरिक',
@@ -5106,6 +4993,26 @@ app.post('/api/services/execute-automated', async (req, res) => {
       docTitle = `${serviceDisplayName} रसीद (${generatedData.receiptNo}) - ₹${generatedData.amount}`;
       refNumber = generatedData.receiptNo;
     }
+  }
+
+  // Zero-Fake Policy: If no authentic government data was returned by live API/gateway
+  if (!generatedData) {
+    if (!isOtherCategory) {
+      if (!isOperatorB2bDirect && customerWallet) {
+        customerWallet.balance += retailFee;
+        if (customerWallet.transactions) customerWallet.transactions.shift();
+      }
+      if (cafe.b2bWallet) {
+        cafe.b2bWallet.balance += wholesaleCost;
+        if (cafe.b2bWallet.transactions) cafe.b2bWallet.transactions.shift();
+      }
+      if (store.cashbook) store.cashbook.shift();
+      saveStore(store);
+    }
+    return res.status(400).json({
+      success: false,
+      error: 'सरकारी रिकॉर्ड में यह विवरण उपलब्ध नहीं है अथवा सेवा प्रदाता सर्वर अस्थायी रूप से डाउन है।'
+    });
   }
 
   const newOrder = {
@@ -5150,17 +5057,24 @@ app.post('/api/services/execute-automated', async (req, res) => {
 });
 
 // 4. Instant Vehicle RC Lookup API
-app.get('/api/rc/lookup/:regNo', (req, res) => {
+app.get('/api/rc/lookup/:regNo', async (req, res) => {
   const store = getStore();
   if (isToolDisabled(store, 'rc', 'rcDownload')) {
     return res.status(403).json({ error: 'यह टूल वर्तमान में सुपर एडमिन द्वारा अक्षम (Disabled) है।' });
   }
-  const regNo = req.params.regNo.trim().toUpperCase();
+  const regNo = req.params.regNo.trim().replace(/[\s-]+/g, '').toUpperCase();
   if (regNo.length < 6) {
     return res.status(400).json({ error: 'कृपया वैध गाड़ी नंबर दर्ज करें।' });
   }
-  const details = getVehicleDetails(regNo);
-  res.json(details);
+  const p4ApiKey = store.apiGateway?.apiKey || 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
+  try {
+    const liveP4 = await dispatchLiveP4Points('rc_to_details', { rcno: regNo }, p4ApiKey);
+    if (liveP4) {
+      const p4Data = (liveP4.data && typeof liveP4.data === 'object') ? liveP4.data : {};
+      return res.json({ ...liveP4, ...p4Data, regNo });
+    }
+  } catch (e) {}
+  return res.status(404).json({ error: 'सरकारी रिकॉर्ड में यह वाहन विवरण उपलब्ध नहीं है अथवा सर्वर अस्थायी रूप से डाउन है।' });
 });
 
 app.get('/api/rc/orders', (req, res) => {

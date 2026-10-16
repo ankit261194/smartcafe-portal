@@ -106,7 +106,7 @@ export class RDServiceBridge {
       timeout = 10000,
       env = 'P', // 'P' = Production, 'S' = Staging
       wadh = '',
-      allowSimulated = true
+      allowSimulated = false
     } = options;
 
     const probe = await this.probeDevice(1000);
