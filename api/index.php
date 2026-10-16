@@ -1739,47 +1739,128 @@ if (preg_match('#^wallet/([0-9]+)$#', $endpoint, $m)) {
     $phone = $m[1];
     $wallet = null;
     if (!isset($store['wallets'])) $store['wallets'] = [];
-    foreach ($store['wallets'] as $w) {
-        if ($w['phone'] === $phone) { $wallet = $w; break; }
-    }
-    if ($phone === '8006518960') {
-        if (!$wallet) {
-            $wallet = ['phone' => $phone, 'customerName' => 'ankit kumar', 'balance' => 0, 'transactions' => []];
-            $store['wallets'][] = $wallet;
-        } else {
-            if (isset($wallet['transactions']) && is_array($wallet['transactions'])) {
-                $wallet['transactions'] = array_values(array_filter($wallet['transactions'], function($tx) {
-                    return ($tx['id'] ?? '') !== 'TXN-INIT-500' 
-                        && ($tx['description'] ?? '') !== 'Opening Balance'
-                        && strpos($tx['note'] ?? '', 'Instant') === false 
-                        && strpos($tx['id'] ?? '', 'INSTANT') === false;
-                }));
-            }
-            $realBal = 0;
-            foreach ($wallet['transactions'] ?? [] as $tx) {
-                if (($tx['type'] ?? '') === 'credit') $realBal += floatval($tx['amount'] ?? 0);
-                if (($tx['type'] ?? '') === 'debit') $realBal -= floatval($tx['amount'] ?? 0);
-            }
-            $wallet['balance'] = 0;
-            $wallet['customerName'] = 'ankit kumar';
+    foreach ($store['wallets'] as &$w) {
+        if (($w['phone'] ?? '') === $phone) { 
+            $wallet = &$w; 
+            break; 
         }
-        foreach ($store['wallets'] as &$sw) {
-            if (($sw['phone'] ?? '') === '8006518960') {
-                $sw['balance'] = $wallet['balance'];
-                $sw['transactions'] = $wallet['transactions'];
-                $sw['customerName'] = 'ankit kumar';
-            }
-        }
-        unset($sw);
-        saveStore($dataFile, $store);
-        echo json_encode($wallet);
-        exit;
     }
+    unset($w);
+
     if (!$wallet) {
-        $wallet = ['phone' => $phone, 'customerName' => 'ग्राहक', 'balance' => 0, 'transactions' => []];
+        $uName = ($phone === '8006518960') ? 'ankit kumar' : 'ग्राहक';
+        foreach ($store['users'] ?? [] as $u) {
+            if (($u['phone'] ?? '') === $phone && !empty($u['name'])) {
+                $uName = $u['name'];
+                break;
+            }
+        }
+        $wallet = ['phone' => $phone, 'customerName' => $uName, 'balance' => 0, 'transactions' => []];
         $store['wallets'][] = $wallet;
-        saveStore($dataFile, $store);
     }
+
+    if (isset($wallet['transactions']) && is_array($wallet['transactions'])) {
+        $wallet['transactions'] = array_values(array_filter($wallet['transactions'], function($tx) {
+            return ($tx['id'] ?? '') !== 'TXN-INIT-500' 
+                && ($tx['description'] ?? '') !== 'Opening Balance'
+                && strpos($tx['note'] ?? '', 'Instant') === false 
+                && strpos($tx['id'] ?? '', 'INSTANT') === false;
+        }));
+    } else {
+        $wallet['transactions'] = [];
+    }
+
+    // Auto-reconcile with approved UTR requests (Zero-loss ledger guarantee)
+    foreach ($store['utrRequests'] ?? [] as $u) {
+        if (($u['customerPhone'] ?? '') === $phone && ($u['status'] ?? '') === 'approved') {
+            $uAmt = floatval($u['amount'] ?? 0);
+            if ($uAmt > 0) {
+                $foundTx = false;
+                foreach ($wallet['transactions'] as $tx) {
+                    if (($tx['utr'] ?? '') === ($u['utr'] ?? '') || ($tx['id'] ?? '') === ('TXN-' . ($u['id'] ?? ''))) {
+                        $foundTx = true;
+                        break;
+                    }
+                }
+                if (!$foundTx) {
+                    $wallet['transactions'][] = [
+                        'id' => 'TXN-' . ($u['id'] ?? time()),
+                        'type' => 'credit',
+                        'amount' => $uAmt,
+                        'utr' => $u['utr'] ?? '',
+                        'note' => "सुपर एडमिन स्वीकृत UTR (" . ($u['utr'] ?? '') . ") वॉलेट टॉप-अप",
+                        'createdAt' => $u['approvedAt'] ?? ($u['createdAt'] ?? date('c'))
+                    ];
+                }
+            }
+        }
+    }
+
+    // Calculate genuine balance strictly from legitimate transactions
+    $realBal = 0;
+    foreach ($wallet['transactions'] as $tx) {
+        if (($tx['type'] ?? '') === 'credit') $realBal += floatval($tx['amount'] ?? 0);
+        if (($tx['type'] ?? '') === 'debit') $realBal -= floatval($tx['amount'] ?? 0);
+    }
+
+    // Also check SQL wallets table if active
+    try {
+        $pdo = getPdoConnection();
+        if ($pdo) {
+            $stmt = $pdo->prepare("SELECT balance FROM wallets WHERE phone = ?");
+            $stmt->execute([$phone]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row && isset($row['balance'])) {
+                $sqlBal = floatval($row['balance']);
+                if ($sqlBal > $realBal) $realBal = $sqlBal;
+            }
+        }
+    } catch (Throwable $e) {}
+
+    $wallet['balance'] = max(0, $realBal);
+    if ($phone === '8006518960') {
+        $wallet['customerName'] = 'ankit kumar';
+    }
+
+    // Sync to $store['wallets']
+    foreach ($store['wallets'] as &$sw) {
+        if (($sw['phone'] ?? '') === $phone) {
+            $sw['balance'] = $wallet['balance'];
+            $sw['transactions'] = $wallet['transactions'];
+            $sw['customerName'] = $wallet['customerName'];
+            break;
+        }
+    }
+    unset($sw);
+
+    // Sync to $store['users']
+    foreach ($store['users'] as &$su) {
+        if (($su['phone'] ?? '') === $phone) {
+            $su['balance'] = $wallet['balance'];
+            break;
+        }
+    }
+    unset($su);
+
+    // Sync to users_master.json if exists
+    $dataDir = dirname($dataFile);
+    $masterUsersFile = $dataDir . '/users_master.json';
+    if (file_exists($masterUsersFile)) {
+        $mUsers = json_decode(file_get_contents($masterUsersFile), true) ?: [];
+        $uMod = false;
+        foreach ($mUsers as &$mu) {
+            if (($mu['phone'] ?? '') === $phone && ($mu['balance'] ?? 0) !== $wallet['balance']) {
+                $mu['balance'] = $wallet['balance'];
+                $uMod = true;
+            }
+        }
+        unset($mu);
+        if ($uMod) {
+            @file_put_contents($masterUsersFile, json_encode($mUsers, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        }
+    }
+
+    saveStore($dataFile, $store);
     echo json_encode($wallet);
     exit;
 }
