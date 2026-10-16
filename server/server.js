@@ -5216,6 +5216,42 @@ app.post('/api/superadmin/manual-orders/update-status', (req, res) => {
   res.json({ success: true, message: 'ऑर्डर स्थिति सफलतापूर्वक अपडेट की गई।', order });
 });
 
+// ROUTE: /api/services/manual-relay/pending-queue (Silent Auto-Relay Bot Queue)
+app.all(['/api/services/manual-relay/pending-queue', '/api/manual-relay/pending-queue'], (req, res) => {
+  const store = getStore();
+  const pendingOrders = (store.orderHistory || []).filter(o => o.fulfillmentType === 'manual_relay' && o.status === 'pending');
+  res.json({
+    success: true,
+    count: pendingOrders.length,
+    orders: pendingOrders,
+    rekhaConfig: {
+      username: store.systemSettings?.rekhaPrint?.username || '8006518960',
+      password: store.systemSettings?.rekhaPrint?.password || '012323',
+      baseUrl: store.systemSettings?.rekhaPrint?.baseUrl || 'https://rekhaprint.info'
+    }
+  });
+});
+
+// ROUTE: /api/services/manual-relay/update-upstream (Update Upstream Dispatch State)
+app.post('/api/services/manual-relay/update-upstream', (req, res) => {
+  const store = getStore();
+  const { orderId, id, upstreamStatus, upstreamOrderId, upstreamNote } = req.body;
+  const targetId = orderId || id;
+  const order = (store.orderHistory || []).find(o => o.id === targetId || o.orderId === targetId);
+  if (!order) {
+    return res.status(404).json({ error: 'ऑर्डर नहीं मिला।' });
+  }
+
+  order.upstreamDispatched = true;
+  order.upstreamStatus = upstreamStatus || 'Dispatched';
+  if (upstreamOrderId) order.upstreamOrderId = upstreamOrderId;
+  if (upstreamNote) order.upstreamNote = upstreamNote;
+  order.lastDispatchedAt = new Date().toISOString();
+
+  saveStore(store);
+  res.json({ success: true, message: 'अपस्ट्रीम स्टेटस सफलतापूर्वक अपडेट हुआ।', order });
+});
+
 // ROUTE: /api/superadmin/rekha-gateway/config (Rekha Relay Credentials)
 app.all('/api/superadmin/rekha-gateway/config', (req, res) => {
   const store = getStore();

@@ -2729,9 +2729,25 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
                     पेंडिंग ऑर्डर्स: <strong>{pendingManualOrdersCount}</strong>
                   </span>
                 </div>
+
+                <div className="mt-3.5 p-3 rounded-xl bg-purple-900/40 border border-purple-500/30 text-[11px] text-purple-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+                    <span><strong>रास्ता A (साइलेंट ऑटो-रिले बॉट सक्रिय):</strong> एक्सटेंशन बॉट आपके भारतीय IP से रेखा प्रिंट पर 0 सेकंड में सीधे ऑटो-सबमिट व ऑटो-रिजल्ट सिंक करता है। आपको हाथ से कोई फॉर्म नहीं भरना पड़ेगा।</span>
+                  </div>
+                </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-2 self-start md:self-auto shrink-0">
+                <a
+                  href="/SmartCafe_Chrome_Extension_Package.zip"
+                  download="SmartCafe_Master_Bot_Extension.zip"
+                  className="bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-black px-4 py-3 rounded-2xl text-xs flex items-center gap-1.5 transition shadow-lg shadow-amber-500/20 cursor-pointer"
+                  title="100% साइलेंट रेखा प्रिंट ऑटो-रिले बॉट एक्सटेंशन डाउनलोड करें"
+                >
+                  <span>🤖 ऑटो-रिले बॉट (.ZIP)</span>
+                </a>
+
                 <button
                   type="button"
                   onClick={handlePollRekha}

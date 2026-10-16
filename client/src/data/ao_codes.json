@@ -1,0 +1,6374 @@
+[
+  {
+    "display": "Uttar Pradesh (BULANDSHAHAR) (KNP W 17 95)",
+    "state": "Uttar Pradesh",
+    "city": "BULANDSHAHAR",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "17",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Telangana (Adilabad) (APR W 72 93)",
+    "state": "Telangana",
+    "city": "Adilabad",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Madhya Pradesh (AGAR) (BPL W 91 3)",
+    "state": "Madhya Pradesh",
+    "city": "AGAR",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Madhya Pradesh (Agar Malwa) (BPL W 91 3)",
+    "state": "Madhya Pradesh",
+    "city": "Agar Malwa",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Uttar Pradesh (Agra) (KNP C 75 1)",
+    "state": "Uttar Pradesh",
+    "city": "Agra",
+    "areaCode": "KNP",
+    "aoType": "C",
+    "rangeCode": "75",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (ahilyanagar) (PNE W 52 91)",
+    "state": "Maharashtra",
+    "city": "ahilyanagar",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "52",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Gujarat (Ahmedabad) (GUJ W 101 1)",
+    "state": "Gujarat",
+    "city": "Ahmedabad",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "101",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (Ahmedanagar) (PNE W 52 96)",
+    "state": "Maharashtra",
+    "city": "Ahmedanagar",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "52",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Maharashtra (Ahmedanagr) (PNE W 52 91)",
+    "state": "Maharashtra",
+    "city": "Ahmedanagr",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "52",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Mizoram (AIZAWL) (SHL W 16 1)",
+    "state": "Mizoram",
+    "city": "AIZAWL",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Rajasthan (Ajmer) (RJN W 750 1)",
+    "state": "Rajasthan",
+    "city": "Ajmer",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "750",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (Akola) (NGP C 101 1)",
+    "state": "Maharashtra",
+    "city": "Akola",
+    "areaCode": "NGP",
+    "aoType": "C",
+    "rangeCode": "101",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Kerala (Alappuzha) (KRL W 61 91)",
+    "state": "Kerala",
+    "city": "Alappuzha",
+    "areaCode": "KRL",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttar Pradesh (Aligarh) (KNP W 85 1)",
+    "state": "Uttar Pradesh",
+    "city": "Aligarh",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "1"
+  },
+  {
+    "display": "West Bengal (Alipurduar) (WBG W 212 92)",
+    "state": "West Bengal",
+    "city": "Alipurduar",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "212",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttarakhand (Almora) (LKN W 90 97)",
+    "state": "Uttarakhand",
+    "city": "Almora",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "90",
+    "aoNumber": "97"
+  },
+  {
+    "display": "Rajasthan (Alwar) (RJN C 110 1)",
+    "state": "Rajasthan",
+    "city": "Alwar",
+    "areaCode": "RJN",
+    "aoType": "C",
+    "rangeCode": "110",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Arunachal Pradesh (Ambedkar Konaseema) (SHL W 25 1)",
+    "state": "Arunachal Pradesh",
+    "city": "Ambedkar Konaseema",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Ambedkar Nagar) (LKN W 61 3)",
+    "state": "Uttar Pradesh",
+    "city": "Ambedkar Nagar",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Chhattisgarh (Ambikapur) (BPL W 85 1)",
+    "state": "Chhattisgarh",
+    "city": "Ambikapur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Amethi) (LKN W 61 92)",
+    "state": "Uttar Pradesh",
+    "city": "Amethi",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Maharashtra (Amravati) (NGP C 301 1)",
+    "state": "Maharashtra",
+    "city": "Amravati",
+    "areaCode": "NGP",
+    "aoType": "C",
+    "rangeCode": "301",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Amreli) (GUJ W 202 97)",
+    "state": "Gujarat",
+    "city": "Amreli",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "202",
+    "aoNumber": "97"
+  },
+  {
+    "display": "Punjab (Amritsar) (NWR C 80 1)",
+    "state": "Punjab",
+    "city": "Amritsar",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "80",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Amroha) (LKN W 71 1)",
+    "state": "Uttar Pradesh",
+    "city": "Amroha",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (ANAKAPALLE) (APR W 84 91)",
+    "state": "Andhra Pradesh",
+    "city": "ANAKAPALLE",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "84",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Gujarat (Anand) (GUJ C 304 91)",
+    "state": "Gujarat",
+    "city": "Anand",
+    "areaCode": "GUJ",
+    "aoType": "C",
+    "rangeCode": "304",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Andhra Pradesh (Anantapur) (APR W 77 91)",
+    "state": "Andhra Pradesh",
+    "city": "Anantapur",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "77",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Andhra Pradesh (ANANTAPUR) (APR W 7 91)",
+    "state": "Andhra Pradesh",
+    "city": "ANANTAPUR",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Andhra Pradesh (ANANTHAPUR) (APR W 77 91)",
+    "state": "Andhra Pradesh",
+    "city": "ANANTHAPUR",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "77",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Jammu and Kashmir (Anantnag) (NWR P 209 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Anantnag",
+    "areaCode": "NWR",
+    "aoType": "P",
+    "rangeCode": "209",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (Andhra Pradesh) (APR W 116 5)",
+    "state": "Andhra Pradesh",
+    "city": "Andhra Pradesh",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "116",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Odisha (ANGUL) (BBN W 1 93)",
+    "state": "Odisha",
+    "city": "ANGUL",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Arunachal Pradesh (Anjaw) (SHL W 25 91)",
+    "state": "Arunachal Pradesh",
+    "city": "Anjaw",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Andhra Pradesh (ANNAMAYYA) (APR W 80 91)",
+    "state": "Andhra Pradesh",
+    "city": "ANNAMAYYA",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "80",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Anuppur) (BPL W 71 96)",
+    "state": "Madhya Pradesh",
+    "city": "Anuppur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Bihar (Araria) (PTN W 30 94)",
+    "state": "Bihar",
+    "city": "Araria",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Gujarat (Aravalli) (GUJ W 104 94)",
+    "state": "Gujarat",
+    "city": "Aravalli",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "104",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Tamil Nadu (Ariyalur) (CHE W 191 11)",
+    "state": "Tamil Nadu",
+    "city": "Ariyalur",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "191",
+    "aoNumber": "11"
+  },
+  {
+    "display": "Bihar (ArWal) (PTN W 24 91)",
+    "state": "Bihar",
+    "city": "ArWal",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "24",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Ashok nagar) (BPL W 41 94)",
+    "state": "Madhya Pradesh",
+    "city": "Ashok nagar",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "41",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Uttar Pradesh (Auraiya) (KNP W 75 5)",
+    "state": "Uttar Pradesh",
+    "city": "Auraiya",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "75",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Maharashtra (auranagabad) (PNE C 27 1)",
+    "state": "Maharashtra",
+    "city": "auranagabad",
+    "areaCode": "PNE",
+    "aoType": "C",
+    "rangeCode": "27",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (Aurangabad) (PNE C 27 1)",
+    "state": "Bihar",
+    "city": "Aurangabad",
+    "areaCode": "PNE",
+    "aoType": "C",
+    "rangeCode": "27",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Ayodhya) (LKN W 61 1)",
+    "state": "Uttar Pradesh",
+    "city": "Ayodhya",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Azamgarh) (LKN W 26 92)",
+    "state": "Uttar Pradesh",
+    "city": "Azamgarh",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (BADAUN) (LKN W 71 91)",
+    "state": "Uttar Pradesh",
+    "city": "BADAUN",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Karnataka (Bagalkot) (KAR W 521 91)",
+    "state": "Karnataka",
+    "city": "Bagalkot",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "521",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttarakhand (Bageshwar) (LKN W 90 97)",
+    "state": "Uttarakhand",
+    "city": "Bageshwar",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "90",
+    "aoNumber": "97"
+  },
+  {
+    "display": "Uttar Pradesh (Baghpat) (KNP W 14 6)",
+    "state": "Uttar Pradesh",
+    "city": "Baghpat",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "14",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Uttar Pradesh (Bahraich) (LKN W 61 93)",
+    "state": "Uttar Pradesh",
+    "city": "Bahraich",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Assam (Baksa) (SHL W 2 13)",
+    "state": "Assam",
+    "city": "Baksa",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "13"
+  },
+  {
+    "display": "Madhya Pradesh (Balaghat) (BPL W 72 94)",
+    "state": "Madhya Pradesh",
+    "city": "Balaghat",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Odisha (BALANGIR) (BBN W 7 91)",
+    "state": "Odisha",
+    "city": "BALANGIR",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (BALASORE) (BBN W 4 91)",
+    "state": "Odisha",
+    "city": "BALASORE",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "4",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (baleswar) (BBN W 4 91)",
+    "state": "Odisha",
+    "city": "baleswar",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "4",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttar Pradesh (Ballia) (LKN W 23 93)",
+    "state": "Uttar Pradesh",
+    "city": "Ballia",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "23",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Chhattisgarh (Balod) (BPL W 87 1)",
+    "state": "Chhattisgarh",
+    "city": "Balod",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "87",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Baloda Bazar) (BPL W 85 92)",
+    "state": "Chhattisgarh",
+    "city": "Baloda Bazar",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Balrampur) (LKN W 61 96)",
+    "state": "Uttar Pradesh",
+    "city": "Balrampur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Gujarat (Banaskantha) (GUJ W 123 91)",
+    "state": "Gujarat",
+    "city": "Banaskantha",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "123",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttar Pradesh (Banda) (KNP W 54 92)",
+    "state": "Uttar Pradesh",
+    "city": "Banda",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "54",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Jammu and Kashmir (Bandipore) (NWR C 88 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Bandipore",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (Banka) (PTN W 21 6)",
+    "state": "Bihar",
+    "city": "Banka",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "21",
+    "aoNumber": "6"
+  },
+  {
+    "display": "West Bengal (Bankura) (WBG W 2019 2)",
+    "state": "West Bengal",
+    "city": "Bankura",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "2019",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Rajasthan (Banswara) (RJN W 720 91)",
+    "state": "Rajasthan",
+    "city": "Banswara",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "720",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttar Pradesh (Barabanki) (LKN W 93 94)",
+    "state": "Uttar Pradesh",
+    "city": "Barabanki",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "93",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Jammu and Kashmir (Baramulla) (NWR C 88 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Baramulla",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Rajasthan (Baran) (RJN W 780 4)",
+    "state": "Rajasthan",
+    "city": "Baran",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "780",
+    "aoNumber": "4"
+  },
+  {
+    "display": "West Bengal (barddhman) (WBG W 201 1)",
+    "state": "West Bengal",
+    "city": "barddhman",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "201",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Odisha (BARGARH) (BBN W 7 93)",
+    "state": "Odisha",
+    "city": "BARGARH",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Rajasthan (Barmer) (RJN W 540 95)",
+    "state": "Rajasthan",
+    "city": "Barmer",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "540",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Punjab (Barnala) (NWR W 47 97)",
+    "state": "Punjab",
+    "city": "Barnala",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "47",
+    "aoNumber": "97"
+  },
+  {
+    "display": "Assam (Barpeta) (SHL W 2 91)",
+    "state": "Assam",
+    "city": "Barpeta",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Barwani) (BPL W 619 4)",
+    "state": "Madhya Pradesh",
+    "city": "Barwani",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "619",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Chhattisgarh (Bastar) (BPL W 85 94)",
+    "state": "Chhattisgarh",
+    "city": "Bastar",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Uttar Pradesh (Basti) (LKN W 61 95)",
+    "state": "Uttar Pradesh",
+    "city": "Basti",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Punjab (Bathinda) (NWR C 89 1)",
+    "state": "Punjab",
+    "city": "Bathinda",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "89",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (BEED) (PNE C 21 1)",
+    "state": "Maharashtra",
+    "city": "BEED",
+    "areaCode": "PNE",
+    "aoType": "C",
+    "rangeCode": "21",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (Begusarai) (PTN W 30 91)",
+    "state": "Bihar",
+    "city": "Begusarai",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Rajasthan (BEHROR) (RJN W 110 92)",
+    "state": "Rajasthan",
+    "city": "BEHROR",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "110",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Karnataka (Belagavi) (KAR W 521 1)",
+    "state": "Karnataka",
+    "city": "Belagavi",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "521",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Bemetara) (BPL W 87 1)",
+    "state": "Chhattisgarh",
+    "city": "Bemetara",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "87",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Betul) (BPL W 31 91)",
+    "state": "Madhya Pradesh",
+    "city": "Betul",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Telangana (Bhadradri Kothagudem) (APR W 63 92)",
+    "state": "Telangana",
+    "city": "Bhadradri Kothagudem",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "63",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Odisha (BHADRAK) (BBN W 4 92)",
+    "state": "Odisha",
+    "city": "BHADRAK",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "4",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Maharashtra (BHANDARA) (NGP W 2 41)",
+    "state": "Maharashtra",
+    "city": "BHANDARA",
+    "areaCode": "NGP",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "41"
+  },
+  {
+    "display": "Rajasthan (Bharatpur) (RJN W 110 91)",
+    "state": "Rajasthan",
+    "city": "Bharatpur",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "110",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Gujarat (Bharuch) (GUJ W 304 91)",
+    "state": "Gujarat",
+    "city": "Bharuch",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "304",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Gujarat (Bhavnagar) (GUJ W 120 10)",
+    "state": "Gujarat",
+    "city": "Bhavnagar",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "120",
+    "aoNumber": "10"
+  },
+  {
+    "display": "Rajasthan (Bhilwara) (RJN W 750 91)",
+    "state": "Rajasthan",
+    "city": "Bhilwara",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "750",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Haryana (Bhiwani) (NWR W 57 92)",
+    "state": "Haryana",
+    "city": "Bhiwani",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "57",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Bihar (Bhojpur) (PTN W 21 5)",
+    "state": "Bihar",
+    "city": "Bhojpur",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "21",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Madhya Pradesh (Bhopal) (BPL W 33 92)",
+    "state": "Madhya Pradesh",
+    "city": "Bhopal",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "33",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Odisha (BHUBANESWAR) (BBN C 1 8)",
+    "state": "Odisha",
+    "city": "BHUBANESWAR",
+    "areaCode": "BBN",
+    "aoType": "C",
+    "rangeCode": "1",
+    "aoNumber": "8"
+  },
+  {
+    "display": "Karnataka (Bidar) (KAR W 421 4)",
+    "state": "Karnataka",
+    "city": "Bidar",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "421",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Chhattisgarh (Bijapur) (KAR W 5219 2)",
+    "state": "Chhattisgarh",
+    "city": "Bijapur",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "5219",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Uttar Pradesh (Bijnor) (LKN W 71 94)",
+    "state": "Uttar Pradesh",
+    "city": "Bijnor",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Rajasthan (Bikaner) (RJN W 570 1)",
+    "state": "Rajasthan",
+    "city": "Bikaner",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "570",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Himachal Pradesh (Bilaspur) (NWR C 37 1)",
+    "state": "Himachal Pradesh",
+    "city": "Bilaspur",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "37",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Bilaspur) (BPL W 85 1)",
+    "state": "Chhattisgarh",
+    "city": "Bilaspur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "1"
+  },
+  {
+    "display": "West Bengal (Birbhum) (WBG C 201 91)",
+    "state": "West Bengal",
+    "city": "Birbhum",
+    "areaCode": "WBG",
+    "aoType": "C",
+    "rangeCode": "201",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Manipur (Bishnupur) (WBG W 201 92)",
+    "state": "Manipur",
+    "city": "Bishnupur",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "201",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Assam (Biswanath) (SHL W 19 1)",
+    "state": "Assam",
+    "city": "Biswanath",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "19",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Jharkhand (Bokaro) (PTN W 57 93)",
+    "state": "Jharkhand",
+    "city": "Bokaro",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "57",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Odisha (BOLANGIR) (BBN W 7 91)",
+    "state": "Odisha",
+    "city": "BOLANGIR",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Assam (Bongaigaon) (SHL W 2 94)",
+    "state": "Assam",
+    "city": "Bongaigaon",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Gujarat (Botad) (GUJ W 120 10)",
+    "state": "Gujarat",
+    "city": "Botad",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "120",
+    "aoNumber": "10"
+  },
+  {
+    "display": "Odisha (BOUDH) (BBN W 7 96)",
+    "state": "Odisha",
+    "city": "BOUDH",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Odisha (Boudhgarh) (BBN W 7 96)",
+    "state": "Odisha",
+    "city": "Boudhgarh",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Uttar Pradesh (Budaun) (LKN W 71 91)",
+    "state": "Uttar Pradesh",
+    "city": "Budaun",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Jammu and Kashmir (Budgam) (NWR C 88 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Budgam",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Bulandshahr) (KNP W 17 95)",
+    "state": "Uttar Pradesh",
+    "city": "Bulandshahr",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "17",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Maharashtra (Buldhana) (NGP W 101 4)",
+    "state": "Maharashtra",
+    "city": "Buldhana",
+    "areaCode": "NGP",
+    "aoType": "W",
+    "rangeCode": "101",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Rajasthan (Bundi) (RJN W 780 92)",
+    "state": "Rajasthan",
+    "city": "Bundi",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "780",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Madhya Pradesh (Burhanpur) (BPL W 61 93)",
+    "state": "Madhya Pradesh",
+    "city": "Burhanpur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Bihar (Buxar) (PTN W 21 6)",
+    "state": "Bihar",
+    "city": "Buxar",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "21",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Assam (Cachar) (SHL W 16 1)",
+    "state": "Assam",
+    "city": "Cachar",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Delhi (CENTRAL DELHI) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "CENTRAL DELHI",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Karnataka (Chamarajanagar) (KAR W 321 7)",
+    "state": "Karnataka",
+    "city": "Chamarajanagar",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "321",
+    "aoNumber": "7"
+  },
+  {
+    "display": "Himachal Pradesh (Chamba) (NWR W 37 92)",
+    "state": "Himachal Pradesh",
+    "city": "Chamba",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttarakhand (Chamoli) (KNP W 26 92)",
+    "state": "Uttarakhand",
+    "city": "Chamoli",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttarakhand (Champawat) (LKN W 90 99)",
+    "state": "Uttarakhand",
+    "city": "Champawat",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "90",
+    "aoNumber": "99"
+  },
+  {
+    "display": "Manipur (Chandel) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Chandel",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (CHANDRAPUR) (NGP W 301 92)",
+    "state": "Maharashtra",
+    "city": "CHANDRAPUR",
+    "areaCode": "NGP",
+    "aoType": "W",
+    "rangeCode": "301",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Arunachal Pradesh (Changlang) (SHL W 25 1)",
+    "state": "Arunachal Pradesh",
+    "city": "Changlang",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (CHAPARA) (PTN W 27 91)",
+    "state": "Bihar",
+    "city": "CHAPARA",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Assam (Charaideo) (SHL W 19 3)",
+    "state": "Assam",
+    "city": "Charaideo",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "19",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Haryana (Charkhi Dadri) (NWR W 57 92)",
+    "state": "Haryana",
+    "city": "Charkhi Dadri",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "57",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Tamil Nadu (Chengalpattu) (CHE C 141 1)",
+    "state": "Tamil Nadu",
+    "city": "Chengalpattu",
+    "areaCode": "CHE",
+    "aoType": "C",
+    "rangeCode": "141",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Chennai) (CHE W 110 1)",
+    "state": "Tamil Nadu",
+    "city": "Chennai",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "110",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Chhatarpur) (BPL W 411 1)",
+    "state": "Madhya Pradesh",
+    "city": "Chhatarpur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "411",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Chhindwara) (BPL W 72 91)",
+    "state": "Madhya Pradesh",
+    "city": "Chhindwara",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (CHICHIA) (BBN C 1 8)",
+    "state": "Odisha",
+    "city": "CHICHIA",
+    "areaCode": "BBN",
+    "aoType": "C",
+    "rangeCode": "1",
+    "aoNumber": "8"
+  },
+  {
+    "display": "Karnataka (CHIKABALLAPUR) (KAR W 128 94)",
+    "state": "Karnataka",
+    "city": "CHIKABALLAPUR",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "128",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Karnataka (Chikkamagaluru) (KAR W 321 94)",
+    "state": "Karnataka",
+    "city": "Chikkamagaluru",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "321",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Assam (Chirang) (SHL W 2 94)",
+    "state": "Assam",
+    "city": "Chirang",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Karnataka (Chitradurga) (KAR W 113 91)",
+    "state": "Karnataka",
+    "city": "Chitradurga",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "113",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Karnataka (Chitradurga) (KAR W 128 93)",
+    "state": "Karnataka",
+    "city": "Chitradurga",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "128",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (Chitrakoot) (LKN W 23 1)",
+    "state": "Uttar Pradesh",
+    "city": "Chitrakoot",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "23",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (Chittoor) (APR C 81 1)",
+    "state": "Andhra Pradesh",
+    "city": "Chittoor",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "81",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Rajasthan (Chittorgarh) (RJN W 720 92)",
+    "state": "Rajasthan",
+    "city": "Chittorgarh",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "720",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Manipur (Churachandpur) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Churachandpur",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Rajasthan (Churu) (RJN W 107 91)",
+    "state": "Rajasthan",
+    "city": "Churu",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "107",
+    "aoNumber": "91"
+  },
+  {
+    "display": "West Bengal (Cooch Behar) (WBG W 212 91)",
+    "state": "West Bengal",
+    "city": "Cooch Behar",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "212",
+    "aoNumber": "91"
+  },
+  {
+    "display": "West Bengal (COOCHBEHAR) (WBG W 212 91)",
+    "state": "West Bengal",
+    "city": "COOCHBEHAR",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "212",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Tamil Nadu (Cuddalore) (CHE C 181 1)",
+    "state": "Tamil Nadu",
+    "city": "Cuddalore",
+    "areaCode": "CHE",
+    "aoType": "C",
+    "rangeCode": "181",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (cuddapah kadapa) (APR W 80 91)",
+    "state": "Andhra Pradesh",
+    "city": "cuddapah kadapa",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "80",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (Cuttack) (BBN W 4 1)",
+    "state": "Odisha",
+    "city": "Cuttack",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "4",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Dadra and Nagar Haveli (Dadar nagar Haveli) (GUJ W 410 92)",
+    "state": "Dadra and Nagar Haveli",
+    "city": "Dadar nagar Haveli",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "410",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Gujarat (Dahod) (GUJ W 304 93)",
+    "state": "Gujarat",
+    "city": "Dahod",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "304",
+    "aoNumber": "93"
+  },
+  {
+    "display": "West Bengal (Dakshin Dinajpur) (WBG W 208 94)",
+    "state": "West Bengal",
+    "city": "Dakshin Dinajpur",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "208",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Karnataka (Dakshina Kannada) (KAR C 531 1)",
+    "state": "Karnataka",
+    "city": "Dakshina Kannada",
+    "areaCode": "KAR",
+    "aoType": "C",
+    "rangeCode": "531",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Damoh) (BPL W 72 95)",
+    "state": "Madhya Pradesh",
+    "city": "Damoh",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Gujarat (DANG) (GUJ W 412 4)",
+    "state": "Gujarat",
+    "city": "DANG",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "412",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Chhattisgarh (Dantewada) (BPL W 85 94)",
+    "state": "Chhattisgarh",
+    "city": "Dantewada",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Bihar (Darbhanga) (PTN W 27 94)",
+    "state": "Bihar",
+    "city": "Darbhanga",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "94"
+  },
+  {
+    "display": "West Bengal (Darjeeling) (WBG W 208 93)",
+    "state": "West Bengal",
+    "city": "Darjeeling",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "208",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Assam (Darrang) (SHL W 19 4)",
+    "state": "Assam",
+    "city": "Darrang",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "19",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Rajasthan (Dausa) (RJN W 110 93)",
+    "state": "Rajasthan",
+    "city": "Dausa",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "110",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Karnataka (Davangere) (KAR W 113 94)",
+    "state": "Karnataka",
+    "city": "Davangere",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "113",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Jharkhand (Deoghar) (PTN W 60 92)",
+    "state": "Jharkhand",
+    "city": "Deoghar",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Deoria) (LKN W 26 94)",
+    "state": "Uttar Pradesh",
+    "city": "Deoria",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Gujarat (Devbhoomi Dwarka) (GUJ W 221 4)",
+    "state": "Gujarat",
+    "city": "Devbhoomi Dwarka",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "221",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Madhya Pradesh (Dewas) (BPL W 911 1)",
+    "state": "Madhya Pradesh",
+    "city": "Dewas",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "911",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tripura (Dhalai) (SHL W 16 92)",
+    "state": "Tripura",
+    "city": "Dhalai",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Chhattisgarh (Dhamtari) (BPL W 85 93)",
+    "state": "Chhattisgarh",
+    "city": "Dhamtari",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Madhya Pradesh (Dhar) (BPL W 51 11)",
+    "state": "Madhya Pradesh",
+    "city": "Dhar",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "51",
+    "aoNumber": "11"
+  },
+  {
+    "display": "Tamil Nadu (Dharmapuri) (CHE W 231 91)",
+    "state": "Tamil Nadu",
+    "city": "Dharmapuri",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "231",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Assam (Dhemaji) (SHL W 19 2)",
+    "state": "Assam",
+    "city": "Dhemaji",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "19",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Odisha (Dhenkanal) (BBN W 1 94)",
+    "state": "Odisha",
+    "city": "Dhenkanal",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Rajasthan (Dholpur) (RJN W 110 91)",
+    "state": "Rajasthan",
+    "city": "Dholpur",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "110",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Assam (Dhubri) (SHL W 2 92)",
+    "state": "Assam",
+    "city": "Dhubri",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Maharashtra (DHULE) (PNE W 21 92)",
+    "state": "Maharashtra",
+    "city": "DHULE",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "21",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Arunachal Pradesh (Dibang Valley) (SHL W 25 1)",
+    "state": "Arunachal Pradesh",
+    "city": "Dibang Valley",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Assam (Dibrugarh) (SHL W 25 1)",
+    "state": "Assam",
+    "city": "Dibrugarh",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Assam (Dima Hasao) (SHL W 16 1)",
+    "state": "Assam",
+    "city": "Dima Hasao",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Nagaland (DIMAPUR) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "DIMAPUR",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Tamil Nadu (Dindigul) (CHE W 501 91)",
+    "state": "Tamil Nadu",
+    "city": "Dindigul",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "501",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Jharkhand (Dumka) (PTN W 60 93)",
+    "state": "Jharkhand",
+    "city": "Dumka",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Rajasthan (Dungarpur) (RJN W 720 94)",
+    "state": "Rajasthan",
+    "city": "Dungarpur",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "720",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Chhattisgarh (Durg) (BPL W 87 1)",
+    "state": "Chhattisgarh",
+    "city": "Durg",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "87",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (East Champaran) (PTN W 27 2)",
+    "state": "Bihar",
+    "city": "East Champaran",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Delhi (EAST DELHI) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "EAST DELHI",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (EAST GODAVARI) (APR W 116 5)",
+    "state": "Andhra Pradesh",
+    "city": "EAST GODAVARI",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "116",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Arunachal Pradesh (East Kameng) (SHL W 1 91)",
+    "state": "Arunachal Pradesh",
+    "city": "East Kameng",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "91"
+  },
+  {
+    "display": "West Bengal (EAST MIDNAPORE) (WBG C 176 1)",
+    "state": "West Bengal",
+    "city": "EAST MIDNAPORE",
+    "areaCode": "WBG",
+    "aoType": "C",
+    "rangeCode": "176",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Arunachal Pradesh (East Siang) (SHL W 25 93)",
+    "state": "Arunachal Pradesh",
+    "city": "East Siang",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Sikkim (East Sikkim) (WBG C 208 92)",
+    "state": "Sikkim",
+    "city": "East Sikkim",
+    "areaCode": "WBG",
+    "aoType": "C",
+    "rangeCode": "208",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Jharkhand (East Singhbhum) (PTN W 54 1)",
+    "state": "Jharkhand",
+    "city": "East Singhbhum",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "54",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (ELURU) (APR W 116 5)",
+    "state": "Andhra Pradesh",
+    "city": "ELURU",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "116",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Kerala (Ernakulam) (KRL C 10 1)",
+    "state": "Kerala",
+    "city": "Ernakulam",
+    "areaCode": "KRL",
+    "aoType": "C",
+    "rangeCode": "10",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Erode) (CHE C 65 1)",
+    "state": "Tamil Nadu",
+    "city": "Erode",
+    "areaCode": "CHE",
+    "aoType": "C",
+    "rangeCode": "65",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Etah) (KNP W 75 92)",
+    "state": "Uttar Pradesh",
+    "city": "Etah",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "75",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Etawah) (KNP W 80 93)",
+    "state": "Uttar Pradesh",
+    "city": "Etawah",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "80",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (FAIZABAD) (LKN W 93 94)",
+    "state": "Uttar Pradesh",
+    "city": "FAIZABAD",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "93",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Haryana (Faridabad) (NWR W 51 92)",
+    "state": "Haryana",
+    "city": "Faridabad",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "51",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Punjab (Faridkot) (NWR W 89 91)",
+    "state": "Punjab",
+    "city": "Faridkot",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "89",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttar Pradesh (Farrukhabad) (KNP W 85 91)",
+    "state": "Uttar Pradesh",
+    "city": "Farrukhabad",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Haryana (Fatehabad) (NWR W 57 93)",
+    "state": "Haryana",
+    "city": "Fatehabad",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "57",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Punjab (Fatehgarh Sahib) (NWR W 47 95)",
+    "state": "Punjab",
+    "city": "Fatehgarh Sahib",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "47",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Uttar Pradesh (Fatehpur) (LKN W 20 93)",
+    "state": "Uttar Pradesh",
+    "city": "Fatehpur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "20",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Punjab (Fazilka) (NWR W 89 93)",
+    "state": "Punjab",
+    "city": "Fazilka",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "89",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Punjab (Ferozepur) (NWR W 89 94)",
+    "state": "Punjab",
+    "city": "Ferozepur",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "89",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Uttar Pradesh (Firozabad) (KNP W 80 91)",
+    "state": "Uttar Pradesh",
+    "city": "Firozabad",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "80",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Karnataka (Gadag) (KAR W 411 11)",
+    "state": "Karnataka",
+    "city": "Gadag",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "411",
+    "aoNumber": "11"
+  },
+  {
+    "display": "Maharashtra (GADCHIROLI) (NGP W 301 92)",
+    "state": "Maharashtra",
+    "city": "GADCHIROLI",
+    "areaCode": "NGP",
+    "aoType": "W",
+    "rangeCode": "301",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Jammu and Kashmir (Ganderbal) (NWR C 88 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Ganderbal",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Gandhinagar) (GUJ C 123 1)",
+    "state": "Gujarat",
+    "city": "Gandhinagar",
+    "areaCode": "GUJ",
+    "aoType": "C",
+    "rangeCode": "123",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Gariyaband) (BPL W 85 92)",
+    "state": "Chhattisgarh",
+    "city": "Gariyaband",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Chhattisgarh (GAURELLA PENDRA MARWAHI) (BPL C 88 1)",
+    "state": "Chhattisgarh",
+    "city": "GAURELLA PENDRA MARWAHI",
+    "areaCode": "BPL",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Gaurella-pendra-marwahi) (BPL C 88 1)",
+    "state": "Chhattisgarh",
+    "city": "Gaurella-pendra-marwahi",
+    "areaCode": "BPL",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Gautam Buddha Nagar) (KNP W 100 1)",
+    "state": "Uttar Pradesh",
+    "city": "Gautam Buddha Nagar",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "100",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Gautam budh Nagar) (KNP W 100 1)",
+    "state": "Uttar Pradesh",
+    "city": "Gautam budh Nagar",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "100",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (Gaya) (PTN W 24 91)",
+    "state": "Bihar",
+    "city": "Gaya",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "24",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttar Pradesh (Ghaziabad) (KNP C 17 1)",
+    "state": "Uttar Pradesh",
+    "city": "Ghaziabad",
+    "areaCode": "KNP",
+    "aoType": "C",
+    "rangeCode": "17",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Ghazipur) (LKN W 23 96)",
+    "state": "Uttar Pradesh",
+    "city": "Ghazipur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "23",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Gujarat (Gir Somnath) (GUJ W 304 96)",
+    "state": "Gujarat",
+    "city": "Gir Somnath",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "304",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Jharkhand (Giridih) (PTN W 60 94)",
+    "state": "Jharkhand",
+    "city": "Giridih",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Assam (Goalpara) (SHL W 2 93)",
+    "state": "Assam",
+    "city": "Goalpara",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Jharkhand (Godda) (PTN W 60 94)",
+    "state": "Jharkhand",
+    "city": "Godda",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Assam (Golaghat) (SHL W 7 11)",
+    "state": "Assam",
+    "city": "Golaghat",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "11"
+  },
+  {
+    "display": "Tripura (Gomati) (SHL W 16 92)",
+    "state": "Tripura",
+    "city": "Gomati",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Gonda) (LKN W 61 96)",
+    "state": "Uttar Pradesh",
+    "city": "Gonda",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Maharashtra (Gondia) (NGP W 4 93)",
+    "state": "Maharashtra",
+    "city": "Gondia",
+    "areaCode": "NGP",
+    "aoType": "W",
+    "rangeCode": "4",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Bihar (Gopalganj) (PTN W 27 92)",
+    "state": "Bihar",
+    "city": "Gopalganj",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Gorakhpur) (LKN W 26 1)",
+    "state": "Uttar Pradesh",
+    "city": "Gorakhpur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Karnataka (GULBARGA) (KAR W 421 1)",
+    "state": "Karnataka",
+    "city": "GULBARGA",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "421",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Guna) (BPL W 41 93)",
+    "state": "Madhya Pradesh",
+    "city": "Guna",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "41",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Andhra Pradesh (Guntur) (APR C 78 1)",
+    "state": "Andhra Pradesh",
+    "city": "Guntur",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "78",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Punjab (Gurdaspur) (NWR W 80 94)",
+    "state": "Punjab",
+    "city": "Gurdaspur",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "80",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Haryana (Gurugram) (NWR W 107 1)",
+    "state": "Haryana",
+    "city": "Gurugram",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "107",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Gwalior) (BPL W 41 91)",
+    "state": "Madhya Pradesh",
+    "city": "Gwalior",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "41",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Assam (Hailakandi) (SHL W 16 1)",
+    "state": "Assam",
+    "city": "Hailakandi",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "1"
+  },
+  {
+    "display": "West Bengal (HALDIA) (WBG C 176 1)",
+    "state": "West Bengal",
+    "city": "HALDIA",
+    "areaCode": "WBG",
+    "aoType": "C",
+    "rangeCode": "176",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Himachal Pradesh (Hamirpur) (NWR W 37 93)",
+    "state": "Himachal Pradesh",
+    "city": "Hamirpur",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (Hamirpur) (LKN W 43 2)",
+    "state": "Uttar Pradesh",
+    "city": "Hamirpur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "43",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Rajasthan (Hanumangarh) (RJN W 570 93)",
+    "state": "Rajasthan",
+    "city": "Hanumangarh",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "570",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (Hapur) (KNP W 17 96)",
+    "state": "Uttar Pradesh",
+    "city": "Hapur",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "17",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Madhya Pradesh (Harda) (BPL W 31 92)",
+    "state": "Madhya Pradesh",
+    "city": "Harda",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Hardoi) (LKN W 43 4)",
+    "state": "Uttar Pradesh",
+    "city": "Hardoi",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "43",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Uttarakhand (Haridwar) (KNP W 26 96)",
+    "state": "Uttarakhand",
+    "city": "Haridwar",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Karnataka (Hassan) (KAR W 3219 2)",
+    "state": "Karnataka",
+    "city": "Hassan",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "3219",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Uttar Pradesh (Hathras) (KNP W 75 95)",
+    "state": "Uttar Pradesh",
+    "city": "Hathras",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "75",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Karnataka (Haveri) (KAR W 113 93)",
+    "state": "Karnataka",
+    "city": "Haveri",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "113",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttarakhand (HAWALBAGH) (LKN C 90 91)",
+    "state": "Uttarakhand",
+    "city": "HAWALBAGH",
+    "areaCode": "LKN",
+    "aoType": "C",
+    "rangeCode": "90",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Maharashtra (HINGOLI) (PNE W 27 94)",
+    "state": "Maharashtra",
+    "city": "HINGOLI",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Haryana (Hisar) (NWR C 57 1)",
+    "state": "Haryana",
+    "city": "Hisar",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "57",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Assam (Hojai) (SHL W 1 93)",
+    "state": "Assam",
+    "city": "Hojai",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "93"
+  },
+  {
+    "display": "West Bengal (Hooghly) (WBG C 182 1)",
+    "state": "West Bengal",
+    "city": "Hooghly",
+    "areaCode": "WBG",
+    "aoType": "C",
+    "rangeCode": "182",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Hoshangabad) (BPL W 31 93)",
+    "state": "Madhya Pradesh",
+    "city": "Hoshangabad",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Punjab (Hoshiarpur) (NWR W 101 92)",
+    "state": "Punjab",
+    "city": "Hoshiarpur",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "101",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Telangana (Hyderabad) (APR W 50 1)",
+    "state": "Telangana",
+    "city": "Hyderabad",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "50",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Kerala (ldukki) (KRL C 10 1)",
+    "state": "Kerala",
+    "city": "ldukki",
+    "areaCode": "KRL",
+    "aoType": "C",
+    "rangeCode": "10",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Manipur (Imphal East) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Imphal East",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Manipur (Imphal West) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Imphal West",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Indore) (BPL W 51 1)",
+    "state": "Madhya Pradesh",
+    "city": "Indore",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "51",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Jabalpur) (BPL W 72 1)",
+    "state": "Madhya Pradesh",
+    "city": "Jabalpur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Odisha (Jagatsinghapur) (BBN W 4 6)",
+    "state": "Odisha",
+    "city": "Jagatsinghapur",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "4",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Telangana (Jagtial) (APR C 72 1)",
+    "state": "Telangana",
+    "city": "Jagtial",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "72",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Rajasthan (JAISALMER) (RJN W 540 92)",
+    "state": "Rajasthan",
+    "city": "JAISALMER",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "540",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Odisha (Jajpur) (BBN W 4 2)",
+    "state": "Odisha",
+    "city": "Jajpur",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "4",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Uttar Pradesh (Jalaun) (KNP W 54 5)",
+    "state": "Uttar Pradesh",
+    "city": "Jalaun",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "54",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Maharashtra (JALGAON) (PNE C 25 1)",
+    "state": "Maharashtra",
+    "city": "JALGAON",
+    "areaCode": "PNE",
+    "aoType": "C",
+    "rangeCode": "25",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (Jalgoan) (PNE W 25 1)",
+    "state": "Maharashtra",
+    "city": "Jalgoan",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (JALNA) (PNE W 27 91)",
+    "state": "Maharashtra",
+    "city": "JALNA",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Rajasthan (Jalore) (RJN W 540 96)",
+    "state": "Rajasthan",
+    "city": "Jalore",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "540",
+    "aoNumber": "96"
+  },
+  {
+    "display": "West Bengal (Jalpaiguri) (WBG C 212 1)",
+    "state": "West Bengal",
+    "city": "Jalpaiguri",
+    "areaCode": "WBG",
+    "aoType": "C",
+    "rangeCode": "212",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Jamnagar) (GUJ C 221 1)",
+    "state": "Gujarat",
+    "city": "Jamnagar",
+    "areaCode": "GUJ",
+    "aoType": "C",
+    "rangeCode": "221",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Jharkhand (Jamtara) (PTN W 60 93)",
+    "state": "Jharkhand",
+    "city": "Jamtara",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Bihar (Jamui) (PTN W 30 91)",
+    "state": "Bihar",
+    "city": "Jamui",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Telangana (Jangaon) (APR W 53 94)",
+    "state": "Telangana",
+    "city": "Jangaon",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "53",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Chhattisgarh (Janjgir-Champa) (BPL W 88 1)",
+    "state": "Chhattisgarh",
+    "city": "Janjgir-Champa",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Jashpur) (BPL W 88 3)",
+    "state": "Chhattisgarh",
+    "city": "Jashpur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "88",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Uttar Pradesh (Jaunpur) (LKN W 61 4)",
+    "state": "Uttar Pradesh",
+    "city": "Jaunpur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Telangana (Jayashankar Bhoopalpally) (APR W 53 94)",
+    "state": "Telangana",
+    "city": "Jayashankar Bhoopalpally",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "53",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Bihar (Jehanabad) (PTN W 24 91)",
+    "state": "Bihar",
+    "city": "Jehanabad",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "24",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Jhabua) (BPL W 72 1)",
+    "state": "Madhya Pradesh",
+    "city": "Jhabua",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Haryana (Jhajar) (NWR W 57 94)",
+    "state": "Haryana",
+    "city": "Jhajar",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "57",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Rajasthan (Jhalawar) (RJN W 780 94)",
+    "state": "Rajasthan",
+    "city": "Jhalawar",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "780",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Uttar Pradesh (Jhansi) (KNP W 80 94)",
+    "state": "Uttar Pradesh",
+    "city": "Jhansi",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "80",
+    "aoNumber": "94"
+  },
+  {
+    "display": "West Bengal (Jhargram) (WBG W 139 91)",
+    "state": "West Bengal",
+    "city": "Jhargram",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "139",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (Jharsuguda) (BBN W 9 93)",
+    "state": "Odisha",
+    "city": "Jharsuguda",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "9",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Rajasthan (Jhunjhunu) (RJN W 107 92)",
+    "state": "Rajasthan",
+    "city": "Jhunjhunu",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "107",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Haryana (Jind) (NWR W 57 94)",
+    "state": "Haryana",
+    "city": "Jind",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "57",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Manipur (Jiribam) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Jiribam",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Rajasthan (Jodhpur) (RJN C 510 1)",
+    "state": "Rajasthan",
+    "city": "Jodhpur",
+    "areaCode": "RJN",
+    "aoType": "C",
+    "rangeCode": "510",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Telangana (Jogulamba Gadwal) (APR W 55 4)",
+    "state": "Telangana",
+    "city": "Jogulamba Gadwal",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "55",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Assam (Jorhat) (SHL W 7 1)",
+    "state": "Assam",
+    "city": "Jorhat",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Junagadh) (GUJ W 201 92)",
+    "state": "Gujarat",
+    "city": "Junagadh",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "201",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Chhattisgarh (Kabirdham) (BPL W 85 92)",
+    "state": "Chhattisgarh",
+    "city": "Kabirdham",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Gujarat (Kachchh) (GUJ W 202 94)",
+    "state": "Gujarat",
+    "city": "Kachchh",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "202",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Bihar (Kaimur Bhabua) (PTN W 30 6)",
+    "state": "Bihar",
+    "city": "Kaimur Bhabua",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Haryana (Kaithal) (NWR W 60 91)",
+    "state": "Haryana",
+    "city": "Kaithal",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Manipur (Kakching) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Kakching",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (KAKINADA) (APR W 90 1)",
+    "state": "Andhra Pradesh",
+    "city": "KAKINADA",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "90",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Karnataka (Kalaburagi) (KAR W 421 1)",
+    "state": "Karnataka",
+    "city": "Kalaburagi",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "421",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Odisha (Kalahandi) (BBN W 7 94)",
+    "state": "Odisha",
+    "city": "Kalahandi",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "94"
+  },
+  {
+    "display": "West Bengal (Kalimpong) (WBG W 208 93)",
+    "state": "West Bengal",
+    "city": "Kalimpong",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "208",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Tamil Nadu (Kallakurichi) (CHE W 181 11)",
+    "state": "Tamil Nadu",
+    "city": "Kallakurichi",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "181",
+    "aoNumber": "11"
+  },
+  {
+    "display": "Telangana (Kamareddy) (APR C 72 91)",
+    "state": "Telangana",
+    "city": "Kamareddy",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "72",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Manipur (Kamjong) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Kamjong",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Assam (Kamrup) (SHL W 1 1)",
+    "state": "Assam",
+    "city": "Kamrup",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Kanchipuram) (CHE W 141 91)",
+    "state": "Tamil Nadu",
+    "city": "Kanchipuram",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "141",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (Kandhamal) (BBN W 7 96)",
+    "state": "Odisha",
+    "city": "Kandhamal",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Uttar Pradesh (Kandhla) (LKN W 71 2)",
+    "state": "Uttar Pradesh",
+    "city": "Kandhla",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Manipur (Kangpokpi) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Kangpokpi",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Himachal Pradesh (Kangra) (NWR W 37 1)",
+    "state": "Himachal Pradesh",
+    "city": "Kangra",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Kanker) (BPL W 85 94)",
+    "state": "Chhattisgarh",
+    "city": "Kanker",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Uttar Pradesh (Kannauj) (KNP W 85 93)",
+    "state": "Uttar Pradesh",
+    "city": "Kannauj",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Kerala (Kannur) (KRL W 31 93)",
+    "state": "Kerala",
+    "city": "Kannur",
+    "areaCode": "KRL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (Kanpur Dehat) (KNP W 51 1)",
+    "state": "Uttar Pradesh",
+    "city": "Kanpur Dehat",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "51",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Kanyakumari) (CHE W 513 91)",
+    "state": "Tamil Nadu",
+    "city": "Kanyakumari",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "513",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Punjab (Kapurthala) (NWR W 104 3)",
+    "state": "Punjab",
+    "city": "Kapurthala",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "104",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Rajasthan (Karauli) (RJN W 780 93)",
+    "state": "Rajasthan",
+    "city": "Karauli",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "780",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Assam (Karbi Anglong) (SHL W 2 1)",
+    "state": "Assam",
+    "city": "Karbi Anglong",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Assam (Karimganj) (SHL W 16 21)",
+    "state": "Assam",
+    "city": "Karimganj",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "21"
+  },
+  {
+    "display": "Telangana (Karimnagar) (APR C 72 1)",
+    "state": "Telangana",
+    "city": "Karimnagar",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "72",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Haryana (Karnal) (NWR W 60 1)",
+    "state": "Haryana",
+    "city": "Karnal",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Karur) (CHE W 191 91)",
+    "state": "Tamil Nadu",
+    "city": "Karur",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "191",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Kerala (Kasaragod) (KRL W 31 92)",
+    "state": "Kerala",
+    "city": "Kasaragod",
+    "areaCode": "KRL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Kasganj) (KNP W 75 94)",
+    "state": "Uttar Pradesh",
+    "city": "Kasganj",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "75",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Jammu and Kashmir (Kathua) (NWR W 86 4)",
+    "state": "Jammu and Kashmir",
+    "city": "Kathua",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "86",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Bihar (Katihar) (PTN W 30 6)",
+    "state": "Bihar",
+    "city": "Katihar",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Madhya Pradesh (Katni) (BPL W 71 91)",
+    "state": "Madhya Pradesh",
+    "city": "Katni",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Jammu and Kashmir (Katra) (NWR W 86 91)",
+    "state": "Jammu and Kashmir",
+    "city": "Katra",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "86",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttar Pradesh (Kaushambi) (LKN W 20 91)",
+    "state": "Uttar Pradesh",
+    "city": "Kaushambi",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "20",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (Kendrapara) (BBN W 2 93)",
+    "state": "Odisha",
+    "city": "Kendrapara",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Odisha (Keonjhar) (BBN W 9 92)",
+    "state": "Odisha",
+    "city": "Keonjhar",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "9",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Bihar (Khagaria) (PTN W 30 91)",
+    "state": "Bihar",
+    "city": "Khagaria",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Chhattisgarh (khairagarh) (BPL W 85 1)",
+    "state": "Chhattisgarh",
+    "city": "khairagarh",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Telangana (Khammam) (APR W 63 91)",
+    "state": "Telangana",
+    "city": "Khammam",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "63",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Khandwa) (BPL W 619 4)",
+    "state": "Madhya Pradesh",
+    "city": "Khandwa",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "619",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Madhya Pradesh (Khargone) (BPL W 61 92)",
+    "state": "Madhya Pradesh",
+    "city": "Khargone",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Gujarat (Kheda) (GUJ W 304 96)",
+    "state": "Gujarat",
+    "city": "Kheda",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "304",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Uttar Pradesh (Kheri) (LKN W 43 2)",
+    "state": "Uttar Pradesh",
+    "city": "Kheri",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "43",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Odisha (khorda) (BBN W 2 4)",
+    "state": "Odisha",
+    "city": "khorda",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Odisha (Khordha) (BBN W 2 4)",
+    "state": "Odisha",
+    "city": "Khordha",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Tripura (Khowai) (SHL W 16 92)",
+    "state": "Tripura",
+    "city": "Khowai",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Himachal Pradesh (Kinnaur) (NWR W 37 1)",
+    "state": "Himachal Pradesh",
+    "city": "Kinnaur",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Nagaland (kiphire) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "kiphire",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Bihar (Kishanganj) (PTN W 30 94)",
+    "state": "Bihar",
+    "city": "Kishanganj",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Karnataka (Kodagu) (KAR W 321 91)",
+    "state": "Karnataka",
+    "city": "Kodagu",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "321",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Jharkhand (Koderma) (PTN W 57 5)",
+    "state": "Jharkhand",
+    "city": "Koderma",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "57",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Nagaland (kohima) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "kohima",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Assam (Kokrajhar) (SHL W 2 94)",
+    "state": "Assam",
+    "city": "Kokrajhar",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Karnataka (Kolar) (KAR W 126 93)",
+    "state": "Karnataka",
+    "city": "Kolar",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "126",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Mizoram (Kolasib) (SHL W 16 1)",
+    "state": "Mizoram",
+    "city": "Kolasib",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (KOLHAPUR) (PNE W 93 1)",
+    "state": "Maharashtra",
+    "city": "KOLHAPUR",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "93",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Kerala (Kollam) (KRL W 51 93)",
+    "state": "Kerala",
+    "city": "Kollam",
+    "areaCode": "KRL",
+    "aoType": "W",
+    "rangeCode": "51",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Telangana (Komaram Bheem Asifabad) (APR W 72 5)",
+    "state": "Telangana",
+    "city": "Komaram Bheem Asifabad",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Chhattisgarh (Kondagaon) (BPL W 85 92)",
+    "state": "Chhattisgarh",
+    "city": "Kondagaon",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Karnataka (Koppal) (KAR W 411 92)",
+    "state": "Karnataka",
+    "city": "Koppal",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "411",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Odisha (Koraput) (BBN W 7 95)",
+    "state": "Odisha",
+    "city": "Koraput",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Chhattisgarh (Korba) (BPL W 88 93)",
+    "state": "Chhattisgarh",
+    "city": "Korba",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "88",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Rajasthan (Kota) (RJN W 780 1)",
+    "state": "Rajasthan",
+    "city": "Kota",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "780",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Rajasthan (KOTPUTLI-BEHROR) (RJN W 110 92)",
+    "state": "Rajasthan",
+    "city": "KOTPUTLI-BEHROR",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "110",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Kerala (Kottayam) (KRL C 61 1)",
+    "state": "Kerala",
+    "city": "Kottayam",
+    "areaCode": "KRL",
+    "aoType": "C",
+    "rangeCode": "61",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Kerala (Kozhikode) (KRL C 32 1)",
+    "state": "Kerala",
+    "city": "Kozhikode",
+    "areaCode": "KRL",
+    "aoType": "C",
+    "rangeCode": "32",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Arunachal Pradesh (KRA DAADI) (SHL C 1 1)",
+    "state": "Arunachal Pradesh",
+    "city": "KRA DAADI",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "1",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (Krishna) (APR C 74 1)",
+    "state": "Andhra Pradesh",
+    "city": "Krishna",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "74",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Krishnagiri) (CHE W 231 93)",
+    "state": "Tamil Nadu",
+    "city": "Krishnagiri",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "231",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Jammu and Kashmir (Kulgam) (NWR C 88 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Kulgam",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Himachal Pradesh (Kullu) (NWR W 37 94)",
+    "state": "Himachal Pradesh",
+    "city": "Kullu",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Telangana (KUMRAM BHEEM ASIFABAD) (APR W 72 93)",
+    "state": "Telangana",
+    "city": "KUMRAM BHEEM ASIFABAD",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Jammu and Kashmir (Kupwara) (NWR C 88 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Kupwara",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (Kurnool) (APR C 77 1)",
+    "state": "Andhra Pradesh",
+    "city": "Kurnool",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "77",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Haryana (Kurukshetra) (NWR W 60 92)",
+    "state": "Haryana",
+    "city": "Kurukshetra",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Arunachal Pradesh (Kurung Kumey) (SHL W 25 1)",
+    "state": "Arunachal Pradesh",
+    "city": "Kurung Kumey",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Kushinagar) (LKN W 26 91)",
+    "state": "Uttar Pradesh",
+    "city": "Kushinagar",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Himachal Pradesh (Lahaul & Spiti) (NWR W 37 1)",
+    "state": "Himachal Pradesh",
+    "city": "Lahaul & Spiti",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Assam (Lakhimpur) (LKN W 43 2)",
+    "state": "Assam",
+    "city": "Lakhimpur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "43",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Uttar Pradesh (LAKHIMPUR KHERI) (LKN W 43 2)",
+    "state": "Uttar Pradesh",
+    "city": "LAKHIMPUR KHERI",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "43",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Bihar (Lakhisarai) (PTN W 30 93)",
+    "state": "Bihar",
+    "city": "Lakhisarai",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (Lalitpur) (KNP W 80 95)",
+    "state": "Uttar Pradesh",
+    "city": "Lalitpur",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "80",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Maharashtra (LATUR) (PNE W 27 92)",
+    "state": "Maharashtra",
+    "city": "LATUR",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Mizoram (LAWNGTLAI) (SHL W 16 1)",
+    "state": "Mizoram",
+    "city": "LAWNGTLAI",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Jharkhand (Lohardaga) (PTN W 51 1)",
+    "state": "Jharkhand",
+    "city": "Lohardaga",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "51",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Arunachal Pradesh (Lohit) (SHL W 25 91)",
+    "state": "Arunachal Pradesh",
+    "city": "Lohit",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Arunachal Pradesh (Longding) (SHL W 25 93)",
+    "state": "Arunachal Pradesh",
+    "city": "Longding",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Nagaland (longieng) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "longieng",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Nagaland (LONGLENG) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "LONGLENG",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Arunachal Pradesh (Lower Dibang Valley) (SHL W 25 1)",
+    "state": "Arunachal Pradesh",
+    "city": "Lower Dibang Valley",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Arunachal Pradesh (Lower Subansiri) (SHL W 1 92)",
+    "state": "Arunachal Pradesh",
+    "city": "Lower Subansiri",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Lucknow) (LKN W 91 1)",
+    "state": "Uttar Pradesh",
+    "city": "Lucknow",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Punjab (Ludhiana) (NWR C 110 1)",
+    "state": "Punjab",
+    "city": "Ludhiana",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "110",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Mizoram (lunglei) (SHL W 16 1)",
+    "state": "Mizoram",
+    "city": "lunglei",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (Madhepura) (PTN W 27 96)",
+    "state": "Bihar",
+    "city": "Madhepura",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Bihar (Madhubani) (PTN W 27 96)",
+    "state": "Bihar",
+    "city": "Madhubani",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Tamil Nadu (Madurai) (CHE W 571 12)",
+    "state": "Tamil Nadu",
+    "city": "Madurai",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "571",
+    "aoNumber": "12"
+  },
+  {
+    "display": "Telangana (Mahabubabad) (APR W 53 94)",
+    "state": "Telangana",
+    "city": "Mahabubabad",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "53",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Telangana (Mahabubnagar) (APR W 55 4)",
+    "state": "Telangana",
+    "city": "Mahabubnagar",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "55",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Uttar Pradesh (Maharajganj) (LKN W 26 4)",
+    "state": "Uttar Pradesh",
+    "city": "Maharajganj",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Chhattisgarh (MAHASAMUND) (BPL W 85 95)",
+    "state": "Chhattisgarh",
+    "city": "MAHASAMUND",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Haryana (Mahendragarh) (NWR W 107 92)",
+    "state": "Haryana",
+    "city": "Mahendragarh",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "107",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Gujarat (Mahisagar) (GUJ W 304 95)",
+    "state": "Gujarat",
+    "city": "Mahisagar",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "304",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Uttar Pradesh (Mahoba) (KNP W 54 92)",
+    "state": "Uttar Pradesh",
+    "city": "Mahoba",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "54",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Mainpuri) (KNP W 85 94)",
+    "state": "Uttar Pradesh",
+    "city": "Mainpuri",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Assam (Majuli) (SHL W 7 1)",
+    "state": "Assam",
+    "city": "Majuli",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Kerala (Malappuram) (KRL W 32 91)",
+    "state": "Kerala",
+    "city": "Malappuram",
+    "areaCode": "KRL",
+    "aoType": "W",
+    "rangeCode": "32",
+    "aoNumber": "91"
+  },
+  {
+    "display": "West Bengal (Malda) (WBG W 208 92)",
+    "state": "West Bengal",
+    "city": "Malda",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "208",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Punjab (malerkotla) (NWR W 47 94)",
+    "state": "Punjab",
+    "city": "malerkotla",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "47",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Odisha (Malkangiri) (BBN W 7 95)",
+    "state": "Odisha",
+    "city": "Malkangiri",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Telangana (Mancherial) (APR W 72 5)",
+    "state": "Telangana",
+    "city": "Mancherial",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Himachal Pradesh (Mandi) (NWR W 37 95)",
+    "state": "Himachal Pradesh",
+    "city": "Mandi",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Madhya Pradesh (Mandsaur) (BPL W 91 92)",
+    "state": "Madhya Pradesh",
+    "city": "Mandsaur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Karnataka (Mandya) (KAR W 3219 3)",
+    "state": "Karnataka",
+    "city": "Mandya",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "3219",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Punjab (Mansa) (NWR W 89 4)",
+    "state": "Punjab",
+    "city": "Mansa",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "89",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Uttar Pradesh (Mathura) (KNP W 75 91)",
+    "state": "Uttar Pradesh",
+    "city": "Mathura",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "75",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttar Pradesh (Mau) (LKN W 26 93)",
+    "state": "Uttar Pradesh",
+    "city": "Mau",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Tamil Nadu (Mayiladuthurai) (CHE W 192 31)",
+    "state": "Tamil Nadu",
+    "city": "Mayiladuthurai",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "192",
+    "aoNumber": "31"
+  },
+  {
+    "display": "Odisha (Mayurbhanj) (BBN W 9 91)",
+    "state": "Odisha",
+    "city": "Mayurbhanj",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "9",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Telangana (Medak) (APR W 58 4)",
+    "state": "Telangana",
+    "city": "Medak",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "58",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Telangana (Medchal) (APR W 50 1)",
+    "state": "Telangana",
+    "city": "Medchal",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "50",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Meerut) (KNP W 14 1)",
+    "state": "Uttar Pradesh",
+    "city": "Meerut",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "14",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Mehsana) (GUJ W 123 93)",
+    "state": "Gujarat",
+    "city": "Mehsana",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "123",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (Mirzapur) (LKN W 23 94)",
+    "state": "Uttar Pradesh",
+    "city": "Mirzapur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "23",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Punjab (Moga) (NWR W 110 96)",
+    "state": "Punjab",
+    "city": "Moga",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "110",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Punjab (Mohali) (NWR W 41 91)",
+    "state": "Punjab",
+    "city": "Mohali",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "41",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Chhattisgarh (Mohla Manpur ab.chowki) (BPL W 88 93)",
+    "state": "Chhattisgarh",
+    "city": "Mohla Manpur ab.chowki",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "88",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Nagaland (mokokchung) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "mokokchung",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Nagaland (Mon) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "Mon",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Uttar Pradesh (Moradabad) (LKN W 71 1)",
+    "state": "Uttar Pradesh",
+    "city": "Moradabad",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Morbi) (GUJ W 201 93)",
+    "state": "Gujarat",
+    "city": "Morbi",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "201",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Madhya Pradesh (Morena) (BPL W 41 95)",
+    "state": "Madhya Pradesh",
+    "city": "Morena",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "41",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Assam (Morigaon) (SHL W 19 5)",
+    "state": "Assam",
+    "city": "Morigaon",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "19",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Punjab (Muktsar) (NWR W 89 92)",
+    "state": "Punjab",
+    "city": "Muktsar",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "89",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Telangana (MULUGU) (APR C 50 1)",
+    "state": "Telangana",
+    "city": "MULUGU",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "50",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (Mumbai) (MUM C 272 1)",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "areaCode": "MUM",
+    "aoType": "C",
+    "rangeCode": "272",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Mungeli) (BPL W 88 1)",
+    "state": "Chhattisgarh",
+    "city": "Mungeli",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (Munger) (PTN W 30 92)",
+    "state": "Bihar",
+    "city": "Munger",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (MURADNAGAR) (KNP C 17 1)",
+    "state": "Uttar Pradesh",
+    "city": "MURADNAGAR",
+    "areaCode": "KNP",
+    "aoType": "C",
+    "rangeCode": "17",
+    "aoNumber": "1"
+  },
+  {
+    "display": "West Bengal (Murshidabad) (WBG W 156 93)",
+    "state": "West Bengal",
+    "city": "Murshidabad",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "156",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (Muzaffarnagar) (KNP C 23 1)",
+    "state": "Uttar Pradesh",
+    "city": "Muzaffarnagar",
+    "areaCode": "KNP",
+    "aoType": "C",
+    "rangeCode": "23",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Odisha (Nabarangpur) (BBN W 7 95)",
+    "state": "Odisha",
+    "city": "Nabarangpur",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "95"
+  },
+  {
+    "display": "West Bengal (Nadia) (WBG W 156 92)",
+    "state": "West Bengal",
+    "city": "Nadia",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "156",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Assam (Nagaon) (SHL W 19 3)",
+    "state": "Assam",
+    "city": "Nagaon",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "19",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Tamil Nadu (Nagapattinam) (CHE W 192 31)",
+    "state": "Tamil Nadu",
+    "city": "Nagapattinam",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "192",
+    "aoNumber": "31"
+  },
+  {
+    "display": "Telangana (Nagarkurnool) (APR W 55 4)",
+    "state": "Telangana",
+    "city": "Nagarkurnool",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "55",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Rajasthan (Nagaur) (RJN W 540 94)",
+    "state": "Rajasthan",
+    "city": "Nagaur",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "540",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Maharashtra (Nagpur) (NGP W 1 5)",
+    "state": "Maharashtra",
+    "city": "Nagpur",
+    "areaCode": "NGP",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Uttarakhand (Nainital) (LKN W 90 96)",
+    "state": "Uttarakhand",
+    "city": "Nainital",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "90",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Bihar (Nalanda) (PTN W 21 92)",
+    "state": "Bihar",
+    "city": "Nalanda",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "21",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Assam (Nalbari) (SHL W 2 13)",
+    "state": "Assam",
+    "city": "Nalbari",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "13"
+  },
+  {
+    "display": "Telangana (Nalgonda) (APR W 53 91)",
+    "state": "Telangana",
+    "city": "Nalgonda",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "53",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Tamil Nadu (Namakkal) (CHE W 65 93)",
+    "state": "Tamil Nadu",
+    "city": "Namakkal",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "65",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Arunachal Pradesh (Namsai) (SHL W 25 91)",
+    "state": "Arunachal Pradesh",
+    "city": "Namsai",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Maharashtra (NANDED) (PNE W 27 93)",
+    "state": "Maharashtra",
+    "city": "NANDED",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Maharashtra (Nandurbar) (PNE W 25 1)",
+    "state": "Maharashtra",
+    "city": "Nandurbar",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Narayanpur) (BPL W 85 92)",
+    "state": "Chhattisgarh",
+    "city": "Narayanpur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Gujarat (Narmada) (GUJ W 304 91)",
+    "state": "Gujarat",
+    "city": "Narmada",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "304",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Narsinghpur) (BPL W 72 95)",
+    "state": "Madhya Pradesh",
+    "city": "Narsinghpur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Madhya Pradesh (Narsingpur) (BPL W 72 95)",
+    "state": "Madhya Pradesh",
+    "city": "Narsingpur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Gujarat (Navsari) (GUJ W 412 4)",
+    "state": "Gujarat",
+    "city": "Navsari",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "412",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Bihar (Nawada) (PTN W 21 92)",
+    "state": "Bihar",
+    "city": "Nawada",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "21",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Punjab (Nawanshahr) (NWR W 101 91)",
+    "state": "Punjab",
+    "city": "Nawanshahr",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "101",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (Nayagarh) (BBN W 2 4)",
+    "state": "Odisha",
+    "city": "Nayagarh",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Madhya Pradesh (Neemuch) (BPL W 919 3)",
+    "state": "Madhya Pradesh",
+    "city": "Neemuch",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "919",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Andhra Pradesh (NELLORE) (APR C 80 1)",
+    "state": "Andhra Pradesh",
+    "city": "NELLORE",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "80",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Delhi (NeW Delhi) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "NeW Delhi",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (nidjinta mahabub nagar) (APR W 55 4)",
+    "state": "Andhra Pradesh",
+    "city": "nidjinta mahabub nagar",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "55",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Tamil Nadu (Nilgiris) (CHE W 62 93)",
+    "state": "Tamil Nadu",
+    "city": "Nilgiris",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "62",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Telangana (Nirmal) (APR W 72 92)",
+    "state": "Telangana",
+    "city": "Nirmal",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Madhya Pradesh (NIWARI) (BPL C 33 1)",
+    "state": "Madhya Pradesh",
+    "city": "NIWARI",
+    "areaCode": "BPL",
+    "aoType": "C",
+    "rangeCode": "33",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Telangana (Nizamabad) (APR C 72 91)",
+    "state": "Telangana",
+    "city": "Nizamabad",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "72",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Manipur (Noney) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Noney",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "West Bengal (North 24 Parganas) (WBG W 156 1)",
+    "state": "West Bengal",
+    "city": "North 24 Parganas",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "156",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Assam (NORTH CACHAR HILLS) (SHL W 16 93)",
+    "state": "Assam",
+    "city": "NORTH CACHAR HILLS",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Delhi (NORTH DELHI) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "NORTH DELHI",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "West Bengal (North Dinajpur) (WBG W 208 94)",
+    "state": "West Bengal",
+    "city": "North Dinajpur",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "208",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Delhi (NORTH EAST DELHI) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "NORTH EAST DELHI",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Meghalaya (North Garo Hills) (SHL W 15 1)",
+    "state": "Meghalaya",
+    "city": "North Garo Hills",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "15",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Sikkim (North Sikkim) (WBG C 208 92)",
+    "state": "Sikkim",
+    "city": "North Sikkim",
+    "areaCode": "WBG",
+    "aoType": "C",
+    "rangeCode": "208",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Tripura (North Tripura) (SHL W 16 93)",
+    "state": "Tripura",
+    "city": "North Tripura",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Delhi (NORTH WEST) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "NORTH WEST",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Delhi (NORTH WEST) (DEL C 57 1)",
+    "state": "Delhi",
+    "city": "NORTH WEST",
+    "areaCode": "DEL",
+    "aoType": "C",
+    "rangeCode": "57",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Delhi (NORTH WEST DELHI) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "NORTH WEST DELHI",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (NTR DIST) (APR C 74 1)",
+    "state": "Andhra Pradesh",
+    "city": "NTR DIST",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "74",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Odisha (Nuapada) (BBN C 7 8)",
+    "state": "Odisha",
+    "city": "Nuapada",
+    "areaCode": "BBN",
+    "aoType": "C",
+    "rangeCode": "7",
+    "aoNumber": "8"
+  },
+  {
+    "display": "Haryana (Nuh) (NWR W 53 1)",
+    "state": "Haryana",
+    "city": "Nuh",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "53",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Delhi (OLD Delhi) (DEL C 31 1)",
+    "state": "Delhi",
+    "city": "OLD Delhi",
+    "areaCode": "DEL",
+    "aoType": "C",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Jharkhand (Pakur) (PTN W 60 95)",
+    "state": "Jharkhand",
+    "city": "Pakur",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Kerala (Palakkad) (KRL W 21 93)",
+    "state": "Kerala",
+    "city": "Palakkad",
+    "areaCode": "KRL",
+    "aoType": "W",
+    "rangeCode": "21",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Maharashtra (Palghar) (PNE W 70 91)",
+    "state": "Maharashtra",
+    "city": "Palghar",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "70",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Rajasthan (Pali) (RJN W 510 95)",
+    "state": "Rajasthan",
+    "city": "Pali",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "510",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Haryana (Palwal) (NWR W 519 2)",
+    "state": "Haryana",
+    "city": "Palwal",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "519",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Haryana (Panchkula) (NWR W 65 1)",
+    "state": "Haryana",
+    "city": "Panchkula",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "65",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Panchmahal) (GUJ W 304 94)",
+    "state": "Gujarat",
+    "city": "Panchmahal",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "304",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Haryana (Panipat) (NWR W 60 93)",
+    "state": "Haryana",
+    "city": "Panipat",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Madhya Pradesh (Panna) (BPL W 71 94)",
+    "state": "Madhya Pradesh",
+    "city": "Panna",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Arunachal Pradesh (Papum Pare) (SHL W 25 93)",
+    "state": "Arunachal Pradesh",
+    "city": "Papum Pare",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Maharashtra (Parbhani) (PNE W 27 94)",
+    "state": "Maharashtra",
+    "city": "Parbhani",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "94"
+  },
+  {
+    "display": "West Bengal (Paschim Bardhaman) (WBG W 201 1)",
+    "state": "West Bengal",
+    "city": "Paschim Bardhaman",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "201",
+    "aoNumber": "1"
+  },
+  {
+    "display": "West Bengal (Paschim Medinipur) (WBG W 139 91)",
+    "state": "West Bengal",
+    "city": "Paschim Medinipur",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "139",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Gujarat (Patan) (GUJ W 123 92)",
+    "state": "Gujarat",
+    "city": "Patan",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "123",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Kerala (Pathanamthitta) (KRL W 61 94)",
+    "state": "Kerala",
+    "city": "Pathanamthitta",
+    "areaCode": "KRL",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Punjab (Pathankot) (NWR W 80 92)",
+    "state": "Punjab",
+    "city": "Pathankot",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "80",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Punjab (Patiala) (NWR C 47 1)",
+    "state": "Punjab",
+    "city": "Patiala",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "47",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttarakhand (Pauri Garhwal) (KNP W 26 93)",
+    "state": "Uttarakhand",
+    "city": "Pauri Garhwal",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Telangana (Peddapalli) (APR C 72 1)",
+    "state": "Telangana",
+    "city": "Peddapalli",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "72",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Perambalur) (CHE W 191 11)",
+    "state": "Tamil Nadu",
+    "city": "Perambalur",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "191",
+    "aoNumber": "11"
+  },
+  {
+    "display": "Nagaland (Peren) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "Peren",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Nagaland (phek) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "phek",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Manipur (Pherzawl) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Pherzawl",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Pilibhit) (LKN W 41 92)",
+    "state": "Uttar Pradesh",
+    "city": "Pilibhit",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "41",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttarakhand (Pithoragarh) (LKN W 90 98)",
+    "state": "Uttarakhand",
+    "city": "Pithoragarh",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "90",
+    "aoNumber": "98"
+  },
+  {
+    "display": "Pondicherry (Pondicherry) (CHE W 171 1)",
+    "state": "Pondicherry",
+    "city": "Pondicherry",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "171",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Porbandar) (GUJ W 221 95)",
+    "state": "Gujarat",
+    "city": "Porbandar",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "221",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Andaman and Nicobar Islands (PORT BLAIR) (WBG W 101 93)",
+    "state": "Andaman and Nicobar Islands",
+    "city": "PORT BLAIR",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "101",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Andhra Pradesh (Prakasam) (APR W 79 4)",
+    "state": "Andhra Pradesh",
+    "city": "Prakasam",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "79",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Uttar Pradesh (Pratapgarh) (LKN W 26 92)",
+    "state": "Uttar Pradesh",
+    "city": "Pratapgarh",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Prayagraj) (LKN C 20 2)",
+    "state": "Uttar Pradesh",
+    "city": "Prayagraj",
+    "areaCode": "LKN",
+    "aoType": "C",
+    "rangeCode": "20",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Tamil Nadu (Pudukkottai) (CHE W 192 91)",
+    "state": "Tamil Nadu",
+    "city": "Pudukkottai",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "192",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Jammu and Kashmir (Pulwama) (NWR C 88 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Pulwama",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "West Bengal (Purba Burdwan) (WBG W 201 1)",
+    "state": "West Bengal",
+    "city": "Purba Burdwan",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "201",
+    "aoNumber": "1"
+  },
+  {
+    "display": "West Bengal (Purba Medinipur) (WBG W 139 91)",
+    "state": "West Bengal",
+    "city": "Purba Medinipur",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "139",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (Puri) (BBN W 19 5)",
+    "state": "Odisha",
+    "city": "Puri",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "19",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Bihar (Purnia) (PTN W 30 94)",
+    "state": "Bihar",
+    "city": "Purnia",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "94"
+  },
+  {
+    "display": "West Bengal (Purulia) (WBG W 196 93)",
+    "state": "West Bengal",
+    "city": "Purulia",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "196",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (RAEBAREILLY) (LKN W 61 94)",
+    "state": "Uttar Pradesh",
+    "city": "RAEBAREILLY",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Uttar Pradesh (Raebareli) (LKN W 61 94)",
+    "state": "Uttar Pradesh",
+    "city": "Raebareli",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Karnataka (Raichur) (KAR W 421 6)",
+    "state": "Karnataka",
+    "city": "Raichur",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "421",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Maharashtra (Raigad) (PNE C 81 1)",
+    "state": "Maharashtra",
+    "city": "Raigad",
+    "areaCode": "PNE",
+    "aoType": "C",
+    "rangeCode": "81",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (Raigarh) (BPL W 88 3)",
+    "state": "Chhattisgarh",
+    "city": "Raigarh",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "88",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Chhattisgarh (Raipur) (BPL W 85 1)",
+    "state": "Chhattisgarh",
+    "city": "Raipur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Raisen) (BPL W 26 93)",
+    "state": "Madhya Pradesh",
+    "city": "Raisen",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Telangana (Rajanna Sircilla) (APR C 72 1)",
+    "state": "Telangana",
+    "city": "Rajanna Sircilla",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "72",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Rajgarh) (BPL W 91 96)",
+    "state": "Madhya Pradesh",
+    "city": "Rajgarh",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Chhattisgarh (Rajnandgaon) (BPL W 87 91)",
+    "state": "Chhattisgarh",
+    "city": "Rajnandgaon",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "87",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Rajasthan (Rajsamand) (RJN W 720 3)",
+    "state": "Rajasthan",
+    "city": "Rajsamand",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "720",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Karnataka (Ramanagara) (KAR W 125 94)",
+    "state": "Karnataka",
+    "city": "Ramanagara",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "125",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Tamil Nadu (Ramanathapuram) (CHE W 511 92)",
+    "state": "Tamil Nadu",
+    "city": "Ramanathapuram",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "511",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Jharkhand (Ramgarh) (PTN W 57 92)",
+    "state": "Jharkhand",
+    "city": "Ramgarh",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "57",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Rampur) (LKN W 71 4)",
+    "state": "Uttar Pradesh",
+    "city": "Rampur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Telangana (Rangareddy) (APR W 50 1)",
+    "state": "Telangana",
+    "city": "Rangareddy",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "50",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Ranipet) (CHE C 146 1)",
+    "state": "Tamil Nadu",
+    "city": "Ranipet",
+    "areaCode": "CHE",
+    "aoType": "C",
+    "rangeCode": "146",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Ratlam) (BPL W 91 95)",
+    "state": "Madhya Pradesh",
+    "city": "Ratlam",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Maharashtra (Ratnagiri) (PNE W 93 6)",
+    "state": "Maharashtra",
+    "city": "Ratnagiri",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "93",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Odisha (Rayagada) (BBN W 7 97)",
+    "state": "Odisha",
+    "city": "Rayagada",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "97"
+  },
+  {
+    "display": "Jammu and Kashmir (Reasi) (NWR W 86 91)",
+    "state": "Jammu and Kashmir",
+    "city": "Reasi",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "86",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Rewa) (BPL W 71 92)",
+    "state": "Madhya Pradesh",
+    "city": "Rewa",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Haryana (Rewari) (NWR W 107 93)",
+    "state": "Haryana",
+    "city": "Rewari",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "107",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Meghalaya (RI BHOI) (SHL W 15 21)",
+    "state": "Meghalaya",
+    "city": "RI BHOI",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "15",
+    "aoNumber": "21"
+  },
+  {
+    "display": "Uttarakhand (RISHIKESH) (KNP W 26 92)",
+    "state": "Uttarakhand",
+    "city": "RISHIKESH",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Maharashtra (RISOD) (DLC C 283 2)",
+    "state": "Maharashtra",
+    "city": "RISOD",
+    "areaCode": "DLC",
+    "aoType": "C",
+    "rangeCode": "283",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Himachal Pradesh (ROHAR MANDI) (NWR W 37 95)",
+    "state": "Himachal Pradesh",
+    "city": "ROHAR MANDI",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Bihar (Rohtas) (PTN W 24 93)",
+    "state": "Bihar",
+    "city": "Rohtas",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "24",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttarakhand (ROORKEE) (KNP W 26 91)",
+    "state": "Uttarakhand",
+    "city": "ROORKEE",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttarakhand (Rudraprayag) (NWR C 88 1)",
+    "state": "Uttarakhand",
+    "city": "Rudraprayag",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Punjab (Rupnagar) (NWR W 41 94)",
+    "state": "Punjab",
+    "city": "Rupnagar",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "41",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Andhra Pradesh (S P Sriramulu Nellore) (APR C 80 1)",
+    "state": "Andhra Pradesh",
+    "city": "S P Sriramulu Nellore",
+    "areaCode": "APR",
+    "aoType": "C",
+    "rangeCode": "80",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Sabarkantha) (GUJ W 104 93)",
+    "state": "Gujarat",
+    "city": "Sabarkantha",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "104",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Madhya Pradesh (Sagar) (BPL W 71 93)",
+    "state": "Madhya Pradesh",
+    "city": "Sagar",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (Saharanpur) (KNP W 23 96)",
+    "state": "Uttar Pradesh",
+    "city": "Saharanpur",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "23",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Bihar (Saharsa) (PTN W 30 95)",
+    "state": "Bihar",
+    "city": "Saharsa",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Jharkhand (Sahibganj) (PTN W 60 95)",
+    "state": "Jharkhand",
+    "city": "Sahibganj",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Mizoram (SAIHA) (SHL W 16 1)",
+    "state": "Mizoram",
+    "city": "SAIHA",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Chhattisgarh (SAKTI) (BPL W 88 3)",
+    "state": "Chhattisgarh",
+    "city": "SAKTI",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "88",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Bihar (Samastipur) (PTN W 27 95)",
+    "state": "Bihar",
+    "city": "Samastipur",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Odisha (Sambalpur) (BBN C 7 8)",
+    "state": "Odisha",
+    "city": "Sambalpur",
+    "areaCode": "BBN",
+    "aoType": "C",
+    "rangeCode": "7",
+    "aoNumber": "8"
+  },
+  {
+    "display": "Uttar Pradesh (Sambhal) (LKN W 71 2)",
+    "state": "Uttar Pradesh",
+    "city": "Sambhal",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Telangana (Sangareddy) (APR W 58 4)",
+    "state": "Telangana",
+    "city": "Sangareddy",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "58",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Maharashtra (Sangli) (PNE C 94 1)",
+    "state": "Maharashtra",
+    "city": "Sangli",
+    "areaCode": "PNE",
+    "aoType": "C",
+    "rangeCode": "94",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Punjab (Sangrur) (NWR W 47 94)",
+    "state": "Punjab",
+    "city": "Sangrur",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "47",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Uttar Pradesh (Sant Kabir Nagar) (LKN W 61 95)",
+    "state": "Uttar Pradesh",
+    "city": "Sant Kabir Nagar",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Bihar (Saran) (PTN W 27 91)",
+    "state": "Bihar",
+    "city": "Saran",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Chhattisgarh (SARANGARH BILAIGARH) (BPL W 87 1)",
+    "state": "Chhattisgarh",
+    "city": "SARANGARH BILAIGARH",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "87",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (Satara) (PNE W 62 3)",
+    "state": "Maharashtra",
+    "city": "Satara",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "62",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Madhya Pradesh (Satna) (BPL W 71 94)",
+    "state": "Madhya Pradesh",
+    "city": "Satna",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Delhi (SAUTH WEST) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "SAUTH WEST",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Rajasthan (Sawai Madhopur) (RJN W 780 91)",
+    "state": "Rajasthan",
+    "city": "Sawai Madhopur",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "780",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Sehore) (BPL W 33 5)",
+    "state": "Madhya Pradesh",
+    "city": "Sehore",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "33",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Manipur (Senapati) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Senapati",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Seoni) (BPL W 72 96)",
+    "state": "Madhya Pradesh",
+    "city": "Seoni",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "72",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Tripura (Sepahijala) (SHL W 16 92)",
+    "state": "Tripura",
+    "city": "Sepahijala",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Jharkhand (Seraikela-Kharsawan) (PTN W 54 1)",
+    "state": "Jharkhand",
+    "city": "Seraikela-Kharsawan",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "54",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Delhi (Shahdara Delhi) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "Shahdara Delhi",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Shahdol) (BPL W 71 96)",
+    "state": "Madhya Pradesh",
+    "city": "Shahdol",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Uttar Pradesh (Shahjahanpur) (LKN W 41 13)",
+    "state": "Uttar Pradesh",
+    "city": "Shahjahanpur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "41",
+    "aoNumber": "13"
+  },
+  {
+    "display": "Madhya Pradesh (Shajapur) (BPL W 91 94)",
+    "state": "Madhya Pradesh",
+    "city": "Shajapur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Uttar Pradesh (Shamli) (KNP W 23 4)",
+    "state": "Uttar Pradesh",
+    "city": "Shamli",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "23",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Bihar (Sheikhpura) (PTN W 30 91)",
+    "state": "Bihar",
+    "city": "Sheikhpura",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Bihar (Sheohar) (PTN W 27 93)",
+    "state": "Bihar",
+    "city": "Sheohar",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Madhya Pradesh (Sheopur) (BPL W 33 5)",
+    "state": "Madhya Pradesh",
+    "city": "Sheopur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "33",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Himachal Pradesh (Shimla) (NWR W 37 1)",
+    "state": "Himachal Pradesh",
+    "city": "Shimla",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Karnataka (Shivamogga) (KAR W 224 91)",
+    "state": "Karnataka",
+    "city": "Shivamogga",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "224",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Shivpuri) (BPL C 41 1)",
+    "state": "Madhya Pradesh",
+    "city": "Shivpuri",
+    "areaCode": "BPL",
+    "aoType": "C",
+    "rangeCode": "41",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Jammu and Kashmir (Shopian) (NWR C 88 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Shopian",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Shravasti) (LKN W 23 96)",
+    "state": "Uttar Pradesh",
+    "city": "Shravasti",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "23",
+    "aoNumber": "96"
+  },
+  {
+    "display": "Uttar Pradesh (SHRAWASTI) (LKN W 61 93)",
+    "state": "Uttar Pradesh",
+    "city": "SHRAWASTI",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Arunachal Pradesh (SIANG) (SHL W 25 91)",
+    "state": "Arunachal Pradesh",
+    "city": "SIANG",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttar Pradesh (siddharthnagar) (LKN W 91 4)",
+    "state": "Uttar Pradesh",
+    "city": "siddharthnagar",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Uttar Pradesh (siddhatnagar) (LKN C 91 1)",
+    "state": "Uttar Pradesh",
+    "city": "siddhatnagar",
+    "areaCode": "LKN",
+    "aoType": "C",
+    "rangeCode": "91",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Telangana (Siddipet) (APR W 59 91)",
+    "state": "Telangana",
+    "city": "Siddipet",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "59",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Madhya Pradesh (Sidhi) (BPL W 71 92)",
+    "state": "Madhya Pradesh",
+    "city": "Sidhi",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Rajasthan (Sikar) (RJN W 107 93)",
+    "state": "Rajasthan",
+    "city": "Sikar",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "107",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Dadra and Nagar Haveli (SILVAsSA) (GUJ W 410 92)",
+    "state": "Dadra and Nagar Haveli",
+    "city": "SILVAsSA",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "410",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Maharashtra (Sindhudurg) (PNE W 93 92)",
+    "state": "Maharashtra",
+    "city": "Sindhudurg",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "93",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Madhya Pradesh (Singrauli) (BPL W 71 97)",
+    "state": "Madhya Pradesh",
+    "city": "Singrauli",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "71",
+    "aoNumber": "97"
+  },
+  {
+    "display": "Himachal Pradesh (Sirmaur) (NWR W 37 8)",
+    "state": "Himachal Pradesh",
+    "city": "Sirmaur",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "8"
+  },
+  {
+    "display": "Rajasthan (Sirohi) (RJN W 510 92)",
+    "state": "Rajasthan",
+    "city": "Sirohi",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "510",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Haryana (Sirsa) (NWR W 57 95)",
+    "state": "Haryana",
+    "city": "Sirsa",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "57",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Bihar (Sitamarhi) (PTN W 27 93)",
+    "state": "Bihar",
+    "city": "Sitamarhi",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Uttar Pradesh (Sitapur) (LKN W 43 1)",
+    "state": "Uttar Pradesh",
+    "city": "Sitapur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "43",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Sivaganga) (CHE W 511 91)",
+    "state": "Tamil Nadu",
+    "city": "Sivaganga",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "511",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Assam (Sivasagar) (SHL W 7 91)",
+    "state": "Assam",
+    "city": "Sivasagar",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Bihar (Siwan) (PTN W 27 92)",
+    "state": "Bihar",
+    "city": "Siwan",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Maharashtra (Solapur) (PNE C 63 1)",
+    "state": "Maharashtra",
+    "city": "Solapur",
+    "areaCode": "PNE",
+    "aoType": "C",
+    "rangeCode": "63",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Sonbhadra) (LKN W 23 95)",
+    "state": "Uttar Pradesh",
+    "city": "Sonbhadra",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "23",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Haryana (Sonipat) (NWR W 60 94)",
+    "state": "Haryana",
+    "city": "Sonipat",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "60",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Assam (Sonitpur) (SHL W 1 91)",
+    "state": "Assam",
+    "city": "Sonitpur",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "91"
+  },
+  {
+    "display": "West Bengal (South 24 Parganas) (WBG W 156 1)",
+    "state": "West Bengal",
+    "city": "South 24 Parganas",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "156",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Delhi (SOUTH DELHI) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "SOUTH DELHI",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Delhi (South East Delhi) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "South East Delhi",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Assam (South Salamara Mankachar) (SHL W 2 92)",
+    "state": "Assam",
+    "city": "South Salamara Mankachar",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Sikkim (South Sikkim) (WBG C 208 92)",
+    "state": "Sikkim",
+    "city": "South Sikkim",
+    "areaCode": "WBG",
+    "aoType": "C",
+    "rangeCode": "208",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Tripura (South Tripura) (SHL W 16 92)",
+    "state": "Tripura",
+    "city": "South Tripura",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Delhi (SOUTH WEST DELHI) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "SOUTH WEST DELHI",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Rajasthan (Sri Ganganagar) (RJN W 570 92)",
+    "state": "Rajasthan",
+    "city": "Sri Ganganagar",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "570",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Punjab (SRI MUKTSAR SAHIB) (NWR W 89 92)",
+    "state": "Punjab",
+    "city": "SRI MUKTSAR SAHIB",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "89",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Andhra Pradesh (sri sathya sai) (APR W 77 91)",
+    "state": "Andhra Pradesh",
+    "city": "sri sathya sai",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "77",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Andhra Pradesh (Srikakulam) (APR W 85 95)",
+    "state": "Andhra Pradesh",
+    "city": "Srikakulam",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Jammu and Kashmir (Srinagar) (NWR C 88 1)",
+    "state": "Jammu and Kashmir",
+    "city": "Srinagar",
+    "areaCode": "NWR",
+    "aoType": "C",
+    "rangeCode": "88",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Odisha (Subarnapur Sonepur) (BBN C 7 8)",
+    "state": "Odisha",
+    "city": "Subarnapur Sonepur",
+    "areaCode": "BBN",
+    "aoType": "C",
+    "rangeCode": "7",
+    "aoNumber": "8"
+  },
+  {
+    "display": "Chhattisgarh (Sukma) (BPL W 85 94)",
+    "state": "Chhattisgarh",
+    "city": "Sukma",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Uttar Pradesh (Sultanpur) (LKN W 61 91)",
+    "state": "Uttar Pradesh",
+    "city": "Sultanpur",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "61",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Odisha (Sundargarh) (BBN W 9 1)",
+    "state": "Odisha",
+    "city": "Sundargarh",
+    "areaCode": "BBN",
+    "aoType": "W",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (Supaul) (PTN W 30 95)",
+    "state": "Bihar",
+    "city": "Supaul",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "30",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Chhattisgarh (Surajpur) (BPL W 85 91)",
+    "state": "Chhattisgarh",
+    "city": "Surajpur",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Gujarat (Surat) (GUJ C 401 1)",
+    "state": "Gujarat",
+    "city": "Surat",
+    "areaCode": "GUJ",
+    "aoType": "C",
+    "rangeCode": "401",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (Surendranagar) (GUJ W 108 92)",
+    "state": "Gujarat",
+    "city": "Surendranagar",
+    "areaCode": "GUJ",
+    "aoType": "W",
+    "rangeCode": "108",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Chhattisgarh (Surguja) (BPL W 88 91)",
+    "state": "Chhattisgarh",
+    "city": "Surguja",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "88",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Telangana (Suryapet) (APR W 53 92)",
+    "state": "Telangana",
+    "city": "Suryapet",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "53",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Manipur (Tamenglong) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Tamenglong",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Assam (TAMULPUR) (SHL W 1 2)",
+    "state": "Assam",
+    "city": "TAMULPUR",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Punjab (Tarn Taran) (NWR W 80 3)",
+    "state": "Punjab",
+    "city": "Tarn Taran",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "80",
+    "aoNumber": "3"
+  },
+  {
+    "display": "Arunachal Pradesh (Tawang) (SHL W 1 91)",
+    "state": "Arunachal Pradesh",
+    "city": "Tawang",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttarakhand (Tehri Garhwal) (KNP W 26 95)",
+    "state": "Uttarakhand",
+    "city": "Tehri Garhwal",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "95"
+  },
+  {
+    "display": "Manipur (Tengnoupal) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Tengnoupal",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Maharashtra (Thane) (PNE W 70 1)",
+    "state": "Maharashtra",
+    "city": "Thane",
+    "areaCode": "PNE",
+    "aoType": "W",
+    "rangeCode": "70",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Thanjavur) (CHE W 192 16)",
+    "state": "Tamil Nadu",
+    "city": "Thanjavur",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "192",
+    "aoNumber": "16"
+  },
+  {
+    "display": "Tamil Nadu (Theni) (CHE W 501 92)",
+    "state": "Tamil Nadu",
+    "city": "Theni",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "501",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Kerala (Thiruvananthapuram) (KRL W 51 1)",
+    "state": "Kerala",
+    "city": "Thiruvananthapuram",
+    "areaCode": "KRL",
+    "aoType": "W",
+    "rangeCode": "51",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Thoothukudi Tuticorin) (CHE W 513 93)",
+    "state": "Tamil Nadu",
+    "city": "Thoothukudi Tuticorin",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "513",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Manipur (Thoubal) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Thoubal",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Kerala (Thrissur) (KRL C 21 1)",
+    "state": "Kerala",
+    "city": "Thrissur",
+    "areaCode": "KRL",
+    "aoType": "C",
+    "rangeCode": "21",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Tikamgarh) (BPL W 41 4)",
+    "state": "Madhya Pradesh",
+    "city": "Tikamgarh",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "41",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Assam (Tinsukia) (SHL W 25 92)",
+    "state": "Assam",
+    "city": "Tinsukia",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Arunachal Pradesh (Tirap) (SHL W 25 91)",
+    "state": "Arunachal Pradesh",
+    "city": "Tirap",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Tamil Nadu (Tirupathur) (CHE C 146 1)",
+    "state": "Tamil Nadu",
+    "city": "Tirupathur",
+    "areaCode": "CHE",
+    "aoType": "C",
+    "rangeCode": "146",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Tiruppur) (CHE C 68 1)",
+    "state": "Tamil Nadu",
+    "city": "Tiruppur",
+    "areaCode": "CHE",
+    "aoType": "C",
+    "rangeCode": "68",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tamil Nadu (Tiruvallur) (CHE W 141 92)",
+    "state": "Tamil Nadu",
+    "city": "Tiruvallur",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "141",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Tamil Nadu (Tiruvannamalai) (CHE W 146 21)",
+    "state": "Tamil Nadu",
+    "city": "Tiruvannamalai",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "146",
+    "aoNumber": "21"
+  },
+  {
+    "display": "Tamil Nadu (Tiruvarur) (CHE W 192 21)",
+    "state": "Tamil Nadu",
+    "city": "Tiruvarur",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "192",
+    "aoNumber": "21"
+  },
+  {
+    "display": "Rajasthan (Tonk) (RJN W 107 5)",
+    "state": "Rajasthan",
+    "city": "Tonk",
+    "areaCode": "RJN",
+    "aoType": "W",
+    "rangeCode": "107",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Assam (TRIPURA) (SHL W 2 13)",
+    "state": "Assam",
+    "city": "TRIPURA",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "13"
+  },
+  {
+    "display": "Nagaland (tuensang) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "tuensang",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Karnataka (Tumakuru Tumkur) (KAR W 212 91)",
+    "state": "Karnataka",
+    "city": "Tumakuru Tumkur",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "212",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Assam (Udalguri) (SHL W 19 4)",
+    "state": "Assam",
+    "city": "Udalguri",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "19",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Uttarakhand (Udham Singh Nagar) (LKN W 90 92)",
+    "state": "Uttarakhand",
+    "city": "Udham Singh Nagar",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "90",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Jammu and Kashmir (Udhampur) (NWR W 88 91)",
+    "state": "Jammu and Kashmir",
+    "city": "Udhampur",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "88",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Karnataka (Udupi) (KAR W 5319 2)",
+    "state": "Karnataka",
+    "city": "Udupi",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "5319",
+    "aoNumber": "2"
+  },
+  {
+    "display": "Madhya Pradesh (Ujain) (BPL W 91 1)",
+    "state": "Madhya Pradesh",
+    "city": "Ujain",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Manipur (Ukhrul) (SHL C 9 1)",
+    "state": "Manipur",
+    "city": "Ukhrul",
+    "areaCode": "SHL",
+    "aoType": "C",
+    "rangeCode": "9",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Himachal Pradesh (Una) (NWR W 37 98)",
+    "state": "Himachal Pradesh",
+    "city": "Una",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "37",
+    "aoNumber": "98"
+  },
+  {
+    "display": "Tripura (Unakoti) (SHL W 16 92)",
+    "state": "Tripura",
+    "city": "Unakoti",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Uttar Pradesh (Unnao) (LKN W 91 92)",
+    "state": "Uttar Pradesh",
+    "city": "Unnao",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "91",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Arunachal Pradesh (Upper Siang) (SHL W 25 93)",
+    "state": "Arunachal Pradesh",
+    "city": "Upper Siang",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Arunachal Pradesh (Upper Subansiri) (SHL W 1 92)",
+    "state": "Arunachal Pradesh",
+    "city": "Upper Subansiri",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "92"
+  },
+  {
+    "display": "West Bengal (UTTAR DINAJPUR) (WBG W 212 93)",
+    "state": "West Bengal",
+    "city": "UTTAR DINAJPUR",
+    "areaCode": "WBG",
+    "aoType": "W",
+    "rangeCode": "212",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Karnataka (Uttara Kannada Karwar) (KAR W 531 91)",
+    "state": "Karnataka",
+    "city": "Uttara Kannada Karwar",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "531",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Uttarakhand (Uttarkashi) (KNP W 26 92)",
+    "state": "Uttarakhand",
+    "city": "Uttarkashi",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Bihar (Vaishali) (PTN W 21 4)",
+    "state": "Bihar",
+    "city": "Vaishali",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "21",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Gujarat (Valsad) (GUJ C 410 1)",
+    "state": "Gujarat",
+    "city": "Valsad",
+    "areaCode": "GUJ",
+    "aoType": "C",
+    "rangeCode": "410",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Uttar Pradesh (Varanasi) (LKN W 23 1)",
+    "state": "Uttar Pradesh",
+    "city": "Varanasi",
+    "areaCode": "LKN",
+    "aoType": "W",
+    "rangeCode": "23",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Gujarat (VAV-THARAD) (KNP W 26 94)",
+    "state": "Gujarat",
+    "city": "VAV-THARAD",
+    "areaCode": "KNP",
+    "aoType": "W",
+    "rangeCode": "26",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Tamil Nadu (Vellore) (CHE C 146 1)",
+    "state": "Tamil Nadu",
+    "city": "Vellore",
+    "areaCode": "CHE",
+    "aoType": "C",
+    "rangeCode": "146",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Madhya Pradesh (Vidisha) (BPL W 33 91)",
+    "state": "Madhya Pradesh",
+    "city": "Vidisha",
+    "areaCode": "BPL",
+    "aoType": "W",
+    "rangeCode": "33",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Karnataka (Vijayapura Bijapur) (KAR W 521 92)",
+    "state": "Karnataka",
+    "city": "Vijayapura Bijapur",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "521",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Telangana (Vikarabad) (APR W 58 6)",
+    "state": "Telangana",
+    "city": "Vikarabad",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "58",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Tamil Nadu (Viluppuram) (CHE W 181 11)",
+    "state": "Tamil Nadu",
+    "city": "Viluppuram",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "181",
+    "aoNumber": "11"
+  },
+  {
+    "display": "Tamil Nadu (Virudhunagar) (CHE W 501 93)",
+    "state": "Tamil Nadu",
+    "city": "Virudhunagar",
+    "areaCode": "CHE",
+    "aoType": "W",
+    "rangeCode": "501",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Andhra Pradesh (Visakhapatnam) (APR W 85 6)",
+    "state": "Andhra Pradesh",
+    "city": "Visakhapatnam",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Andhra Pradesh (Vizianagaram) (APR W 85 92)",
+    "state": "Andhra Pradesh",
+    "city": "Vizianagaram",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "85",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Telangana (Wanaparthy) (APR W 55 4)",
+    "state": "Telangana",
+    "city": "Wanaparthy",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "55",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Telangana (Warangal Rural) (APR W 53 94)",
+    "state": "Telangana",
+    "city": "Warangal Rural",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "53",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Telangana (Warangal Urban) (APR W 53 94)",
+    "state": "Telangana",
+    "city": "Warangal Urban",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "53",
+    "aoNumber": "94"
+  },
+  {
+    "display": "Maharashtra (Wardha) (NGP W 3 92)",
+    "state": "Maharashtra",
+    "city": "Wardha",
+    "areaCode": "NGP",
+    "aoType": "W",
+    "rangeCode": "3",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Maharashtra (Washim) (NGP C 101 1)",
+    "state": "Maharashtra",
+    "city": "Washim",
+    "areaCode": "NGP",
+    "aoType": "C",
+    "rangeCode": "101",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Kerala (Wayanad) (KRL W 32 7)",
+    "state": "Kerala",
+    "city": "Wayanad",
+    "areaCode": "KRL",
+    "aoType": "W",
+    "rangeCode": "32",
+    "aoNumber": "7"
+  },
+  {
+    "display": "Delhi (WEST) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "WEST",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Bihar (West Champaran) (PTN W 27 4)",
+    "state": "Bihar",
+    "city": "West Champaran",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "27",
+    "aoNumber": "4"
+  },
+  {
+    "display": "Delhi (WEST DELHI) (DEL W 31 1)",
+    "state": "Delhi",
+    "city": "WEST DELHI",
+    "areaCode": "DEL",
+    "aoType": "W",
+    "rangeCode": "31",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Meghalaya (West Garo Hills) (SHL W 15 1)",
+    "state": "Meghalaya",
+    "city": "West Garo Hills",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "15",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Andhra Pradesh (West Godavari) (APR W 116 5)",
+    "state": "Andhra Pradesh",
+    "city": "West Godavari",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "116",
+    "aoNumber": "5"
+  },
+  {
+    "display": "Meghalaya (WEST JAINTIA HILLS) (SHL W 15 21)",
+    "state": "Meghalaya",
+    "city": "WEST JAINTIA HILLS",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "15",
+    "aoNumber": "21"
+  },
+  {
+    "display": "Arunachal Pradesh (West Kameng) (SHL W 1 91)",
+    "state": "Arunachal Pradesh",
+    "city": "West Kameng",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "1",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Assam (West Karbi Anglong) (SHL W 2 1)",
+    "state": "Assam",
+    "city": "West Karbi Anglong",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "2",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Arunachal Pradesh (West Siang) (SHL W 25 93)",
+    "state": "Arunachal Pradesh",
+    "city": "West Siang",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "25",
+    "aoNumber": "93"
+  },
+  {
+    "display": "Sikkim (West Sikkim) (WBG C 208 92)",
+    "state": "Sikkim",
+    "city": "West Sikkim",
+    "areaCode": "WBG",
+    "aoType": "C",
+    "rangeCode": "208",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Jharkhand (West Singhbhum) (PTN W 54 1)",
+    "state": "Jharkhand",
+    "city": "West Singhbhum",
+    "areaCode": "PTN",
+    "aoType": "W",
+    "rangeCode": "54",
+    "aoNumber": "1"
+  },
+  {
+    "display": "Tripura (West Tripura) (SHL W 16 92)",
+    "state": "Tripura",
+    "city": "West Tripura",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "16",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Nagaland (wokha) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "wokha",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  },
+  {
+    "display": "Telangana (Yadadri Bhuvanagiri) (APR W 53 92)",
+    "state": "Telangana",
+    "city": "Yadadri Bhuvanagiri",
+    "areaCode": "APR",
+    "aoType": "W",
+    "rangeCode": "53",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Karnataka (Yadgir) (KAR W 411 92)",
+    "state": "Karnataka",
+    "city": "Yadgir",
+    "areaCode": "KAR",
+    "aoType": "W",
+    "rangeCode": "411",
+    "aoNumber": "92"
+  },
+  {
+    "display": "Haryana (Yamunanagar) (NWR W 65 91)",
+    "state": "Haryana",
+    "city": "Yamunanagar",
+    "areaCode": "NWR",
+    "aoType": "W",
+    "rangeCode": "65",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Maharashtra (Yavatmal) (NGP W 3 91)",
+    "state": "Maharashtra",
+    "city": "Yavatmal",
+    "areaCode": "NGP",
+    "aoType": "W",
+    "rangeCode": "3",
+    "aoNumber": "91"
+  },
+  {
+    "display": "Nagaland (zunheboto) (SHL W 7 6)",
+    "state": "Nagaland",
+    "city": "zunheboto",
+    "areaCode": "SHL",
+    "aoType": "W",
+    "rangeCode": "7",
+    "aoNumber": "6"
+  }
+]
