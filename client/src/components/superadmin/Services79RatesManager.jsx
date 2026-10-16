@@ -107,7 +107,12 @@ export default function Services79RatesManager({ onRatesUpdated }) {
 
       const data = await res.json();
       if (data.success) {
-        setSaveSuccessMsg(`✅ "${service.name}" का नया रेट सफलतापूर्वक सहेजा गया!`);
+        try {
+          localStorage.setItem('portal_services_79_rates', JSON.stringify(services));
+          window.dispatchEvent(new CustomEvent('services-rates-updated', { detail: services }));
+        } catch (e) {}
+
+        setSaveSuccessMsg(`✅ "${service.name}" का नया रेट सफलतापूर्वक सहेजा गया और पूरे पोर्टल पर लाइव हो चुका है!`);
         setTimeout(() => setSaveSuccessMsg(''), 4000);
         if (onRatesUpdated) onRatesUpdated();
       } else {
@@ -140,9 +145,10 @@ export default function Services79RatesManager({ onRatesUpdated }) {
 
       const data = await res.json();
       if (data.success) {
-        // Also cache locally in browser as safety net
+        // Also cache locally in browser as safety net and notify all tabs/components
         try {
           localStorage.setItem('portal_services_79_rates', JSON.stringify(services));
+          window.dispatchEvent(new CustomEvent('services-rates-updated', { detail: services }));
         } catch (e) {}
 
         setUnsavedCount(0);

@@ -28,7 +28,7 @@ export const MASTER_12_APIS = [
 ];
 export const MASTER_14_APIS = MASTER_12_APIS;
 
-export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated = () => {}, onBackToPortal = () => {}, onLogout = () => {} }) {
+export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated = () => {}, onBackToPortal = () => {}, onLogout = () => {}, onRatesUpdated = () => {} }) {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -1355,7 +1355,10 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
 
       {/* TAB: 79 SERVICES DYNAMIC RATE & MULTI-TIER MARGIN ENGINE */}
       {(activeTab === 'rates' || activeTab === 'services_79') && (
-        <Services79RatesManager onRatesUpdated={fetchStats} />
+        <Services79RatesManager onRatesUpdated={() => {
+          fetchStats();
+          if (onRatesUpdated) onRatesUpdated();
+        }} />
       )}
 
       {/* TAB: USERS & PASSWORDS DIRECTORY CONTROL ROOM */}

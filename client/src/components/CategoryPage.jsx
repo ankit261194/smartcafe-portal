@@ -383,9 +383,13 @@ export default function CategoryPage({
                             {displayTitle}
                           </span>
 
-                          {(category.id === 'other' || service.category === 'other' || service.group === 'other' || (service.wholesaleRate === 0 && service.retailRate === 0) || ['pvc_auto_cropper', 'passport_photo_maker', 'govt_form_resizer', 'bank_ifsc_lookup', 'pincode_lookup', 'qr_generator', 'sarkari_job_feed'].includes(service.id)) && (
+                          {(category.id === 'other' || service.category === 'other' || service.group === 'other' || (service.wholesaleRate === 0 && service.retailRate === 0) || ['pvc_auto_cropper', 'passport_photo_maker', 'govt_form_resizer', 'bank_ifsc_lookup', 'pincode_lookup', 'qr_generator', 'sarkari_job_feed'].includes(service.id)) ? (
                             <span className="mt-1 text-[9px] font-black bg-emerald-500 text-white px-2 py-0.5 rounded-full shadow-2xs">
                               🎉 {language === 'hi' ? 'मुफ़्त • ₹0' : 'FREE • ₹0'}
+                            </span>
+                          ) : (
+                            <span className="mt-1 text-[10px] font-black bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800 shadow-2xs">
+                              ₹{service.retailRate || 25}
                             </span>
                           )}
                         </div>

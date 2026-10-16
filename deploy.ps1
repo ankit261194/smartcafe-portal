@@ -133,6 +133,24 @@ s1.utrRequests = mergedUtrs;
 s2.utrRequests = mergedUtrs;
 s3.utrRequests = mergedUtrs;
 
+// Protect and merge services_79 custom rates (live rates take highest priority)
+const allRatesMap = new Map();
+[...(s1.services_79||[]), ...(s2.services_79||[]), ...(s3.services_79||[])].forEach(r => {
+  if (r && r.id) allRatesMap.set(r.id, r);
+});
+(liveSync.services_79 || []).forEach(r => {
+  if (r && r.id) {
+    const existing = allRatesMap.get(r.id);
+    allRatesMap.set(r.id, Object.assign({}, existing || {}, r));
+  }
+});
+const mergedServices79 = Array.from(allRatesMap.values());
+if (mergedServices79.length > 0) {
+  s1.services_79 = mergedServices79;
+  s2.services_79 = mergedServices79;
+  s3.services_79 = mergedServices79;
+}
+
 mergedUsers.forEach(u => {
   if (u && u.phone) {
     if (!allWalletsMap.has(u.phone)) {
@@ -202,6 +220,14 @@ fs.writeFileSync(p3, JSON.stringify(s3, null, 2));
 fs.writeFileSync('server/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
 fs.writeFileSync('client/public/api/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
 fs.writeFileSync('client/dist/api/data/users_master.json', JSON.stringify(mergedUsers, null, 2));
+if (mergedServices79.length > 0) {
+  try {
+    fs.writeFileSync('server/data/services_79.json', JSON.stringify(mergedServices79, null, 2));
+    fs.writeFileSync('client/public/api/data/services_79.json', JSON.stringify(mergedServices79, null, 2));
+    fs.writeFileSync('client/dist/api/data/services_79.json', JSON.stringify(mergedServices79, null, 2));
+    fs.writeFileSync('client/src/data/services_79.json', JSON.stringify(mergedServices79, null, 2));
+  } catch (e) {}
+}
 console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts, ' + mergedCafes.length + ' cafes, ' + mergedWallets.length + ' wallets, & ' + mergedUtrs.length + ' UTRs.');
 "
 Copy-Item -Path "$PSScriptRoot\client\public\.htaccess" -Destination "$PSScriptRoot\client\dist\.htaccess" -Force

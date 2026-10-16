@@ -1,6 +1,6 @@
 ﻿{
     "success":  true,
-    "timestamp":  "2026-10-16T16:25:21+00:00",
+    "timestamp":  "2026-10-16T16:47:39+00:00",
     "users":  [
                   {
                       "id":  "USR-8006518960",
@@ -16,6 +16,21 @@
               ],
     "wallets":  [
                     {
+                        "phone":  "8006518960",
+                        "customerName":  "ankit kumar",
+                        "balance":  10,
+                        "transactions":  [
+                                             {
+                                                 "id":  "TXN-UTR-CUST-1792125257-861",
+                                                 "type":  "credit",
+                                                 "amount":  10,
+                                                 "utr":  "717839573483",
+                                                 "note":  "à¤¸à¥à¤ªà¤° à¤à¤¡à¤®à¤¿à¤¨ à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤ UTR (717839573483) à¤µà¥‰à¤²à¥‡à¤Ÿ à¤Ÿà¥‰à¤ª-à¤…à¤ª",
+                                                 "createdAt":  "2026-10-16T04:54:07+00:00"
+                                             }
+                                         ]
+                    },
+                    {
                         "phone":  "9999999999",
                         "customerName":  "ग्राहक",
                         "balance":  0,
@@ -27,14 +42,6 @@
                         "phone":  "0000000000",
                         "customerName":  "ग्राहक",
                         "balance":  0,
-                        "transactions":  [
-
-                                         ]
-                    },
-                    {
-                        "phone":  "8006518960",
-                        "customerName":  "ankit kumar",
-                        "balance":  10,
                         "transactions":  [
 
                                          ]
@@ -72,64 +79,7 @@
 
                  ],
     "applications":  [
-                         {
-                             "id":  "APP-7973",
-                             "cafeId":  "",
-                             "customerName":  "RAMESH KUMAR",
-                             "phone":  "9876543210",
-                             "serviceCategory":  "?????? ???? (Certificates)",
-                             "serviceName":  "?? ?????? ???? (Income Certificate)",
-                             "details":  {
-                                             "applicantName":  "RAMESH KUMAR",
-                                             "applicantNameHindi":  "???? ?????",
-                                             "fatherHusbandName":  "???? ???????",
-                                             "annualIncome":  "?48,000",
-                                             "occupation":  "????? ??????",
-                                             "villageMohalla":  "????? ??????",
-                                             "tehsil":  "????????",
-                                             "district":  "?????",
-                                             "aadhaarNo":  "XXXX XXXX 4921"
-                                         },
-                             "status":  "received",
-                             "totalFee":  80,
-                             "paymentStatus":  "paid",
-                             "paymentType":  "paid_upi",
-                             "documents":  [
 
-                                           ],
-                             "acknowledgmentReceipt":  null,
-                             "remarks":  "आवेदन प्राप्त हुआ। कैफे ऑपरेटर द्वारा जांच की जा रही है।",
-                             "otpStatus":  "none",
-                             "otpType":  null,
-                             "liveOtp":  null,
-                             "otpRequestedAt":  null,
-                             "otpReceivedAt":  null,
-                             "createdAt":  "2026-10-12T10:32:14.144Z"
-                         },
-                         {
-                             "id":  "APP-6881",
-                             "cafeId":  "",
-                             "customerName":  "आवेदक",
-                             "phone":  "",
-                             "serviceCategory":  "सरकारी सेवा",
-                             "serviceName":  "ऑनलाइन फॉर्म",
-                             "details":  "",
-                             "status":  "received",
-                             "totalFee":  0,
-                             "paymentStatus":  "paid",
-                             "paymentType":  "paid_upi",
-                             "documents":  [
-
-                                           ],
-                             "acknowledgmentReceipt":  null,
-                             "remarks":  "आवेदन प्राप्त हुआ। कैफे ऑपरेटर द्वारा जांच की जा रही है।",
-                             "otpStatus":  "none",
-                             "otpType":  null,
-                             "liveOtp":  null,
-                             "otpRequestedAt":  null,
-                             "otpReceivedAt":  null,
-                             "createdAt":  "2026-10-12T10:31:50.916Z"
-                         }
                      ],
     "prints":  [
 

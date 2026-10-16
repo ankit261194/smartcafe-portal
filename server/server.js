@@ -954,8 +954,8 @@ const handleSaveRates = (req, res) => {
         });
       }
     });
-  } else if ((service && service.id) || req.body.serviceId) {
-    const targetId = (service && service.id) || req.body.serviceId;
+  } else if ((service && (service.id || service.serviceId)) || req.body.serviceId || req.body.id) {
+    const targetId = (service && (service.id || service.serviceId)) || req.body.serviceId || req.body.id;
     const idx = store.services_79.findIndex(s => s.id === targetId || s.num === Number(targetId));
     if (idx !== -1) {
       const wRate = req.body.wholesaleRate !== undefined ? req.body.wholesaleRate : service?.wholesaleRate;

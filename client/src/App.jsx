@@ -173,15 +173,27 @@ export default function App() {
   };
 
   // Master 79 Services Dynamic Rates State (Persisted in server & database)
-  const [services79Rates, setServices79Rates] = useState([]);
+  const [services79Rates, setServices79Rates] = useState(() => {
+    try {
+      const cached = localStorage.getItem('portal_services_79_rates');
+      return cached ? JSON.parse(cached) : [];
+    } catch {
+      return [];
+    }
+  });
 
   const fetchServices79Rates = async () => {
     try {
-      const res = await fetch('/api/services/rates');
+      const res = await fetch('/api/services/rates?_t=' + Date.now(), {
+        headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+      });
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.services)) {
           setServices79Rates(data.services);
+          try {
+            localStorage.setItem('portal_services_79_rates', JSON.stringify(data.services));
+          } catch (e) {}
         }
       }
     } catch (err) {
@@ -192,6 +204,23 @@ export default function App() {
   useEffect(() => {
     fetchToolSettings();
     fetchServices79Rates();
+
+    const handleCustomRatesUpdate = (e) => {
+      if (e?.detail && Array.isArray(e.detail)) {
+        setServices79Rates(e.detail);
+      } else {
+        fetchServices79Rates();
+      }
+    };
+    window.addEventListener('services-rates-updated', handleCustomRatesUpdate);
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'portal_services_79_rates' && e.newValue) {
+        try { setServices79Rates(JSON.parse(e.newValue)); } catch (err) {}
+      }
+    });
+    return () => {
+      window.removeEventListener('services-rates-updated', handleCustomRatesUpdate);
+    };
   }, []);
 
   // Authentication & Dynamic Customer Session (No fake defaults)

@@ -104,12 +104,31 @@ function getStore($dataFile) {
             $data['settings']['superAdminPayeeName'] = 'Suman Devi';
             $data['settings']['superAdminQrImage'] = '/images/superadmin_qr.jpg';
 
-            // Always sync services_79 from authoritative services_79.json
+            // Merge services_79 base catalog while PRESERVING custom rates from store.json
             $sFile = __DIR__ . '/data/services_79.json';
             if (file_exists($sFile)) {
-                $latest79 = json_decode(file_get_contents($sFile), true);
-                if (is_array($latest79) && count($latest79) >= 70) {
-                    $data['services_79'] = $latest79;
+                $baseCatalog = json_decode(file_get_contents($sFile), true);
+                if (is_array($baseCatalog) && count($baseCatalog) >= 70) {
+                    $overrides = $data['services_79'] ?? [];
+                    if (is_array($overrides) && !empty($overrides)) {
+                        $rateMap = [];
+                        foreach ($overrides as $ov) {
+                            if (!empty($ov['id'])) $rateMap[$ov['id']] = $ov;
+                            if (isset($ov['num'])) $rateMap['num_' . $ov['num']] = $ov;
+                        }
+                        foreach ($baseCatalog as &$bSvc) {
+                            $bid = $bSvc['id'] ?? '';
+                            $bnum = 'num_' . ($bSvc['num'] ?? -999);
+                            $matched = $rateMap[$bid] ?? ($rateMap[$bnum] ?? null);
+                            if ($matched) {
+                                if (isset($matched['wholesaleRate'])) $bSvc['wholesaleRate'] = floatval($matched['wholesaleRate']);
+                                if (isset($matched['retailRate'])) $bSvc['retailRate'] = floatval($matched['retailRate']);
+                                if (isset($matched['isActive'])) $bSvc['isActive'] = (bool)$matched['isActive'];
+                            }
+                        }
+                        unset($bSvc);
+                    }
+                    $data['services_79'] = $baseCatalog;
                 }
             }
 
@@ -1027,77 +1046,121 @@ if ($endpoint === 'auth/change-password' && $method === 'POST') {
 // Route: /api/services/rates
 if ($endpoint === 'services/rates') {
     if ($method === 'GET') {
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+        header('Pragma: no-cache');
         $sFile = __DIR__ . '/data/services_79.json';
         $baseServices = file_exists($sFile) ? json_decode(file_get_contents($sFile), true) : [];
         if (!is_array($baseServices)) $baseServices = [];
 
         $overrides = $store['services_79'] ?? [];
         if (!empty($overrides) && is_array($overrides)) {
+            $rateMap = [];
+            foreach ($overrides as $ov) {
+                if (!empty($ov['id'])) $rateMap[$ov['id']] = $ov;
+                if (isset($ov['num'])) $rateMap['num_' . $ov['num']] = $ov;
+            }
             foreach ($baseServices as &$base) {
-                foreach ($overrides as $ov) {
-                    if (($ov['id'] ?? '') === ($base['id'] ?? '') || ($ov['num'] ?? -1) === ($base['num'] ?? -2)) {
-                        if (isset($ov['wholesaleRate'])) $base['wholesaleRate'] = floatval($ov['wholesaleRate']);
-                        if (isset($ov['retailRate'])) $base['retailRate'] = floatval($ov['retailRate']);
-                        if (isset($ov['isActive'])) $base['isActive'] = (bool)$ov['isActive'];
-                        break;
-                    }
+                $bid = $base['id'] ?? '';
+                $bnum = 'num_' . ($base['num'] ?? -999);
+                $matched = $rateMap[$bid] ?? ($rateMap[$bnum] ?? null);
+                if ($matched) {
+                    if (isset($matched['wholesaleRate'])) $base['wholesaleRate'] = floatval($matched['wholesaleRate']);
+                    if (isset($matched['retailRate'])) $base['retailRate'] = floatval($matched['retailRate']);
+                    if (isset($matched['isActive'])) $base['isActive'] = (bool)$matched['isActive'];
                 }
             }
+            unset($base);
         }
         echo json_encode(['success' => true, 'count' => count($baseServices), 'services' => $baseServices]);
         exit;
     }
 }
 
-// Route: /api/superadmin/services/rates
+// Route: /api/superadmin/services/rates & /api/services/rates (Universal Rate Saver)
 if (($endpoint === 'superadmin/services/rates' || $endpoint === 'services/rates') && $method === 'POST') {
-    if (!isset($store['services_79'])) $store['services_79'] = [];
-    if (isset($body['services']) && is_array($body['services'])) {
-        foreach ($body['services'] as $updated) {
-            $found = false;
-            foreach ($store['services_79'] as &$s) {
-                if (($s['id'] ?? '') === ($updated['id'] ?? '') || ($s['num'] ?? 0) === ($updated['num'] ?? -1)) {
-                    if (isset($updated['wholesaleRate'])) $s['wholesaleRate'] = floatval($updated['wholesaleRate']);
-                    if (isset($updated['retailRate'])) $s['retailRate'] = floatval($updated['retailRate']);
-                    if (isset($updated['isActive'])) $s['isActive'] = (bool)$updated['isActive'];
-                    $found = true;
-                    break;
-                }
-            }
-            if (!$found) {
-                $store['services_79'][] = [
-                    'id' => $updated['id'] ?? '',
-                    'num' => $updated['num'] ?? 0,
-                    'wholesaleRate' => floatval($updated['wholesaleRate'] ?? 10),
-                    'retailRate' => floatval($updated['retailRate'] ?? 20),
-                    'isActive' => $updated['isActive'] ?? true
-                ];
-            }
-        }
-    } elseif (isset($body['service']) && is_array($body['service'])) {
-        $u = $body['service'];
-        $found = false;
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+    if (!isset($store['services_79']) || !is_array($store['services_79'])) {
+        $store['services_79'] = [];
+    }
+
+    $sFile = __DIR__ . '/data/services_79.json';
+    $baseServices = file_exists($sFile) ? json_decode(file_get_contents($sFile), true) : [];
+    if (!is_array($baseServices)) $baseServices = [];
+
+    // Helper closure to update a single service
+    $applyUpdate = function($targetId, $wRate, $rRate, $isActive) use (&$store, &$baseServices) {
+        if (!$targetId) return;
+        // 1. Update in $store['services_79']
+        $foundInStore = false;
         foreach ($store['services_79'] as &$s) {
-            if (($s['id'] ?? '') === ($u['id'] ?? '') || ($s['num'] ?? 0) === ($u['num'] ?? -1)) {
-                if (isset($u['wholesaleRate'])) $s['wholesaleRate'] = floatval($u['wholesaleRate']);
-                if (isset($u['retailRate'])) $s['retailRate'] = floatval($u['retailRate']);
-                if (isset($u['isActive'])) $s['isActive'] = (bool)$u['isActive'];
-                $found = true;
+            if (($s['id'] ?? '') === $targetId || ($s['num'] ?? -999) === intval($targetId)) {
+                if ($wRate !== null) $s['wholesaleRate'] = floatval($wRate);
+                if ($rRate !== null) $s['retailRate'] = floatval($rRate);
+                if ($isActive !== null) $s['isActive'] = (bool)$isActive;
+                $foundInStore = true;
                 break;
             }
         }
-        if (!$found) {
+        unset($s);
+        if (!$foundInStore) {
             $store['services_79'][] = [
-                'id' => $u['id'] ?? '',
-                'num' => $u['num'] ?? 0,
-                'wholesaleRate' => floatval($u['wholesaleRate'] ?? 10),
-                'retailRate' => floatval($u['retailRate'] ?? 20),
-                'isActive' => $u['isActive'] ?? true
+                'id' => $targetId,
+                'wholesaleRate' => $wRate !== null ? floatval($wRate) : 10,
+                'retailRate' => $rRate !== null ? floatval($rRate) : 20,
+                'isActive' => $isActive !== null ? (bool)$isActive : true
             ];
         }
+
+        // 2. Also sync to $baseServices
+        foreach ($baseServices as &$base) {
+            if (($base['id'] ?? '') === $targetId || ($base['num'] ?? -999) === intval($targetId)) {
+                if ($wRate !== null) $base['wholesaleRate'] = floatval($wRate);
+                if ($rRate !== null) $base['retailRate'] = floatval($rRate);
+                if ($isActive !== null) $base['isActive'] = (bool)$isActive;
+                break;
+            }
+        }
+        unset($base);
+    };
+
+    if (isset($body['services']) && is_array($body['services'])) {
+        foreach ($body['services'] as $updated) {
+            $tId = $updated['id'] ?? ($updated['serviceId'] ?? '');
+            $w = isset($updated['wholesaleRate']) ? $updated['wholesaleRate'] : null;
+            $r = isset($updated['retailRate']) ? $updated['retailRate'] : null;
+            $a = isset($updated['isActive']) ? $updated['isActive'] : null;
+            $applyUpdate($tId, $w, $r, $a);
+        }
+    } elseif (isset($body['service']) && is_array($body['service'])) {
+        $u = $body['service'];
+        $tId = $u['id'] ?? ($u['serviceId'] ?? '');
+        $w = isset($u['wholesaleRate']) ? $u['wholesaleRate'] : null;
+        $r = isset($u['retailRate']) ? $u['retailRate'] : null;
+        $a = isset($u['isActive']) ? $u['isActive'] : null;
+        $applyUpdate($tId, $w, $r, $a);
+    } elseif (isset($body['serviceId']) || isset($body['id'])) {
+        $tId = $body['serviceId'] ?? ($body['id'] ?? '');
+        $w = isset($body['wholesaleRate']) ? $body['wholesaleRate'] : null;
+        $r = isset($body['retailRate']) ? $body['retailRate'] : null;
+        $a = isset($body['isActive']) ? $body['isActive'] : null;
+        $applyUpdate($tId, $w, $r, $a);
     }
+
+    // Save to store.json
     saveStore($dataFile, $store);
-    echo json_encode(['success' => true, 'services' => $store['services_79'], 'message' => '79-सर्विस रेट्स सफलतापूर्वक अपडेट और लाइव कर दिए गए।']);
+
+    // Save to data/services_79.json so it is permanently authoritative on disk!
+    if (!empty($baseServices)) {
+        @file_put_contents($sFile, json_encode($baseServices, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE), LOCK_EX);
+    }
+
+    echo json_encode([
+        'success' => true,
+        'count' => count($baseServices),
+        'services' => $baseServices,
+        'message' => '79-सर्विस रेट्स सफलतापूर्वक अपडेट और पूरे पोर्टल पर लाइव कर दिए गए।'
+    ]);
     exit;
 }
 
