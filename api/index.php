@@ -3033,6 +3033,17 @@ if ($endpoint === 'superadmin/live-vault' && $method === 'GET') {
         }
     } catch (Throwable $e) {}
 
+    // Sync user balances to matching wallet balances
+    foreach ($allUsersMap as $sp => &$u) {
+        foreach ($store['wallets'] ?? [] as $w) {
+            if (($w['phone'] ?? '') === $sp) {
+                $u['balance'] = $w['balance'];
+                break;
+            }
+        }
+    }
+    unset($u);
+
     echo json_encode([
         'success' => true,
         'timestamp' => date('c'),
