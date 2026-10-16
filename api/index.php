@@ -6195,6 +6195,65 @@ if ($endpoint === 'services/manual-relay/poll-order' && in_array($method, ['GET'
 }
 
 // ---------------------------------------------------------------------------
+// ROUTE: /api/services/manual-relay/pending-queue (Silent Auto-Relay Bot Queue)
+// ---------------------------------------------------------------------------
+if ($endpoint === 'services/manual-relay/pending-queue' && in_array($method, ['GET', 'POST'])) {
+    $pendingOrders = [];
+    if (!empty($store['orderHistory'])) {
+        foreach ($store['orderHistory'] as $o) {
+            if (($o['fulfillmentType'] ?? '') === 'manual_relay' && ($o['status'] ?? '') === 'pending') {
+                $pendingOrders[] = $o;
+            }
+        }
+    }
+    echo json_encode([
+        'success' => true,
+        'count' => count($pendingOrders),
+        'orders' => $pendingOrders,
+        'rekhaConfig' => [
+            'username' => $store['systemSettings']['rekhaPrint']['username'] ?? '8006518960',
+            'password' => $store['systemSettings']['rekhaPrint']['password'] ?? '012323',
+            'baseUrl' => $store['systemSettings']['rekhaPrint']['baseUrl'] ?? 'https://rekhaprint.info'
+        ]
+    ]);
+    exit;
+}
+
+// ---------------------------------------------------------------------------
+// ROUTE: /api/services/manual-relay/update-upstream (Update Upstream Dispatch State)
+// ---------------------------------------------------------------------------
+if ($endpoint === 'services/manual-relay/update-upstream' && $method === 'POST') {
+    $orderId = $body['orderId'] ?? ($body['id'] ?? '');
+    $upstreamStatus = $body['upstreamStatus'] ?? 'Dispatched';
+    $upstreamOrderId = $body['upstreamOrderId'] ?? '';
+    $upstreamNote = $body['upstreamNote'] ?? '';
+
+    $found = false;
+    if (!empty($store['orderHistory'])) {
+        foreach ($store['orderHistory'] as &$o) {
+            if ($o['id'] === $orderId || ($o['orderId'] ?? '') === $orderId) {
+                $o['upstreamDispatched'] = true;
+                $o['upstreamStatus'] = $upstreamStatus;
+                if ($upstreamOrderId) $o['upstreamOrderId'] = $upstreamOrderId;
+                if ($upstreamNote) $o['upstreamNote'] = $upstreamNote;
+                $o['lastDispatchedAt'] = date('c');
+                $found = true;
+                break;
+            }
+        }
+    }
+
+    if ($found) {
+        saveStore($dataFile, $store);
+        echo json_encode(['success' => true, 'message' => 'अपस्ट्रीम स्टेटस सफलतापूर्वक अपडेट हुआ।']);
+    } else {
+        http_response_code(404);
+        echo json_encode(['error' => 'ऑर्डर नहीं मिला।']);
+    }
+    exit;
+}
+
+// ---------------------------------------------------------------------------
 // ROUTE: /api/superadmin/manual-orders/update-status (Manual Admin Fulfillment)
 // ---------------------------------------------------------------------------
 if ($endpoint === 'superadmin/manual-orders/update-status' && $method === 'POST') {
