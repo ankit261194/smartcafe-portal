@@ -557,9 +557,15 @@ function ServicePageContent({
       setErrorMsg(language === 'hi' ? 'कृपया आवेदक का नाम (Applicant Name) दर्ज करें।' : 'Please enter Applicant Name.');
       return;
     }
-    if (['aadhaar_pdf_otp', 'aadhaar_original_pdf_otp'].includes(tid) && val.replace(/\D/g, '').length !== 12) {
-      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
-      return;
+    if (['aadhaar_pdf_otp', 'aadhaar_original_pdf_otp'].includes(tid)) {
+      if (val.replace(/\D/g, '').length !== 12) {
+        setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+        return;
+      }
+      if (secondaryInput.trim() && secondaryInput.trim().replace(/\D/g, '').length !== 6) {
+        setErrorMsg(language === 'hi' ? 'कृपया ठीक 6-अंकीय OTP कोड दर्ज करें।' : 'Please enter valid 6-digit OTP code.');
+        return;
+      }
     }
     if (['aadhaar_ekyc', 'uid_ekyc'].includes(tid) && val.replace(/\D/g, '').length !== 12) {
       setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
@@ -639,8 +645,8 @@ function ServicePageContent({
     const effectivePhone = customerSession?.phone || (isOperator ? (selectedCafe?.phone || '') : (localStorage.getItem('customer_phone') || ''));
     const cafeId = selectedCafe?.id || (isOperator ? (selectedCafe?.code || 'SMARTCAFE-HQ') : 'SMARTCAFE-HQ');
 
-    // Check if service requires Live OTP verification
-    const requiresLiveOtp = currentTool?.id?.includes('otp') || currentTool?.id === 'aadhaar_original_pdf_otp' || currentTool?.id === 'aadhaar_otp_kyc' || currentTool?.id === 'abha_otp' || currentTool?.id === 'voter_original_pdf_otp';
+    // Check if service requires Live OTP verification (only if OTP is not already provided)
+    const requiresLiveOtp = (currentTool?.id?.includes('otp') || currentTool?.id === 'aadhaar_original_pdf_otp' || currentTool?.id === 'aadhaar_otp_kyc' || currentTool?.id === 'abha_otp' || currentTool?.id === 'voter_original_pdf_otp') && !secondaryInput.trim();
     if (requiresLiveOtp) {
       try {
         const otpRes = await authFetch('/api/services/otp/request', {
@@ -971,6 +977,7 @@ function ServicePageContent({
       params.gender = gender;
       params.address = addressInput.trim();
       params.photoData = photoData;
+      params.photo = photoData;
       params.serviceId = 'aadhaarCard';
     }
 
@@ -2467,17 +2474,19 @@ function ServicePageContent({
                   setErrorMsg('');
                   setLoading(true);
                   try {
-                    const otpRes = await fetch('/api/services/otp/request', {
+                    const otpRes = await authFetch('/api/services/otp/request', {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({
-                        serviceType: 'aadhaar_original_pdf_otp',
+                        serviceType: currentTool?.id || 'aadhaar_original_pdf_otp',
                         phone: customerSession?.phone || '8006518960',
-                        aadhaarNo: primaryInput
+                        aadhaarNo: primaryInput,
+                        uidNumber: primaryInput,
+                        cafeId: selectedCafe?.id || 'SMARTCAFE-HQ'
                       })
                     });
                     const otpData = await otpRes.json();
-                    if (otpData.success) {
+                    if (otpData.success || otpData.requiresOtp) {
                       setActiveOtpData({ ...otpData, testOtpHint: otpData.message?.match(/\d{6}/)?.[0] || '123456' });
                       setShowOtpModal(true);
                     } else {
@@ -4253,7 +4262,9 @@ function ServicePageContent({
                       gender: activeData.gender || 'MALE',
                       address: activeData.address || '-',
                       photoUrl: activeData.photoUrl || photoData,
-                      signUrl: activeData.signUrl || signData
+                      signUrl: activeData.signUrl || signData,
+                      aadhaarNo: activeData.aadhaarNo || activeData.uidNumber || primaryInput || 'XXXX-XXXX-XXXX',
+                      maskedAadhaar: activeData.maskedAadhaar || (activeData.aadhaarNo && activeData.aadhaarNo.length === 12 ? `XXXX-XXXX-${activeData.aadhaarNo.slice(8)}` : (primaryInput && primaryInput.length === 12 ? `XXXX-XXXX-${primaryInput.slice(8)}` : 'XXXX-XXXX-XXXX'))
                     };
 
                     return (
@@ -4383,13 +4394,13 @@ function ServicePageContent({
 
                               <div className="flex items-center gap-3 py-1">
                                 <div className="w-[68px] h-[84px] bg-slate-100 border-2 border-slate-700 rounded overflow-hidden shrink-0 shadow-2xs">
-                                  <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
+                                  <img src={cardData.photoUrl || photoData || SAMPLE_PHOTOS.male} alt="Photo" className="w-full h-full object-cover" />
                                 </div>
 
                                 <div className="flex-1 space-y-1 text-xs">
                                   <div>
                                     <span className="font-black text-slate-900 text-[11px] block">{cardData.name}</span>
-                                    <span className="text-[9px] text-slate-600 block">{language === 'hi' ? 'आत्मज:' : 'S/O:'} {cardData.fatherName}</span>
+                                    <span className="text-[9px] text-slate-600 block">{cardData.careOf || ((cardData.gender === 'FEMALE' ? (language === 'hi' ? 'पत्नी/आत्मजा:' : 'W/O, D/O:') : (language === 'hi' ? 'आत्मज:' : 'S/O:')) + ' ' + cardData.fatherName)}</span>
                                   </div>
                                   <div className="text-[10px] text-slate-700">
                                     <div>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <span className="font-mono font-bold">{cardData.dob}</span></div>

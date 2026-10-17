@@ -11,7 +11,7 @@
     "serviceType": "live_api",
     "status": "live",
     "fulfillmentType": "instant_api",
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uid/ekycVerification",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php",
     "method": "POST",
     "isComingSoon": false,
     "badge": "🟢 लाइव सरकारी API",
@@ -512,8 +512,8 @@
   {
     "id": "pan_aadhar_mask",
     "num": 20,
-    "name": "PAN Aadhar Mask",
-    "category": "pan",
+    "name": "Mask Aadhaar Verification (मास्क आधार सत्यापन)",
+    "category": "aadhaar",
     "providerCost": 2,
     "wholesaleRate": 5,
     "retailRate": 15,
@@ -521,17 +521,19 @@
     "serviceType": "live_api",
     "status": "live",
     "fulfillmentType": "instant_api",
-    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/maskAadharVerification",
+    "apiEndpoint": "https://authorized.p4points.co.in/api/v1/maskAadharVerification.php",
     "method": "GET",
     "isComingSoon": false,
     "badge": "🟢 लाइव सरकारी API",
     "p4Key": "mask_aadhaar_verification",
     "parameters": [
       "apiKey",
-      "panNumber"
+      "aadhaarNo",
+      "uidNumber",
+      "aadhar"
     ],
     "requiredInputs": [
-      "panNumber"
+      "aadhaar"
     ]
   },
   {

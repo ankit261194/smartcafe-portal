@@ -175,7 +175,9 @@ const relayMeta = {
   'pan_aadhaar_link_manual': { upstreamService: 'Pan_Number_Link', upstreamFile: 'panAadharNumber_Link.php' },
   'pan_find_manual': { upstreamService: 'pan_find_manual', upstreamFile: 'pan_find_manual.php' },
   'pan_find_manual_alt': { upstreamService: 'pan_find_manual', upstreamFile: 'pan_find_manual.php' },
-  'dob_update_service': { upstreamService: 'Dob_Update', upstreamFile: 'dob_update.php' }
+  'dob_update_service': { upstreamService: 'Dob_Update', upstreamFile: 'dob_update.php' },
+  'mobile_update_service': { upstreamService: 'Mobile_Update', upstreamFile: 'Mobile_Update.php' },
+  'aadhaar_to_mobile_find': { upstreamService: 'Mobile_Update', upstreamFile: 'Mobile_Update.php' }
 };
 allRatesMap.forEach((v, k) => {
   if (relayMeta[k]) Object.assign(v, relayMeta[k]);
