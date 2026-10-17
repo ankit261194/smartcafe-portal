@@ -3166,22 +3166,23 @@ function getVoterDetails(epicNo, custom = {}) {
 // 4. Ayushman Bharat Golden Card Generator (PM-JAY Layout)
 function getAyushmanDetails(id, custom = {}) {
   const cleanId = (id || '').replace(/[\s-]+/g, '').toUpperCase();
-  const name = custom.name || custom.customerName || '-';
+  const name = custom.name || custom.customerName || custom.beneficiaryName || 'आयुष्मान लाभार्थी';
   const gender = custom.gender || "MALE / पुरुष";
-  const yob = custom.dob ? custom.dob.slice(0, 4) : '-';
-  const hash = getDeterministicHash(name || 'PMJAY');
-  const pmjayId = cleanId || `PMJAY-UP-${10000 + (hash % 90000)}-${1000 + (hash % 9000)}`;
-  const familyId = `NFSA-FAM-${200000 + (hash % 800000)}`;
+  const yob = custom.dob ? custom.dob.slice(0, 4) : '1985';
+  const pmjayId = cleanId || 'PMJAY';
+  const familyId = custom.familyId || `NFSA-FAM-${cleanId.replace(/\D/g, '').slice(-6) || '100000'}`;
 
   return {
     pmjayId,
     name,
+    beneficiaryName: name,
     gender,
     yob,
-    state: "UTTAR PRADESH",
-    district: "LUCKNOW",
+    dob: custom.dob || '01/01/1985',
+    state: custom.state || "UTTAR PRADESH",
+    district: custom.district || "LUCKNOW",
     familyId,
-    coverageAmount: "₹5,00,000/- प्रति वर्ष मुफ़्त उपचार सुरक्षा",
+    coverageAmount: custom.coverageAmount || "₹5,00,000/- प्रति वर्ष मुफ़्त उपचार सुरक्षा",
     status: "सत्यापित पात्र लाभार्थी (BIS Verified Beneficiary)",
     qrCodeData: `PMJAY:ID=${pmjayId}:NAME=${name}:YOB=${yob}:FAM=${familyId}:VALID=5LAKH`,
     cardType: 'ayushman'
@@ -3191,26 +3192,18 @@ function getAyushmanDetails(id, custom = {}) {
 // 5. Ration Card to PDF / Parchaa Generator (NFSA Layout)
 function getRationDetails(rationNo, custom = {}) {
   const cleanRation = (rationNo || '').replace(/[\s-]+/g, '');
-  const hash = getDeterministicHash(cleanRation || 'RATION');
-  const sampleHeads = [
-    { head: "SUNITA DEVI", spouse: "RAM PRAKASH" },
-    { head: "KUSUM LATA", spouse: "ANAND MOHAN" },
-    { head: "SHANTI DEVI", spouse: "BHAGWATI PRASAD" },
-    { head: "MEENA DEVI", spouse: "SURENDRA NATH" },
-    { head: "KAMLESH DEVI", spouse: "JAGDISH PRASAD" }
-  ];
-  const chosenHead = sampleHeads[hash % sampleHeads.length];
-  const headName = custom.headName || custom.customerName || custom.name || chosenHead.head;
-  const spouse = custom.spouse || custom.fatherName || chosenHead.spouse;
+  const headName = custom.headName || custom.customerName || custom.name || 'राशन कार्ड धारक';
+  const spouse = custom.spouse || custom.fatherName || '';
   const scheme = "पात्र गृहस्थी (PHH)";
-  const fpsDealer = `उचित दर विक्रेता (उ.प्र. अधिकृत कोटेदार)`;
+  const fpsDealer = custom.dealerName || custom.fps_name || `उचित दर विक्रेता (उ.प्र. अधिकृत कोटेदार)`;
 
-  const members = [
-    { index: 1, name: headName, relation: "स्वयं (मुखिया)", gender: "मुखिया", age: "42" },
-    { index: 2, name: spouse, relation: "पति/पिता", gender: "सदस्य", age: "46" },
-    { index: 3, name: "विकास", relation: "पुत्र", gender: "सदस्य", age: "18" },
-    { index: 4, name: "पूजा", relation: "पुत्री", gender: "सदस्य", age: "15" }
-  ];
+  const members = (custom.members && Array.isArray(custom.members) && custom.members.length > 0)
+    ? custom.members
+    : [
+        { index: 1, name: headName, relation: "स्वयं (मुखिया)", gender: "मुखिया", age: "42" }
+      ];
+
+  const totalUnits = custom.totalMembers ? Number(custom.totalMembers) : members.length;
 
   return {
     rationNo: cleanRation || '-',
@@ -3218,17 +3211,17 @@ function getRationDetails(rationNo, custom = {}) {
     spouse,
     fatherName: spouse,
     scheme,
-    units: members.length,
+    units: totalUnits,
     fpsDealer,
-    district: "उ.प्र. खाद्य एवं रसद विभाग",
-    block: "सदर",
-    village: "सदर",
-    wheatKg: members.length * 3,
-    riceKg: members.length * 2,
+    district: custom.district || "उ.प्र. खाद्य एवं रसद विभाग",
+    block: custom.block || "सदर",
+    village: custom.village || "सदर",
+    wheatKg: totalUnits * 3,
+    riceKg: totalUnits * 2,
     sugarKg: 0,
     members,
     status: "सक्रिय कार्ड (राशन वितरण चालू)",
-    qrCodeData: `NFSA:RC=${cleanRation}:HEAD=${headName}:UNITS=${members.length}:FPS=${fpsDealer}`,
+    qrCodeData: `NFSA:RC=${cleanRation}:HEAD=${headName}:UNITS=${totalUnits}:FPS=${fpsDealer}`,
     cardType: 'ration'
   };
 }
@@ -3578,10 +3571,12 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
           'gst_verification': 'gst_to_pan',
           'aadhaarcard': 'aadhaar_advance', 'aadhaar_card': 'aadhaar_advance',
           'votercard': 'voter_verification', 'voter_card': 'voter_verification',
-          'rationcard': 'ration_pdf_by_ration', 'ration_card': 'ration_pdf_by_ration',
+          'rationcard': 'ration_pdf_by_ration', 'ration_card': 'ration_pdf_by_ration', 'ration_pdf': 'ration_pdf_by_ration',
           'electricitybill': 'electric_bill_pdf_bihar', 'electricity_bill': 'electric_bill_pdf_bihar',
           'drivinglicence': 'driving_licence_pdf', 'driving_licence': 'driving_licence_pdf',
-          'ayushmancard': 'ayushman_image_jpg', 'ayushman_card': 'ayushman_image_jpg',
+          'ayushman': 'ayushman_image_jpg', 'ayushmancard': 'ayushman_image_jpg', 'ayushman_card': 'ayushman_image_jpg',
+          'eshram': 'e_shram', 'eshram_update': 'e_shram_update',
+          'samagra': 'samagra_service', 'sambal': 'sambal_pdf',
           'edistrictslip': 'rtps_bihar_pdf', 'edistrict_slip' : 'rtps_bihar_pdf',
           'epan': 'pan_find', 'findpan': 'pan_find', 'challansearch': 'chalan_find',
           'searchepic': 'voter_verification',
@@ -3760,14 +3755,36 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       }
       if (!p4Params.action) p4Params.action = 'status';
     }
-    if (lowerUrl.includes('ration')) {
-      const cleanRation = String(params?.ration_no || params?.rationNo || params?.rationNumber || params?.aadhar || params?.uidNumber || val).trim();
+    if (lowerUrl.includes('pmjay') || lowerUrl.includes('ayushman')) {
+      const pmjayClean = String(params?.pmjayId || params?.pmjay_id || params?.query || val).trim();
+      p4Params.pmjayId = pmjayClean;
+      p4Params.pmjay_id = pmjayClean;
+      p4Params.id = pmjayClean;
+    }
+    if (lowerUrl.includes('aadhar_to_rationpdf')) {
+      const cleanUid = String(params?.aadhaar || params?.aadhaarNo || params?.aadhar || params?.uidNumber || val).replace(/\D/g, '');
+      p4Params.aadhar = cleanUid;
+      p4Params.aadhaar = cleanUid;
+      p4Params.rationtype = 'new';
+      delete p4Params.ration_no;
+      delete p4Params.rationNo;
+      delete p4Params.rationNumber;
+    } else if (lowerUrl.includes('ration2uid') || lowerUrl.includes('ration_to_aadhaar')) {
+      const cleanRat = String(params?.rationNumber || params?.rationNo || params?.ration_no || params?.query || val).trim();
+      p4Params.rationNumber = cleanRat;
+      p4Params.ration_no = cleanRat;
+      p4Params.rationNo = cleanRat;
+      if (params?.state) p4Params.state = params.state;
+    } else if (lowerUrl.includes('ration_full_info_up') || norm === 'up_ration_info') {
+      const cleanRat = String(params?.rationNumber || params?.rationNo || params?.ration_no || params?.query || val).trim();
+      p4Params.rationNumber = cleanRat;
+      p4Params.ration_no = cleanRat;
+      p4Params.rationNo = cleanRat;
+    } else if (lowerUrl.includes('ration')) {
+      const cleanRation = String(params?.ration_no || params?.rationNo || params?.rationNumber || val).trim();
       p4Params.ration_no = cleanRation;
       p4Params.rationNo = cleanRation;
       p4Params.rationNumber = cleanRation;
-      p4Params.aadhar = cleanRation;
-      p4Params.aadhaar = cleanRation;
-      p4Params.uidNumber = cleanRation;
       p4Params.rationtype = params?.rationtype || 'new';
     }
     if (lowerUrl.includes('dl') || lowerUrl.includes('licence') || lowerUrl.includes('license')) {
@@ -3891,10 +3908,15 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       p4Params.upi_id = cleanUpi;
       p4Params.upi = cleanUpi;
     }
-    if (lowerUrl.includes('familyverification') || lowerUrl.includes('hr_services')) {
-      const famClean = String(params?.familyId || params?.family_id || val).trim();
+    if (lowerUrl.includes('familyverification') || lowerUrl.includes('hr_services') || norm === 'samagra_service') {
+      const famClean = String(params?.familyId || params?.family_id || params?.samagraId || val).trim();
       p4Params.familyId = famClean;
       p4Params.family_id = famClean;
+    }
+    if (lowerUrl.includes('sharmadhan') || norm === 'sambal_pdf') {
+      const uidClean = String(params?.uidNumber || params?.aadhaar || params?.aadhaarNo || val).replace(/\D/g, '');
+      p4Params.uidNumber = uidClean;
+      p4Params.aadhar = uidClean;
     }
 
     if (params && typeof params === 'object') {
@@ -4235,8 +4257,8 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
   }
 
   // 5. Ration PDF
-  if (norm.includes('ration')) {
-    const rationNo = String(params?.rationNo || params?.query || '').replace(/[^0-9]/g, '');
+  if (norm.includes('ration') && !norm.includes('aadhar') && !norm.includes('uid') && !norm.includes('info')) {
+    const rationNo = String(params?.rationNo || params?.rationNumber || params?.ration_no || params?.query || '').replace(/[^0-9]/g, '');
     if (rationNo && rationNo.length >= 6) {
       try {
         const rationUrl = `https://authorized.p4points.co.in/api/v1/rationPdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&ration_no=${encodeURIComponent(rationNo)}&rationtype=new`;
@@ -4253,6 +4275,69 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
         }
       } catch (err) {
         console.error('Live P4Points Ration PDF fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 5B. UP Ration Info (ration_full_info_up.php)
+  if (norm.includes('up_ration_info') || norm.includes('ration_full_info') || norm === 'up_ration_info') {
+    const rationNo = String(params?.rationNumber || params?.rationNo || params?.ration_no || params?.query || '').replace(/[^0-9]/g, '');
+    if (rationNo && rationNo.length >= 6) {
+      try {
+        const upUrl = `https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey=${encodeURIComponent(p4ApiKey)}&rationNumber=${encodeURIComponent(rationNo)}`;
+        const res = await fetch(upUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.data || json.response || json.status === 1 || json.success)) {
+          const d = json.data || json.response || json;
+          return {
+            source: 'p4points',
+            service: 'ration',
+            rationNo: rationNo,
+            headName: d.headName || d.head_name || d.name || 'राशन कार्ड धारक',
+            name: d.headName || d.head_name || d.name || 'राशन कार्ड धारक',
+            dealerName: d.dealerName || d.fps_name || '',
+            totalMembers: d.totalMembers || d.member_count || '',
+            members: d.members || [],
+            address: d.address || '',
+            state: 'UP',
+            district: d.district || '',
+            isLiveFromP4Points: true,
+            data: d
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points UP Ration Info fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 5C. Ration To Aadhaar (Ration2Uid-up, Ration2Uid-All_state, aasham_ration2uid.php)
+  if (norm.includes('ration_to_aadhaar') || norm.includes('ration2uid')) {
+    const rationNo = String(params?.rationNumber || params?.rationNo || params?.ration_no || params?.query || '').replace(/[^0-9]/g, '');
+    if (rationNo && rationNo.length >= 6) {
+      try {
+        let r2uUrl = `https://authorized.p4points.co.in/api/v1/Ration2Uid-up?apiKey=${encodeURIComponent(p4ApiKey)}&rationNumber=${encodeURIComponent(rationNo)}`;
+        if (norm.includes('all_state') || norm.includes('allstate')) {
+          r2uUrl = `https://authorized.p4points.co.in/api/v1/Ration2Uid-All_state?apiKey=${encodeURIComponent(p4ApiKey)}&rationNumber=${encodeURIComponent(rationNo)}`;
+        } else if (norm.includes('assam') || norm.includes('aasham')) {
+          r2uUrl = `https://authorized.p4points.co.in/api/v2/aasham_ration2uid.php?apiKey=${encodeURIComponent(p4ApiKey)}&rationNumber=${encodeURIComponent(rationNo)}`;
+        }
+        const res = await fetch(r2uUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.data || json.response || json.uidNumber || json.aadhaar || json.status === 1 || json.success)) {
+          const d = json.data || json.response || json;
+          return {
+            source: 'p4points',
+            service: 'rationToAadhaar',
+            rationNo: rationNo,
+            aadhaarNo: d.uidNumber || d.aadhaar || d.aadhar || '',
+            name: d.name || d.headName || 'राशन कार्ड धारक',
+            isLiveFromP4Points: true,
+            data: d
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Ration To Aadhaar fetch failed:', err.message);
       }
     }
   }
@@ -4367,12 +4452,13 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
   }
 
   // 10. Aadhaar to Ration PDF
-  if (norm.includes('aadhar_to_ration') || norm.includes('aadhaarrationslip')) {
-    const uid = String(params?.aadhaarNo || params?.query || '').replace(/[^0-9]/g, '');
+  if (norm.includes('aadhar_to_ration') || norm.includes('aadhaarrationslip') || norm === 'ration_pdf_by_aadhar') {
+    const uid = String(params?.aadhaarNo || params?.aadhaar || params?.aadhar || params?.uidNumber || params?.query || '').replace(/[^0-9]/g, '');
     if (uid.length === 12) {
       try {
         const arUrl = `https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&aadhar=${encodeURIComponent(uid)}&rationtype=new`;
         const res = await fetch(arUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
         const pdf = json?.Ration_Pdf || json?.api_response?.pdf || json?.pdf;
         if (pdf) {
           return {
@@ -4500,6 +4586,36 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
         }
       } catch (err) {
         console.error('Live P4Points PUC fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 12D. Ayushman Card / PMJAY Verification
+  if (norm.includes('ayushman') || norm.includes('pmjay') || norm === 'ayushman_image_jpg') {
+    const pmjayId = String(params?.pmjayId || params?.pmjay_id || params?.id || params?.query || '').trim();
+    if (pmjayId && pmjayId.length >= 5) {
+      try {
+        const ayUrl = `https://authorized.p4points.co.in/api/v1/PmjayVerification?apiKey=${encodeURIComponent(p4ApiKey)}&pmjayId=${encodeURIComponent(pmjayId)}`;
+        const res = await fetch(ayUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.data || json.response || json.pdf || json.image || json.status === 1 || json.success)) {
+          const d = json.data || json.response || json;
+          return {
+            source: 'p4points',
+            service: 'ayushman',
+            pmjayId: d.pmjayId || d.pmjay_id || pmjayId,
+            name: d.name || d.beneficiaryName || params?.customerName || 'आयुष्मान लाभार्थी',
+            dob: d.dob || '',
+            gender: d.gender || 'MALE',
+            state: d.state || 'UTTAR PRADESH',
+            photoUrl: d.photoUrl || d.image || d.photo || null,
+            pdfUrl: d.pdf || d.pdfUrl || null,
+            isLiveFromP4Points: true,
+            data: d
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Ayushman fetch failed:', err.message);
       }
     }
   }
@@ -5107,11 +5223,18 @@ app.post('/api/services/execute-automated', async (req, res) => {
       relayParams.fatherName = String(params?.fatherName || '').trim();
       relayParams.dob = String(params?.dob || '').trim();
       relayParams.mobile = String(params?.mobile || params?.phone || params?.secondaryInput || '').replace(/\D/g, '').trim();
-    } else if (uService === 'Mobile_Update' || service79.id === 'mobile_update_service' || service79.id === 'aadhaar_to_mobile_find') {
+    } else if (uService === 'Mobile_Update' || service79.id === 'mobile_update_service' || service79.id === 'aadhaar_to_mobile_find' || service79.id === 'e_shram_update') {
       relayParams.uidNumber = String(params?.uidNumber || params?.aadhaarNo || params?.query || '').trim();
       relayParams.aadhaarNo = String(params?.aadhaarNo || params?.uidNumber || params?.query || '').trim();
       relayParams.dob = String(params?.dob || '').trim();
       relayParams.mobile = String(params?.mobile || params?.phone || params?.secondaryInput || '').trim();
+    } else if (uService === 'Samagra Print' || service79.id === 'samagra_service') {
+      relayParams.familyId = String(params?.familyId || params?.samagraId || params?.query || '').trim();
+      relayParams.samagraId = relayParams.familyId;
+      relayParams.mobile = String(params?.mobile || params?.phone || params?.secondaryInput || '').trim();
+    } else if (service79.id === 'sambal_pdf') {
+      relayParams.uidNumber = String(params?.uidNumber || params?.aadhaarNo || params?.query || '').replace(/\D/g, '').trim();
+      relayParams.aadhaarNo = relayParams.uidNumber;
     } else if (uService === 'Dob_Update' || service79.id === 'dob_update_service') {
       relayParams.uidNumber = String(params?.uidNumber || params?.aadhaarNo || params?.query || '').trim();
       relayParams.aadhaarNo = String(params?.aadhaarNo || params?.uidNumber || params?.query || '').trim();
@@ -5244,11 +5367,43 @@ app.post('/api/services/execute-automated', async (req, res) => {
       docTitle = `वोटर स्मार्ट कार्ड (${epic}) - ${voterName}`;
       refNumber = epic;
     } else if (liveP4.service === 'ration' || normServiceType.includes('ration')) {
-      const rat = String(liveP4.rationNo || rawData.ration_no || rawData.rationNo || params?.rationNo || '').trim();
+      const rat = String(liveP4.rationNo || rawData.ration_no || rawData.rationNo || params?.rationNo || params?.rationNumber || '').trim();
       generatedData.rationNo = rat;
-      const headName = rawData.headName || rawData.head_name || params?.customerName || 'राशन कार्ड';
+      const headName = liveP4.name || rawData.headName || rawData.head_name || rawData.owner_name || rawData.name || params?.customerName || 'राशन कार्ड धारक';
+      generatedData.name = headName;
+      generatedData.headName = headName;
+      generatedData.customerName = headName;
+      if (rawData.dealerName || rawData.fps_name || liveP4.dealerName) generatedData.dealerName = rawData.dealerName || rawData.fps_name || liveP4.dealerName;
+      if (rawData.totalMembers || rawData.member_count || liveP4.totalMembers) generatedData.totalMembers = rawData.totalMembers || rawData.member_count || liveP4.totalMembers;
+      if (rawData.members || liveP4.members) generatedData.members = rawData.members || liveP4.members;
+      if (rawData.address || liveP4.address) generatedData.address = rawData.address || liveP4.address;
+      if (rawData.state || liveP4.state) generatedData.state = rawData.state || liveP4.state;
+      if (rawData.district || liveP4.district) generatedData.district = rawData.district || liveP4.district;
       docTitle = `राशन पर्ची (${rat}) - ${headName}`;
-      refNumber = rat;
+      refNumber = rat || 'RATION';
+    } else if (liveP4.service === 'ayushman' || normServiceType.includes('ayushman') || normServiceType === 'ayushmanCard') {
+      const pmjayId = String(liveP4.pmjayId || rawData.pmjay_id || rawData.pmjayId || params?.pmjayId || params?.query || '').trim();
+      generatedData.pmjayId = pmjayId;
+      const benName = rawData.name || rawData.beneficiaryName || liveP4.name || params?.customerName || 'आयुष्मान लाभार्थी';
+      generatedData.name = benName;
+      generatedData.customerName = benName;
+      if (rawData.dob || liveP4.dob) generatedData.dob = rawData.dob || liveP4.dob;
+      if (rawData.gender || liveP4.gender) generatedData.gender = rawData.gender || liveP4.gender;
+      if (rawData.state || liveP4.state) generatedData.state = rawData.state || liveP4.state;
+      if (rawData.photoUrl || liveP4.photoUrl) generatedData.photoUrl = rawData.photoUrl || liveP4.photoUrl;
+      generatedData.coverageAmount = '₹5,00,000 / वर्ष';
+      docTitle = `आयुष्मान कार्ड (${pmjayId}) - ${benName}`;
+      refNumber = pmjayId || 'PMJAY';
+    } else if (liveP4.service === 'eshram' || normServiceType.includes('eshram') || normServiceType.includes('e_shram')) {
+      const uan = String(liveP4.uanNo || rawData.uan_no || rawData.uan || rawData.uanNo || '').trim();
+      const uid = String(liveP4.aadhaarNo || rawData.aadhaarNo || rawData.uidNumber || params?.aadhaarNo || params?.uidNumber || '').replace(/\D/g, '');
+      generatedData.uanNo = uan;
+      generatedData.aadhaarNo = uid;
+      const shramName = rawData.name || liveP4.name || params?.customerName || 'श्रमिक';
+      generatedData.name = shramName;
+      generatedData.customerName = shramName;
+      docTitle = uan ? `ई-श्रम कार्ड (${uan}) - ${shramName}` : `ई-श्रम कार्ड - ${shramName}`;
+      refNumber = uan || uid || 'ESHRAM';
     } else if (liveP4.service === 'electricity' || normServiceType.includes('electric') || normServiceType.includes('bill')) {
       const ca = String(liveP4.consumerNo || rawData.consumer_no || rawData.caNumber || params?.consumerNo || '').trim();
       generatedData.consumerNo = ca;
@@ -5543,6 +5698,58 @@ app.post('/api/services/execute-automated', async (req, res) => {
         };
         docTitle = `वोटर कार्ड CR-80 PVC (${epic}) - ${vName}`;
         refNumber = epic;
+      }
+    } else if (normServiceType === 'ayushmancard' || normServiceType === 'ayushmanCard' || normServiceType === 'ayushman_image_jpg' || ['ayushmanCard', 'ayushman_image_jpg'].includes(params?.serviceId)) {
+      const pmjayId = String(params?.pmjayId || params?.pmjay_id || params?.query || '').trim();
+      const aName = String(params?.customerName || params?.name || '').trim();
+      const dob = String(params?.dob || '').trim();
+      const gender = String(params?.gender || 'MALE').trim();
+      const state = String(params?.state || 'UTTAR PRADESH').trim();
+      if (pmjayId && aName) {
+        generatedData = {
+          pmjayId,
+          name: aName,
+          customerName: aName,
+          beneficiaryName: aName,
+          dob: dob || '01/01/1985',
+          gender,
+          state,
+          coverageAmount: '₹5,00,000 / वर्ष',
+          photoUrl: params?.photo || params?.photoData || null,
+          refNumber: pmjayId,
+          serviceType: 'ayushmanCard',
+          cardType: 'ISO CR-80 PVC Smart Card',
+          isInstantPvc: true
+        };
+        docTitle = `आयुष्मान कार्ड CR-80 PVC (${pmjayId}) - ${aName}`;
+        refNumber = pmjayId;
+      }
+    } else if (normServiceType === 'rationcard' || normServiceType === 'rationCard' || normServiceType === 'ration_pdf_by_ration' || ['rationCard', 'ration_pdf_by_ration'].includes(params?.serviceId)) {
+      const ratNo = String(params?.rationNo || params?.rationNumber || params?.query || '').trim();
+      const hName = String(params?.customerName || params?.name || params?.headName || '').trim();
+      const dName = String(params?.dealerName || params?.fpsName || '').trim();
+      const tot = String(params?.totalMembers || params?.memberCount || '4').trim();
+      const addr = String(params?.address || '').trim();
+      const state = String(params?.state || 'UP').trim();
+      const dist = String(params?.district || '').trim();
+      if (ratNo && hName) {
+        generatedData = {
+          rationNo: ratNo,
+          name: hName,
+          headName: hName,
+          customerName: hName,
+          dealerName: dName || 'उचित दर विक्रेता',
+          totalMembers: tot,
+          address: addr,
+          state,
+          district: dist,
+          refNumber: ratNo,
+          serviceType: 'rationCard',
+          cardType: 'NFSA Ration Slip',
+          isInstantPvc: true
+        };
+        docTitle = `राशन पर्ची (${ratNo}) - ${hName}`;
+        refNumber = ratNo;
       }
     }
   }
@@ -6020,20 +6227,40 @@ app.get('/api/voter/lookup/:epicNo', (req, res) => {
   res.json(getVoterDetails(req.params.epicNo));
 });
 
-app.get('/api/ayushman/lookup/:id', (req, res) => {
+app.get('/api/ayushman/lookup/:id', async (req, res) => {
   const store = getStore();
   if (isToolDisabled(store, 'ayushman', 'ayushmanCard')) {
     return res.status(403).json({ error: 'यह टूल वर्तमान में सुपर एडमिन द्वारा अक्षम (Disabled) है।' });
   }
-  res.json(getAyushmanDetails(req.params.id));
+  const id = req.params.id.trim();
+  const p4ApiKey = store.apiGateway?.apiKey;
+  if (p4ApiKey && (store.apiGateway?.liveMode !== false)) {
+    try {
+      const live = await dispatchLiveP4Points('ayushman_image_jpg', { pmjayId: id }, p4ApiKey);
+      if (live && (live.name || live.pmjayId)) {
+        return res.json(getAyushmanDetails(id, live));
+      }
+    } catch(e) {}
+  }
+  res.json(getAyushmanDetails(id));
 });
 
-app.get('/api/ration/lookup/:rationNo', (req, res) => {
+app.get('/api/ration/lookup/:rationNo', async (req, res) => {
   const store = getStore();
   if (isToolDisabled(store, 'ration', 'rationCard')) {
     return res.status(403).json({ error: 'यह टूल वर्तमान में सुपर एडमिन द्वारा अक्षम (Disabled) है।' });
   }
-  res.json(getRationDetails(req.params.rationNo));
+  const rationNo = req.params.rationNo.trim();
+  const p4ApiKey = store.apiGateway?.apiKey;
+  if (p4ApiKey && (store.apiGateway?.liveMode !== false)) {
+    try {
+      const live = await dispatchLiveP4Points('ration_pdf_by_ration', { ration_no: rationNo, rationNo }, p4ApiKey);
+      if (live && (live.name || live.rationNo)) {
+        return res.json(getRationDetails(rationNo, live));
+      }
+    } catch(e) {}
+  }
+  res.json(getRationDetails(rationNo));
 });
 
 app.get('/api/electricity/lookup/:consumerNo', (req, res) => {

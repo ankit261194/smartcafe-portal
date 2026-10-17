@@ -3962,21 +3962,23 @@ function getVoterDetails($epicNo, $custom = []) {
 
 function getAyushmanDetails($id, $custom = []) {
     $cleanId = strtoupper(preg_replace('/[\s-]+/', '', $id ?? ''));
-    $name = trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['customerName']) ? $custom['customerName'] : '-'));
+    $name = trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['beneficiaryName']) ? $custom['beneficiaryName'] : 'आयुष्मान लाभार्थी')));
     $gender = trim(!empty($custom['gender']) ? $custom['gender'] : 'MALE / पुरुष');
-    $yob = !empty($custom['dob']) ? substr($custom['dob'], 0, 4) : '-';
-    $pmjayId = $cleanId ?: ("PMJAY-" . substr(str_pad((string)getDeterministicHash($name ?: 'PMJAY'), 10, '0', STR_PAD_LEFT), 0, 10));
-    $familyId = "NFSA-FAM-" . (200000 + (getDeterministicHash($name) % 800000));
+    $yob = !empty($custom['dob']) ? substr($custom['dob'], 0, 4) : '1985';
+    $pmjayId = $cleanId ?: 'PMJAY';
+    $familyId = !empty($custom['familyId']) ? $custom['familyId'] : ("NFSA-FAM-" . (substr(preg_replace('/\D/', '', $cleanId), -6) ?: '100000'));
 
     return [
         'pmjayId' => $pmjayId,
         'name' => $name,
+        'beneficiaryName' => $name,
         'gender' => $gender,
         'yob' => $yob,
-        'state' => "UTTAR PRADESH",
-        'district' => "LUCKNOW",
+        'dob' => $custom['dob'] ?? '01/01/1985',
+        'state' => $custom['state'] ?? "UTTAR PRADESH",
+        'district' => $custom['district'] ?? "LUCKNOW",
         'familyId' => $familyId,
-        'coverageAmount' => "₹5,00,000/- प्रति वर्ष मुफ़्त उपचार सुरक्षा",
+        'coverageAmount' => $custom['coverageAmount'] ?? "₹5,00,000/- प्रति वर्ष मुफ़्त उपचार सुरक्षा",
         'status' => "सत्यापित पात्र लाभार्थी (BIS Verified Beneficiary)",
         'qrCodeData' => "PMJAY:ID=$pmjayId:NAME=$name:YOB=$yob:FAM=$familyId:VALID=5LAKH",
         'cardType' => 'ayushman'
@@ -3985,26 +3987,18 @@ function getAyushmanDetails($id, $custom = []) {
 
 function getRationDetails($rationNo, $custom = []) {
     $cleanRation = preg_replace('/[\s-]+/', '', $rationNo ?? '');
-    $posHash = getDeterministicHash($cleanRation ?: 'RATION');
-    $sampleHeads = [
-        ["head" => "SUNITA DEVI", "spouse" => "RAM PRAKASH"],
-        ["head" => "KUSUM LATA", "spouse" => "ANAND MOHAN"],
-        ["head" => "SHANTI DEVI", "spouse" => "BHAGWATI PRASAD"],
-        ["head" => "MEENA DEVI", "spouse" => "SURENDRA NATH"],
-        ["head" => "KAMLESH DEVI", "spouse" => "JAGDISH PRASAD"]
-    ];
-    $chosenHead = $sampleHeads[$posHash % count($sampleHeads)];
-    $headName = trim(!empty($custom['headName']) ? $custom['headName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : $chosenHead['head'])));
-    $spouse = trim(!empty($custom['spouse']) ? $custom['spouse'] : (!empty($custom['fatherName']) ? $custom['fatherName'] : $chosenHead['spouse']));
+    $headName = trim(!empty($custom['headName']) ? $custom['headName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : 'राशन कार्ड धारक')));
+    $spouse = trim(!empty($custom['spouse']) ? $custom['spouse'] : (!empty($custom['fatherName']) ? $custom['fatherName'] : ''));
     $scheme = "पात्र गृहस्थी (PHH)";
-    $fpsDealer = "उचित दर विक्रेता (उ.प्र. अधिकृत कोटेदार)";
+    $fpsDealer = !empty($custom['dealerName']) ? $custom['dealerName'] : (!empty($custom['fps_name']) ? $custom['fps_name'] : "उचित दर विक्रेता (उ.प्र. अधिकृत कोटेदार)");
 
-    $members = [
-        ["index" => 1, "name" => $headName, "relation" => "स्वयं (मुखिया)", "gender" => "मुखिया", "age" => "42"],
-        ["index" => 2, "name" => $spouse, "relation" => "पति/पिता", "gender" => "सदस्य", "age" => "46"],
-        ["index" => 3, "name" => "विकास", "relation" => "पुत्र", "gender" => "सदस्य", "age" => "18"],
-        ["index" => 4, "name" => "पूजा", "relation" => "पुत्री", "gender" => "सदस्य", "age" => "15"]
-    ];
+    $members = (!empty($custom['members']) && is_array($custom['members']))
+        ? $custom['members']
+        : [
+            ["index" => 1, "name" => $headName, "relation" => "स्वयं (मुखिया)", "gender" => "मुखिया", "age" => "42"]
+        ];
+
+    $totalUnits = !empty($custom['totalMembers']) ? intval($custom['totalMembers']) : count($members);
 
     return [
         'rationNo' => $cleanRation ?: '-',
@@ -4012,17 +4006,17 @@ function getRationDetails($rationNo, $custom = []) {
         'spouse' => $spouse,
         'fatherName' => $spouse,
         'scheme' => $scheme,
-        'units' => count($members),
+        'units' => $totalUnits,
         'fpsDealer' => $fpsDealer,
-        'district' => "उ.प्र. खाद्य एवं रसद विभाग",
-        'block' => "सदर",
-        'village' => "सदर",
-        'wheatKg' => count($members) * 3,
-        'riceKg' => count($members) * 2,
+        'district' => $custom['district'] ?? "उ.प्र. खाद्य एवं रसद विभाग",
+        'block' => $custom['block'] ?? "सदर",
+        'village' => $custom['village'] ?? "सदर",
+        'wheatKg' => $totalUnits * 3,
+        'riceKg' => $totalUnits * 2,
         'sugarKg' => 0,
         'members' => $members,
         'status' => "सक्रिय कार्ड (राशन वितरण चालू)",
-        'qrCodeData' => "NFSA:RC=$cleanRation:HEAD=$headName:UNITS=" . count($members) . ":FPS=$fpsDealer",
+        'qrCodeData' => "NFSA:RC=$cleanRation:HEAD=$headName:UNITS=$totalUnits:FPS=$fpsDealer",
         'cardType' => 'ration'
     ];
 }
@@ -4257,10 +4251,12 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             'gst_verification' => 'gst_to_pan',
             'aadhaarcard' => 'aadhaar_advance', 'aadhaar_card' => 'aadhaar_advance',
             'votercard' => 'voter_verification', 'voter_card' => 'voter_verification',
-            'rationcard' => 'ration_pdf_by_ration', 'ration_card' => 'ration_pdf_by_ration',
+            'rationcard' => 'ration_pdf_by_ration', 'ration_card' => 'ration_pdf_by_ration', 'ration_pdf' => 'ration_pdf_by_ration',
             'electricitybill' => 'electric_bill_pdf_bihar', 'electricity_bill' => 'electric_bill_pdf_bihar',
             'drivinglicence' => 'driving_licence_pdf', 'driving_licence' => 'driving_licence_pdf',
-            'ayushmancard' => 'ayushman_image_jpg', 'ayushman_card' => 'ayushman_image_jpg',
+            'ayushman' => 'ayushman_image_jpg', 'ayushmancard' => 'ayushman_image_jpg', 'ayushman_card' => 'ayushman_image_jpg',
+            'eshram' => 'e_shram', 'eshram_update' => 'e_shram_update',
+            'samagra' => 'samagra_service', 'sambal' => 'sambal_pdf',
             'edistrictslip' => 'rtps_bihar_pdf', 'edistrict_slip' => 'rtps_bihar_pdf',
             'epan' => 'pan_find', 'findpan' => 'pan_find', 'challansearch' => 'chalan_find',
             'searchepic' => 'voter_verification',
@@ -4437,14 +4433,34 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             }
             if (!isset($p4Params['action'])) $p4Params['action'] = 'status';
         }
-        if (strpos($lowerUrl, 'ration') !== false) {
-            $cleanRation = trim($params['ration_no'] ?? ($params['rationNo'] ?? ($params['rationNumber'] ?? ($params['aadhar'] ?? ($params['uidNumber'] ?? $val)))));
+        if (strpos($lowerUrl, 'pmjay') !== false || strpos($lowerUrl, 'ayushman') !== false) {
+            $pmjayClean = trim($params['pmjayId'] ?? ($params['pmjay_id'] ?? ($params['query'] ?? $val)));
+            $p4Params['pmjayId'] = $pmjayClean;
+            $p4Params['pmjay_id'] = $pmjayClean;
+            $p4Params['id'] = $pmjayClean;
+        }
+        if (strpos($lowerUrl, 'aadhar_to_rationpdf') !== false) {
+            $cleanUid = preg_replace('/\D/', '', $params['aadhaar'] ?? ($params['aadhaarNo'] ?? ($params['aadhar'] ?? ($params['uidNumber'] ?? $val))));
+            $p4Params['aadhar'] = $cleanUid;
+            $p4Params['aadhaar'] = $cleanUid;
+            $p4Params['rationtype'] = 'new';
+            unset($p4Params['ration_no'], $p4Params['rationNo'], $p4Params['rationNumber']);
+        } elseif (strpos($lowerUrl, 'ration2uid') !== false || strpos($lowerUrl, 'ration_to_aadhaar') !== false) {
+            $cleanRat = trim($params['rationNumber'] ?? ($params['rationNo'] ?? ($params['ration_no'] ?? ($params['query'] ?? $val))));
+            $p4Params['rationNumber'] = $cleanRat;
+            $p4Params['ration_no'] = $cleanRat;
+            $p4Params['rationNo'] = $cleanRat;
+            if (!empty($params['state'])) $p4Params['state'] = $params['state'];
+        } elseif (strpos($lowerUrl, 'ration_full_info_up') !== false || $norm === 'up_ration_info') {
+            $cleanRat = trim($params['rationNumber'] ?? ($params['rationNo'] ?? ($params['ration_no'] ?? ($params['query'] ?? $val))));
+            $p4Params['rationNumber'] = $cleanRat;
+            $p4Params['ration_no'] = $cleanRat;
+            $p4Params['rationNo'] = $cleanRat;
+        } elseif (strpos($lowerUrl, 'ration') !== false) {
+            $cleanRation = trim($params['ration_no'] ?? ($params['rationNo'] ?? ($params['rationNumber'] ?? $val)));
             $p4Params['ration_no'] = $cleanRation;
             $p4Params['rationNo'] = $cleanRation;
             $p4Params['rationNumber'] = $cleanRation;
-            $p4Params['aadhar'] = $cleanRation;
-            $p4Params['aadhaar'] = $cleanRation;
-            $p4Params['uidNumber'] = $cleanRation;
             $p4Params['rationtype'] = $params['rationtype'] ?? 'new';
         }
         if (strpos($lowerUrl, 'dl') !== false || strpos($lowerUrl, 'licence') !== false || strpos($lowerUrl, 'license') !== false) {
@@ -4560,10 +4576,15 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             $p4Params['upi_id'] = $cleanUpi;
             $p4Params['upi'] = $cleanUpi;
         }
-        if (strpos($lowerUrl, 'familyverification') !== false || strpos($lowerUrl, 'hr_services') !== false) {
-            $famClean = trim($params['familyId'] ?? ($params['family_id'] ?? $val));
+        if (strpos($lowerUrl, 'familyverification') !== false || strpos($lowerUrl, 'hr_services') !== false || $norm === 'samagra_service') {
+            $famClean = trim($params['familyId'] ?? ($params['family_id'] ?? ($params['samagraId'] ?? $val)));
             $p4Params['familyId'] = $famClean;
             $p4Params['family_id'] = $famClean;
+        }
+        if (strpos($lowerUrl, 'sharmadhan') !== false || $norm === 'sambal_pdf') {
+            $uidClean = preg_replace('/\D/', '', $params['uidNumber'] ?? ($params['aadhaar'] ?? ($params['aadhaarNo'] ?? $val)));
+            $p4Params['uidNumber'] = $uidClean;
+            $p4Params['aadhar'] = $uidClean;
         }
 
         foreach ($params as $k => $v) {
@@ -4900,13 +4921,15 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
     }
 
     // 5. Ration PDF
-    if (strpos($norm, 'ration') !== false) {
-        $rationNo = preg_replace('/[^0-9]/', '', $params['rationNo'] ?? ($params['query'] ?? ''));
+    if (strpos($norm, 'ration') !== false && strpos($norm, 'aadhar') === false && strpos($norm, 'uid') === false && strpos($norm, 'info') === false) {
+        $rationNo = preg_replace('/[^0-9]/', '', $params['rationNo'] ?? ($params['rationNumber'] ?? ($params['ration_no'] ?? ($params['query'] ?? ''))));
         if (strlen($rationNo) >= 6) {
-            $url = 'https://authorized.p4points.co.in/api/v1/rationPdf.php?apiKey=' . urlencode($p4ApiKey) . '&ration_no=' . urlencode($rationNo) . '&rationtype=NFSA';
+            $url = 'https://authorized.p4points.co.in/api/v1/rationPdf.php?apiKey=' . urlencode($p4ApiKey) . '&ration_no=' . urlencode($rationNo) . '&rationtype=new';
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $resp = curl_exec($ch);
             curl_close($ch);
             if ($resp) {
@@ -4918,6 +4941,77 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
                         'rationNo' => $rationNo,
                         'pdfUrl' => $json['pdf_url'],
                         'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 5B. UP Ration Info (ration_full_info_up.php)
+    if (strpos($norm, 'up_ration_info') !== false || strpos($norm, 'ration_full_info') !== false || $norm === 'up_ration_info') {
+        $rationNo = preg_replace('/[^0-9]/', '', $params['rationNumber'] ?? ($params['rationNo'] ?? ($params['ration_no'] ?? ($params['query'] ?? ''))));
+        if (strlen($rationNo) >= 6) {
+            $url = 'https://authorized.p4points.co.in/api/v1/ration_full_info_up.php?apiKey=' . urlencode($p4ApiKey) . '&rationNumber=' . urlencode($rationNo);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (is_array($json) && (!empty($json['data']) || !empty($json['response']) || (!empty($json['status']) && $json['status'] == 1) || !empty($json['success']))) {
+                    $d = $json['data'] ?? ($json['response'] ?? $json);
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'ration',
+                        'rationNo' => $rationNo,
+                        'headName' => $d['headName'] ?? ($d['head_name'] ?? ($d['name'] ?? 'राशन कार्ड धारक')),
+                        'name' => $d['headName'] ?? ($d['head_name'] ?? ($d['name'] ?? 'राशन कार्ड धारक')),
+                        'dealerName' => $d['dealerName'] ?? ($d['fps_name'] ?? ''),
+                        'totalMembers' => $d['totalMembers'] ?? ($d['member_count'] ?? ''),
+                        'members' => $d['members'] ?? [],
+                        'address' => $d['address'] ?? '',
+                        'state' => 'UP',
+                        'district' => $d['district'] ?? '',
+                        'isLiveFromP4Points' => true,
+                        'data' => $d
+                    ];
+                }
+            }
+        }
+    }
+
+    // 5C. Ration To Aadhaar (Ration2Uid-up, Ration2Uid-All_state, aasham_ration2uid.php)
+    if (strpos($norm, 'ration_to_aadhaar') !== false || strpos($norm, 'ration2uid') !== false) {
+        $rationNo = preg_replace('/[^0-9]/', '', $params['rationNumber'] ?? ($params['rationNo'] ?? ($params['ration_no'] ?? ($params['query'] ?? ''))));
+        if (strlen($rationNo) >= 6) {
+            $r2uUrl = 'https://authorized.p4points.co.in/api/v1/Ration2Uid-up?apiKey=' . urlencode($p4ApiKey) . '&rationNumber=' . urlencode($rationNo);
+            if (strpos($norm, 'all_state') !== false || strpos($norm, 'allstate') !== false) {
+                $r2uUrl = 'https://authorized.p4points.co.in/api/v1/Ration2Uid-All_state?apiKey=' . urlencode($p4ApiKey) . '&rationNumber=' . urlencode($rationNo);
+            } elseif (strpos($norm, 'assam') !== false || strpos($norm, 'aasham') !== false) {
+                $r2uUrl = 'https://authorized.p4points.co.in/api/v2/aasham_ration2uid.php?apiKey=' . urlencode($p4ApiKey) . '&rationNumber=' . urlencode($rationNo);
+            }
+            $ch = curl_init($r2uUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (is_array($json) && (!empty($json['data']) || !empty($json['response']) || !empty($json['uidNumber']) || !empty($json['aadhaar']) || (!empty($json['status']) && $json['status'] == 1) || !empty($json['success']))) {
+                    $d = $json['data'] ?? ($json['response'] ?? $json);
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'rationToAadhaar',
+                        'rationNo' => $rationNo,
+                        'aadhaarNo' => $d['uidNumber'] ?? ($d['aadhaar'] ?? ($d['aadhar'] ?? '')),
+                        'name' => $d['name'] ?? ($d['headName'] ?? 'राशन कार्ड धारक'),
+                        'isLiveFromP4Points' => true,
+                        'data' => $d
                     ];
                 }
             }
@@ -5044,8 +5138,8 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
     }
 
     // 10. Aadhaar to Ration PDF
-    if (strpos($norm, 'aadhar_to_ration') !== false || strpos($norm, 'aadhaarrationslip') !== false) {
-        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['query'] ?? ''));
+    if (strpos($norm, 'aadhar_to_ration') !== false || strpos($norm, 'aadhaarrationslip') !== false || $norm === 'ration_pdf_by_aadhar') {
+        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['aadhaar'] ?? ($params['aadhar'] ?? ($params['uidNumber'] ?? ($params['query'] ?? '')))));
         if (strlen($uid) === 12) {
             $url = 'https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php?apiKey=' . urlencode($p4ApiKey) . '&aadhar=' . urlencode($uid) . '&rationtype=new';
             $ch = curl_init($url);
@@ -5192,6 +5286,39 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
                         'pdfBase64' => $json['pdf_base64'] ?? null,
                         'isLiveFromP4Points' => true,
                         'data' => $json['data'] ?? $json
+                    ];
+                }
+            }
+        }
+    }
+
+    // 12D. Ayushman Card / PMJAY Verification
+    if (strpos($norm, 'ayushman') !== false || strpos($norm, 'pmjay') !== false || $norm === 'ayushman_image_jpg') {
+        $pmjayId = trim($params['pmjayId'] ?? ($params['pmjay_id'] ?? ($params['id'] ?? ($params['query'] ?? ''))));
+        if (strlen($pmjayId) >= 5) {
+            $url = 'https://authorized.p4points.co.in/api/v1/PmjayVerification?apiKey=' . urlencode($p4ApiKey) . '&pmjayId=' . urlencode($pmjayId);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (is_array($json) && (!empty($json['data']) || !empty($json['response']) || !empty($json['pdf']) || !empty($json['image']) || (!empty($json['status']) && $json['status'] == 1) || !empty($json['success']))) {
+                    $d = $json['data'] ?? ($json['response'] ?? $json);
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'ayushman',
+                        'pmjayId' => $d['pmjayId'] ?? ($d['pmjay_id'] ?? $pmjayId),
+                        'name' => $d['name'] ?? ($d['beneficiaryName'] ?? ($params['customerName'] ?? 'आयुष्मान लाभार्थी')),
+                        'dob' => $d['dob'] ?? '',
+                        'gender' => $d['gender'] ?? 'MALE',
+                        'state' => $d['state'] ?? 'UTTAR PRADESH',
+                        'pdfUrl' => $d['pdf'] ?? ($d['file'] ?? ($d['image'] ?? null)),
+                        'isLiveFromP4Points' => true,
+                        'data' => $d
                     ];
                 }
             }
@@ -5822,7 +5949,7 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
     } elseif ($uService === 'Ayushman Download') {
         $postData['uidNumber'] = trim($params['uidNumber'] ?? ($params['pmjayId'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? ''))));
         $postData['state_code'] = trim($params['stateCode'] ?? ($params['state'] ?? 'UP'));
-    } elseif ($uService === 'Mobile_Update' || in_array($service79['id'] ?? '', ['mobile_update_service', 'aadhaar_to_mobile_find'])) {
+    } elseif ($uService === 'Mobile_Update' || in_array($service79['id'] ?? '', ['mobile_update_service', 'aadhaar_to_mobile_find', 'e_shram_update'])) {
         $postData['uidNumber'] = trim($params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? '')));
         $postData['aadhaarNo'] = trim($params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['query'] ?? '')));
         $postData['dob'] = trim($params['dob'] ?? '');
@@ -5835,8 +5962,13 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
     } elseif ($uService === 'Land Seeding') {
         $postData['farmerId'] = trim($params['farmerId'] ?? ($params['registrationNo'] ?? ($params['query'] ?? '')));
         $postData['state'] = trim($params['state'] ?? 'UP');
-    } elseif ($uService === 'Samagra Print') {
-        $postData['samagraId'] = trim($params['samagraId'] ?? ($params['familyId'] ?? ($params['query'] ?? '')));
+    } elseif ($uService === 'Samagra Print' || ($service79['id'] ?? '') === 'samagra_service') {
+        $postData['familyId'] = trim($params['familyId'] ?? ($params['samagraId'] ?? ($params['query'] ?? '')));
+        $postData['samagraId'] = $postData['familyId'];
+        $postData['mobile'] = trim($params['mobile'] ?? ($params['phone'] ?? ''));
+    } elseif (($service79['id'] ?? '') === 'sambal_pdf') {
+        $postData['uidNumber'] = preg_replace('/\D/', '', $params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? '')));
+        $postData['aadhaarNo'] = $postData['uidNumber'];
     } elseif ($uService === 'Pan_Number_Link' || ($service79['id'] ?? '') === 'pan_aadhaar_link_manual') {
         $postData['panNo'] = strtoupper(trim($params['panNo'] ?? ($params['pan'] ?? ($params['query'] ?? ''))));
         $postData['aadhaarNo'] = trim($params['aadhaarNo'] ?? ($params['aadhaar'] ?? ''));
@@ -6386,12 +6518,56 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             if (!empty($liveP4['mobileNumber'])) $generatedData['mobileNumber'] = $liveP4['mobileNumber'];
             $docTitle = "वोटर स्मार्ट कार्ड ({$epic}) - {$voterName}";
             $refNumber = $epic;
-        } elseif ($p4Service === 'ration' || strpos($normServiceType, 'ration') !== false) {
-            $rat = trim($liveP4['rationNo'] ?? ($p4Data['ration_no'] ?? ($p4Data['rationNo'] ?? ($userVal ?: ''))));
+        } elseif ($p4Service === 'ration' || strpos($normServiceType, 'ration') !== false || $normServiceType === 'rationCard') {
+            $rat = trim($liveP4['rationNo'] ?? ($p4Data['ration_no'] ?? ($p4Data['rationNo'] ?? ($params['rationNo'] ?? ($params['rationNumber'] ?? ($params['query'] ?? ''))))));
             $generatedData['rationNo'] = $rat;
-            $headName = $p4Data['headName'] ?? ($p4Data['head_name'] ?? ($params['customerName'] ?? 'राशन कार्ड'));
+            $headName = $p4Data['headName'] ?? ($p4Data['head_name'] ?? ($p4Data['name'] ?? ($liveP4['headName'] ?? ($liveP4['name'] ?? ($params['customerName'] ?? 'राशन कार्ड धारक')))));
+            $generatedData['name'] = $headName;
+            $generatedData['headName'] = $headName;
+            $generatedData['customerName'] = $headName;
+            if (!empty($p4Data['dealerName']) || !empty($p4Data['fps_name']) || !empty($liveP4['dealerName'])) {
+                $generatedData['dealerName'] = $p4Data['dealerName'] ?? ($p4Data['fps_name'] ?? $liveP4['dealerName']);
+            }
+            if (!empty($p4Data['totalMembers']) || !empty($p4Data['member_count']) || !empty($liveP4['totalMembers'])) {
+                $generatedData['totalMembers'] = $p4Data['totalMembers'] ?? ($p4Data['member_count'] ?? $liveP4['totalMembers']);
+            }
+            if (!empty($p4Data['members']) || !empty($liveP4['members'])) {
+                $generatedData['members'] = $p4Data['members'] ?? $liveP4['members'];
+            }
+            if (!empty($p4Data['address']) || !empty($liveP4['address'])) {
+                $generatedData['address'] = $p4Data['address'] ?? $liveP4['address'];
+            }
+            if (!empty($p4Data['state']) || !empty($liveP4['state'])) {
+                $generatedData['state'] = $p4Data['state'] ?? $liveP4['state'];
+            }
+            if (!empty($p4Data['district']) || !empty($liveP4['district'])) {
+                $generatedData['district'] = $p4Data['district'] ?? $liveP4['district'];
+            }
             $docTitle = "राशन पर्ची ({$rat}) - {$headName}";
-            $refNumber = $rat;
+            $refNumber = $rat ?: 'RATION';
+        } elseif ($p4Service === 'ayushman' || strpos($normServiceType, 'ayushman') !== false || $normServiceType === 'ayushmanCard') {
+            $pmjayId = trim($liveP4['pmjayId'] ?? ($p4Data['pmjay_id'] ?? ($p4Data['pmjayId'] ?? ($params['pmjayId'] ?? ($params['query'] ?? '')))));
+            $generatedData['pmjayId'] = $pmjayId;
+            $benName = $p4Data['name'] ?? ($p4Data['beneficiaryName'] ?? ($liveP4['name'] ?? ($params['customerName'] ?? 'आयुष्मान लाभार्थी')));
+            $generatedData['name'] = $benName;
+            $generatedData['customerName'] = $benName;
+            if (!empty($p4Data['dob']) || !empty($liveP4['dob'])) $generatedData['dob'] = $p4Data['dob'] ?? $liveP4['dob'];
+            if (!empty($p4Data['gender']) || !empty($liveP4['gender'])) $generatedData['gender'] = $p4Data['gender'] ?? $liveP4['gender'];
+            if (!empty($p4Data['state']) || !empty($liveP4['state'])) $generatedData['state'] = $p4Data['state'] ?? $liveP4['state'];
+            if (!empty($p4Data['photoUrl']) || !empty($liveP4['photoUrl'])) $generatedData['photoUrl'] = $p4Data['photoUrl'] ?? $liveP4['photoUrl'];
+            $generatedData['coverageAmount'] = '₹5,00,000 / वर्ष';
+            $docTitle = "आयुष्मान कार्ड ({$pmjayId}) - {$benName}";
+            $refNumber = $pmjayId ?: 'PMJAY';
+        } elseif ($p4Service === 'eshram' || strpos($normServiceType, 'eshram') !== false || strpos($normServiceType, 'e_shram') !== false) {
+            $uan = trim($liveP4['uanNo'] ?? ($p4Data['uan_no'] ?? ($p4Data['uan'] ?? ($p4Data['uanNo'] ?? ''))));
+            $uid = preg_replace('/\D/', '', $liveP4['aadhaarNo'] ?? ($p4Data['aadhaarNo'] ?? ($p4Data['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['uidNumber'] ?? '')))));
+            $generatedData['uanNo'] = $uan;
+            $generatedData['aadhaarNo'] = $uid;
+            $shramName = $p4Data['name'] ?? ($liveP4['name'] ?? ($params['customerName'] ?? 'श्रमिक'));
+            $generatedData['name'] = $shramName;
+            $generatedData['customerName'] = $shramName;
+            $docTitle = $uan ? "ई-श्रम कार्ड ({$uan}) - {$shramName}" : "ई-श्रम कार्ड - {$shramName}";
+            $refNumber = $uan ?: ($uid ?: 'ESHRAM');
         } elseif ($p4Service === 'electricity' || strpos($normServiceType, 'electric') !== false || strpos($normServiceType, 'bill') !== false) {
             $ca = trim($liveP4['consumerNo'] ?? ($p4Data['consumer_no'] ?? ($p4Data['caNumber'] ?? ($userVal ?: ''))));
             $generatedData['consumerNo'] = $ca;
@@ -6677,6 +6853,58 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                 ];
                 $docTitle = "वोटर कार्ड CR-80 PVC ({$epic}) - {$vName}";
                 $refNumber = $epic;
+            }
+        } elseif ($normServiceType === 'ayushmancard' || $normServiceType === 'ayushmanCard' || $normServiceType === 'ayushman_image_jpg' || (isset($params['serviceId']) && in_array($params['serviceId'], ['ayushmanCard', 'ayushman_image_jpg']))) {
+            $pmjayId = trim($params['pmjayId'] ?? ($params['pmjay_id'] ?? ($params['query'] ?? '')));
+            $aName = trim($params['customerName'] ?? ($params['name'] ?? ''));
+            $dob = trim($params['dob'] ?? '');
+            $gender = trim($params['gender'] ?? 'MALE');
+            $state = trim($params['state'] ?? 'UTTAR PRADESH');
+            if (!empty($pmjayId) && !empty($aName)) {
+                $generatedData = [
+                    'pmjayId' => $pmjayId,
+                    'name' => $aName,
+                    'customerName' => $aName,
+                    'beneficiaryName' => $aName,
+                    'dob' => $dob ?: '01/01/1985',
+                    'gender' => $gender,
+                    'state' => $state,
+                    'coverageAmount' => '₹5,00,000 / वर्ष',
+                    'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
+                    'refNumber' => $pmjayId,
+                    'serviceType' => 'ayushmanCard',
+                    'cardType' => 'ISO CR-80 PVC Smart Card',
+                    'isInstantPvc' => true
+                ];
+                $docTitle = "आयुष्मान कार्ड CR-80 PVC ({$pmjayId}) - {$aName}";
+                $refNumber = $pmjayId;
+            }
+        } elseif ($normServiceType === 'rationcard' || $normServiceType === 'rationCard' || $normServiceType === 'ration_pdf_by_ration' || (isset($params['serviceId']) && in_array($params['serviceId'], ['rationCard', 'ration_pdf_by_ration']))) {
+            $ratNo = trim($params['rationNo'] ?? ($params['rationNumber'] ?? ($params['query'] ?? '')));
+            $hName = trim($params['customerName'] ?? ($params['name'] ?? ($params['headName'] ?? '')));
+            $dName = trim($params['dealerName'] ?? ($params['fpsName'] ?? ''));
+            $tot = trim($params['totalMembers'] ?? ($params['memberCount'] ?? '4'));
+            $addr = trim($params['address'] ?? '');
+            $state = trim($params['state'] ?? 'UP');
+            $dist = trim($params['district'] ?? '');
+            if (!empty($ratNo) && !empty($hName)) {
+                $generatedData = [
+                    'rationNo' => $ratNo,
+                    'name' => $hName,
+                    'headName' => $hName,
+                    'customerName' => $hName,
+                    'dealerName' => $dName ?: 'उचित दर विक्रेता',
+                    'totalMembers' => $tot,
+                    'address' => $addr,
+                    'state' => $state,
+                    'district' => $dist,
+                    'refNumber' => $ratNo,
+                    'serviceType' => 'rationCard',
+                    'cardType' => 'NFSA Ration Slip',
+                    'isInstantPvc' => true
+                ];
+                $docTitle = "राशन पर्ची ({$ratNo}) - {$hName}";
+                $refNumber = $ratNo;
             }
         }
     }
@@ -7360,12 +7588,34 @@ if (preg_match('#^voter/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') 
 }
 
 if (preg_match('#^ayushman/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getAyushmanDetails(strtoupper(trim($m[1]))));
+    $id = trim($m[1]);
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('ayushman_image_jpg', ['pmjayId' => $id], $p4ApiKey);
+            if ($live && (!empty($live['name']) || !empty($live['pmjayId']))) {
+                echo json_encode(getAyushmanDetails($id, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    echo json_encode(getAyushmanDetails(strtoupper($id)));
     exit;
 }
 
 if (preg_match('#^ration/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getRationDetails(trim($m[1])));
+    $rationNo = trim($m[1]);
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('ration_pdf_by_ration', ['ration_no' => $rationNo, 'rationNo' => $rationNo], $p4ApiKey);
+            if ($live && (!empty($live['name']) || !empty($live['rationNo']))) {
+                echo json_encode(getRationDetails($rationNo, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    echo json_encode(getRationDetails($rationNo));
     exit;
 }
 

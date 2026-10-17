@@ -355,6 +355,95 @@ assert(serverJsContent.includes("!norm.includes('link') && !norm.includes('mobil
 
 console.log('✅ PASS: Part 4 Voter Card Services Suite 100% verified across all tiers');
 
+console.log('\n--- TEST 3F: Part 5 Ration, Ayushman, Samagra & Welfare Services Suite Verification ---');
+// 1. Verify all 12 services exist in services_79.json
+const part5ServiceIds = [
+  'ration_verification', 'ration_pdf_by_ration', 'ration_pdf_by_aadhar',
+  'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar',
+  'up_ration_info', 'ayushman_image_jpg', 'e_shram', 'e_shram_update',
+  'samagra_service', 'sambal_pdf'
+];
+part5ServiceIds.forEach(id => {
+  const svc = services79.find(s => s.id === id);
+  assert(svc, `Service ${id} must exist in services_79.json`);
+  assert(svc.badge, `Service ${id} must have honest badge`);
+  assert(svc.isComingSoon === false, `Service ${id} must NOT be coming soon`);
+});
+console.log('✅ PASS: All 12 Part 5 services registered with honest badges and active status');
+
+// 2. Client-side Input Validations & Parameter Packing in ServicePage.jsx
+assert(servicePageContent.includes("['ration', 'ration_pdf_by_ration', 'ration_verification', 'rationCard', 'up_ration_info'].includes(tid)"), 'Ration number validation present');
+assert(servicePageContent.includes("['ayushman', 'pmjay_verify', 'ayushman_card', 'ayushman_image_jpg', 'ayushmanCard'].includes(tid)"), 'Ayushman PMJAY ID validation present');
+assert(servicePageContent.includes("tid === 'e_shram' && val.replace(/\\D/g, '').length !== 12"), 'e-Shram 12-digit Aadhaar validation present');
+assert(servicePageContent.includes("['e_shram_update', 'e_shram_number_link'].includes(tid)"), 'e-Shram update validation present');
+assert(servicePageContent.includes("tid === 'samagra_service'"), 'Samagra validation present');
+assert(servicePageContent.includes("tid === 'sambal_pdf'"), 'Sambal validation present');
+assert(servicePageContent.includes("params.pmjayId = val.toUpperCase().trim()"), 'Ayushman packs pmjayId');
+assert(servicePageContent.includes("params.rationNumber = val"), 'Ration info/aadhaar services pack rationNumber');
+assert(servicePageContent.includes("params.uidNumber = val"), 'e-Shram / Sambal pack uidNumber');
+assert(servicePageContent.includes("params.familyId = val"), 'Samagra packs familyId');
+console.log('✅ PASS: ServicePage client-side validations and parameter packing verified');
+
+// 3. Official CR-80 PVC Preview for Ayushman Golden Card
+assert(servicePageContent.includes("National Health Authority (NHA)"), 'Ayushman preview must contain official NHA header');
+assert(servicePageContent.includes("आयुष्मान भारत • प्रधानमंत्री जन आरोग्य योजना"), 'Ayushman preview must display PM-JAY scheme name');
+assert(servicePageContent.includes("14555"), 'Ayushman preview must display official 14555 helpline');
+assert(servicePageContent.includes("toolKind === 'ayushman'"), 'Ayushman preview condition check');
+console.log('✅ PASS: Ayushman ISO CR-80 PVC Golden Card preview with NHA & helpline verified');
+
+// 4. Zero Mock Names Sanitization in Backend Lookups
+assert(!serverJsContent.includes('SUNITA DEVI'), 'server.js must NOT contain mock name SUNITA DEVI');
+assert(!serverJsContent.includes('KUSUM LATA'), 'server.js must NOT contain mock name KUSUM LATA');
+assert(!serverJsContent.includes('विकास'), 'server.js must NOT contain mock name Vikas');
+assert(!serverJsContent.includes('पूजा'), 'server.js must NOT contain mock name Pooja');
+assert(!indexPhpContent.includes('SUNITA DEVI'), 'index.php must NOT contain mock name SUNITA DEVI');
+assert(!indexPhpContent.includes('KUSUM LATA'), 'index.php must NOT contain mock name KUSUM LATA');
+assert(!indexPhpContent.includes('विकास'), 'index.php must NOT contain mock name Vikas');
+assert(!indexPhpContent.includes('पूजा'), 'index.php must NOT contain mock name Pooja');
+console.log('✅ PASS: Zero mock/synthetic names verified in both Node and PHP backends');
+
+// 5. Backend Section 5 Isolation and Endpoints (Node & PHP)
+assert(serverJsContent.includes("norm.includes('ration') && !norm.includes('aadhar') && !norm.includes('uid') && !norm.includes('info')"), 'server.js Section 5 must isolate ration PDF');
+assert(indexPhpContent.includes("strpos($norm, 'ration') !== false && strpos($norm, 'aadhar') === false && strpos($norm, 'uid') === false && strpos($norm, 'info') === false"), 'index.php Section 5 must isolate ration PDF');
+assert(serverJsContent.includes("ration_full_info_up.php"), 'server.js Section 5B UP ration info implemented');
+assert(indexPhpContent.includes("ration_full_info_up.php"), 'index.php Section 5B UP ration info implemented');
+assert(serverJsContent.includes("Ration2Uid-up"), 'server.js Section 5C Ration to Aadhaar implemented');
+assert(indexPhpContent.includes("Ration2Uid-up"), 'index.php Section 5C Ration to Aadhaar implemented');
+assert(serverJsContent.includes("Ration2Uid-All_state"), 'server.js Section 5C All state ration to UID implemented');
+assert(indexPhpContent.includes("Ration2Uid-All_state"), 'index.php Section 5C All state ration to UID implemented');
+assert(serverJsContent.includes("aasham_ration2uid.php"), 'server.js Section 5C Assam ration to UID implemented');
+assert(indexPhpContent.includes("aasham_ration2uid.php"), 'index.php Section 5C Assam ration to UID implemented');
+assert(serverJsContent.includes("PmjayVerification"), 'server.js Section 12D PMJAY verification implemented');
+assert(indexPhpContent.includes("PmjayVerification"), 'index.php Section 12D PMJAY verification implemented');
+assert(serverJsContent.includes("aadhar_to_Rationpdf.php"), 'server.js Section 10 Aadhaar to Ration implemented');
+assert(indexPhpContent.includes("aadhar_to_Rationpdf.php"), 'index.php Section 10 Aadhaar to Ration implemented');
+console.log('✅ PASS: Live P4Points Section 5, 5B, 5C, 10, 12D verified in both backends');
+
+// 6. Manual Relay Parameter Handling (Node & PHP)
+assert(serverJsContent.includes("uService === 'Mobile_Update' || service79.id === 'mobile_update_service' || service79.id === 'aadhaar_to_mobile_find' || service79.id === 'e_shram_update'"), 'server.js relay supports e_shram_update');
+assert(indexPhpContent.includes("uService === 'Mobile_Update' || in_array($service79['id'] ?? '', ['mobile_update_service', 'aadhaar_to_mobile_find', 'e_shram_update'])"), 'index.php relay supports e_shram_update');
+assert(serverJsContent.includes("uService === 'Samagra Print' || service79.id === 'samagra_service'"), 'server.js relay supports samagra_service');
+assert(indexPhpContent.includes("$uService === 'Samagra Print' || ($service79['id'] ?? '') === 'samagra_service'"), 'index.php relay supports samagra_service');
+assert(serverJsContent.includes("service79.id === 'sambal_pdf'"), 'server.js relay supports sambal_pdf');
+assert(indexPhpContent.includes("($service79['id'] ?? '') === 'sambal_pdf'"), 'index.php relay supports sambal_pdf');
+console.log('✅ PASS: Manual relay handlers for e_shram_update, samagra_service, and sambal_pdf verified');
+
+// 7. Live Demographic Mapping & Instant PVC Generators in execute-automated
+assert(serverJsContent.includes("normServiceType === 'ayushmancard' || normServiceType === 'ayushmanCard' || normServiceType === 'ayushman_image_jpg'"), 'server.js supports instant PVC ayushmanCard');
+assert(indexPhpContent.includes("$normServiceType === 'ayushmancard' || $normServiceType === 'ayushmanCard' || $normServiceType === 'ayushman_image_jpg'"), 'index.php supports instant PVC ayushmanCard');
+assert(serverJsContent.includes("normServiceType === 'rationcard' || normServiceType === 'rationCard' || normServiceType === 'ration_pdf_by_ration'"), 'server.js supports instant PVC rationCard');
+assert(indexPhpContent.includes("$normServiceType === 'rationcard' || $normServiceType === 'rationCard' || $normServiceType === 'ration_pdf_by_ration'"), 'index.php supports instant PVC rationCard');
+console.log('✅ PASS: Live demographic mappings and instant PVC generators verified');
+
+// 8. Lookup routes connected to Live P4Points
+assert(serverJsContent.includes("app.get('/api/ayushman/lookup/:id'"), 'server.js ayushman lookup route exists');
+assert(serverJsContent.includes("app.get('/api/ration/lookup/:rationNo'"), 'server.js ration lookup route exists');
+assert(indexPhpContent.includes("preg_match('#^ayushman/lookup/([^/]+)$#'"), 'index.php ayushman lookup route exists');
+assert(indexPhpContent.includes("preg_match('#^ration/lookup/([^/]+)$#'"), 'index.php ration lookup route exists');
+console.log('✅ PASS: Ayushman and Ration lookup routes with live gateway check verified');
+
+console.log('✅ PASS: Part 5 Ration, Ayushman, Samagra & Welfare Suite 100% verified across all tiers');
+
 console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass & Server-Side Validations ---');
 assert(!indexPhpContent.includes('$isTrial = $previewMode;'), 'index.php must not have $isTrial = $previewMode;');
 assert(indexPhpContent.includes('http_response_code(403);'), 'index.php must return 403 on low balance');

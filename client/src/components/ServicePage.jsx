@@ -653,6 +653,52 @@ function ServicePageContent({
         return;
       }
     }
+    if (['ration', 'ration_pdf_by_ration', 'ration_verification', 'rationCard', 'up_ration_info'].includes(tid)) {
+      if (val.replace(/\D/g, '').length !== 12) {
+        setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य राशन कार्ड नंबर दर्ज करें।' : 'Please enter valid 12-digit Ration Card number.');
+        return;
+      }
+    }
+    if (tid === 'ration_pdf_by_aadhar' && val.replace(/\D/g, '').length !== 12) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+      return;
+    }
+    if (['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar'].includes(tid) && val.replace(/\D/g, '').length < 8) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य राशन कार्ड नंबर दर्ज करें।' : 'Please enter valid Ration Card number.');
+      return;
+    }
+    if (['ayushman', 'pmjay_verify', 'ayushman_card', 'ayushman_image_jpg', 'ayushmanCard'].includes(tid)) {
+      if (val.length < 5) {
+        setErrorMsg(language === 'hi' ? 'कृपया मान्य PM-JAY ID अथवा 12-अंकीय आधार नंबर दर्ज करें।' : 'Please enter valid PM-JAY ID or Aadhaar number.');
+        return;
+      }
+    }
+    if (tid === 'e_shram' && val.replace(/\D/g, '').length !== 12) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार अथवा UAN नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar/UAN number.');
+      return;
+    }
+    if (['e_shram_update', 'e_shram_number_link'].includes(tid)) {
+      if (val.replace(/\D/g, '').length !== 12) {
+        setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+        return;
+      }
+      if (!dobDate) {
+        setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+        return;
+      }
+      if (!secondaryInput.trim() || secondaryInput.trim().replace(/\D/g, '').length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया मान्य 10-अंकीय नया मोबाइल नंबर दर्ज करें।' : 'Please enter valid 10-digit mobile number.');
+        return;
+      }
+    }
+    if (tid === 'samagra_service' && (val.replace(/\D/g, '').length < 8 || val.replace(/\D/g, '').length > 9)) {
+      setErrorMsg(language === 'hi' ? 'कृपया 8 अथवा 9-अंकीय समग्र परिवार या सदस्य आईडी दर्ज करें।' : 'Please enter valid 8 or 9-digit Samagra ID.');
+      return;
+    }
+    if (tid === 'sambal_pdf' && val.replace(/\D/g, '').length < 8) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय आधार अथवा 9-अंकीय समग्र आईडी दर्ज करें।' : 'Please enter valid Aadhaar or Samagra ID.');
+      return;
+    }
 
     // Balance Evaluation (Strict Zero-Bypass Mode)
     const currentBal = isOperator ? (sanchalakB2bBalance || 0) : (customerSession?.phone ? (walletBalance || 0) : 0);
@@ -1056,11 +1102,48 @@ function ServicePageContent({
       params.rationtype = 'new';
       delete params.rationNo;
       delete params.ration_no;
+      delete params.rationNumber;
     }
 
     if (['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar'].includes(tid)) {
       params.rationNo = val;
+      params.ration_no = val;
+      params.rationNumber = val;
       params.state = selectState || 'UP';
+    }
+
+    if (['ration', 'ration_pdf_by_ration', 'ration_verification', 'rationCard', 'up_ration_info'].includes(tid)) {
+      params.rationNo = val;
+      params.rationNumber = val;
+      params.ration_no = val;
+      params.state = selectState || 'UP';
+    }
+
+    if (['ayushman', 'pmjay_verify', 'ayushman_card', 'ayushman_image_jpg', 'ayushmanCard'].includes(tid)) {
+      params.pmjayId = val.toUpperCase().trim();
+      params.uidNumber = val.trim();
+      params.customerName = customerName.trim() || undefined;
+      params.name = customerName.trim() || undefined;
+      params.state = selectState || 'UP';
+    }
+
+    if (tid === 'e_shram') {
+      params.uidNumber = val;
+      params.aadhaar = val;
+    }
+
+    if (['e_shram_update', 'e_shram_number_link'].includes(tid)) {
+      params.uidNumber = val;
+      params.aadhaar = val;
+      if (dobDate) params.dob = formatDobDisplay(dobDate);
+      if (secondaryInput) params.mobile = secondaryInput.trim();
+    }
+
+    if (['samagra_service', 'sambal_pdf'].includes(tid)) {
+      params.familyId = val;
+      params.samagraId = val;
+      params.aadhaar = val;
+      params.uidNumber = val;
     }
 
     if (['rtps_bihar_pdf', 'rtps'].includes(tid)) {
@@ -3232,16 +3315,34 @@ function ServicePageContent({
         <div className="space-y-3">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Ration Number *
+              Ration Card Number (12-अंकीय राशन कार्ड नंबर) *
             </label>
             <input
               type="text"
               required
+              maxLength={12}
+              inputMode="numeric"
               value={primaryInput}
               onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
-              placeholder="Enter Ration Number"
+              placeholder="12-अंकीय राशन कार्ड नंबर दर्ज करें"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select State (राज्य) *</label>
+            <select
+              value={selectState}
+              onChange={(e) => setSelectState(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="Uttar Pradesh">Uttar Pradesh (उत्तर प्रदेश)</option>
+              <option value="Bihar">Bihar (बिहार)</option>
+              <option value="Madhya Pradesh">Madhya Pradesh (मध्य प्रदेश)</option>
+              <option value="Rajasthan">Rajasthan (राजस्थान)</option>
+              <option value="Haryana">Haryana (हरियाणा)</option>
+              <option value="Delhi">Delhi (दिल्ली)</option>
+              <option value="All India">All India (समस्त भारत)</option>
+            </select>
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Ration Type</label>
@@ -3411,6 +3512,18 @@ function ServicePageContent({
             />
           </div>
           <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Beneficiary Name (लाभार्थी का नाम) *
+            </label>
+            <input
+              type="text"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value.toUpperCase())}
+              placeholder="जैसे RAMESH KUMAR"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select State:</label>
             <select
               value={selectState}
@@ -3472,39 +3585,45 @@ function ServicePageContent({
         <div className="space-y-3">
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Aadhaar Number *
+              {id === 'e_shram' ? 'Aadhaar / UAN Number (आधार या UAN नंबर) *' : 'Aadhaar Number (12-अंकीय आधार नंबर) *'}
             </label>
             <input
               type="text"
               required
+              maxLength={12}
+              inputMode="numeric"
               value={primaryInput}
               onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
-              placeholder="Enter Aadhaar Number"
+              placeholder="12-अंकीय आधार अथवा UAN नंबर दर्ज करें"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
           </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Date of Birth *</label>
-            <input
-              type="date"
-              required
-              value={dobDate}
-              onChange={(e) => setDobDate(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs font-bold focus:outline-none cursor-pointer"
-            />
-          </div>
           {(id.includes('link') || id.includes('update')) && (
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">New Mobile Number *</label>
-              <input
-                type="text"
-                required
-                value={secondaryInput}
-                onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
-                placeholder="Enter New Mobile Number"
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm font-mono focus:outline-none"
-              />
-            </div>
+            <>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Date of Birth (आधार अनुसार जन्मतिथि) *</label>
+                <input
+                  type="date"
+                  required
+                  value={dobDate}
+                  onChange={(e) => setDobDate(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+                />
+              </div>
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">New Mobile Number (नया 10-अंकीय मोबाइल नंबर) *</label>
+                <input
+                  type="text"
+                  required
+                  maxLength={10}
+                  inputMode="numeric"
+                  value={secondaryInput}
+                  onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+                  placeholder="10-अंकीय नया मोबाइल नंबर दर्ज करें"
+                  className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-sm font-mono focus:outline-none"
+                />
+              </div>
+            </>
           )}
         </div>
       );
@@ -3515,14 +3634,18 @@ function ServicePageContent({
       return (
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            Member ID *
+            {id === 'samagra_service'
+              ? 'Samagra Family ID / Member ID (समग्र परिवार अथवा सदस्य आईडी) *'
+              : 'Aadhaar Number / Samagra ID (12-अंकीय आधार अथवा 9-अंकीय समग्र आईडी) *'}
           </label>
           <input
             type="text"
             required
+            maxLength={id === 'samagra_service' ? 9 : 12}
+            inputMode="numeric"
             value={primaryInput}
-            onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 9))}
-            placeholder="Enter Member ID"
+            onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, id === 'samagra_service' ? 9 : 12))}
+            placeholder={id === 'samagra_service' ? '8 या 9-अंकीय समग्र आईडी' : '12-अंकीय आधार अथवा 9-अंकीय समग्र आईडी'}
             className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
           />
         </div>
@@ -4082,11 +4205,11 @@ function ServicePageContent({
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🎉 100% मुफ़्त सेवा
                   </span>
-                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service'].includes(currentTool?.id)) ? (
+                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'e_shram_update', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service'].includes(currentTool?.id)) ? (
                   <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     ⏱️ मैन्युअल रिले (1-2 घंटे)
                   </span>
-                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'pan_verification_premium', 'panverificationpremium', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'aadhaar_pdf_otp', 'aadhaar_original_pdf_otp', 'aadhaar_ekyc', 'uid_ekyc', 'aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask', 'pan_to_aadhar_find', 'pan_to_gst', 'gst_to_pan', 'gst_verification'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
+                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'pan_verification_premium', 'panverificationpremium', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'aadhaar_pdf_otp', 'aadhaar_original_pdf_otp', 'aadhaar_ekyc', 'uid_ekyc', 'aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask', 'pan_to_aadhar_find', 'pan_to_gst', 'gst_to_pan', 'gst_verification', 'ration_verification', 'ration_pdf_by_ration', 'ration_pdf_by_aadhar', 'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'up_ration_info', 'ayushman_image_jpg', 'e_shram'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🟢 लाइव सरकारी API
                   </span>
@@ -4253,7 +4376,7 @@ function ServicePageContent({
                 </span>
               </span>
               <span className="text-[11px] bg-white/20 text-white font-mono font-bold px-2.5 py-0.5 rounded-full">
-                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service'].includes(currentTool?.id)
+                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'e_shram_update', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service'].includes(currentTool?.id)
                   ? '⏱️ 1-2 घंटे रिले'
                   : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'aadhaar_manual', 'aadhaar_pvc', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id))
                   ? '🖨️ त्वरित कार्ड प्रिंट'
@@ -4843,50 +4966,91 @@ function ServicePageContent({
                     )}
 
                     {/* ======================================================= */}
-                    {/* 5. AYUSHMAN GOLDEN CARD */}
+                    {/* 5. AYUSHMAN GOLDEN CARD (CR-80 PVC FRONT & BACK) */}
                     {/* ======================================================= */}
                     {toolKind === 'ayushman' && (
-                      <div className="cr80-card-scaler relative group max-w-full">
-                        <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-slate-400 pointer-events-none" />
-                        <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
-                        <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
-                        <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
+                      <div className="flex flex-wrap items-center justify-center gap-4">
+                        {(cardSide === 'both' || cardSide === 'front') && (
+                          <div className="cr80-card-scaler relative group max-w-full">
+                            <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-slate-400 pointer-events-none" />
+                            <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
+                            <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
+                            <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
 
-                        <div className="cr80-card-print w-[340px] h-[215px] bg-gradient-to-br from-amber-400 via-yellow-200 to-amber-500 rounded-xl border border-amber-600 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-950 font-sans print:shadow-none print:border-slate-800">
-                          <div className="flex items-center justify-between border-b border-amber-600 pb-1">
-                            <div>
-                              <div className="text-[9px] font-black tracking-wider text-slate-950 uppercase">
-                                {language === 'hi' ? 'आयुष्मान भारत • प्रधानमंत्री जन आरोग्य योजना' : 'AYUSHMAN BHARAT • PM-JAY'}
+                            <div className="cr80-card-print w-[340px] h-[215px] bg-gradient-to-br from-amber-400 via-yellow-200 to-amber-500 rounded-xl border border-amber-600 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-950 font-sans print:shadow-none print:border-slate-800">
+                              <div className="flex items-center justify-between border-b border-amber-600 pb-1">
+                                <div>
+                                  <div className="text-[9px] font-black tracking-wider text-slate-950 uppercase">
+                                    {language === 'hi' ? 'आयुष्मान भारत • प्रधानमंत्री जन आरोग्य योजना' : 'AYUSHMAN BHARAT • PM-JAY'}
+                                  </div>
+                                  <div className="text-[7.5px] font-bold text-slate-800">
+                                    {language === 'hi' ? 'राष्ट्रीय स्वास्थ्य प्राधिकरण (NHA)' : 'National Health Authority (NHA)'}
+                                  </div>
+                                </div>
+                                <span className="bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded shadow-xs">
+                                  {language === 'hi' ? '₹5 लाख मुफ़्त' : '₹5 Lakh Free'}
+                                </span>
+                              </div>
+
+                              <div className="flex items-center gap-3 py-1">
+                                <div className="w-[68px] h-[84px] bg-white/90 border border-amber-700 rounded overflow-hidden shrink-0 shadow-2xs">
+                                  <img src={photoData || cardData.photoUrl || SAMPLE_PHOTOS.male} alt="Photo" className="w-full h-full object-cover" />
+                                </div>
+
+                                <div className="flex-1 space-y-1 text-xs">
+                                  <div>
+                                    <span className="text-[8px] text-slate-700 font-bold block uppercase">{language === 'hi' ? 'लाभार्थी का नाम' : 'Beneficiary Name'}</span>
+                                    <span className="font-black text-slate-950 text-[11px] block">{cardData.name || cardData.beneficiaryName || primaryInput}</span>
+                                  </div>
+                                  <div className="text-[9px] text-slate-800 space-y-0.5">
+                                    <div>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <span className="font-mono font-bold">{cardData.dob || '01/01/1985'}</span></div>
+                                    <div>{language === 'hi' ? 'लिंग:' : 'Gender:'} <span className="font-bold">{cardData.gender || 'MALE'}</span></div>
+                                    <div>{language === 'hi' ? 'राज्य:' : 'State:'} <span className="font-bold">{cardData.state || 'UTTAR PRADESH'}</span></div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="bg-slate-950 text-white rounded p-1 flex items-center justify-between px-2 text-[10px] font-mono font-bold shadow-xs">
+                                <span>{cardData.pmjayId || cardData.pmjay_id || primaryInput}</span>
+                                <span className="text-yellow-400 text-[8px] uppercase">{cardData.coverageAmount || '₹5,00,000 / वर्ष'}</span>
                               </div>
                             </div>
-                            <span className="bg-red-600 text-white text-[8px] font-black px-1.5 py-0.5 rounded shadow-xs">
-                              {language === 'hi' ? '₹5 लाख मुफ़्त' : '₹5 Lakh Free'}
-                            </span>
                           </div>
+                        )}
 
-                          <div className="flex items-center gap-3 py-1">
-                            <div className="w-[68px] h-[84px] bg-white/80 border border-amber-700 rounded overflow-hidden shrink-0 shadow-2xs">
-                              <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
-                            </div>
+                        {(cardSide === 'both' || cardSide === 'back') && (
+                          <div className="cr80-card-scaler relative group max-w-full">
+                            <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-slate-400 pointer-events-none" />
+                            <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
+                            <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
+                            <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
 
-                            <div className="flex-1 space-y-1 text-xs">
-                              <div>
-                                <span className="text-[8px] text-slate-700 font-bold block uppercase">{language === 'hi' ? 'लाभार्थी का नाम' : 'Beneficiary Name'}</span>
-                                <span className="font-black text-slate-950 text-[11px] block">{cardData.name}</span>
+                            <div className="cr80-card-print w-[340px] h-[215px] bg-gradient-to-br from-amber-100 via-amber-50 to-amber-200 rounded-xl border border-amber-500 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-950 font-sans print:shadow-none print:border-slate-800">
+                              <div className="border-b border-amber-400 pb-1 flex items-center justify-between">
+                                <div className="text-[8px] font-black uppercase text-amber-900">
+                                  {language === 'hi' ? 'महत्वपूर्ण दिशानिर्देश एवं हेल्पलाइन' : 'Guidelines & Helpline'}
+                                </div>
+                                <span className="text-[8px] font-bold text-red-700 font-mono">Toll Free: 14555</span>
                               </div>
-                              <div className="text-[9px] text-slate-800 space-y-0.5">
-                                <div>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <span className="font-mono font-bold">{cardData.dob}</span></div>
-                                <div>{language === 'hi' ? 'लिंग:' : 'Gender:'} <span className="font-bold">{cardData.gender}</span></div>
-                                <div>{language === 'hi' ? 'राज्य:' : 'State:'} <span className="font-bold">{cardData.state}</span></div>
+
+                              <div className="flex items-start justify-between gap-3 py-1 text-[8.5px]">
+                                <div className="space-y-1 text-slate-800 max-w-[210px] leading-tight">
+                                  <p>• {language === 'hi' ? 'यह कार्ड सूचीबद्ध सरकारी व निजी अस्पतालों में कैशलेस उपचार हेतु मान्य है।' : 'Valid for cashless treatment at empanelled public & private hospitals.'}</p>
+                                  <p>• {language === 'hi' ? 'उपचार हेतु अस्पताल में यह कार्ड व कोई भी सरकारी पहचान पत्र दिखाएं।' : 'Show this card along with a valid Govt ID at the hospital.'}</p>
+                                  <p>• {language === 'hi' ? 'अधिक जानकारी के लिए mera.pmjay.gov.in पर जाएं या 14555 पर कॉल करें।' : 'Visit mera.pmjay.gov.in or call 14555 for info.'}</p>
+                                </div>
+                                <div className="p-1 bg-white border border-amber-300 rounded shadow-xs shrink-0">
+                                  <QRCodeSVG value={`PMJAY:ID:${cardData.pmjayId || cardData.pmjay_id || primaryInput}|NAME:${cardData.name || cardData.beneficiaryName}|STATE:${cardData.state || 'UP'}`} size={62} />
+                                </div>
+                              </div>
+
+                              <div className="border-t border-amber-300 pt-1 flex items-center justify-between text-[8px] text-slate-600 font-medium">
+                                <span>{language === 'hi' ? 'राष्ट्रीय स्वास्थ्य प्राधिकरण' : 'National Health Authority'}</span>
+                                <span className="font-mono font-bold text-slate-900">{cardData.pmjayId || cardData.pmjay_id || primaryInput}</span>
                               </div>
                             </div>
                           </div>
-
-                          <div className="bg-slate-950 text-white rounded p-1 flex items-center justify-between px-2 text-[10px] font-mono font-bold shadow-xs">
-                            <span>{cardData.pmjayId}</span>
-                            <span className="text-yellow-400 text-[8px] uppercase">{cardData.coverageAmount}</span>
-                          </div>
-                        </div>
+                        )}
                       </div>
                     )}
 

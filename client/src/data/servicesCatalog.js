@@ -319,17 +319,77 @@ const SERVICE_ENRICHMENT = {
     inputLabel: { hi: 'EPIC वोटर नंबर दर्ज करें', en: 'Enter EPIC Number' },
     placeholder: { hi: '10-अक्षरों का EPIC नंबर', en: '10-Character EPIC Number' }
   },
+  ration_verification: {
+    title: { hi: 'राशन कार्ड सत्यापन (Ration Verification)', en: 'Ration Card Verification' },
+    sub: { hi: 'खाद्य एवं रसद विभाग अधिकृत राशन कार्ड विवरण व प्रामाणिकता जांच', en: 'Official Food Supplies NFSA Ration Details Verification' },
+    inputLabel: { hi: 'राशन कार्ड नंबर दर्ज करें', en: 'Enter Ration Card Number' },
+    placeholder: { hi: '12-अंकीय राशन कार्ड नंबर', en: '12-Digit Ration Card Number' }
+  },
   ration_pdf_by_ration: {
     title: { hi: 'राशन कार्ड पर्चा / PDF (राशन नंबर से)', en: 'Ration Card PDF by Ration No' },
     sub: { hi: 'खाद्य रसद विभाग NFSA अधिकृत राशन पर्ची', en: 'NFSA Food Supplies Official Ration Slip' },
     inputLabel: { hi: 'राशन कार्ड नंबर दर्ज करें', en: 'Enter Ration Card Number' },
     placeholder: { hi: '12-अंकीय राशन कार्ड नंबर', en: '12-Digit Ration Card Number' }
   },
+  ration_pdf_by_aadhar: {
+    title: { hi: 'आधार से राशन कार्ड पर्ची / PDF', en: 'Ration Card PDF by Aadhaar' },
+    sub: { hi: 'आधार नंबर से खोजकर आधिकारिक NFSA राशन कार्ड पर्चा डाउनलोड करें', en: 'Find & Download Official NFSA Ration Slip by Aadhaar Number' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: 'परिवार सदस्य का 12-अंकीय आधार नंबर', en: '12-Digit Member Aadhaar Number' }
+  },
+  up_ration_to_aadhaar: {
+    title: { hi: 'UP राशन कार्ड से आधार नंबर खोज', en: 'UP Ration to Aadhaar Search' },
+    sub: { hi: 'उत्तर प्रदेश राशन कार्ड संख्या से सभी परिवार सदस्यों के आधार नंबर निकालें', en: 'Find Aadhaar Numbers of Family Members from UP Ration Card' },
+    inputLabel: { hi: 'UP राशन कार्ड नंबर दर्ज करें', en: 'Enter UP Ration Card Number' },
+    placeholder: { hi: '12-अंकीय राशन कार्ड नंबर', en: '12-Digit Ration Card Number' }
+  },
+  all_state_ration_to_aadhar: {
+    title: { hi: 'ऑल स्टेट राशन कार्ड से आधार खोज', en: 'All State Ration to Aadhaar Search' },
+    sub: { hi: 'भारत के किसी भी राज्य के राशन कार्ड से परिवार सदस्यों के आधार नंबर प्राप्त करें', en: 'Find Aadhaar Numbers from Any State Ration Card across India' },
+    inputLabel: { hi: 'राशन कार्ड नंबर दर्ज करें', en: 'Enter Ration Card Number' },
+    placeholder: { hi: 'राशन कार्ड नंबर दर्ज करें', en: 'Enter Ration Card Number' }
+  },
+  assam_ration_to_aadhaar: {
+    title: { hi: 'असम राशन कार्ड से आधार खोज', en: 'Assam Ration to Aadhaar Search' },
+    sub: { hi: 'असम खाद्य रसद राशन कार्ड से परिवार सदस्यों के आधार नंबर प्राप्त करें', en: 'Find Aadhaar Numbers from Assam Food Supplies Ration Card' },
+    inputLabel: { hi: 'असम राशन कार्ड नंबर दर्ज करें', en: 'Enter Assam Ration Card Number' },
+    placeholder: { hi: 'राशन कार्ड नंबर दर्ज करें', en: 'Enter Ration Card Number' }
+  },
+  up_ration_info: {
+    title: { hi: 'UP राशन कार्ड संपूर्ण विवरण व सदस्य सूची', en: 'UP Ration Card Full Info & Members' },
+    sub: { hi: 'राशन कार्ड के कुल यूनिट, कोटेदार, खाद्यान्न पात्रता व सभी सदस्यों का विवरण', en: 'Complete Member List, Quota, Dealer & Units Details' },
+    inputLabel: { hi: 'UP राशन कार्ड नंबर दर्ज करें', en: 'Enter UP Ration Card Number' },
+    placeholder: { hi: '12-अंकीय राशन कार्ड नंबर', en: '12-Digit Ration Card Number' }
+  },
+  ayushman_image_jpg: {
+    title: { hi: 'आयुष्मान भारत PM-JAY गोल्डन कार्ड', en: 'Ayushman Bharat PM-JAY Golden Card' },
+    sub: { hi: 'प्रधानमंत्री जन आरोग्य योजना ₹5 लाख मुफ़्त उपचार कार्ड डाउनलोड व PVC प्रिंट', en: 'PM-JAY ₹5 Lakh Free Healthcare Golden Card Print' },
+    inputLabel: { hi: 'PM-JAY ID अथवा आधार नंबर दर्ज करें', en: 'Enter PM-JAY ID or Aadhaar Number' },
+    placeholder: { hi: 'PM-JAY ID / 12-अंकीय आधार नंबर', en: 'PM-JAY ID / 12-Digit Aadhaar' }
+  },
+  e_shram: {
+    title: { hi: 'ई-श्रम कार्ड सत्यापन व विवरण', en: 'e-Shram Card Verification' },
+    sub: { hi: 'श्रम एवं रोजगार मंत्रालय UAN व ई-श्रम कार्ड प्रामाणिकता जांच', en: 'Ministry of Labour e-Shram & UAN Verification' },
+    inputLabel: { hi: '12-अंकीय आधार / UAN नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar / UAN' },
+    placeholder: { hi: '12-अंकीय आधार अथवा UAN नंबर', en: '12-Digit Aadhaar or UAN' }
+  },
+  e_shram_update: {
+    title: { hi: 'ई-श्रम मोबाइल नंबर लिंक व सुधार', en: 'e-Shram Mobile Link & Update' },
+    sub: { hi: 'ई-श्रम कार्ड में नया मोबाइल नंबर जोड़ने हेतु आधिकारिक B2B रिले आवेदन', en: 'Link New Mobile Number to e-Shram Card via Official Relay' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
+  },
   samagra_service: {
     title: { hi: 'समग्र आईडी परिवार व सदस्य PDF', en: 'Samagra ID Search & PDF' },
     sub: { hi: 'मध्य प्रदेश समग्र सामाजिक सुरक्षा मिशन पर्ची', en: 'MP Samagra Social Security Mission Slip' },
     inputLabel: { hi: 'समग्र परिवार ID या सदस्य ID दर्ज करें', en: 'Enter Samagra Family / Member ID' },
-    placeholder: { hi: '9-अंकीय समग्र सदस्य आईडी', en: '9-Digit Member ID' }
+    placeholder: { hi: '8 या 9-अंकीय समग्र सदस्य आईडी', en: '8 or 9-Digit Member ID' }
+  },
+  sambal_pdf: {
+    title: { hi: 'संबल कार्ड 2.0 डाउनलोड (Sambal Card)', en: 'Sambal Card 2.0 Download' },
+    sub: { hi: 'मध्य प्रदेश श्रम कल्याण संबल योजना आधिकारिक प्रमाण पत्र पर्ची', en: 'MP Labour Welfare Sambal Scheme Official Certificate' },
+    inputLabel: { hi: '12-अंकीय आधार अथवा समग्र आईडी दर्ज करें', en: 'Enter Aadhaar / Samagra ID' },
+    placeholder: { hi: '12-अंकीय आधार या 9-अंकीय समग्र आईडी', en: '12-Digit Aadhaar or 9-Digit Samagra ID' }
   },
   rtps_bihar_pdf: {
     title: { hi: 'RTPS बिहार प्रमाण पत्र PDF', en: 'RTPS Bihar Certificate PDF' },
