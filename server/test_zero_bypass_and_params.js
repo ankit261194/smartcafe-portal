@@ -612,4 +612,38 @@ assert(servicePageContent.includes("बिहार लोक सेवाओं
 assert(servicePageContent.includes("भारतीय विशिष्ट पहचान प्राधिकरण"), 'Phase 4: UIDAI official e-Aadhaar A4 layout must exist');
 console.log('✅ PASS: Phase 4 Official A4 Government Certificates & Dual View Mode verified');
 
+console.log('\n--- TEST 8: Inspect Phase 8 Manual Relay Services Transparency & Ticket Dossier ---');
+const expected12Services = [
+  'll_exam_pass_auto', 'e_shram_update', 'samagra_service', 'sambal_pdf',
+  'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual',
+  'puc_certificate_download', 'dl_to_mobile_find', 'dob_update_service',
+  'mobile_update_service', 'agristack_pdf'
+];
+expected12Services.forEach(sId => {
+  assert(servicePageContent.includes(`'${sId}'`), `Service ${sId} must be included in ServicePage manual relay list`);
+});
+
+// Explicit Manual Relay Banner & Action Button Text
+assert(servicePageContent.includes("⏱️ अधिकृत ऑपरेटर सेवा अनुरोध (1-2 घंटे में प्रोसेस)"), 'Banner & button text for manual relay present');
+assert(servicePageContent.includes("यह सेवा सारथी/सरकारी पोर्टल पर बैकएंड ऑपरेटर द्वारा प्रोसेस की जाती है। अनुरोध दर्ज होने पर ट्रैकिंग रसीद जारी होगी।"), 'Explanation for manual relay present');
+
+// High-Prestige Official Service Processing Acknowledgement & Tracking Docket
+assert(servicePageContent.includes("आधिकारिक सेवा अनुरोध पावती एवं ट्रैकिंग पत्र"), 'Official Tracking Docket title present');
+assert(servicePageContent.includes("Official Service Processing Acknowledgement & Tracking Docket"), 'Official Tracking Docket English title present');
+assert(servicePageContent.includes("⏳ प्रक्रियाधीन (Under Processing by Operator)"), 'Pending operator status badge present');
+assert(servicePageContent.includes("जैसे ही ऑपरेटर द्वारा सारथी/संबंधित पोर्टल से कार्य पूरा किया जाएगा, स्थिति 'सफल' हो जाएगी।"), 'Mandatory operator completion note present');
+assert(servicePageContent.includes("DIGITALLY VERIFIED"), 'Authorized digital seal present');
+assert(servicePageContent.includes("SMARTCAFE.SBS"), 'Cafe branding domain present');
+
+// Zero Dummy Placeholders Check
+assert(!servicePageContent.includes("जैसे प्राथमिक विद्यालय"), 'No dummy school placeholder in ServicePage.jsx');
+assert(servicePageContent.includes('placeholder="मतदान केंद्र का नाम व भाग संख्या"'), 'Neutral polling station placeholder in ServicePage.jsx');
+assert(servicePageContent.includes('placeholder="विधानसभा निर्वाचन क्षेत्र संख्या व नाम"'), 'Neutral assembly constituency placeholder in ServicePage.jsx');
+assert(!servicePageContent.includes('placeholder="जैसे RAMESH KUMAR"'), 'No mock RAMESH KUMAR placeholder in ServicePage.jsx');
+
+// Multi-Member Ration to Aadhaar Disclosure
+assert(servicePageContent.includes("const isRationAadhaarService = ['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'ration_pdf_by_aadhar']"), 'All 4 ration to aadhaar services checked');
+assert(servicePageContent.includes("राशन कार्ड से जुड़े सभी सदस्यों का आधार विवरण"), 'Family Aadhaar Disclosure banner present');
+console.log('✅ PASS: Phase 8 Manual Relay Transparency, Ticket Dossier, Zero Dummy Placeholders & Multi-Member Aadhaar Disclosure verified');
+
 console.log('\n🎉 ALL LOCAL STATIC & INTEGRATION CHECKS PASSED PERFECTLY!');

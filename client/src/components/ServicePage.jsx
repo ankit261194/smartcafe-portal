@@ -4973,7 +4973,8 @@ function ServicePageContent({
                       issueDate: activeData.issueDate || activeData.date || new Date().toLocaleDateString('en-GB'),
                       village: activeData.village || activeData.address || '-',
                       district: activeData.district || selectState || '-',
-                      fee: activeData.fee || currentTool?.fee || requiredFee || 0
+                      fee: activeData.fee || currentTool?.fee || requiredFee || 0,
+                      members: activeData.members || activeData.memberDetails || activeData.member_list || activeData.data?.members || activeData.data?.memberDetails || []
                     };
 
                     return (
