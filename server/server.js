@@ -4258,8 +4258,8 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
   }
 
   // 6. Voter Verification
-  if (norm.includes('voter') || norm.includes('epic')) {
-    const epicNo = String(params?.epicNo || params?.epic || params?.query || '').trim().toUpperCase();
+  if (((norm.includes('voter') || norm.includes('epic')) && !norm.includes('link') && !norm.includes('mobile') && !norm.includes('otp') && !norm.includes('pdf') && !norm.includes('card') && !norm.includes('manual')) || norm === 'voter' || norm === 'epic' || norm.includes('voter_verification') || norm.includes('voter_details')) {
+    const epicNo = String(params?.epicNumber || params?.epicNo || params?.epic || params?.query || '').trim().toUpperCase();
     if (epicNo && epicNo.length >= 5) {
       try {
         const voterUrl = `https://authorized.p4points.co.in/api/v1/voterVerification_new.php?apiKey=${encodeURIComponent(p4ApiKey)}&epicNumber=${encodeURIComponent(epicNo)}`;
@@ -4271,6 +4271,7 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
             source: 'p4points',
             service: 'voter',
             epicNo: doc.epicNumber || doc.epic_no || epicNo,
+            epicNumber: doc.epicNumber || doc.epic_no || epicNo,
             name: `${doc.FirstName || ''} ${doc.LastName || ''}`.trim() || doc.name_v1 || doc.name || 'मतदाता',
             fatherName: doc.rln_name || doc.relativeName || '',
             gender: doc.gender || 'M',
@@ -4280,6 +4281,9 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
             state: doc.state || '',
             assembly: doc.ac_name || doc.assemblyName || '',
             partName: doc.part_name || '',
+            partNo: doc.part_no || '',
+            serialNo: doc.serial_no || '',
+            photoUrl: doc.photo || doc.photoUrl || doc.image || null,
             isLiveFromP4Points: true
           };
         }
@@ -4627,18 +4631,19 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
 
   // 17. Instant Voter Mobile Link (No OTP)
   if (norm.includes('instant_voter') || norm.includes('voter_link') || norm.includes('voter_mobile')) {
-    const epic = String(params?.epicNo || params?.epic || params?.query || '').trim().toUpperCase();
+    const epic = String(params?.epicNumber || params?.epicNo || params?.epic || params?.query || '').trim().toUpperCase();
     const mobile = String(params?.mobile || params?.mobileNumber || params?.phone || '').replace(/[^0-9]/g, '');
     if (epic.length >= 5 && mobile.length === 10) {
       try {
         const ivUrl = `https://authorized.p4points.co.in/api/v4/instant_voter_link.php?apiKey=${encodeURIComponent(p4ApiKey)}&epic=${encodeURIComponent(epic)}&mobile=${encodeURIComponent(mobile)}`;
-        const res = await fetch(ivUrl, { signal: AbortSignal.timeout(12000) });
+        const res = await fetch(ivUrl, { signal: AbortSignal.timeout(15000) });
         const json = await res.json().catch(() => null);
         if (json && json.status) {
           return {
             source: 'p4points',
             service: 'voter',
             epicNo: epic,
+            epicNumber: epic,
             mobileNumber: mobile,
             refId: json.refId || `VCM${Date.now()}`,
             message: json.message || 'वोटर कार्ड में मोबाइल नंबर सफलतापूर्वक लिंक हो गया है।',
@@ -4647,6 +4652,83 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
         }
       } catch (err) {
         console.error('Live P4Points Instant Voter Mobile fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 17B. Voter Original PDF With OTP (send-otp.php / verify-otp.php)
+  if (norm.includes('voter_original_pdf_otp') || (norm.includes('voter') && norm.includes('pdf') && norm.includes('otp'))) {
+    const epic = String(params?.epicNumber || params?.epic_number || params?.voterNumber || params?.epicNo || params?.query || '').trim().toUpperCase();
+    const otp = String(params?.otp || params?.otpCode || '').trim();
+    if (epic.length >= 5) {
+      if (!otp) {
+        // Step 1: Send OTP
+        try {
+          const sendUrl = `https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=${encodeURIComponent(p4ApiKey)}&epic_number=${encodeURIComponent(epic)}`;
+          const res = await fetch(sendUrl, { signal: AbortSignal.timeout(15000) });
+          const json = await res.json().catch(() => null);
+          if (json) {
+            return {
+              source: 'p4points',
+              service: 'voter',
+              requiresOtp: true,
+              otpSent: true,
+              epicNumber: epic,
+              epicNo: epic,
+              message: json.message || 'वोटर कार्ड पंजीकृत मोबाइल पर OTP प्रेषित कर दिया गया है।',
+              status: json.status_code || json.status || 'otp_sent',
+              isLiveFromP4Points: true
+            };
+          }
+        } catch (err) {
+          console.error('Live P4Points Voter Send OTP failed:', err.message);
+        }
+      } else {
+        // Step 2: Verify OTP & Download PDF
+        try {
+          const verUrl = `https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey=${encodeURIComponent(p4ApiKey)}&epic_number=${encodeURIComponent(epic)}&otp=${encodeURIComponent(otp)}`;
+          const res = await fetch(verUrl, { signal: AbortSignal.timeout(30000) });
+          const json = await res.json().catch(() => null);
+          if (json && (json.pdf || json.pdf_base64 || json.file || json.pdf_url)) {
+            return {
+              source: 'p4points',
+              service: 'voter',
+              epicNumber: epic,
+              epicNo: epic,
+              pdfBase64: json.pdf || json.pdf_base64 || null,
+              pdfUrl: json.file || json.pdf_url || null,
+              message: 'वोटर कार्ड ओरिजिनल PDF सफलतापूर्वक प्राप्त हो गया है।',
+              isLiveFromP4Points: true
+            };
+          }
+        } catch (err) {
+          console.error('Live P4Points Voter Verify OTP failed:', err.message);
+        }
+      }
+    }
+  }
+
+  // 17C. Voter PDF / Original PDF Without OTP
+  if (norm.includes('voter_pdf') || norm.includes('voter_original_pdf_no_otp')) {
+    const epic = String(params?.voter_number || params?.epicNumber || params?.epicNo || params?.epic || params?.query || '').trim().toUpperCase();
+    if (epic.length >= 5) {
+      try {
+        const pdfUrl = `https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&voter_number=${encodeURIComponent(epic)}`;
+        const res = await fetch(pdfUrl, { signal: AbortSignal.timeout(20000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.pdf || json.pdf_url || json.file || json.pdf_base64)) {
+          return {
+            source: 'p4points',
+            service: 'voter',
+            epicNumber: epic,
+            epicNo: epic,
+            pdfBase64: json.pdf || json.pdf_base64 || null,
+            pdfUrl: json.file || json.pdf_url || null,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Voter PDF Request failed:', err.message);
       }
     }
   }
@@ -5141,9 +5223,24 @@ app.post('/api/services/execute-automated', async (req, res) => {
       docTitle = panNo ? `पैन कार्ड (${panNo}) - ${panName}` : (serviceTitles[normServiceType] || 'पैन कार्ड सेवा');
       refNumber = panNo || (params?.query || 'PAN');
     } else if (liveP4.service === 'voter' || normServiceType.includes('voter') || normServiceType.includes('epic')) {
-      const epic = String(liveP4.epicNo || rawData.epicNumber || rawData.epicNo || rawData.epic_number || params?.epicNo || '').toUpperCase().trim();
+      const epic = String(liveP4.epicNo || liveP4.epicNumber || rawData.epicNumber || rawData.epicNo || rawData.epic_number || params?.epicNo || params?.epicNumber || params?.epic || '').toUpperCase().trim();
       generatedData.epicNo = epic;
-      const voterName = rawData.name || rawData.applicant_name || params?.customerName || 'मतदाता';
+      generatedData.epicNumber = epic;
+      const voterName = liveP4.name || rawData.name || rawData.applicant_name || params?.customerName || 'मतदाता';
+      generatedData.name = voterName;
+      generatedData.customerName = voterName;
+      if (liveP4.fatherName || rawData.fatherName || rawData.rln_name) generatedData.fatherName = liveP4.fatherName || rawData.fatherName || rawData.rln_name;
+      if (liveP4.gender || rawData.gender) generatedData.gender = liveP4.gender || rawData.gender;
+      if (liveP4.dob || rawData.dob) generatedData.dob = liveP4.dob || rawData.dob;
+      if (liveP4.age || rawData.age) generatedData.age = liveP4.age || rawData.age;
+      if (liveP4.assembly || rawData.ac_name) generatedData.acName = liveP4.assembly || rawData.ac_name;
+      if (liveP4.partName || rawData.part_name) generatedData.partName = liveP4.partName || rawData.part_name;
+      if (liveP4.partNo || rawData.part_no) generatedData.partNo = liveP4.partNo || rawData.part_no;
+      if (liveP4.serialNo || rawData.serial_no) generatedData.serialNo = liveP4.serialNo || rawData.serial_no;
+      if (liveP4.district || rawData.district) generatedData.district = liveP4.district || rawData.district;
+      if (liveP4.state || rawData.state) generatedData.state = liveP4.state || rawData.state;
+      if (liveP4.photoUrl || rawData.photo || rawData.photoUrl) generatedData.photoUrl = liveP4.photoUrl || rawData.photo || rawData.photoUrl;
+      if (liveP4.mobileNumber) generatedData.mobileNumber = liveP4.mobileNumber;
       docTitle = `वोटर स्मार्ट कार्ड (${epic}) - ${voterName}`;
       refNumber = epic;
     } else if (liveP4.service === 'ration' || normServiceType.includes('ration')) {
@@ -5413,6 +5510,39 @@ app.post('/api/services/execute-automated', async (req, res) => {
         };
         docTitle = `आधार कार्ड CR-80 PVC (${aid}) - ${aName}`;
         refNumber = aid;
+      }
+    } else if (normServiceType === 'votercard' || normServiceType === 'voterCard' || normServiceType === 'voter_manual' || normServiceType === 'voter_card_pvc' || ['voterCard', 'voter_manual', 'voter_card_pvc'].includes(params?.serviceId)) {
+      const epic = String(params?.epicNo || params?.epicNumber || params?.epic || params?.query || '').trim().toUpperCase();
+      const vName = String(params?.customerName || params?.name || '').trim();
+      const fName = String(params?.fatherName || params?.relativeName || '').trim();
+      const dob = String(params?.dob || params?.age || '').trim();
+      const gender = String(params?.gender || 'MALE').trim();
+      const acName = String(params?.acName || params?.assembly || '').trim();
+      const partName = String(params?.partName || params?.pollingStation || '').trim();
+      const partNo = String(params?.partNo || '').trim();
+      const serialNo = String(params?.serialNo || '').trim();
+      if (epic && vName) {
+        generatedData = {
+          epicNo: epic,
+          epicNumber: epic,
+          name: vName,
+          customerName: vName,
+          name_hi: params?.name_hi || vName,
+          fatherName: fName,
+          dob,
+          gender,
+          acName,
+          partName,
+          partNo,
+          serialNo,
+          photoUrl: params?.photo || params?.photoData || null,
+          refNumber: epic,
+          serviceType: 'voterCard',
+          cardType: 'ISO CR-80 PVC Smart Card',
+          isInstantPvc: true
+        };
+        docTitle = `वोटर कार्ड CR-80 PVC (${epic}) - ${vName}`;
+        refNumber = epic;
       }
     }
   }

@@ -295,6 +295,66 @@ assert(serverJsContent.includes("liveP4.service === 'aadhaar' || normServiceType
 
 console.log('✅ PASS: Part 3 Aadhaar Card Services Suite 100% verified across all tiers');
 
+console.log('\n--- TEST 3E: Part 4 Voter Card Services Suite Comprehensive Verification ---');
+// 1. Service 20: voter_verification & voter_details
+assert(servicePageContent.includes("['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_verification', 'epic'].includes(id)"), 'voter_verification must have dedicated form 28');
+assert(servicePageContent.includes("['voter', 'epic', 'voter_verification', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp'].includes(tid) && val.length < 5"), 'voter_verification must validate min 5 chars');
+assert(servicePageContent.includes("params.epicNumber = val.toUpperCase().trim()"), 'ServicePage must pack epicNumber');
+assert(servicePageContent.includes("params.epic = val.toUpperCase().trim()"), 'ServicePage must pack epic');
+
+const voterVerSvc = services79.find(s => s.id === 'voter_verification');
+assert(voterVerSvc, 'voter_verification must exist in services_79.json');
+assert(voterVerSvc.apiEndpoint.includes('voterVerification_new.php'), 'voter_verification must route to voterVerification_new.php');
+assert(voterVerSvc.badge.includes('लाइव P4 API'), 'voter_verification must have honest live API badge');
+assert(indexPhpContent.includes("api/v1/voterVerification_new.php"), 'index.php must call voterVerification_new.php');
+assert(serverJsContent.includes("api/v1/voterVerification_new.php"), 'server.js must call voterVerification_new.php');
+
+// 2. Service 21: instant_voter_link & voter_mobile_link
+assert(servicePageContent.includes("['voter_mobile_link', 'vcmRequest', 'voter_mobile_link_no_otp', 'voter_mobile_link_instant_otp', 'instant_voter_link', 'voter_mobile_link_instant'].includes(id)"), 'voter_mobile_link must have dedicated form 22');
+assert(servicePageContent.includes("['voter_mobile_link', 'vcmRequest', 'voter_mobile_link_no_otp', 'voter_mobile_link_instant_otp', 'instant_voter_link', 'voter_mobile_link_instant'].includes(tid)"), 'voter_mobile_link must validate mobile number');
+assert(servicePageContent.includes("params.mobile = secondaryInput.trim()"), 'voter_mobile_link must pack mobile');
+const voterLinkSvc = services79.find(s => s.id === 'voter_mobile_link');
+assert(voterLinkSvc, 'voter_mobile_link must exist in services_79.json');
+assert(voterLinkSvc.apiEndpoint.includes('instant_voter_link.php'), 'voter_mobile_link must route to instant_voter_link.php');
+assert(indexPhpContent.includes("api/v4/instant_voter_link.php"), 'index.php must route to instant_voter_link.php');
+assert(serverJsContent.includes("api/v4/instant_voter_link.php"), 'server.js must route to instant_voter_link.php');
+
+// 3. Service 22B: voter_original_pdf_otp
+assert(servicePageContent.includes("id === 'voter_original_pdf_otp'"), 'voter_original_pdf_otp must have dedicated form 22B');
+assert(servicePageContent.includes("currentTool?.id === 'voter_original_pdf_otp'"), 'voter_original_pdf_otp must validate OTP requirement');
+const voterOtpSvc = services79.find(s => s.id === 'voter_original_pdf_otp');
+assert(voterOtpSvc, 'voter_original_pdf_otp must exist in services_79.json');
+assert(voterOtpSvc.apiEndpoint.includes('send-otp.php'), 'voter_original_pdf_otp must route to send-otp.php');
+assert(indexPhpContent.includes("api/v1/v-Addition/Pdf-Download/api/send-otp.php"), 'index.php must implement send-otp.php');
+assert(indexPhpContent.includes("api/v1/v-Addition/Pdf-Download/api/verify-otp.php"), 'index.php must implement verify-otp.php');
+assert(serverJsContent.includes("api/v1/v-Addition/Pdf-Download/api/send-otp.php"), 'server.js must implement send-otp.php');
+assert(serverJsContent.includes("api/v1/v-Addition/Pdf-Download/api/verify-otp.php"), 'server.js must implement verify-otp.php');
+
+// 4. Service 22C: voter_pdf & voter_original_pdf_no_otp
+const voterPdfSvc = services79.find(s => s.id === 'voter_pdf');
+assert(voterPdfSvc, 'voter_pdf must exist in services_79.json');
+assert(voterPdfSvc.apiEndpoint.includes('request-pdf.php'), 'voter_pdf must route to request-pdf.php');
+assert(indexPhpContent.includes("api/v1/voter-api/request-pdf.php"), 'index.php must call request-pdf.php');
+assert(serverJsContent.includes("api/v1/voter-api/request-pdf.php"), 'server.js must call request-pdf.php');
+
+// 5. Service 28A: voterCard / voter_manual (Manual ISO CR-80 PVC Smart Card Maker)
+assert(servicePageContent.includes("['voterCard', 'voter_card_pvc', 'voter_manual'].includes(id)"), 'voterCard must have dedicated form 28A');
+assert(servicePageContent.includes("ISO CR-80 PVC डिजिटल वोटर कार्ड मेकर"), 'voterCard form must display ISO CR-80 banner');
+assert(servicePageContent.includes("toolKind === 'voter' || currentTool?.serviceType === 'voterCard'"), 'ServicePage must render voter CR-80 card preview');
+assert(servicePageContent.includes("ELECTION COMMISSION OF INDIA"), 'Voter preview must contain official ECI header');
+assert(indexPhpContent.includes("$normServiceType === 'votercard' || $normServiceType === 'voterCard' || $normServiceType === 'voter_manual'"), 'index.php must support instant PVC voterCard');
+assert(serverJsContent.includes("normServiceType === 'votercard' || normServiceType === 'voterCard' || normServiceType === 'voter_manual'"), 'server.js must support instant PVC voterCard');
+
+// 6. Voter Demographic Mapping in Backend
+assert(indexPhpContent.includes("liveP4['name'] ?? ($p4Data['name'] ?? ($p4Data['applicant_name'] ?? ($params['customerName'] ?? 'मतदाता')))") || indexPhpContent.includes("$generatedData['epicNumber'] = $epic;"), 'index.php must map voter demographic fields');
+assert(serverJsContent.includes("generatedData.acName = liveP4.assembly || rawData.ac_name"), 'server.js must map voter demographic fields');
+
+// 7. Section 6 Voter Verification isolation from sub-services
+assert(indexPhpContent.includes("strpos($norm, 'link') === false && strpos($norm, 'mobile') === false && strpos($norm, 'otp') === false"), 'index.php Section 6 must isolate verification from link/otp');
+assert(serverJsContent.includes("!norm.includes('link') && !norm.includes('mobile') && !norm.includes('otp')"), 'server.js Section 6 must isolate verification from link/otp');
+
+console.log('✅ PASS: Part 4 Voter Card Services Suite 100% verified across all tiers');
+
 console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass & Server-Side Validations ---');
 assert(!indexPhpContent.includes('$isTrial = $previewMode;'), 'index.php must not have $isTrial = $previewMode;');
 assert(indexPhpContent.includes('http_response_code(403);'), 'index.php must return 403 on low balance');

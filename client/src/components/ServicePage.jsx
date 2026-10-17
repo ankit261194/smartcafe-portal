@@ -629,6 +629,30 @@ function ServicePageContent({
       setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
       return;
     }
+    if (['voter_mobile_link', 'vcmRequest', 'voter_mobile_link_no_otp', 'voter_mobile_link_instant_otp', 'instant_voter_link', 'voter_mobile_link_instant'].includes(tid)) {
+      if (val.length < 5) {
+        setErrorMsg(language === 'hi' ? 'कृपया 10-अक्षरों का मान्य EPIC वोटर नंबर दर्ज करें।' : 'Please enter valid EPIC Voter Number.');
+        return;
+      }
+      if (!secondaryInput.trim() || secondaryInput.trim().replace(/\D/g, '').length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया 10-अंकीय मान्य मोबाइल नंबर दर्ज करें।' : 'Please enter valid 10-digit mobile number.');
+        return;
+      }
+    }
+    if (['voter', 'epic', 'voter_verification', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp'].includes(tid) && val.length < 5) {
+      setErrorMsg(language === 'hi' ? 'कृपया 10-अक्षरों का मान्य EPIC वोटर नंबर दर्ज करें।' : 'Please enter valid EPIC Voter Number.');
+      return;
+    }
+    if (['voterCard', 'voter_card_pvc', 'voter_manual'].includes(tid) || (toolKind === 'card' && currentTool?.id === 'voterCard')) {
+      if (val.length < 5) {
+        setErrorMsg(language === 'hi' ? 'कृपया 10-अक्षरों का मान्य EPIC वोटर नंबर दर्ज करें।' : 'Please enter valid EPIC Voter Number.');
+        return;
+      }
+      if (!customerName.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया मतदाता का पूरा नाम दर्ज करें।' : 'Please enter Voter Full Name.');
+        return;
+      }
+    }
 
     // Balance Evaluation (Strict Zero-Bypass Mode)
     const currentBal = isOperator ? (sanchalakB2bBalance || 0) : (customerSession?.phone ? (walletBalance || 0) : 0);
@@ -726,12 +750,32 @@ function ServicePageContent({
       params.name = customerName.trim() || undefined;
       params.address = addressInput.trim() || undefined;
     }
-    if (toolKind === 'voter') {
-      params.epicNo = val.toUpperCase();
-      params.epicNumber = val.toUpperCase();
-      params.voter_number = val.toUpperCase();
-      params.voterNumber = val.toUpperCase();
-      params.name = customerName.trim() || undefined;
+    if (toolKind === 'voter' || currentTool?.category === 'voter' || tid.includes('voter') || tid.includes('epic')) {
+      params.epicNo = val.toUpperCase().trim();
+      params.epicNumber = val.toUpperCase().trim();
+      params.epic = val.toUpperCase().trim();
+      params.voter_number = val.toUpperCase().trim();
+      params.voterNumber = val.toUpperCase().trim();
+      params.epic_number = val.toUpperCase().trim();
+      if (secondaryInput) {
+        params.mobile = secondaryInput.trim();
+        params.mobileNumber = secondaryInput.trim();
+        params.phone = secondaryInput.trim();
+        params.otp = secondaryInput.trim();
+        params.otpCode = secondaryInput.trim();
+      }
+      if (customerName) {
+        params.name = customerName.trim();
+        params.customerName = customerName.trim();
+      }
+      if (fatherName) {
+        params.fatherName = fatherName.trim();
+        params.relativeName = fatherName.trim();
+      }
+      if (dobDate) params.dob = formatDobDisplay(dobDate);
+      if (gender) params.gender = gender;
+      if (thirdInput) params.assembly = thirdInput.trim();
+      if (photoData) params.photo = photoData;
     }
     if (toolKind === 'ayushman') {
       params.pmjayId = val.toUpperCase();
@@ -3486,7 +3530,7 @@ function ServicePageContent({
     }
 
     // 22. VOTER MOBILE LINK (Screenshot 264)
-    if (['voter_mobile_link', 'vcmRequest', 'voter_mobile_link_no_otp', 'voter_mobile_link_instant_otp'].includes(id)) {
+    if (['voter_mobile_link', 'vcmRequest', 'voter_mobile_link_no_otp', 'voter_mobile_link_instant_otp', 'instant_voter_link', 'voter_mobile_link_instant'].includes(id)) {
       return (
         <div className="space-y-3">
           <div className="space-y-1.5">
@@ -3510,6 +3554,42 @@ function ServicePageContent({
               placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
+          </div>
+        </div>
+      );
+    }
+
+    // 22B. VOTER ORIGINAL PDF WITH OTP
+    if (id === 'voter_original_pdf_otp') {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {language === 'hi' ? 'EPIC वोटर नंबर (10 अक्षर) *' : 'EPIC Voter Number (10 Chars) *'}
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10))}
+              placeholder="EPIC वोटर नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {language === 'hi' ? '6-अंकीय मोबाइल OTP (यदि पहले से प्राप्त हो)' : '6-Digit Mobile OTP (Optional / If received)'}
+            </label>
+            <input
+              type="text"
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+              placeholder="6-अंकीय OTP दर्ज करें (खाली छोड़ें यदि अभी OTP भेजना है)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+            />
+            <p className="text-[10px] text-amber-600 dark:text-amber-400 font-medium">
+              💡 {language === 'hi' ? 'यदि OTP खाली छोड़ेंगे तो सबमिट करने पर पंजीकृत मोबाइल पर OTP भेजा जाएगा।' : 'Leave blank to trigger SMS OTP on registered mobile on submit.'}
+            </p>
           </div>
         </div>
       );
@@ -3641,12 +3721,140 @@ function ServicePageContent({
       );
     }
 
-    // 28. VOTER CARD / EPIC
-    if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_verification', 'voter_original_pdf_otp'].includes(id) || cat === 'voter') {
+    // 28A. VOTER PVC SMART CARD MAKER (CR-80 85.6mm×54mm)
+    if (['voterCard', 'voter_card_pvc', 'voter_manual'].includes(id) || (toolKind === 'card' && id === 'voterCard')) {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2">
+            <span className="text-base leading-none">🖨️</span>
+            <div>
+              <p className="font-bold">ISO CR-80 PVC डिजिटल वोटर कार्ड मेकर (CR-80 85.6mm×54mm)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                निर्वाचन आयोग (ECI) आधिकारिक डिज़ाइन, त्रि-रंगी सुरक्षा वॉटरमार्क, क्यूआर कोड एवं मतदान केंद्र विवरण सहित।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              {language === 'hi' ? 'EPIC वोटर नंबर (10 अक्षर) *' : 'EPIC Voter Number (10 Chars) *'}
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10))}
+              placeholder="जैसे ABC1234567"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {language === 'hi' ? 'मतदाता का पूरा नाम *' : 'Full Name *'}
+              </label>
+              <input
+                type="text"
+                required
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+                placeholder="पूरा नाम दर्ज करें"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {language === 'hi' ? 'पिता / पति का नाम *' : 'Father / Husband Name *'}
+              </label>
+              <input
+                type="text"
+                required
+                value={fatherName}
+                onChange={(e) => setFatherName(e.target.value)}
+                placeholder="पिता या पति का नाम"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
+              />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {language === 'hi' ? 'जन्मतिथि (DOB) / आयु' : 'Date of Birth (DOB) / Age'}
+              </label>
+              <input
+                type="date"
+                value={dobDate}
+                onChange={(e) => setDobDate(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {language === 'hi' ? 'लिंग (Gender) *' : 'Gender *'}
+              </label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none cursor-pointer"
+              >
+                <option value="MALE">{language === 'hi' ? 'पुरुष (Male)' : 'Male'}</option>
+                <option value="FEMALE">{language === 'hi' ? 'महिला (Female)' : 'Female'}</option>
+                <option value="TRANSGENDER">{language === 'hi' ? 'अन्य (Transgender)' : 'Transgender'}</option>
+              </select>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {language === 'hi' ? 'विधानसभा निर्वाचन क्षेत्र (Assembly)' : 'Assembly Constituency'}
+              </label>
+              <input
+                type="text"
+                value={thirdInput}
+                onChange={(e) => setThirdInput(e.target.value)}
+                placeholder="जैसे 174 - लखनऊ मध्य"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                {language === 'hi' ? 'मतदान केंद्र / भाग संख्या (Part Name / No)' : 'Polling Station / Part No'}
+              </label>
+              <input
+                type="text"
+                value={addressInput}
+                onChange={(e) => setAddressInput(e.target.value)}
+                placeholder="जैसे प्राथमिक विद्यालय कक्ष सं. 1"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5 pt-1">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300 flex items-center justify-between">
+              <span>{language === 'hi' ? 'मतदाता फोटो (Photo Upload)' : 'Voter Photo'}</span>
+              <span className="text-[10px] text-blue-600 dark:text-blue-400 font-normal">PNG / JPG (max 2MB)</span>
+            </label>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-14 bg-slate-100 border border-slate-300 rounded overflow-hidden shrink-0 shadow-xs">
+                <img src={photoData || SAMPLE_PHOTOS.male} alt="Preview" className="w-full h-full object-cover" />
+              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="text-xs file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer text-slate-600 dark:text-slate-400"
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 28. VOTER CARD / EPIC (Lookup & Standard Verification)
+    if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_verification', 'epic'].includes(id) || cat === 'voter') {
       return (
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            Voter Number (EPIC) *
+            {language === 'hi' ? '10-अक्षरों का EPIC वोटर नंबर *' : 'Voter Number (EPIC) *'}
           </label>
           <input
             type="text"
@@ -4454,7 +4662,7 @@ function ServicePageContent({
                     {/* ======================================================= */}
                     {/* 3. VOTER SMART CARD (EPIC CR-80 FORMAT) */}
                     {/* ======================================================= */}
-                    {toolKind === 'voter' && (
+                    {(toolKind === 'voter' || currentTool?.serviceType === 'voterCard' || currentResult?.serviceType === 'voterCard' || currentTool?.id === 'voterCard' || currentTool?.category === 'voter') && (
                       <>
                         {(cardSide === 'both' || cardSide === 'front') && (
                           <div className="cr80-card-scaler relative group max-w-full">
@@ -4471,13 +4679,13 @@ function ServicePageContent({
                                   </div>
                                 </div>
                                 <div className="font-mono font-black text-amber-900 text-xs px-2 py-0.5 bg-amber-100 rounded">
-                                  {cardData.epicNo}
+                                  {cardData.epicNo || cardData.epicNumber || primaryInput}
                                 </div>
                               </div>
 
                               <div className="flex items-center gap-3 py-1">
                                 <div className="w-[68px] h-[84px] bg-slate-100 border border-slate-500 rounded overflow-hidden shrink-0 shadow-2xs">
-                                  <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
+                                  <img src={cardData.photoUrl || photoData || SAMPLE_PHOTOS.male} alt="Photo" className="w-full h-full object-cover" />
                                 </div>
 
                                 <div className="flex-1 space-y-1 text-xs">
@@ -4491,14 +4699,14 @@ function ServicePageContent({
                                   </div>
                                   <div className="flex items-center gap-3 text-[9px] text-slate-700">
                                     <span>{language === 'hi' ? 'लिंग:' : 'Gender:'} <strong>{cardData.gender}</strong></span>
-                                    <span>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <strong>{cardData.dob}</strong></span>
+                                    <span>{language === 'hi' ? 'जन्म तिथि / आयु:' : 'DOB / Age:'} <strong>{cardData.dob || cardData.age}</strong></span>
                                   </div>
                                 </div>
                               </div>
 
                               <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-600">
                                 <span>{language === 'hi' ? 'विधानसभा:' : 'Assembly:'} {cardData.acName ? `${cardData.acNumber ? cardData.acNumber + ' - ' : ''}${cardData.acName}` : (selectedCafe?.city || '-')}</span>
-                                <span className="font-mono font-bold text-amber-800">{cardData.epicNo}</span>
+                                <span className="font-mono font-bold text-amber-800">{cardData.epicNo || cardData.epicNumber || primaryInput}</span>
                               </div>
                             </div>
                           </div>
@@ -4518,18 +4726,18 @@ function ServicePageContent({
 
                               <div className="flex items-start justify-between gap-3 py-1 text-[9px]">
                                 <div className="space-y-1 text-slate-700 max-w-[200px]">
-                                  <div>{language === 'hi' ? 'मतदान केंद्र:' : 'Polling Station:'} <strong>{language === 'hi' ? 'प्राथमिक विद्यालय, कक्ष सं. 1' : 'Primary School, Room 1'}</strong></div>
-                                  <div>{language === 'hi' ? 'भाग संख्या:' : 'Part No:'} <strong>142</strong> | {language === 'hi' ? 'क्रम संख्या:' : 'Serial No:'} <strong>81</strong></div>
+                                  <div>{language === 'hi' ? 'मतदान केंद्र:' : 'Polling Station:'} <strong>{cardData.partName || cardData.pollingStation || (language === 'hi' ? 'प्राथमिक विद्यालय, कक्ष सं. 1' : 'Primary School, Room 1')}</strong></div>
+                                  <div>{language === 'hi' ? 'भाग संख्या:' : 'Part No:'} <strong>{cardData.partNo || cardData.part_no || '142'}</strong> | {language === 'hi' ? 'क्रम संख्या:' : 'Serial No:'} <strong>{cardData.serialNo || cardData.serial_no || '81'}</strong></div>
                                   <div className="text-[8px] text-slate-500 mt-1">{language === 'hi' ? 'पहचान पत्र को सुरक्षित रखें। मतदान दिवस पर अवश्य लाएं।' : 'Keep card secure. Bring on polling day.'}</div>
                                 </div>
                                 <div className="p-1 bg-white border border-slate-300 rounded shadow-xs shrink-0">
-                                  <QRCodeSVG value={`ECI:EPIC:${cardData.epicNo}|NAME:${cardData.name}|RELATION:${cardData.fatherName}`} size={64} />
+                                  <QRCodeSVG value={`ECI:EPIC:${cardData.epicNo || cardData.epicNumber || primaryInput}|NAME:${cardData.name}|RELATION:${cardData.fatherName}`} size={64} />
                                 </div>
                               </div>
 
                               <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-500">
                                 <span>{language === 'hi' ? 'मानक स्मार्ट कार्ड' : 'Standard Smart Card'}</span>
-                                <span className="font-mono font-bold">{cardData.epicNo}</span>
+                                <span className="font-mono font-bold">{cardData.epicNo || cardData.epicNumber || primaryInput}</span>
                               </div>
                             </div>
                           </div>

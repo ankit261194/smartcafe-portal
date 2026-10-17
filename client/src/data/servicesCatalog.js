@@ -277,6 +277,30 @@ const SERVICE_ENRICHMENT = {
     inputLabel: { hi: '15-अंकीय DL नंबर दर्ज करें', en: 'Enter 15-Digit DL Number' },
     placeholder: { hi: 'DL नंबर दर्ज करें', en: 'Enter DL Number' }
   },
+  voter_verification: {
+    title: { hi: 'वोटर कार्ड सत्यापन व विवरण (EPIC)', en: 'Voter Verification & Details (EPIC)' },
+    sub: { hi: 'निर्वाचन आयोग मतदाता पहचान पत्र लाइव सत्यापन', en: 'Election Commission Official Voter Verification' },
+    inputLabel: { hi: '10-अक्षरों का EPIC वोटर कार्ड नंबर', en: '10-Character EPIC Number' },
+    placeholder: { hi: 'जैसे ABC1234567', en: 'e.g. ABC1234567' }
+  },
+  voter_mobile_link: {
+    title: { hi: 'वोटर कार्ड मोबाइल नंबर लिंक (बिना OTP)', en: 'Voter Mobile Number Link (No OTP)' },
+    sub: { hi: 'वोटर कार्ड में नया मोबाइल नंबर जोड़ें / अपडेट करें', en: 'Link or Update Mobile Number in Voter Card' },
+    inputLabel: { hi: 'EPIC वोटर नंबर दर्ज करें', en: 'Enter EPIC Number' },
+    placeholder: { hi: '10-अक्षरों का EPIC नंबर', en: '10-Character EPIC Number' }
+  },
+  voter_mobile_link_no_otp: {
+    title: { hi: 'वोटर मोबाइल लिंक (बिना OTP)', en: 'Voter Mobile Link Without OTP' },
+    sub: { hi: 'तत्काल बिना OTP वोटर मोबाइल सीडिंग', en: 'Instant No OTP Voter Mobile Seeding' },
+    inputLabel: { hi: 'EPIC वोटर नंबर दर्ज करें', en: 'Enter EPIC Number' },
+    placeholder: { hi: '10-अक्षरों का EPIC नंबर', en: '10-Character EPIC Number' }
+  },
+  voter_mobile_link_instant_otp: {
+    title: { hi: 'वोटर मोबाइल लिंक (तत्काल फॉर्म-8)', en: 'Voter Mobile Link (Instant Form 8)' },
+    sub: { hi: 'निर्वाचन आयोग फॉर्म-8 तत्काल मोबाइल अपडेट', en: 'Election Commission Form 8 Mobile Update' },
+    inputLabel: { hi: 'EPIC वोटर नंबर दर्ज करें', en: 'Enter EPIC Number' },
+    placeholder: { hi: '10-अक्षरों का EPIC नंबर', en: '10-Character EPIC Number' }
+  },
   voter_pdf: {
     title: { hi: 'डिजिटल वोटर स्मार्ट कार्ड (EPIC PDF)', en: 'Digital Voter Card PDF' },
     sub: { hi: 'निर्वाचन आयोग डिजिटल स्मार्ट पहचान पत्र', en: 'Election Commission Smart Voter Card' },
@@ -288,6 +312,12 @@ const SERVICE_ENRICHMENT = {
     sub: { hi: 'बिना मोबाइल OTP के आधिकारिक वोटर कार्ड PDF', en: 'Official Voter Card PDF Without OTP' },
     inputLabel: { hi: 'EPIC वोटर नंबर दर्ज करें', en: 'Enter EPIC Number' },
     placeholder: { hi: 'EPIC नंबर दर्ज करें', en: 'Enter EPIC Number' }
+  },
+  voter_original_pdf_otp: {
+    title: { hi: 'वोटर ओरिजिनल PDF (OTP के साथ)', en: 'Voter Original PDF (With OTP)' },
+    sub: { hi: 'निर्वाचन आयोग आधिकारिक वोटर कार्ड PDF OTP द्वारा', en: 'Official Election Commission PDF via Mobile OTP' },
+    inputLabel: { hi: 'EPIC वोटर नंबर दर्ज करें', en: 'Enter EPIC Number' },
+    placeholder: { hi: '10-अक्षरों का EPIC नंबर', en: '10-Character EPIC Number' }
   },
   ration_pdf_by_ration: {
     title: { hi: 'राशन कार्ड पर्चा / PDF (राशन नंबर से)', en: 'Ration Card PDF by Ration No' },
