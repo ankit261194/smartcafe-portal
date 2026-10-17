@@ -3573,6 +3573,9 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
         const legacyMap = {
           'rcdownload': 'rc_to_details', 'rc_download': 'rc_to_details',
           'pancard': 'pan_details', 'pan_card': 'pan_details',
+          'pan_verification_premium': 'pan_details',
+          'panverificationpremium': 'pan_details',
+          'gst_verification': 'gst_to_pan',
           'aadhaarcard': 'aadhaar_advance', 'aadhaar_card': 'aadhaar_advance',
           'votercard': 'voter_verification', 'voter_card': 'voter_verification',
           'rationcard': 'ration_pdf_by_ration', 'ration_card': 'ration_pdf_by_ration',
@@ -3635,17 +3638,33 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       p4Params.gstNumber = cleanGst;
       p4Params.gstNo = cleanGst;
     }
-    if (lowerUrl.includes('getpan') || lowerUrl.includes('panfind')) {
+    if (lowerUrl.includes('getpan') || lowerUrl.includes('panfind') || ['pan_find', 'pan_find_manual', 'pan_find_manual_alt'].includes(norm)) {
       const cleanUid = String(params?.aadhaar || params?.aadhaarNo || params?.uidNumber || params?.aadhar || val).replace(/\D/g, '');
-      p4Params.aadhaar = cleanUid;
-      p4Params.aadhar = cleanUid;
-      p4Params.uidNumber = cleanUid;
-      p4Params.aadhar_number = cleanUid;
+      if (cleanUid.length === 12) {
+        p4Params.aadhaar = cleanUid;
+        p4Params.aadhar = cleanUid;
+        p4Params.uidNumber = cleanUid;
+        p4Params.aadhar_number = cleanUid;
+      }
       if (params?.name || params?.customerName) {
         p4Params.name = params?.name || params?.customerName;
       }
+      if (params?.fatherName) {
+        p4Params.fatherName = params.fatherName;
+      }
+      if (params?.dob) {
+        p4Params.dob = params.dob;
+      }
       if (params?.mobile || params?.phone) {
         p4Params.mobile = params?.mobile || params?.phone;
+      }
+    } else if (lowerUrl.includes('pan_to_aadhar') || norm === 'pan_to_aadhar_find') {
+      const panClean = String(params?.panNumber || params?.panNo || params?.pan || val).toUpperCase().trim();
+      p4Params.pan = panClean;
+      p4Params.panNumber = panClean;
+      p4Params.panNo = panClean;
+      if (params?.dob) {
+        p4Params.dob = params.dob;
       }
     } else if (lowerUrl.includes('pan')) {
       const panClean = String(params?.panNumber || params?.panNo || params?.pan || val).toUpperCase().trim();
@@ -3659,6 +3678,12 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       }
       if (params?.name || params?.customerName) {
         p4Params.name = params?.name || params?.customerName;
+      }
+      if (params?.fatherName) {
+        p4Params.fatherName = params.fatherName;
+      }
+      if (params?.dob) {
+        p4Params.dob = params.dob;
       }
       if (params?.mobile || params?.phone) {
         p4Params.mobile = params?.mobile || params?.phone;
@@ -3895,6 +3920,22 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
 
       if (result && result.ok && result.json) {
         const json = result.json;
+
+        if (['pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'epan', 'findpan'].includes(norm)) {
+          const foundPan = json.panNumber || json.pan_number || json.pan || json.full_pan_number || (json.data && (json.data.panNumber || json.data.pan_number || json.data.pan));
+          const hasValidPan = foundPan && /^[A-Z]{5}[0-9]{4}[A-Z]$/i.test(String(foundPan).trim());
+          if (!hasValidPan) {
+            return null;
+          }
+        }
+        if (norm === 'pan_to_aadhar_find') {
+          const foundUid = json.aadhaarNumber || json.aadhaar_number || json.aadhaar || json.aadhar || json.uidNumber || (json.data && (json.data.aadhaar || json.data.aadhaarNumber));
+          const hasValidUid = foundUid && String(foundUid).replace(/\D/g, '').length >= 4;
+          if (!hasValidUid) {
+            return null;
+          }
+        }
+
         const hasData = Boolean(json.data || json.holder || json.response || json.items || json.panNumber || json.full_pan_number || json.farmerNameEn || json.uan_no || json.front || json.back || json.pdf);
         const hasPdf = Boolean(json.pdf || json.pdf_base64 || json.pdfBase64 || json.Rc_Pdf || json.file || json.pdf_url || json.front || json.back);
         const isExplicitSuccess = Boolean((json.success && json.success !== false) || json.status === true || json.status === 1 || json.status === 100 || json.status === 'success' || json.status === 200 || json.code === 100);
@@ -4900,6 +4941,15 @@ app.post('/api/services/execute-automated', async (req, res) => {
       relayParams.vehicle_number = vNum;
       relayParams.vehicleNumber = vNum;
       relayParams.regNo = vNum;
+    } else if (uService === 'Pan_Number_Link' || service79.id === 'pan_aadhaar_link_manual') {
+      relayParams.panNo = String(params?.panNo || params?.pan || params?.query || '').toUpperCase().trim();
+      relayParams.aadhaarNo = String(params?.aadhaarNo || params?.aadhaar || params?.secondaryInput || '').replace(/\D/g, '').trim();
+      relayParams.mobile = String(params?.mobile || params?.phone || params?.thirdInput || '').replace(/\D/g, '').trim();
+    } else if (uService === 'pan_find_manual' || service79.id === 'pan_find_manual' || service79.id === 'pan_find_manual_alt') {
+      relayParams.name = String(params?.name || params?.customerName || '').trim();
+      relayParams.fatherName = String(params?.fatherName || '').trim();
+      relayParams.dob = String(params?.dob || '').trim();
+      relayParams.mobile = String(params?.mobile || params?.phone || params?.secondaryInput || '').replace(/\D/g, '').trim();
     }
 
     const newOrder = {
@@ -4993,11 +5043,17 @@ app.post('/api/services/execute-automated', async (req, res) => {
       if (!store.rcOrders) store.rcOrders = [];
       store.rcOrders.unshift(newRcOrder);
     } else if (liveP4.service === 'panCard' || liveP4.service === 'aadhaarToPan' || normServiceType.includes('pan')) {
-      const panNo = String(liveP4.panNo || rawData.panNumber || rawData.panNo || rawData.pan || params?.panNo || '').toUpperCase().trim();
+      const extractedPan = liveP4.panNo || rawData.panNumber || rawData.panNo || rawData.pan || (liveP4.raw && (liveP4.raw.panNumber || liveP4.raw.pan_number || liveP4.raw.pan || liveP4.raw.full_pan_number));
+      let panNo = '';
+      if (extractedPan && /^[A-Z]{5}[0-9]{4}[A-Z]$/i.test(String(extractedPan).trim())) {
+        panNo = String(extractedPan).toUpperCase().trim();
+      } else {
+        panNo = ['pan_details', 'pan_verification_premium', 'pan', 'pan_to_gst', 'pan_to_aadhar_find'].includes(normServiceType) ? String(params?.panNo || params?.pan || params?.query || '').toUpperCase().trim() : '';
+      }
       generatedData.panNo = panNo;
-      const panName = rawData.name || rawData.full_name || params?.customerName || 'PAN धारक';
-      docTitle = `पैन कार्ड (${panNo}) - ${panName}`;
-      refNumber = panNo;
+      const panName = rawData.name || rawData.full_name || rawData.holder_name || params?.customerName || 'PAN धारक';
+      docTitle = panNo ? `पैन कार्ड (${panNo}) - ${panName}` : (serviceTitles[normServiceType] || 'पैन कार्ड सेवा');
+      refNumber = panNo || (params?.query || 'PAN');
     } else if (liveP4.service === 'voter' || normServiceType.includes('voter') || normServiceType.includes('epic')) {
       const epic = String(liveP4.epicNo || rawData.epicNumber || rawData.epicNo || rawData.epic_number || params?.epicNo || '').toUpperCase().trim();
       generatedData.epicNo = epic;
@@ -5195,6 +5251,28 @@ app.post('/api/services/execute-automated', async (req, res) => {
       });
       docTitle = `${serviceDisplayName} रसीद (${generatedData.receiptNo}) - ₹${generatedData.amount}`;
       refNumber = generatedData.receiptNo;
+    } else if (normServiceType === 'pancard' || normServiceType === 'panCard' || params?.serviceId === 'panCard') {
+      const panNo = String(params?.panNo || params?.panNumber || params?.pan || params?.query || '').toUpperCase().trim();
+      const panName = String(params?.customerName || params?.name || '').toUpperCase().trim();
+      const fName = String(params?.fatherName || '').toUpperCase().trim();
+      const dob = String(params?.dob || '').trim();
+      if (panNo && panName) {
+        generatedData = {
+          panNo,
+          name: panName,
+          customerName: panName,
+          fatherName: fName,
+          dob,
+          photoUrl: params?.photo || params?.photoData || null,
+          signUrl: params?.signature || params?.signData || null,
+          refNumber: panNo,
+          serviceType: 'panCard',
+          cardType: 'ISO CR-80 PVC Smart Card',
+          isInstantPvc: true
+        };
+        docTitle = `पैन कार्ड CR-80 PVC (${panNo}) - ${panName}`;
+        refNumber = panNo;
+      }
     }
   }
 

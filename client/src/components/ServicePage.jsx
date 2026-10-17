@@ -97,7 +97,7 @@ function ServicePageContent({
     if (id === 'passport_photo_maker' || id.includes('passport_photo') || id.includes('photo_maker')) return 'passport_photo';
     if (id === 'govt_form_resizer' || id.includes('resizer') || id.includes('compressor')) return 'govt_resizer';
     if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc'].includes(id) || cat === 'rc' || id.includes('rc_')) return 'rc';
-    if (['pan', 'pan_find', 'pan_details'].includes(id) || cat === 'pan' || id.includes('pan_')) return 'pan';
+    if (['pan', 'pancard', 'pan_find', 'pan_details'].includes(id) || cat === 'pan' || id.includes('pan')) return 'pan';
     if (id === 'epan') return 'epan';
     if (['aadhaar', 'aadhaar_advance', 'aadhaar_original_pdf_otp', 'aadhaar_original_pdf_no_otp', 'aadhaar_otp_kyc', 'aadhaar_pvc'].includes(id) || cat === 'aadhaar' || id.includes('aadhaar_') || id.includes('uid_') || id.includes('pvc_')) return 'aadhaar';
     if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp'].includes(id) || cat === 'voter' || id.includes('voter_')) return 'voter';
@@ -413,12 +413,16 @@ function ServicePageContent({
   const handleInstantGenerate = async (e) => {
     if (e) e.preventDefault();
     let val = primaryInput.trim();
+    const tid = (currentTool?.id || '').toLowerCase();
+
+    if (['pan_find_manual', 'pan_find_manual_alt'].includes(tid)) {
+      val = customerName.trim();
+    }
+
     if (!val) {
       setErrorMsg(language === 'hi' ? 'कृपया पहचान / संदर्भ संख्या दर्ज करें।' : 'Please enter reference ID or number.');
       return;
     }
-
-    const tid = (currentTool?.id || '').toLowerCase();
 
     // Mandatory Input Validations for Custom/Dedicated Services
     if (tid === 'll_exam_pass_auto') {
@@ -461,9 +465,81 @@ function ServicePageContent({
       setErrorMsg(language === 'hi' ? 'कृपया मान्य वाहन रजिस्ट्रेशन नंबर दर्ज करें (जैसे UP32AB1234)।' : 'Please enter valid Vehicle Registration Number.');
       return;
     }
-    if (tid === 'pan_aadhaar_link_manual' && !secondaryInput.trim()) {
-      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय आधार नंबर दर्ज करें।' : 'Please enter 12-digit Aadhaar number.');
+    if (tid === 'pan_find' && val.replace(/\D/g, '').length !== 12) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
       return;
+    }
+    if (['pan_find_manual', 'pan_find_manual_alt'].includes(tid)) {
+      if (!customerName.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया आधार अनुसार पूरा नाम (Full Name) दर्ज करें।' : 'Please enter Full Name.');
+        return;
+      }
+      if (!fatherName.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया पिता का नाम (Father Name) दर्ज करें।' : 'Please enter Father Name.');
+        return;
+      }
+      if (!dobDate) {
+        setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+        return;
+      }
+      if (!secondaryInput.trim() || secondaryInput.trim().replace(/\D/g, '').length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया मान्य 10-अंकीय मोबाइल नंबर दर्ज करें।' : 'Please enter valid 10-digit mobile number.');
+        return;
+      }
+    }
+    if (tid === 'pan_to_aadhar_find') {
+      if (val.length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया 10-अंकीय मान्य पैन नंबर दर्ज करें।' : 'Please enter valid 10-digit PAN number.');
+        return;
+      }
+      if (!dobDate) {
+        setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+        return;
+      }
+    }
+    if (tid === 'pan_aadhaar_link_manual') {
+      if (val.length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया 10-अंकीय मान्य पैन नंबर दर्ज करें।' : 'Please enter valid 10-digit PAN number.');
+        return;
+      }
+      if (!secondaryInput.trim() || secondaryInput.trim().replace(/\D/g, '').length !== 12) {
+        setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+        return;
+      }
+      if (!thirdInput.trim() || thirdInput.trim().replace(/\D/g, '').length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया 10-अंकीय मान्य मोबाइल नंबर दर्ज करें।' : 'Please enter valid 10-digit mobile number.');
+        return;
+      }
+    }
+    if (tid === 'pan_to_gst' && val.length !== 10) {
+      setErrorMsg(language === 'hi' ? 'कृपया 10-अंकीय मान्य पैन नंबर दर्ज करें।' : 'Please enter valid 10-digit PAN number.');
+      return;
+    }
+    if (['gst_to_pan', 'gst_verification'].includes(tid) && val.length !== 15) {
+      setErrorMsg(language === 'hi' ? 'कृपया 15-अंकीय मान्य GST नंबर (GSTIN) दर्ज करें।' : 'Please enter valid 15-digit GSTIN.');
+      return;
+    }
+    if (['pan_details', 'panverificationpremium', 'pan_basic_pricing'].includes(tid) && val.length !== 10) {
+      setErrorMsg(language === 'hi' ? 'कृपया 10-अंकीय मान्य पैन नंबर दर्ज करें।' : 'Please enter valid 10-digit PAN number.');
+      return;
+    }
+    if (tid === 'pancard' || (toolKind === 'card' && currentTool?.id === 'panCard')) {
+      if (val.length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया 10-अंकीय मान्य पैन नंबर दर्ज करें।' : 'Please enter valid 10-digit PAN number.');
+        return;
+      }
+      if (!customerName.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया पूरा नाम (Full Name) दर्ज करें।' : 'Please enter Full Name.');
+        return;
+      }
+      if (!fatherName.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया पिता का नाम (Father Name) दर्ज करें।' : 'Please enter Father Name.');
+        return;
+      }
+      if (!dobDate) {
+        setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+        return;
+      }
     }
     if (tid === 'nsdl_bank' && !secondaryInput.trim()) {
       setErrorMsg(language === 'hi' ? 'कृपया 11-अंकीय बैंक IFSC कोड दर्ज करें।' : 'Please enter 11-digit Bank IFSC code.');
@@ -718,27 +794,72 @@ function ServicePageContent({
       params.engine_number = val.toUpperCase().trim();
     }
 
-    if (['pan_find', 'pan_find_manual', 'pan_find_manual_alt'].includes(tid)) {
-      params.aadhaarNo = val;
-      params.uidNumber = val;
-      params.aadhar = val;
+    if (tid === 'pan_find') {
+      const cleanUid = val.replace(/\D/g, '');
+      params.aadhaarNo = cleanUid;
+      params.uidNumber = cleanUid;
+      params.aadhar = cleanUid;
+      params.aadhaar = cleanUid;
+      delete params.panNo;
+      delete params.panNumber;
+      delete params.pan;
+    }
+
+    if (['pan_find_manual', 'pan_find_manual_alt'].includes(tid)) {
       params.name = customerName.trim();
+      params.customerName = customerName.trim();
       params.fatherName = fatherName.trim();
       params.dob = dobDate ? formatDobDisplay(dobDate) : undefined;
+      params.mobile = secondaryInput.trim();
       delete params.panNo;
       delete params.panNumber;
       delete params.pan;
     }
 
     if (tid === 'pan_to_aadhar_find') {
-      params.panNo = val.toUpperCase();
+      params.panNo = val.toUpperCase().trim();
+      params.pan = val.toUpperCase().trim();
+      params.panNumber = val.toUpperCase().trim();
       params.dob = dobDate ? formatDobDisplay(dobDate) : undefined;
     }
 
     if (tid === 'pan_aadhaar_link_manual') {
-      params.panNo = val.toUpperCase();
-      params.aadhaarNo = secondaryInput.trim();
-      params.mobile = thirdInput.trim() || secondaryInput.trim();
+      params.panNo = val.toUpperCase().trim();
+      params.pan = val.toUpperCase().trim();
+      params.panNumber = val.toUpperCase().trim();
+      params.aadhaarNo = secondaryInput.trim().replace(/\D/g, '');
+      params.aadhaar = secondaryInput.trim().replace(/\D/g, '');
+      params.mobile = (thirdInput.trim() || secondaryInput.trim()).replace(/\D/g, '');
+    }
+
+    if (tid === 'pan_to_gst') {
+      params.panNo = val.toUpperCase().trim();
+      params.pan = val.toUpperCase().trim();
+      params.panNumber = val.toUpperCase().trim();
+    }
+
+    if (['gst_to_pan', 'gst_verification'].includes(tid)) {
+      params.gstin = val.toUpperCase().trim();
+      params.gst = val.toUpperCase().trim();
+      params.gstNumber = val.toUpperCase().trim();
+    }
+
+    if (['pan_details', 'panverificationpremium', 'pan_basic_pricing'].includes(tid)) {
+      params.panNumber = val.toUpperCase().trim();
+      params.pan = val.toUpperCase().trim();
+      params.panNo = val.toUpperCase().trim();
+    }
+
+    if (['pancard', 'pan'].includes(tid)) {
+      params.panNo = val.toUpperCase().trim();
+      params.pan = val.toUpperCase().trim();
+      params.panNumber = val.toUpperCase().trim();
+      params.name = customerName.trim() || undefined;
+      params.customerName = customerName.trim() || undefined;
+      params.fatherName = fatherName.trim() || undefined;
+      params.dob = dobDate ? formatDobDisplay(dobDate) : undefined;
+      params.photoData = photoData;
+      params.signData = signData;
     }
 
     if (tid === 'ration_pdf_by_aadhar') {
@@ -1281,6 +1402,15 @@ function ServicePageContent({
     if (['chassis_to_rc', 'chassis_to_rc_find', 'chassis_to_rc_alt', 'engine_to_rc', 'puc_certificate_download'].includes(id)) {
       return '🔍 विवरण प्राप्त करें';
     }
+    if (['pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_to_aadhar_find'].includes(id)) {
+      return '🔍 पैन खोजें';
+    }
+    if (id === 'pan_aadhaar_link_manual') {
+      return '🔗 लिंक अनुरोध भेजें';
+    }
+    if (id === 'pancard' || (id === 'pan' && currentTool?.serviceType === 'panCard')) {
+      return '🖨️ कार्ड जनरेट करें';
+    }
     if (['pan_to_gst', 'gst_to_pan', 'gst_verification', 'upi_to_details', 'gmail_to_details'].includes(id)) {
       return 'Search';
     }
@@ -1715,16 +1845,16 @@ function ServicePageContent({
       );
     }
 
-    // 9. LOST PAN CARD FIND (Aadhaar No OR Name + Father Name + DOB - NO PAN NUMBER NEEDED!)
-    if (['pan_find', 'pan_find_manual', 'pan_find_manual_alt'].includes(id)) {
+    // 9A. LOST PAN CARD FIND BY AADHAAR (12-Digit Aadhaar Number - NO PAN Field!)
+    if (id === 'pan_find') {
       return (
         <div className="space-y-3">
           <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2">
             <span className="text-base leading-none">🔍</span>
             <div>
-              <p className="font-bold">गुमशुदा पैन कार्ड खोज (Lost PAN Search)</p>
+              <p className="font-bold">गुमशुदा पैन - आधार से खोज (Lost PAN by Aadhaar)</p>
               <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
-                यदि आपके पास पैन नंबर नहीं है, तो कृपया 12-अंकीय आधार नंबर अथवा आधार अनुसार नाम व जन्मतिथि दर्ज करें।
+                अपना 12-अंकीय आधार नंबर दर्ज करें। आयकर विभाग के सर्वर से संबद्ध स्थायी खाता संख्या (PAN) तुरंत खोजी जाएगी।
               </p>
             </div>
           </div>
@@ -1743,42 +1873,77 @@ function ServicePageContent({
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
             />
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Full Name (आधार अनुसार पूरा नाम)
-              </label>
-              <input
-                type="text"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value.toUpperCase())}
-                placeholder="पूरा नाम दर्ज करें"
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm uppercase focus:outline-none"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-                Father Name (पिता का नाम)
-              </label>
-              <input
-                type="text"
-                value={fatherName}
-                onChange={(e) => setFatherName(e.target.value.toUpperCase())}
-                placeholder="पिता का नाम दर्ज करें"
-                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm uppercase focus:outline-none"
-              />
+        </div>
+      );
+    }
+
+    // 9B. LOST PAN CARD FIND MANUAL (Name + Father Name + DOB + Mobile - NO PAN Field!)
+    if (['pan_find_manual', 'pan_find_manual_alt'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2">
+            <span className="text-base leading-none">📋</span>
+            <div>
+              <p className="font-bold">नाम-मोबाइल-DOB से पैन खोज (PAN Search by Name, DOB & Mobile)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                आधार अनुसार पूरा नाम, पिता का नाम, जन्मतिथि और 10-अंकीय मोबाइल नंबर दर्ज करें।
+              </p>
             </div>
           </div>
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Date Of Birth (जन्मतिथि)
+              Full Name (आधार अनुसार पूरा नाम) *
             </label>
             <input
-              type="date"
-              value={dobDate}
-              onChange={(e) => setDobDate(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
+              type="text"
+              required
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value.toUpperCase())}
+              placeholder="पूरा नाम दर्ज करें (आधार अनुसार)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm uppercase focus:outline-none"
             />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Father Name (पिता का नाम) *
+            </label>
+            <input
+              type="text"
+              required
+              value={fatherName}
+              onChange={(e) => setFatherName(e.target.value.toUpperCase())}
+              placeholder="पिता का नाम दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm uppercase focus:outline-none"
+            />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Date Of Birth (जन्मतिथि) *
+              </label>
+              <input
+                type="date"
+                required
+                value={dobDate}
+                onChange={(e) => setDobDate(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Mobile Number (मोबाइल नंबर) *
+              </label>
+              <input
+                type="text"
+                required
+                maxLength={10}
+                inputMode="numeric"
+                value={secondaryInput}
+                onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+                placeholder="10-अंकीय मोबाइल नंबर"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
+              />
+            </div>
           </div>
         </div>
       );
@@ -1923,8 +2088,120 @@ function ServicePageContent({
       );
     }
 
-    // 15. GENERAL PAN / PAN DETAILS (Screenshot 220)
-    if (['pan', 'pan_details', 'pan_basic_pricing', 'panCard', 'pan_to_udyam_details'].includes(id)) {
+    // 15A. INSTANT PAN PVC CR-80 MAKER (Service 12: panCard)
+    if (id === 'pancard') {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2">
+            <span className="text-base leading-none">🖨️</span>
+            <div>
+              <p className="font-bold">ISO CR-80 PVC पैन कार्ड मेकर (NSDL/UTI लेआउट)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                पैन कार्ड नंबर, नाम, पिता का नाम, जन्मतिथि दर्ज करें तथा फ़ोटो व हस्ताक्षर अपलोड करें। 1-क्लिक में आधिकारिक CR-80 कार्ड तैयार होगा।
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              10-Digit PAN Number (पैन नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10))}
+              placeholder="10-अंकीय पैन नंबर दर्ज करें (जैसे ABCDE1234F)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Full Name (पूरा नाम) *
+            </label>
+            <input
+              type="text"
+              required
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value.toUpperCase())}
+              placeholder="पैन कार्ड धारक का पूरा नाम"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none uppercase"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Father's Name (पिता का नाम) *
+            </label>
+            <input
+              type="text"
+              required
+              value={fatherName}
+              onChange={(e) => setFatherName(e.target.value.toUpperCase())}
+              placeholder="पिता का नाम दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none uppercase"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Date Of Birth (जन्मतिथि) *
+            </label>
+            <input
+              type="date"
+              required
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 pt-1">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                पासपोर्ट फ़ोटो अपलोड
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                />
+              </div>
+              {photoData && (
+                <div className="w-12 h-14 rounded border border-slate-300 overflow-hidden mt-1 shadow-2xs">
+                  <img src={photoData} alt="Photo preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                हस्ताक्षर (Signature) अपलोड
+              </label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleSignUpload}
+                  className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer"
+                />
+              </div>
+              {signData && (
+                <div className="w-20 h-8 rounded border border-slate-300 overflow-hidden mt-1 bg-white flex items-center justify-center p-1 shadow-2xs">
+                  <img src={signData} alt="Sign preview" className="max-h-full max-w-full object-contain" />
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // 15B. GENERAL PAN / PAN DETAILS (Screenshot 220)
+    if (['pan', 'pan_details', 'pan_basic_pricing', 'pan_to_udyam_details', 'pan_verification_premium', 'panverificationpremium'].includes(id)) {
       return (
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
@@ -2947,11 +3224,11 @@ function ServicePageContent({
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🎉 100% मुफ़्त सेवा
                   </span>
-                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)) ? (
+                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)) ? (
                   <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     ⏱️ मैन्युअल रिले (1-2 घंटे)
                   </span>
-                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'aadhaar_pdf_otp'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
+                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'pan_verification_premium', 'panverificationpremium', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'aadhaar_pdf_otp', 'pan_to_aadhar_find', 'pan_to_gst', 'gst_to_pan', 'gst_verification'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🟢 लाइव सरकारी API
                   </span>

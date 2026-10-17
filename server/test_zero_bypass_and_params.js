@@ -134,6 +134,84 @@ assert(!servicePageContent.includes('// 8D. ENGINE TO RC FIND'), 'ServicePage mu
 
 console.log('✅ PASS: Part 1 RTO & Transport Services parameter & routing verified across all tiers');
 
+const services79 = JSON.parse(fs.readFileSync('client/src/data/services_79.json', 'utf8'));
+
+console.log('\n--- TEST 3C: Part 2 PAN Card Services Suite Comprehensive Verification ---');
+// 1. Service 6: pan_find (Aadhaar to PAN Find)
+assert(servicePageContent.includes("if (id === 'pan_find')"), 'pan_find must have dedicated form 9A');
+assert(servicePageContent.includes("onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}"), 'pan_find must strictly accept 12-digit Aadhaar only');
+assert(servicePageContent.includes("tid === 'pan_find' && val.replace(/\\D/g, '').length !== 12"), 'pan_find must enforce 12-digit Aadhaar length validation');
+assert(servicePageContent.includes("const cleanUid = val.replace(/\\D/g, '')"), 'pan_find must extract clean 12-digit Aadhaar');
+assert(servicePageContent.includes("delete params.panNo"), 'pan_find must delete panNo parameter');
+assert(servicePageContent.includes("delete params.panNumber"), 'pan_find must delete panNumber parameter');
+assert(servicePageContent.includes("delete params.pan"), 'pan_find must delete pan parameter');
+
+const panFindSvc = services79.find(s => s.id === 'pan_find');
+assert(panFindSvc, 'pan_find must exist in services_79.json');
+assert(panFindSvc.apiEndpoint.includes('getPanNumber.php'), 'pan_find must route to getPanNumber.php');
+assert(panFindSvc.badge.includes('मैन्युअल रिले'), 'pan_find must have honest manual relay badge');
+
+// 2. Service 7: pan_find_manual & pan_find_manual_alt
+assert(servicePageContent.includes("['pan_find_manual', 'pan_find_manual_alt'].includes(id)"), 'pan_find_manual must have dedicated form 9B');
+assert(servicePageContent.includes("val = customerName.trim()"), 'pan_find_manual must assign customerName as val');
+assert(servicePageContent.includes("['pan_find_manual', 'pan_find_manual_alt'].includes(tid)"), 'pan_find_manual client validation check present');
+assert(servicePageContent.includes("params.name = customerName.trim()"), 'pan_find_manual must pack name');
+assert(servicePageContent.includes("params.fatherName = fatherName.trim()"), 'pan_find_manual must pack fatherName');
+assert(servicePageContent.includes("params.mobile = secondaryInput.trim()"), 'pan_find_manual must pack mobile');
+
+const panFindMan = services79.find(s => s.id === 'pan_find_manual');
+assert(panFindMan, 'pan_find_manual must exist in services_79.json');
+assert(panFindMan.apiEndpoint.includes('panFind_name_and_number.php'), 'pan_find_manual must route to panFind_name_and_number.php');
+assert(panFindMan.upstreamService === 'pan_find_manual', 'pan_find_manual upstreamService must be pan_find_manual');
+assert(panFindMan.upstreamFile === 'pan_find_manual.php', 'pan_find_manual upstreamFile must be pan_find_manual.php');
+
+// 3. Service 8: pan_to_aadhar_find
+assert(servicePageContent.includes("if (id === 'pan_to_aadhar_find')"), 'pan_to_aadhar_find must have dedicated form 10');
+assert(servicePageContent.includes("tid === 'pan_to_aadhar_find'"), 'pan_to_aadhar_find client validation check present');
+assert(servicePageContent.includes("params.dob = dobDate ? formatDobDisplay(dobDate) : undefined"), 'pan_to_aadhar_find must pack dob');
+
+const panToAadharSvc = services79.find(s => s.id === 'pan_to_aadhar_find');
+assert(panToAadharSvc, 'pan_to_aadhar_find must exist in services_79.json');
+assert(panToAadharSvc.apiEndpoint.includes('pan_to_aadhar.php'), 'pan_to_aadhar_find must route to pan_to_aadhar.php');
+assert(panToAadharSvc.badge.includes('लाइव सरकारी API'), 'pan_to_aadhar_find must have live API badge');
+
+// 4. Service 9: pan_aadhaar_link_manual
+assert(servicePageContent.includes("if (id === 'pan_aadhaar_link_manual')"), 'pan_aadhaar_link_manual must have dedicated form 11');
+assert(servicePageContent.includes("tid === 'pan_aadhaar_link_manual'"), 'pan_aadhaar_link_manual client validation check present');
+assert(indexPhpContent.includes("$uService === 'Pan_Number_Link' || ($service79['id'] ?? '') === 'pan_aadhaar_link_manual'"), 'index.php must support pan_aadhaar_link_manual in relay');
+assert(serverJsContent.includes("uService === 'Pan_Number_Link' || service79.id === 'pan_aadhaar_link_manual'"), 'server.js must support pan_aadhaar_link_manual in relay');
+assert(indexPhpContent.includes("$upstreamFile = 'panAadharNumber_Link.php'"), 'index.php must route Pan_Number_Link to panAadharNumber_Link.php');
+
+// 5. Service 10: pan_to_gst & gst_to_pan & gst_verification
+assert(servicePageContent.includes("if (id === 'pan_to_gst')"), 'pan_to_gst must have dedicated form 12');
+assert(servicePageContent.includes("['gst_to_pan', 'gst_verification'].includes(id)"), 'gst_to_pan must have dedicated form 13');
+assert(indexPhpContent.includes("'gst_verification' => 'gst_to_pan'"), 'index.php legacyMap must resolve gst_verification');
+assert(serverJsContent.includes("'gst_verification': 'gst_to_pan'"), 'server.js legacyMap must resolve gst_verification');
+
+// 6. Service 11: pan_details & pan_verification_premium
+assert(servicePageContent.includes("['pan', 'pan_details', 'pan_basic_pricing'"), 'pan_details must have clean 15B form');
+assert(indexPhpContent.includes("'pan_verification_premium' => 'pan_details'"), 'index.php legacyMap must resolve pan_verification_premium');
+assert(serverJsContent.includes("'pan_verification_premium': 'pan_details'"), 'server.js legacyMap must resolve pan_verification_premium');
+const panDetailsSvc = services79.find(s => s.id === 'pan_details');
+assert(panDetailsSvc.apiEndpoint.includes('panVerificationPremium.php'), 'pan_details must route to panVerificationPremium.php');
+
+// 7. Service 12: panCard / Instant PAN PVC CR-80 Maker
+assert(servicePageContent.includes("if (id === 'pancard')"), 'panCard must have dedicated 15A form');
+assert(servicePageContent.includes("ISO CR-80 PVC पैन कार्ड मेकर"), 'panCard form must display ISO CR-80 banner');
+assert(servicePageContent.includes("handlePhotoUpload"), 'panCard form must have photo upload');
+assert(servicePageContent.includes("handleSignUpload"), 'panCard form must have signature upload');
+assert(servicePageContent.includes("toolKind === 'pan' && ("), 'ServicePage must render CR-80 card preview for toolKind pan');
+assert(servicePageContent.includes("INCOME TAX DEPARTMENT • GOVT. OF INDIA"), 'PAN card preview must contain official ITD header');
+assert(indexPhpContent.includes("$normServiceType === 'pancard' || (isset($params['serviceId']) && $params['serviceId'] === 'panCard')"), 'index.php execute-automated must support instant PVC panCard');
+assert(serverJsContent.includes("normServiceType === 'pancard' || normServiceType === 'panCard' || params?.serviceId === 'panCard'"), 'server.js execute-automated must support instant PVC panCard');
+
+// 8. Strict Backend Response Validation (Zero Fake Fallback Protection)
+assert(indexPhpContent.includes("in_array($norm, ['pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'epan', 'findpan'])"), 'index.php must strictly validate PAN find responses');
+assert(serverJsContent.includes("['pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'epan', 'findpan'].includes(norm)"), 'server.js must strictly validate PAN find responses');
+assert(!indexPhpContent.includes("$panNo = strtoupper(trim($liveP4['panNo'] ?? ($p4Data['panNumber'] ?? ($p4Data['panNo'] ?? ($p4Data['pan'] ?? ($userVal ?: ''))))));"), 'index.php must NOT unconditionally fall back to userVal on PAN search');
+
+console.log('✅ PASS: Part 2 PAN Card Services Suite 100% verified across all tiers');
+
 console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass & Server-Side Validations ---');
 assert(!indexPhpContent.includes('$isTrial = $previewMode;'), 'index.php must not have $isTrial = $previewMode;');
 assert(indexPhpContent.includes('http_response_code(403);'), 'index.php must return 403 on low balance');
@@ -147,7 +225,6 @@ assert(serverJsContent.includes("if (normServiceType === 'll_exam_pass_auto')"),
 console.log('✅ PASS: index.php and server.js zero-bypass & password validation code verified');
 
 console.log('\n--- TEST 5: Inspect services_79.json Upstream Manual Relay Metadata ---');
-const services79 = JSON.parse(fs.readFileSync('client/src/data/services_79.json', 'utf8'));
 const llExam = services79.find(s => s.id === 'll_exam_pass_auto');
 assert(llExam, 'll_exam_pass_auto must exist in services_79.json');
 assert(llExam.upstreamService === 'LL_Request', 'll_exam_pass_auto must have upstreamService LL_Request');

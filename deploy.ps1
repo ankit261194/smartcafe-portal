@@ -198,6 +198,7 @@ const relayMeta = {
   'samagra_service': { upstreamService: 'Samagra Print', upstreamFile: 'familyID_Service.php' },
   'sambal_pdf': { upstreamService: 'Samagra Print', upstreamFile: 'familyID_Service.php' },
   'pan_aadhaar_link_manual': { upstreamService: 'Pan_Number_Link', upstreamFile: 'panAadharNumber_Link.php' },
+  'pan_find_manual': { upstreamService: 'pan_find_manual', upstreamFile: 'pan_find_manual.php' },
   'dob_update_service': { upstreamService: 'Dob_Update', upstreamFile: 'dob_update.php' }
 };
 allRatesMap.forEach((v, k) => {
