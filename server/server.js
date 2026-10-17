@@ -3961,6 +3961,12 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     const backupEndpoints = [];
     if (norm === 'll_find' || norm === 'll_pdf') {
       backupEndpoints.push('https://authorized.p4points.co.in/api/v1/LL_application_pdf.php');
+    } else if (norm === 'pan_find') {
+      backupEndpoints.push('https://authorized.p4points.co.in/api/v1/panfind.php');
+    } else if (norm === 'pan_find_manual' || norm === 'pan_find_manual_alt') {
+      backupEndpoints.push('https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php');
+    } else if (norm === 'pan_to_aadhar_find') {
+      backupEndpoints.push('https://authorized.p4points.co.in/api/v1/panAadhar.php');
     } else if (lowerUrl.includes('dl') || norm.includes('dl')) {
       backupEndpoints.push('https://authorized.p4points.co.in/serviceApi/TargetApiV1/DrivingLicence/dl-details.php');
       backupEndpoints.push('https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl-pdf.php');
@@ -4050,24 +4056,25 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
   }
 
-  // 2. Aadhaar to PAN / UID to PAN
-  if (norm.includes('aadhaartopan') || norm.includes('uidtopan') || norm.includes('panfind') || norm.includes('aadhaar_to_pan')) {
-    const uid = String(params?.aadhaarNo || params?.uidNumber || params?.query || '').replace(/[^0-9]/g, '');
+  // 2. Aadhaar to PAN / UID to PAN (pan_find)
+  if ((norm.includes('pan_find') || norm.includes('aadhaartopan') || norm.includes('uidtopan') || norm.includes('panfind') || norm.includes('aadhaar_to_pan')) && !norm.includes('manual')) {
+    const uid = String(params?.aadhaarNo || params?.uidNumber || params?.aadhar || params?.aadhaar || params?.query || '').replace(/[^0-9]/g, '');
     if (uid.length === 12) {
       try {
         const uidUrl = `https://authorized.p4points.co.in/api/v1/getPanNumber.php?apiKey=${encodeURIComponent(p4ApiKey)}&uidNumber=${encodeURIComponent(uid)}`;
         const res = await fetch(uidUrl, { signal: AbortSignal.timeout(12000) });
         const json = await res.json().catch(() => null);
-        const pan = json?.panNumber || json?.pan_number || json?.pan;
+        const pan = json?.panNumber || json?.pan_number || json?.pan || json?.data?.pan || json?.data?.panNumber;
         if (pan) {
           return {
             source: 'p4points',
             service: 'aadhaarToPan',
-            panNo: pan,
+            panNo: String(pan).toUpperCase().trim(),
             maskedAadhaar: `XXXX XXXX ${uid.slice(-4)}`,
             aadhaarNo: uid,
-            name: json?.name || params?.name || 'PAN धारक',
-            isLiveFromP4Points: true
+            name: json?.name || json?.data?.name || params?.name || 'PAN धारक',
+            isLiveFromP4Points: true,
+            data: json
           };
         }
       } catch (err) {
@@ -4076,8 +4083,36 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
   }
 
+  // 2B. PAN to Aadhaar Find (pan_to_aadhar_find)
+  if (norm.includes('pan_to_aadhar') || norm === 'pan_to_aadhar_find') {
+    const pan = String(params?.panNo || params?.panNumber || params?.pan || params?.query || '').trim().toUpperCase();
+    const dob = String(params?.dob || params?.date_of_birth || '').trim();
+    if (pan.length === 10) {
+      try {
+        const p2aUrl = `https://authorized.p4points.co.in/api/v1/pan_to_aadhar.php?apiKey=${encodeURIComponent(p4ApiKey)}&pan=${encodeURIComponent(pan)}${dob ? `&dob=${encodeURIComponent(dob)}` : ''}`;
+        const res = await fetch(p2aUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        const foundUid = json?.aadhaarNumber || json?.aadhaar_number || json?.aadhaar || json?.aadhar || json?.uidNumber || json?.data?.aadhaar || json?.data?.aadhaarNumber;
+        if (foundUid && String(foundUid).replace(/\D/g, '').length >= 4) {
+          return {
+            source: 'p4points',
+            service: 'panToAadhaar',
+            panNo: pan,
+            aadhaarNo: String(foundUid),
+            maskedAadhaar: String(foundUid),
+            name: json?.name || json?.data?.name || 'PAN धारक',
+            isLiveFromP4Points: true,
+            data: json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points PAN to Aadhaar fetch failed:', err.message);
+      }
+    }
+  }
+
   // 3. PAN Verification & Details
-  if (norm.includes('pan') && !norm.includes('find') && !norm.includes('aadhaar')) {
+  if (norm.includes('pan') && !norm.includes('find') && !norm.includes('aadhaar') && !norm.includes('gst') && !norm.includes('link')) {
     const panNo = String(params?.panNo || params?.pan || params?.query || '').trim().toUpperCase();
     if (/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(panNo)) {
       try {
@@ -4582,23 +4617,29 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
   }
 
-  // 18. PAN Find (Name + Mobile)
-  if (norm.includes('pan_find_name') || norm.includes('pan_name_mobile')) {
+  // 18. PAN Find (Name + Father Name + DOB + Mobile)
+  if (norm.includes('pan_find_manual') || norm.includes('pan_find_name') || norm.includes('pan_name_mobile')) {
     const name = String(params?.name || params?.customerName || params?.query || '').trim();
+    const fatherName = String(params?.fatherName || '').trim();
+    const dob = String(params?.dob || '').trim();
     const mobile = String(params?.mobile || params?.phone || '').replace(/[^0-9]/g, '');
-    if (name.length >= 3 && mobile.length === 10) {
+    if (name.length >= 3) {
       try {
-        const pfUrl = `https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php?apiKey=${encodeURIComponent(p4ApiKey)}&name=${encodeURIComponent(name)}&mobile=${encodeURIComponent(mobile)}`;
+        const pfUrl = `https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php?apiKey=${encodeURIComponent(p4ApiKey)}&name=${encodeURIComponent(name)}${fatherName ? `&fatherName=${encodeURIComponent(fatherName)}` : ''}${dob ? `&dob=${encodeURIComponent(dob)}` : ''}${mobile ? `&mobile=${encodeURIComponent(mobile)}` : ''}`;
         const res = await fetch(pfUrl, { signal: AbortSignal.timeout(12000) });
         const json = await res.json().catch(() => null);
-        if (json && json.panNumber) {
+        const foundPan = json?.panNumber || json?.pan_number || json?.pan || json?.data?.pan || json?.data?.panNumber;
+        if (foundPan) {
           return {
             source: 'p4points',
             service: 'panCard',
-            panNo: json.panNumber,
-            name: json.name || name,
-            mobile: mobile,
-            isLiveFromP4Points: true
+            panNo: String(foundPan).toUpperCase().trim(),
+            name: json?.name || name,
+            fatherName,
+            dob,
+            mobile,
+            isLiveFromP4Points: true,
+            data: json
           };
         }
       } catch (err) {
