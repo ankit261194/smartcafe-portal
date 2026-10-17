@@ -132,6 +132,16 @@ function getStore($dataFile) {
                 }
             }
 
+            // Initialize PAN applications & wallet transactions
+            if (!isset($data['panApplications']) || !is_array($data['panApplications'])) {
+                $data['panApplications'] = [];
+                $changed = true;
+            }
+            if (!isset($data['walletTransactions']) || !is_array($data['walletTransactions'])) {
+                $data['walletTransactions'] = [];
+                $changed = true;
+            }
+
             // Initialize unified users collection
             if (!isset($data['users']) || !is_array($data['users'])) {
                 $data['users'] = [];
@@ -340,6 +350,8 @@ function getStore($dataFile) {
         'orderHistory' => [],
         'utrRequests' => [],
         'vleKycApplications' => [],
+        'panApplications' => [],
+        'walletTransactions' => [],
         'wallets' => [],
         'cafes' => [],
         'superAdminRates' => [
@@ -357,6 +369,11 @@ function getStore($dataFile) {
 }
 
 function saveStore($dataFile, $store) {
+    // 1. BACKUP FIRST: Create store.json.bak before making any modification
+    if (file_exists($dataFile)) {
+        @copy($dataFile, $dataFile . '.bak');
+    }
+
     $dataDir = dirname($dataFile);
     $masterUsersFile = $dataDir . '/users_master.json';
     if (!empty($store['users']) && is_array($store['users'])) {
@@ -8685,6 +8702,776 @@ if ($endpoint === 'gateway/p4points/ekyc' && $method === 'POST') {
     $res = curl_exec($ch);
     curl_close($ch);
     echo $res ?: json_encode(['status' => false, 'code' => 500, 'error' => 'Failed to reach P4Points API']);
+    exit;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODULE: NEW PAN CARD APPLICATION SERVICE (FORM 49A PHYSICAL + E-PAN)
+// ═══════════════════════════════════════════════════════════════════════════
+
+$panDocsDir = $baseDir . '/uploads/pan_docs';
+if (!is_dir($panDocsDir)) @mkdir($panDocsDir, 0755, true);
+
+function parseJsonFieldPhp($val, $defaultArr = []) {
+    if (empty($val)) return $defaultArr;
+    if (is_array($val)) return $val;
+    if (is_string($val)) {
+        $decoded = json_decode($val, true);
+        if (is_array($decoded)) return $decoded;
+    }
+    return $defaultArr;
+}
+
+function saveBase64PanDocPhp($dataUrlOrBase64, $prefix, $panDocsDir) {
+    if (empty($dataUrlOrBase64) || !is_string($dataUrlOrBase64)) return '';
+    if (strpos($dataUrlOrBase64, '/uploads/') === 0 || strpos($dataUrlOrBase64, 'http') === 0) {
+        return $dataUrlOrBase64;
+    }
+    try {
+        $ext = '.jpg';
+        $base64Data = $dataUrlOrBase64;
+        if (preg_match('/^data:([a-zA-Z0-9\/\-+.]+);base64,(.+)$/', $dataUrlOrBase64, $matches)) {
+            $mime = $matches[1];
+            $base64Data = $matches[2];
+            if (strpos($mime, 'pdf') !== false) $ext = '.pdf';
+            elseif (strpos($mime, 'png') !== false) $ext = '.png';
+            elseif (strpos($mime, 'webp') !== false) $ext = '.webp';
+            else $ext = '.jpg';
+        } else {
+            if (strpos($base64Data, 'JVBERi') === 0 || $prefix === 'FORM49A' || $prefix === 'SLIP') {
+                $ext = '.pdf';
+            }
+        }
+        $filename = "PAN-{$prefix}-" . time() . '-' . rand(1000, 9999) . $ext;
+        $destPath = $panDocsDir . '/' . $filename;
+        @file_put_contents($destPath, base64_decode($base64Data));
+        return '/uploads/pan_docs/' . $filename;
+    } catch (\Throwable $e) {
+        return '';
+    }
+}
+
+// 1. Submit New PAN Application (Atomic Wallet Deduction)
+if ($endpoint === 'pan/apply' && $method === 'POST') {
+    if (!isset($store['panApplications']) || !is_array($store['panApplications'])) $store['panApplications'] = [];
+    if (!isset($store['wallets']) || !is_array($store['wallets'])) $store['wallets'] = [];
+    if (!isset($store['walletTransactions']) || !is_array($store['walletTransactions'])) $store['walletTransactions'] = [];
+
+    $tokenPayload = verifyToken();
+    $rawPersonal = parseJsonFieldPhp($body['personal'] ?? null, []);
+    $appliedBy = trim((string)($body['appliedBy'] ?? ($tokenPayload['phone'] ?? ($body['mobile'] ?? ($rawPersonal['mobile'] ?? '')))));
+    if (!$appliedBy || !preg_match('/^\d{10}$/', $appliedBy)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'वैध 10-अंकीय मोबाइल नंबर (appliedBy) अनिवार्य है।']);
+        exit;
+    }
+
+    $personal = [
+        'title' => $rawPersonal['title'] ?? ($body['title'] ?? 'Shri'),
+        'firstName' => $rawPersonal['firstName'] ?? ($body['firstName'] ?? ''),
+        'middleName' => $rawPersonal['middleName'] ?? ($body['middleName'] ?? ''),
+        'lastName' => $rawPersonal['lastName'] ?? ($body['lastName'] ?? ''),
+        'gender' => $rawPersonal['gender'] ?? ($body['gender'] ?? 'Male'),
+        'dob' => $rawPersonal['dob'] ?? ($body['dob'] ?? ''),
+        'fatherName' => $rawPersonal['fatherName'] ?? ($body['fatherName'] ?? ''),
+        'motherName' => $rawPersonal['motherName'] ?? ($body['motherName'] ?? ''),
+        'cardParentChoice' => $rawPersonal['cardParentChoice'] ?? ($body['cardParentChoice'] ?? 'father'),
+        'mobile' => $rawPersonal['mobile'] ?? ($body['mobile'] ?? $appliedBy),
+        'email' => $rawPersonal['email'] ?? ($body['email'] ?? '')
+    ];
+
+    if (empty($personal['lastName'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'आवेदक का उपनाम/अंतिम नाम (Last Name) अनिवार्य है।']);
+        exit;
+    }
+    if (empty($personal['dob'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'जन्म तिथि (DOB) अनिवार्य है।']);
+        exit;
+    }
+
+    $rawAddress = parseJsonFieldPhp($body['address'] ?? null, []);
+    $address = [
+        'flat' => $rawAddress['flat'] ?? ($body['flat'] ?? ''),
+        'premises' => $rawAddress['premises'] ?? ($body['premises'] ?? ''),
+        'street' => $rawAddress['street'] ?? ($body['street'] ?? ''),
+        'locality' => $rawAddress['locality'] ?? ($body['locality'] ?? ''),
+        'city' => $rawAddress['city'] ?? ($body['city'] ?? ''),
+        'state' => $rawAddress['state'] ?? ($body['state'] ?? ''),
+        'pincode' => $rawAddress['pincode'] ?? ($body['pincode'] ?? '')
+    ];
+    if (empty($address['pincode']) || !preg_match('/^\d{6}$/', trim((string)$address['pincode']))) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'वैध 6-अंकीय पिनकोड अनिवार्य है।']);
+        exit;
+    }
+
+    $rawAo = parseJsonFieldPhp($body['aoCode'] ?? null, []);
+    $aoCode = [
+        'areaCode' => $rawAo['areaCode'] ?? ($body['areaCode'] ?? ''),
+        'aoType' => $rawAo['aoType'] ?? ($body['aoType'] ?? ''),
+        'rangeCode' => $rawAo['rangeCode'] ?? ($body['rangeCode'] ?? ''),
+        'aoNumber' => $rawAo['aoNumber'] ?? ($body['aoNumber'] ?? ''),
+        'displayText' => $rawAo['displayText'] ?? ($body['aoDisplayText'] ?? ($body['displayText'] ?? ''))
+    ];
+    if (empty($aoCode['areaCode'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'AO Code (Area Code) अनिवार्य है।']);
+        exit;
+    }
+
+    $rawId = parseJsonFieldPhp($body['identity'] ?? null, []);
+    $identity = [
+        'dobProof' => $rawId['dobProof'] ?? ($body['dobProof'] ?? 'Municipal Birth Certificate'),
+        'aadhaarNumber' => $rawId['aadhaarNumber'] ?? ($body['aadhaarNumber'] ?? ''),
+        'nameOnAadhaar' => $rawId['nameOnAadhaar'] ?? ($body['nameOnAadhaar'] ?? (!empty($personal['firstName']) ? "{$personal['firstName']} {$personal['lastName']}" : $personal['lastName'])),
+        'signType' => $rawId['signType'] ?? ($body['signType'] ?? 'physical')
+    ];
+    $cleanAadhaar = preg_replace('/\D/', '', (string)($identity['aadhaarNumber'] ?? ''));
+    if (strlen($cleanAadhaar) !== 12) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'वैध 12-अंकीय आधार संख्या अनिवार्य है।']);
+        exit;
+    }
+    $identity['aadhaarNumber'] = $cleanAadhaar;
+
+    // Pricing & Role resolution
+    $cafeIdx = -1;
+    foreach ($store['cafes'] ?? [] as $cIdx => $c) {
+        if (($c['phone'] ?? '') === $appliedBy || (!empty($body['cafeId']) && ($c['id'] ?? '') === $body['cafeId'])) {
+            $cafeIdx = $cIdx;
+            break;
+        }
+    }
+
+    $role = $body['role'] ?? (($tokenPayload['role'] ?? '') === 'customer' ? 'customer' : ($cafeIdx !== -1 ? 'cafe_operator' : 'customer'));
+    if (in_array($body['role'] ?? '', ['cafe_operator', 'retailer', 'cafe'])) {
+        $role = 'cafe_operator';
+    }
+
+    $standardFee = ($role === 'customer') ? 190.0 : 145.0;
+    $feeCharged = $standardFee;
+    if (!empty($body['feeCharged'])) {
+        $numFee = floatval($body['feeCharged']);
+        if ($numFee >= $standardFee) {
+            $feeCharged = $numFee;
+        }
+    }
+    $baseCost = 120.0;
+    $netProfit = $feeCharged - $baseCost;
+
+    // Wallet balance lookup
+    $walletIdx = -1;
+    foreach ($store['wallets'] ?? [] as $wIdx => $w) {
+        if (($w['phone'] ?? '') === $appliedBy) {
+            $walletIdx = $wIdx;
+            break;
+        }
+    }
+    $userIdx = -1;
+    foreach ($store['users'] ?? [] as $uIdx => $u) {
+        if (($u['phone'] ?? '') === $appliedBy || ($u['id'] ?? '') === $appliedBy) {
+            $userIdx = $uIdx;
+            break;
+        }
+    }
+
+    $currentBalance = 0.0;
+    if ($cafeIdx !== -1 && $role === 'cafe_operator') {
+        $currentBalance = floatval($store['cafes'][$cafeIdx]['b2bWallet']['balance'] ?? ($store['users'][$userIdx]['balance'] ?? ($store['wallets'][$walletIdx]['balance'] ?? 0)));
+    } elseif ($walletIdx !== -1) {
+        $currentBalance = floatval($store['wallets'][$walletIdx]['balance'] ?? ($store['users'][$userIdx]['balance'] ?? 0));
+    } elseif ($userIdx !== -1) {
+        $currentBalance = floatval($store['users'][$userIdx]['balance'] ?? 0);
+    }
+
+    // STRICT ATOMIC BALANCE CHECK
+    if ($currentBalance < $feeCharged) {
+        http_response_code(402);
+        echo json_encode([
+            'success' => false,
+            'error' => "अपर्याप्त वॉलेट बैलेंस! आवश्यक: ₹{$feeCharged}, वर्तमान: ₹{$currentBalance}। कृपया वॉलेट रिचार्ज करें।",
+            'requiredAmount' => $feeCharged,
+            'currentBalance' => $currentBalance
+        ]);
+        exit;
+    }
+
+    // Atomic Deduction
+    $txnId = "TXN-PAN-" . time() . '-' . rand(1000, 9999);
+    $applicantName = trim((!empty($personal['firstName']) ? $personal['firstName'] . ' ' : '') . ($personal['lastName'] ?? ''));
+    $txnNote = "नया पैन कार्ड आवेदन शुल्क: {$applicantName} ({$appliedBy})";
+    $remainingBal = round($currentBalance - $feeCharged, 2);
+
+    if ($cafeIdx !== -1 && $role === 'cafe_operator') {
+        if (!isset($store['cafes'][$cafeIdx]['b2bWallet'])) {
+            $store['cafes'][$cafeIdx]['b2bWallet'] = ['balance' => $currentBalance, 'minThreshold' => 200, 'transactions' => []];
+        }
+        $store['cafes'][$cafeIdx]['b2bWallet']['balance'] = $remainingBal;
+        if (!isset($store['cafes'][$cafeIdx]['b2bWallet']['transactions'])) $store['cafes'][$cafeIdx]['b2bWallet']['transactions'] = [];
+        array_unshift($store['cafes'][$cafeIdx]['b2bWallet']['transactions'], [
+            'id' => $txnId,
+            'type' => 'debit',
+            'amount' => $feeCharged,
+            'note' => $txnNote,
+            'createdAt' => date('c')
+        ]);
+    }
+
+    if ($walletIdx === -1) {
+        $store['wallets'][] = [
+            'phone' => $appliedBy,
+            'customerName' => $applicantName ?: 'ग्राहक',
+            'balance' => $remainingBal,
+            'transactions' => []
+        ];
+        $walletIdx = count($store['wallets']) - 1;
+    } else {
+        $store['wallets'][$walletIdx]['balance'] = $remainingBal;
+    }
+    if (!isset($store['wallets'][$walletIdx]['transactions'])) $store['wallets'][$walletIdx]['transactions'] = [];
+    array_unshift($store['wallets'][$walletIdx]['transactions'], [
+        'id' => $txnId,
+        'type' => 'debit',
+        'amount' => $feeCharged,
+        'note' => $txnNote,
+        'createdAt' => date('c')
+    ]);
+
+    if ($userIdx !== -1) {
+        $store['users'][$userIdx]['balance'] = $remainingBal;
+    }
+
+    $todayStr = date('Ymd');
+    $rand4 = rand(1000, 9999);
+    $panId = "PAN-{$todayStr}-{$rand4}";
+
+    array_unshift($store['walletTransactions'], [
+        'id' => $txnId,
+        'phone' => $appliedBy,
+        'type' => 'debit',
+        'amount' => $feeCharged,
+        'note' => $txnNote,
+        'applicationId' => $panId,
+        'createdAt' => date('c')
+    ]);
+
+    // Handle Document Uploads & Base64
+    $inputDocs = parseJsonFieldPhp($body['documents'] ?? null, []);
+    $docUrls = [
+        'photo' => saveBase64PanDocPhp($inputDocs['photo'] ?? ($body['photo'] ?? ''), 'PHOTO', $panDocsDir),
+        'signature' => saveBase64PanDocPhp($inputDocs['signature'] ?? ($body['signature'] ?? ''), 'SIGN', $panDocsDir),
+        'aadhaarDoc' => saveBase64PanDocPhp($inputDocs['aadhaarDoc'] ?? ($body['aadhaarDoc'] ?? ''), 'AADHAAR', $panDocsDir),
+        'dobDoc' => saveBase64PanDocPhp($inputDocs['dobDoc'] ?? ($body['dobDoc'] ?? ''), 'DOB', $panDocsDir),
+        'generatedFormPdf' => saveBase64PanDocPhp($inputDocs['generatedFormPdf'] ?? ($body['generatedFormPdf'] ?? ''), 'FORM49A', $panDocsDir)
+    ];
+
+    if (!empty($_FILES)) {
+        foreach (['photo', 'signature', 'aadhaarDoc', 'dobDoc', 'generatedFormPdf'] as $fKey) {
+            if (!empty($_FILES[$fKey]['name']) && $_FILES[$fKey]['error'] === UPLOAD_ERR_OK) {
+                $ext = pathinfo($_FILES[$fKey]['name'], PATHINFO_EXTENSION);
+                $ext = $ext ? ('.' . $ext) : '.jpg';
+                $fName = "PAN-" . strtoupper($fKey) . '-' . time() . '-' . rand(1000, 9999) . $ext;
+                if (@move_uploaded_file($_FILES[$fKey]['tmp_name'], $panDocsDir . '/' . $fName)) {
+                    $docUrls[$fKey] = '/uploads/pan_docs/' . $fName;
+                }
+            }
+        }
+    }
+
+    $newPanApp = [
+        'id' => $panId,
+        'appliedBy' => $appliedBy,
+        'role' => $role,
+        'cafeId' => ($cafeIdx !== -1 ? ($store['cafes'][$cafeIdx]['id'] ?? '') : ($body['cafeId'] ?? '')),
+        'personal' => [
+            'title' => $personal['title'] ?? 'Shri',
+            'firstName' => $personal['firstName'] ?? '',
+            'middleName' => $personal['middleName'] ?? '',
+            'lastName' => $personal['lastName'],
+            'gender' => $personal['gender'] ?? 'Male',
+            'dob' => $personal['dob'],
+            'fatherName' => $personal['fatherName'] ?? '',
+            'motherName' => $personal['motherName'] ?? '',
+            'cardParentChoice' => $personal['cardParentChoice'] ?? 'father',
+            'mobile' => $personal['mobile'] ?? $appliedBy,
+            'email' => $personal['email'] ?? ''
+        ],
+        'address' => [
+            'flat' => $address['flat'] ?? '',
+            'premises' => $address['premises'] ?? '',
+            'street' => $address['street'] ?? '',
+            'locality' => $address['locality'] ?? '',
+            'city' => $address['city'] ?? '',
+            'state' => $address['state'] ?? '',
+            'pincode' => $address['pincode']
+        ],
+        'aoCode' => [
+            'areaCode' => $aoCode['areaCode'],
+            'aoType' => $aoCode['aoType'] ?? '',
+            'rangeCode' => $aoCode['rangeCode'] ?? '',
+            'aoNumber' => $aoCode['aoNumber'] ?? '',
+            'displayText' => $aoCode['displayText'] ?? ''
+        ],
+        'identity' => [
+            'dobProof' => $identity['dobProof'],
+            'aadhaarNumber' => $identity['aadhaarNumber'],
+            'nameOnAadhaar' => $identity['nameOnAadhaar'],
+            'signType' => $identity['signType'] ?? 'physical'
+        ],
+        'documents' => $docUrls,
+        'financials' => [
+            'feeCharged' => $feeCharged,
+            'baseCost' => $baseCost,
+            'netProfit' => $netProfit,
+            'walletTxnId' => $txnId,
+            'isRefunded' => false,
+            'refundTxnId' => null,
+            'refundedAt' => null
+        ],
+        'status' => 'pending',
+        'objectionDetails' => null,
+        'rejectionDetails' => null,
+        'fulfillment' => [
+            'ackNumber' => null,
+            'slipPdfUrl' => null,
+            'completedAt' => null
+        ],
+        'timestamps' => [
+            'createdAt' => date('c'),
+            'updatedAt' => date('c')
+        ]
+    ];
+
+    array_unshift($store['panApplications'], $newPanApp);
+    saveStore($dataFile, $store);
+
+    $finalBal = ($cafeIdx !== -1 && $role === 'cafe_operator') 
+        ? $store['cafes'][$cafeIdx]['b2bWallet']['balance'] 
+        : $store['wallets'][$walletIdx]['balance'];
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'पैन कार्ड आवेदन सफलतापूर्वक जमा हो गया है।',
+        'id' => $newPanApp['id'],
+        'trackingId' => $newPanApp['id'],
+        'feeCharged' => $feeCharged,
+        'walletTxnId' => $txnId,
+        'remainingBalance' => $finalBal,
+        'application' => $newPanApp,
+        'receipt' => [
+            'receiptNo' => "RCP-{$panId}",
+            'applicationId' => $panId,
+            'applicantName' => $applicantName,
+            'feeCharged' => $feeCharged,
+            'walletTxnId' => $txnId,
+            'status' => 'pending',
+            'date' => $newPanApp['timestamps']['createdAt']
+        ]
+    ]);
+    exit;
+}
+
+// 2. Fetch User's PAN Applications
+if ($endpoint === 'pan/my-applications' && $method === 'GET') {
+    $tokenPayload = verifyToken();
+    $mobile = trim((string)($_GET['mobile'] ?? ($_GET['phone'] ?? ($tokenPayload['phone'] ?? ''))));
+    $cafeId = $_GET['cafeId'] ?? ($tokenPayload['cafeId'] ?? '');
+
+    $apps = $store['panApplications'] ?? [];
+    if (($tokenPayload['role'] ?? '') !== 'superadmin') {
+        if (!$mobile && !$cafeId) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'मोबाइल नंबर या लॉगिन आवश्यक है।']);
+            exit;
+        }
+        $apps = array_values(array_filter($apps, function($a) use ($mobile, $cafeId) {
+            return ($mobile && ($a['appliedBy'] ?? '') === $mobile) || ($cafeId && ($a['cafeId'] ?? '') === $cafeId);
+        }));
+    }
+
+    echo json_encode([
+        'success' => true,
+        'count' => count($apps),
+        'applications' => $apps
+    ]);
+    exit;
+}
+
+// 3. Resubmit Corrected Documents for Objection
+if (preg_match('#^pan/applications/([^/]+)/resubmit-objection$#', $endpoint, $m) && $method === 'POST') {
+    $id = $m[1];
+    $appIdx = -1;
+    foreach ($store['panApplications'] ?? [] as $idx => $a) {
+        if (($a['id'] ?? '') === $id) {
+            $appIdx = $idx;
+            break;
+        }
+    }
+    if ($appIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'आवेदन नहीं मिला (Application not found)']);
+        exit;
+    }
+    if (($store['panApplications'][$appIdx]['status'] ?? '') !== 'objection') {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'आवेदन आपत्ति (Objection) स्थिति में नहीं है।']);
+        exit;
+    }
+
+    $inputDocs = parseJsonFieldPhp($body['documents'] ?? null, []);
+    foreach (['photo', 'signature', 'aadhaarDoc', 'dobDoc'] as $docKey) {
+        if (!empty($inputDocs[$docKey]) || !empty($body[$docKey])) {
+            $store['panApplications'][$appIdx]['documents'][$docKey] = saveBase64PanDocPhp($inputDocs[$docKey] ?? $body[$docKey], strtoupper($docKey), $panDocsDir);
+        }
+        if (!empty($_FILES[$docKey]['name']) && $_FILES[$docKey]['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES[$docKey]['name'], PATHINFO_EXTENSION);
+            $ext = $ext ? ('.' . $ext) : '.jpg';
+            $fName = "PAN-" . strtoupper($docKey) . '-' . time() . '-' . rand(1000, 9999) . $ext;
+            if (@move_uploaded_file($_FILES[$docKey]['tmp_name'], $panDocsDir . '/' . $fName)) {
+                $store['panApplications'][$appIdx]['documents'][$docKey] = '/uploads/pan_docs/' . $fName;
+            }
+        }
+    }
+
+    $store['panApplications'][$appIdx]['status'] = 'under_review';
+    if (!isset($store['panApplications'][$appIdx]['objectionDetails']) || !is_array($store['panApplications'][$appIdx]['objectionDetails'])) {
+        $store['panApplications'][$appIdx]['objectionDetails'] = [];
+    }
+    $store['panApplications'][$appIdx]['objectionDetails']['resubmittedAt'] = date('c');
+    $store['panApplications'][$appIdx]['objectionDetails']['resolved'] = true;
+    if (!empty($body['notes'])) {
+        $store['panApplications'][$appIdx]['objectionDetails']['notes'] = $body['notes'];
+    }
+    $store['panApplications'][$appIdx]['timestamps']['updatedAt'] = date('c');
+
+    saveStore($dataFile, $store);
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'संशोधित दस्तावेज़ सफलतापूर्वक पुनः जमा किए गए। कोई अतिरिक्त शुल्क नहीं लिया गया।',
+        'application' => $store['panApplications'][$appIdx]
+    ]);
+    exit;
+}
+
+// 4. SuperAdmin Queue with Status Filters (Strictly Authenticated)
+if ($endpoint === 'superadmin/pan/applications' && $method === 'GET') {
+    $tokenPayload = verifyToken();
+    if (!$tokenPayload || ($tokenPayload['role'] ?? '') !== 'superadmin') {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'अनधिकृत! केवल सुपर एडमिन को अनुमति है।']);
+        exit;
+    }
+
+    $apps = $store['panApplications'] ?? [];
+    $status = $_GET['status'] ?? 'all';
+    if ($status && $status !== 'all') {
+        $apps = array_values(array_filter($apps, function($a) use ($status) {
+            return ($a['status'] ?? '') === $status;
+        }));
+    }
+    $search = strtolower(trim((string)($_GET['search'] ?? '')));
+    if ($search) {
+        $apps = array_values(array_filter($apps, function($a) use ($search) {
+            return strpos(strtolower($a['id'] ?? ''), $search) !== false ||
+                   strpos((string)($a['appliedBy'] ?? ''), $search) !== false ||
+                   strpos(strtolower($a['personal']['firstName'] ?? ''), $search) !== false ||
+                   strpos(strtolower($a['personal']['lastName'] ?? ''), $search) !== false ||
+                   strpos((string)($a['identity']['aadhaarNumber'] ?? ''), $search) !== false;
+        }));
+    }
+
+    echo json_encode([
+        'success' => true,
+        'total' => count($apps),
+        'applications' => $apps
+    ]);
+    exit;
+}
+
+// 5. SuperAdmin Complete Application (Ack & Slip - Strictly Authenticated)
+if (preg_match('#^superadmin/pan/applications/([^/]+)/complete$#', $endpoint, $m) && $method === 'POST') {
+    $tokenPayload = verifyToken();
+    if (!$tokenPayload || ($tokenPayload['role'] ?? '') !== 'superadmin') {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'अनधिकृत! केवल सुपर एडमिन को अनुमति है।']);
+        exit;
+    }
+
+    $id = $m[1];
+    $appIdx = -1;
+    foreach ($store['panApplications'] ?? [] as $idx => $a) {
+        if (($a['id'] ?? '') === $id) {
+            $appIdx = $idx;
+            break;
+        }
+    }
+    if ($appIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'आवेदन नहीं मिला (Application not found)']);
+        exit;
+    }
+
+    $ackNumber = trim((string)($body['ackNumber'] ?? ''));
+    if (strlen($ackNumber) !== 15) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => '15-अंकीय वैध Acknowledgement Number अनिवार्य है।']);
+        exit;
+    }
+
+    $slipPdfUrl = $body['slipPdfUrl'] ?? '';
+    if (!empty($_FILES['slipPdf']['name']) && $_FILES['slipPdf']['error'] === UPLOAD_ERR_OK) {
+        $ext = pathinfo($_FILES['slipPdf']['name'], PATHINFO_EXTENSION);
+        $ext = $ext ? ('.' . $ext) : '.pdf';
+        $fName = "PAN-SLIP-" . time() . '-' . rand(1000, 9999) . $ext;
+        if (@move_uploaded_file($_FILES['slipPdf']['tmp_name'], $panDocsDir . '/' . $fName)) {
+            $slipPdfUrl = '/uploads/pan_docs/' . $fName;
+        }
+    } elseif (!empty($body['slipPdf'])) {
+        $slipPdfUrl = saveBase64PanDocPhp($body['slipPdf'], 'SLIP', $panDocsDir);
+    }
+
+    $store['panApplications'][$appIdx]['status'] = 'completed';
+    $store['panApplications'][$appIdx]['fulfillment'] = [
+        'ackNumber' => $ackNumber,
+        'slipPdfUrl' => $slipPdfUrl ?: ($store['panApplications'][$appIdx]['fulfillment']['slipPdfUrl'] ?? ''),
+        'completedAt' => date('c')
+    ];
+    $store['panApplications'][$appIdx]['timestamps']['updatedAt'] = date('c');
+
+    saveStore($dataFile, $store);
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'पैन आवेदन सफलतापूर्वक पूर्ण (Completed) मार्क किया गया।',
+        'application' => $store['panApplications'][$appIdx]
+    ]);
+    exit;
+}
+
+// 6. SuperAdmin Raise Objection (STRICT: Zero Refund - Strictly Authenticated)
+if (preg_match('#^superadmin/pan/applications/([^/]+)/raise-objection$#', $endpoint, $m) && $method === 'POST') {
+    $tokenPayload = verifyToken();
+    if (!$tokenPayload || ($tokenPayload['role'] ?? '') !== 'superadmin') {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'अनधिकृत! केवल सुपर एडमिन को अनुमति है।']);
+        exit;
+    }
+
+    $id = $m[1];
+    $appIdx = -1;
+    foreach ($store['panApplications'] ?? [] as $idx => $a) {
+        if (($a['id'] ?? '') === $id) {
+            $appIdx = $idx;
+            break;
+        }
+    }
+    if ($appIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'आवेदन नहीं मिला (Application not found)']);
+        exit;
+    }
+
+    $reason = trim((string)($body['reason'] ?? ($body['objectionReason'] ?? '')));
+    if (empty($reason)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'आपत्ति का कारण (reason) अनिवार्य है।']);
+        exit;
+    }
+
+    $store['panApplications'][$appIdx]['status'] = 'objection';
+    $store['panApplications'][$appIdx]['objectionDetails'] = [
+        'reason' => $reason,
+        'raisedAt' => date('c'),
+        'resolved' => false
+    ];
+    $store['panApplications'][$appIdx]['timestamps']['updatedAt'] = date('c');
+
+    saveStore($dataFile, $store);
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'आपत्ति (Objection) सफलतापूर्वक दर्ज की गई। कोई रिफंड नहीं हुआ।',
+        'application' => $store['panApplications'][$appIdx]
+    ]);
+    exit;
+}
+
+// 7. SuperAdmin Mark Rejected (STRICT: Reject != Refund - Strictly Authenticated)
+if (preg_match('#^superadmin/pan/applications/([^/]+)/mark-rejected$#', $endpoint, $m) && $method === 'POST') {
+    $tokenPayload = verifyToken();
+    if (!$tokenPayload || ($tokenPayload['role'] ?? '') !== 'superadmin') {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'अनधिकृत! केवल सुपर एडमिन को अनुमति है।']);
+        exit;
+    }
+
+    $id = $m[1];
+    $appIdx = -1;
+    foreach ($store['panApplications'] ?? [] as $idx => $a) {
+        if (($a['id'] ?? '') === $id) {
+            $appIdx = $idx;
+            break;
+        }
+    }
+    if ($appIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'आवेदन नहीं मिला (Application not found)']);
+        exit;
+    }
+
+    $reason = trim((string)($body['reason'] ?? ($body['rejectionReason'] ?? 'आवेदन निरस्त किया गया')));
+    $store['panApplications'][$appIdx]['status'] = 'rejected';
+    $store['panApplications'][$appIdx]['rejectionDetails'] = [
+        'reason' => $reason,
+        'rejectedAt' => date('c')
+    ];
+    $store['panApplications'][$appIdx]['timestamps']['updatedAt'] = date('c');
+
+    saveStore($dataFile, $store);
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'आवेदन निरस्त (Rejected) मार्क किया गया। कोई रिफंड नहीं हुआ।',
+        'application' => $store['panApplications'][$appIdx]
+    ]);
+    exit;
+}
+
+// 8. SuperAdmin Issue Independent Wallet Refund (Strictly Authenticated)
+if (preg_match('#^superadmin/pan/applications/([^/]+)/issue-refund$#', $endpoint, $m) && $method === 'POST') {
+    $tokenPayload = verifyToken();
+    if (!$tokenPayload || ($tokenPayload['role'] ?? '') !== 'superadmin') {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'error' => 'अनधिकृत! केवल सुपर एडमिन को अनुमति है।']);
+        exit;
+    }
+
+    $id = $m[1];
+    $appIdx = -1;
+    foreach ($store['panApplications'] ?? [] as $idx => $a) {
+        if (($a['id'] ?? '') === $id) {
+            $appIdx = $idx;
+            break;
+        }
+    }
+    if ($appIdx === -1) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'error' => 'आवेदन नहीं मिला (Application not found)']);
+        exit;
+    }
+
+    $targetApp = $store['panApplications'][$appIdx];
+    if (!empty($targetApp['financials']['isRefunded'])) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'यह आवेदन पहले ही रिफंड किया जा चुका है (Already refunded)']);
+        exit;
+    }
+
+    $refundAmount = floatval($targetApp['financials']['feeCharged'] ?? 145);
+    $refundTxnId = "REFUND-PAN-" . time() . '-' . rand(1000, 9999);
+    $refundNote = "पैन कार्ड आवेदन रिफंड ({$targetApp['id']})";
+    $appliedBy = $targetApp['appliedBy'];
+
+    $cafeIdx = -1;
+    foreach ($store['cafes'] ?? [] as $cIdx => $c) {
+        if (($c['phone'] ?? '') === $appliedBy || (!empty($targetApp['cafeId']) && ($c['id'] ?? '') === $targetApp['cafeId'])) {
+            $cafeIdx = $cIdx;
+            break;
+        }
+    }
+    $walletIdx = -1;
+    foreach ($store['wallets'] ?? [] as $wIdx => $w) {
+        if (($w['phone'] ?? '') === $appliedBy) {
+            $walletIdx = $wIdx;
+            break;
+        }
+    }
+    $userIdx = -1;
+    foreach ($store['users'] ?? [] as $uIdx => $u) {
+        if (($u['phone'] ?? '') === $appliedBy || ($u['id'] ?? '') === $appliedBy) {
+            $userIdx = $uIdx;
+            break;
+        }
+    }
+
+    $finalBal = 0.0;
+    if ($cafeIdx !== -1 && ($targetApp['role'] ?? '') === 'cafe_operator') {
+        if (!isset($store['cafes'][$cafeIdx]['b2bWallet'])) {
+            $store['cafes'][$cafeIdx]['b2bWallet'] = ['balance' => 0, 'minThreshold' => 200, 'transactions' => []];
+        }
+        $store['cafes'][$cafeIdx]['b2bWallet']['balance'] = round($store['cafes'][$cafeIdx]['b2bWallet']['balance'] + $refundAmount, 2);
+        if (!isset($store['cafes'][$cafeIdx]['b2bWallet']['transactions'])) $store['cafes'][$cafeIdx]['b2bWallet']['transactions'] = [];
+        array_unshift($store['cafes'][$cafeIdx]['b2bWallet']['transactions'], [
+            'id' => $refundTxnId,
+            'type' => 'credit',
+            'amount' => $refundAmount,
+            'note' => $refundNote,
+            'createdAt' => date('c')
+        ]);
+        $finalBal = $store['cafes'][$cafeIdx]['b2bWallet']['balance'];
+    }
+
+    if ($walletIdx !== -1) {
+        $store['wallets'][$walletIdx]['balance'] = round($store['wallets'][$walletIdx]['balance'] + $refundAmount, 2);
+        if (!isset($store['wallets'][$walletIdx]['transactions'])) $store['wallets'][$walletIdx]['transactions'] = [];
+        array_unshift($store['wallets'][$walletIdx]['transactions'], [
+            'id' => $refundTxnId,
+            'type' => 'credit',
+            'amount' => $refundAmount,
+            'note' => $refundNote,
+            'createdAt' => date('c')
+        ]);
+        if (!$finalBal) $finalBal = $store['wallets'][$walletIdx]['balance'];
+    } elseif ($cafeIdx === -1 || ($targetApp['role'] ?? '') !== 'cafe_operator') {
+        $store['wallets'][] = [
+            'phone' => $appliedBy,
+            'customerName' => 'ग्राहक',
+            'balance' => $refundAmount,
+            'transactions' => [[
+                'id' => $refundTxnId,
+                'type' => 'credit',
+                'amount' => $refundAmount,
+                'note' => $refundNote,
+                'createdAt' => date('c')
+            ]]
+        ];
+        $finalBal = $refundAmount;
+    }
+
+    if ($userIdx !== -1) {
+        $store['users'][$userIdx]['balance'] = round(floatval($store['users'][$userIdx]['balance'] ?? 0) + $refundAmount, 2);
+        if (!$finalBal) $finalBal = $store['users'][$userIdx]['balance'];
+    }
+
+    if (!isset($store['walletTransactions']) || !is_array($store['walletTransactions'])) $store['walletTransactions'] = [];
+    array_unshift($store['walletTransactions'], [
+        'id' => $refundTxnId,
+        'phone' => $appliedBy,
+        'type' => 'credit',
+        'amount' => $refundAmount,
+        'note' => $refundNote,
+        'applicationId' => $targetApp['id'],
+        'createdAt' => date('c')
+    ]);
+
+    $store['panApplications'][$appIdx]['financials']['isRefunded'] = true;
+    $store['panApplications'][$appIdx]['financials']['refundTxnId'] = $refundTxnId;
+    $store['panApplications'][$appIdx]['financials']['refundedAt'] = date('c');
+    $store['panApplications'][$appIdx]['timestamps']['updatedAt'] = date('c');
+
+    saveStore($dataFile, $store);
+
+    echo json_encode([
+        'success' => true,
+        'message' => "रिफंड ₹{$refundAmount} सफलतापूर्वक उपयोगकर्ता वॉलेट में जमा कर दिया गया।",
+        'refundedAmount' => $refundAmount,
+        'refundTxnId' => $refundTxnId,
+        'currentBalance' => $finalBal,
+        'application' => $store['panApplications'][$appIdx]
+    ]);
     exit;
 }
 
