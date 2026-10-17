@@ -123,8 +123,10 @@ function ServicePageContent({
     if (id === 'sarkari_job_feed' || id.includes('sarkari')) return 'sarkari_feed';
     if (cat === 'banking' || id.includes('bank') || id.includes('nsdl') || id.includes('npci')) return 'banking';
     if (cat === 'telecom' || id.includes('telecom') || id.includes('sim') || id.includes('cdr')) return 'telecom';
-    if (cat === 'agriculture' || id.includes('agri') || id.includes('kisan')) return 'agriculture';
-    if (cat === 'welfare' || id.includes('samagra') || id.includes('sambal') || id.includes('eshram')) return 'welfare';
+    if (id === 'e_shram' || id === 'eshram' || id === 'e_shram_update' || id.includes('eshram') || id.includes('e_shram')) return 'eshram';
+    if (id === 'samagra_service' || id.includes('samagra')) return 'samagra';
+    if (id === 'sambal_pdf' || id.includes('sambal')) return 'sambal';
+    if (cat === 'welfare') return 'welfare';
     if (cat === 'lookup' || id.includes('lookup') || id.includes('to_number') || id.includes('to_details') || id.includes('telegram') || id.includes('gmail') || id.includes('operator') || id.includes('check_plan')) return 'lookup';
     return 'receipt';
   }, [currentTool]);
@@ -4685,7 +4687,7 @@ function ServicePageContent({
 
                   <div className="flex items-center gap-2 flex-wrap">
                     {/* A4 Official Government Proforma vs PVC Card Toggle */}
-                    {['rc', 'edistrict', 'aadhaar'].includes(toolKind) && (
+                    {['rc', 'edistrict', 'aadhaar', 'dl'].includes(toolKind) && (
                       <div className="bg-slate-200 dark:bg-slate-800 p-0.5 rounded-lg flex items-center text-xs font-bold">
                         <button
                           type="button"
@@ -5228,11 +5230,153 @@ function ServicePageContent({
                     )}
 
                     {/* ======================================================= */}
-                    {/* 4. DRIVING LICENCE (SARATHI PARIVAHAN CR-80 PVC) */}
+                    {/* 4. DRIVING LICENCE (SARATHI PARIVAHAN CR-80 PVC & FORM 7 A4) */}
                     {/* ======================================================= */}
                     {toolKind === 'dl' && (
                       <>
-                        {(cardSide === 'both' || cardSide === 'front') && (
+                        {docViewMode === 'a4' ? (
+                          <div className="w-[794px] min-h-[1050px] bg-white border-2 border-slate-900 rounded-2xl p-8 text-slate-900 font-sans shadow-xl relative select-none print:shadow-none print:border-slate-800 print:m-0 print:w-full space-y-5">
+                            {/* Header */}
+                            <div className="text-center border-b-2 border-slate-900 pb-3">
+                              <div className="text-xs font-black uppercase text-indigo-950">
+                                भारत संघ • सड़क परिवहन एवं राजमार्ग मंत्रालय
+                              </div>
+                              <h1 className="text-lg font-black uppercase tracking-wide">
+                                FORM 7 [See Rule 16(2)] • FORM OF DRIVING LICENCE
+                              </h1>
+                              <p className="text-xs font-semibold text-slate-700">
+                                परिवहन विभाग • {cardData.rtoOffice || 'परिवहन कार्यालय, भारत सरकार'}
+                              </p>
+                            </div>
+
+                            {/* Licence Summary Strip */}
+                            <div className="grid grid-cols-4 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-300 text-xs">
+                              <div>
+                                <span className="text-[10px] text-slate-500 font-bold block uppercase">ड्राइविंग लाइसेंस सं. (DL No):</span>
+                                <strong className="font-mono text-sm text-indigo-950 block">{cardData.dlNo}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[10px] text-slate-500 font-bold block uppercase">निर्गत दिनांक (Issue Date):</span>
+                                <strong className="font-mono text-xs text-slate-900 block">{cardData.issueDate || cardData.date || '-'}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[10px] text-slate-500 font-bold block uppercase">वैधता (Non-Transport):</span>
+                                <strong className="font-mono text-xs text-emerald-800 block">{cardData.validNt || '-'}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[10px] text-slate-500 font-bold block uppercase">रक्त समूह (Blood Group):</span>
+                                <strong className="font-mono text-xs text-rose-700 block">{cardData.bloodGroup || '-'}</strong>
+                              </div>
+                            </div>
+
+                            {/* Middle Section: Photo & Demographics */}
+                            <div className="flex gap-6 items-start border p-4 rounded-xl bg-white shadow-2xs">
+                              <div className="flex flex-col items-center gap-2">
+                                <div className="w-[110px] h-[135px] border-2 border-slate-400 rounded-lg overflow-hidden bg-slate-100 flex items-center justify-center">
+                                  {photoData ? (
+                                    <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center p-2 text-center">
+                                      <span className="text-3xl">👤</span>
+                                      <span className="text-[9px] font-bold text-slate-500 uppercase mt-1">
+                                        फोटो अनुपलब्ध
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="w-[110px] h-8 border-b-2 border-slate-400 overflow-hidden flex items-center justify-center bg-slate-50">
+                                  {signData ? (
+                                    <img src={signData} alt="Sign" className="max-h-full max-w-full object-contain" />
+                                  ) : (
+                                    <span className="text-[8px] font-mono text-slate-400 italic">
+                                      हस्ताक्षर अनुपलब्ध
+                                    </span>
+                                  )}
+                                </div>
+                                <span className="text-[8px] font-bold text-slate-400 uppercase">धारक के हस्ताक्षर</span>
+                              </div>
+
+                              <div className="flex-1 space-y-2.5 text-xs">
+                                <div>
+                                  <span className="text-[10px] text-slate-500 font-bold block uppercase">लाइसेंस धारक का नाम (Name of Holder):</span>
+                                  <strong className="text-base font-black text-slate-900 block">{cardData.name}</strong>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div>
+                                    <span className="text-[10px] text-slate-500 font-bold block uppercase">पिता/पति का नाम (Father / Husband):</span>
+                                    <strong className="text-xs font-bold text-slate-800 block">{cardData.fatherName}</strong>
+                                  </div>
+                                  <div>
+                                    <span className="text-[10px] text-slate-500 font-bold block uppercase">जन्म तिथि (Date of Birth):</span>
+                                    <strong className="font-mono text-xs text-slate-800 block">{cardData.dob}</strong>
+                                  </div>
+                                </div>
+                                <div>
+                                  <span className="text-[10px] text-slate-500 font-bold block uppercase">स्थायी पता (Permanent Address):</span>
+                                  <p className="text-xs text-slate-700 leading-snug">{cardData.address}</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-2 pt-1 border-t">
+                                  <div>
+                                    <span className="text-[10px] text-slate-500 font-bold block uppercase">लाइसेंसिंग प्राधिकारी (Authority):</span>
+                                    <strong className="text-xs text-slate-800 block">{cardData.rtoOffice}</strong>
+                                  </div>
+                                  <div>
+                                    <span className="text-[10px] text-slate-500 font-bold block uppercase">परिवहन वैधता (Transport Upto):</span>
+                                    <strong className="font-mono text-xs text-slate-800 block">{cardData.validTr || '-'}</strong>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div className="p-2 bg-white border border-slate-300 rounded-lg shadow-2xs shrink-0 self-center">
+                                <QRCodeSVG value={`MORTH:FORM7:DL:${cardData.dlNo}|NAME:${cardData.name}|COV:${(cardData.covs || []).join(',')}`} size={90} />
+                              </div>
+                            </div>
+
+                            {/* Class of Vehicles Table */}
+                            <div className="space-y-1">
+                              <h3 className="text-xs font-black uppercase text-slate-800">
+                                अधिकृत वाहन श्रेणी विवरण (Class of Vehicles Authorised to Drive)
+                              </h3>
+                              <table className="w-full border-collapse border border-slate-300 text-xs">
+                                <thead>
+                                  <tr className="bg-slate-100 text-slate-800 text-[10px] uppercase font-bold">
+                                    <th className="border border-slate-300 p-2 text-left">क्र.सं.</th>
+                                    <th className="border border-slate-300 p-2 text-left">वाहन श्रेणी (COV)</th>
+                                    <th className="border border-slate-300 p-2 text-left">प्रभावी दिनांक (Effective From)</th>
+                                    <th className="border border-slate-300 p-2 text-left">बैज संख्या / पृष्ठांकन</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {(cardData.covs || ['MCWG (Motor Cycle with Gear)', 'LMV (Light Motor Vehicle)']).map((cov, idx) => (
+                                    <tr key={idx} className="border-b">
+                                      <td className="border border-slate-300 p-2 font-mono text-center">{idx + 1}</td>
+                                      <td className="border border-slate-300 p-2 font-bold text-indigo-950">{cov}</td>
+                                      <td className="border border-slate-300 p-2 font-mono">{cardData.issueDate || cardData.date || '-'}</td>
+                                      <td className="border border-slate-300 p-2 text-slate-600">अधिकृत (Authorized)</td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+
+                            {/* Footer & Signature Stamp */}
+                            <div className="border-t-2 border-slate-900 pt-4 flex items-end justify-between mt-auto">
+                              <div className="text-[10px] text-slate-500 space-y-0.5">
+                                <p>नोट: यह परिवहन एवं राजमार्ग मंत्रालय (MoRTH) के आधिकारिक प्रारूप Form 7 के अनुसार मुद्रित है।</p>
+                                <p className="font-mono">सारथी पोर्टल: parivahan.gov.in • डिजिटल रूप से सत्यापित</p>
+                              </div>
+                              <div className="border border-indigo-900 bg-indigo-50/50 p-3 rounded-xl text-center min-w-[200px]">
+                                <div className="text-[9px] font-black text-indigo-900 uppercase">
+                                  ✅ अधिकृत लाइसेंसिंग प्राधिकारी
+                                </div>
+                                <div className="text-xs font-bold text-slate-900 mt-0.5">Licensing Authority</div>
+                                <div className="text-[10px] text-slate-600">{cardData.rtoOffice}</div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            {(cardSide === 'both' || cardSide === 'front') && (
                           <div className="cr80-card-scaler relative group max-w-full">
                             <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-slate-400 pointer-events-none" />
                             <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
@@ -5252,8 +5396,17 @@ function ServicePageContent({
                               </div>
 
                               <div className="flex items-center gap-2.5 py-1">
-                                <div className="w-[66px] h-[82px] bg-slate-100 border border-slate-400 rounded overflow-hidden shrink-0 shadow-2xs">
-                                  <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
+                                <div className="w-[66px] h-[82px] bg-slate-100 border border-slate-400 rounded overflow-hidden shrink-0 shadow-2xs flex items-center justify-center">
+                                  {photoData ? (
+                                    <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center p-1 text-center">
+                                      <span className="text-xl">👤</span>
+                                      <span className="text-[6.5px] font-bold text-slate-500 uppercase mt-0.5 leading-tight">
+                                        {language === 'hi' ? 'फोटो अनुपलब्ध' : 'Photo N/A'}
+                                      </span>
+                                    </div>
+                                  )}
                                 </div>
 
                                 <div className="flex-1 space-y-1 text-xs">
@@ -5270,8 +5423,14 @@ function ServicePageContent({
                                     <div>{language === 'hi' ? 'रक्त समूह:' : 'BG:'} <strong className="text-rose-600">{cardData.bloodGroup}</strong></div>
                                   </div>
                                   {/* Signature */}
-                                  <div className="w-20 h-4 border-b border-slate-400 overflow-hidden flex items-center">
-                                    <img src={signData} alt="Sign" className="max-h-full max-w-full object-contain" />
+                                  <div className="w-20 h-4 border-b border-slate-400 overflow-hidden flex items-center justify-center bg-white/50">
+                                    {signData ? (
+                                      <img src={signData} alt="Sign" className="max-h-full max-w-full object-contain" />
+                                    ) : (
+                                      <span className="text-[6px] font-mono text-slate-400 italic">
+                                        {language === 'hi' ? 'हस्ताक्षर अनुपलब्ध' : 'Signature N/A'}
+                                      </span>
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -5323,6 +5482,8 @@ function ServicePageContent({
                         )}
                       </>
                     )}
+                  </>
+                )}
 
                     {/* ======================================================= */}
                     {/* 5. AYUSHMAN GOLDEN CARD (CR-80 PVC FRONT & BACK) */}
@@ -5676,24 +5837,37 @@ function ServicePageContent({
                           </div>
                         </div>
 
-                        <div className="border rounded-xl overflow-hidden text-xs">
-                          <div className="bg-slate-900 text-white p-2 font-bold grid grid-cols-12 text-[10px]">
-                            <span className="col-span-2">{language === 'hi' ? 'क्र.सं.' : 'S.No'}</span>
-                            <span className="col-span-5">{language === 'hi' ? 'सदस्य का नाम' : 'Member Name'}</span>
-                            <span className="col-span-3">{language === 'hi' ? 'संबंध' : 'Relation'}</span>
-                            <span className="col-span-2 text-right">{language === 'hi' ? 'आयु' : 'Age'}</span>
-                          </div>
-                          <div className="divide-y text-[11px]">
-                            {(cardData.members || []).map((m, idx) => (
-                              <div key={idx} className="p-1.5 grid grid-cols-12">
-                                <span className="col-span-2 font-mono">{m.index}</span>
-                                <span className="col-span-5 font-bold">{m.name}</span>
-                                <span className="col-span-3 text-slate-600">{m.relation}</span>
-                                <span className="col-span-2 text-right">{m.age} {language === 'hi' ? 'वर्ष' : 'Yrs'}</span>
+                        {(() => {
+                          const hasAadhaarCol = (cardData.members || []).some(m => m.aadhaar || m.aadhar || m.uid || m.uidNumber) || currentTool?.id?.includes('ration_to_aadhaar') || currentTool?.id?.includes('ration2uid') || currentTool?.id?.includes('ration_to_aadhar');
+                          return (
+                            <div className="border rounded-xl overflow-hidden text-xs">
+                              <div className="bg-slate-900 text-white p-2 font-bold grid grid-cols-12 text-[10px]">
+                                <span className="col-span-1">{language === 'hi' ? 'क्र.' : '#'}</span>
+                                <span className={hasAadhaarCol ? "col-span-4" : "col-span-5"}>{language === 'hi' ? 'सदस्य का नाम' : 'Member Name'}</span>
+                                <span className={hasAadhaarCol ? "col-span-3" : "col-span-4"}>{language === 'hi' ? 'संबंध' : 'Relation'}</span>
+                                {hasAadhaarCol && (
+                                  <span className="col-span-3 font-mono text-amber-300">{language === 'hi' ? 'आधार नंबर' : 'Aadhaar No'}</span>
+                                )}
+                                <span className="col-span-1 text-right">{language === 'hi' ? 'आयु' : 'Age'}</span>
                               </div>
-                            ))}
-                          </div>
-                        </div>
+                              <div className="divide-y text-[11px]">
+                                {(cardData.members || []).map((m, idx) => (
+                                  <div key={idx} className="p-1.5 grid grid-cols-12 items-center">
+                                    <span className="col-span-1 font-mono">{m.index || (idx + 1)}</span>
+                                    <span className={`${hasAadhaarCol ? "col-span-4" : "col-span-5"} font-bold text-slate-900`}>{m.name}</span>
+                                    <span className={`${hasAadhaarCol ? "col-span-3" : "col-span-4"} text-slate-600`}>{m.relation || '-'}</span>
+                                    {hasAadhaarCol && (
+                                      <span className="col-span-3 font-mono font-bold text-indigo-900 bg-indigo-50 px-1 py-0.5 rounded text-[10px]">
+                                        {m.aadhaar || m.aadhar || m.uid || m.uidNumber || '-'}
+                                      </span>
+                                    )}
+                                    <span className="col-span-1 text-right font-mono">{m.age ? `${m.age}` : '-'}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })()}
 
                         <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
                           <span>{cardData.fpsDealer}</span>
@@ -5707,18 +5881,27 @@ function ServicePageContent({
                     {/* ======================================================= */}
                     {toolKind === 'electricity' && (
                       <div className="w-full max-w-xl bg-white border-2 border-slate-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
-                        <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
-                          <div>
-                            <div className="text-[10px] font-black text-amber-700 uppercase">
-                              {language === 'hi' ? 'UPPCL • विद्युत वितरण निगम लि.' : 'UPPCL • Power Distribution Corp. Ltd.'}
+                        {(() => {
+                          const isBihar = currentTool?.id === 'electric_bill_pdf_bihar' || selectState === 'Bihar' || selectState === 'BR' || cardData.state === 'BR' || (cardData.discom || '').includes('Bihar') || (cardData.discom || '').includes('SBPDCL') || (cardData.discom || '').includes('NBPDCL');
+                          const orgTitle = isBihar 
+                            ? (language === 'hi' ? 'बिहार स्टेट पावर (होल्डिंग) कंपनी लि. • SBPDCL / NBPDCL' : 'Bihar State Power Holding Company Ltd. (BSPHCL)')
+                            : (language === 'hi' ? 'UPPCL • विद्युत वितरण निगम लि.' : 'UPPCL • Power Distribution Corp. Ltd.');
+                          const qrPrefix = isBihar ? 'BSPHCL:BILL' : 'UPPCL:BILL';
+                          return (
+                            <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
+                              <div>
+                                <div className="text-[10px] font-black text-amber-700 uppercase">
+                                  {orgTitle}
+                                </div>
+                                <h3 className="text-base font-black text-slate-900">{cardData.discom || (isBihar ? 'उत्तर / दक्षिण बिहार विद्युत वितरण कंपनी लि.' : 'विद्युत वितरण निगम')}</h3>
+                                <p className="text-[11px] text-slate-600">{language === 'hi' ? 'विद्युत बिल एवं सफल भुगतान रसीद' : 'Electricity Bill & Payment Receipt'}</p>
+                              </div>
+                              <div className="p-1 bg-white border rounded">
+                                <QRCodeSVG value={`${qrPrefix}:${cardData.consumerNo}|NAME:${cardData.consumerName}|PAID:${cardData.netPayable}`} size={54} />
+                              </div>
                             </div>
-                            <h3 className="text-base font-black text-slate-900">{cardData.discom}</h3>
-                            <p className="text-[11px] text-slate-600">{language === 'hi' ? 'विद्युत बिल एवं सफल भुगतान रसीद' : 'Electricity Bill & Payment Receipt'}</p>
-                          </div>
-                          <div className="p-1 bg-white border rounded">
-                            <QRCodeSVG value={`UPPCL:BILL:${cardData.consumerNo}|NAME:${cardData.consumerName}|PAID:${cardData.netPayable}`} size={54} />
-                          </div>
-                        </div>
+                          );
+                        })()}
 
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-50 p-2.5 rounded-xl border text-xs">
                           <div>
@@ -5801,9 +5984,9 @@ function ServicePageContent({
                                     निवास / जाति / आय प्रमाण पत्र (RESIDENCE / CASTE / INCOME CERTIFICATE)
                                   </h3>
                                   <p className="text-justify indent-8 leading-loose">
-                                    प्रमाणित किया जाता है कि <b>{cardData.applicantName || cardData.name}</b>, आत्मज/आत्मजा/पत्नी <b>{cardData.fatherName}</b>, माता <b>{cardData.motherName || 'श्रीमती देवी'}</b>, 
-                                    ग्राम/मोहल्ला <b>{cardData.village || cardData.address || '-'}</b>, पोस्ट <b>{cardData.postOffice || 'प्रधान डाकघर'}</b>, थाना <b>{cardData.policeStation || '-'}</b>, 
-                                    प्रखण्ड <b>{cardData.block || 'सदर'}</b>, अनुमंडल <b>{cardData.subDivision || 'सदर'}</b>, जिला <b>{cardData.district || selectState || 'पटना'}</b>, राज्य <b>बिहार</b> के स्थायी निवासी हैं।
+                                    प्रमाणित किया जाता है कि <b>{cardData.applicantName || cardData.name}</b>, आत्मज/आत्मजा/पत्नी <b>{cardData.fatherName}</b>, माता <b>{cardData.motherName || '-'}</b>, 
+                                    ग्राम/मोहल्ला <b>{cardData.village || cardData.address || '-'}</b>, पोस्ट <b>{cardData.postOffice || '-'}</b>, थाना <b>{cardData.policeStation || '-'}</b>, 
+                                    प्रखण्ड <b>{cardData.block || '-'}</b>, अनुमंडल <b>{cardData.subDivision || '-'}</b>, जिला <b>{cardData.district || selectState || '-'}</b>, राज्य <b>{cardData.state || selectState || 'बिहार'}</b> के स्थायी निवासी हैं।
                                   </p>
                                   <p className="text-justify indent-8 leading-loose">
                                     यह प्रमाण पत्र आवेदक द्वारा प्रस्तुत स्व-घोषणा एवं संबंधित राजस्व कर्मचारी/अंचल अधिकारी द्वारा समर्पित सत्यापन प्रतिवेदन के आधार पर 
@@ -6039,7 +6222,9 @@ function ServicePageContent({
 
                         <div className="bg-slate-950 text-white p-3 rounded-xl flex justify-between items-center">
                           <span className="font-bold text-sm">{language === 'hi' ? 'कुल प्राप्त राशि:' : 'Total Amount:'}</span>
-                          <span className="font-mono font-black text-2xl text-yellow-400">₹{cardData.fee || currentTool?.fee || requiredFee || 30}.00</span>
+                          <span className="font-mono font-black text-2xl text-yellow-400">
+                            ₹{cardData.fee !== undefined && cardData.fee !== null ? cardData.fee : (currentTool?.fee !== undefined ? currentTool.fee : (requiredFee !== undefined ? requiredFee : 0))}.00
+                          </span>
                         </div>
 
                         <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-500">
@@ -6120,6 +6305,199 @@ function ServicePageContent({
                         <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
                           <span>{language === 'hi' ? 'ई-केवाईसी स्थिति: सफल' : 'e-KYC Status: Successful'}</span>
                           <span className="font-bold text-emerald-700">{language === 'hi' ? 'अधिकृत किसान पावती' : 'Authorized Farmer Slip'}</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 15A. E-SHRAM NATIONAL LABOUR UAN CARD (OFFICIAL CR-80) */}
+                    {/* ======================================================= */}
+                    {toolKind === 'eshram' && (
+                      <div className="cr80-card-scaler relative group max-w-full">
+                        <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-slate-400 pointer-events-none" />
+                        <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
+                        <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
+                        <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
+
+                        <div className="cr80-card-print w-[340px] h-[215px] bg-gradient-to-br from-amber-50 via-white to-orange-50 rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-900 font-sans print:shadow-none print:border-slate-800">
+                          {/* Header */}
+                          <div className="flex items-center justify-between border-b border-orange-500 pb-1">
+                            <div>
+                              <div className="text-[8px] font-black text-orange-900 uppercase">
+                                श्रम एवं रोजगार मंत्रालय • भारत सरकार
+                              </div>
+                              <div className="text-[7px] font-bold text-slate-600 uppercase">
+                                Ministry of Labour & Employment • Govt. of India
+                              </div>
+                            </div>
+                            <span className="text-xs font-black bg-orange-600 text-white px-1.5 py-0.5 rounded shadow-2xs">
+                              e-SHRAM
+                            </span>
+                          </div>
+
+                          {/* Body: Photo + Details */}
+                          <div className="flex items-center gap-2.5 py-1">
+                            <div className="w-[64px] h-[78px] bg-slate-100 border border-slate-400 rounded overflow-hidden shrink-0 shadow-2xs flex items-center justify-center">
+                              {photoData ? (
+                                <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center p-1 text-center">
+                                  <span className="text-xl">👤</span>
+                                  <span className="text-[6.5px] font-bold text-slate-500 uppercase mt-0.5 leading-tight">
+                                    {language === 'hi' ? 'फोटो अनुपलब्ध' : 'Photo N/A'}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex-1 space-y-0.5 text-xs">
+                              <div>
+                                <span className="text-[7.5px] text-slate-500 font-bold block uppercase">{language === 'hi' ? 'नाम' : 'Name'}</span>
+                                <span className="font-black text-slate-900 text-[10.5px] block">{cardData.name}</span>
+                              </div>
+                              <div>
+                                <span className="text-[7px] text-slate-500 font-bold block uppercase">{language === 'hi' ? 'पिता/पति का नाम' : "Father / Husband Name"}</span>
+                                <span className="font-bold text-slate-800 text-[9.5px] block">{cardData.fatherName}</span>
+                              </div>
+                              <div className="grid grid-cols-2 text-[7.5px] text-slate-700">
+                                <div>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <strong className="font-mono">{cardData.dob}</strong></div>
+                                <div>{language === 'hi' ? 'लिंग:' : 'Gender:'} <strong>{cardData.gender}</strong></div>
+                              </div>
+                              <div>
+                                <span className="text-[7px] text-slate-500 font-bold block uppercase">{language === 'hi' ? 'प्राथमिक व्यवसाय' : 'Primary Occupation'}</span>
+                                <span className="font-bold text-orange-950 text-[8.5px] truncate block">{cardData.occupation || cardData.primaryOccupation || 'श्रमिक / कामगार (Labour)'}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* 12-Digit UAN Strip */}
+                          <div className="bg-orange-950 text-white rounded p-1 text-center font-mono font-black text-xs tracking-widest shadow-xs">
+                            <span className="text-[7px] text-orange-200 block font-sans tracking-normal font-normal">
+                              {language === 'hi' ? 'सार्वभौमिक खाता संख्या (UAN)' : 'Universal Account Number (UAN)'}
+                            </span>
+                            {cardData.uan || cardData.uanNumber || cardData.uidNumber || (primaryInput && primaryInput.length === 12 ? primaryInput.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : 'XXXX XXXX XXXX')}
+                          </div>
+
+                          <div className="border-t pt-1 flex items-center justify-between text-[7px] text-slate-600">
+                            <span>हेल्पलाइन: <strong>14434</strong> • eshram.gov.in</span>
+                            <span className="font-bold text-emerald-800">सत्यापित कामगार</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 15B. MP SAMAGRA SSSM MEMBER SLIP PROFORMA */}
+                    {/* ======================================================= */}
+                    {toolKind === 'samagra' && (
+                      <div className="w-full max-w-xl bg-white border-2 border-emerald-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
+                        <div className="border-b-2 border-emerald-800 pb-2 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-emerald-800 uppercase">
+                              मध्य प्रदेश शासन • सामाजिक न्याय एवं निःशक्तजन कल्याण
+                            </div>
+                            <h3 className="text-base font-black text-slate-900">
+                              समग्र सामाजिक सुरक्षा मिशन (SSSM) • सदस्य जानकारी पर्ची
+                            </h3>
+                            <p className="text-[11px] text-slate-600">Samagra Samajik Suraksha Mission Member Slip</p>
+                          </div>
+                          <div className="p-1 bg-white border rounded">
+                            <QRCodeSVG value={`SAMAGRA:ID:${cardData.samagraId || primaryInput}|NAME:${cardData.name}`} size={54} />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-emerald-50/50 p-2.5 rounded-xl border border-emerald-200 text-xs">
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">समग्र सदस्य आईडी</span>
+                            <strong className="font-mono text-emerald-950 text-sm">{cardData.samagraId || cardData.memberId || primaryInput}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">समग्र परिवार आईडी</span>
+                            <strong className="font-mono text-indigo-900">{cardData.familyId || secondaryInput || '-'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">सदस्य का नाम</span>
+                            <strong className="text-slate-900">{cardData.name}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">पिता/अभिभावक</span>
+                            <strong>{cardData.fatherName}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">जन्म तिथि / आयु</span>
+                            <strong className="font-mono">{cardData.dob}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">लिंग</span>
+                            <strong>{cardData.gender}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">वर्ग (Category)</span>
+                            <strong>{cardData.category || 'सामान्य / पिछड़ा वर्ग'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">ई-केवाईसी स्थिति</span>
+                            <strong className="text-emerald-700">सत्यापित (Yes)</strong>
+                          </div>
+                        </div>
+
+                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>पोर्टल: <strong>samagra.gov.in</strong> • आधिकारिक प्रति</span>
+                          <span className="font-bold text-emerald-700">सत्यापित समग्र रिकॉर्ड</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* ======================================================= */}
+                    {/* 15C. MP SAMBAL 2.0 JAN KALYAN CARD PROFORMA */}
+                    {/* ======================================================= */}
+                    {toolKind === 'sambal' && (
+                      <div className="w-full max-w-xl bg-white border-2 border-amber-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
+                        <div className="border-b-2 border-amber-800 pb-2 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-amber-800 uppercase">
+                              श्रम विभाग • मध्य प्रदेश शासन
+                            </div>
+                            <h3 className="text-base font-black text-slate-900">
+                              मुख्यमंत्री जन कल्याण (संबल 2.0) योजना परिचय पत्र
+                            </h3>
+                            <p className="text-[11px] text-slate-600">असंगठित शहरी एवं ग्रामीण कर्मकार कल्याण मण्डल</p>
+                          </div>
+                          <div className="p-1 bg-white border rounded">
+                            <QRCodeSVG value={`SAMBAL:ID:${cardData.sambalId || primaryInput}|NAME:${cardData.name}`} size={54} />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 bg-amber-50/50 p-2.5 rounded-xl border border-amber-200 text-xs">
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">संबल पंजीयन क्रमांक</span>
+                            <strong className="font-mono text-amber-950 text-sm">{cardData.sambalId || cardData.samagraId || primaryInput}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">हितग्राही का नाम</span>
+                            <strong className="text-slate-900">{cardData.name}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">पिता/पति का नाम</span>
+                            <strong>{cardData.fatherName}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">व्यवसाय श्रेणी</span>
+                            <strong className="text-slate-800">{cardData.occupation || 'असंगठित श्रमिक'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">जिला / निकाय</span>
+                            <strong>{cardData.district || selectState || 'मध्य प्रदेश'}</strong>
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-500 block uppercase">कार्ड स्थिति</span>
+                            <strong className="text-emerald-700">सक्रिय (Active 2.0)</strong>
+                          </div>
+                        </div>
+
+                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                          <span>संबल पोर्टल: <strong>sambal.mp.gov.in</strong></span>
+                          <span className="font-bold text-amber-800">संबल 2.0 अधिकृत</span>
                         </div>
                       </div>
                     )}

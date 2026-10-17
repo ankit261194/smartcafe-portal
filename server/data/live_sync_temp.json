@@ -1,6 +1,6 @@
 ﻿{
     "success":  true,
-    "timestamp":  "2026-10-17T18:45:01+00:00",
+    "timestamp":  "2026-10-17T18:54:18+00:00",
     "users":  [
                   {
                       "id":  "USR-8006518960",
@@ -12,9 +12,66 @@
                       "balance":  10,
                       "isBlocked":  false,
                       "createdAt":  "2026-10-15T00:00:00.000Z"
+                  },
+                  {
+                      "id":  "USR-8006517171",
+                      "name":  "Ankit Chaudhary",
+                      "shopName":  "स्मार्ट डिजिटल सेवा केंद्र",
+                      "phone":  "8006517171",
+                      "password":  "Aa@910010025",
+                      "role":  "cafe",
+                      "balance":  0,
+                      "isBlocked":  false,
+                      "createdAt":  "2026-10-17T00:00:00.000Z"
+                  },
+                  {
+                      "id":  "CAFE-999",
+                      "name":  "परीक्षण संचालक",
+                      "shopName":  "परीक्षण जन सेवा केंद्र",
+                      "phone":  "9999988888",
+                      "password":  "1234",
+                      "role":  "cafe",
+                      "balance":  0,
+                      "isBlocked":  false,
+                      "createdAt":  "2026-10-17T17:43:12.040Z"
                   }
               ],
     "wallets":  [
+                    {
+                        "phone":  "8006517171",
+                        "customerName":  "Ankit Chaudhary",
+                        "balance":  0,
+                        "transactions":  [
+                                             {
+                                                 "id":  "REFUND-PAN-1792258956492-4053",
+                                                 "type":  "credit",
+                                                 "amount":  145,
+                                                 "note":  "पैन कार्ड आवेदन रिफंड (PAN-20261017-2566)",
+                                                 "createdAt":  "2026-10-17T17:42:36.492Z"
+                                             },
+                                             {
+                                                 "id":  "TXN-PAN-1792258956223-5095",
+                                                 "type":  "debit",
+                                                 "amount":  145,
+                                                 "note":  "नया पैन कार्ड आवेदन शुल्क: Test Reject (8006517171)",
+                                                 "createdAt":  "2026-10-17T17:42:36.223Z"
+                                             },
+                                             {
+                                                 "id":  "REFUND-PAN-1792258928917-5737",
+                                                 "type":  "credit",
+                                                 "amount":  145,
+                                                 "note":  "पैन कार्ड आवेदन रिफंड (PAN-20261017-5974)",
+                                                 "createdAt":  "2026-10-17T17:42:08.917Z"
+                                             },
+                                             {
+                                                 "id":  "TXN-PAN-1792258928605-5598",
+                                                 "type":  "debit",
+                                                 "amount":  145,
+                                                 "note":  "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+                                                 "createdAt":  "2026-10-17T17:42:08.605Z"
+                                             }
+                                         ]
+                    },
                     {
                         "phone":  "8006518960",
                         "customerName":  "ankit kumar",
@@ -45,10 +102,84 @@
                         "transactions":  [
 
                                          ]
+                    },
+                    {
+                        "phone":  "9876543210",
+                        "customerName":  "राजेश कुमार",
+                        "balance":  0,
+                        "transactions":  [
+
+                                         ]
+                    },
+                    {
+                        "phone":  "9999988888",
+                        "customerName":  "परीक्षण संचालक",
+                        "balance":  0,
+                        "transactions":  [
+
+                                         ]
                     }
                 ],
     "cafes":  [
-
+                  {
+                      "id":  "CAFE-999",
+                      "code":  "999",
+                      "shopName":  "परीक्षण जन सेवा केंद्र",
+                      "ownerName":  "परीक्षण संचालक",
+                      "phone":  "9999988888",
+                      "email":  "test999@rekha.in",
+                      "pin":  "$2b$10$HFsHyObzjVf1lMcnV7DzUO8ZLRtw1dfHSCzj69dpkmVILkGiKqpwi",
+                      "status":  "active",
+                      "subscriptionStatus":  "active",
+                      "isFrozen":  false,
+                      "validTill":  1823798546046,
+                      "b2bWallet":  {
+                                        "balance":  9863,
+                                        "minThreshold":  200,
+                                        "transactions":  [
+                                                             {
+                                                                 "id":  "B2B-TXN-1792262568359",
+                                                                 "type":  "debit",
+                                                                 "amount":  15,
+                                                                 "note":  "थोक एडमिन सेवा कटौती: डिजिटल वोटर स्मार्ट कार्ड (EPIC)",
+                                                                 "createdAt":  "2026-10-17T18:42:48.359Z"
+                                                             },
+                                                             {
+                                                                 "id":  "B2B-TXN-1792262568298",
+                                                                 "type":  "debit",
+                                                                 "amount":  15,
+                                                                 "note":  "थोक एडमिन सेवा कटौती: एडवांस आधार CR-80 PVC स्मार्ट कार्ड",
+                                                                 "createdAt":  "2026-10-17T18:42:48.298Z"
+                                                             },
+                                                             {
+                                                                 "id":  "B2B-TXN-1792262564706",
+                                                                 "type":  "debit",
+                                                                 "amount":  107,
+                                                                 "note":  "थोक एडमिन सेवा कटौती: इंस्टेंट पैन कार्ड CR-80 PVC",
+                                                                 "createdAt":  "2026-10-17T18:42:44.706Z"
+                                                             }
+                                                         ]
+                                    },
+                      "retailRates":  {
+                                          "rcDownload":  250,
+                                          "panCard":  30,
+                                          "aadhaarCard":  30,
+                                          "voterCard":  30,
+                                          "ayushmanCard":  30,
+                                          "rationCard":  25,
+                                          "electricityBill":  20,
+                                          "edistrictSlip":  30,
+                                          "drivingLicence":  50,
+                                          "challanSearch":  20,
+                                          "ePan":  25,
+                                          "receiptMaker":  15
+                                      },
+                      "staffPin":  "$2b$10$ayu4.pf54NK2jEX8x67q9eSpNaZkvjRzXGgdQb0MLTK19pPfKrNsC",
+                      "staffEnabled":  true,
+                      "frozenReason":  "",
+                      "kycStatus":  "verified",
+                      "licenseKey":  "VLE-LIC-2026-UP24-999"
+                  }
               ],
     "utrRequests":  [
                         {

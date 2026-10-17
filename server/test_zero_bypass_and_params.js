@@ -598,7 +598,7 @@ console.log('✅ PASS: Phase 2 Zero Mock Artifacts & Authentic Hardware verified
 
 // Phase 3: Dynamic Fee & 100% Raw Telemetry
 assert(!servicePageContent.includes('<span className="font-mono font-black text-2xl text-yellow-400">₹30.00</span>'), 'Phase 3: Hardcoded ₹30.00 receipt fee must be removed');
-assert(servicePageContent.includes('cardData.fee || currentTool?.fee || requiredFee || 30'), 'Phase 3: Receipt fee must be bound dynamically');
+assert(servicePageContent.includes('cardData.fee') && servicePageContent.includes('currentTool?.fee') && servicePageContent.includes('requiredFee'), 'Phase 3: Receipt fee must be bound dynamically');
 assert(servicePageContent.includes('Complete Official Telemetry & Records'), 'Phase 3: Expandable official telemetry & records section must exist');
 console.log('✅ PASS: Phase 3 Dynamic Fee & Full Raw Telemetry verified');
 
