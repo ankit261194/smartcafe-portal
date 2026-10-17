@@ -3956,7 +3956,7 @@ function getVoterDetails($epicNo, $custom = []) {
     $ac = $acList[$hash % count($acList)];
     $partNo = 45 + ($hash % 240);
     $serialNo = 1 + ($hash % 790);
-    $pollingStation = "प्राथमिक विद्यालय कक्ष सं. " . (1 + ($hash % 4)) . ", मतदान केंद्र भाग सं. $partNo";
+    $pollingStation = "मतदान केंद्र भाग सं. $partNo";
 
     return [
         'epicNo' => $cleanEpic ?: '-',

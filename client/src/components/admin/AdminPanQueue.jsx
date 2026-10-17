@@ -353,15 +353,15 @@ export default function AdminPanQueue({ theme = 'light' }) {
           firstName: stamperForm.firstName,
           lastName: stamperForm.lastName,
           gender: stamperForm.gender,
-          dob: stamperForm.dob || '01-01-1995',
-          fatherName: stamperForm.fatherName || 'FATHER NAME',
+          dob: stamperForm.dob || '',
+          fatherName: stamperForm.fatherName || '',
           mobile: stamperForm.mobile,
           email: stamperForm.email
         },
         address: {
-          city: stamperForm.city || 'BULANDSHAHAR',
+          city: stamperForm.city || '',
           state: stamperForm.state,
-          pincode: stamperForm.pincode || '203001'
+          pincode: stamperForm.pincode || ''
         },
         aoCode: {
           areaCode: stamperForm.areaCode,
@@ -370,7 +370,7 @@ export default function AdminPanQueue({ theme = 'light' }) {
           aoNumber: stamperForm.aoNumber
         },
         identity: {
-          aadhaarNumber: stamperForm.aadhaarNumber || '548963217458',
+          aadhaarNumber: stamperForm.aadhaarNumber || '',
           dobProof: stamperForm.dobProof
         },
         photo: stamperPhoto,

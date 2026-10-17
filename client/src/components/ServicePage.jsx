@@ -129,11 +129,11 @@ function ServicePageContent({
     if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc'].includes(id) || cat === 'rc' || id.includes('rc_')) return 'rc';
     if (['pan', 'pancard', 'pan_find', 'pan_details'].includes(id) || cat === 'pan' || id.includes('pan')) return 'pan';
     if (id === 'epan') return 'epan';
-    if (['aadhaar', 'aadhaarCard', 'aadhaarcard', 'aadhaar_advance', 'aadhaar_original_pdf_otp', 'aadhaar_original_pdf_no_otp', 'aadhaar_otp_kyc', 'aadhaar_pvc', 'aadhaar_manual'].includes(id) || cat === 'aadhaar' || id.toLowerCase().includes('aadhaar') || id.toLowerCase().includes('aadhar') || id.includes('uid_') || id.includes('pvc_')) return 'aadhaar';
+    if (['ration', 'ration_pdf_by_ration', 'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'ration_pdf_by_aadhar'].includes(id) || cat === 'ration' || id.includes('ration')) return 'ration';
+    if (['aadhaar', 'aadhaarCard', 'aadhaarcard', 'aadhaar_advance', 'aadhaar_original_pdf_otp', 'aadhaar_original_pdf_no_otp', 'aadhaar_otp_kyc', 'aadhaar_pvc', 'aadhaar_manual'].includes(id) || cat === 'aadhaar' || (!id.includes('ration') && (id.toLowerCase().includes('aadhaar') || id.toLowerCase().includes('aadhar') || id.includes('uid_') || id.includes('pvc_')))) return 'aadhaar';
     if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp'].includes(id) || cat === 'voter' || id.includes('voter_')) return 'voter';
     if (['dl', 'driving_licence_pdf', 'dl_details'].includes(id) || cat === 'dl' || id.includes('driving_licence') || id.includes('dl_')) return 'dl';
     if (['ayushman', 'ayushman_card', 'abha_card', 'abha_otp'].includes(id) || cat === 'health' || id.includes('ayushman') || id.includes('abha')) return 'ayushman';
-    if (['ration', 'ration_pdf_by_ration'].includes(id) || cat === 'ration' || id.includes('ration_')) return 'ration';
     if (['electricity', 'electric_bill_pdf_bihar'].includes(id) || cat === 'utility' || id.includes('electric_bill')) return 'electricity';
     if (['challan', 'chalan_find'].includes(id) || id.includes('chalan') || id.includes('challan')) return 'challan';
     if (['edistrict', 'edistrict-verify', 'edistrict-decl', 'edistrict-packer', 'edistrict-bhulekh', 'rtps_bihar_pdf', 'rtps'].includes(id) || cat === 'edistrict' || id.includes('rtps') || id.includes('edistrict')) return 'edistrict';
@@ -1393,11 +1393,11 @@ function ServicePageContent({
           ...rawGen,
           regNo: val,
           panNo: val,
-          aadhaarNo: val,
+          aadhaarNo: ['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar'].includes(tid) ? (rawGen.aadhaarNo || rawGen.uidNumber || rawGen.aadhar || '-') : val,
           maskedAadhaar: val.length >= 4 ? `XXXX XXXX ${val.replace(/\s/g, '').slice(-4)}` : val,
           epicNo: val,
           pmjayId: val,
-          rationNo: val,
+          rationNo: tid === 'ration_pdf_by_aadhar' ? (rawGen.rationNo || rawGen.ration_no || rawGen.rcNo || rawGen.rationCardNo || '-') : val,
           consumerNo: val,
           appNo: val,
           certNo: secondaryInput.trim() || rawGen.certNo || '-',
@@ -4581,7 +4581,7 @@ function ServicePageContent({
                 </span>
               </span>
               <span className="text-[11px] bg-white/20 text-white font-mono font-bold px-2.5 py-0.5 rounded-full">
-                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'e_shram_update', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service'].includes(currentTool?.id)
+                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || isManualRelay12 || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'e_shram_update', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service', 'puc_certificate_download', 'agristack_pdf'].includes(currentTool?.id)
                   ? '⏱️ 1-2 घंटे रिले'
                   : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'aadhaar_manual', 'aadhaar_pvc', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id))
                   ? '🖨️ त्वरित कार्ड प्रिंट'
@@ -4686,24 +4686,24 @@ function ServicePageContent({
                     <div className="space-y-0.5 sm:col-span-2 pt-1 border-t border-slate-200">
                       <span className="text-[10px] font-bold text-slate-500 uppercase block">आवेदन / संदर्भ संख्या (Application / Query Input)</span>
                       <strong className="font-mono text-xs sm:text-sm font-black text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-300 inline-block">
-                        {primaryInput || currentResult.order?.refNumber || '-'}
+                        {primaryInput || currentResult.order?.refNumber || currentResult.order?.params?.query || currentResult.order?.params?.applicationNumber || currentResult.order?.params?.vehicleNumber || currentResult.order?.params?.regNo || currentResult.order?.params?.panNo || currentResult.order?.params?.uidNumber || '-'}
                       </strong>
                     </div>
 
-                    {secondaryInput && (
+                    {(secondaryInput || currentResult.order?.params?.password || currentResult.order?.params?.mobile || currentResult.order?.params?.secondaryInput) && (
                       <div className="space-y-0.5">
                         <span className="text-[10px] font-bold text-slate-500 uppercase block">अतिरिक्त विवरण / पासवर्ड</span>
                         <strong className="text-xs font-bold text-slate-800">
-                          {currentTool?.id === 'll_exam_pass_auto' ? '•••••••• (SMS Password Linked)' : secondaryInput}
+                          {currentTool?.id === 'll_exam_pass_auto' || currentResult.order?.serviceType === 'll_exam_pass_auto' ? '•••••••• (SMS Password Linked)' : (secondaryInput || currentResult.order?.params?.mobile || currentResult.order?.params?.secondaryInput || '-')}
                         </strong>
                       </div>
                     )}
 
-                    {dobDate && (
+                    {(dobDate || currentResult.order?.params?.dob) && (
                       <div className="space-y-0.5">
                         <span className="text-[10px] font-bold text-slate-500 uppercase block">जन्मतिथि (DOB)</span>
                         <strong className="font-mono text-xs font-bold text-slate-800">
-                          {formatDobDisplay(dobDate)}
+                          {dobDate ? formatDobDisplay(dobDate) : currentResult.order?.params?.dob}
                         </strong>
                       </div>
                     )}
@@ -4711,7 +4711,7 @@ function ServicePageContent({
                     <div className="space-y-0.5 pt-1 border-t border-slate-200">
                       <span className="text-[10px] font-bold text-slate-500 uppercase block">अनुरोध दर्ज समय (Date & Time)</span>
                       <strong className="font-mono text-xs text-slate-800">
-                        {currentResult.submittedAt || new Date().toLocaleString('hi-IN')}
+                        {currentResult.submittedAt || (currentResult.order?.createdAt ? new Date(currentResult.order.createdAt).toLocaleString('hi-IN') : new Date().toLocaleString('hi-IN'))}
                       </strong>
                     </div>
 
@@ -4728,8 +4728,8 @@ function ServicePageContent({
                     {/* Customer Info */}
                     <div className="space-y-1">
                       <span className="text-[10px] font-black text-slate-500 uppercase block">नागरिक / ग्राहक विवरण</span>
-                      <div className="text-xs font-bold text-slate-900">{customerName.trim() || customerSession?.name || 'अधिकृत नागरिक'}</div>
-                      <div className="text-[11px] font-mono text-slate-600">{customerSession?.phone || '8006518960'}</div>
+                      <div className="text-xs font-bold text-slate-900">{customerName.trim() || currentResult.order?.customerName || customerSession?.name || 'अधिकृत नागरिक'}</div>
+                      <div className="text-[11px] font-mono text-slate-600">{currentResult.order?.customerPhone || customerSession?.phone || '8006518960'}</div>
                     </div>
 
                     {/* Cafe Branding */}
@@ -6010,7 +6010,7 @@ function ServicePageContent({
                                   name: cardData.headName || cardData.name || 'मुख्य सदस्य',
                                   relation: 'स्वयं (Head)',
                                   aadhaar: cardData.aadhaarNo || cardData.uidNumber || (primaryInput && primaryInput.length === 12 ? primaryInput : 'XXXX-XXXX-XXXX'),
-                                  age: '42'
+                                  age: cardData.age || '-'
                                 }
                               ];
 
@@ -7284,14 +7284,24 @@ function ServicePageContent({
                       </td>
                       <td className="py-3 px-4 text-right">
                         {isPending ? (
-                          <button
-                            type="button"
-                            onClick={() => handlePollSingleOrder(orderItem.id || orderItem.orderId)}
-                            disabled={pollingSingleOrder}
-                            className="bg-blue-50 dark:bg-blue-950 hover:bg-blue-100 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
-                          >
-                            🔄 {language === 'hi' ? 'स्टेटस जांचें' : 'Check'}
-                          </button>
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleFreeReprint(orderItem)}
+                              className="bg-purple-50 dark:bg-purple-950 hover:bg-purple-100 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 px-2 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
+                              title={language === 'hi' ? 'पावती एवं ट्रैकिंग पत्र देखें' : 'View Docket'}
+                            >
+                              📄 {language === 'hi' ? 'पावती' : 'Docket'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handlePollSingleOrder(orderItem.id || orderItem.orderId)}
+                              disabled={pollingSingleOrder}
+                              className="bg-blue-50 dark:bg-blue-950 hover:bg-blue-100 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer"
+                            >
+                              🔄 {language === 'hi' ? 'जांचें' : 'Check'}
+                            </button>
+                          </div>
                         ) : (
                           <button
                             type="button"

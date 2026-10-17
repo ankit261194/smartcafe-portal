@@ -3146,7 +3146,7 @@ function getVoterDetails(epicNo, custom = {}) {
   const ac = acList[hash % acList.length];
   const partNo = 45 + (hash % 240);
   const serialNo = 1 + (hash % 790);
-  const pollingStation = `प्राथमिक विद्यालय कक्ष सं. ${1 + (hash % 4)}, मतदान केंद्र भाग सं. ${partNo}`;
+  const pollingStation = `मतदान केंद्र भाग सं. ${partNo}`;
 
   return {
     epicNo: cleanEpic || '-',

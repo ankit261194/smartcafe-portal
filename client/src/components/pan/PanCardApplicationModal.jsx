@@ -932,7 +932,7 @@ export default function PanCardApplicationModal({
                           type="text"
                           value={lastName}
                           onChange={(e) => setLastName(e.target.value.toUpperCase())}
-                          placeholder="e.g. CHAUDHARY"
+                          placeholder={language === 'hi' ? 'उपनाम दर्ज करें' : 'Enter Last Name'}
                           className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold uppercase focus:ring-2 focus:ring-blue-500"
                           required
                         />
@@ -946,7 +946,7 @@ export default function PanCardApplicationModal({
                           type="text"
                           value={firstName}
                           onChange={(e) => setFirstName(e.target.value.toUpperCase())}
-                          placeholder="e.g. ANKIT"
+                          placeholder={language === 'hi' ? 'प्रथम नाम दर्ज करें' : 'Enter First Name'}
                           className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold uppercase focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
@@ -959,7 +959,7 @@ export default function PanCardApplicationModal({
                           type="text"
                           value={middleName}
                           onChange={(e) => setMiddleName(e.target.value.toUpperCase())}
-                          placeholder="e.g. KUMAR"
+                          placeholder={language === 'hi' ? 'मध्य नाम दर्ज करें' : 'Enter Middle Name'}
                           className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold uppercase focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
@@ -1018,7 +1018,7 @@ export default function PanCardApplicationModal({
                             type="text"
                             value={fatherLastName}
                             onChange={(e) => setFatherLastName(e.target.value.toUpperCase())}
-                            placeholder="e.g. SINGH"
+                            placeholder={language === 'hi' ? 'पिता का उपनाम दर्ज करें' : "Enter Father's Last Name"}
                             className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold uppercase focus:ring-2 focus:ring-blue-500"
                             required
                           />
@@ -1032,7 +1032,7 @@ export default function PanCardApplicationModal({
                             type="text"
                             value={fatherFirstName}
                             onChange={(e) => setFatherFirstName(e.target.value.toUpperCase())}
-                            placeholder="e.g. RAJENDRA"
+                            placeholder={language === 'hi' ? 'पिता का प्रथम नाम दर्ज करें' : "Enter Father's First Name"}
                             className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold uppercase focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
@@ -1060,7 +1060,7 @@ export default function PanCardApplicationModal({
                             type="text"
                             value={motherName}
                             onChange={(e) => setMotherName(e.target.value.toUpperCase())}
-                            placeholder="e.g. KAMLA DEVI"
+                            placeholder={language === 'hi' ? 'माता का नाम दर्ज करें' : "Enter Mother's Name"}
                             className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold uppercase focus:ring-2 focus:ring-blue-500"
                           />
                         </div>
@@ -1404,7 +1404,7 @@ export default function PanCardApplicationModal({
                           maxLength={12}
                           value={aadhaarNumber}
                           onChange={(e) => setAadhaarNumber(e.target.value.replace(/\D/g, ''))}
-                          placeholder="5489 6321 7458"
+                          placeholder={language === 'hi' ? '12-अंकीय आधार संख्या दर्ज करें' : 'Enter 12-digit Aadhaar Number'}
                           className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-black tracking-widest focus:ring-2 focus:ring-blue-500"
                           required
                         />
@@ -1418,7 +1418,7 @@ export default function PanCardApplicationModal({
                           type="text"
                           value={nameOnAadhaar}
                           onChange={(e) => setNameOnAadhaar(e.target.value.toUpperCase())}
-                          placeholder="ANKIT CHAUDHARY"
+                          placeholder={language === 'hi' ? 'आधार कार्ड अनुसार पूरा नाम दर्ज करें' : 'Enter Name as per Aadhaar'}
                           className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold uppercase focus:ring-2 focus:ring-blue-500"
                         />
                       </div>

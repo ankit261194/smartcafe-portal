@@ -635,15 +635,41 @@ assert(servicePageContent.includes("जैसे ही ऑपरेटर द�
 assert(servicePageContent.includes("DIGITALLY VERIFIED"), 'Authorized digital seal present');
 assert(servicePageContent.includes("SMARTCAFE.SBS"), 'Cafe branding domain present');
 
-// Zero Dummy Placeholders Check
+// Zero Dummy Placeholders & Mock Names Check
 assert(!servicePageContent.includes("जैसे प्राथमिक विद्यालय"), 'No dummy school placeholder in ServicePage.jsx');
 assert(servicePageContent.includes('placeholder="मतदान केंद्र का नाम व भाग संख्या"'), 'Neutral polling station placeholder in ServicePage.jsx');
 assert(servicePageContent.includes('placeholder="विधानसभा निर्वाचन क्षेत्र संख्या व नाम"'), 'Neutral assembly constituency placeholder in ServicePage.jsx');
 assert(!servicePageContent.includes('placeholder="जैसे RAMESH KUMAR"'), 'No mock RAMESH KUMAR placeholder in ServicePage.jsx');
+assert(!servicePageContent.includes("age: '42'"), 'No mock age 42 in ServicePage.jsx');
 
-// Multi-Member Ration to Aadhaar Disclosure
+// Verify PanCardApplicationModal zero mock names
+const panModalContent = fs.readFileSync('client/src/components/pan/PanCardApplicationModal.jsx', 'utf8');
+assert(!panModalContent.includes('placeholder="e.g. ANKIT"'), 'No ANKIT placeholder in PanCardApplicationModal');
+assert(!panModalContent.includes('placeholder="e.g. CHAUDHARY"'), 'No CHAUDHARY placeholder in PanCardApplicationModal');
+assert(!panModalContent.includes('placeholder="e.g. KUMAR"'), 'No KUMAR placeholder in PanCardApplicationModal');
+assert(!panModalContent.includes('placeholder="e.g. SINGH"'), 'No SINGH placeholder in PanCardApplicationModal');
+assert(!panModalContent.includes('placeholder="e.g. RAJENDRA"'), 'No RAJENDRA placeholder in PanCardApplicationModal');
+assert(!panModalContent.includes('placeholder="e.g. KAMLA DEVI"'), 'No KAMLA DEVI placeholder in PanCardApplicationModal');
+assert(!panModalContent.includes('placeholder="5489 6321 7458"'), 'No 5489 6321 7458 placeholder in PanCardApplicationModal');
+assert(!panModalContent.includes('placeholder="ANKIT CHAUDHARY"'), 'No ANKIT CHAUDHARY placeholder in PanCardApplicationModal');
+
+// Verify AdminPanQueue zero mock fallback defaults
+const adminPanQueueContent = fs.readFileSync('client/src/components/admin/AdminPanQueue.jsx', 'utf8');
+assert(!adminPanQueueContent.includes("'BULANDSHAHAR'"), 'No BULANDSHAHAR fallback in AdminPanQueue');
+assert(!adminPanQueueContent.includes("'548963217458'"), 'No 548963217458 fallback in AdminPanQueue');
+assert(!adminPanQueueContent.includes("'01-01-1995'"), 'No 01-01-1995 fallback in AdminPanQueue');
+assert(!adminPanQueueContent.includes("'FATHER NAME'"), 'No FATHER NAME fallback in AdminPanQueue');
+
+// Verify Backend PollingStation Neutrality
+const serverJsLiveContent = fs.readFileSync('server/server.js', 'utf8');
+const indexPhpLiveContent = fs.readFileSync('client/public/api/index.php', 'utf8');
+assert(!serverJsLiveContent.includes('प्राथमिक विद्यालय कक्ष सं.'), 'No dummy school in server.js voter pollingStation');
+assert(!indexPhpLiveContent.includes('प्राथमिक विद्यालय कक्ष सं.'), 'No dummy school in index.php voter pollingStation');
+
+// Multi-Member Ration to Aadhaar Disclosure & toolKind Classification
 assert(servicePageContent.includes("const isRationAadhaarService = ['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'ration_pdf_by_aadhar']"), 'All 4 ration to aadhaar services checked');
 assert(servicePageContent.includes("राशन कार्ड से जुड़े सभी सदस्यों का आधार विवरण"), 'Family Aadhaar Disclosure banner present');
-console.log('✅ PASS: Phase 8 Manual Relay Transparency, Ticket Dossier, Zero Dummy Placeholders & Multi-Member Aadhaar Disclosure verified');
+assert(servicePageContent.includes("['ration', 'ration_pdf_by_ration', 'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'ration_pdf_by_aadhar'].includes(id)"), 'Ration to Aadhaar services correctly mapped to toolKind ration');
+console.log('✅ PASS: Phase 8 Manual Relay Transparency, Ticket Dossier, Zero Dummy Placeholders, Backend Neutrality & Multi-Member Aadhaar Disclosure verified');
 
 console.log('\n🎉 ALL LOCAL STATIC & INTEGRATION CHECKS PASSED PERFECTLY!');
