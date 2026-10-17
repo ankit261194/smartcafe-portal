@@ -488,5 +488,23 @@ export function getMergedServicesCatalog(liveRates = []) {
     };
   });
 
-  return enriched79;
+  // Prepend official New PAN Card Form 49A application service
+  const newPanService = {
+    id: 'pan_new_apply',
+    num: 101,
+    name: 'New PAN Card (Form 49A)',
+    category: 'pan',
+    group: 'pan',
+    wholesaleRate: 145,
+    retailRate: 190,
+    isFree: false,
+    isActive: true,
+    title: { hi: 'नया पैन कार्ड आवेदन (Form 49A Physical + e-PAN)', en: 'New PAN Card Application (Form 49A)' },
+    sub: { hi: '100% डिजिटल पेपरलेस आवेदन, ऑटो-स्टैम्प्ड फ़ोटो & हस्ताक्षर, 708 शहरों का AO कोड', en: '100% Paperless Digital PAN with Auto Photo & Sign Stamping' },
+    inputLabel: { hi: 'नया पैन आवेदन शुरू करें', en: 'Apply New PAN' },
+    placeholder: { hi: 'नया आवेदन', en: 'Apply Now' }
+  };
+
+  return [newPanService, ...enriched79];
 }
+

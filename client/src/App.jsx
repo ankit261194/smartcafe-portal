@@ -755,6 +755,8 @@ export default function App() {
             } else if (tabId === 'complaint') {
               if (mode === 'customer') setCustomerTab('complaints');
               else setAdminTab('complaints');
+            } else if (tabId === 'new_pan_card' || tabId === 'pan_49a') {
+              setIsPanModalOpen(true);
             }
           }}
           mode={mode}

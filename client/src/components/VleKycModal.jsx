@@ -214,7 +214,7 @@ export default function VleKycModal({
                   type="text"
                   value={ownerName}
                   onChange={(e) => setOwnerName(e.target.value)}
-                  placeholder="जैसे अंकित चौधरी"
+                  placeholder="संचालक का नाम दर्ज करें"
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 font-bold text-sm text-slate-900 dark:text-white focus:outline-none focus:border-orange-500"
                   required
                 />
@@ -243,7 +243,7 @@ export default function VleKycModal({
                   type="text"
                   value={shopName}
                   onChange={(e) => setShopName(e.target.value)}
-                  placeholder="जैसे स्मार्ट जन सेवा केंद्र"
+                  placeholder="दुकान / साइबर कैफे का नाम दर्ज करें"
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 font-bold text-sm text-slate-900 dark:text-white focus:outline-none focus:border-orange-500"
                   required
                 />

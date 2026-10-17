@@ -33,7 +33,41 @@
   },
   "prints": [],
   "applications": [],
-  "cashbook": [],
+  "cashbook": [
+    {
+      "id": "CB-1792262568359",
+      "cafeId": "CAFE-999",
+      "title": "डिजिटल वोटर स्मार्ट कार्ड (EPIC) नेट मार्जिन (+₹15)",
+      "category": "Automated Service",
+      "amount": 15,
+      "paymentMode": "wallet",
+      "type": "income",
+      "customer": "राजेश कुमार",
+      "createdAt": "2026-10-17T18:42:48.359Z"
+    },
+    {
+      "id": "CB-1792262568298",
+      "cafeId": "CAFE-999",
+      "title": "एडवांस आधार CR-80 PVC स्मार्ट कार्ड नेट मार्जिन (+₹15)",
+      "category": "Automated Service",
+      "amount": 15,
+      "paymentMode": "wallet",
+      "type": "income",
+      "customer": "राजेश कुमार",
+      "createdAt": "2026-10-17T18:42:48.298Z"
+    },
+    {
+      "id": "CB-1792262564706",
+      "cafeId": "CAFE-999",
+      "title": "इंस्टेंट पैन कार्ड CR-80 PVC नेट मार्जिन (+₹-77)",
+      "category": "Automated Service",
+      "amount": -77,
+      "paymentMode": "wallet",
+      "type": "income",
+      "customer": "राजेश कुमार",
+      "createdAt": "2026-10-17T18:42:44.706Z"
+    }
+  ],
   "udhar": [],
   "bulletins": [],
   "customerVault": [],
@@ -60,6 +94,1518 @@
   ],
   "vleKycApplications": [],
   "panApplications": [
+    {
+      "id": "PAN-20261017-3179",
+      "appliedBy": "8006517171",
+      "role": "customer",
+      "cafeId": "",
+      "personal": {
+        "title": "Kumari",
+        "firstName": "Pooja",
+        "middleName": "",
+        "lastName": "Sharma",
+        "gender": "Female",
+        "dob": "2001-08-20",
+        "fatherName": "Ramesh Sharma",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "Civil Lines",
+        "street": "",
+        "locality": "",
+        "city": "Meerut",
+        "state": "Uttar Pradesh",
+        "pincode": "250001"
+      },
+      "aoCode": {
+        "areaCode": "MRT",
+        "aoType": "W",
+        "rangeCode": "21",
+        "aoNumber": "88",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987456321458",
+        "nameOnAadhaar": "Pooja Sharma",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262895616-21425.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262895620-203990.png",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 190,
+        "baseCost": 120,
+        "netProfit": 70,
+        "walletTxnId": "TXN-PAN-1792262895616-9606",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262895796-5882",
+        "refundedAt": "2026-10-17T18:48:15.796Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Duplicate PAN detected",
+        "rejectedAt": "2026-10-17T18:48:15.750Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:48:15.621Z",
+        "updatedAt": "2026-10-17T18:48:15.796Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-8723",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "Main Bazar",
+        "street": "",
+        "locality": "",
+        "city": "Bulandshahar",
+        "state": "Uttar Pradesh",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th / Matriculation Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262895697-255580.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262895593-552510.png",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262895583-8240",
+        "isRefunded": false,
+        "refundTxnId": null,
+        "refundedAt": null
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Photograph has red eye glare",
+        "raisedAt": "2026-10-17T18:48:15.652Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:48:15.698Z",
+        "notes": "Uploaded studio photo"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "887766554433221",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792262895739-267773.png",
+        "completedAt": "2026-10-17T18:48:15.739Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:48:15.594Z",
+        "updatedAt": "2026-10-17T18:48:15.739Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-6898",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262876268-3284",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262876306-2394",
+        "refundedAt": "2026-10-17T18:47:56.306Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:47:56.290Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:47:56.268Z",
+        "updatedAt": "2026-10-17T18:47:56.306Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-4465",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262876047-240616.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262876048-775541.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792262876147-472371.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792262876049-86446.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262876046-1174",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262876226-3573",
+        "refundedAt": "2026-10-17T18:47:56.226Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:47:56.117Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:47:56.148Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792262876180-312196.pdf",
+        "completedAt": "2026-10-17T18:47:56.181Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:47:56.049Z",
+        "updatedAt": "2026-10-17T18:47:56.226Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-8599",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262876000-8172",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262876012-6133",
+        "refundedAt": "2026-10-17T18:47:56.012Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:47:56.001Z",
+        "updatedAt": "2026-10-17T18:47:56.012Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-2769",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262452660-8201",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262453065-8481",
+        "refundedAt": "2026-10-17T18:40:53.065Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:40:52.688Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:40:52.660Z",
+        "updatedAt": "2026-10-17T18:40:53.065Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5250",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262452453-955511.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262452454-818324.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792262452554-614535.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792262452455-831631.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262452452-2807",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262452607-6356",
+        "refundedAt": "2026-10-17T18:40:52.607Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:40:52.519Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:40:52.555Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792262452589-670499.pdf",
+        "completedAt": "2026-10-17T18:40:52.589Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:40:52.456Z",
+        "updatedAt": "2026-10-17T18:40:52.607Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-4115",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262452419-4279",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262452433-5862",
+        "refundedAt": "2026-10-17T18:40:52.433Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:40:52.420Z",
+        "updatedAt": "2026-10-17T18:40:52.433Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5040",
+      "appliedBy": "8006517171",
+      "role": "customer",
+      "cafeId": "",
+      "personal": {
+        "title": "Kumari",
+        "firstName": "Pooja",
+        "middleName": "",
+        "lastName": "Sharma",
+        "gender": "Female",
+        "dob": "2001-08-20",
+        "fatherName": "Ramesh Sharma",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "Civil Lines",
+        "street": "",
+        "locality": "",
+        "city": "Meerut",
+        "state": "Uttar Pradesh",
+        "pincode": "250001"
+      },
+      "aoCode": {
+        "areaCode": "MRT",
+        "aoType": "W",
+        "rangeCode": "21",
+        "aoNumber": "88",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987456321458",
+        "nameOnAadhaar": "Pooja Sharma",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262438703-473802.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262438704-774240.png",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 190,
+        "baseCost": 120,
+        "netProfit": 70,
+        "walletTxnId": "TXN-PAN-1792262438703-4380",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262438871-7936",
+        "refundedAt": "2026-10-17T18:40:38.872Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Duplicate PAN detected",
+        "rejectedAt": "2026-10-17T18:40:38.826Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:40:38.705Z",
+        "updatedAt": "2026-10-17T18:40:38.872Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-2180",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "Main Bazar",
+        "street": "",
+        "locality": "",
+        "city": "Bulandshahar",
+        "state": "Uttar Pradesh",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th / Matriculation Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262438763-798079.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262438675-551113.png",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262438673-8501",
+        "isRefunded": false,
+        "refundTxnId": null,
+        "refundedAt": null
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Photograph has red eye glare",
+        "raisedAt": "2026-10-17T18:40:38.723Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:40:38.764Z",
+        "notes": "Uploaded studio photo"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "887766554433221",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792262438811-364423.png",
+        "completedAt": "2026-10-17T18:40:38.812Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:40:38.676Z",
+        "updatedAt": "2026-10-17T18:40:38.812Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-9809",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262353202-1204",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262353268-4301",
+        "refundedAt": "2026-10-17T18:39:13.268Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:39:13.238Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:39:13.202Z",
+        "updatedAt": "2026-10-17T18:39:13.268Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-2704",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262353017-571066.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262353019-278718.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792262353109-69249.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792262353020-863662.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262353017-2561",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262353161-7329",
+        "refundedAt": "2026-10-17T18:39:13.161Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:39:13.076Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:39:13.109Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792262353143-966205.pdf",
+        "completedAt": "2026-10-17T18:39:13.143Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:39:13.020Z",
+        "updatedAt": "2026-10-17T18:39:13.161Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-2174",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262352980-2312",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262353006-1981",
+        "refundedAt": "2026-10-17T18:39:13.006Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:39:12.980Z",
+        "updatedAt": "2026-10-17T18:39:13.006Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-4903",
+      "appliedBy": "8006517171",
+      "role": "customer",
+      "cafeId": "",
+      "personal": {
+        "title": "Kumari",
+        "firstName": "Pooja",
+        "middleName": "",
+        "lastName": "Sharma",
+        "gender": "Female",
+        "dob": "2001-08-20",
+        "fatherName": "Ramesh Sharma",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "Civil Lines",
+        "street": "",
+        "locality": "",
+        "city": "Meerut",
+        "state": "Uttar Pradesh",
+        "pincode": "250001"
+      },
+      "aoCode": {
+        "areaCode": "MRT",
+        "aoType": "W",
+        "rangeCode": "21",
+        "aoNumber": "88",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987456321458",
+        "nameOnAadhaar": "Pooja Sharma",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262194542-989310.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262194543-944094.png",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 190,
+        "baseCost": 120,
+        "netProfit": 70,
+        "walletTxnId": "TXN-PAN-1792262194542-9372",
+        "isRefunded": false,
+        "refundTxnId": null,
+        "refundedAt": null
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:36:34.543Z",
+        "updatedAt": "2026-10-17T18:36:34.543Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-7794",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "Main Bazar",
+        "street": "",
+        "locality": "",
+        "city": "Bulandshahar",
+        "state": "Uttar Pradesh",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th / Matriculation Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262194517-79650.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262194518-672390.png",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262194517-3608",
+        "isRefunded": false,
+        "refundTxnId": null,
+        "refundedAt": null
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:36:34.519Z",
+        "updatedAt": "2026-10-17T18:36:34.519Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-1882",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260921413-6415",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260921473-6532",
+        "refundedAt": "2026-10-17T18:15:21.473Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:15:21.446Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:15:21.413Z",
+        "updatedAt": "2026-10-17T18:15:21.473Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5459",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792260921089-205786.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792260921093-27028.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792260921304-463396.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792260921097-602323.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260921089-5732",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260921358-9887",
+        "refundedAt": "2026-10-17T18:15:21.358Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:15:21.266Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:15:21.321Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792260921348-76304.pdf",
+        "completedAt": "2026-10-17T18:15:21.348Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:15:21.097Z",
+        "updatedAt": "2026-10-17T18:15:21.358Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-7110",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260921065-4605",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260921078-6761",
+        "refundedAt": "2026-10-17T18:15:21.078Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:15:21.065Z",
+        "updatedAt": "2026-10-17T18:15:21.079Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5252",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260740257-1645",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260740462-8522",
+        "refundedAt": "2026-10-17T18:12:20.462Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:12:20.277Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:12:20.258Z",
+        "updatedAt": "2026-10-17T18:12:20.462Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5790",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792260739814-786787.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792260739815-698696.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792260739958-663404.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792260739817-601424.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260739814-6469",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260739995-3526",
+        "refundedAt": "2026-10-17T18:12:19.995Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:12:19.928Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:12:19.959Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792260739986-376171.pdf",
+        "completedAt": "2026-10-17T18:12:19.987Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:12:19.817Z",
+        "updatedAt": "2026-10-17T18:12:19.995Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-9833",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260739791-4416",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260739804-2338",
+        "refundedAt": "2026-10-17T18:12:19.804Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:12:19.792Z",
+        "updatedAt": "2026-10-17T18:12:19.804Z"
+      }
+    },
     {
       "id": "PAN-20261017-4529",
       "appliedBy": "8006517171",
@@ -1076,6 +2622,348 @@
   ],
   "walletTransactions": [
     {
+      "id": "REFUND-PAN-1792262895796-5882",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 190,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-3179)",
+      "applicationId": "PAN-20261017-3179",
+      "createdAt": "2026-10-17T18:48:15.796Z"
+    },
+    {
+      "id": "TXN-PAN-1792262895616-9606",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 190,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Pooja Sharma (8006517171)",
+      "applicationId": "PAN-20261017-3179",
+      "createdAt": "2026-10-17T18:48:15.616Z"
+    },
+    {
+      "id": "TXN-PAN-1792262895583-8240",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-8723",
+      "createdAt": "2026-10-17T18:48:15.583Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262876306-2394",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-6898)",
+      "applicationId": "PAN-20261017-6898",
+      "createdAt": "2026-10-17T18:47:56.306Z"
+    },
+    {
+      "id": "TXN-PAN-1792262876268-3284",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-6898",
+      "createdAt": "2026-10-17T18:47:56.268Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262876226-3573",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-4465)",
+      "applicationId": "PAN-20261017-4465",
+      "createdAt": "2026-10-17T18:47:56.226Z"
+    },
+    {
+      "id": "TXN-PAN-1792262876046-1174",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-4465",
+      "createdAt": "2026-10-17T18:47:56.046Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262876012-6133",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-8599)",
+      "applicationId": "PAN-20261017-8599",
+      "createdAt": "2026-10-17T18:47:56.012Z"
+    },
+    {
+      "id": "TXN-PAN-1792262876000-8172",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-8599",
+      "createdAt": "2026-10-17T18:47:56.000Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262453065-8481",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2769)",
+      "applicationId": "PAN-20261017-2769",
+      "createdAt": "2026-10-17T18:40:53.065Z"
+    },
+    {
+      "id": "TXN-PAN-1792262452660-8201",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-2769",
+      "createdAt": "2026-10-17T18:40:52.660Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262452607-6356",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5250)",
+      "applicationId": "PAN-20261017-5250",
+      "createdAt": "2026-10-17T18:40:52.607Z"
+    },
+    {
+      "id": "TXN-PAN-1792262452452-2807",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-5250",
+      "createdAt": "2026-10-17T18:40:52.452Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262452433-5862",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-4115)",
+      "applicationId": "PAN-20261017-4115",
+      "createdAt": "2026-10-17T18:40:52.433Z"
+    },
+    {
+      "id": "TXN-PAN-1792262452419-4279",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-4115",
+      "createdAt": "2026-10-17T18:40:52.419Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262438871-7936",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 190,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5040)",
+      "applicationId": "PAN-20261017-5040",
+      "createdAt": "2026-10-17T18:40:38.872Z"
+    },
+    {
+      "id": "TXN-PAN-1792262438703-4380",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 190,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Pooja Sharma (8006517171)",
+      "applicationId": "PAN-20261017-5040",
+      "createdAt": "2026-10-17T18:40:38.703Z"
+    },
+    {
+      "id": "TXN-PAN-1792262438673-8501",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-2180",
+      "createdAt": "2026-10-17T18:40:38.673Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262353268-4301",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9809)",
+      "applicationId": "PAN-20261017-9809",
+      "createdAt": "2026-10-17T18:39:13.268Z"
+    },
+    {
+      "id": "TXN-PAN-1792262353202-1204",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-9809",
+      "createdAt": "2026-10-17T18:39:13.202Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262353161-7329",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2704)",
+      "applicationId": "PAN-20261017-2704",
+      "createdAt": "2026-10-17T18:39:13.161Z"
+    },
+    {
+      "id": "TXN-PAN-1792262353017-2561",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-2704",
+      "createdAt": "2026-10-17T18:39:13.017Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262353006-1981",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2174)",
+      "applicationId": "PAN-20261017-2174",
+      "createdAt": "2026-10-17T18:39:13.006Z"
+    },
+    {
+      "id": "TXN-PAN-1792262352980-2312",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-2174",
+      "createdAt": "2026-10-17T18:39:12.980Z"
+    },
+    {
+      "id": "TXN-PAN-1792262194542-9372",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 190,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Pooja Sharma (8006517171)",
+      "applicationId": "PAN-20261017-4903",
+      "createdAt": "2026-10-17T18:36:34.542Z"
+    },
+    {
+      "id": "TXN-PAN-1792262194517-3608",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-7794",
+      "createdAt": "2026-10-17T18:36:34.517Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260921473-6532",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-1882)",
+      "applicationId": "PAN-20261017-1882",
+      "createdAt": "2026-10-17T18:15:21.473Z"
+    },
+    {
+      "id": "TXN-PAN-1792260921413-6415",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-1882",
+      "createdAt": "2026-10-17T18:15:21.413Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260921358-9887",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5459)",
+      "applicationId": "PAN-20261017-5459",
+      "createdAt": "2026-10-17T18:15:21.358Z"
+    },
+    {
+      "id": "TXN-PAN-1792260921089-5732",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-5459",
+      "createdAt": "2026-10-17T18:15:21.089Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260921078-6761",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-7110)",
+      "applicationId": "PAN-20261017-7110",
+      "createdAt": "2026-10-17T18:15:21.078Z"
+    },
+    {
+      "id": "TXN-PAN-1792260921065-4605",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-7110",
+      "createdAt": "2026-10-17T18:15:21.065Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260740462-8522",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5252)",
+      "applicationId": "PAN-20261017-5252",
+      "createdAt": "2026-10-17T18:12:20.462Z"
+    },
+    {
+      "id": "TXN-PAN-1792260740257-1645",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-5252",
+      "createdAt": "2026-10-17T18:12:20.257Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260739995-3526",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5790)",
+      "applicationId": "PAN-20261017-5790",
+      "createdAt": "2026-10-17T18:12:19.995Z"
+    },
+    {
+      "id": "TXN-PAN-1792260739814-6469",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-5790",
+      "createdAt": "2026-10-17T18:12:19.814Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260739804-2338",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9833)",
+      "applicationId": "PAN-20261017-9833",
+      "createdAt": "2026-10-17T18:12:19.804Z"
+    },
+    {
+      "id": "TXN-PAN-1792260739791-4416",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-9833",
+      "createdAt": "2026-10-17T18:12:19.791Z"
+    },
+    {
       "id": "REFUND-PAN-1792260660428-3964",
       "phone": "8006517171",
       "type": "credit",
@@ -1330,174 +3218,6 @@
       "balance": 500,
       "transactions": [
         {
-          "id": "REFUND-PAN-1792260660428-3964",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-4529)",
-          "createdAt": "2026-10-17T18:11:00.428Z"
-        },
-        {
-          "id": "TXN-PAN-1792260660383-7489",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
-          "createdAt": "2026-10-17T18:11:00.383Z"
-        },
-        {
-          "id": "REFUND-PAN-1792260660330-5331",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-7394)",
-          "createdAt": "2026-10-17T18:11:00.330Z"
-        },
-        {
-          "id": "TXN-PAN-1792260660157-7823",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
-          "createdAt": "2026-10-17T18:11:00.157Z"
-        },
-        {
-          "id": "REFUND-PAN-1792260660142-3769",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5110)",
-          "createdAt": "2026-10-17T18:11:00.142Z"
-        },
-        {
-          "id": "TXN-PAN-1792260660131-6565",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
-          "createdAt": "2026-10-17T18:11:00.131Z"
-        },
-        {
-          "id": "REFUND-PAN-1792260633612-9340",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2306)",
-          "createdAt": "2026-10-17T18:10:33.612Z"
-        },
-        {
-          "id": "TXN-PAN-1792260633512-1402",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
-          "createdAt": "2026-10-17T18:10:33.512Z"
-        },
-        {
-          "id": "REFUND-PAN-1792260633466-6078",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5633)",
-          "createdAt": "2026-10-17T18:10:33.466Z"
-        },
-        {
-          "id": "TXN-PAN-1792260633329-3721",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
-          "createdAt": "2026-10-17T18:10:33.329Z"
-        },
-        {
-          "id": "REFUND-PAN-1792260633305-4738",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9950)",
-          "createdAt": "2026-10-17T18:10:33.305Z"
-        },
-        {
-          "id": "TXN-PAN-1792260633293-7649",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
-          "createdAt": "2026-10-17T18:10:33.293Z"
-        },
-        {
-          "id": "REFUND-PAN-1792260558427-6151",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9226)",
-          "createdAt": "2026-10-17T18:09:18.427Z"
-        },
-        {
-          "id": "TXN-PAN-1792260558288-3993",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
-          "createdAt": "2026-10-17T18:09:18.288Z"
-        },
-        {
-          "id": "REFUND-PAN-1792260558256-1910",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-3921)",
-          "createdAt": "2026-10-17T18:09:18.256Z"
-        },
-        {
-          "id": "TXN-PAN-1792260558137-1005",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
-          "createdAt": "2026-10-17T18:09:18.137Z"
-        },
-        {
-          "id": "REFUND-PAN-1792260558126-1639",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-1315)",
-          "createdAt": "2026-10-17T18:09:18.126Z"
-        },
-        {
-          "id": "TXN-PAN-1792260558108-8070",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
-          "createdAt": "2026-10-17T18:09:18.108Z"
-        },
-        {
-          "id": "REFUND-PAN-1792259295582-6307",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-8025)",
-          "createdAt": "2026-10-17T17:48:15.582Z"
-        },
-        {
-          "id": "TXN-PAN-1792259295487-3887",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: Test Reject (8006517171)",
-          "createdAt": "2026-10-17T17:48:15.487Z"
-        },
-        {
-          "id": "REFUND-PAN-1792259288581-3412",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-3409)",
-          "createdAt": "2026-10-17T17:48:08.581Z"
-        },
-        {
-          "id": "TXN-PAN-1792259288459-7810",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
-          "createdAt": "2026-10-17T17:48:08.459Z"
-        },
-        {
-          "id": "REFUND-PAN-1792259096925-2893",
-          "type": "credit",
-          "amount": 145,
-          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-6510)",
-          "createdAt": "2026-10-17T17:44:56.925Z"
-        },
-        {
-          "id": "TXN-PAN-1792259096633-1112",
-          "type": "debit",
-          "amount": 145,
-          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
-          "createdAt": "2026-10-17T17:44:56.633Z"
-        },
-        {
           "id": "REFUND-PAN-1792258956492-4053",
           "type": "credit",
           "amount": 145,
@@ -1524,13 +3244,6 @@
           "amount": 145,
           "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
           "createdAt": "2026-10-17T17:42:08.605Z"
-        },
-        {
-          "id": "TXN-INIT-500",
-          "type": "credit",
-          "amount": 500,
-          "note": "प्रारंभिक वॉलेट बैलेंस (Initial Balance)",
-          "createdAt": "2026-10-17T00:00:00.000Z"
         }
       ]
     },
@@ -1564,17 +3277,77 @@
     {
       "phone": "9876543210",
       "customerName": "राजेश कुमार",
-      "balance": 10000,
+      "balance": 0,
       "transactions": []
     },
     {
       "phone": "9999988888",
       "customerName": "परीक्षण संचालक",
-      "balance": 10000,
+      "balance": 0,
       "transactions": []
     }
   ],
-  "cafes": [],
+  "cafes": [
+    {
+      "id": "CAFE-999",
+      "code": "999",
+      "shopName": "परीक्षण जन सेवा केंद्र",
+      "ownerName": "परीक्षण संचालक",
+      "phone": "9999988888",
+      "email": "test999@rekha.in",
+      "pin": "$2b$10$HFsHyObzjVf1lMcnV7DzUO8ZLRtw1dfHSCzj69dpkmVILkGiKqpwi",
+      "status": "active",
+      "subscriptionStatus": "active",
+      "isFrozen": false,
+      "validTill": 1823798546046,
+      "b2bWallet": {
+        "balance": 9863,
+        "minThreshold": 200,
+        "transactions": [
+          {
+            "id": "B2B-TXN-1792262568359",
+            "type": "debit",
+            "amount": 15,
+            "note": "थोक एडमिन सेवा कटौती: डिजिटल वोटर स्मार्ट कार्ड (EPIC)",
+            "createdAt": "2026-10-17T18:42:48.359Z"
+          },
+          {
+            "id": "B2B-TXN-1792262568298",
+            "type": "debit",
+            "amount": 15,
+            "note": "थोक एडमिन सेवा कटौती: एडवांस आधार CR-80 PVC स्मार्ट कार्ड",
+            "createdAt": "2026-10-17T18:42:48.298Z"
+          },
+          {
+            "id": "B2B-TXN-1792262564706",
+            "type": "debit",
+            "amount": 107,
+            "note": "थोक एडमिन सेवा कटौती: इंस्टेंट पैन कार्ड CR-80 PVC",
+            "createdAt": "2026-10-17T18:42:44.706Z"
+          }
+        ]
+      },
+      "retailRates": {
+        "rcDownload": 250,
+        "panCard": 30,
+        "aadhaarCard": 30,
+        "voterCard": 30,
+        "ayushmanCard": 30,
+        "rationCard": 25,
+        "electricityBill": 20,
+        "edistrictSlip": 30,
+        "drivingLicence": 50,
+        "challanSearch": 20,
+        "ePan": 25,
+        "receiptMaker": 15
+      },
+      "staffPin": "$2b$10$ayu4.pf54NK2jEX8x67q9eSpNaZkvjRzXGgdQb0MLTK19pPfKrNsC",
+      "staffEnabled": true,
+      "frozenReason": "",
+      "kycStatus": "verified",
+      "licenseKey": "VLE-LIC-2026-UP24-999"
+    }
+  ],
   "superAdminRates": {
     "rcDownload": 200,
     "panCard": 107,
@@ -1586,13 +3359,13 @@
   },
   "systemHealth": {
     "fileShredder": {
-      "lastRun": "2026-10-17T17:41:32.429Z",
+      "lastRun": "2026-10-17T18:41:35.459Z",
       "lastRunFilesPurged": 0,
       "lastRunBytesReclaimed": 0,
       "totalPurged": 1,
       "bytesReclaimed": 33,
       "status": "active",
-      "nextRun": "2026-10-17T18:41:32.429Z"
+      "nextRun": "2026-10-17T19:41:35.459Z"
     }
   },
   "superAdminAuditLogs": [],
@@ -1602,7 +3375,159 @@
     "rcDownload": true,
     "tool-rc": true
   },
-  "orderHistory": [],
+  "orderHistory": [
+    {
+      "id": "ORD-1792262568409-7316",
+      "orderId": "ORD-1792262568409-1400",
+      "cafeId": "CAFE-999",
+      "cafeShopName": "परीक्षण जन सेवा केंद्र",
+      "customerPhone": "9876543210",
+      "customerName": "राजेश कुमार",
+      "serviceType": "voterCard",
+      "serviceTitle": "डिजिटल वोटर स्मार्ट कार्ड (EPIC)",
+      "docTitle": "वोटर कार्ड CR-80 PVC (WBD1234567) - धर्मेन्द्र",
+      "refNumber": "WBD1234567",
+      "retailFee": 30,
+      "wholesaleCost": 15,
+      "margin": 15,
+      "status": "completed",
+      "data": {
+        "epicNo": "WBD1234567",
+        "epicNumber": "WBD1234567",
+        "name": "धर्मेन्द्र",
+        "customerName": "धर्मेन्द्र",
+        "name_hi": "धर्मेन्द्र",
+        "fatherName": "",
+        "dob": "",
+        "gender": "MALE",
+        "acName": "",
+        "partName": "",
+        "partNo": "",
+        "serialNo": "",
+        "photoUrl": null,
+        "refNumber": "WBD1234567",
+        "serviceType": "voterCard",
+        "cardType": "ISO CR-80 PVC Smart Card",
+        "isInstantPvc": true
+      },
+      "generatedData": {
+        "epicNo": "WBD1234567",
+        "epicNumber": "WBD1234567",
+        "name": "धर्मेन्द्र",
+        "customerName": "धर्मेन्द्र",
+        "name_hi": "धर्मेन्द्र",
+        "fatherName": "",
+        "dob": "",
+        "gender": "MALE",
+        "acName": "",
+        "partName": "",
+        "partNo": "",
+        "serialNo": "",
+        "photoUrl": null,
+        "refNumber": "WBD1234567",
+        "serviceType": "voterCard",
+        "cardType": "ISO CR-80 PVC Smart Card",
+        "isInstantPvc": true
+      },
+      "createdAt": "2026-10-17T18:42:48.409Z"
+    },
+    {
+      "id": "ORD-1792262568345-9724",
+      "orderId": "ORD-1792262568345-9144",
+      "cafeId": "CAFE-999",
+      "cafeShopName": "परीक्षण जन सेवा केंद्र",
+      "customerPhone": "9876543210",
+      "customerName": "राजेश कुमार",
+      "serviceType": "aadhaarCard",
+      "serviceTitle": "एडवांस आधार CR-80 PVC स्मार्ट कार्ड",
+      "docTitle": "आधार कार्ड CR-80 PVC (541287963214) - अनिल वर्मा",
+      "refNumber": "541287963214",
+      "retailFee": 30,
+      "wholesaleCost": 15,
+      "margin": 15,
+      "status": "completed",
+      "data": {
+        "aadhaarNo": "541287963214",
+        "uidNumber": "541287963214",
+        "name": "अनिल वर्मा",
+        "customerName": "अनिल वर्मा",
+        "name_hi": "अनिल वर्मा",
+        "fatherName": "",
+        "careOf": "",
+        "dob": "",
+        "gender": "MALE",
+        "address": "",
+        "address_hi": "",
+        "photoUrl": null,
+        "refNumber": "541287963214",
+        "serviceType": "aadhaarCard",
+        "cardType": "ISO CR-80 PVC Smart Card",
+        "isInstantPvc": true
+      },
+      "generatedData": {
+        "aadhaarNo": "541287963214",
+        "uidNumber": "541287963214",
+        "name": "अनिल वर्मा",
+        "customerName": "अनिल वर्मा",
+        "name_hi": "अनिल वर्मा",
+        "fatherName": "",
+        "careOf": "",
+        "dob": "",
+        "gender": "MALE",
+        "address": "",
+        "address_hi": "",
+        "photoUrl": null,
+        "refNumber": "541287963214",
+        "serviceType": "aadhaarCard",
+        "cardType": "ISO CR-80 PVC Smart Card",
+        "isInstantPvc": true
+      },
+      "createdAt": "2026-10-17T18:42:48.345Z"
+    },
+    {
+      "id": "ORD-1792262568278-5089",
+      "orderId": "ORD-1792262568278-2233",
+      "cafeId": "CAFE-999",
+      "cafeShopName": "परीक्षण जन सेवा केंद्र",
+      "customerPhone": "9876543210",
+      "customerName": "राजेश कुमार",
+      "serviceType": "panCard",
+      "serviceTitle": "इंस्टेंट पैन कार्ड CR-80 PVC",
+      "docTitle": "पैन कार्ड CR-80 PVC (ABCDE1234F) - राजेश कुमार",
+      "refNumber": "ABCDE1234F",
+      "retailFee": 30,
+      "wholesaleCost": 107,
+      "margin": -77,
+      "status": "completed",
+      "data": {
+        "panNo": "ABCDE1234F",
+        "name": "राजेश कुमार",
+        "customerName": "राजेश कुमार",
+        "fatherName": "",
+        "dob": "",
+        "photoUrl": null,
+        "signUrl": null,
+        "refNumber": "ABCDE1234F",
+        "serviceType": "panCard",
+        "cardType": "ISO CR-80 PVC Smart Card",
+        "isInstantPvc": true
+      },
+      "generatedData": {
+        "panNo": "ABCDE1234F",
+        "name": "राजेश कुमार",
+        "customerName": "राजेश कुमार",
+        "fatherName": "",
+        "dob": "",
+        "photoUrl": null,
+        "signUrl": null,
+        "refNumber": "ABCDE1234F",
+        "serviceType": "panCard",
+        "cardType": "ISO CR-80 PVC Smart Card",
+        "isInstantPvc": true
+      },
+      "createdAt": "2026-10-17T18:42:48.278Z"
+    }
+  ],
   "apiGateway": {
     "liveMode": true,
     "provider": "P4Points",
@@ -4010,7 +5935,7 @@
       "phone": "9999988888",
       "password": "1234",
       "role": "cafe",
-      "balance": 10000,
+      "balance": 0,
       "isBlocked": false,
       "createdAt": "2026-10-17T17:43:12.040Z"
     }

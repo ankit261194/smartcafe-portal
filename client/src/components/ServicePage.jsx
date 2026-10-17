@@ -50,6 +50,21 @@ export const INSTANT_TOOLS = [
   }
 ];
 
+export const MANUAL_RELAY_12_SERVICES = [
+  'll_exam_pass_auto',
+  'e_shram_update',
+  'samagra_service',
+  'sambal_pdf',
+  'pan_find_manual',
+  'pan_find_manual_alt',
+  'pan_aadhaar_link_manual',
+  'puc_certificate_download',
+  'dl_to_mobile_find',
+  'dob_update_service',
+  'mobile_update_service',
+  'agristack_pdf'
+];
+
 function ServicePageContent({
   activeToolId = 'aadhaar_advance',
   onSelectTool,
@@ -82,6 +97,11 @@ function ServicePageContent({
       allServices[0] || 
       INSTANT_TOOLS[0];
   }, [allServices, normalizedToolId]);
+
+  const isManualRelay12 = useMemo(() => {
+    const id = (currentTool?.id || '').toLowerCase();
+    return MANUAL_RELAY_12_SERVICES.includes(id) || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint';
+  }, [currentTool]);
 
   const isFreeService = useMemo(() => {
     return Boolean(
@@ -1800,6 +1820,9 @@ function ServicePageContent({
   // Screenshot-Exact Action Button Label Helper
   const getActionButtonText = () => {
     const id = (currentTool?.id || '').toLowerCase();
+    if (isManualRelay12) {
+      return '⏱️ अधिकृत ऑपरेटर सेवा अनुरोध (1-2 घंटे में प्रोसेस)';
+    }
     if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc', 'pan', 'pan_details', 'pan_basic_pricing'].includes(id)) {
       return 'Fetch Details';
     }
@@ -3530,7 +3553,7 @@ function ServicePageContent({
               required
               value={secondaryInput}
               onChange={(e) => setSecondaryInput(e.target.value.toUpperCase())}
-              placeholder="आवेदक का नाम दर्ज करें (जैसे RAMESH KUMAR)"
+              placeholder="आवेदक का पूरा नाम (अंग्रेजी में दर्ज करें)"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none uppercase"
             />
           </div>
@@ -3654,7 +3677,7 @@ function ServicePageContent({
               type="text"
               value={customerName}
               onChange={(e) => setCustomerName(e.target.value.toUpperCase())}
-              placeholder="जैसे RAMESH KUMAR"
+              placeholder="लाभार्थी का नाम दर्ज करें"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none uppercase"
             />
           </div>
@@ -4069,7 +4092,7 @@ function ServicePageContent({
                 type="text"
                 value={thirdInput}
                 onChange={(e) => setThirdInput(e.target.value)}
-                placeholder="जैसे 174 - लखनऊ मध्य"
+                placeholder="विधानसभा निर्वाचन क्षेत्र संख्या व नाम"
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
               />
             </div>
@@ -4081,7 +4104,7 @@ function ServicePageContent({
                 type="text"
                 value={addressInput}
                 onChange={(e) => setAddressInput(e.target.value)}
-                placeholder="जैसे प्राथमिक विद्यालय कक्ष सं. 1"
+                placeholder="मतदान केंद्र का नाम व भाग संख्या"
                 className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-bold text-sm focus:outline-none"
               />
             </div>
@@ -4344,11 +4367,11 @@ function ServicePageContent({
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🎉 100% मुफ़्त सेवा
                   </span>
-                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'e_shram_update', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service'].includes(currentTool?.id)) ? (
+                ) : (isManualRelay12 || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'e_shram_update', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service', 'puc_certificate_download', 'agristack_pdf'].includes(currentTool?.id)) ? (
                   <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     ⏱️ मैन्युअल रिले (1-2 घंटे)
                   </span>
-                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'pan_verification_premium', 'panverificationpremium', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'agristack_dbt', 'agristack_pdf', 'udyam_pdf', 'mobile_to_upi_find', 'mobile_to_multi_upi_find', 'mobile_to_account_find', 'mobile_to_multi_account', 'upi_to_details', 'vi_sim_to_photo_details', 'check_operator', 'check_plan', 'mobile_to_details', 'mobile_lookup', 'chalan_find_mobile', 'chalan_find', 'nsdl_bank', 'npci_verify', 'uid_seeding', 'telegram_to_number_lookup', 'gmail_to_details', 'aadhaar_pdf_otp', 'aadhaar_original_pdf_otp', 'aadhaar_ekyc', 'uid_ekyc', 'aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask', 'pan_to_aadhar_find', 'pan_to_gst', 'gst_to_pan', 'gst_verification', 'ration_verification', 'ration_pdf_by_ration', 'ration_pdf_by_aadhar', 'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'up_ration_info', 'ayushman_image_jpg', 'e_shram'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
+                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'pan_verification_premium', 'panverificationpremium', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'agristack_dbt', 'udyam_pdf', 'mobile_to_upi_find', 'mobile_to_multi_upi_find', 'mobile_to_account_find', 'mobile_to_multi_account', 'upi_to_details', 'vi_sim_to_photo_details', 'check_operator', 'check_plan', 'mobile_to_details', 'mobile_lookup', 'chalan_find_mobile', 'chalan_find', 'nsdl_bank', 'npci_verify', 'uid_seeding', 'telegram_to_number_lookup', 'gmail_to_details', 'aadhaar_pdf_otp', 'aadhaar_original_pdf_otp', 'aadhaar_ekyc', 'uid_ekyc', 'aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask', 'pan_to_aadhar_find', 'pan_to_gst', 'gst_to_pan', 'gst_verification', 'ration_verification', 'ration_pdf_by_ration', 'ration_pdf_by_aadhar', 'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'up_ration_info', 'ayushman_image_jpg', 'e_shram'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🟢 लाइव सरकारी API
                   </span>
@@ -4371,6 +4394,23 @@ function ServicePageContent({
                 </button>
               </div>
             </div>
+
+            {/* Manual Relay 12 Services Explicit Form Banner */}
+            {isManualRelay12 && (
+              <div className="m-4 mb-0 p-3.5 bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-orange-500/10 border-2 border-amber-500/40 rounded-xl text-amber-950 dark:text-amber-200 text-xs shadow-sm space-y-1">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-amber-600 dark:text-amber-400 shrink-0" />
+                  <span className="font-black text-xs sm:text-sm text-amber-900 dark:text-amber-300">
+                    ⏱️ अधिकृत ऑपरेटर सेवा अनुरोध (1-2 घंटे में प्रोसेस)
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-700 dark:text-slate-300 font-medium leading-relaxed pl-6">
+                  {language === 'hi'
+                    ? 'यह सेवा सारथी/सरकारी पोर्टल पर बैकएंड ऑपरेटर द्वारा प्रोसेस की जाती है। अनुरोध दर्ज होने पर ट्रैकिंग रसीद जारी होगी।'
+                    : 'This service is manually processed on the official portal by authorized backend operators (1-2 hours). A tracking docket will be issued upon submission.'}
+                </p>
+              </div>
+            )}
 
             {/* Coming Soon Notice Banner */}
             {currentTool?.isComingSoon && (
@@ -4549,70 +4589,191 @@ function ServicePageContent({
               </span>
             </div>
 
-            {/* When Order is Pending in Rekha Manual Relay */}
+            {/* When Order is Pending: Official Service Processing Acknowledgement & Tracking Docket */}
             {currentResult && (currentResult.isPendingRelay || currentResult.status === 'pending') ? (
-              <div className="p-6 sm:p-8 space-y-6">
-                {/* Amber Status Card Header */}
-                <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-2 border-amber-500/40 rounded-2xl p-5 space-y-3">
-                  <div className="flex items-center justify-between flex-wrap gap-2">
+              <div className="p-4 sm:p-6 space-y-5">
+                {/* Print & Action Controls */}
+                <div className="no-print flex items-center justify-between gap-3 bg-slate-50 dark:bg-slate-900/80 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
+                    <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                      {language === 'hi' ? 'आधिकारिक रसीद जनरेट हो चुकी है' : 'Official Docket Generated'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => window.print()}
+                      className="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 shadow-sm transition cursor-pointer"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>{language === 'hi' ? 'पावती प्रिंट करें' : 'Print Docket'}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Printable High-Prestige Official Docket Paper */}
+                <div id="official-tracking-docket" className="bg-white text-slate-900 border-2 border-slate-800 rounded-2xl p-5 sm:p-7 shadow-lg space-y-5 select-none print:shadow-none print:border-black print:p-4 print:m-0">
+                  {/* Government & Portal Header */}
+                  <div className="border-b-2 border-slate-900 pb-4 flex items-start justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center font-serif text-2xl font-black shrink-0 shadow-xs">
+                        🏛️
+                      </div>
+                      <div>
+                        <div className="text-[10px] sm:text-[11px] font-black uppercase tracking-wider text-slate-600">
+                          {selectedCafe?.shopName || 'स्मार्ट जन सेवा केंद्र'} • अधिकृत सेवा वितरण नेटवर्क
+                        </div>
+                        <h2 className="text-base sm:text-lg font-black text-slate-900 tracking-tight leading-snug">
+                          आधिकारिक सेवा अनुरोध पावती एवं ट्रैकिंग पत्र
+                        </h2>
+                        <div className="text-[10px] font-semibold text-slate-500 uppercase tracking-wide">
+                          Official Service Processing Acknowledgement & Tracking Docket
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <div className="p-1 bg-white border border-slate-300 rounded-lg inline-block shadow-2xs">
+                        <QRCodeSVG 
+                          value={`DOCKET:${currentResult.orderId || currentResult.order?.id || 'ORD'}|SERVICE:${currentResult.serviceTitle || currentTool?.name || 'SERVICE'}|STATUS:PENDING|REF:${primaryInput || currentResult.order?.refNumber || '-'}`} 
+                          size={56} 
+                        />
+                      </div>
+                      <div className="text-[8px] font-mono text-slate-500 mt-0.5">
+                        {currentResult.orderId || currentResult.order?.id || 'ORD-SECURE'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status Banner */}
+                  <div className="bg-gradient-to-r from-amber-500/15 via-amber-500/10 to-orange-500/10 border-2 border-amber-500/40 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3">
                     <div className="flex items-center gap-2.5">
                       <span className="relative flex h-3.5 w-3.5">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                         <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-amber-500"></span>
                       </span>
-                      <span className="text-xs font-black uppercase tracking-wider text-amber-700 dark:text-amber-400">
-                        {language === 'hi' ? 'आवेदन प्रक्रियाधीन (Order Pending)' : 'Application Pending'}
-                      </span>
+                      <div>
+                        <span className="text-xs sm:text-sm font-black text-amber-950 uppercase tracking-wide block">
+                          ⏳ प्रक्रियाधीन (Under Processing by Operator)
+                        </span>
+                        <span className="text-[10px] text-amber-900 font-semibold">
+                          ऑपरेटर सेवा डेस्क पर कार्य प्रगति पर है
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-[11px] font-mono font-bold bg-amber-100 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 px-2.5 py-0.5 rounded-full border border-amber-300 dark:border-amber-700">
-                      ⏱️ 1-2 घंटे में निष्पादन
-                    </span>
+                    <div className="bg-amber-100 border border-amber-300 text-amber-950 px-3 py-1 rounded-full text-xs font-black font-mono">
+                      ⏱️ 1-2 कार्य घंटे (1-2 Hours Window)
+                    </div>
                   </div>
 
-                  <h3 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
-                    {currentResult.serviceTitle || currentTool?.name || 'सेवा आवेदन'}
-                  </h3>
+                  {/* Docket Core Details Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
+                    <div className="space-y-0.5">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase block">डॉकेट / ऑर्डर आईडी (Docket / Order ID)</span>
+                      <strong className="font-mono text-xs sm:text-sm font-black text-slate-900 tracking-wider">
+                        {currentResult.orderId || currentResult.order?.id || '-'}
+                      </strong>
+                    </div>
 
-                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                    {currentResult.message || (language === 'hi' 
-                      ? 'आपका आवेदन सफलतापूर्वक दर्ज हो गया है और रेखा प्रिंट ऑपरेटर डेस्क पर प्रोसेस होने हेतु प्रेषित कर दिया गया है।'
-                      : 'Your application has been received and forwarded for manual fulfillment.')}
-                  </p>
+                    <div className="space-y-0.5">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase block">सेवा का नाम (Service Name)</span>
+                      <strong className="text-xs sm:text-sm font-black text-blue-900">
+                        {currentResult.serviceTitle || currentTool?.name || 'अधिकृत ऑपरेटर सेवा'}
+                      </strong>
+                    </div>
+
+                    <div className="space-y-0.5 sm:col-span-2 pt-1 border-t border-slate-200">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase block">आवेदन / संदर्भ संख्या (Application / Query Input)</span>
+                      <strong className="font-mono text-xs sm:text-sm font-black text-slate-900 bg-white px-2 py-0.5 rounded border border-slate-300 inline-block">
+                        {primaryInput || currentResult.order?.refNumber || '-'}
+                      </strong>
+                    </div>
+
+                    {secondaryInput && (
+                      <div className="space-y-0.5">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase block">अतिरिक्त विवरण / पासवर्ड</span>
+                        <strong className="text-xs font-bold text-slate-800">
+                          {currentTool?.id === 'll_exam_pass_auto' ? '•••••••• (SMS Password Linked)' : secondaryInput}
+                        </strong>
+                      </div>
+                    )}
+
+                    {dobDate && (
+                      <div className="space-y-0.5">
+                        <span className="text-[10px] font-bold text-slate-500 uppercase block">जन्मतिथि (DOB)</span>
+                        <strong className="font-mono text-xs font-bold text-slate-800">
+                          {formatDobDisplay(dobDate)}
+                        </strong>
+                      </div>
+                    )}
+
+                    <div className="space-y-0.5 pt-1 border-t border-slate-200">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase block">अनुरोध दर्ज समय (Date & Time)</span>
+                      <strong className="font-mono text-xs text-slate-800">
+                        {currentResult.submittedAt || new Date().toLocaleString('hi-IN')}
+                      </strong>
+                    </div>
+
+                    <div className="space-y-0.5 pt-1 border-t border-slate-200">
+                      <span className="text-[10px] font-bold text-slate-500 uppercase block">अनुमानित प्रसंस्करण समय (Window)</span>
+                      <strong className="text-xs font-bold text-amber-800">
+                        1 से 2 घंटे (Within 1-2 Hours)
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* Customer, Cafe & Digital Seal Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 items-center border border-slate-200 rounded-xl p-3.5 bg-slate-50/50">
+                    {/* Customer Info */}
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-black text-slate-500 uppercase block">नागरिक / ग्राहक विवरण</span>
+                      <div className="text-xs font-bold text-slate-900">{customerName.trim() || customerSession?.name || 'अधिकृत नागरिक'}</div>
+                      <div className="text-[11px] font-mono text-slate-600">{customerSession?.phone || '8006518960'}</div>
+                    </div>
+
+                    {/* Cafe Branding */}
+                    <div className="space-y-1 border-t sm:border-t-0 sm:border-l border-slate-200 sm:pl-3 pt-2 sm:pt-0">
+                      <span className="text-[10px] font-black text-slate-500 uppercase block">सेवा केंद्र एवं पोर्टल</span>
+                      <div className="text-xs font-black text-blue-900">{selectedCafe?.shopName || selectedCafe?.name || 'स्मार्ट जन सेवा केंद्र'}</div>
+                      <div className="text-[11px] text-slate-600">पोर्टल: <span className="font-mono font-bold text-slate-800">smartcafe.sbs</span></div>
+                    </div>
+
+                    {/* Authorized Digital Seal */}
+                    <div className="flex sm:justify-end border-t sm:border-t-0 sm:border-l border-slate-200 sm:pl-3 pt-2 sm:pt-0">
+                      <div className="w-28 h-28 rounded-full border-2 border-dashed border-emerald-700 bg-emerald-50/80 p-1 flex flex-col items-center justify-center text-center shadow-xs">
+                        <div className="text-[7.5px] font-black text-emerald-900 uppercase tracking-tighter">DIGITALLY VERIFIED</div>
+                        <div className="text-base my-0.5">🛡️</div>
+                        <div className="text-[7px] font-black text-emerald-800 uppercase">OPERATOR RELAY</div>
+                        <div className="text-[6.5px] font-bold text-slate-600">SMARTCAFE.SBS</div>
+                        <div className="text-[6px] font-mono text-emerald-700 mt-0.5">AUTH-SEAL-OK</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mandatory Explanatory Note */}
+                  <div className="p-3.5 bg-blue-50/80 border-l-4 border-blue-600 rounded-r-xl text-xs text-blue-950 space-y-1">
+                    <div className="font-black flex items-center gap-1.5">
+                      <AlertCircle className="w-4 h-4 text-blue-600 shrink-0" />
+                      <span>महत्वपूर्ण सूचना (Important Notice)</span>
+                    </div>
+                    <p className="text-[11px] leading-relaxed font-semibold">
+                      जैसे ही ऑपरेटर द्वारा सारथी/संबंधित पोर्टल से कार्य पूरा किया जाएगा, स्थिति 'सफल' हो जाएगी।
+                    </p>
+                    <p className="text-[10px] text-slate-600 leading-tight">
+                      (As soon as the authorized operator completes processing on the official portal, the status will automatically update to 'Successful'.)
+                    </p>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="border-t border-slate-300 pt-2 flex items-center justify-between text-[9px] text-slate-500 font-medium">
+                    <span>कंप्यूटर जनरेटेड पावती • हस्ताक्षर की आवश्यकता नहीं</span>
+                    <span>smartcafe.sbs • अधिकृत डिजिटल सेवा</span>
+                  </div>
                 </div>
 
-                {/* Order Details Grid */}
-                <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-4 border border-slate-200 dark:border-slate-800 space-y-3">
-                  <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200 dark:border-slate-800">
-                    <span className="text-slate-500 font-bold">{language === 'hi' ? 'ऑर्डर संदर्भ सं.' : 'Order Ref'}</span>
-                    <span className="font-mono font-black text-slate-900 dark:text-white">{currentResult.orderId || currentResult.order?.id || '-'}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200 dark:border-slate-800">
-                    <span className="text-slate-500 font-bold">{language === 'hi' ? 'आवेदन संदर्भ / नंबर' : 'Primary Input'}</span>
-                    <span className="font-mono font-black text-blue-600 dark:text-blue-400">{primaryInput || currentResult.order?.refNumber || '-'}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-200 dark:border-slate-800">
-                    <span className="text-slate-500 font-bold">{language === 'hi' ? 'दर्ज करने का समय' : 'Submitted At'}</span>
-                    <span className="font-mono text-slate-700 dark:text-slate-300">{currentResult.submittedAt || new Date().toLocaleTimeString()}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-500 font-bold">{language === 'hi' ? 'कार्य प्रगति' : 'Status'}</span>
-                    <span className="font-black text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
-                      {language === 'hi' ? 'रेखा ऑपरेटर डेस्क पर प्रक्रियाधीन' : 'Processing by Operator'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Poll Feedback Message */}
-                {pollOrderMessage && (
-                  <div className="p-3.5 bg-blue-50 dark:bg-blue-950/60 border border-blue-300 dark:border-blue-800 rounded-xl text-xs font-bold text-blue-800 dark:text-blue-300 flex items-center gap-2">
-                    <RefreshCw className="w-4 h-4 shrink-0 text-blue-500" />
-                    <span>{pollOrderMessage}</span>
-                  </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
+                {/* Poll / Live Status / New Action Buttons */}
+                <div className="no-print pt-2 flex flex-col sm:flex-row items-center gap-3">
                   <button
                     type="button"
                     onClick={() => handlePollSingleOrder(currentResult.orderId || currentResult.order?.id)}

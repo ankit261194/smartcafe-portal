@@ -318,6 +318,12 @@ if (Test-Path "$PSScriptRoot\client\public\services") {
     }
     Copy-Item -Path "$PSScriptRoot\client\public\services\*" -Destination "$PSScriptRoot\client\dist\services" -Recurse -Force
 }
+if (-not (Test-Path "$PSScriptRoot\client\dist\uploads\pan_docs")) {
+    New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\uploads\pan_docs" -Force
+}
+if (Test-Path "$PSScriptRoot\uploads\pan_docs\.htaccess") {
+    Copy-Item -Path "$PSScriptRoot\uploads\pan_docs\.htaccess" -Destination "$PSScriptRoot\client\dist\uploads\pan_docs\.htaccess" -Force
+}
 
 $nowStr = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 

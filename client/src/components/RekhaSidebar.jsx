@@ -86,6 +86,12 @@ export default function RekhaSidebar({
       badge: { hi: 'लाइव', en: 'Live' }
     },
     {
+      id: 'new_pan_card',
+      label: { hi: '💳 नया पैन कार्ड (Form 49A)', en: '💳 New PAN (Form 49A)' },
+      icon: CreditCard,
+      badge: { hi: 'ज़ीरो प्रिंट', en: 'Zero Print' }
+    },
+    {
       id: 'settings',
       label: { hi: 'दुकान सेटिंग्स व रेट्स', en: 'Cafe Settings' },
       icon: Settings
@@ -98,6 +104,12 @@ export default function RekhaSidebar({
       id: 'dashboard',
       label: { hi: 'नागरिक सेवा डैशबोर्ड', en: 'Services Dashboard' },
       icon: LayoutDashboard
+    },
+    {
+      id: 'new_pan_card',
+      label: { hi: '💳 नया पैन कार्ड (Form 49A)', en: '💳 New PAN (Form 49A)' },
+      icon: CreditCard,
+      badge: { hi: 'डिजिटल', en: 'Digital' }
     },
     {
       id: 'print',
@@ -138,6 +150,12 @@ export default function RekhaSidebar({
       id: 'dashboard',
       label: { hi: 'सभी नागरिक सेवाएं', en: 'All Services' },
       icon: LayoutDashboard
+    },
+    {
+      id: 'new_pan_card',
+      label: { hi: '💳 नया पैन कार्ड (Form 49A)', en: '💳 New PAN (Form 49A)' },
+      icon: CreditCard,
+      badge: { hi: 'डिजिटल', en: 'Digital' }
     },
     {
       id: 'print',

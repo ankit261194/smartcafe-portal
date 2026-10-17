@@ -1074,7 +1074,7 @@ export default function AdminPanQueue({ theme = 'light' }) {
                 maxLength={15}
                 value={ackNumber}
                 onChange={(e) => setAckNumber(e.target.value.replace(/\D/g, ''))}
-                placeholder="जैसे: 123456789012345"
+                placeholder="15-अंकीय एक्नॉलेजमेंट नंबर दर्ज करें"
                 className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-mono font-black tracking-widest focus:ring-2 focus:ring-emerald-500"
               />
               <span className="text-[10px] text-slate-400 mt-1 block">UTIITSL / Protean NSDL पावती रसीद नंबर</span>
@@ -1148,7 +1148,7 @@ export default function AdminPanQueue({ theme = 'light' }) {
                   type="text"
                   value={stamperForm.lastName}
                   onChange={(e) => setStamperForm({ ...stamperForm, lastName: e.target.value.toUpperCase() })}
-                  placeholder="CHAUDHARY"
+                  placeholder="उपनाम दर्ज करें"
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold uppercase"
                 />
               </div>
@@ -1159,7 +1159,7 @@ export default function AdminPanQueue({ theme = 'light' }) {
                   type="text"
                   value={stamperForm.firstName}
                   onChange={(e) => setStamperForm({ ...stamperForm, firstName: e.target.value.toUpperCase() })}
-                  placeholder="ANKIT"
+                  placeholder="प्रथम नाम दर्ज करें"
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold uppercase"
                 />
               </div>
@@ -1170,7 +1170,7 @@ export default function AdminPanQueue({ theme = 'light' }) {
                   type="text"
                   value={stamperForm.fatherName}
                   onChange={(e) => setStamperForm({ ...stamperForm, fatherName: e.target.value.toUpperCase() })}
-                  placeholder="RAJENDRA SINGH"
+                  placeholder="पिता का नाम दर्ज करें"
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold uppercase"
                 />
               </div>
@@ -1194,7 +1194,7 @@ export default function AdminPanQueue({ theme = 'light' }) {
                   maxLength={12}
                   value={stamperForm.aadhaarNumber}
                   onChange={(e) => setStamperForm({ ...stamperForm, aadhaarNumber: e.target.value.replace(/\D/g, '') })}
-                  placeholder="548963217458"
+                  placeholder="12-अंकीय आधार नंबर दर्ज करें"
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-mono font-bold"
                 />
               </div>
@@ -1205,7 +1205,7 @@ export default function AdminPanQueue({ theme = 'light' }) {
                   type="text"
                   value={stamperForm.city}
                   onChange={(e) => setStamperForm({ ...stamperForm, city: e.target.value.toUpperCase() })}
-                  placeholder="BULANDSHAHAR"
+                  placeholder="शहर / जिला दर्ज करें"
                   className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-bold uppercase"
                 />
               </div>

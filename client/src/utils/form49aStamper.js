@@ -97,6 +97,33 @@ async function embedImage(pdfDoc, imageInput) {
 }
 
 /**
+ * Sanitize text to ensure WinAnsi compatibility (ASCII printable only).
+ * Strips Hindi/non-Latin characters and bracketed translations.
+ */
+function cleanAscii(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/\([^)]*[\u0900-\u097F]+[^)]*\)/g, '') // remove bracketed Hindi e.g. (जन्म प्रमाण पत्र)
+    .replace(/[\u0900-\u097F]/g, '') // remove any stray Devanagari chars
+    .replace(/[^\x20-\x7E]/g, ' ') // replace non-ASCII with space
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function attachSafeDrawText(page) {
+  const origDrawText = page.drawText.bind(page);
+  page.drawText = (text, options) => {
+    const cleaned = cleanAscii(text);
+    if (!cleaned) return;
+    try {
+      return origDrawText(cleaned, options);
+    } catch (e) {
+      console.warn('[form49aStamper] drawText failed:', e.message);
+    }
+  };
+}
+
+/**
  * 100% Digital Form 49A Auto-Stamping & Document Merging Engine
  * Accurately stamps Photo 1 & Photo 2, overlays 15° angled cross-sign across left photo,
  * centers signature in right box & page 2 declaration, and merges Aadhaar & DOB proof into a <2MB PDF.
@@ -159,6 +186,7 @@ export async function generateStampedForm49APdf(data = {}) {
   // PAGE 1: FORM NO. 49A (Front Page)
   // ═══════════════════════════════════════════════════════════════════════════
   const page1 = pdfDoc.addPage([595.28, 841.89]); // A4: 595.28 x 841.89 pts
+  attachSafeDrawText(page1);
   const { width, height } = page1.getSize();
 
   // Outer Page Border
@@ -510,6 +538,7 @@ export async function generateStampedForm49APdf(data = {}) {
   // PAGE 2: FORM NO. 49A (Declaration & Verification Page)
   // ═══════════════════════════════════════════════════════════════════════════
   const page2 = pdfDoc.addPage([595.28, 841.89]);
+  attachSafeDrawText(page2);
 
   // Page 2 Border
   page2.drawRectangle({
@@ -755,6 +784,7 @@ export async function generateStampedForm49APdf(data = {}) {
       const extImg = await embedImage(pdfDoc, docBytes);
       if (extImg) {
         const attPage = pdfDoc.addPage([595.28, 841.89]);
+        attachSafeDrawText(attPage);
         const pSize = attPage.getSize();
 
         // Title Header
