@@ -69,9 +69,19 @@ function ServicePageContent({
 }) {
   const { language, t, localize } = useLanguage();
   const allServices = useMemo(() => getMergedServicesCatalog(services79Rates), [services79Rates]);
+  const normalizedToolId = useMemo(() => {
+    if (typeof activeToolId === 'object' && activeToolId !== null) {
+      return activeToolId.id || activeToolId.toolId || activeToolId.key || 'aadhaar_advance';
+    }
+    return String(activeToolId || 'aadhaar_advance');
+  }, [activeToolId]);
+
   const currentTool = useMemo(() => {
-    return allServices.find(s => s.id === activeToolId || s.num === Number(activeToolId)) || allServices[0] || INSTANT_TOOLS[0];
-  }, [allServices, activeToolId]);
+    return allServices.find(s => s.id === normalizedToolId || s.num === Number(normalizedToolId)) || 
+      allServices.find(s => s.id === 'sarkari_job_feed' && normalizedToolId === 'sarkari_job_feed') ||
+      allServices[0] || 
+      INSTANT_TOOLS[0];
+  }, [allServices, normalizedToolId]);
 
   const isFreeService = useMemo(() => {
     return Boolean(
@@ -241,7 +251,24 @@ function ServicePageContent({
   useEffect(() => {
     resetForm();
     fetchOrderHistory();
-  }, [activeToolId]);
+    if (normalizedToolId === 'sarkari_job_feed' || currentTool?.id === 'sarkari_job_feed') {
+      fetch('/api/sarkari-jobs/feed')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success && Array.isArray(data.items)) {
+            setCurrentResult({
+              success: true,
+              docTitle: 'सरकारी नौकरियां एवं प्रवेश पत्र (Live Feed)',
+              generatedData: {
+                items: data.items,
+                count: data.count || data.items.length
+              }
+            });
+          }
+        })
+        .catch(() => {});
+    }
+  }, [normalizedToolId, currentTool?.id]);
 
   const resetForm = () => {
     setPrimaryInput('');

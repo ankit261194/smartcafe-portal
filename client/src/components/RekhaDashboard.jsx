@@ -419,7 +419,7 @@ export default function RekhaDashboard({
                 <div
                   onClick={() => {
                     if (onSelectTool) {
-                      onSelectTool({ id: 'sarkari_job_feed', name: 'लाइव सरकारी नौकरी, एडमिट कार्ड व योजनाएं', category: 'other' });
+                      onSelectTool('sarkari_job_feed');
                     } else if (onSelectCategory) {
                       onSelectCategory({ id: 'other', title: { hi: 'अन्य सेवाएं', en: 'Other Services' } });
                     }

@@ -455,11 +455,13 @@ export default function App() {
   };
 
   const handleLaunchService = (toolKey) => {
-    setActiveInstantToolId(toolKey);
+    const rawId = typeof toolKey === 'object' && toolKey !== null ? (toolKey.id || toolKey.toolId || toolKey.key) : toolKey;
+    const actualToolId = String(rawId || 'aadhaar_advance');
+    setActiveInstantToolId(actualToolId);
     // Automatically find and attach category so Back navigation is always 100% accurate
     try {
       const all = getMergedServicesCatalog(services79Rates);
-      const matched = all.find(s => s.id === toolKey || s.num === Number(toolKey));
+      const matched = all.find(s => s.id === actualToolId || s.num === Number(actualToolId));
       if (matched) {
         const catObj = SERVICE_CATEGORIES.find(c => c.id === matched.group || c.id === matched.category);
         if (catObj) {
@@ -470,7 +472,7 @@ export default function App() {
 
     if (typeof window !== 'undefined') {
       try {
-        window.history.pushState({ appTab: 'tool', toolId: toolKey }, '');
+        window.history.pushState({ appTab: 'tool', toolId: actualToolId }, '');
       } catch (e) {}
     }
     if (mode === 'customer') setCustomerTab('tool');
