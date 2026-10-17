@@ -4283,8 +4283,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             'aadhaar_dob_update' => 'dob_update_service',
             'mask_aadhaar' => 'pan_aadhar_mask',
             'aadhaar_mask_verification' => 'pan_aadhar_mask',
-            'aadhaar_mask' => 'pan_aadhar_mask',
-            'aadhaar_manual' => 'aadhaar_advance'
+            'aadhaar_mask' => 'pan_aadhar_mask'
         ];
         $mappedId = $legacyMap[$norm] ?? null;
         if ($mappedId && isset($s79Map[$mappedId])) {
@@ -4307,6 +4306,10 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         $targetUrl = $endpointUrl;
         if (strpos($targetUrl, 'http') !== 0) {
             $targetUrl = 'https://authorized.p4points.co.in' . (strpos($targetUrl, '/') === 0 ? '' : '/') . $targetUrl;
+        }
+        if (strpos($targetUrl, 'p4points.co.in') !== false && strpos($targetUrl, '.php') === false) {
+            $parts = explode('?', $targetUrl, 2);
+            $targetUrl = $parts[0] . '.php' . (isset($parts[1]) ? '?' . $parts[1] : '');
         }
         if ($norm === 'll_find' || $norm === 'll_pdf') {
             $targetUrl = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/ll_pdf.php';
@@ -6308,12 +6311,31 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             $bankName = $liveP4['bankName'] ?? ($p4Data['bankName'] ?? 'बैंक');
             $docTitle = "NPCI डीबीटी लिंक स्थिति ({$bankName})";
             $refNumber = $aid ?: 'NPCI';
-        } elseif ($p4Service === 'aadhaar' || strpos($normServiceType, 'aadhaar') !== false || strpos($normServiceType, 'aadhar') !== false || strpos($normServiceType, 'uid') !== false) {
+        } elseif ($p4Service === 'aadhaar' || strpos($normServiceType, 'aadhaar') !== false || strpos($normServiceType, 'aadhar') !== false || strpos($normServiceType, 'uid') !== false || in_array($normServiceType, ['mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask'])) {
             $aid = preg_replace('/[^0-9]/', '', $liveP4['aadhaarNo'] ?? ($liveP4['uidNumber'] ?? ($p4Data['aadhaarNo'] ?? ($p4Data['uidNumber'] ?? ($p4Data['uid_number'] ?? ($userVal ?: ''))))));
             $generatedData['aadhaarNo'] = $aid;
             $generatedData['uidNumber'] = $aid;
-            $aName = $p4Data['name'] ?? ($p4Data['customerName'] ?? ($params['customerName'] ?? 'आधार धारक'));
-            $docTitle = $aid ? "आधार कार्ड ({$aid}) - {$aName}" : ($service79['name'] ?? ($serviceTitles[$normServiceType] ?? 'आधार सेवा'));
+            $aName = $p4Data['name'] ?? ($p4Data['customerName'] ?? ($p4Data['full_name'] ?? ($liveP4['name'] ?? ($params['customerName'] ?? 'आधार धारक'))));
+            $fName = $p4Data['fatherName'] ?? ($p4Data['father_name'] ?? ($p4Data['careOf'] ?? ($p4Data['co'] ?? ($p4Data['relation_name'] ?? ($liveP4['fatherName'] ?? '')))));
+            $dob = $p4Data['dob'] ?? ($p4Data['dateOfBirth'] ?? ($p4Data['date_of_birth'] ?? ($liveP4['dob'] ?? '')));
+            $gender = $p4Data['gender'] ?? ($p4Data['sex'] ?? ($liveP4['gender'] ?? 'MALE'));
+            $address = $p4Data['address'] ?? ($p4Data['full_address'] ?? ($p4Data['presentAddress'] ?? ($p4Data['permanentAddress'] ?? ($liveP4['address'] ?? ''))));
+            $photo = $p4Data['photo'] ?? ($p4Data['photoUrl'] ?? ($p4Data['image'] ?? ($p4Data['base64photo'] ?? ($p4Data['photo_base64'] ?? ($liveP4['photoUrl'] ?? null)))));
+            $masked = $p4Data['maskedAadhaar'] ?? ($p4Data['masked_aadhaar'] ?? ($p4Data['maskedUid'] ?? ($p4Data['mask_aadhar'] ?? (!empty($aid) && strlen($aid) === 12 ? ('XXXX-XXXX-' . substr($aid, 8)) : ''))));
+
+            $generatedData['name'] = $aName;
+            $generatedData['customerName'] = $aName;
+            $generatedData['fatherName'] = $fName;
+            $generatedData['careOf'] = $fName ? ('C/O: ' . $fName) : '';
+            $generatedData['dob'] = $dob;
+            $generatedData['gender'] = $gender;
+            $generatedData['address'] = $address;
+            if ($photo) $generatedData['photoUrl'] = $photo;
+            $generatedData['maskedAadhaar'] = $masked;
+            $generatedData['status'] = $p4Data['status'] ?? ($p4Data['verificationStatus'] ?? 'Active / Verified');
+            $generatedData['isAadhaarVerified'] = true;
+
+            $docTitle = $aid ? (strpos($normServiceType, 'mask') !== false ? "मास्क आधार सत्यापन ({$masked})" : "आधार कार्ड ({$aid}) - {$aName}") : ($service79['name'] ?? ($serviceTitles[$normServiceType] ?? 'आधार सेवा'));
             $refNumber = $aid ?: ($userVal ?: 'UID');
         } else {
             $docTitle = ($service79['name'] ?? ($serviceTitles[$normServiceType] ?? $normServiceType));
