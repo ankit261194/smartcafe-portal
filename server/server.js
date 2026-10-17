@@ -3609,6 +3609,9 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       endpointUrl = 'https://authorized.p4points.co.in' + (endpointUrl.startsWith('/') ? '' : '/') + endpointUrl;
     }
     let targetUrl = endpointUrl;
+    if (norm === 'll_find' || norm === 'll_pdf') {
+      targetUrl = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/ll_pdf.php';
+    }
     const lowerUrl = targetUrl.toLowerCase();
 
     if (lowerUrl.includes('rc') || lowerUrl.includes('vahan')) {
@@ -3717,9 +3720,12 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       p4Params.date_of_birth = rawDob;
       p4Params.dobenter = rawDob;
       p4Params.dltype = params?.dltype || '1';
+      if (params?.cardBg) {
+        p4Params.cardBg = params.cardBg;
+      }
     }
-    if (lowerUrl.includes('ll') || lowerUrl.includes('learner')) {
-      const llVal = String(params?.applicationNumber || params?.application_number || params?.idNumber || val).trim();
+    if (lowerUrl.includes('ll') || lowerUrl.includes('learner') || norm === 'll_find' || norm === 'll_pdf') {
+      const llVal = String(params?.applicationNumber || params?.application_number || params?.idNumber || params?.appNo || val).trim();
       p4Params.idNumber = llVal;
       p4Params.application_number = llVal;
       p4Params.applicationNumber = llVal;
@@ -3798,17 +3804,25 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       }
     }
     if (lowerUrl.includes('chassis') || lowerUrl.includes('chasis')) {
-      const cleanChassis = String(params?.chassisNumber || params?.chasis_number || params?.chassis_number || params?.chassis || val).toUpperCase().trim();
+      const cleanChassis = String(params?.chassisNumber || params?.chasis_number || params?.chassis_number || params?.chassis || params?.chassis_no || val).toUpperCase().trim();
       p4Params.chassisNumber = cleanChassis;
       p4Params.chassis_number = cleanChassis;
       p4Params.chasis_number = cleanChassis;
       p4Params.chassis = cleanChassis;
+      p4Params.chassis_no = cleanChassis;
     }
     if (lowerUrl.includes('engine')) {
       const cleanEngine = String(params?.engineNumber || params?.engine_number || params?.engine || val).toUpperCase().trim();
       p4Params.engineNumber = cleanEngine;
       p4Params.engine_number = cleanEngine;
       p4Params.engine = cleanEngine;
+    }
+    if (lowerUrl.includes('puc') || norm.includes('puc')) {
+      const cleanPuc = String(params?.vehicle_number || params?.vehicleNumber || params?.regNo || params?.vehicalNumber || val).replace(/[\s-]+/g, '').toUpperCase();
+      p4Params.vehicle_number = cleanPuc;
+      p4Params.vehicleNumber = cleanPuc;
+      p4Params.regNo = cleanPuc;
+      p4Params.vehicalNumber = cleanPuc;
     }
     if (lowerUrl.includes('upi')) {
       const cleanUpi = String(params?.UPI_ID || params?.upi_id || params?.upi || val).trim();
@@ -3898,6 +3912,42 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       }
     } catch (err) {
       console.warn('Dynamic dispatch failed for', matchedService.id, err.message);
+    }
+
+    // Multi-Provider Fallback Router for sensitive services (DL, RC, PAN, Voter, LL, etc.)
+    const backupEndpoints = [];
+    if (norm === 'll_find' || norm === 'll_pdf') {
+      backupEndpoints.push('https://authorized.p4points.co.in/api/v1/LL_application_pdf.php');
+    } else if (lowerUrl.includes('dl') || norm.includes('dl')) {
+      backupEndpoints.push('https://authorized.p4points.co.in/serviceApi/TargetApiV1/DrivingLicence/dl-details.php');
+      backupEndpoints.push('https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl-pdf.php');
+    } else if (lowerUrl.includes('rc') || norm.includes('rc')) {
+      backupEndpoints.push('https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php');
+    } else if (lowerUrl.includes('pan') || norm.includes('pan')) {
+      backupEndpoints.push('https://authorized.p4points.co.in/api/v1/panVerificationPremium.php');
+    }
+
+    for (const bkUrl of backupEndpoints) {
+      try {
+        const sep = bkUrl.includes('?') ? '&' : '?';
+        const queryBk = new URLSearchParams(p4Params).toString();
+        const bkRes = await fetch(bkUrl + sep + queryBk, { signal: AbortSignal.timeout(8000) });
+        const bkJson = await bkRes.json().catch(() => null);
+        if (bkJson && (bkJson.data || bkJson.holder || bkJson.response || bkJson.pdf || bkJson.pdf_base64 || bkJson.file)) {
+          return {
+            source: 'p4points_fallback',
+            service: serviceType,
+            serviceId: matchedService?.id || serviceType,
+            isLiveFromP4Points: true,
+            isFallback: true,
+            pdfUrl: bkJson.pdf || bkJson.pdf_base64 || bkJson.file || null,
+            data: bkJson.data || bkJson.holder || bkJson.response || bkJson,
+            raw: bkJson
+          };
+        }
+      } catch (e) {
+        // try next
+      }
     }
   }
 
@@ -4013,10 +4063,46 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
 
   // 4. DL PDF / Driving Licence
   if (norm.includes('dl') || norm.includes('licence') || norm.includes('driving')) {
-    const dlNo = String(params?.dlNo || params?.query || '').trim().toUpperCase();
-    const dob = params?.dob || '01-01-1990';
+    const dlNo = String(params?.dl || params?.dlNo || params?.query || '').trim().toUpperCase();
+    const dob = params?.dob || params?.date_of_birth || '01-01-1990';
+    const cardBg = params?.cardBg || 'White Background';
     if (dlNo && dlNo.length >= 6) {
       try {
+        // 1. Primary: serviceApi/TargetApiV1/DrivingLicence/dl-details.php
+        const u1 = `https://authorized.p4points.co.in/serviceApi/TargetApiV1/DrivingLicence/dl-details.php?apiKey=${encodeURIComponent(p4ApiKey)}&dlNo=${encodeURIComponent(dlNo)}&dob=${encodeURIComponent(dob)}&cardBg=${encodeURIComponent(cardBg)}`;
+        const r1 = await fetch(u1, { signal: AbortSignal.timeout(12000) });
+        const j1 = await r1.json().catch(() => null);
+        if (j1 && (j1.data || j1.success || j1.pdf)) {
+          return {
+            source: 'p4points',
+            service: 'dl',
+            dlNo: dlNo,
+            pdfUrl: j1.pdf || j1.file || null,
+            data: j1.data || j1,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (e1) {}
+
+      try {
+        // 2. Secondary: serviceApi/TargetApiV1/DL/dl-pdf.php
+        const u2 = `https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl-pdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&dlNo=${encodeURIComponent(dlNo)}&dob=${encodeURIComponent(dob)}&cardBg=${encodeURIComponent(cardBg)}`;
+        const r2 = await fetch(u2, { signal: AbortSignal.timeout(12000) });
+        const j2 = await r2.json().catch(() => null);
+        if (j2 && (j2.pdf || j2.file || j2.data)) {
+          return {
+            source: 'p4points',
+            service: 'dl',
+            dlNo: dlNo,
+            pdfUrl: j2.pdf || j2.file || null,
+            data: j2.data || j2,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (e2) {}
+
+      try {
+        // 3. Fallback: serviceApi/TargetApiV1/DL/dl_link.php
         const dlUrl = `https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php?apiKey=${encodeURIComponent(p4ApiKey)}&dlNo=${encodeURIComponent(dlNo)}&dob=${encodeURIComponent(dob)}&dltype=1`;
         const res = await fetch(dlUrl, { signal: AbortSignal.timeout(12000) });
         const json = await res.json().catch(() => null);
@@ -4223,7 +4309,7 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
 
   // 12. Chassis to RC
   if (norm.includes('chassis_to_rc') || norm.includes('chassis')) {
-    const chassisNo = String(params?.chassisNumber || params?.query || '').trim().toUpperCase();
+    const chassisNo = String(params?.chassisNumber || params?.chassis || params?.chassis_no || params?.query || '').trim().toUpperCase();
     if (chassisNo && chassisNo.length >= 5) {
       try {
         const cUrl = `https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php?apiKey=${encodeURIComponent(p4ApiKey)}&chassis_no=${encodeURIComponent(chassisNo)}`;
@@ -4242,6 +4328,60 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
         }
       } catch (err) {
         console.error('Live P4Points Chassis to RC fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 12B. Engine to RC
+  if (norm.includes('engine_to_rc') || norm === 'engine_to_rc') {
+    const engineNo = String(params?.engineNumber || params?.engine_number || params?.engine || params?.query || '').trim().toUpperCase();
+    if (engineNo.length >= 4) {
+      try {
+        const eUrl = `https://authorized.p4points.co.in/api/v1/engine_to_rc.php?apiKey=${encodeURIComponent(p4ApiKey)}&engine_number=${encodeURIComponent(engineNo)}`;
+        const res = await fetch(eUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.plate || json.rc_number || json.success)) {
+          return {
+            source: 'p4points',
+            service: 'rc',
+            regNo: json.plate || json.rc_number || json.vehicleNumber || 'RC RECORD',
+            ownerName: json.full_name || json.owner_name || 'वाहन स्वामी',
+            fatherName: json.relation_name || json.father_name || '',
+            engineNo: engineNo,
+            chassisNo: json.chassis_no || json.chassis || '',
+            isLiveFromP4Points: true,
+            data: json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Engine to RC fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 12C. PUC Certificate Download
+  if (norm.includes('puc') || norm === 'puc_certificate_download') {
+    const vNo = String(params?.vehicle_number || params?.vehicleNumber || params?.regNo || params?.query || '').replace(/[\s-]+/g, '').toUpperCase();
+    if (vNo.length >= 4) {
+      try {
+        const pucUrl = `https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/puc_certificate.php?apiKey=${encodeURIComponent(p4ApiKey)}&vehicle_number=${encodeURIComponent(vNo)}&vehicleNumber=${encodeURIComponent(vNo)}&regNo=${encodeURIComponent(vNo)}`;
+        const res = await fetch(pucUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        const pdf = json?.file || json?.pdf || json?.pdf_url || json?.pdf_base64;
+        if (pdf || json?.data || json?.success) {
+          return {
+            source: 'p4points',
+            service: 'rc',
+            vehicleNumber: vNo,
+            regNo: vNo,
+            pdfUrl: pdf,
+            pdfBase64: json?.pdf_base64 || null,
+            isLiveFromP4Points: true,
+            data: json?.data || json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points PUC fetch failed:', err.message);
       }
     }
   }
@@ -4321,26 +4461,52 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
   }
 
-  // 16. Learning Licence PDF Download
-  if (norm.includes('ll_pdf') || norm.includes('ll_download')) {
-    const idNumber = String(params?.appNo || params?.idNumber || params?.query || '').trim();
-    if (idNumber.length >= 5) {
+  // 16. Learning Licence Find & PDF Download
+  if (norm.includes('ll_find') || norm.includes('ll_pdf') || norm.includes('ll_download')) {
+    const idNumber = String(params?.applicationNumber || params?.application_number || params?.idNumber || params?.appNo || params?.query || '').trim();
+    const dob = params?.dob || params?.date_of_birth || '01-01-1990';
+    const state = params?.state || params?.state_name || 'UP';
+    if (idNumber.length >= 4) {
       try {
-        const llUrl = `https://authorized.p4points.co.in/api/v1/LL_application_pdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&idNumber=${encodeURIComponent(idNumber)}`;
-        const res = await fetch(llUrl, { signal: AbortSignal.timeout(10000) });
-        const json = await res.json().catch(() => null);
-        if (json && json.pdf) {
+        // 1. Primary: serviceApi/TargetApiV1/DL/ll_pdf.php
+        const u1 = `https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/ll_pdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&idNumber=${encodeURIComponent(idNumber)}&dob=${encodeURIComponent(dob)}&state=${encodeURIComponent(state)}`;
+        const r1 = await fetch(u1, { signal: AbortSignal.timeout(10000) });
+        const j1 = await r1.json().catch(() => null);
+        const pdf1 = j1?.file || j1?.pdf || j1?.pdf_url || j1?.pdf_base64;
+        if (pdf1 || j1?.success || j1?.data) {
           return {
             source: 'p4points',
             service: 'dl',
             idNumber: idNumber,
             dlNo: idNumber,
-            pdfBase64: json.pdf,
-            isLiveFromP4Points: true
+            pdfUrl: pdf1,
+            pdfBase64: j1?.pdf_base64 || null,
+            isLiveFromP4Points: true,
+            data: j1?.data || j1
           };
         }
-      } catch (err) {
-        console.error('Live P4Points LL PDF fetch failed:', err.message);
+      } catch (e1) {}
+
+      try {
+        // 2. Fallback: api/v1/LL_application_pdf.php
+        const u2 = `https://authorized.p4points.co.in/api/v1/LL_application_pdf.php?apiKey=${encodeURIComponent(p4ApiKey)}&idNumber=${encodeURIComponent(idNumber)}&dob=${encodeURIComponent(dob)}&state=${encodeURIComponent(state)}`;
+        const r2 = await fetch(u2, { signal: AbortSignal.timeout(10000) });
+        const j2 = await r2.json().catch(() => null);
+        const pdf2 = j2?.pdf || j2?.file || j2?.pdf_url || j2?.pdf_base64;
+        if (pdf2 || j2?.success || j2?.data) {
+          return {
+            source: 'p4points_fallback',
+            service: 'dl',
+            idNumber: idNumber,
+            dlNo: idNumber,
+            pdfUrl: pdf2,
+            pdfBase64: j2?.pdf_base64 || null,
+            isLiveFromP4Points: true,
+            data: j2?.data || j2
+          };
+        }
+      } catch (e2) {
+        console.error('Live P4Points LL PDF fetch failed:', e2.message);
       }
     }
   }
@@ -4704,7 +4870,25 @@ app.post('/api/services/execute-automated', async (req, res) => {
   // ASYNCHRONOUS MANUAL RELAY FULFILLMENT GATEWAY (Rekha Print Engine)
   if (service79 && service79.fulfillmentType === 'manual_relay') {
     const orderId = `ORD-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
-    const userRef = params?.applicationNumber || params?.appNo || params?.uidNumber || params?.aadhaarNo || params?.farmerId || params?.samagraId || params?.dlNo || params?.vehicleNumber || params?.panNo || '';
+    const userRef = params?.applicationNumber || params?.appNo || params?.uidNumber || params?.aadhaarNo || params?.farmerId || params?.samagraId || params?.dlNo || params?.dl || params?.vehicle_number || params?.vehicleNumber || params?.regNo || params?.panNo || '';
+
+    const relayParams = { ...(params || {}) };
+    const uService = service79.upstreamService || '';
+    if (uService === 'DL Mobile Link' || service79.id === 'dl_to_mobile_find') {
+      const dlClean = String(params?.dlNo || params?.dl || params?.applicationNumber || params?.query || '').trim();
+      relayParams.applicationNumber = dlClean;
+      relayParams.dlNo = dlClean;
+      relayParams.dl = dlClean;
+      relayParams.dob = String(params?.dob || params?.date_of_birth || '').trim();
+      relayParams.mobile = String(params?.mobile || params?.phone || '').trim();
+      relayParams.state = String(params?.state || 'UP').trim();
+      relayParams.password = String(params?.password || '').trim();
+    } else if (uService === 'puc_services' || service79.id === 'puc_certificate_download') {
+      const vNum = String(params?.vehicle_number || params?.vehicleNumber || params?.regNo || params?.vehicalNumber || params?.query || '').replace(/[\s-]+/g, '').toUpperCase().trim();
+      relayParams.vehicle_number = vNum;
+      relayParams.vehicleNumber = vNum;
+      relayParams.regNo = vNum;
+    }
 
     const newOrder = {
       id: orderId,
@@ -4727,7 +4911,7 @@ app.post('/api/services/execute-automated', async (req, res) => {
       upstreamStatus: 'Pending',
       upstreamDispatched: true,
       eta: '2-4 घंटे',
-      params: params || {},
+      params: relayParams,
       createdAt: new Date().toISOString()
     };
 

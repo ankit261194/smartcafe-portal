@@ -77,14 +77,54 @@ assert(servicePageContent.includes('tid === \'upi_to_details\''), 'upi_to_detail
 
 console.log('✅ PASS: All 13 parameter mappings verified in ServicePage.jsx');
 
-console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass & Server-Side Validations ---');
 const indexPhpContent = fs.readFileSync('client/public/api/index.php', 'utf8');
+const serverJsContent = fs.readFileSync('server/server.js', 'utf8');
+
+console.log('\n--- TEST 3B: Part 1 RTO & Transport Services Verification ---');
+// 1. ll_find & ll_pdf
+assert(servicePageContent.includes("params.state = selectState || 'UP'"), 'll_find/ll_pdf must map state');
+assert(servicePageContent.includes("params.applicationNumber = val"), 'll_find/ll_pdf must map applicationNumber');
+assert(servicePageContent.includes("params.idNumber = val"), 'll_find/ll_pdf must map idNumber');
+assert(indexPhpContent.includes("serviceApi/TargetApiV1/DL/ll_pdf.php"), 'index.php must route ll_find/ll_pdf to primary ll_pdf.php');
+assert(indexPhpContent.includes("api/v1/LL_application_pdf.php"), 'index.php must fallback ll_find/ll_pdf to LL_application_pdf.php');
+assert(serverJsContent.includes("serviceApi/TargetApiV1/DL/ll_pdf.php"), 'server.js must route ll_find/ll_pdf to primary ll_pdf.php');
+assert(serverJsContent.includes("api/v1/LL_application_pdf.php"), 'server.js must fallback ll_find/ll_pdf to LL_application_pdf.php');
+
+// 2. dl_to_mobile_find
+assert(servicePageContent.includes("tid === 'dl_to_mobile_find'"), 'dl_to_mobile_find must be mapped in ServicePage');
+assert(servicePageContent.includes("params.password = thirdInput.trim()"), 'dl_to_mobile_find must map password from thirdInput');
+assert(indexPhpContent.includes("$uService === 'DL Mobile Link' || ($service79['id'] ?? '') === 'dl_to_mobile_find'"), 'index.php must support dl_to_mobile_find in relay');
+assert(serverJsContent.includes("uService === 'DL Mobile Link' || service79.id === 'dl_to_mobile_find'"), 'server.js must support dl_to_mobile_find in relay');
+
+// 3. Driving Licence (DL)
+assert(servicePageContent.includes("params.cardBg = cardBg || 'White Background'"), 'DL must map cardBg');
+assert(indexPhpContent.includes("serviceApi/TargetApiV1/DrivingLicence/dl-details.php"), 'index.php must route DL to dl-details.php');
+assert(indexPhpContent.includes("serviceApi/TargetApiV1/DL/dl-pdf.php"), 'index.php must route DL to dl-pdf.php');
+assert(serverJsContent.includes("serviceApi/TargetApiV1/DrivingLicence/dl-details.php"), 'server.js must route DL to dl-details.php');
+assert(serverJsContent.includes("serviceApi/TargetApiV1/DL/dl-pdf.php"), 'server.js must route DL to dl-pdf.php');
+
+// 4. PUC Certificate Download
+assert(servicePageContent.includes("tid === 'puc_certificate_download'"), 'puc_certificate_download must be mapped in ServicePage');
+assert(servicePageContent.includes("params.vehicle_number = val.toUpperCase().replace(/[\\s-]+/g, '')"), 'puc_certificate_download must map vehicle_number');
+assert(indexPhpContent.includes("serviceApi/TargetApiV1/RC/puc_certificate.php"), 'index.php must route PUC to puc_certificate.php');
+assert(serverJsContent.includes("serviceApi/TargetApiV1/RC/puc_certificate.php"), 'server.js must route PUC to puc_certificate.php');
+
+// 5. Chassis to RC & Engine to RC
+assert(servicePageContent.includes("params.chassis_no = val.toUpperCase().trim()"), 'chassis_to_rc must map chassis_no');
+assert(servicePageContent.includes("params.engine_number = val.toUpperCase().trim()"), 'engine_to_rc must map engine_number');
+assert(indexPhpContent.includes("api/v1/chassis_to_Rc.php"), 'index.php must call chassis_to_Rc.php');
+assert(indexPhpContent.includes("api/v1/engine_to_rc.php"), 'index.php must call engine_to_rc.php');
+assert(serverJsContent.includes("api/v1/chassis_to_Rc.php"), 'server.js must call chassis_to_Rc.php');
+assert(serverJsContent.includes("api/v1/engine_to_rc.php"), 'server.js must call engine_to_rc.php');
+
+console.log('✅ PASS: Part 1 RTO & Transport Services parameter & routing verified across all tiers');
+
+console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass & Server-Side Validations ---');
 assert(!indexPhpContent.includes('$isTrial = $previewMode;'), 'index.php must not have $isTrial = $previewMode;');
 assert(indexPhpContent.includes('http_response_code(403);'), 'index.php must return 403 on low balance');
 assert(indexPhpContent.includes("if ($normServiceType === 'll_exam_pass_auto')"), 'index.php must validate ll_exam_pass_auto');
 assert(indexPhpContent.includes("सारथी SMS पासवर्ड (Password) आवश्यक है।"), 'index.php must require password for ll_exam_pass_auto');
 
-const serverJsContent = fs.readFileSync('server/server.js', 'utf8');
 assert(!serverJsContent.includes('let isTrial = isOtherCategory ? false : Boolean(previewMode);'), 'server.js must not have isTrial previewMode bypass');
 assert(serverJsContent.includes('return res.status(403).json('), 'server.js must return 403 on low balance');
 assert(serverJsContent.includes("if (normServiceType === 'll_exam_pass_auto')"), 'server.js must validate ll_exam_pass_auto');

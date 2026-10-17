@@ -435,6 +435,10 @@ function ServicePageContent({
       setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
       return;
     }
+    if (['driving_licence_pdf', 'dl_details', 'dl', 'drivinglicence'].includes(tid) && !dobDate) {
+      setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+      return;
+    }
     if (tid === 'dl_to_mobile_find') {
       if (!dobDate) {
         setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
@@ -665,6 +669,7 @@ function ServicePageContent({
       params.applicationNumber = val;
       params.idNumber = val;
       params.dob = dobDate ? formatDobDisplay(dobDate) : '';
+      params.state = selectState || 'UP';
     }
 
     if (tid === 'dl_to_mobile_find') {
@@ -672,6 +677,33 @@ function ServicePageContent({
       params.dl = val;
       params.dob = dobDate ? formatDobDisplay(dobDate) : '';
       params.mobile = secondaryInput.trim();
+      params.state = selectState || 'UP';
+      params.password = thirdInput.trim();
+    }
+
+    if (['driving_licence_pdf', 'dl_details', 'dl', 'drivinglicence'].includes(tid)) {
+      params.dl = val;
+      params.dlNo = val;
+      params.dob = dobDate ? formatDobDisplay(dobDate) : '';
+      params.cardBg = cardBg || 'White Background';
+    }
+
+    if (tid === 'puc_certificate_download') {
+      params.vehicle_number = val.toUpperCase().replace(/[\s-]+/g, '');
+      params.vehicleNumber = val.toUpperCase().replace(/[\s-]+/g, '');
+      params.regNo = val.toUpperCase().replace(/[\s-]+/g, '');
+    }
+
+    if (['chassis_to_rc', 'chassis_to_rc_find', 'chassis_to_rc_alt'].includes(tid)) {
+      params.chassisNumber = val.toUpperCase().trim();
+      params.chassis = val.toUpperCase().trim();
+      params.chassis_no = val.toUpperCase().trim();
+    }
+
+    if (tid === 'engine_to_rc') {
+      params.engineNumber = val.toUpperCase().trim();
+      params.engine = val.toUpperCase().trim();
+      params.engine_number = val.toUpperCase().trim();
     }
 
     if (['pan_find', 'pan_find_manual', 'pan_find_manual_alt'].includes(tid)) {
@@ -1475,6 +1507,24 @@ function ServicePageContent({
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
             />
           </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Select State (राज्य) *
+            </label>
+            <select
+              value={selectState}
+              onChange={(e) => setSelectState(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="Uttar Pradesh">Uttar Pradesh</option>
+              <option value="Bihar">Bihar</option>
+              <option value="Madhya Pradesh">Madhya Pradesh</option>
+              <option value="Rajasthan">Rajasthan</option>
+              <option value="Delhi">Delhi</option>
+              <option value="Haryana">Haryana</option>
+              <option value="All India">All India</option>
+            </select>
+          </div>
         </div>
       );
     }
@@ -1521,6 +1571,38 @@ function ServicePageContent({
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none"
             />
           </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Select State (राज्य) *
+              </label>
+              <select
+                value={selectState}
+                onChange={(e) => setSelectState(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none cursor-pointer"
+              >
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Haryana">Haryana</option>
+                <option value="All India">All India</option>
+              </select>
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Sarathi SMS Password / PIN <span className="text-slate-400 font-normal">(Optional)</span>
+              </label>
+              <input
+                type="text"
+                value={thirdInput}
+                onChange={(e) => setThirdInput(e.target.value)}
+                placeholder="सारथी SMS पासवर्ड / पिन"
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none"
+              />
+            </div>
+          </div>
         </div>
       );
     }
@@ -1566,6 +1648,96 @@ function ServicePageContent({
               <option value="White Background">White Background</option>
               <option value="Light Blue (Original)">Light Blue (Original)</option>
             </select>
+          </div>
+        </div>
+      );
+    }
+
+    // 8B. PUC POLLUTION CERTIFICATE DOWNLOAD
+    if (id === 'puc_certificate_download') {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs text-emerald-900 dark:text-emerald-200 flex items-start gap-2">
+            <span className="text-base leading-none">🚗</span>
+            <div>
+              <p className="font-bold">वाहन प्रदूषण प्रमाण पत्र (PUC Certificate Download)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                वाहन का आधिकारिक रजिस्ट्रेशन नंबर दर्ज करें (जैसे UP32AB1234)। आधिकारिक प्रदूषण जांच प्रमाण पत्र तुरंत तैयार होगा।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Vehicle Registration Number (गाड़ी का नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 14))}
+              placeholder="गाड़ी नंबर दर्ज करें (जैसे UP32AB1234)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 8C. CHASSIS TO RC FIND
+    if (['chassis_to_rc', 'chassis_to_rc_find', 'chassis_to_rc_alt'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2">
+            <span className="text-base leading-none">🔍</span>
+            <div>
+              <p className="font-bold">चेसिस नंबर से RC खोज (Chassis To RC)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                वाहन का 17-अंकीय चेसिस नंबर दर्ज करें। आधिकारिक RC विवरण व रजिस्ट्रेशन नंबर तुरंत प्राप्त करें।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Chassis Number (17-अंकीय चेसिस नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 17))}
+              placeholder="17-अंकीय चेसिस नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 8D. ENGINE TO RC FIND
+    if (id === 'engine_to_rc') {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 rounded-xl text-xs text-teal-900 dark:text-teal-200 flex items-start gap-2">
+            <span className="text-base leading-none">⚙️</span>
+            <div>
+              <p className="font-bold">इंजन नंबर से RC खोज (Engine To RC)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                वाहन का आधिकारिक इंजन नंबर दर्ज करें और RC विवरण प्राप्त करें।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Engine Number (इंजन नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 20))}
+              placeholder="इंजन नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
           </div>
         </div>
       );
