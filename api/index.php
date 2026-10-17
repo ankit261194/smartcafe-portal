@@ -4599,6 +4599,12 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         $backupEndpoints = [];
         if ($norm === 'll_find' || $norm === 'll_pdf') {
             $backupEndpoints[] = 'https://authorized.p4points.co.in/api/v1/LL_application_pdf.php';
+        } elseif ($norm === 'pan_find') {
+            $backupEndpoints[] = 'https://authorized.p4points.co.in/api/v1/panfind.php';
+        } elseif ($norm === 'pan_find_manual' || $norm === 'pan_find_manual_alt') {
+            $backupEndpoints[] = 'https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php';
+        } elseif ($norm === 'pan_to_aadhar_find') {
+            $backupEndpoints[] = 'https://authorized.p4points.co.in/api/v1/panAadhar.php';
         } elseif (strpos($lowerUrl, 'dl') !== false || strpos($norm, 'dl') !== false) {
             $backupEndpoints[] = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DrivingLicence/dl-details.php';
             $backupEndpoints[] = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl-pdf.php';
@@ -4705,9 +4711,9 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         }
     }
 
-    // 2. Aadhaar to PAN / UID to PAN
-    if (strpos($norm, 'aadhaartopan') !== false || strpos($norm, 'uidtopan') !== false || strpos($norm, 'panfind') !== false || strpos($norm, 'aadhaar_to_pan') !== false) {
-        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['query'] ?? '')));
+    // 2. Aadhaar to PAN / UID to PAN (pan_find)
+    if (($norm === 'pan_find' || strpos($norm, 'pan_find') !== false || strpos($norm, 'aadhaartopan') !== false || strpos($norm, 'uidtopan') !== false || strpos($norm, 'panfind') !== false || strpos($norm, 'aadhaar_to_pan') !== false) && strpos($norm, 'manual') === false) {
+        $uid = preg_replace('/[^0-9]/', '', $params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['aadhar'] ?? ($params['aadhaar'] ?? ($params['query'] ?? '')))));
         if (strlen($uid) === 12) {
             $url = 'https://authorized.p4points.co.in/api/v1/getPanNumber.php?apiKey=' . urlencode($p4ApiKey) . '&uidNumber=' . urlencode($uid);
             $ch = curl_init($url);
@@ -4717,16 +4723,48 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             curl_close($ch);
             if ($resp) {
                 $json = json_decode($resp, true);
-                $pan = $json['panNumber'] ?? ($json['pan_number'] ?? '');
+                $pan = $json['panNumber'] ?? ($json['pan_number'] ?? ($json['pan'] ?? ($json['data']['pan'] ?? ($json['data']['panNumber'] ?? ''))));
                 if (!empty($pan)) {
                     return [
                         'source' => 'p4points',
                         'service' => 'aadhaarToPan',
-                        'panNo' => $pan,
+                        'panNo' => strtoupper(trim($pan)),
                         'maskedAadhaar' => 'XXXX XXXX ' . substr($uid, -4),
                         'aadhaarNo' => $uid,
-                        'name' => $json['name'] ?? ($params['name'] ?? 'PAN धारक'),
-                        'isLiveFromP4Points' => true
+                        'name' => $json['name'] ?? ($json['data']['name'] ?? ($params['name'] ?? 'PAN धारक')),
+                        'isLiveFromP4Points' => true,
+                        'data' => $json
+                    ];
+                }
+            }
+        }
+    }
+
+    // 2B. PAN to Aadhaar Find (pan_to_aadhar_find)
+    if (strpos($norm, 'pan_to_aadhar') !== false || $norm === 'pan_to_aadhar_find') {
+        $pan = strtoupper(trim($params['panNo'] ?? ($params['panNumber'] ?? ($params['pan'] ?? ($params['query'] ?? '')))));
+        $dob = trim($params['dob'] ?? ($params['date_of_birth'] ?? ''));
+        if (strlen($pan) === 10) {
+            $url = 'https://authorized.p4points.co.in/api/v1/pan_to_aadhar.php?apiKey=' . urlencode($p4ApiKey) . '&pan=' . urlencode($pan) . ($dob ? '&dob=' . urlencode($dob) : '');
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                $foundUid = $json['aadhaarNumber'] ?? ($json['aadhaar_number'] ?? ($json['aadhaar'] ?? ($json['aadhar'] ?? ($json['uidNumber'] ?? ($json['data']['aadhaar'] ?? ($json['data']['aadhaarNumber'] ?? ''))))));
+                if (!empty($foundUid) && strlen(preg_replace('/\D/', '', $foundUid)) >= 4) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'panToAadhaar',
+                        'panNo' => $pan,
+                        'aadhaarNo' => $foundUid,
+                        'maskedAadhaar' => $foundUid,
+                        'name' => $json['name'] ?? ($json['data']['name'] ?? 'PAN धारक'),
+                        'isLiveFromP4Points' => true,
+                        'data' => $json
                     ];
                 }
             }
@@ -4734,7 +4772,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
     }
 
     // 3. PAN Verification & Details
-    if (strpos($norm, 'pan') !== false && strpos($norm, 'find') === false && strpos($norm, 'aadhaar') === false) {
+    if (strpos($norm, 'pan') !== false && strpos($norm, 'find') === false && strpos($norm, 'aadhaar') === false && strpos($norm, 'gst') === false && strpos($norm, 'link') === false) {
         $panNo = strtoupper(trim($params['panNo'] ?? ($params['pan'] ?? ($params['query'] ?? ''))));
         if (preg_match('/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/', $panNo)) {
             $url = 'https://authorized.p4points.co.in/api/v1/panVerificationPremium.php?apiKey=' . urlencode($p4ApiKey) . '&panNumber=' . urlencode($panNo);
@@ -5424,12 +5462,14 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         }
     }
 
-    // 23. PAN Find (Name + Mobile)
-    if (strpos($norm, 'pan_find_name') !== false || strpos($norm, 'pan_name_mobile') !== false) {
+    // 23. PAN Find (Name + Father Name + DOB + Mobile)
+    if (strpos($norm, 'pan_find_manual') !== false || strpos($norm, 'pan_find_name') !== false || strpos($norm, 'pan_name_mobile') !== false) {
         $name = trim($params['name'] ?? ($params['customerName'] ?? ($params['query'] ?? '')));
+        $fatherName = trim($params['fatherName'] ?? '');
+        $dob = trim($params['dob'] ?? '');
         $mobile = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['phone'] ?? ''));
-        if (strlen($name) >= 3 && strlen($mobile) === 10) {
-            $url = 'https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php?apiKey=' . urlencode($p4ApiKey) . '&name=' . urlencode($name) . '&mobile=' . urlencode($mobile);
+        if (strlen($name) >= 3) {
+            $url = 'https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php?apiKey=' . urlencode($p4ApiKey) . '&name=' . urlencode($name) . ($fatherName ? '&fatherName=' . urlencode($fatherName) : '') . ($dob ? '&dob=' . urlencode($dob) : '') . ($mobile ? '&mobile=' . urlencode($mobile) : '');
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 12);
@@ -5437,14 +5477,18 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             curl_close($ch);
             if ($resp) {
                 $json = json_decode($resp, true);
-                if (!empty($json['panNumber'])) {
+                $foundPan = $json['panNumber'] ?? ($json['pan_number'] ?? ($json['pan'] ?? ($json['data']['pan'] ?? ($json['data']['panNumber'] ?? ''))));
+                if (!empty($foundPan)) {
                     return [
                         'source' => 'p4points',
                         'service' => 'panCard',
-                        'panNo' => $json['panNumber'],
+                        'panNo' => strtoupper(trim($foundPan)),
                         'name' => $json['name'] ?? $name,
+                        'fatherName' => $fatherName,
+                        'dob' => $dob,
                         'mobile' => $mobile,
-                        'isLiveFromP4Points' => true
+                        'isLiveFromP4Points' => true,
+                        'data' => $json
                     ];
                 }
             }
