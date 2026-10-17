@@ -4925,8 +4925,8 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
     }
 
     // 6. Voter Verification
-    if (strpos($norm, 'voter') !== false || strpos($norm, 'epic') !== false) {
-        $epicNo = strtoupper(trim($params['epicNo'] ?? ($params['epic'] ?? ($params['query'] ?? ''))));
+    if (((strpos($norm, 'voter') !== false || strpos($norm, 'epic') !== false) && strpos($norm, 'link') === false && strpos($norm, 'mobile') === false && strpos($norm, 'otp') === false && strpos($norm, 'pdf') === false && strpos($norm, 'card') === false && strpos($norm, 'manual') === false) || $norm === 'voter' || $norm === 'epic' || strpos($norm, 'voter_verification') !== false || strpos($norm, 'voter_details') !== false) {
+        $epicNo = strtoupper(trim($params['epicNumber'] ?? ($params['epicNo'] ?? ($params['epic'] ?? ($params['query'] ?? '')))));
         if (strlen($epicNo) >= 5) {
             $url = 'https://authorized.p4points.co.in/api/v1/voterVerification_new.php?apiKey=' . urlencode($p4ApiKey) . '&epicNumber=' . urlencode($epicNo);
             $ch = curl_init($url);
@@ -4942,6 +4942,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
                         'source' => 'p4points',
                         'service' => 'voter',
                         'epicNo' => $doc['epicNumber'] ?? ($doc['epic_no'] ?? $epicNo),
+                        'epicNumber' => $doc['epicNumber'] ?? ($doc['epic_no'] ?? $epicNo),
                         'name' => trim(($doc['FirstName'] ?? '') . ' ' . ($doc['LastName'] ?? '')) ?: ($doc['name_v1'] ?? ($doc['name'] ?? 'मतदाता')),
                         'fatherName' => $doc['rln_name'] ?? ($doc['relativeName'] ?? ''),
                         'gender' => $doc['gender'] ?? 'M',
@@ -4951,6 +4952,9 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
                         'state' => $doc['state'] ?? '',
                         'assembly' => $doc['ac_name'] ?? ($doc['assemblyName'] ?? ''),
                         'partName' => $doc['part_name'] ?? '',
+                        'partNo' => $doc['part_no'] ?? '',
+                        'serialNo' => $doc['serial_no'] ?? '',
+                        'photoUrl' => $doc['photo'] ?? ($doc['photoUrl'] ?? ($doc['image'] ?? null)),
                         'isLiveFromP4Points' => true
                     ];
                 }
@@ -5470,13 +5474,14 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
 
     // 22. Instant Voter Mobile Link (No OTP)
     if (strpos($norm, 'instant_voter') !== false || strpos($norm, 'voter_link') !== false || strpos($norm, 'voter_mobile') !== false) {
-        $epic = strtoupper(trim($params['epicNo'] ?? ($params['epic'] ?? ($params['query'] ?? ''))));
+        $epic = strtoupper(trim($params['epicNumber'] ?? ($params['epicNo'] ?? ($params['epic'] ?? ($params['query'] ?? '')))));
         $mobile = preg_replace('/[^0-9]/', '', $params['mobile'] ?? ($params['mobileNumber'] ?? ($params['phone'] ?? '')));
         if (strlen($epic) >= 5 && strlen($mobile) === 10) {
             $url = 'https://authorized.p4points.co.in/api/v4/instant_voter_link.php?apiKey=' . urlencode($p4ApiKey) . '&epic=' . urlencode($epic) . '&mobile=' . urlencode($mobile);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $resp = curl_exec($ch);
             curl_close($ch);
             if ($resp) {
@@ -5486,9 +5491,94 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
                         'source' => 'p4points',
                         'service' => 'voter',
                         'epicNo' => $epic,
+                        'epicNumber' => $epic,
                         'mobileNumber' => $mobile,
                         'refId' => $json['refId'] ?? ('VCM' . time()),
                         'message' => $json['message'] ?? 'वोटर कार्ड में मोबाइल नंबर सफलतापूर्वक लिंक हो गया है।',
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            }
+        }
+    }
+
+    // 22B. Voter Original PDF With OTP (send-otp.php / verify-otp.php)
+    if (strpos($norm, 'voter_original_pdf_otp') !== false || (strpos($norm, 'voter') !== false && strpos($norm, 'pdf') !== false && strpos($norm, 'otp') !== false)) {
+        $epic = strtoupper(trim($params['epicNumber'] ?? ($params['epic_number'] ?? ($params['voterNumber'] ?? ($params['epicNo'] ?? ($params['query'] ?? ''))))));
+        $otp = trim($params['otp'] ?? ($params['otpCode'] ?? ''));
+        if (strlen($epic) >= 5) {
+            if (empty($otp)) {
+                // Step 1: Send OTP
+                $url = 'https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php?apiKey=' . urlencode($p4ApiKey) . '&epic_number=' . urlencode($epic);
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $resp = curl_exec($ch);
+                curl_close($ch);
+                if ($resp) {
+                    $json = json_decode($resp, true);
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'voter',
+                        'requiresOtp' => true,
+                        'otpSent' => true,
+                        'epicNumber' => $epic,
+                        'epicNo' => $epic,
+                        'message' => $json['message'] ?? 'वोटर कार्ड पंजीकृत मोबाइल पर OTP प्रेषित कर दिया गया है।',
+                        'status' => $json['status_code'] ?? ($json['status'] ?? 'otp_sent'),
+                        'isLiveFromP4Points' => true
+                    ];
+                }
+            } else {
+                // Step 2: Verify OTP & Download PDF
+                $url = 'https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/verify-otp.php?apiKey=' . urlencode($p4ApiKey) . '&epic_number=' . urlencode($epic) . '&otp=' . urlencode($otp);
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                $resp = curl_exec($ch);
+                curl_close($ch);
+                if ($resp) {
+                    $json = json_decode($resp, true);
+                    if (!empty($json['pdf']) || !empty($json['pdf_base64']) || !empty($json['file']) || !empty($json['pdf_url'])) {
+                        return [
+                            'source' => 'p4points',
+                            'service' => 'voter',
+                            'epicNumber' => $epic,
+                            'epicNo' => $epic,
+                            'pdfBase64' => $json['pdf'] ?? ($json['pdf_base64'] ?? null),
+                            'pdfUrl' => $json['file'] ?? ($json['pdf_url'] ?? null),
+                            'message' => 'वोटर कार्ड ओरिजिनल PDF सफलतापूर्वक प्राप्त हो गया है।',
+                            'isLiveFromP4Points' => true
+                        ];
+                    }
+                }
+            }
+        }
+    }
+
+    // 22C. Voter PDF / Original PDF Without OTP
+    if (strpos($norm, 'voter_pdf') !== false || strpos($norm, 'voter_original_pdf_no_otp') !== false) {
+        $epic = strtoupper(trim($params['voter_number'] ?? ($params['epicNumber'] ?? ($params['epicNo'] ?? ($params['epic'] ?? ($params['query'] ?? ''))))));
+        if (strlen($epic) >= 5) {
+            $url = 'https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php?apiKey=' . urlencode($p4ApiKey) . '&voter_number=' . urlencode($epic);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['pdf']) || !empty($json['pdf_url']) || !empty($json['file']) || !empty($json['pdf_base64'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'voter',
+                        'epicNumber' => $epic,
+                        'epicNo' => $epic,
+                        'pdfBase64' => $json['pdf'] ?? ($json['pdf_base64'] ?? null),
+                        'pdfUrl' => $json['file'] ?? ($json['pdf_url'] ?? null),
                         'isLiveFromP4Points' => true
                     ];
                 }
@@ -6276,9 +6366,24 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             $docTitle = $panNo ? "पैन कार्ड ({$panNo}) - {$panName}" : ($serviceTitles[$normServiceType] ?? 'पैन कार्ड सेवा');
             $refNumber = $panNo ?: ($userVal ?: 'PAN');
         } elseif ($p4Service === 'voter' || strpos($normServiceType, 'voter') !== false || strpos($normServiceType, 'epic') !== false) {
-            $epic = strtoupper(trim($liveP4['epicNo'] ?? ($p4Data['epicNumber'] ?? ($p4Data['epicNo'] ?? ($p4Data['epic_number'] ?? ($userVal ?: ''))))));
+            $epic = strtoupper(trim($liveP4['epicNo'] ?? ($liveP4['epicNumber'] ?? ($p4Data['epicNumber'] ?? ($p4Data['epicNo'] ?? ($p4Data['epic_number'] ?? ($userVal ?: '')))))));
             $generatedData['epicNo'] = $epic;
-            $voterName = $p4Data['name'] ?? ($p4Data['applicant_name'] ?? ($params['customerName'] ?? 'मतदाता'));
+            $generatedData['epicNumber'] = $epic;
+            $voterName = $liveP4['name'] ?? ($p4Data['name'] ?? ($p4Data['applicant_name'] ?? ($params['customerName'] ?? 'मतदाता')));
+            $generatedData['name'] = $voterName;
+            $generatedData['customerName'] = $voterName;
+            if (!empty($liveP4['fatherName'])) $generatedData['fatherName'] = $liveP4['fatherName'];
+            if (!empty($liveP4['gender'])) $generatedData['gender'] = $liveP4['gender'];
+            if (!empty($liveP4['dob'])) $generatedData['dob'] = $liveP4['dob'];
+            if (!empty($liveP4['age'])) $generatedData['age'] = $liveP4['age'];
+            if (!empty($liveP4['assembly'])) $generatedData['acName'] = $liveP4['assembly'];
+            if (!empty($liveP4['partName'])) $generatedData['partName'] = $liveP4['partName'];
+            if (!empty($liveP4['partNo'])) $generatedData['partNo'] = $liveP4['partNo'];
+            if (!empty($liveP4['serialNo'])) $generatedData['serialNo'] = $liveP4['serialNo'];
+            if (!empty($liveP4['district'])) $generatedData['district'] = $liveP4['district'];
+            if (!empty($liveP4['state'])) $generatedData['state'] = $liveP4['state'];
+            if (!empty($liveP4['photoUrl'])) $generatedData['photoUrl'] = $liveP4['photoUrl'];
+            if (!empty($liveP4['mobileNumber'])) $generatedData['mobileNumber'] = $liveP4['mobileNumber'];
             $docTitle = "वोटर स्मार्ट कार्ड ({$epic}) - {$voterName}";
             $refNumber = $epic;
         } elseif ($p4Service === 'ration' || strpos($normServiceType, 'ration') !== false) {
@@ -6539,6 +6644,39 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                 ];
                 $docTitle = "आधार कार्ड CR-80 PVC ({$aid}) - {$aName}";
                 $refNumber = $aid;
+            }
+        } elseif ($normServiceType === 'votercard' || $normServiceType === 'voterCard' || $normServiceType === 'voter_manual' || $normServiceType === 'voter_card_pvc' || (isset($params['serviceId']) && in_array($params['serviceId'], ['voterCard', 'voter_manual', 'voter_card_pvc']))) {
+            $epic = strtoupper(trim($params['epicNo'] ?? ($params['epicNumber'] ?? ($params['epic'] ?? $userVal))));
+            $vName = trim($params['customerName'] ?? ($params['name'] ?? ''));
+            $fName = trim($params['fatherName'] ?? ($params['relativeName'] ?? ''));
+            $dob = trim($params['dob'] ?? ($params['age'] ?? ''));
+            $gender = trim($params['gender'] ?? 'MALE');
+            $acName = trim($params['acName'] ?? ($params['assembly'] ?? ''));
+            $partName = trim($params['partName'] ?? ($params['pollingStation'] ?? ''));
+            $partNo = trim($params['partNo'] ?? '');
+            $serialNo = trim($params['serialNo'] ?? '');
+            if (!empty($epic) && !empty($vName)) {
+                $generatedData = [
+                    'epicNo' => $epic,
+                    'epicNumber' => $epic,
+                    'name' => $vName,
+                    'customerName' => $vName,
+                    'name_hi' => $params['name_hi'] ?? $vName,
+                    'fatherName' => $fName,
+                    'dob' => $dob,
+                    'gender' => $gender,
+                    'acName' => $acName,
+                    'partName' => $partName,
+                    'partNo' => $partNo,
+                    'serialNo' => $serialNo,
+                    'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
+                    'refNumber' => $epic,
+                    'serviceType' => 'voterCard',
+                    'cardType' => 'ISO CR-80 PVC Smart Card',
+                    'isInstantPvc' => true
+                ];
+                $docTitle = "वोटर कार्ड CR-80 PVC ({$epic}) - {$vName}";
+                $refNumber = $epic;
             }
         }
     }
