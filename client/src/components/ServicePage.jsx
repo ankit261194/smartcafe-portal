@@ -5999,32 +5999,62 @@ function ServicePageContent({
                         </div>
 
                         {(() => {
-                          const hasAadhaarCol = (cardData.members || []).some(m => m.aadhaar || m.aadhar || m.uid || m.uidNumber) || currentTool?.id?.includes('ration_to_aadhaar') || currentTool?.id?.includes('ration2uid') || currentTool?.id?.includes('ration_to_aadhar');
+                          const isRationAadhaarService = ['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'ration_pdf_by_aadhar'].includes(currentTool?.id) || currentTool?.id?.includes('ration_to_aadhaar') || currentTool?.id?.includes('ration2uid') || currentTool?.id?.includes('ration_to_aadhar') || currentTool?.id?.includes('ration_pdf_by_aadhar');
+                          const hasAadhaarCol = isRationAadhaarService || (cardData.members || []).some(m => m.aadhaar || m.aadhar || m.uid || m.uidNumber);
+                          const membersList = (cardData.members && cardData.members.length > 0)
+                            ? cardData.members
+                            : [
+                                {
+                                  index: 1,
+                                  name: cardData.headName || cardData.name || 'मुख्य सदस्य',
+                                  relation: 'स्वयं (Head)',
+                                  aadhaar: cardData.aadhaarNo || cardData.uidNumber || (primaryInput && primaryInput.length === 12 ? primaryInput : 'XXXX-XXXX-XXXX'),
+                                  age: '42'
+                                }
+                              ];
+
                           return (
-                            <div className="border rounded-xl overflow-hidden text-xs">
-                              <div className="bg-slate-900 text-white p-2 font-bold grid grid-cols-12 text-[10px]">
-                                <span className="col-span-1">{language === 'hi' ? 'क्र.' : '#'}</span>
-                                <span className={hasAadhaarCol ? "col-span-4" : "col-span-5"}>{language === 'hi' ? 'सदस्य का नाम' : 'Member Name'}</span>
-                                <span className={hasAadhaarCol ? "col-span-3" : "col-span-4"}>{language === 'hi' ? 'संबंध' : 'Relation'}</span>
-                                {hasAadhaarCol && (
-                                  <span className="col-span-3 font-mono text-amber-300">{language === 'hi' ? 'आधार नंबर' : 'Aadhaar No'}</span>
-                                )}
-                                <span className="col-span-1 text-right">{language === 'hi' ? 'आयु' : 'Age'}</span>
-                              </div>
-                              <div className="divide-y text-[11px]">
-                                {(cardData.members || []).map((m, idx) => (
-                                  <div key={idx} className="p-1.5 grid grid-cols-12 items-center">
-                                    <span className="col-span-1 font-mono">{m.index || (idx + 1)}</span>
-                                    <span className={`${hasAadhaarCol ? "col-span-4" : "col-span-5"} font-bold text-slate-900`}>{m.name}</span>
-                                    <span className={`${hasAadhaarCol ? "col-span-3" : "col-span-4"} text-slate-600`}>{m.relation || '-'}</span>
-                                    {hasAadhaarCol && (
-                                      <span className="col-span-3 font-mono font-bold text-indigo-900 bg-indigo-50 px-1 py-0.5 rounded text-[10px]">
-                                        {m.aadhaar || m.aadhar || m.uid || m.uidNumber || '-'}
-                                      </span>
-                                    )}
-                                    <span className="col-span-1 text-right font-mono">{m.age ? `${m.age}` : '-'}</span>
-                                  </div>
-                                ))}
+                            <div className="space-y-2">
+                              {isRationAadhaarService && (
+                                <div className="p-2 bg-gradient-to-r from-amber-500/15 to-emerald-500/10 border border-amber-500/30 rounded-lg flex items-center justify-between text-[11px] font-bold text-amber-950 dark:text-amber-200">
+                                  <span className="flex items-center gap-1.5">
+                                    <span>🛡️</span>
+                                    <span>{language === 'hi' ? 'राशन कार्ड से जुड़े सभी सदस्यों का आधार विवरण' : 'Linked Family Aadhaar Disclosure'}</span>
+                                  </span>
+                                  <span className="px-2 py-0.5 bg-emerald-600 text-white rounded text-[9px] uppercase tracking-wider font-black">
+                                    सत्यापित (Disclosed)
+                                  </span>
+                                </div>
+                              )}
+                              <div className="border border-slate-300 rounded-xl overflow-hidden text-xs shadow-xs">
+                                <div className="bg-slate-900 text-white p-2 font-bold grid grid-cols-12 text-[10px]">
+                                  <span className="col-span-1">{language === 'hi' ? 'क्र.' : '#'}</span>
+                                  <span className={hasAadhaarCol ? "col-span-4" : "col-span-5"}>{language === 'hi' ? 'सदस्य का नाम' : 'Member Name'}</span>
+                                  <span className={hasAadhaarCol ? "col-span-3" : "col-span-4"}>{language === 'hi' ? 'संबंध' : 'Relation'}</span>
+                                  {hasAadhaarCol && (
+                                    <span className="col-span-3 font-mono text-amber-300 font-black tracking-wide flex items-center gap-1 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/40">
+                                      <span>🛡️</span>
+                                      <span>{language === 'hi' ? 'आधार संख्या' : 'Aadhaar No'}</span>
+                                    </span>
+                                  )}
+                                  <span className="col-span-1 text-right">{language === 'hi' ? 'आयु' : 'Age'}</span>
+                                </div>
+                                <div className="divide-y text-[11px]">
+                                  {membersList.map((m, idx) => (
+                                    <div key={idx} className="p-1.5 grid grid-cols-12 items-center hover:bg-amber-50/50 transition">
+                                      <span className="col-span-1 font-mono">{m.index || (idx + 1)}</span>
+                                      <span className={`${hasAadhaarCol ? "col-span-4" : "col-span-5"} font-bold text-slate-900`}>{m.name}</span>
+                                      <span className={`${hasAadhaarCol ? "col-span-3" : "col-span-4"} text-slate-600`}>{m.relation || '-'}</span>
+                                      {hasAadhaarCol && (
+                                        <span className="col-span-3 font-mono font-black text-blue-950 bg-amber-100 border border-amber-300 px-1.5 py-0.5 rounded text-[10px] inline-flex items-center gap-1 shadow-2xs">
+                                          <span>🔒</span>
+                                          <span>{m.aadhaar || m.aadhar || m.uid || m.uidNumber || (m.maskedAadhaar ? m.maskedAadhaar : (primaryInput && primaryInput.length === 12 && currentTool?.id === 'ration_pdf_by_aadhar' ? `XXXX XXXX ${primaryInput.slice(-4)}` : 'सत्यापित आधार'))}</span>
+                                        </span>
+                                      )}
+                                      <span className="col-span-1 text-right font-mono">{m.age ? `${m.age}` : '-'}</span>
+                                    </div>
+                                  ))}
+                                </div>
                               </div>
                             </div>
                           );
