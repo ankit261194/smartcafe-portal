@@ -99,7 +99,7 @@ function ServicePageContent({
     if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc'].includes(id) || cat === 'rc' || id.includes('rc_')) return 'rc';
     if (['pan', 'pancard', 'pan_find', 'pan_details'].includes(id) || cat === 'pan' || id.includes('pan')) return 'pan';
     if (id === 'epan') return 'epan';
-    if (['aadhaar', 'aadhaar_advance', 'aadhaar_original_pdf_otp', 'aadhaar_original_pdf_no_otp', 'aadhaar_otp_kyc', 'aadhaar_pvc'].includes(id) || cat === 'aadhaar' || id.includes('aadhaar_') || id.includes('uid_') || id.includes('pvc_')) return 'aadhaar';
+    if (['aadhaar', 'aadhaarCard', 'aadhaarcard', 'aadhaar_advance', 'aadhaar_original_pdf_otp', 'aadhaar_original_pdf_no_otp', 'aadhaar_otp_kyc', 'aadhaar_pvc', 'aadhaar_manual'].includes(id) || cat === 'aadhaar' || id.toLowerCase().includes('aadhaar') || id.toLowerCase().includes('aadhar') || id.includes('uid_') || id.includes('pvc_')) return 'aadhaar';
     if (['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp'].includes(id) || cat === 'voter' || id.includes('voter_')) return 'voter';
     if (['dl', 'driving_licence_pdf', 'dl_details'].includes(id) || cat === 'dl' || id.includes('driving_licence') || id.includes('dl_')) return 'dl';
     if (['ayushman', 'ayushman_card', 'abha_card', 'abha_otp'].includes(id) || cat === 'health' || id.includes('ayushman') || id.includes('abha')) return 'ayushman';
@@ -171,6 +171,9 @@ function ServicePageContent({
   const [rdDeviceStatus, setRdDeviceStatus] = useState({ connected: false, name: '', checking: false });
   const [isScanningFingerprint, setIsScanningFingerprint] = useState(false);
   const [biometricScore, setBiometricScore] = useState(null);
+  const [biometricPid, setBiometricPid] = useState('');
+  const [rdDeviceType, setRdDeviceType] = useState('Mantra MFS100');
+  const [advanceServer, setAdvanceServer] = useState('1');
   const [showOtpModal, setShowOtpModal] = useState(false);
   const [activeOtpData, setActiveOtpData] = useState(null);
   const [showPvcTrayModal, setShowPvcTrayModal] = useState(false);
@@ -200,6 +203,8 @@ function ServicePageContent({
       const res = await rdService.captureFingerprint({ allowSimulated: false });
       if (res.success) {
         setBiometricScore(res.qScore);
+        setBiometricPid(res.pidData || 'PID_CAPTURED_SUCCESS');
+        setRdDeviceType(res.deviceModel || rdDeviceStatus.name || 'Mantra MFS100');
       } else {
         setErrorMsg(res.error || 'बायोमेट्रिक फिंगरप्रिंट स्कैन विफल हुआ।');
       }
@@ -256,6 +261,9 @@ function ServicePageContent({
     setIsCustomSign(false);
     setCurrentResult(null);
     setErrorMsg('');
+    setBiometricPid('');
+    setBiometricScore(null);
+    setAdvanceServer('1');
   };
 
   // Fetch persistent order history
@@ -547,6 +555,72 @@ function ServicePageContent({
     }
     if (['rtps_bihar_pdf', 'rtps'].includes(tid) && !secondaryInput.trim()) {
       setErrorMsg(language === 'hi' ? 'कृपया आवेदक का नाम (Applicant Name) दर्ज करें।' : 'Please enter Applicant Name.');
+      return;
+    }
+    if (['aadhaar_pdf_otp', 'aadhaar_original_pdf_otp'].includes(tid) && val.replace(/\D/g, '').length !== 12) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+      return;
+    }
+    if (['aadhaar_ekyc', 'uid_ekyc'].includes(tid) && val.replace(/\D/g, '').length !== 12) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+      return;
+    }
+    if (['aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'aadhaar_fingerprint'].includes(tid) && val.replace(/\D/g, '').length !== 12) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+      return;
+    }
+    if (['aadhaar_manual', 'aadhaarcard'].includes(tid) || (toolKind === 'card' && currentTool?.id === 'aadhaarCard')) {
+      if (val.replace(/\D/g, '').length !== 12) {
+        setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+        return;
+      }
+      if (!customerName.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया आधार अनुसार पूरा नाम (Full Name) दर्ज करें।' : 'Please enter Full Name.');
+        return;
+      }
+      if (!fatherName.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया पिता/पति का नाम (Father/Husband Name) दर्ज करें।' : 'Please enter Father/Husband Name.');
+        return;
+      }
+      if (!dobDate) {
+        setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+        return;
+      }
+      if (!addressInput.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया पूरा पता (Complete Address) दर्ज करें।' : 'Please enter Complete Address.');
+        return;
+      }
+    }
+    if (['mobile_update_service', 'aadhaar_to_mobile_find', 'aadhaar_mobile_link'].includes(tid)) {
+      if (val.replace(/\D/g, '').length !== 12) {
+        setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+        return;
+      }
+      if (!dobDate) {
+        setErrorMsg(language === 'hi' ? 'कृपया जन्मतिथि (Date of Birth) चुनें।' : 'Please select Date of Birth.');
+        return;
+      }
+      if (!secondaryInput.trim() || secondaryInput.trim().replace(/\D/g, '').length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया मान्य 10-अंकीय नया मोबाइल नंबर दर्ज करें।' : 'Please enter valid 10-digit mobile number.');
+        return;
+      }
+    }
+    if (['dob_update_service', 'aadhaar_dob_update'].includes(tid)) {
+      if (val.replace(/\D/g, '').length !== 12) {
+        setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+        return;
+      }
+      if (!dobDate) {
+        setErrorMsg(language === 'hi' ? 'कृपया नई जन्मतिथि (New Date of Birth) चुनें।' : 'Please select Date of Birth.');
+        return;
+      }
+      if (!secondaryInput.trim() || secondaryInput.trim().replace(/\D/g, '').length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया 10-अंकीय पंजीकृत मोबाइल नंबर दर्ज करें।' : 'Please enter valid 10-digit mobile number.');
+        return;
+      }
+    }
+    if (['mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask'].includes(tid) && val.replace(/\D/g, '').length !== 12) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
       return;
     }
 
@@ -860,6 +934,67 @@ function ServicePageContent({
       params.dob = dobDate ? formatDobDisplay(dobDate) : undefined;
       params.photoData = photoData;
       params.signData = signData;
+    }
+
+    if (['aadhaar_pdf_otp', 'aadhaar_original_pdf_otp'].includes(tid)) {
+      params.aadhaarNo = val;
+      params.uidNumber = val;
+      params.otp = secondaryInput.trim();
+      params.txnId = currentResult?.txnId || activeOtpData?.txnId || undefined;
+      params.action = secondaryInput.trim() ? 'verify_otp' : 'sendOtp';
+    }
+
+    if (['aadhaar_ekyc', 'uid_ekyc'].includes(tid)) {
+      params.aadhaarNo = val;
+      params.uidNumber = val;
+      params.pidData = biometricPid;
+      params.bioenc = biometricPid;
+      params.deviceType = rdDeviceType || rdDeviceStatus.name || 'Mantra MFS100';
+    }
+
+    if (['aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'aadhaar_fingerprint'].includes(tid)) {
+      params.aadhaarNo = val;
+      params.uidNumber = val;
+      params.fingerprintData = biometricPid;
+      params.pidData = biometricPid;
+      params.bioenc = biometricPid;
+      params.advanceServer = advanceServer || '1';
+    }
+
+    if (['aadhaar_manual', 'aadhaarcard'].includes(tid) || (toolKind === 'card' && currentTool?.id === 'aadhaarCard')) {
+      params.aadhaarNo = val;
+      params.uidNumber = val;
+      params.name = customerName.trim();
+      params.customerName = customerName.trim();
+      params.fatherName = fatherName.trim();
+      params.dob = dobDate ? formatDobDisplay(dobDate) : undefined;
+      params.gender = gender;
+      params.address = addressInput.trim();
+      params.photoData = photoData;
+      params.serviceId = 'aadhaarCard';
+    }
+
+    if (['mobile_update_service', 'aadhaar_to_mobile_find', 'aadhaar_mobile_link'].includes(tid)) {
+      params.aadhaarNo = val;
+      params.uidNumber = val;
+      params.dob = dobDate ? formatDobDisplay(dobDate) : undefined;
+      params.mobile = secondaryInput.trim();
+    }
+
+    if (['dob_update_service', 'aadhaar_dob_update'].includes(tid)) {
+      params.aadhaarNo = val;
+      params.uidNumber = val;
+      params.dob = dobDate ? formatDobDisplay(dobDate) : undefined;
+      params.mobile = secondaryInput.trim();
+      params.docProof = thirdInput.trim() || undefined;
+    }
+
+    if (['mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask'].includes(tid)) {
+      const cleanUid = val.replace(/\D/g, '');
+      params.aadhaarNo = cleanUid;
+      params.uidNumber = cleanUid;
+      params.aadhar = cleanUid;
+      params.aadhaar = cleanUid;
     }
 
     if (tid === 'ration_pdf_by_aadhar') {
@@ -2281,62 +2416,204 @@ function ServicePageContent({
       );
     }
 
-    // 13. UIDAI ORIGINAL PDF API (Screenshot 182)
-    if (['uidai_original_pdf', 'aadhaar_original_pdf_no_otp', 'aadhaar_original_pdf_otp'].includes(id)) {
+    // 13A. AADHAAR ORIGINAL PDF WITH OTP (Service 13: aadhaar_pdf_otp)
+    if (['aadhaar_pdf_otp', 'aadhaar_original_pdf_otp'].includes(id)) {
       return (
-        <div className="space-y-3">
+        <div className="space-y-4">
+          <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-xl text-xs text-red-900 dark:text-red-200 flex items-start gap-2">
+            <span className="text-base leading-none">🪪</span>
+            <div>
+              <p className="font-bold">आधार ओरिजिनल PDF डाउनलोड (OTP द्वारा)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                12-अंकीय आधार नंबर दर्ज करें, 'OTP भेजें' बटन दबाएं एवं पंजीकृत मोबाइल पर प्राप्त 6-अंकीय OTP दर्ज कर ओरिजिनल e-Aadhaar PDF डाउनलोड करें।
+              </p>
+            </div>
+          </div>
+
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Aadhaar Number *
+              12-Digit Aadhaar Number (आधार नंबर) *
             </label>
+            <div className="flex rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 focus-within:border-blue-500">
+              <span className="bg-red-600 text-white font-bold px-3 py-2.5 text-xs flex items-center">
+                UID
+              </span>
+              <input
+                type="text"
+                required
+                maxLength={12}
+                inputMode="numeric"
+                autoComplete="off"
+                value={primaryInput}
+                onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+                placeholder="12-अंकीय आधार नंबर दर्ज करें"
+                className="w-full bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                6-Digit Aadhaar OTP (प्राप्त OTP)
+              </label>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (primaryInput.replace(/\D/g, '').length !== 12) {
+                    setErrorMsg(language === 'hi' ? 'कृपया पहले 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar number.');
+                    return;
+                  }
+                  setErrorMsg('');
+                  setLoading(true);
+                  try {
+                    const otpRes = await fetch('/api/services/otp/request', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        serviceType: 'aadhaar_original_pdf_otp',
+                        phone: customerSession?.phone || '8006518960',
+                        aadhaarNo: primaryInput
+                      })
+                    });
+                    const otpData = await otpRes.json();
+                    if (otpData.success) {
+                      setActiveOtpData({ ...otpData, testOtpHint: otpData.message?.match(/\d{6}/)?.[0] || '123456' });
+                      setShowOtpModal(true);
+                    } else {
+                      setErrorMsg(otpData.error || 'OTP भेजने में विफल। कृपया पुनः प्रयास करें।');
+                    }
+                  } catch (e) {
+                    setErrorMsg('OTP सर्वर से संपर्क नहीं हो सका।');
+                  } finally {
+                    setLoading(false);
+                  }
+                }}
+                className="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>OTP भेजें (Request OTP)</span>
+              </button>
+            </div>
             <input
               type="text"
-              required
-              maxLength={12}
+              maxLength={6}
               inputMode="numeric"
-              autoComplete="off"
-              value={primaryInput}
-              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
-              placeholder="Enter 12-digit Aadhaar Number"
+              autoComplete="one-time-code"
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+              placeholder="6-अंकीय OTP कोड दर्ज करें"
               className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
             />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select Language</label>
-            <select
-              value={secondaryInput || 'Hindi (हिन्दी)'}
-              onChange={(e) => setSecondaryInput(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
-            >
-              <option value="Hindi (हिन्दी)">Hindi (हिन्दी)</option>
-              <option value="English">English</option>
-              <option value="Bengali">Bengali</option>
-              <option value="Gujarati">Gujarati</option>
-              <option value="Marathi">Marathi</option>
-            </select>
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select PDF Type</label>
-            <select
-              value={thirdInput || 'E-Print'}
-              onChange={(e) => setThirdInput(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
-            >
-              <option value="E-Print">E-Print</option>
-              <option value="PVC Format">PVC Format</option>
-            </select>
           </div>
         </div>
       );
     }
 
-    // 14. AADHAAR ADVANCE / FINGERPRINT (Screenshot 177 / 178)
-    if (['aadhaar_advance', 'aadhaar_fingerprint'].includes(id)) {
+    // 13B. AADHAAR E-KYC BIOMETRIC VERIFICATION (Service 14: aadhaar_ekyc)
+    if (['aadhaar_ekyc', 'uid_ekyc'].includes(id)) {
       return (
         <div className="space-y-4">
+          <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-xl text-xs text-red-900 dark:text-red-200 flex items-start gap-2">
+            <span className="text-base leading-none">🔍</span>
+            <div>
+              <p className="font-bold">आधार e-KYC बायोमेट्रिक सत्यापन (eKYC Verification)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                आधार नंबर दर्ज करें व बायोमेट्रिक स्कैनर (Mantra / Morpho / Startek) पर फिंगरप्रिंट कैप्चर कर लाइव जनसांख्यिकी डेटा सत्यापित करें।
+              </p>
+            </div>
+          </div>
+
           <div className="space-y-1.5">
             <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Enter Your Aadhaar Number *
+              12-Digit Aadhaar Number (आधार नंबर) *
+            </label>
+            <div className="flex rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 focus-within:border-blue-500">
+              <span className="bg-red-600 text-white font-bold px-3 py-2.5 text-xs flex items-center">
+                UID
+              </span>
+              <input
+                type="text"
+                required
+                maxLength={12}
+                inputMode="numeric"
+                autoComplete="off"
+                value={primaryInput}
+                onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+                placeholder="12-अंकीय आधार नंबर दर्ज करें"
+                className="w-full bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+              />
+            </div>
+          </div>
+
+          {/* Live Biometric RD Service Scanner Interactive Block */}
+          <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-center space-y-3">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <span className={`w-2.5 h-2.5 rounded-full ${rdDeviceStatus.connected ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`} />
+              <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
+                {rdDeviceStatus.connected
+                  ? `🟢 बायोमेट्रिक RD डिवाइस सक्रिय: ${rdDeviceStatus.name}`
+                  : '🟡 UIDAI RD सर्विस (Mantra / Morpho / Startek)'}
+              </span>
+            </div>
+
+            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-red-500/10 to-indigo-500/10 border-2 border-dashed border-red-400 dark:border-red-600 flex items-center justify-center text-red-600 dark:text-red-400">
+              <ShieldCheck className={`w-8 h-8 ${isScanningFingerprint ? 'animate-bounce' : ''}`} />
+            </div>
+
+            {biometricScore ? (
+              <div className="text-xs font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl p-2 flex items-center justify-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>फिंगरप्रिंट कैप्चर सफल! गुणवत्ता स्कोर: <b>{biometricScore}%</b> (e-KYC हेतु तैयार)</span>
+              </div>
+            ) : (
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {isScanningFingerprint
+                  ? '⏳ स्कैनर पर अंगूठा रखें... फिंगरप्रिंट पढ़ा जा रहा है...'
+                  : 'UIDAI प्रमाणित RD स्कैनर से अंगूठा स्कैन करें'}
+              </p>
+            )}
+
+            <button
+              type="button"
+              disabled={isScanningFingerprint}
+              onClick={handleCaptureFingerprint}
+              className="bg-gradient-to-r from-red-600 to-indigo-600 hover:from-red-500 hover:to-indigo-500 text-white font-black px-4 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition cursor-pointer w-full disabled:opacity-50"
+            >
+              {isScanningFingerprint ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <span>स्कैन हो रहा है... अंगूठा न हटाएं</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4" />
+                  <span>बायोमेट्रिक स्कैन करें (Capture Fingerprint)</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 13C. AADHAAR ADVANCE / FINGERPRINT PRINT 1 TO 5 (Service 15: aadhaar_advance)
+    if (['aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'aadhaar_fingerprint'].includes(id)) {
+      return (
+        <div className="space-y-4">
+          <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-xl text-xs text-red-900 dark:text-red-200 flex items-start gap-2">
+            <span className="text-base leading-none">🖨️</span>
+            <div>
+              <p className="font-bold">आधार एडवांस फिंगरप्रिंट प्रिंट (सर्वर 1 से 5)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                आधार नंबर दर्ज करें, सर्वर चुनें और बायोमेट्रिक स्कैनर पर अंगूठा लगाकर तुरंत लाइव आधार कार्ड प्राप्त करें।
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              12-Digit Aadhaar Number (आधार नंबर) *
             </label>
             <div className="flex rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 focus-within:border-blue-500">
               <span className="bg-purple-600 text-white font-bold px-3 py-2.5 text-xs flex items-center">
@@ -2350,11 +2627,29 @@ function ServicePageContent({
                 autoComplete="off"
                 value={primaryInput}
                 onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
-                placeholder="12-digit Aadhaar Number"
+                placeholder="12-अंकीय आधार नंबर दर्ज करें"
                 className="w-full bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
               />
             </div>
           </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              एडवांस सर्वर चुनें (Select Advance Server 1-5) *
+            </label>
+            <select
+              value={advanceServer}
+              onChange={(e) => setAdvanceServer(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="1">सर्वर 1 (सुपरफास्ट - UIDAI Live)</option>
+              <option value="2">सर्वर 2 (बैकअप - High Speed)</option>
+              <option value="3">सर्वर 3 (Direct Auth Server)</option>
+              <option value="4">सर्वर 4 (Enterprise Gateway)</option>
+              <option value="5">सर्वर 5 (Redundant Mirror)</option>
+            </select>
+          </div>
+
           {/* Live Biometric RD Service Scanner Interactive Block */}
           <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-center space-y-3">
             <div className="flex items-center justify-center gap-2 mb-1">
@@ -2401,6 +2696,352 @@ function ServicePageContent({
                 </>
               )}
             </button>
+          </div>
+        </div>
+      );
+    }
+
+    // 13D. AADHAAR MANUAL CR-80 PVC SMART CARD MAKER (Service 16: aadhaar_manual & aadhaarCard)
+    if (['aadhaar_manual', 'aadhaarcard'].includes(id) || (toolKind === 'card' && currentTool?.id === 'aadhaarCard')) {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-xl text-xs text-red-900 dark:text-red-200 flex items-start gap-2">
+            <span className="text-base leading-none">🖨️</span>
+            <div>
+              <p className="font-bold">आधार मैनुअल CR-80 PVC स्मार्ट कार्ड मेकर</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                आधार विवरण, जन्मतिथि व पूरा पता दर्ज करें तथा फ़ोटो अपलोड करें। ISO CR-80 PVC मानक (85.6mm × 54mm) कटिंग गाइडलाइन के साथ 1-क्लिक में कार्ड प्रिंट होगा।
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              12-Digit Aadhaar Number (आधार नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={12}
+              inputMode="numeric"
+              autoComplete="off"
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+              placeholder="12-अंकीय आधार नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Full Name (पूरा नाम - English / हिन्दी) *
+            </label>
+            <input
+              type="text"
+              required
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              placeholder="आधार धारक का पूरा नाम"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Father's / Husband's Name (पिता/पति का नाम) *
+            </label>
+            <input
+              type="text"
+              required
+              value={fatherName}
+              onChange={(e) => setFatherName(e.target.value)}
+              placeholder="पिता अथवा पति का नाम"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none"
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Date Of Birth (जन्मतिथि) *
+              </label>
+              <input
+                type="date"
+                required
+                value={dobDate}
+                onChange={(e) => setDobDate(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                Gender (लिंग) *
+              </label>
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+              >
+                <option value="MALE">पुरुष (MALE)</option>
+                <option value="FEMALE">महिला (FEMALE)</option>
+                <option value="TRANSGENDER">अन्य (TRANSGENDER)</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Complete Address (पूरा पता) *
+            </label>
+            <textarea
+              required
+              rows={2}
+              value={addressInput}
+              onChange={(e) => setAddressInput(e.target.value)}
+              placeholder="गाँव/मकान नं., पोस्ट, तहसील, जिला, राज्य एवं पिनकोड"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-xs focus:outline-none"
+            />
+          </div>
+
+          <div className="space-y-1.5 pt-1">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              पासपोर्ट फ़ोटो अपलोड (Photo Upload)
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoUpload}
+                className="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-red-50 file:text-red-700 hover:file:bg-red-100 cursor-pointer"
+              />
+            </div>
+            {photoData && (
+              <div className="w-12 h-14 rounded border border-slate-300 overflow-hidden mt-1 shadow-2xs">
+                <img src={photoData} alt="Photo preview" className="w-full h-full object-cover" />
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // 13E. AADHAAR MOBILE UPDATE SERVICE (Service 17: mobile_update_service)
+    if (['mobile_update_service', 'aadhaar_to_mobile_find', 'aadhaar_mobile_link'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2">
+            <span className="text-base leading-none">📱</span>
+            <div>
+              <p className="font-bold">आधार मोबाइल नंबर लिंक / अपडेट अनुरोध (मैन्युअल रिले)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                आधार नंबर, जन्मतिथि एवं नया मोबाइल नंबर दर्ज करें। 1-2 घंटे में बैकएंड रिले द्वारा मोबाइल लिंक अनुरोध प्रोसेस किया जाएगा।
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              12-Digit Aadhaar Number (आधार नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={12}
+              inputMode="numeric"
+              autoComplete="off"
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+              placeholder="12-अंकीय आधार नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Date Of Birth (आधार अनुसार जन्मतिथि) *
+            </label>
+            <input
+              type="date"
+              required
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              New Mobile Number (नया मोबाइल नंबर जिसे लिंक करना है) *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={10}
+              inputMode="numeric"
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+              placeholder="10-अंकीय नया मोबाइल नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 13F. AADHAAR DOB UPDATE SERVICE (Service 18: dob_update_service)
+    if (['dob_update_service', 'aadhaar_dob_update'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-900 dark:text-amber-200 flex items-start gap-2">
+            <span className="text-base leading-none">📅</span>
+            <div>
+              <p className="font-bold">आधार जन्मतिथि सुधार आवेदन (DOB Update Request)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                आधार नंबर, नई जन्मतिथि एवं पंजीकृत मोबाइल नंबर दर्ज करें। 1-2 घंटे में बैकएंड रिले द्वारा जन्मतिथि संशोधन अनुरोध प्रोसेस किया जाएगा।
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              12-Digit Aadhaar Number (आधार नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={12}
+              inputMode="numeric"
+              autoComplete="off"
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+              placeholder="12-अंकीय आधार नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              New Date Of Birth (संशोधित / नई जन्मतिथि) *
+            </label>
+            <input
+              type="date"
+              required
+              value={dobDate}
+              onChange={(e) => setDobDate(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm focus:outline-none cursor-pointer"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Registered Mobile Number (पंजीकृत मोबाइल नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={10}
+              inputMode="numeric"
+              value={secondaryInput}
+              onChange={(e) => setSecondaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+              placeholder="10-अंकीय मोबाइल नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-sm font-bold focus:outline-none"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Document Proof Details (दस्तावेज़ प्रमाण जैसे जन्म प्रमाण पत्र / 10th मार्कशीट)
+            </label>
+            <input
+              type="text"
+              value={thirdInput}
+              onChange={(e) => setThirdInput(e.target.value)}
+              placeholder="दस्तावेज़ का नाम अथवा प्रमाण पत्र संख्या (वैकल्पिक)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-slate-900 dark:text-white text-xs focus:outline-none"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 13G. MASK AADHAAR VERIFICATION (Service 19: mask_aadhaar)
+    if (['mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-xl text-xs text-red-900 dark:text-red-200 flex items-start gap-2">
+            <span className="text-base leading-none">🛡️</span>
+            <div>
+              <p className="font-bold">मास्क आधार सत्यापन (Mask Aadhaar Verification)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                12-अंकीय आधार नंबर दर्ज कर UIDAI आधिकारिक मास्क आधार एवं सत्यापन स्थिति (Active/Linked) जांचें।
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              12-Digit Aadhaar Number (आधार नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={12}
+              inputMode="numeric"
+              autoComplete="off"
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+              placeholder="12-अंकीय आधार नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 13H. UIDAI ORIGINAL PDF WITHOUT OTP (Screenshot 182)
+    if (['uidai_original_pdf', 'aadhaar_original_pdf_no_otp'].includes(id)) {
+      return (
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Aadhaar Number *
+            </label>
+            <input
+              type="text"
+              required
+              maxLength={12}
+              inputMode="numeric"
+              autoComplete="off"
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.replace(/[^0-9]/g, '').slice(0, 12))}
+              placeholder="Enter 12-digit Aadhaar Number"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none tracking-widest"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select Language</label>
+            <select
+              value={secondaryInput || 'Hindi (हिन्दी)'}
+              onChange={(e) => setSecondaryInput(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="Hindi (हिन्दी)">Hindi (हिन्दी)</option>
+              <option value="English">English</option>
+              <option value="Bengali">Bengali</option>
+              <option value="Gujarati">Gujarati</option>
+              <option value="Marathi">Marathi</option>
+            </select>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Select PDF Type</label>
+            <select
+              value={thirdInput || 'E-Print'}
+              onChange={(e) => setThirdInput(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none cursor-pointer"
+            >
+              <option value="E-Print">E-Print</option>
+              <option value="PVC Format">PVC Format</option>
+            </select>
           </div>
         </div>
       );
@@ -3224,15 +3865,15 @@ function ServicePageContent({
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🎉 100% मुफ़्त सेवा
                   </span>
-                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)) ? (
+                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service'].includes(currentTool?.id)) ? (
                   <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     ⏱️ मैन्युअल रिले (1-2 घंटे)
                   </span>
-                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'pan_verification_premium', 'panverificationpremium', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'aadhaar_pdf_otp', 'pan_to_aadhar_find', 'pan_to_gst', 'gst_to_pan', 'gst_verification'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
+                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'pan_verification_premium', 'panverificationpremium', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'aadhaar_pdf_otp', 'aadhaar_original_pdf_otp', 'aadhaar_ekyc', 'uid_ekyc', 'aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask', 'pan_to_aadhar_find', 'pan_to_gst', 'gst_to_pan', 'gst_verification'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🟢 लाइव सरकारी API
                   </span>
-                ) : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id)) ? (
+                ) : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'aadhaar_manual', 'aadhaar_pvc', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id)) ? (
                   <span className="px-2 py-0.5 bg-sky-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🖨️ CR-80 PVC स्मार्ट कार्ड
                   </span>
@@ -3395,9 +4036,9 @@ function ServicePageContent({
                 </span>
               </span>
               <span className="text-[11px] bg-white/20 text-white font-mono font-bold px-2.5 py-0.5 rounded-full">
-                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)
+                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service'].includes(currentTool?.id)
                   ? '⏱️ 1-2 घंटे रिले'
-                  : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id))
+                  : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'aadhaar_manual', 'aadhaar_pvc', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id))
                   ? '🖨️ त्वरित कार्ड प्रिंट'
                   : '⚡ 0.5s लाइव'}
               </span>
@@ -3719,7 +4360,7 @@ function ServicePageContent({
                     {/* ======================================================= */}
                     {/* 2. AADHAAR CARD RENDERER (UIDAI CR-80 PVC FORMAT) */}
                     {/* ======================================================= */}
-                    {toolKind === 'aadhaar' && (
+                    {(toolKind === 'aadhaar' || currentTool?.serviceType === 'aadhaarCard' || currentResult?.serviceType === 'aadhaarCard') && (
                       <>
                         {(cardSide === 'both' || cardSide === 'front') && (
                           <div className="cr80-card-scaler relative group max-w-full">

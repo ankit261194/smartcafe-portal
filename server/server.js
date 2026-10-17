@@ -3586,7 +3586,26 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
           'epan': 'pan_find', 'findpan': 'pan_find', 'challansearch': 'chalan_find',
           'searchepic': 'voter_verification',
           'chassis_to_rc': 'chassis_to_rc_find',
-          'chassis-to-rc': 'chassis_to_rc_find'
+          'chassis-to-rc': 'chassis_to_rc_find',
+          'aadhaar_pdf_otp': 'aadhaar_original_pdf_otp',
+          'aadhaar_pdf': 'aadhaar_original_pdf_otp',
+          'uid_ekyc': 'aadhaar_advance',
+          'aadhaar_ekyc': 'aadhaar_advance',
+          'aadhaar_advance_one': 'aadhaar_advance',
+          'aadhaar_advance_two': 'aadhaar_advance',
+          'aadhaar_advance_three': 'aadhaar_advance',
+          'aadhaar_advance_four': 'aadhaar_advance',
+          'aadhaar_advance_five': 'aadhaar_advance',
+          'aadhaar_fingerprint': 'aadhaar_advance',
+          'mobile_update_service': 'mobile_update_service',
+          'aadhaar_to_mobile_find': 'mobile_update_service',
+          'aadhaar_mobile_link': 'mobile_update_service',
+          'dob_update_service': 'dob_update_service',
+          'aadhaar_dob_update': 'dob_update_service',
+          'mask_aadhaar': 'pan_aadhar_mask',
+          'aadhaar_mask_verification': 'pan_aadhar_mask',
+          'aadhaar_mask': 'pan_aadhar_mask',
+          'aadhaar_manual': 'aadhaar_advance'
         };
         const mappedId = legacyMap[norm];
         if (mappedId) {
@@ -3694,10 +3713,22 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       if (cleanAadhaar) {
         p4Params.aadhar = cleanAadhaar;
         p4Params.aadhaar = cleanAadhaar;
+        p4Params.aadhaarNo = cleanAadhaar;
         p4Params.uidNumber = cleanAadhaar;
         p4Params.uid_number = cleanAadhaar;
+        p4Params.number = cleanAadhaar;
       }
       if (params?.bioenc) p4Params.bioenc = params.bioenc;
+      if (params?.pidData) p4Params.pidData = params.pidData;
+      if (params?.fingerprintData) p4Params.fingerprintData = params.fingerprintData;
+      if (params?.device) p4Params.device = params.device;
+      if (params?.rdDeviceType) p4Params.rdDeviceType = params.rdDeviceType;
+      if (params?.server) p4Params.server = params.server;
+      if (params?.advanceServer) p4Params.advanceServer = params.advanceServer;
+      if (params?.dob) p4Params.dob = params.dob;
+      if (params?.name) p4Params.name = params.name;
+      if (params?.customerName) p4Params.customerName = params.customerName;
+      if (params?.mobile) p4Params.mobile = params.mobile;
       if (params?.otp) {
         p4Params.otp = String(params.otp).trim();
         p4Params.action = 'verify_otp';
@@ -4991,6 +5022,17 @@ app.post('/api/services/execute-automated', async (req, res) => {
       relayParams.fatherName = String(params?.fatherName || '').trim();
       relayParams.dob = String(params?.dob || '').trim();
       relayParams.mobile = String(params?.mobile || params?.phone || params?.secondaryInput || '').replace(/\D/g, '').trim();
+    } else if (uService === 'Mobile_Update' || service79.id === 'mobile_update_service' || service79.id === 'aadhaar_to_mobile_find') {
+      relayParams.uidNumber = String(params?.uidNumber || params?.aadhaarNo || params?.query || '').trim();
+      relayParams.aadhaarNo = String(params?.aadhaarNo || params?.uidNumber || params?.query || '').trim();
+      relayParams.dob = String(params?.dob || '').trim();
+      relayParams.mobile = String(params?.mobile || params?.phone || params?.secondaryInput || '').trim();
+    } else if (uService === 'Dob_Update' || service79.id === 'dob_update_service') {
+      relayParams.uidNumber = String(params?.uidNumber || params?.aadhaarNo || params?.query || '').trim();
+      relayParams.aadhaarNo = String(params?.aadhaarNo || params?.uidNumber || params?.query || '').trim();
+      relayParams.dob = String(params?.dob || '').trim();
+      relayParams.mobile = String(params?.mobile || params?.phone || params?.secondaryInput || '').trim();
+      relayParams.docProof = String(params?.docProof || params?.thirdInput || '').trim();
     }
 
     const newOrder = {
@@ -5131,6 +5173,13 @@ app.post('/api/services/execute-automated', async (req, res) => {
       const bankName = liveP4.bankName || rawData.bankName || 'बैंक';
       docTitle = `NPCI डीबीटी लिंक स्थिति (${bankName})`;
       refNumber = aid || 'NPCI';
+    } else if (liveP4.service === 'aadhaar' || normServiceType.includes('aadhaar') || normServiceType.includes('aadhar') || normServiceType.includes('uid')) {
+      const aid = String(liveP4.aadhaarNo || liveP4.uidNumber || rawData.aadhaarNo || rawData.uidNumber || rawData.uid_number || params?.aadhaarNo || params?.uidNumber || '').replace(/\D/g, '');
+      generatedData.aadhaarNo = aid;
+      generatedData.uidNumber = aid;
+      const aName = rawData.name || rawData.customerName || params?.customerName || 'आधार धारक';
+      docTitle = aid ? `आधार कार्ड (${aid}) - ${aName}` : (service79?.name || serviceDisplayName);
+      refNumber = aid || refNumber || 'UID';
     } else {
       docTitle = service79?.name || serviceDisplayName;
       refNumber = refNumber || 'DOC';
@@ -5313,6 +5362,35 @@ app.post('/api/services/execute-automated', async (req, res) => {
         };
         docTitle = `पैन कार्ड CR-80 PVC (${panNo}) - ${panName}`;
         refNumber = panNo;
+      }
+    } else if (normServiceType === 'aadhaarcard' || normServiceType === 'aadhaarCard' || normServiceType === 'aadhaar_manual' || normServiceType === 'aadhaar_pvc' || ['aadhaarCard', 'aadhaar_manual', 'aadhaar_pvc'].includes(params?.serviceId)) {
+      const aid = String(params?.aadhaarNo || params?.uidNumber || params?.aadhar || params?.query || '').replace(/\D/g, '').trim();
+      const aName = String(params?.customerName || params?.name || '').trim();
+      const fName = String(params?.fatherName || params?.careOf || '').trim();
+      const dob = String(params?.dob || '').trim();
+      const gender = String(params?.gender || 'MALE').trim();
+      const address = String(params?.address || '').trim();
+      if (aid && aid.length === 12 && aName) {
+        generatedData = {
+          aadhaarNo: aid,
+          uidNumber: aid,
+          name: aName,
+          customerName: aName,
+          name_hi: params?.name_hi || aName,
+          fatherName: fName,
+          careOf: fName ? `C/O: ${fName}` : '',
+          dob,
+          gender,
+          address,
+          address_hi: params?.address_hi || address,
+          photoUrl: params?.photo || params?.photoData || null,
+          refNumber: aid,
+          serviceType: 'aadhaarCard',
+          cardType: 'ISO CR-80 PVC Smart Card',
+          isInstantPvc: true
+        };
+        docTitle = `आधार कार्ड CR-80 PVC (${aid}) - ${aName}`;
+        refNumber = aid;
       }
     }
   }

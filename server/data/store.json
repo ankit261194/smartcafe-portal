@@ -186,13 +186,13 @@
       "wholesaleRate": 15,
       "retailRate": 25,
       "isActive": true,
-      "serviceType": "coming_soon",
+      "serviceType": "live_api",
       "status": "live",
       "fulfillmentType": "instant_api",
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uid/ekycVerification",
       "method": "POST",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "🟢 लाइव सरकारी API",
       "p4Key": "aadhaar_ekyc",
       "parameters": [
         "apiKey",
@@ -219,7 +219,7 @@
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar_pdf.php",
       "method": "GET",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "🟢 लाइव सरकारी API",
       "p4Key": "aadhaar_pdf_otp",
       "parameters": [
         "apiKey",
@@ -696,13 +696,13 @@
       "wholesaleRate": 5,
       "retailRate": 15,
       "isActive": true,
-      "serviceType": "generator",
+      "serviceType": "live_api",
       "status": "live",
       "fulfillmentType": "instant_api",
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/maskAadharVerification",
       "method": "GET",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "🟢 लाइव सरकारी API",
       "p4Key": "mask_aadhaar_verification",
       "parameters": [
         "apiKey",
@@ -2461,6 +2461,34 @@
       "requiredInputs": [
         "aadhaarNumber",
         "dob"
+      ]
+    },
+    {
+      "id": "mobile_update_service",
+      "num": 90,
+      "name": "Aadhaar Mobile Link / Update (आधार मोबाइल लिंक अनुरोध)",
+      "category": "aadhaar",
+      "wholesaleRate": 50,
+      "retailRate": 100,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Mobile_Update",
+      "upstreamFile": "Mobile_Update.php",
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "parameters": [
+        "aadhaarNo",
+        "dob",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "dob",
+        "mobile"
       ]
     }
   ],

@@ -163,6 +163,66 @@ const SERVICE_ENRICHMENT = {
     inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
     placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
   },
+  aadhaar_pdf_otp: {
+    title: { hi: 'आधार ओरिजिनल PDF (OTP द्वारा)', en: 'Aadhaar Original PDF (OTP)' },
+    sub: { hi: 'UIDAI आधिकारिक e-Aadhaar PDF पासवर्ड सहित', en: 'Official UIDAI e-Aadhaar PDF' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
+  },
+  aadhaar_ekyc: {
+    title: { hi: 'आधार e-KYC बायोमेट्रिक सत्यापन', en: 'Aadhaar Biometric e-KYC' },
+    sub: { hi: 'बायोमेट्रिक फिंगरप्रिंट से UIDAI आधिकारिक डेटा सत्यापन', en: 'Official UIDAI Demographic Data via Fingerprint' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
+  },
+  uid_ekyc: {
+    title: { hi: 'आधार e-KYC बायोमेट्रिक सत्यापन', en: 'UID e-KYC Verification' },
+    sub: { hi: 'बायोमेट्रिक फिंगरप्रिंट से UIDAI आधिकारिक डेटा सत्यापन', en: 'Official UIDAI Demographic Data via Fingerprint' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
+  },
+  aadhaar_manual: {
+    title: { hi: 'आधार मैनुअल CR-80 PVC स्मार्ट कार्ड मेकर', en: 'Aadhaar Manual CR-80 PVC Smart Card Maker' },
+    sub: { hi: '85.6mm×54mm ISO लेआउट HD PVC आधार कार्ड मेकर', en: 'ISO CR-80 PVC Smart Card Maker' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' },
+    placeholder: { hi: 'आधार नंबर दर्ज करें', en: 'Enter Aadhaar Number' }
+  },
+  aadhaarCard: {
+    title: { hi: 'आधार CR-80 PVC स्मार्ट कार्ड प्रिंट', en: 'Aadhaar CR-80 PVC Smart Card Print' },
+    sub: { hi: '85.6mm×54mm ISO लेआउट HD PVC आधार कार्ड मेकर', en: 'ISO CR-80 PVC Smart Card Maker' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' },
+    placeholder: { hi: 'आधार नंबर दर्ज करें', en: 'Enter Aadhaar Number' }
+  },
+  mobile_update_service: {
+    title: { hi: 'आधार मोबाइल नंबर लिंक / अपडेट अनुरोध', en: 'Aadhaar Mobile Link / Update' },
+    sub: { hi: 'आधार में नया मोबाइल नंबर जोड़ने हेतु अनुरोध प्रेषित करें', en: 'Aadhaar Mobile Link Request' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
+  },
+  aadhaar_to_mobile_find: {
+    title: { hi: 'आधार मोबाइल नंबर लिंक / खोज', en: 'Aadhaar Mobile Link / Find' },
+    sub: { hi: 'आधार में नया मोबाइल नंबर जोड़ने हेतु अनुरोध प्रेषित करें', en: 'Aadhaar Mobile Link Request' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
+  },
+  dob_update_service: {
+    title: { hi: 'आधार जन्मतिथि सुधार आवेदन (DOB Update)', en: 'Aadhaar DOB Update / Correction' },
+    sub: { hi: 'आधार कार्ड में जन्मतिथि संशोधन हेतु अधिकृत अनुरोध', en: 'Aadhaar Date of Birth Correction' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
+  },
+  mask_aadhaar: {
+    title: { hi: 'मास्क आधार सत्यापन (Mask Aadhaar)', en: 'Mask Aadhaar Verification' },
+    sub: { hi: 'UIDAI सुरक्षित मास्क आधार सत्यापन व स्थिति', en: 'UIDAI Masked Aadhaar Verification' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
+  },
+  aadhaar_mask_verification: {
+    title: { hi: 'मास्क आधार सत्यापन (Mask Aadhaar)', en: 'Mask Aadhaar Verification' },
+    sub: { hi: 'UIDAI सुरक्षित मास्क आधार सत्यापन व स्थिति', en: 'UIDAI Masked Aadhaar Verification' },
+    inputLabel: { hi: '12-अंकीय आधार नंबर दर्ज करें', en: 'Enter 12-Digit Aadhaar Number' },
+    placeholder: { hi: '12-अंकीय आधार नंबर', en: '12-Digit Aadhaar Number' }
+  },
   aadhaar_original_pdf_no_otp: {
     title: { hi: 'आधार ओरिजिनल PDF (बिना OTP)', en: 'Aadhaar Original PDF (No OTP)' },
     sub: { hi: 'बिना मोबाइल OTP के आधिकारिक आधार PDF डाउनलोड', en: 'Aadhaar PDF Download Without Mobile OTP' },

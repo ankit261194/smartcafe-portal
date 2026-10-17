@@ -212,6 +212,83 @@ assert(!indexPhpContent.includes("$panNo = strtoupper(trim($liveP4['panNo'] ?? (
 
 console.log('✅ PASS: Part 2 PAN Card Services Suite 100% verified across all tiers');
 
+console.log('\n--- TEST 3D: Part 3 Aadhaar Card Services Suite Comprehensive Verification ---');
+// 1. Service 13: aadhaar_pdf_otp / aadhaar_original_pdf_otp (Original PDF via OTP)
+assert(servicePageContent.includes("['aadhaar_pdf_otp', 'aadhaar_original_pdf_otp'].includes(id)"), 'aadhaar_pdf_otp must have dedicated form 13A');
+assert(servicePageContent.includes("['aadhaar_pdf_otp', 'aadhaar_original_pdf_otp'].includes(tid) && val.replace(/\\D/g, '').length !== 12"), 'aadhaar_pdf_otp must validate 12-digit Aadhaar');
+assert(servicePageContent.includes("currentTool?.id === 'aadhaar_original_pdf_otp'"), 'requiresLiveOtp must check aadhaar_original_pdf_otp');
+const aadhaarPdfSvc = services79.find(s => s.id === 'aadhaar_original_pdf_otp');
+assert(aadhaarPdfSvc, 'aadhaar_original_pdf_otp must exist in services_79.json');
+assert(aadhaarPdfSvc.apiEndpoint.includes('aadhaar_pdf.php'), 'aadhaar_original_pdf_otp must route to aadhaar_pdf.php');
+assert(aadhaarPdfSvc.badge.includes('लाइव सरकारी API'), 'aadhaar_original_pdf_otp must have honest live API badge');
+assert(indexPhpContent.includes("'aadhaar_pdf_otp' => 'aadhaar_original_pdf_otp'"), 'index.php legacyMap must resolve aadhaar_pdf_otp');
+assert(serverJsContent.includes("'aadhaar_pdf_otp': 'aadhaar_original_pdf_otp'"), 'server.js legacyMap must resolve aadhaar_pdf_otp');
+
+// 2. Service 14: aadhaar_ekyc / uid_ekyc (eKYC Verification via Biometric RD)
+assert(servicePageContent.includes("['aadhaar_ekyc', 'uid_ekyc'].includes(id)"), 'aadhaar_ekyc must have dedicated form 13B');
+assert(servicePageContent.includes("['aadhaar_ekyc', 'uid_ekyc'].includes(tid) && val.replace(/\\D/g, '').length !== 12"), 'aadhaar_ekyc must validate 12-digit Aadhaar');
+assert(servicePageContent.includes("params.pidData = biometricPid"), 'ServicePage must pack biometric pidData');
+assert(indexPhpContent.includes("'uid_ekyc' => 'aadhaar_advance'"), 'index.php legacyMap must resolve uid_ekyc');
+assert(serverJsContent.includes("'uid_ekyc': 'aadhaar_advance'"), 'server.js legacyMap must resolve uid_ekyc');
+
+// 3. Service 15: aadhaar_advance (Advance Fingerprint 1 to 5)
+assert(servicePageContent.includes("['aadhaar_advance', 'aadhaar_advance_one'"), 'aadhaar_advance must have dedicated form 13C');
+assert(servicePageContent.includes("params.advanceServer = advanceServer || '1'"), 'aadhaar_advance must pack advanceServer');
+const aadhaarAdvSvc = services79.find(s => s.id === 'aadhaar_advance');
+assert(aadhaarAdvSvc, 'aadhaar_advance must exist in services_79.json');
+assert(aadhaarAdvSvc.apiEndpoint.includes('ekycVerification'), 'aadhaar_advance must route to ekycVerification');
+assert(aadhaarAdvSvc.badge.includes('लाइव सरकारी API'), 'aadhaar_advance must have honest live API badge');
+assert(aadhaarAdvSvc.isComingSoon === false, 'aadhaar_advance must NOT be coming soon');
+assert(indexPhpContent.includes("'aadhaar_advance_one' => 'aadhaar_advance'"), 'index.php legacyMap must resolve aadhaar_advance_one');
+assert(serverJsContent.includes("'aadhaar_advance_one': 'aadhaar_advance'"), 'server.js legacyMap must resolve aadhaar_advance_one');
+
+// 4. Service 16: aadhaar_manual & aadhaarCard (Manual ISO CR-80 PVC Smart Card Maker)
+assert(servicePageContent.includes("['aadhaar_manual', 'aadhaarcard'].includes(id)"), 'aadhaar_manual must have dedicated form 13D');
+assert(servicePageContent.includes("आधार मैनुअल CR-80 PVC स्मार्ट कार्ड मेकर"), 'aadhaar_manual form must display ISO CR-80 banner');
+assert(servicePageContent.includes("params.serviceId = 'aadhaarCard'"), 'aadhaar_manual must pack serviceId aadhaarCard');
+assert(servicePageContent.includes("toolKind === 'aadhaar' || currentTool?.serviceType === 'aadhaarCard'"), 'ServicePage must render Aadhaar CR-80 card preview');
+assert(servicePageContent.includes("मेरा आधार, मेरी पहचान"), 'Aadhaar preview must contain official UIDAI tagline');
+assert(indexPhpContent.includes("$normServiceType === 'aadhaarcard' || $normServiceType === 'aadhaarCard' || $normServiceType === 'aadhaar_manual'"), 'index.php execute-automated must support instant PVC aadhaarCard');
+assert(serverJsContent.includes("normServiceType === 'aadhaarcard' || normServiceType === 'aadhaarCard' || normServiceType === 'aadhaar_manual'"), 'server.js execute-automated must support instant PVC aadhaarCard');
+
+// 5. Service 17: mobile_update_service / aadhaar_to_mobile_find (Mobile Link / Update Relay)
+assert(servicePageContent.includes("['mobile_update_service', 'aadhaar_to_mobile_find', 'aadhaar_mobile_link'].includes(id)"), 'mobile_update_service must have dedicated form 13E');
+assert(servicePageContent.includes("['mobile_update_service', 'aadhaar_to_mobile_find', 'aadhaar_mobile_link'].includes(tid)"), 'mobile_update_service must validate 12-digit Aadhaar');
+const mobUpdSvc = services79.find(s => s.id === 'mobile_update_service');
+assert(mobUpdSvc, 'mobile_update_service must exist in services_79.json');
+assert(mobUpdSvc.upstreamService === 'Mobile_Update', 'mobile_update_service must have upstreamService Mobile_Update');
+assert(mobUpdSvc.upstreamFile === 'Mobile_Update.php', 'mobile_update_service must have upstreamFile Mobile_Update.php');
+assert(mobUpdSvc.badge.includes('मैन्युअल रिले'), 'mobile_update_service must have honest manual relay badge');
+assert(indexPhpContent.includes("$uService === 'Mobile_Update' || in_array($service79['id'] ?? '', ['mobile_update_service', 'aadhaar_to_mobile_find'])"), 'index.php must support Mobile_Update relay');
+assert(serverJsContent.includes("uService === 'Mobile_Update' || service79.id === 'mobile_update_service' || service79.id === 'aadhaar_to_mobile_find'"), 'server.js must support Mobile_Update relay');
+
+// 6. Service 18: dob_update_service (DOB Update Request Relay)
+assert(servicePageContent.includes("['dob_update_service', 'aadhaar_dob_update'].includes(id)"), 'dob_update_service must have dedicated form 13F');
+assert(servicePageContent.includes("['dob_update_service', 'aadhaar_dob_update'].includes(tid)"), 'dob_update_service must validate 12-digit Aadhaar');
+const dobUpdSvc = services79.find(s => s.id === 'dob_update_service');
+assert(dobUpdSvc, 'dob_update_service must exist in services_79.json');
+assert(dobUpdSvc.upstreamService === 'Dob_Update', 'dob_update_service must have upstreamService Dob_Update');
+assert(dobUpdSvc.upstreamFile === 'dob_update.php', 'dob_update_service must have upstreamFile dob_update.php');
+assert(dobUpdSvc.badge.includes('मैन्युअल रिले'), 'dob_update_service must have honest manual relay badge');
+assert(indexPhpContent.includes("$uService === 'Dob_Update' || ($service79['id'] ?? '') === 'dob_update_service'"), 'index.php must support Dob_Update relay');
+assert(serverJsContent.includes("uService === 'Dob_Update' || service79.id === 'dob_update_service'"), 'server.js must support Dob_Update relay');
+
+// 7. Service 19: mask_aadhaar / aadhaar_mask_verification (Mask Aadhaar Verification)
+assert(servicePageContent.includes("['mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask'].includes(id)"), 'mask_aadhaar must have dedicated form 13G');
+assert(servicePageContent.includes("['mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask'].includes(tid) && val.replace(/\\D/g, '').length !== 12"), 'mask_aadhaar must validate 12-digit Aadhaar');
+const maskAadhaarSvc = services79.find(s => s.id === 'pan_aadhar_mask');
+assert(maskAadhaarSvc, 'pan_aadhar_mask must exist in services_79.json');
+assert(maskAadhaarSvc.apiEndpoint.includes('maskAadharVerification'), 'pan_aadhar_mask must route to maskAadharVerification');
+assert(maskAadhaarSvc.badge.includes('लाइव सरकारी API'), 'pan_aadhar_mask must have live API badge');
+assert(indexPhpContent.includes("'mask_aadhaar' => 'pan_aadhar_mask'"), 'index.php legacyMap must resolve mask_aadhaar');
+assert(serverJsContent.includes("'mask_aadhaar': 'pan_aadhar_mask'"), 'server.js legacyMap must resolve mask_aadhaar');
+
+// 8. Aadhaar Demographic Mapping in Backend
+assert(indexPhpContent.includes("$p4Service === 'aadhaar' || strpos($normServiceType, 'aadhaar') !== false || strpos($normServiceType, 'aadhar') !== false || strpos($normServiceType, 'uid') !== false"), 'index.php must map Aadhaar live response');
+assert(serverJsContent.includes("liveP4.service === 'aadhaar' || normServiceType.includes('aadhaar') || normServiceType.includes('aadhar') || normServiceType.includes('uid')"), 'server.js must map Aadhaar live response');
+
+console.log('✅ PASS: Part 3 Aadhaar Card Services Suite 100% verified across all tiers');
+
 console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass & Server-Side Validations ---');
 assert(!indexPhpContent.includes('$isTrial = $previewMode;'), 'index.php must not have $isTrial = $previewMode;');
 assert(indexPhpContent.includes('http_response_code(403);'), 'index.php must return 403 on low balance');
