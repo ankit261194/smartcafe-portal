@@ -4284,6 +4284,9 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         if (strpos($targetUrl, 'http') !== 0) {
             $targetUrl = 'https://authorized.p4points.co.in' . (strpos($targetUrl, '/') === 0 ? '' : '/') . $targetUrl;
         }
+        if ($norm === 'll_find' || $norm === 'll_pdf') {
+            $targetUrl = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/ll_pdf.php';
+        }
         $lowerUrl = strtolower($targetUrl);
 
         if (strpos($lowerUrl, 'rc') !== false || strpos($lowerUrl, 'vahan') !== false) {
@@ -4394,9 +4397,12 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             $p4Params['date_of_birth'] = $rawDob;
             $p4Params['dobenter'] = $rawDob;
             $p4Params['dltype'] = $params['dltype'] ?? '1';
+            if (!empty($params['cardBg'])) {
+                $p4Params['cardBg'] = $params['cardBg'];
+            }
         }
-        if (strpos($lowerUrl, 'll') !== false || strpos($lowerUrl, 'learner') !== false) {
-            $llVal = trim($params['applicationNumber'] ?? ($params['application_number'] ?? ($params['idNumber'] ?? $val)));
+        if (strpos($lowerUrl, 'll') !== false || strpos($lowerUrl, 'learner') !== false || $norm === 'll_find' || $norm === 'll_pdf') {
+            $llVal = trim($params['applicationNumber'] ?? ($params['application_number'] ?? ($params['idNumber'] ?? ($params['appNo'] ?? $val))));
             $p4Params['idNumber'] = $llVal;
             $p4Params['application_number'] = $llVal;
             $p4Params['applicationNumber'] = $llVal;
@@ -4551,7 +4557,9 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
 
         // Multi-Provider Fallback Router for sensitive services (DL, RC, PAN, Voter, etc.)
         $backupEndpoints = [];
-        if (strpos($lowerUrl, 'dl') !== false || strpos($norm, 'dl') !== false) {
+        if ($norm === 'll_find' || $norm === 'll_pdf') {
+            $backupEndpoints[] = 'https://authorized.p4points.co.in/api/v1/LL_application_pdf.php';
+        } elseif (strpos($lowerUrl, 'dl') !== false || strpos($norm, 'dl') !== false) {
             $backupEndpoints[] = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DrivingLicence/dl-details.php';
             $backupEndpoints[] = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl-pdf.php';
         } elseif (strpos($lowerUrl, 'rc') !== false || strpos($norm, 'rc') !== false) {
@@ -4715,26 +4723,64 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         }
     }
 
-    // 4. DL PDF / Driving Licence
+    // 4. DL Details & PDF / Driving Licence
     if (strpos($norm, 'dl') !== false || strpos($norm, 'licence') !== false || strpos($norm, 'driving') !== false) {
-        $dlNo = strtoupper(trim($params['dlNo'] ?? ($params['query'] ?? '')));
-        $dob = $params['dob'] ?? '01-01-1990';
+        $dlNo = strtoupper(trim($params['dl'] ?? ($params['dlNo'] ?? ($params['dlNumber'] ?? ($params['query'] ?? '')))));
+        $dob = $params['dob'] ?? ($params['date_of_birth'] ?? ($params['dobenter'] ?? '01-01-1990'));
+        $cardBg = $params['cardBg'] ?? 'White Background';
         if (strlen($dlNo) >= 6) {
-            $url = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php?apiKey=' . urlencode($p4ApiKey) . '&dlNo=' . urlencode($dlNo) . '&dob=' . urlencode($dob) . '&dltype=1';
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
-            $resp = curl_exec($ch);
-            curl_close($ch);
-            if ($resp) {
-                $json = json_decode($resp, true);
-                if (!empty($json['file']) || !empty($json['pdf']) || !empty($json['pdf_url'])) {
+            // 1. Try TargetApiV1 DrivingLicence/dl-details.php
+            $urlDetails = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DrivingLicence/dl-details.php?apiKey=' . urlencode($p4ApiKey) . '&dlNo=' . urlencode($dlNo) . '&dob=' . urlencode($dob) . '&cardBg=' . urlencode($cardBg);
+            $ch1 = curl_init($urlDetails);
+            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch1, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch1, CURLOPT_FOLLOWLOCATION, true);
+            $resp1 = curl_exec($ch1);
+            curl_close($ch1);
+            if ($resp1) {
+                $j1 = json_decode($resp1, true);
+                if (is_array($j1) && (!empty($j1['data']) || !empty($j1['details']) || !empty($j1['holder']) || !empty($j1['name']) || !empty($j1['success']))) {
+                    $dlData = $j1['data'] ?? ($j1['details'] ?? $j1);
                     return [
                         'source' => 'p4points',
                         'service' => 'dl',
                         'dlNo' => $dlNo,
-                        'pdfUrl' => $json['file'] ?? ($json['pdf'] ?? ($json['pdf_url'] ?? '')),
-                        'isLiveFromP4Points' => true
+                        'name' => $dlData['name'] ?? ($dlData['holder_name'] ?? ($dlData['full_name'] ?? 'DL धारक')),
+                        'fatherName' => $dlData['father_name'] ?? ($dlData['relation_name'] ?? ''),
+                        'dob' => $dlData['dob'] ?? $dob,
+                        'address' => $dlData['address'] ?? ($dlData['permanent_address'] ?? ''),
+                        'validity' => $dlData['validity'] ?? ($dlData['valid_upto'] ?? ''),
+                        'cov' => $dlData['cov'] ?? ($dlData['vehicle_class'] ?? 'LMV'),
+                        'pdfUrl' => $j1['file'] ?? ($j1['pdf'] ?? ($j1['pdf_url'] ?? null)),
+                        'pdfBase64' => $j1['pdf_base64'] ?? null,
+                        'isLiveFromP4Points' => true,
+                        'data' => $dlData
+                    ];
+                }
+            }
+
+            // 2. Try TargetApiV1 DL/dl-pdf.php / dl_link.php
+            $urlPdf = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl-pdf.php?apiKey=' . urlencode($p4ApiKey) . '&dlNo=' . urlencode($dlNo) . '&dob=' . urlencode($dob) . '&dltype=1&cardBg=' . urlencode($cardBg);
+            $ch2 = curl_init($urlPdf);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch2, CURLOPT_TIMEOUT, 12);
+            curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, true);
+            $resp2 = curl_exec($ch2);
+            curl_close($ch2);
+            if ($resp2) {
+                $j2 = json_decode($resp2, true);
+                $pdf2 = $j2['file'] ?? ($j2['pdf'] ?? ($j2['pdf_url'] ?? ($j2['pdf_base64'] ?? null)));
+                if (!empty($pdf2) || !empty($j2['success']) || !empty($j2['data'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'dl',
+                        'dlNo' => $dlNo,
+                        'pdfUrl' => $pdf2,
+                        'pdfBase64' => $j2['pdf_base64'] ?? null,
+                        'isLiveFromP4Points' => true,
+                        'data' => $j2['data'] ?? $j2
                     ];
                 }
             }
@@ -4970,6 +5016,68 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         }
     }
 
+    // 12B. Engine to RC
+    if (strpos($norm, 'engine_to_rc') !== false || $norm === 'engine_to_rc') {
+        $engineNo = strtoupper(trim($params['engineNumber'] ?? ($params['engine_number'] ?? ($params['engine'] ?? ($params['query'] ?? '')))));
+        if (strlen($engineNo) >= 4) {
+            $url = 'https://authorized.p4points.co.in/api/v1/engine_to_rc.php?apiKey=' . urlencode($p4ApiKey) . '&engine_number=' . urlencode($engineNo);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                if (!empty($json['status']) || !empty($json['plate']) || !empty($json['rc_number']) || !empty($json['success'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'rc',
+                        'regNo' => $json['plate'] ?? ($json['rc_number'] ?? ($json['vehicleNumber'] ?? 'RC RECORD')),
+                        'ownerName' => $json['full_name'] ?? ($json['owner_name'] ?? 'वाहन स्वामी'),
+                        'fatherName' => $json['relation_name'] ?? ($json['father_name'] ?? ''),
+                        'engineNo' => $engineNo,
+                        'chassisNo' => $json['chassis_no'] ?? ($json['chassis'] ?? ''),
+                        'isLiveFromP4Points' => true,
+                        'data' => $json
+                    ];
+                }
+            }
+        }
+    }
+
+    // 12C. PUC Certificate Download
+    if (strpos($norm, 'puc') !== false || $norm === 'puc_certificate_download') {
+        $vNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicle_number'] ?? ($params['vehicleNumber'] ?? ($params['regNo'] ?? ($params['query'] ?? '')))));
+        if (strlen($vNo) >= 4) {
+            $url = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/puc_certificate.php?apiKey=' . urlencode($p4ApiKey) . '&vehicle_number=' . urlencode($vNo) . '&vehicleNumber=' . urlencode($vNo) . '&regNo=' . urlencode($vNo);
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            $resp = curl_exec($ch);
+            curl_close($ch);
+            if ($resp) {
+                $json = json_decode($resp, true);
+                $pdf = $json['file'] ?? ($json['pdf'] ?? ($json['pdf_url'] ?? ($json['pdf_base64'] ?? null)));
+                if (!empty($pdf) || !empty($json['data']) || !empty($json['success'])) {
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'rc',
+                        'vehicleNumber' => $vNo,
+                        'regNo' => $vNo,
+                        'pdfUrl' => $pdf,
+                        'pdfBase64' => $json['pdf_base64'] ?? null,
+                        'isLiveFromP4Points' => true,
+                        'data' => $json['data'] ?? $json
+                    ];
+                }
+            }
+        }
+    }
+
     // 13. RC to Mobile & Father Name
     if (strpos($norm, 'rc_to_mobile') !== false || strpos($norm, 'rc_mobile') !== false) {
         $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicleNumber'] ?? ($params['query'] ?? '')));
@@ -5154,27 +5262,65 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         }
     }
 
-    // 20. Learning Licence PDF Download
-    if (strpos($norm, 'll_pdf') !== false || strpos($norm, 'll_download') !== false) {
-        $idNumber = trim($params['appNo'] ?? ($params['idNumber'] ?? ($params['query'] ?? '')));
-        if (strlen($idNumber) >= 5) {
-            $url = 'https://authorized.p4points.co.in/api/v1/LL_application_pdf.php?apiKey=' . urlencode($p4ApiKey) . '&idNumber=' . urlencode($idNumber);
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            $resp = curl_exec($ch);
-            curl_close($ch);
-            if ($resp) {
-                $json = json_decode($resp, true);
-                if (!empty($json['pdf'])) {
-                    return [
-                        'source' => 'p4points',
-                        'service' => 'dl',
-                        'idNumber' => $idNumber,
-                        'dlNo' => $idNumber,
-                        'pdfBase64' => $json['pdf'],
-                        'isLiveFromP4Points' => true
-                    ];
+    // 20. Learning Licence Find & PDF Download
+    if (strpos($norm, 'll_find') !== false || strpos($norm, 'll_pdf') !== false || strpos($norm, 'll_download') !== false) {
+        $idNumber = trim($params['applicationNumber'] ?? ($params['application_number'] ?? ($params['idNumber'] ?? ($params['appNo'] ?? ($params['query'] ?? '')))));
+        $dob = $params['dob'] ?? ($params['date_of_birth'] ?? '01-01-1990');
+        $state = $params['state'] ?? ($params['state_name'] ?? 'UP');
+        if (strlen($idNumber) >= 4) {
+            // 1. Primary: serviceApi/TargetApiV1/DL/ll_pdf.php
+            $url1 = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/ll_pdf.php?apiKey=' . urlencode($p4ApiKey) . '&idNumber=' . urlencode($idNumber) . '&dob=' . urlencode($dob) . '&state=' . urlencode($state);
+            $ch1 = curl_init($url1);
+            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch1, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch1, CURLOPT_FOLLOWLOCATION, true);
+            $resp1 = curl_exec($ch1);
+            curl_close($ch1);
+            if ($resp1) {
+                $j1 = json_decode($resp1, true);
+                if (is_array($j1)) {
+                    $pdf1 = $j1['file'] ?? ($j1['pdf'] ?? ($j1['pdf_url'] ?? ($j1['pdf_base64'] ?? null)));
+                    if ($pdf1 || !empty($j1['success']) || !empty($j1['data'])) {
+                        return [
+                            'source' => 'p4points',
+                            'service' => 'dl',
+                            'idNumber' => $idNumber,
+                            'dlNo' => $idNumber,
+                            'pdfUrl' => $pdf1,
+                            'pdfBase64' => $j1['pdf_base64'] ?? null,
+                            'isLiveFromP4Points' => true,
+                            'data' => $j1['data'] ?? $j1
+                        ];
+                    }
+                }
+            }
+
+            // 2. Fallback: api/v1/LL_application_pdf.php
+            $url2 = 'https://authorized.p4points.co.in/api/v1/LL_application_pdf.php?apiKey=' . urlencode($p4ApiKey) . '&idNumber=' . urlencode($idNumber) . '&dob=' . urlencode($dob) . '&state=' . urlencode($state);
+            $ch2 = curl_init($url2);
+            curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch2, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, true);
+            $resp2 = curl_exec($ch2);
+            curl_close($ch2);
+            if ($resp2) {
+                $j2 = json_decode($resp2, true);
+                if (is_array($j2)) {
+                    $pdf2 = $j2['pdf'] ?? ($j2['file'] ?? ($j2['pdf_url'] ?? ($j2['pdf_base64'] ?? null)));
+                    if ($pdf2 || !empty($j2['success']) || !empty($j2['data'])) {
+                        return [
+                            'source' => 'p4points_fallback',
+                            'service' => 'dl',
+                            'idNumber' => $idNumber,
+                            'dlNo' => $idNumber,
+                            'pdfUrl' => $pdf2,
+                            'pdfBase64' => $j2['pdf_base64'] ?? null,
+                            'isLiveFromP4Points' => true,
+                            'data' => $j2['data'] ?? $j2
+                        ];
+                    }
                 }
             }
         }
@@ -5437,11 +5583,15 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
         $postData['state'] = trim($params['state'] ?? 'UP');
         $postData['examsecretpin'] = trim($params['examsecretpin'] ?? ($params['examPin'] ?? ''));
         $postData['examPin'] = trim($params['examPin'] ?? ($params['examsecretpin'] ?? ''));
-    } elseif ($uService === 'DL Mobile Link') {
-        $postData['applicationNumber'] = trim($params['applicationNumber'] ?? ($params['dlNo'] ?? ($params['query'] ?? '')));
-        $postData['password'] = trim($params['password'] ?? '');
-        $postData['state'] = trim($params['state'] ?? 'UP');
+    } elseif ($uService === 'DL Mobile Link' || ($service79['id'] ?? '') === 'dl_to_mobile_find') {
+        $dlClean = trim($params['dlNo'] ?? ($params['dl'] ?? ($params['applicationNumber'] ?? ($params['query'] ?? ''))));
+        $postData['applicationNumber'] = $dlClean;
+        $postData['dlNo'] = $dlClean;
+        $postData['dl'] = $dlClean;
+        $postData['dob'] = trim($params['dob'] ?? ($params['date_of_birth'] ?? ''));
         $postData['mobile'] = trim($params['mobile'] ?? ($params['phone'] ?? ''));
+        $postData['state'] = trim($params['state'] ?? 'UP');
+        $postData['password'] = trim($params['password'] ?? '');
     } elseif ($uService === 'Ayushman Download') {
         $postData['uidNumber'] = trim($params['uidNumber'] ?? ($params['pmjayId'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? ''))));
         $postData['state_code'] = trim($params['stateCode'] ?? ($params['state'] ?? 'UP'));
@@ -5449,8 +5599,11 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
         $postData['uidNumber'] = trim($params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? '')));
         $postData['dob'] = trim($params['dob'] ?? '');
         $postData['mobile'] = trim($params['mobile'] ?? ($params['phone'] ?? ''));
-    } elseif ($uService === 'puc_services') {
-        $postData['vehicle_number'] = strtoupper(trim($params['vehicleNumber'] ?? ($params['vehicalNumber'] ?? ($params['query'] ?? ''))));
+    } elseif ($uService === 'puc_services' || ($service79['id'] ?? '') === 'puc_certificate_download') {
+        $vNum = strtoupper(trim($params['vehicle_number'] ?? ($params['vehicleNumber'] ?? ($params['regNo'] ?? ($params['vehicalNumber'] ?? ($params['query'] ?? ''))))));
+        $postData['vehicle_number'] = $vNum;
+        $postData['vehicleNumber'] = $vNum;
+        $postData['regNo'] = $vNum;
     } elseif ($uService === 'Land Seeding') {
         $postData['farmerId'] = trim($params['farmerId'] ?? ($params['registrationNo'] ?? ($params['query'] ?? '')));
         $postData['state'] = trim($params['state'] ?? 'UP');
@@ -5854,8 +6007,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
 
     // ASYNCHRONOUS MANUAL RELAY FULFILLMENT GATEWAY (Rekha Print Engine)
     if ($service79 && ($service79['fulfillmentType'] ?? '') === 'manual_relay') {
-        $orderId = 'ORD-' . time() . '-' . rand(1000, 9999);
-        $userRef = $params['applicationNumber'] ?? ($params['appNo'] ?? ($params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['farmerId'] ?? ($params['samagraId'] ?? ($params['dlNo'] ?? ($params['vehicleNumber'] ?? ($params['panNo'] ?? ''))))))));
+        $userRef = $params['applicationNumber'] ?? ($params['appNo'] ?? ($params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['farmerId'] ?? ($params['samagraId'] ?? ($params['dlNo'] ?? ($params['dl'] ?? ($params['vehicle_number'] ?? ($params['vehicleNumber'] ?? ($params['regNo'] ?? ($params['panNo'] ?? '')))))))))));
 
         // Dispatch to Rekha Print backend
         $relayRes = dispatchRekhaManualRelay($service79, $params, $orderId, $store);
