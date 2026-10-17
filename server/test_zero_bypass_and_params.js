@@ -117,6 +117,21 @@ assert(indexPhpContent.includes("api/v1/engine_to_rc.php"), 'index.php must call
 assert(serverJsContent.includes("api/v1/chassis_to_Rc.php"), 'server.js must call chassis_to_Rc.php');
 assert(serverJsContent.includes("api/v1/engine_to_rc.php"), 'server.js must call engine_to_rc.php');
 
+// 6. Deep Verification: TargetUrl Overwrite & Section 1 Isolation & LegacyMap Integrity
+assert(!indexPhpContent.includes('$targetUrl = $endpointUrl;\n        $ch = curl_init();'), 'index.php must NOT wipe out targetUrl before curl_init');
+assert(indexPhpContent.includes("'chassis_to_rc' => 'chassis_to_rc_find'"), 'index.php legacyMap must resolve chassis_to_rc');
+assert(serverJsContent.includes("'chassis_to_rc': 'chassis_to_rc_find'"), 'server.js legacyMap must resolve chassis_to_rc');
+assert(indexPhpContent.includes("strpos($norm, 'chassis') === false && strpos($norm, 'engine') === false && strpos($norm, 'puc') === false"), 'index.php Section 1 must isolate standard RC from chassis/engine/puc');
+assert(serverJsContent.includes("!norm.includes('chassis') && !norm.includes('engine') && !norm.includes('puc')"), 'server.js Section 1 must isolate standard RC from chassis/engine/puc');
+
+// 7. Client Form Integrity: Mandatory Validations & Elevated UI Forms
+assert(servicePageContent.includes("['chassis_to_rc', 'chassis_to_rc_find', 'chassis_to_rc_alt'].includes(tid) && val.length < 5"), 'ServicePage must enforce min 5 chars for chassis');
+assert(servicePageContent.includes("tid === 'engine_to_rc' && val.length < 4"), 'ServicePage must enforce min 4 chars for engine');
+assert(servicePageContent.includes("tid === 'puc_certificate_download' && val.replace(/[\\s-]+/g, '').length < 5"), 'ServicePage must enforce min 5 chars for PUC');
+assert(!servicePageContent.includes('// 8B. PUC POLLUTION CERTIFICATE DOWNLOAD'), 'ServicePage must not have dead shadowed duplicate 8B block');
+assert(!servicePageContent.includes('// 8C. CHASSIS TO RC FIND'), 'ServicePage must not have dead shadowed duplicate 8C block');
+assert(!servicePageContent.includes('// 8D. ENGINE TO RC FIND'), 'ServicePage must not have dead shadowed duplicate 8D block');
+
 console.log('✅ PASS: Part 1 RTO & Transport Services parameter & routing verified across all tiers');
 
 console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass & Server-Side Validations ---');

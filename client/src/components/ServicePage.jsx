@@ -449,6 +449,18 @@ function ServicePageContent({
         return;
       }
     }
+    if (['chassis_to_rc', 'chassis_to_rc_find', 'chassis_to_rc_alt'].includes(tid) && val.length < 5) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य चेसिस नंबर दर्ज करें (न्यूनतम 5-17 अक्षर)।' : 'Please enter valid Chassis Number.');
+      return;
+    }
+    if (tid === 'engine_to_rc' && val.length < 4) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य इंजन नंबर दर्ज करें।' : 'Please enter valid Engine Number.');
+      return;
+    }
+    if (tid === 'puc_certificate_download' && val.replace(/[\s-]+/g, '').length < 5) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य वाहन रजिस्ट्रेशन नंबर दर्ज करें (जैसे UP32AB1234)।' : 'Please enter valid Vehicle Registration Number.');
+      return;
+    }
     if (tid === 'pan_aadhaar_link_manual' && !secondaryInput.trim()) {
       setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय आधार नंबर दर्ज करें।' : 'Please enter 12-digit Aadhaar number.');
       return;
@@ -1266,7 +1278,7 @@ function ServicePageContent({
     if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc', 'pan', 'pan_details', 'pan_basic_pricing'].includes(id)) {
       return 'Fetch Details';
     }
-    if (['chassis_to_rc_find', 'chassis_to_rc_alt', 'engine_to_rc'].includes(id)) {
+    if (['chassis_to_rc', 'chassis_to_rc_find', 'chassis_to_rc_alt', 'engine_to_rc', 'puc_certificate_download'].includes(id)) {
       return '🔍 विवरण प्राप्त करें';
     }
     if (['pan_to_gst', 'gst_to_pan', 'gst_verification', 'upi_to_details', 'gmail_to_details'].includes(id)) {
@@ -1300,48 +1312,98 @@ function ServicePageContent({
     const id = (currentTool?.id || '').toLowerCase();
     const cat = (currentTool?.category || '').toLowerCase();
 
-    // 1. CHASSIS TO RC (Screenshot 235)
-    if (['chassis_to_rc_find', 'chassis_to_rc_alt', 'chassis_to_mobile_find'].includes(id)) {
+    // 1. CHASSIS TO RC (Chassis Number)
+    if (['chassis_to_rc', 'chassis_to_rc_find', 'chassis_to_rc_alt', 'chassis_to_mobile_find'].includes(id)) {
       return (
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            चैसिस नंबर (Chassis Number) *
-          </label>
-          <input
-            type="text"
-            required
-            value={primaryInput}
-            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
-            placeholder="चैसिस नंबर दर्ज करें"
-            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
-          />
-          <span className="text-[11px] text-slate-400 block">चैसिस नंबर दर्ज करें।</span>
+        <div className="space-y-3">
+          <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2">
+            <span className="text-base leading-none">🔍</span>
+            <div>
+              <p className="font-bold">चेसिस नंबर से RC खोज (Chassis To RC)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                वाहन का 17-अंकीय चेसिस नंबर दर्ज करें। आधिकारिक RC विवरण व रजिस्ट्रेशन नंबर तुरंत प्राप्त करें।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Chassis Number (17-अंकीय चेसिस नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 17))}
+              placeholder="17-अंकीय चेसिस नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
         </div>
       );
     }
 
-    // 2. ENGINE TO RC (Screenshot 236)
+    // 2. ENGINE TO RC (Engine Number)
     if (id === 'engine_to_rc') {
       return (
-        <div className="space-y-1.5">
-          <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-            इंजन नंबर (Engine Number) *
-          </label>
-          <input
-            type="text"
-            required
-            value={primaryInput}
-            onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().slice(0, 20))}
-            placeholder="इंजन नंबर दर्ज करें"
-            className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
-          />
-          <span className="text-[11px] text-slate-400 block">वाहन का वैध इंजन नंबर दर्ज करें।</span>
+        <div className="space-y-3">
+          <div className="p-3 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 rounded-xl text-xs text-teal-900 dark:text-teal-200 flex items-start gap-2">
+            <span className="text-base leading-none">⚙️</span>
+            <div>
+              <p className="font-bold">इंजन नंबर से RC खोज (Engine To RC)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                वाहन का आधिकारिक इंजन नंबर दर्ज करें और RC विवरण प्राप्त करें।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Engine Number (इंजन नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 20))}
+              placeholder="इंजन नंबर दर्ज करें"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    // 2B. PUC POLLUTION CERTIFICATE DOWNLOAD
+    if (id === 'puc_certificate_download') {
+      return (
+        <div className="space-y-3">
+          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs text-emerald-900 dark:text-emerald-200 flex items-start gap-2">
+            <span className="text-base leading-none">🚗</span>
+            <div>
+              <p className="font-bold">वाहन प्रदूषण प्रमाण पत्र (PUC Certificate Download)</p>
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                वाहन का आधिकारिक रजिस्ट्रेशन नंबर दर्ज करें (जैसे UP32AB1234)। आधिकारिक प्रदूषण जांच प्रमाण पत्र तुरंत तैयार होगा।
+              </p>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
+              Vehicle Registration Number (गाड़ी का नंबर) *
+            </label>
+            <input
+              type="text"
+              required
+              value={primaryInput}
+              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 14))}
+              placeholder="गाड़ी नंबर दर्ज करें (जैसे UP32AB1234)"
+              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
+            />
+          </div>
         </div>
       );
     }
 
     // 3. VEHICLE RC / NEW RC (Screenshot 243)
-    if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc', 'rc_father_name_find', 'rc_to_mobile_find', 'rc_mobile_fetch', 'vahan_check'].includes(id) || cat === 'rc') {
+    if (['rc', 'rc_pdf_download', 'rc_to_details', 'vehicle_rc', 'rc_father_name_find', 'rc_to_mobile_find', 'rc_mobile_fetch', 'vahan_check'].includes(id) || (cat === 'rc' && !['puc_certificate_download', 'chassis_to_rc', 'chassis_to_rc_find', 'chassis_to_rc_alt', 'chassis_to_mobile_find', 'engine_to_rc'].includes(id))) {
       return (
         <div className="space-y-3.5">
           <div className="space-y-1.5">
@@ -1648,96 +1710,6 @@ function ServicePageContent({
               <option value="White Background">White Background</option>
               <option value="Light Blue (Original)">Light Blue (Original)</option>
             </select>
-          </div>
-        </div>
-      );
-    }
-
-    // 8B. PUC POLLUTION CERTIFICATE DOWNLOAD
-    if (id === 'puc_certificate_download') {
-      return (
-        <div className="space-y-3">
-          <div className="p-3 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-xl text-xs text-emerald-900 dark:text-emerald-200 flex items-start gap-2">
-            <span className="text-base leading-none">🚗</span>
-            <div>
-              <p className="font-bold">वाहन प्रदूषण प्रमाण पत्र (PUC Certificate Download)</p>
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
-                वाहन का आधिकारिक रजिस्ट्रेशन नंबर दर्ज करें (जैसे UP32AB1234)। आधिकारिक प्रदूषण जांच प्रमाण पत्र तुरंत तैयार होगा।
-              </p>
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Vehicle Registration Number (गाड़ी का नंबर) *
-            </label>
-            <input
-              type="text"
-              required
-              value={primaryInput}
-              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 14))}
-              placeholder="गाड़ी नंबर दर्ज करें (जैसे UP32AB1234)"
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
-            />
-          </div>
-        </div>
-      );
-    }
-
-    // 8C. CHASSIS TO RC FIND
-    if (['chassis_to_rc', 'chassis_to_rc_find', 'chassis_to_rc_alt'].includes(id)) {
-      return (
-        <div className="space-y-3">
-          <div className="p-3 bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-900 dark:text-blue-200 flex items-start gap-2">
-            <span className="text-base leading-none">🔍</span>
-            <div>
-              <p className="font-bold">चेसिस नंबर से RC खोज (Chassis To RC)</p>
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
-                वाहन का 17-अंकीय चेसिस नंबर दर्ज करें। आधिकारिक RC विवरण व रजिस्ट्रेशन नंबर तुरंत प्राप्त करें।
-              </p>
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Chassis Number (17-अंकीय चेसिस नंबर) *
-            </label>
-            <input
-              type="text"
-              required
-              value={primaryInput}
-              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 17))}
-              placeholder="17-अंकीय चेसिस नंबर दर्ज करें"
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
-            />
-          </div>
-        </div>
-      );
-    }
-
-    // 8D. ENGINE TO RC FIND
-    if (id === 'engine_to_rc') {
-      return (
-        <div className="space-y-3">
-          <div className="p-3 bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-800 rounded-xl text-xs text-teal-900 dark:text-teal-200 flex items-start gap-2">
-            <span className="text-base leading-none">⚙️</span>
-            <div>
-              <p className="font-bold">इंजन नंबर से RC खोज (Engine To RC)</p>
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
-                वाहन का आधिकारिक इंजन नंबर दर्ज करें और RC विवरण प्राप्त करें।
-              </p>
-            </div>
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-bold text-slate-700 dark:text-slate-300">
-              Engine Number (इंजन नंबर) *
-            </label>
-            <input
-              type="text"
-              required
-              value={primaryInput}
-              onChange={(e) => setPrimaryInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 20))}
-              placeholder="इंजन नंबर दर्ज करें"
-              className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2.5 text-slate-900 dark:text-white font-mono font-bold text-sm focus:outline-none uppercase"
-            />
           </div>
         </div>
       );
@@ -2975,7 +2947,7 @@ function ServicePageContent({
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🎉 100% मुफ़्त सेवा
                   </span>
-                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'll_find', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)) ? (
+                ) : (currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)) ? (
                   <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     ⏱️ मैन्युअल रिले (1-2 घंटे)
                   </span>
@@ -3146,7 +3118,7 @@ function ServicePageContent({
                 </span>
               </span>
               <span className="text-[11px] bg-white/20 text-white font-mono font-bold px-2.5 py-0.5 rounded-full">
-                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'll_find', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)
+                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'ration_pdf_by_aadhar', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find'].includes(currentTool?.id)
                   ? '⏱️ 1-2 घंटे रिले'
                   : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id))
                   ? '🖨️ त्वरित कार्ड प्रिंट'

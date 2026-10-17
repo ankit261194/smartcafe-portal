@@ -3581,7 +3581,9 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
           'ayushmancard': 'ayushman_image_jpg', 'ayushman_card': 'ayushman_image_jpg',
           'edistrictslip': 'rtps_bihar_pdf', 'edistrict_slip' : 'rtps_bihar_pdf',
           'epan': 'pan_find', 'findpan': 'pan_find', 'challansearch': 'chalan_find',
-          'searchepic': 'voter_verification'
+          'searchepic': 'voter_verification',
+          'chassis_to_rc': 'chassis_to_rc_find',
+          'chassis-to-rc': 'chassis_to_rc_find'
         };
         const mappedId = legacyMap[norm];
         if (mappedId) {
@@ -3951,8 +3953,8 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
   }
 
-  // 1. RC Services (rcDownload, rc_fast_pdf, rc_details, chassis_to_rc, engine_to_rc, etc.)
-  if (norm.includes('rc') || norm === 'rcdownload' || norm.includes('vehicle') || norm.includes('chassis') || norm.includes('engine')) {
+  // 1. RC Services (rcDownload, rc_fast_pdf, rc_details, etc.)
+  if ((norm.includes('rc') || norm === 'rcdownload' || norm.includes('vehicle')) && !norm.includes('chassis') && !norm.includes('engine') && !norm.includes('puc')) {
     const regNo = String(params?.vehicleNumber || params?.rcNo || params?.regNo || params?.query || '').replace(/[\s-]+/g, '').toUpperCase();
     if (regNo && regNo.length >= 4) {
       try {
@@ -4315,15 +4317,17 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
         const cUrl = `https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php?apiKey=${encodeURIComponent(p4ApiKey)}&chassis_no=${encodeURIComponent(chassisNo)}`;
         const res = await fetch(cUrl, { signal: AbortSignal.timeout(10000) });
         const json = await res.json().catch(() => null);
-        if (json && json.status && json.plate) {
+        if (json && (json.status || json.plate || json.rc_number || json.success || json.data)) {
+          const regPlate = json.plate || json.rc_number || json.vehicleNumber || json.data?.plate || json.data?.rc_number || 'RC RECORD';
           return {
             source: 'p4points',
             service: 'rc',
-            regNo: json.plate,
-            ownerName: json.full_name || 'वाहन स्वामी',
-            fatherName: json.relation_name || '',
+            regNo: regPlate,
+            ownerName: json.full_name || json.owner_name || json.data?.owner_name || 'वाहन स्वामी',
+            fatherName: json.relation_name || json.father_name || json.data?.father_name || '',
             chassisNo: chassisNo,
-            isLiveFromP4Points: true
+            isLiveFromP4Points: true,
+            data: json.data || json
           };
         }
       } catch (err) {
@@ -4726,6 +4730,7 @@ app.post('/api/services/execute-automated', async (req, res) => {
     s.id === serviceType || 
     s.id === req.body.serviceId || 
     s.id === req.body.toolId ||
+    (serviceType === 'chassis_to_rc' && s.id === 'chassis_to_rc_find') ||
     s.num === Number(serviceType)
   );
 
@@ -4767,7 +4772,14 @@ app.post('/api/services/execute-automated', async (req, res) => {
     ePan: 'ई-पैन कार्ड डिजिटल डाउनलोड एवं स्लिप',
     findPan: 'गुमशुदा पैन कार्ड खोज एवं सत्यापन पर्ची',
     searchEpic: 'मतदाता सूचना पर्ची (Voter Information Slip)',
-    receiptMaker: 'साइबर कैफे / जन सेवा केंद्र अधिकृत बिल रसीद'
+    receiptMaker: 'साइबर कैफे / जन सेवा केंद्र अधिकृत बिल रसीद',
+    ll_find: 'लर्निंग लाइसेंस (LL) खोज विवरण',
+    ll_pdf: 'लर्निंग लाइसेंस (LL) PDF डाउनलोड',
+    dl_to_mobile_find: 'DL मोबाइल नंबर लिंक व खोज',
+    puc_certificate_download: 'वाहन प्रदूषण प्रमाण पत्र (PUC)',
+    chassis_to_rc: 'चेसिस नंबर से RC खोज विवरण',
+    chassis_to_rc_find: 'चेसिस नंबर से RC खोज विवरण',
+    engine_to_rc: 'इंजन नंबर से RC खोज विवरण'
   };
 
   let wholesaleCost = 200;
@@ -5004,6 +5016,13 @@ app.post('/api/services/execute-automated', async (req, res) => {
       const payable = rawData.netPayable || rawData.amount || '0';
       docTitle = `बिजली रसीद (${ca}) - ₹${payable}`;
       refNumber = ca;
+    } else if (normServiceType.includes('ll')) {
+      const llNo = String(liveP4.idNumber || liveP4.dlNo || rawData.application_number || rawData.idNumber || params?.applicationNumber || params?.idNumber || params?.query || '').toUpperCase().trim();
+      generatedData.idNumber = llNo;
+      generatedData.applicationNumber = llNo;
+      const llName = rawData.name || params?.customerName || 'लर्नर';
+      docTitle = `लर्निंग लाइसेंस (${llNo}) - ${llName}`;
+      refNumber = llNo;
     } else if (liveP4.service === 'dl' || normServiceType.includes('dl') || normServiceType.includes('licence')) {
       const dl = String(liveP4.dlNo || rawData.dl_number || rawData.dlNo || params?.dlNo || '').toUpperCase().trim();
       generatedData.dlNo = dl;

@@ -4260,7 +4260,9 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             'ayushmancard' => 'ayushman_image_jpg', 'ayushman_card' => 'ayushman_image_jpg',
             'edistrictslip' => 'rtps_bihar_pdf', 'edistrict_slip' => 'rtps_bihar_pdf',
             'epan' => 'pan_find', 'findpan' => 'pan_find', 'challansearch' => 'chalan_find',
-            'searchepic' => 'voter_verification'
+            'searchepic' => 'voter_verification',
+            'chassis_to_rc' => 'chassis_to_rc_find',
+            'chassis-to-rc' => 'chassis_to_rc_find'
         ];
         $mappedId = $legacyMap[$norm] ?? null;
         if ($mappedId && isset($s79Map[$mappedId])) {
@@ -4511,7 +4513,6 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             }
         }
 
-        $targetUrl = $endpointUrl;
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 15);
@@ -4605,7 +4606,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
     }
 
     // 1. RC Services
-    if (strpos($norm, 'rc') !== false || $norm === 'rcdownload' || strpos($norm, 'vehicle') !== false || strpos($norm, 'chassis') !== false || strpos($norm, 'engine') !== false) {
+    if ((strpos($norm, 'rc') !== false || $norm === 'rcdownload' || strpos($norm, 'vehicle') !== false) && strpos($norm, 'chassis') === false && strpos($norm, 'engine') === false && strpos($norm, 'puc') === false) {
         $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicleNumber'] ?? ($params['rcNo'] ?? ($params['regNo'] ?? ($params['query'] ?? '')))));
         if (strlen($regNo) >= 4) {
             $url = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=' . urlencode($p4ApiKey) . '&rcno=' . urlencode($regNo);
@@ -4991,25 +4992,29 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
 
     // 12. Chassis to RC
     if (strpos($norm, 'chassis_to_rc') !== false || strpos($norm, 'chassis') !== false) {
-        $chassisNo = strtoupper(trim($params['chassisNumber'] ?? ($params['query'] ?? '')));
+        $chassisNo = strtoupper(trim($params['chassisNumber'] ?? ($params['chassis'] ?? ($params['chassis_no'] ?? ($params['query'] ?? '')))));
         if (strlen($chassisNo) >= 5) {
             $url = 'https://authorized.p4points.co.in/api/v1/chassis_to_Rc.php?apiKey=' . urlencode($p4ApiKey) . '&chassis_no=' . urlencode($chassisNo);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $resp = curl_exec($ch);
             curl_close($ch);
             if ($resp) {
                 $json = json_decode($resp, true);
-                if (!empty($json['status']) && !empty($json['plate'])) {
+                if (is_array($json) && (!empty($json['status']) || !empty($json['plate']) || !empty($json['rc_number']) || !empty($json['success']) || !empty($json['data']))) {
+                    $regPlate = $json['plate'] ?? ($json['rc_number'] ?? ($json['vehicleNumber'] ?? ($json['data']['plate'] ?? ($json['data']['rc_number'] ?? 'RC RECORD'))));
                     return [
                         'source' => 'p4points',
                         'service' => 'rc',
-                        'regNo' => $json['plate'],
-                        'ownerName' => $json['full_name'] ?? 'वाहन स्वामी',
-                        'fatherName' => $json['relation_name'] ?? '',
+                        'regNo' => $regPlate,
+                        'ownerName' => $json['full_name'] ?? ($json['owner_name'] ?? ($json['data']['owner_name'] ?? 'वाहन स्वामी')),
+                        'fatherName' => $json['relation_name'] ?? ($json['father_name'] ?? ($json['data']['father_name'] ?? '')),
                         'chassisNo' => $chassisNo,
-                        'isLiveFromP4Points' => true
+                        'isLiveFromP4Points' => true,
+                        'data' => $json['data'] ?? $json
                     ];
                 }
             }
@@ -5570,11 +5575,11 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
 
     $rekhaConfig = $store['systemSettings']['rekhaPrint'] ?? ['baseUrl' => 'https://rekhaprint.info'];
     $baseUrl = rtrim($rekhaConfig['baseUrl'] ?? 'https://rekhaprint.info', '/');
-    $upstreamFile = $service79['upstreamFile'] ?? 'll_exam_Request.php';
+    $uService = $service79['upstreamService'] ?? '';
+    $upstreamFile = $service79['upstreamFile'] ?? ($uService === 'DL Mobile Link' || ($service79['id'] ?? '') === 'dl_to_mobile_find' ? 'dl_link.php' : 'll_exam_Request.php');
     $targetUrl = $baseUrl . '/members/' . $upstreamFile;
 
     $postData = ['submit' => 'submit'];
-    $uService = $service79['upstreamService'] ?? '';
 
     if ($uService === 'LL_Request' || ($service79['id'] ?? '') === 'll_exam_pass_auto') {
         $postData['applicationNumber'] = trim($params['applicationNumber'] ?? ($params['appNo'] ?? ($params['query'] ?? '')));
@@ -5847,7 +5852,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     }
     if (is_array($allServices)) {
         foreach ($allServices as $s79) {
-            if (($s79['id'] ?? '') === $normServiceType || ($s79['id'] ?? '') === $serviceType) {
+            if (($s79['id'] ?? '') === $normServiceType || ($s79['id'] ?? '') === $serviceType || ($normServiceType === 'chassis_to_rc' && ($s79['id'] ?? '') === 'chassis_to_rc_find')) {
                 $service79 = $s79;
                 break;
             }
@@ -5967,7 +5972,14 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         'ePan' => 'ई-पैन कार्ड डिजिटल डाउनलोड एवं स्लिप',
         'findPan' => 'गुमशुदा पैन कार्ड खोज एवं सत्यापन पर्ची',
         'searchEpic' => 'मतदाता सूचना पर्ची (Voter Information Slip)',
-        'receiptMaker' => 'साइबर कैफे / जन सेवा केंद्र अधिकृत बिल रसीद'
+        'receiptMaker' => 'साइबर कैफे / जन सेवा केंद्र अधिकृत बिल रसीद',
+        'll_find' => 'लर्निंग लाइसेंस (LL) खोज विवरण',
+        'll_pdf' => 'लर्निंग लाइसेंस (LL) PDF डाउनलोड',
+        'dl_to_mobile_find' => 'DL मोबाइल नंबर लिंक व खोज',
+        'puc_certificate_download' => 'वाहन प्रदूषण प्रमाण पत्र (PUC)',
+        'chassis_to_rc' => 'चेसिस नंबर से RC खोज विवरण',
+        'chassis_to_rc_find' => 'चेसिस नंबर से RC खोज विवरण',
+        'engine_to_rc' => 'इंजन नंबर से RC खोज विवरण'
     ];
 
     if (!$isOtherCategory) {
@@ -6136,6 +6148,13 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             $payable = $p4Data['netPayable'] ?? ($p4Data['amount'] ?? '0');
             $docTitle = "बिजली रसीद ({$ca}) - ₹{$payable}";
             $refNumber = $ca;
+        } elseif (strpos($normServiceType, 'll') !== false) {
+            $llNo = strtoupper(trim($liveP4['idNumber'] ?? ($liveP4['dlNo'] ?? ($p4Data['application_number'] ?? ($p4Data['idNumber'] ?? ($userVal ?: ''))))));
+            $generatedData['idNumber'] = $llNo;
+            $generatedData['applicationNumber'] = $llNo;
+            $llName = $p4Data['name'] ?? ($params['customerName'] ?? 'लर्नर');
+            $docTitle = "लर्निंग लाइसेंस ({$llNo}) - {$llName}";
+            $refNumber = $llNo;
         } elseif ($p4Service === 'dl' || strpos($normServiceType, 'dl') !== false || strpos($normServiceType, 'licence') !== false) {
             $dl = strtoupper(trim($liveP4['dlNo'] ?? ($p4Data['dl_number'] ?? ($p4Data['dlNo'] ?? ($userVal ?: '')))));
             $generatedData['dlNo'] = $dl;
