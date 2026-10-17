@@ -4252,6 +4252,9 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         $legacyMap = [
             'rcdownload' => 'rc_to_details', 'rc_download' => 'rc_to_details',
             'pancard' => 'pan_details', 'pan_card' => 'pan_details',
+            'pan_verification_premium' => 'pan_details',
+            'panverificationpremium' => 'pan_details',
+            'gst_verification' => 'gst_to_pan',
             'aadhaarcard' => 'aadhaar_advance', 'aadhaar_card' => 'aadhaar_advance',
             'votercard' => 'voter_verification', 'voter_card' => 'voter_verification',
             'rationcard' => 'ration_pdf_by_ration', 'ration_card' => 'ration_pdf_by_ration',
@@ -4312,17 +4315,33 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             $p4Params['gstNumber'] = $cleanGst;
             $p4Params['gstNo'] = $cleanGst;
         }
-        if (strpos($lowerUrl, 'getpan') !== false || strpos($lowerUrl, 'panfind') !== false) {
+        if (strpos($lowerUrl, 'getpan') !== false || strpos($lowerUrl, 'panfind') !== false || in_array($norm, ['pan_find', 'pan_find_manual', 'pan_find_manual_alt'])) {
             $cleanUid = preg_replace('/[^0-9]/', '', $params['aadhaar'] ?? ($params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['aadhar'] ?? $val))));
-            $p4Params['aadhaar'] = $cleanUid;
-            $p4Params['aadhar'] = $cleanUid;
-            $p4Params['uidNumber'] = $cleanUid;
-            $p4Params['aadhar_number'] = $cleanUid;
+            if (strlen($cleanUid) === 12) {
+                $p4Params['uidNumber'] = $cleanUid;
+                $p4Params['aadhaar'] = $cleanUid;
+                $p4Params['aadhar'] = $cleanUid;
+                $p4Params['aadhar_number'] = $cleanUid;
+            }
             if (!empty($params['name']) || !empty($params['customerName'])) {
                 $p4Params['name'] = $params['name'] ?? $params['customerName'];
             }
+            if (!empty($params['fatherName'])) {
+                $p4Params['fatherName'] = $params['fatherName'];
+            }
+            if (!empty($params['dob'])) {
+                $p4Params['dob'] = $params['dob'];
+            }
             if (!empty($params['mobile']) || !empty($params['phone'])) {
                 $p4Params['mobile'] = $params['mobile'] ?? $params['phone'];
+            }
+        } elseif (strpos($lowerUrl, 'pan_to_aadhar') !== false || $norm === 'pan_to_aadhar_find') {
+            $panClean = strtoupper(trim($params['panNumber'] ?? ($params['panNo'] ?? ($params['pan'] ?? $val))));
+            $p4Params['pan'] = $panClean;
+            $p4Params['panNumber'] = $panClean;
+            $p4Params['panNo'] = $panClean;
+            if (!empty($params['dob'])) {
+                $p4Params['dob'] = $params['dob'];
             }
         } elseif (strpos($lowerUrl, 'pan') !== false) {
             $panClean = strtoupper(trim($params['panNumber'] ?? ($params['panNo'] ?? ($params['pan'] ?? $val))));
@@ -4336,6 +4355,12 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             }
             if (!empty($params['name']) || !empty($params['customerName'])) {
                 $p4Params['name'] = $params['name'] ?? $params['customerName'];
+            }
+            if (!empty($params['fatherName'])) {
+                $p4Params['fatherName'] = $params['fatherName'];
+            }
+            if (!empty($params['dob'])) {
+                $p4Params['dob'] = $params['dob'];
             }
             if (!empty($params['mobile']) || !empty($params['phone'])) {
                 $p4Params['mobile'] = $params['mobile'] ?? $params['phone'];
@@ -4537,6 +4562,20 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         if ($rawResp && $httpCode < 500) {
             $json = json_decode($rawResp, true);
             if (is_array($json)) {
+                if (in_array($norm, ['pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'epan', 'findpan'])) {
+                    $foundPan = $json['panNumber'] ?? ($json['pan_number'] ?? ($json['pan'] ?? ($json['full_pan_number'] ?? ($json['data']['panNumber'] ?? ($json['data']['pan_number'] ?? ($json['data']['pan'] ?? ''))))));
+                    $hasValidPan = !empty($foundPan) && preg_match('/^[A-Z]{5}[0-9]{4}[A-Z]$/i', trim($foundPan));
+                    if (!$hasValidPan) {
+                        return null;
+                    }
+                }
+                if ($norm === 'pan_to_aadhar_find') {
+                    $foundUid = $json['aadhaarNumber'] ?? ($json['aadhaar_number'] ?? ($json['aadhaar'] ?? ($json['aadhar'] ?? ($json['uidNumber'] ?? ($json['data']['aadhaar'] ?? ($json['data']['aadhaarNumber'] ?? ''))))));
+                    $hasValidUid = !empty($foundUid) && (strlen(preg_replace('/\D/', '', $foundUid)) >= 4);
+                    if (!$hasValidUid) {
+                        return null;
+                    }
+                }
                 $hasData = !empty($json['data']) || !empty($json['holder']) || !empty($json['response']) || !empty($json['items']) || !empty($json['panNumber']) || !empty($json['full_pan_number']) || !empty($json['farmerNameEn']) || !empty($json['uan_no']) || !empty($json['front']) || !empty($json['back']) || !empty($json['pdf']);
                 $hasPdf = !empty($json['pdf']) || !empty($json['pdf_base64']) || !empty($json['pdfBase64']) || !empty($json['Rc_Pdf']) || !empty($json['file']) || !empty($json['pdf_url']) || !empty($json['front']) || !empty($json['back']);
                 $isExplicitSuccess = (!empty($json['success']) && $json['success'] !== false) || (isset($json['status']) && ($json['status'] === true || $json['status'] == 1 || $json['status'] == 100 || $json['status'] === 'success' || $json['status'] == 200)) || (isset($json['code']) && $json['code'] == 100);
@@ -5576,7 +5615,18 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
     $rekhaConfig = $store['systemSettings']['rekhaPrint'] ?? ['baseUrl' => 'https://rekhaprint.info'];
     $baseUrl = rtrim($rekhaConfig['baseUrl'] ?? 'https://rekhaprint.info', '/');
     $uService = $service79['upstreamService'] ?? '';
-    $upstreamFile = $service79['upstreamFile'] ?? ($uService === 'DL Mobile Link' || ($service79['id'] ?? '') === 'dl_to_mobile_find' ? 'dl_link.php' : 'll_exam_Request.php');
+    $upstreamFile = $service79['upstreamFile'] ?? null;
+    if (!$upstreamFile) {
+        if ($uService === 'DL Mobile Link' || ($service79['id'] ?? '') === 'dl_to_mobile_find') {
+            $upstreamFile = 'dl_link.php';
+        } elseif ($uService === 'Pan_Number_Link' || ($service79['id'] ?? '') === 'pan_aadhaar_link_manual') {
+            $upstreamFile = 'panAadharNumber_Link.php';
+        } elseif ($uService === 'pan_find_manual' || ($service79['id'] ?? '') === 'pan_find_manual' || ($service79['id'] ?? '') === 'pan_find_manual_alt') {
+            $upstreamFile = 'pan_find_manual.php';
+        } else {
+            $upstreamFile = 'll_exam_Request.php';
+        }
+    }
     $targetUrl = $baseUrl . '/members/' . $upstreamFile;
 
     $postData = ['submit' => 'submit'];
@@ -5614,10 +5664,15 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
         $postData['state'] = trim($params['state'] ?? 'UP');
     } elseif ($uService === 'Samagra Print') {
         $postData['samagraId'] = trim($params['samagraId'] ?? ($params['familyId'] ?? ($params['query'] ?? '')));
-    } elseif ($uService === 'Pan_Number_Link') {
+    } elseif ($uService === 'Pan_Number_Link' || ($service79['id'] ?? '') === 'pan_aadhaar_link_manual') {
         $postData['panNo'] = strtoupper(trim($params['panNo'] ?? ($params['pan'] ?? ($params['query'] ?? ''))));
         $postData['aadhaarNo'] = trim($params['aadhaarNo'] ?? ($params['aadhaar'] ?? ''));
         $postData['mobile'] = trim($params['mobile'] ?? '');
+    } elseif ($uService === 'pan_find_manual' || ($service79['id'] ?? '') === 'pan_find_manual' || ($service79['id'] ?? '') === 'pan_find_manual_alt') {
+        $postData['name'] = trim($params['name'] ?? ($params['customerName'] ?? ''));
+        $postData['fatherName'] = trim($params['fatherName'] ?? '');
+        $postData['dob'] = trim($params['dob'] ?? '');
+        $postData['mobile'] = trim($params['mobile'] ?? ($params['phone'] ?? ''));
     } elseif ($uService === 'Dob_Update') {
         $postData['aadhaarNo'] = trim($params['aadhaarNo'] ?? ($params['aadhaar'] ?? ($params['query'] ?? '')));
         $postData['dob'] = trim($params['dob'] ?? '');
@@ -6125,11 +6180,16 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             if (!isset($store['rcOrders'])) $store['rcOrders'] = [];
             array_unshift($store['rcOrders'], $newRcOrder);
         } elseif ($p4Service === 'panCard' || $p4Service === 'aadhaarToPan' || strpos($normServiceType, 'pan') !== false) {
-            $panNo = strtoupper(trim($liveP4['panNo'] ?? ($p4Data['panNumber'] ?? ($p4Data['panNo'] ?? ($p4Data['pan'] ?? ($userVal ?: ''))))));
+            $extractedPan = $liveP4['panNo'] ?? ($p4Data['panNumber'] ?? ($p4Data['panNo'] ?? ($p4Data['pan'] ?? ($liveP4['raw']['panNumber'] ?? ($liveP4['raw']['pan_number'] ?? ($liveP4['raw']['pan'] ?? ($liveP4['raw']['full_pan_number'] ?? '')))))));
+            if (!empty($extractedPan) && preg_match('/^[A-Z]{5}[0-9]{4}[A-Z]$/i', trim($extractedPan))) {
+                $panNo = strtoupper(trim($extractedPan));
+            } else {
+                $panNo = (in_array($normServiceType, ['pan_details', 'pan_verification_premium', 'pan', 'pan_to_gst', 'pan_to_aadhar_find'])) ? strtoupper(trim($userVal)) : '';
+            }
             $generatedData['panNo'] = $panNo;
-            $panName = $p4Data['name'] ?? ($p4Data['full_name'] ?? ($params['customerName'] ?? 'PAN धारक'));
-            $docTitle = "पैन कार्ड ({$panNo}) - {$panName}";
-            $refNumber = $panNo;
+            $panName = $p4Data['name'] ?? ($p4Data['full_name'] ?? ($p4Data['holder_name'] ?? ($params['customerName'] ?? 'PAN धारक')));
+            $docTitle = $panNo ? "पैन कार्ड ({$panNo}) - {$panName}" : ($serviceTitles[$normServiceType] ?? 'पैन कार्ड सेवा');
+            $refNumber = $panNo ?: ($userVal ?: 'PAN');
         } elseif ($p4Service === 'voter' || strpos($normServiceType, 'voter') !== false || strpos($normServiceType, 'epic') !== false) {
             $epic = strtoupper(trim($liveP4['epicNo'] ?? ($p4Data['epicNumber'] ?? ($p4Data['epicNo'] ?? ($p4Data['epic_number'] ?? ($userVal ?: ''))))));
             $generatedData['epicNo'] = $epic;
@@ -6318,8 +6378,28 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                 'refNumber' => 'RESIZE-' . rand(100000, 999999),
                 'name' => $params['customerName'] ?? 'सरकारी फॉर्म फोटो/हस्ताक्षर'
             ];
-            $docTitle = "सरकारी फॉर्म फोटो व साइन रिसाइज़र ({$generatedData['targetKb']})";
-            $refNumber = $generatedData['refNumber'];
+        } elseif ($normServiceType === 'pancard' || (isset($params['serviceId']) && $params['serviceId'] === 'panCard')) {
+            $panNo = strtoupper(trim($params['panNo'] ?? ($params['panNumber'] ?? ($params['pan'] ?? $userVal))));
+            $panName = strtoupper(trim($params['customerName'] ?? ($params['name'] ?? '')));
+            $fName = strtoupper(trim($params['fatherName'] ?? ''));
+            $dob = trim($params['dob'] ?? '');
+            if (!empty($panNo) && !empty($panName)) {
+                $generatedData = [
+                    'panNo' => $panNo,
+                    'name' => $panName,
+                    'customerName' => $panName,
+                    'fatherName' => $fName,
+                    'dob' => $dob,
+                    'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
+                    'signUrl' => $params['signature'] ?? ($params['signData'] ?? null),
+                    'refNumber' => $panNo,
+                    'serviceType' => 'panCard',
+                    'cardType' => 'ISO CR-80 PVC Smart Card',
+                    'isInstantPvc' => true
+                ];
+                $docTitle = "पैन कार्ड CR-80 PVC ({$panNo}) - {$panName}";
+                $refNumber = $panNo;
+            }
         }
     }
 
