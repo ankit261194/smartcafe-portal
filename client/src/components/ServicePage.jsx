@@ -639,7 +639,7 @@ function ServicePageContent({
         return;
       }
     }
-    if (['voter', 'epic', 'voter_verification', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp'].includes(tid) && val.length < 5) {
+    if (['voter', 'epic', 'voter_verification', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp', 'votercard'].includes(tid) && val.length < 5) {
       setErrorMsg(language === 'hi' ? 'कृपया 10-अक्षरों का मान्य EPIC वोटर नंबर दर्ज करें।' : 'Please enter valid EPIC Voter Number.');
       return;
     }
@@ -697,6 +697,68 @@ function ServicePageContent({
     }
     if (tid === 'sambal_pdf' && val.replace(/\D/g, '').length < 8) {
       setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय आधार अथवा 9-अंकीय समग्र आईडी दर्ज करें।' : 'Please enter valid Aadhaar or Samagra ID.');
+      return;
+    }
+    if (['electric_bill_pdf_bihar', 'electric_bill'].includes(tid) && val.replace(/\D/g, '').length < 6) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य बिजली बिल CA / उपभोक्ता संख्या दर्ज करें (कम से कम 6 अंक)।' : 'Please enter valid Consumer / CA Number.');
+      return;
+    }
+    if (['rtps_bihar_pdf', 'rtps'].includes(tid)) {
+      if (val.length < 6) {
+        setErrorMsg(language === 'hi' ? 'कृपया मान्य RTPS आवेदन संख्या (Application Number) दर्ज करें।' : 'Please enter valid RTPS Application Number.');
+        return;
+      }
+      if (!secondaryInput.trim() && !customerName.trim()) {
+        setErrorMsg(language === 'hi' ? 'कृपया आवेदक का नाम दर्ज करें।' : 'Please enter Applicant Name.');
+        return;
+      }
+    }
+    if (['agristack_pdf', 'agristack_verify', 'agristack_dbt'].includes(tid) && val.replace(/\D/g, '').length < 8) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य 8-12 अंकीय किसान ID अथवा आधार नंबर दर्ज करें।' : 'Please enter valid Farmer ID or Aadhaar number.');
+      return;
+    }
+    if (['udyam_pdf', 'udyam'].includes(tid) && val.length < 8) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य उद्यम पंजीकरण संख्या (Udyam Reg Number) दर्ज करें।' : 'Please enter valid Udyam Registration Number.');
+      return;
+    }
+    if (['mobile_to_upi_find', 'mobile_to_multi_upi_find', 'mobile_to_account_find', 'mobile_to_multi_account', 'vi_sim_to_photo_details', 'check_operator', 'check_plan', 'mobile_to_details', 'mobile_lookup', 'chalan_find_mobile'].includes(tid)) {
+      if (val.replace(/\D/g, '').length !== 10) {
+        setErrorMsg(language === 'hi' ? 'कृपया 10-अंकीय मान्य मोबाइल नंबर दर्ज करें।' : 'Please enter valid 10-digit Mobile Number.');
+        return;
+      }
+    }
+    if (tid === 'upi_to_details' && (!val.includes('@') || val.length < 4)) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य UPI ID दर्ज करें (उदा. username@upi)।' : 'Please enter valid UPI ID (e.g. username@upi).');
+      return;
+    }
+    if (tid === 'nsdl_bank') {
+      if (val.replace(/\D/g, '').length < 8) {
+        setErrorMsg(language === 'hi' ? 'कृपया मान्य खाता संख्या (Account Number) दर्ज करें।' : 'Please enter valid Account Number.');
+        return;
+      }
+      if (!secondaryInput.trim() || secondaryInput.trim().length !== 11) {
+        setErrorMsg(language === 'hi' ? 'कृपया 11-अक्षरों का मान्य IFSC कोड दर्ज करें।' : 'Please enter valid 11-character IFSC code.');
+        return;
+      }
+    }
+    if (['npci_verify', 'uid_seeding', 'aadhaar_bank_seeding'].includes(tid) && val.replace(/\D/g, '').length !== 12) {
+      setErrorMsg(language === 'hi' ? 'कृपया 12-अंकीय मान्य आधार नंबर दर्ज करें।' : 'Please enter valid 12-digit Aadhaar Number.');
+      return;
+    }
+    if (tid === 'telegram_to_number_lookup' && val.trim().replace(/^@/, '').length < 3) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य टेलीग्राम यूजरनेम दर्ज करें।' : 'Please enter valid Telegram username.');
+      return;
+    }
+    if (tid === 'gmail_to_details' && (!val.includes('@') || val.length < 5)) {
+      setErrorMsg(language === 'hi' ? 'कृपया मान्य ईमेल/जीमेल आईडी दर्ज करें।' : 'Please enter valid Gmail/Email address.');
+      return;
+    }
+    if (tid === 'bank_ifsc_lookup' && val.trim().length !== 11) {
+      setErrorMsg(language === 'hi' ? 'कृपया 11-अक्षरों का मान्य IFSC कोड दर्ज करें।' : 'Please enter valid 11-character IFSC code.');
+      return;
+    }
+    if (tid === 'pincode_lookup' && val.replace(/\D/g, '').length !== 6) {
+      setErrorMsg(language === 'hi' ? 'कृपया 6-अंकीय मान्य पिनकोड दर्ज करें।' : 'Please enter valid 6-digit Pincode.');
       return;
     }
 
@@ -1172,6 +1234,47 @@ function ServicePageContent({
     if (tid === 'gmail_to_details') {
       params.email = val.trim();
       params.gmail = val.trim();
+    }
+
+    if (['electric_bill_pdf_bihar', 'electric_bill'].includes(tid)) {
+      params.caNumber = val;
+      params.ca_number = val;
+      params.consumerNumber = val;
+      params.operator = secondaryInput.trim() || 'SBPDCL';
+    }
+
+    if (['agristack_pdf', 'agristack_verify', 'agristack_dbt'].includes(tid)) {
+      params.farmerId = val;
+      params.uidNumber = val;
+      params.aadhaar = val;
+    }
+
+    if (['udyam_pdf', 'udyam'].includes(tid)) {
+      params.udyamNo = val;
+      params.udyamNumber = val;
+      if (secondaryInput) params.mobile = secondaryInput.trim();
+    }
+
+    if (['mobile_to_upi_find', 'mobile_to_multi_upi_find', 'mobile_to_account_find', 'mobile_to_multi_account', 'vi_sim_to_photo_details', 'check_operator', 'check_plan', 'mobile_to_details', 'mobile_lookup', 'chalan_find_mobile'].includes(tid)) {
+      params.mobile = val.trim();
+      params.mobileNumber = val.trim();
+      params.phone = val.trim();
+      params.type = 'mobile';
+      params.value = val.trim();
+    }
+
+    if (['npci_verify', 'uid_seeding', 'aadhaar_bank_seeding'].includes(tid)) {
+      params.aadhaar = val;
+      params.uidNumber = val;
+      params.aadhaarNo = val;
+    }
+
+    if (tid === 'bank_ifsc_lookup') {
+      params.ifsc = val.trim().toUpperCase();
+    }
+
+    if (tid === 'pincode_lookup') {
+      params.pincode = val.trim();
     }
 
     try {
@@ -4209,7 +4312,7 @@ function ServicePageContent({
                   <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     ⏱️ मैन्युअल रिले (1-2 घंटे)
                   </span>
-                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'pan_verification_premium', 'panverificationpremium', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'aadhaar_pdf_otp', 'aadhaar_original_pdf_otp', 'aadhaar_ekyc', 'uid_ekyc', 'aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask', 'pan_to_aadhar_find', 'pan_to_gst', 'gst_to_pan', 'gst_verification', 'ration_verification', 'ration_pdf_by_ration', 'ration_pdf_by_aadhar', 'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'up_ration_info', 'ayushman_image_jpg', 'e_shram'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
+                ) : (currentTool?.source === 'p4points' || ['rc_to_details', 'rc_fast_server', 'voter_verification', 'pan_details', 'pan_verification_premium', 'panverificationpremium', 'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'agristack_dbt', 'agristack_pdf', 'udyam_pdf', 'mobile_to_upi_find', 'mobile_to_multi_upi_find', 'mobile_to_account_find', 'mobile_to_multi_account', 'upi_to_details', 'vi_sim_to_photo_details', 'check_operator', 'check_plan', 'mobile_to_details', 'mobile_lookup', 'chalan_find_mobile', 'chalan_find', 'nsdl_bank', 'npci_verify', 'uid_seeding', 'telegram_to_number_lookup', 'gmail_to_details', 'aadhaar_pdf_otp', 'aadhaar_original_pdf_otp', 'aadhaar_ekyc', 'uid_ekyc', 'aadhaar_advance', 'aadhaar_advance_one', 'aadhaar_advance_two', 'aadhaar_advance_three', 'aadhaar_advance_four', 'aadhaar_advance_five', 'mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask', 'pan_to_aadhar_find', 'pan_to_gst', 'gst_to_pan', 'gst_verification', 'ration_verification', 'ration_pdf_by_ration', 'ration_pdf_by_aadhar', 'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'up_ration_info', 'ayushman_image_jpg', 'e_shram'].includes(currentTool?.id) || currentTool?.fulfillmentType === 'instant_api' || currentTool?.serviceType === 'live_api') ? (
                   <span className="px-2 py-0.5 bg-emerald-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     🟢 लाइव सरकारी API
                   </span>

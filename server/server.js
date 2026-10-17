@@ -3599,7 +3599,35 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
           'aadhaar_dob_update': 'dob_update_service',
           'mask_aadhaar': 'pan_aadhar_mask',
           'aadhaar_mask_verification': 'pan_aadhar_mask',
-          'aadhaar_mask': 'pan_aadhar_mask'
+          'aadhaar_mask': 'pan_aadhar_mask',
+          'dl_details': 'driving_licence_pdf',
+          'voter_mobile_link_no_otp': 'instant_voter_link',
+          'voter_mobile_link_instant_otp': 'instant_voter_link',
+          'ration_verification': 'ration_pdf_by_ration',
+          'up_ration_to_aadhaar': 'up_ration_to_aadhaar',
+          'assam_ration_to_aadhaar': 'assam_ration_to_aadhaar',
+          'all_state_ration_to_aadhar': 'all_state_ration_to_aadhar',
+          'electric_bill_pdf_bihar': 'electric_bill_pdf_bihar',
+          'agristack_pdf': 'agristack_pdf',
+          'agristack_verify': 'agristack_verify',
+          'agristack_dbt': 'agristack_dbt',
+          'rtps_bihar_pdf': 'rtps_bihar_pdf',
+          'udyam_pdf': 'udyam_pdf',
+          'mobile_to_upi_find': 'mobile_to_upi_find',
+          'mobile_to_multi_upi_find': 'mobile_to_multi_upi_find',
+          'mobile_to_account_find': 'mobile_to_account_find',
+          'mobile_to_multi_account': 'mobile_to_multi_account',
+          'upi_to_details': 'upi_to_details',
+          'nsdl_bank': 'nsdl_bank',
+          'npci_verify': 'npci_verify',
+          'uid_seeding': 'uid_seeding',
+          'vi_sim_to_photo_details': 'vi_sim_to_photo_details',
+          'check_operator': 'check_operator',
+          'check_plan': 'check_plan',
+          'mobile_to_details': 'mobile_to_details',
+          'mobile_lookup': 'mobile_lookup',
+          'telegram_to_number_lookup': 'telegram_to_number_lookup',
+          'gmail_to_details': 'gmail_to_details'
         };
         const mappedId = legacyMap[norm];
         if (mappedId) {
@@ -3633,6 +3661,12 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
     if (norm === 'll_find' || norm === 'll_pdf') {
       targetUrl = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/ll_pdf.php';
+    }
+    if (norm === 'chalan_find_mobile') {
+      targetUrl = 'https://authorized.p4points.co.in/api/v2/MobileNumberToChallanDetails.php';
+      const cleanMob = String(params?.mobileNumber || params?.mobile || params?.phone || val).replace(/\D/g, '');
+      p4Params.mobileNumber = cleanMob;
+      p4Params.mobile = cleanMob;
     }
     const lowerUrl = targetUrl.toLowerCase();
 
@@ -4312,7 +4346,7 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
   }
 
   // 5C. Ration To Aadhaar (Ration2Uid-up, Ration2Uid-All_state, aasham_ration2uid.php)
-  if (norm.includes('ration_to_aadhaar') || norm.includes('ration2uid')) {
+  if (norm.includes('ration_to_aadhaar') || norm.includes('ration_to_aadhar') || norm.includes('ration2uid')) {
     const rationNo = String(params?.rationNumber || params?.rationNo || params?.ration_no || params?.query || '').replace(/[^0-9]/g, '');
     if (rationNo && rationNo.length >= 6) {
       try {
@@ -4929,6 +4963,327 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
     }
   }
 
+  // 21. AgriStack Farmer Details Verification
+  if (norm.includes('agristack_verify') || norm.includes('farmer_details')) {
+    const fid = String(params?.farmerId || params?.uidNumber || params?.aadhaarNo || params?.query || '').trim();
+    if (fid.length >= 6) {
+      try {
+        const avUrl = `https://authorized.p4points.co.in/api/v1/AgriStak/farmer-details.php?apiKey=${encodeURIComponent(p4ApiKey)}&farmerId=${encodeURIComponent(fid)}&uidNumber=${encodeURIComponent(fid)}`;
+        const res = await fetch(avUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.data || json.farmerName || json.farmer_name || json.farmerDetails)) {
+          const d = json.data || json.farmerDetails || json;
+          return {
+            source: 'p4points',
+            service: 'agristack',
+            farmerId: d.farmerId || fid,
+            farmerName: d.farmerName || d.farmer_name || d.farmerNameEn || params?.customerName || 'किसान',
+            fatherName: d.fatherName || d.father_name || '',
+            state: d.state || params?.state || 'UP',
+            district: d.district || '',
+            landArea: d.totalLandArea || d.landArea || '',
+            khasra: d.khasraNo || d.khasra || '',
+            aadhaarLinked: d.aadhaarLinked ?? true,
+            isLiveFromP4Points: true,
+            data: d
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points AgriStack Verify fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 22. AgriStack PM-Kisan DBT Status
+  if (norm.includes('agristack_dbt') || norm.includes('agristack_status')) {
+    const uid = String(params?.uidNumber || params?.aadhaarNo || params?.farmerId || params?.query || '').replace(/[^0-9]/g, '');
+    if (uid.length >= 8) {
+      try {
+        const adUrl = `https://authorized.p4points.co.in/api/v1/AgriStak/checkStatus.php?apiKey=${encodeURIComponent(p4ApiKey)}&uidNumber=${encodeURIComponent(uid)}&farmerId=${encodeURIComponent(uid)}`;
+        const res = await fetch(adUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        const apiD = json?.api_response_data?.data || json?.data || json;
+        if (json && (json.status || apiD?.farmerApprovalStatus || json.success)) {
+          return {
+            source: 'p4points',
+            service: 'agristack',
+            farmerName: apiD.farmerNameEn || apiD.farmerNameLocal || params?.customerName || 'किसान',
+            approvalStatus: apiD.farmerApprovalStatus || 'Approved / Active',
+            state: apiD.autoState || params?.state || 'UP',
+            dbtAccount: apiD.dbtAccount || 'Aadhaar Seeded Bank Account',
+            isLiveFromP4Points: true,
+            data: apiD
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points AgriStack DBT fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 23. Mobile to UPI Find
+  if (norm === 'mobile_to_upi_find' || (norm.includes('mobile') && norm.includes('upi') && !norm.includes('multi'))) {
+    const mob = String(params?.mobile || params?.mobileNumber || params?.phone || params?.query || '').replace(/\D/g, '');
+    if (mob.length === 10) {
+      try {
+        const upiUrl = `https://authorized.p4points.co.in/api/v1/mobiletoupi.php?apiKey=${encodeURIComponent(p4ApiKey)}&mobile=${encodeURIComponent(mob)}`;
+        const res = await fetch(upiUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.data || json.upi || json.upi_id || json.vpa)) {
+          return {
+            source: 'p4points',
+            service: 'upi',
+            mobileNumber: mob,
+            upiId: json.upi || json.upi_id || json.vpa || json.data?.upi || `${mob}@upi`,
+            name: json.name || json.holder_name || params?.customerName || 'UPI उपभोक्ता',
+            status: json.status || 'Active',
+            isLiveFromP4Points: true,
+            data: json.data || json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Mobile to UPI fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 24. Mobile to Multi UPI Find
+  if (norm === 'mobile_to_multi_upi_find' || norm.includes('multi_upi') || norm.includes('multiupi')) {
+    const mob = String(params?.mobile || params?.mobileNumber || params?.phone || params?.query || '').replace(/\D/g, '');
+    if (mob.length === 10) {
+      try {
+        const mUpiUrl = `https://authorized.p4points.co.in/api/v1/mobiletoMultiupi_Find.php?apiKey=${encodeURIComponent(p4ApiKey)}&mobile=${encodeURIComponent(mob)}`;
+        const res = await fetch(mUpiUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.data || json.vpa_list || json.upis)) {
+          return {
+            source: 'p4points',
+            service: 'upi',
+            mobileNumber: mob,
+            upiList: json.vpa_list || json.upis || json.data || [],
+            name: json.name || params?.customerName || 'UPI उपभोक्ता',
+            isLiveFromP4Points: true,
+            data: json.data || json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Mobile to Multi UPI fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 25. Mobile to Account Find
+  if (norm === 'mobile_to_account_find' || (norm.includes('mobile') && norm.includes('account') && !norm.includes('multi'))) {
+    const mob = String(params?.mobile || params?.mobileNumber || params?.phone || params?.query || '').replace(/\D/g, '');
+    if (mob.length === 10) {
+      try {
+        const mAccUrl = `https://authorized.p4points.co.in/api/v1/mobaile_to_account.php?apiKey=${encodeURIComponent(p4ApiKey)}&mobile=${encodeURIComponent(mob)}`;
+        const res = await fetch(mAccUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.data || json.account || json.account_number)) {
+          return {
+            source: 'p4points',
+            service: 'bank',
+            mobileNumber: mob,
+            accountNo: json.account || json.account_number || json.data?.account || '',
+            bankName: json.bank || json.bank_name || json.data?.bank || 'Bank Account',
+            ifsc: json.ifsc || json.data?.ifsc || '',
+            name: json.name || json.holder_name || params?.customerName || 'खाताधारक',
+            isLiveFromP4Points: true,
+            data: json.data || json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Mobile to Account fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 26. Mobile to Multi Account Find
+  if (norm === 'mobile_to_multi_account' || norm.includes('multi_bank') || norm.includes('multibank')) {
+    const mob = String(params?.mobile || params?.mobileNumber || params?.phone || params?.query || '').replace(/\D/g, '');
+    if (mob.length === 10) {
+      try {
+        const mmAccUrl = `https://authorized.p4points.co.in/api/v1/mobaile_to_multi_bank.php?apiKey=${encodeURIComponent(p4ApiKey)}&mobile=${encodeURIComponent(mob)}`;
+        const res = await fetch(mmAccUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.data || json.accounts || json.bank_list)) {
+          return {
+            source: 'p4points',
+            service: 'bank',
+            mobileNumber: mob,
+            accounts: json.accounts || json.bank_list || json.data || [],
+            totalBanks: (json.accounts || json.bank_list || []).length,
+            isLiveFromP4Points: true,
+            data: json.data || json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Mobile to Multi Bank fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 27. UPI ID Verification & Details
+  if (norm === 'upi_to_details' || norm.includes('upi_verify')) {
+    const upi = String(params?.UPI_ID || params?.upi || params?.vpa || params?.query || '').trim();
+    if (upi.includes('@')) {
+      try {
+        const uvUrl = `https://authorized.p4points.co.in/api/v1/upi_verify.php?apiKey=${encodeURIComponent(p4ApiKey)}&upi=${encodeURIComponent(upi)}`;
+        const res = await fetch(uvUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.data || json.name || json.account_holder)) {
+          return {
+            source: 'p4points',
+            service: 'upi',
+            upiId: upi,
+            name: json.name || json.account_holder || json.data?.name || params?.customerName || 'खाताधारक',
+            status: json.status || 'Active / Verified',
+            bankName: json.bank || json.data?.bank || 'Bank Verified',
+            isLiveFromP4Points: true,
+            data: json.data || json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points UPI Verify fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 28. Vi SIM Photo & Details
+  if (norm === 'vi_sim_to_photo_details' || norm.includes('vi_sim')) {
+    const mob = String(params?.mobile || params?.mobileNumber || params?.phone || params?.query || '').replace(/\D/g, '');
+    if (mob.length === 10) {
+      try {
+        const viUrl = `https://authorized.p4points.co.in/api/v1/vi_sim_details.php?apiKey=${encodeURIComponent(p4ApiKey)}&mobile=${encodeURIComponent(mob)}`;
+        const res = await fetch(viUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.data || json.photo || json.photoUrl || json.name)) {
+          const d = json.data || json;
+          return {
+            source: 'p4points',
+            service: 'telecom',
+            mobileNumber: mob,
+            name: d.name || d.customer_name || params?.customerName || 'Vi उपभोक्ता',
+            photoUrl: d.photo || d.photoUrl || d.image || null,
+            activationDate: d.activationDate || d.activation_date || '',
+            circle: d.circle || 'All India',
+            isLiveFromP4Points: true,
+            data: d
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Vi SIM Details fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 29. Check Operator & Plans
+  if (norm === 'check_operator' || norm === 'check_plan') {
+    const mob = String(params?.mobile || params?.mobileNumber || params?.phone || params?.query || '').replace(/\D/g, '');
+    if (mob.length === 10) {
+      try {
+        const opUrl = `https://authorized.p4points.co.in/api/v1/mobile_operator_verify?apiKey=${encodeURIComponent(p4ApiKey)}&mobile=${encodeURIComponent(mob)}`;
+        const res = await fetch(opUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.operator || json.circle || json.data)) {
+          const d = json.data || json;
+          return {
+            source: 'p4points',
+            service: 'telecom',
+            mobileNumber: mob,
+            operator: d.operator || 'Telecom Network',
+            circle: d.circle || 'India',
+            validity: d.validity || 'Active',
+            plans: d.plans || [],
+            isLiveFromP4Points: true,
+            data: d
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Check Operator fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 30. Mobile Lookup & Universal Identity Lookup
+  if (norm === 'mobile_to_details' || norm === 'mobile_lookup' || norm === 'telegram_to_number_lookup' || norm === 'gmail_to_details') {
+    const valLookup = String(params?.value || params?.mobile || params?.phone || params?.telegram || params?.email || params?.query || '').trim();
+    const typeLookup = params?.type || (norm.includes('telegram') ? 'telegram' : (norm.includes('gmail') ? 'email' : 'phone'));
+    if (valLookup.length >= 3) {
+      try {
+        const mlUrl = `https://authorized.p4points.co.in/api/v1/mobileLookup.php?apiKey=${encodeURIComponent(p4ApiKey)}&type=${encodeURIComponent(typeLookup)}&value=${encodeURIComponent(valLookup)}`;
+        const res = await fetch(mlUrl, { signal: AbortSignal.timeout(10000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.DATA || json.status || json.data)) {
+          return {
+            source: 'p4points',
+            service: 'lookup',
+            lookupType: typeLookup,
+            lookupValue: valLookup,
+            data: json.DATA || json.data || json,
+            isLiveFromP4Points: true
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Mobile Lookup fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 31. Challan Find by Mobile Number
+  if (norm === 'chalan_find_mobile' || norm.includes('challan_mobile')) {
+    const mob = String(params?.mobileNumber || params?.mobile || params?.phone || params?.query || '').replace(/\D/g, '');
+    if (mob.length === 10) {
+      try {
+        const cmUrl = `https://authorized.p4points.co.in/api/v2/MobileNumberToChallanDetails.php?apiKey=${encodeURIComponent(p4ApiKey)}&mobileNumber=${encodeURIComponent(mob)}`;
+        const res = await fetch(cmUrl, { signal: AbortSignal.timeout(15000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.data || json.challans || json.challan_list || json.success)) {
+          return {
+            source: 'p4points',
+            service: 'challan',
+            mobileNumber: mob,
+            challans: json.challans || json.challan_list || json.data || [],
+            ownerName: json.owner_name || json.name || params?.customerName || 'वाहन स्वामी',
+            isLiveFromP4Points: true,
+            data: json.data || json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Mobile Challan fetch failed:', err.message);
+      }
+    }
+  }
+
+  // 32. Vehicle Challan Verification by Vehicle Number
+  if (norm === 'chalan_find' || norm === 'challansearch' || norm === 'challan') {
+    const vNo = String(params?.vehicle || params?.vehicleNumber || params?.vehicalNumber || params?.rcNo || params?.query || '').replace(/[\s-]+/g, '').toUpperCase();
+    if (vNo.length >= 4) {
+      try {
+        const cUrl = `https://authorized.p4points.co.in/api/v1/challanVerification.php?apiKey=${encodeURIComponent(p4ApiKey)}&vehicle=${encodeURIComponent(vNo)}`;
+        const res = await fetch(cUrl, { signal: AbortSignal.timeout(12000) });
+        const json = await res.json().catch(() => null);
+        if (json && (json.status || json.data || json.challans || json.challan_number || json.success)) {
+          return {
+            source: 'p4points',
+            service: 'challan',
+            vehicleNumber: vNo,
+            regNo: vNo,
+            challans: json.challans || json.data || [],
+            challanNo: json.challan_number || json.challanNo || '',
+            ownerName: json.owner_name || json.name || params?.customerName || 'वाहन स्वामी',
+            amount: json.amount || json.fine_amount || '0',
+            isLiveFromP4Points: true,
+            data: json.data || json
+          };
+        }
+      } catch (err) {
+        console.error('Live P4Points Challan fetch failed:', err.message);
+      }
+    }
+  }
+
   return null;
 }
 
@@ -5454,6 +5809,65 @@ app.post('/api/services/execute-automated', async (req, res) => {
 
       docTitle = aid ? (normServiceType.includes('mask') ? `मास्क आधार सत्यापन (${masked || aid})` : `आधार कार्ड (${aid}) - ${aName}`) : (service79?.name || serviceDisplayName);
       refNumber = aid || refNumber || 'UID';
+    } else if (liveP4.service === 'agristack' || normServiceType.includes('agristack') || normServiceType.includes('farmer')) {
+      const fName = liveP4.farmerName || rawData.farmerName || rawData.farmerNameEn || params?.customerName || 'किसान';
+      generatedData.farmerName = fName;
+      generatedData.name = fName;
+      generatedData.customerName = fName;
+      const fId = liveP4.farmerId || rawData.farmerId || params?.farmerId || '';
+      if (fId) generatedData.farmerId = fId;
+      docTitle = `किसान पंजीकरण / एग्रीस्टैक पर्ची (${fId || 'AgriStack'}) - ${fName}`;
+      refNumber = fId || liveP4.farmerId || 'AGRISTACK';
+    } else if (liveP4.service === 'edistrict' || normServiceType.includes('rtps') || normServiceType.includes('edistrict')) {
+      const app = liveP4.appNo || rawData.applicationNumber || rawData.appNo || params?.applicationNumber || params?.appNo || '';
+      const apName = liveP4.name || rawData.name || params?.name || params?.customerName || 'आवेदक';
+      generatedData.appNo = app;
+      generatedData.applicationNumber = app;
+      generatedData.name = apName;
+      generatedData.customerName = apName;
+      docTitle = `बिहार RTPS प्रमाण पत्र (${app}) - ${apName}`;
+      refNumber = app || 'RTPS';
+    } else if (liveP4.service === 'upi' || normServiceType.includes('upi')) {
+      const upiId = liveP4.upiId || rawData.upi || rawData.vpa || params?.UPI_ID || params?.upi || '';
+      const uName = liveP4.name || rawData.name || params?.customerName || 'UPI उपभोक्ता';
+      generatedData.upiId = upiId;
+      generatedData.name = uName;
+      generatedData.customerName = uName;
+      docTitle = `UPI आईडी सत्यापन (${upiId || 'UPI'}) - ${uName}`;
+      refNumber = upiId || 'UPI';
+    } else if (liveP4.service === 'bank' || normServiceType.includes('account')) {
+      const acc = liveP4.accountNo || rawData.account || rawData.accountNo || '';
+      const bName = liveP4.bankName || rawData.bank || rawData.bankName || 'Bank';
+      const hName = liveP4.name || rawData.name || params?.customerName || 'खाताधारक';
+      generatedData.accountNo = acc;
+      generatedData.bankName = bName;
+      generatedData.name = hName;
+      generatedData.customerName = hName;
+      docTitle = `बैंक खाता खोज (${acc || bName}) - ${hName}`;
+      refNumber = acc || 'BANK';
+    } else if (liveP4.service === 'telecom' || normServiceType.includes('sim') || normServiceType.includes('operator')) {
+      const mob = liveP4.mobileNumber || rawData.mobileNumber || params?.mobile || '';
+      const tName = liveP4.name || rawData.name || params?.customerName || 'उपभोक्ता';
+      generatedData.mobileNumber = mob;
+      generatedData.name = tName;
+      generatedData.customerName = tName;
+      docTitle = `सिम व टेलीकॉम विवरण (${mob || 'SIM'}) - ${tName}`;
+      refNumber = mob || 'SIM';
+    } else if (liveP4.service === 'challan' || normServiceType.includes('chalan') || normServiceType.includes('challan')) {
+      const chalNo = liveP4.challanNo || rawData.challanNo || rawData.challan_number || '';
+      const cOwner = liveP4.ownerName || rawData.ownerName || rawData.owner_name || params?.customerName || 'वाहन स्वामी';
+      const vNo = liveP4.vehicleNumber || rawData.vehicleNumber || rawData.regNo || params?.vehicleNumber || '';
+      generatedData.challanNo = chalNo;
+      generatedData.ownerName = cOwner;
+      generatedData.name = cOwner;
+      generatedData.customerName = cOwner;
+      generatedData.vehicleNumber = vNo;
+      docTitle = `ई-चालान विवरण (${chalNo || vNo}) - ${cOwner}`;
+      refNumber = chalNo || vNo || 'CHALLAN';
+    } else if (liveP4.service === 'lookup' || normServiceType.includes('lookup')) {
+      const lVal = liveP4.lookupValue || rawData.lookupValue || params?.value || params?.query || '';
+      docTitle = `डिजिटल आइडेंटिटी खोज (${lVal})`;
+      refNumber = lVal || 'LOOKUP';
     } else {
       docTitle = service79?.name || serviceDisplayName;
       refNumber = refNumber || 'DOC';

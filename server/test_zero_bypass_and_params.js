@@ -298,7 +298,7 @@ console.log('✅ PASS: Part 3 Aadhaar Card Services Suite 100% verified across a
 console.log('\n--- TEST 3E: Part 4 Voter Card Services Suite Comprehensive Verification ---');
 // 1. Service 20: voter_verification & voter_details
 assert(servicePageContent.includes("['voter', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_verification', 'epic'].includes(id)"), 'voter_verification must have dedicated form 28');
-assert(servicePageContent.includes("['voter', 'epic', 'voter_verification', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp'].includes(tid) && val.length < 5"), 'voter_verification must validate min 5 chars');
+assert(servicePageContent.includes("['voter', 'epic', 'voter_verification', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp', 'votercard'].includes(tid) && val.length < 5"), 'voter_verification must validate min 5 chars');
 assert(servicePageContent.includes("params.epicNumber = val.toUpperCase().trim()"), 'ServicePage must pack epicNumber');
 assert(servicePageContent.includes("params.epic = val.toUpperCase().trim()"), 'ServicePage must pack epic');
 
@@ -443,6 +443,117 @@ assert(indexPhpContent.includes("preg_match('#^ration/lookup/([^/]+)$#'"), 'inde
 console.log('✅ PASS: Ayushman and Ration lookup routes with live gateway check verified');
 
 console.log('✅ PASS: Part 5 Ration, Ayushman, Samagra & Welfare Suite 100% verified across all tiers');
+
+console.log('\n--- TEST 3G: Part 6 Utility, AgriStack, RTPS, Banking & Telecom Suite Comprehensive Verification ---');
+// 1. Verify 9 Mandatory Audit Items across Node, PHP & Frontend
+assert(serverJsContent.includes("'dl_details': 'driving_licence_pdf'"), 'Audit 1: server.js legacyMap dl_details mapped');
+assert(indexPhpContent.includes("'dl_details' => 'driving_licence_pdf'"), 'Audit 1: index.php legacyMap dl_details mapped');
+
+assert(serverJsContent.includes("MobileNumberToChallanDetails.php"), 'Audit 2: server.js chalan_find_mobile direct route');
+assert(indexPhpContent.includes("MobileNumberToChallanDetails.php"), 'Audit 2: index.php chalan_find_mobile direct route');
+
+assert(serverJsContent.includes("'voter_mobile_link_no_otp': 'instant_voter_link'"), 'Audit 3: server.js voter_mobile_link_no_otp mapped');
+assert(indexPhpContent.includes("'voter_mobile_link_no_otp' => 'instant_voter_link'"), 'Audit 3: index.php voter_mobile_link_no_otp mapped');
+
+assert(serverJsContent.includes("'voter_mobile_link_instant_otp': 'instant_voter_link'"), 'Audit 4: server.js voter_mobile_link_instant_otp mapped');
+assert(indexPhpContent.includes("'voter_mobile_link_instant_otp' => 'instant_voter_link'"), 'Audit 4: index.php voter_mobile_link_instant_otp mapped');
+
+assert(servicePageContent.includes("['voter', 'epic', 'voter_verification', 'voter_pdf', 'voter_original_pdf_no_otp', 'voter_original_pdf_otp', 'votercard'].includes(tid)"), 'Audit 5: ServicePage voter form check includes votercard');
+
+assert(serverJsContent.includes("'ration_verification': 'ration_pdf_by_ration'"), 'Audit 6: server.js ration_verification mapped');
+assert(indexPhpContent.includes("'ration_verification' => 'ration_pdf_by_ration'"), 'Audit 6: index.php ration_verification mapped');
+
+assert(serverJsContent.includes("norm.includes('ration_to_aadhar')"), 'Audit 7: server.js ration_to_aadhar spelling support');
+assert(indexPhpContent.includes("strpos($norm, 'ration_to_aadhar') !== false"), 'Audit 7: index.php ration_to_aadhar spelling support');
+
+assert(serverJsContent.includes("'up_ration_to_aadhaar': 'up_ration_to_aadhaar'"), 'Audit 8: server.js up_ration_to_aadhaar mapped');
+assert(indexPhpContent.includes("'up_ration_to_aadhaar' => 'up_ration_to_aadhaar'"), 'Audit 8: index.php up_ration_to_aadhaar mapped');
+
+assert(serverJsContent.includes("'assam_ration_to_aadhaar': 'assam_ration_to_aadhaar'"), 'Audit 9: server.js assam_ration_to_aadhaar mapped');
+assert(indexPhpContent.includes("'assam_ration_to_aadhaar' => 'assam_ration_to_aadhaar'"), 'Audit 9: index.php assam_ration_to_aadhaar mapped');
+console.log('✅ PASS: All 9 mandatory audit fixes verified across server.js, index.php & ServicePage.jsx');
+
+// 2. Verify all 28 Part 6 Services registered in services_79.json
+const part6ServiceIds = [
+  'electric_bill_pdf_bihar', 'rtps_bihar_pdf', 'agristack_verify', 'agristack_dbt', 'agristack_pdf',
+  'udyam_pdf', 'mobile_to_upi_find', 'mobile_to_multi_upi_find', 'mobile_to_account_find', 'mobile_to_multi_account',
+  'upi_to_details', 'vi_sim_to_photo_details', 'check_operator', 'check_plan', 'mobile_to_details',
+  'mobile_lookup', 'chalan_find_mobile', 'chalan_find', 'nsdl_bank', 'npci_verify', 'uid_seeding',
+  'telegram_to_number_lookup', 'gmail_to_details', 'bank_ifsc_lookup', 'pincode_lookup', 'qr_generator',
+  'sarkari_job_feed', 'pvc_auto_cropper'
+];
+part6ServiceIds.forEach(id => {
+  const svc = services79.find(s => s.id === id);
+  assert(svc, `Service ${id} must exist in services_79.json`);
+  assert(svc.status === 'live', `Service ${id} must have live status in services_79.json`);
+});
+console.log('✅ PASS: All 28 Part 6 services registered with active status in services_79.json');
+
+// 3. Backend Live P4Points Routing Sections (Sections 7, 9, 19, 20-32)
+assert(serverJsContent.includes('elctricBillPDF.php'), 'server.js Section 7 Electric Bill PDF');
+assert(indexPhpContent.includes('elctricBillPDF.php'), 'index.php Section 7 Electric Bill PDF');
+
+assert(serverJsContent.includes('RtpsCertificate-Br.php'), 'server.js Section 9 RTPS Bihar Certificate PDF');
+assert(indexPhpContent.includes('RtpsCertificate-Br.php'), 'index.php Section 9 RTPS Bihar Certificate PDF');
+
+assert(serverJsContent.includes('npci/npci_link_status.php'), 'server.js Section 19/19B NPCI Bank Seeding');
+assert(indexPhpContent.includes('npci/npci_link_status.php'), 'index.php Section 19/19B NPCI Bank Seeding');
+
+assert(serverJsContent.includes('approvedFarmersPdf.php'), 'server.js Section 20 AgriStack Approved Farmers PDF');
+assert(indexPhpContent.includes('approvedFarmersPdf.php'), 'index.php Section 20 AgriStack Approved Farmers PDF');
+
+assert(serverJsContent.includes('farmer-details.php'), 'server.js Section 21 AgriStack Farmer Details');
+assert(indexPhpContent.includes('farmer-details.php'), 'index.php Section 21 AgriStack Farmer Details');
+
+assert(serverJsContent.includes('checkStatus.php'), 'server.js Section 22 AgriStack DBT Status');
+assert(indexPhpContent.includes('checkStatus.php'), 'index.php Section 22 AgriStack DBT Status');
+
+assert(serverJsContent.includes('mobiletoupi.php'), 'server.js Section 23 Mobile to UPI Find');
+assert(indexPhpContent.includes('mobiletoupi.php'), 'index.php Section 23 Mobile to UPI Find');
+
+assert(serverJsContent.includes('mobiletoMultiupi_Find.php'), 'server.js Section 24 Mobile to Multi UPI');
+assert(indexPhpContent.includes('mobiletoMultiupi_Find.php'), 'index.php Section 24 Mobile to Multi UPI');
+
+assert(serverJsContent.includes('mobaile_to_account.php'), 'server.js Section 25 Mobile to Account');
+assert(indexPhpContent.includes('mobaile_to_account.php'), 'index.php Section 25 Mobile to Account');
+
+assert(serverJsContent.includes('mobaile_to_multi_bank.php'), 'server.js Section 26 Mobile to Multi Bank');
+assert(indexPhpContent.includes('mobaile_to_multi_bank.php'), 'index.php Section 26 Mobile to Multi Bank');
+
+assert(serverJsContent.includes('upi_verify.php'), 'server.js Section 27 UPI Verify');
+assert(indexPhpContent.includes('upi_verify.php'), 'index.php Section 27 UPI Verify');
+
+assert(serverJsContent.includes('vi_sim_details.php'), 'server.js Section 28 Vi SIM to Photo & Details');
+assert(indexPhpContent.includes('vi_sim_details.php'), 'index.php Section 28 Vi SIM to Photo & Details');
+
+assert(serverJsContent.includes('mobile_operator_verify'), 'server.js Section 29 Mobile Operator Verify');
+assert(indexPhpContent.includes('mobile_operator_verify'), 'index.php Section 29 Mobile Operator Verify');
+
+assert(serverJsContent.includes('mobileLookup.php'), 'server.js Section 30 Mobile / Plan Lookup');
+assert(indexPhpContent.includes('mobileLookup.php'), 'index.php Section 30 Mobile / Plan Lookup');
+
+assert(serverJsContent.includes('challanVerification.php'), 'server.js Section 32 Challan Vehicle Verification');
+assert(indexPhpContent.includes('challanVerification.php'), 'index.php Section 32 Challan Vehicle Verification');
+console.log('✅ PASS: All 18 Part 6 live P4Points backend sections verified across Node and PHP');
+
+// 4. Client-side Form Validations & Parameter Packings in ServicePage.jsx
+assert(servicePageContent.includes("['electric_bill_pdf_bihar', 'electric_bill'].includes(tid)"), 'Electric Bill CA validation');
+assert(servicePageContent.includes("['rtps_bihar_pdf', 'rtps'].includes(tid)"), 'RTPS App No & Applicant Name validation');
+assert(servicePageContent.includes("['agristack_pdf', 'agristack_verify', 'agristack_dbt'].includes(tid)"), 'AgriStack Farmer ID / Aadhaar validation');
+assert(servicePageContent.includes("['udyam_pdf', 'udyam'].includes(tid)"), 'Udyam Registration Number validation');
+assert(servicePageContent.includes("tid === 'upi_to_details'"), 'UPI ID validation');
+assert(servicePageContent.includes("tid === 'nsdl_bank'"), 'NSDL Bank Account & IFSC validation');
+assert(servicePageContent.includes("['npci_verify', 'uid_seeding', 'aadhaar_bank_seeding'].includes(tid)"), 'NPCI Aadhaar validation');
+assert(servicePageContent.includes("tid === 'telegram_to_number_lookup'"), 'Telegram username validation');
+assert(servicePageContent.includes("tid === 'gmail_to_details'"), 'Gmail address validation');
+assert(servicePageContent.includes("tid === 'bank_ifsc_lookup'"), 'Bank IFSC validation');
+assert(servicePageContent.includes("tid === 'pincode_lookup'"), 'Pincode validation');
+assert(servicePageContent.includes("params.caNumber = val"), 'Electric Bill CA parameter packing');
+assert(servicePageContent.includes("params.farmerId = val"), 'AgriStack farmerId parameter packing');
+assert(servicePageContent.includes("params.udyamNo = val"), 'Udyam udyamNo parameter packing');
+console.log('✅ PASS: Part 6 Client-side validations and parameter packings verified in ServicePage.jsx');
+
+console.log('✅ PASS: Part 6 Utility, AgriStack, RTPS, Banking & Telecom Suite 100% verified across all tiers');
 
 console.log('\n--- TEST 4: Inspect index.php & server.js for Zero Bypass & Server-Side Validations ---');
 assert(!indexPhpContent.includes('$isTrial = $previewMode;'), 'index.php must not have $isTrial = $previewMode;');
