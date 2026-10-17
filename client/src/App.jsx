@@ -44,6 +44,7 @@ import ShopkeeperCustomerDirectory from './components/ShopkeeperCustomerDirector
 import ShopkeeperExtensionDesk from './components/ShopkeeperExtensionDesk';
 import IndianFlagBackdrop from './components/IndianFlagBackdrop';
 import ScrollToTopWidget from './components/ScrollToTopWidget';
+import PanCardApplicationModal from './components/pan/PanCardApplicationModal';
 import { authFetch, getServerBaseUrl, setServerBaseUrl } from './utils/api';
 import { useLanguage } from './context/LanguageContext';
 import { getMergedServicesCatalog, SERVICE_CATEGORIES } from './data/servicesCatalog';
@@ -98,6 +99,7 @@ export default function App() {
   const [submittingOtp, setSubmittingOtp] = useState(false);
   const [janSevaModalOpen, setJanSevaModalOpen] = useState(false);
   const [selectedJanSevaId, setSelectedJanSevaId] = useState(null);
+  const [isPanModalOpen, setIsPanModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth >= 1024;
@@ -457,6 +459,13 @@ export default function App() {
   const handleLaunchService = (toolKey) => {
     const rawId = typeof toolKey === 'object' && toolKey !== null ? (toolKey.id || toolKey.toolId || toolKey.key) : toolKey;
     const actualToolId = String(rawId || 'aadhaar_advance');
+
+    // Intercept New PAN Card Application to open 8-Step Wizard
+    if (actualToolId === 'pan_new_apply' || actualToolId === 'new_pan' || actualToolId === 'new_pan_card' || actualToolId === 'pan_49a' || actualToolId === 'form_49a') {
+      setIsPanModalOpen(true);
+      return;
+    }
+
     setActiveInstantToolId(actualToolId);
     // Automatically find and attach category so Back navigation is always 100% accurate
     try {
@@ -1742,6 +1751,24 @@ export default function App() {
         initialServiceId={selectedJanSevaId}
         selectedCafe={selectedCafe}
         settings={settings}
+      />
+
+      {/* New PAN Card (Form 49A) 8-Step Application Modal */}
+      <PanCardApplicationModal
+        isOpen={isPanModalOpen}
+        onClose={() => setIsPanModalOpen(false)}
+        walletBalance={walletBalance}
+        sanchalakB2bBalance={sanchalakB2bBalance}
+        isOperator={mode === 'admin'}
+        customerSession={customerSession}
+        selectedCafe={selectedCafe}
+        onOpenWallet={() => setIsWalletOpen(true)}
+        onOpenB2bWallet={() => setIsB2bWalletOpen(true)}
+        onBalanceUpdated={(newBal) => {
+          if (mode === 'admin') setSanchalakB2bBalance(newBal);
+          else setWalletBalance(newBal);
+        }}
+        theme={theme}
       />
 
       {/* 1-Click Floating Scroll Control Widget (Top / Bottom / % Indicator) */}

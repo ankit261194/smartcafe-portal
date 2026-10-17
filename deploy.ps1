@@ -133,6 +133,26 @@ s1.utrRequests = mergedUtrs;
 s2.utrRequests = mergedUtrs;
 s3.utrRequests = mergedUtrs;
 
+// Protect PAN applications across deployments
+const allPanAppsMap = new Map();
+[...(s1.panApplications||[]), ...(s2.panApplications||[]), ...(s3.panApplications||[]), ...(liveSync.panApplications||[])].forEach(p => {
+  if (p && p.id) allPanAppsMap.set(p.id, p);
+});
+const mergedPanApps = Array.from(allPanAppsMap.values());
+s1.panApplications = mergedPanApps;
+s2.panApplications = mergedPanApps;
+s3.panApplications = mergedPanApps;
+
+// Protect wallet transactions across deployments
+const allWalletTxnsMap = new Map();
+[...(s1.walletTransactions||[]), ...(s2.walletTransactions||[]), ...(s3.walletTransactions||[]), ...(liveSync.walletTransactions||[])].forEach(t => {
+  if (t && t.id) allWalletTxnsMap.set(t.id, t);
+});
+const mergedWalletTxns = Array.from(allWalletTxnsMap.values());
+s1.walletTransactions = mergedWalletTxns;
+s2.walletTransactions = mergedWalletTxns;
+s3.walletTransactions = mergedWalletTxns;
+
 // Protect and merge services_79 custom rates (live rates take highest priority, but API integration schema is strictly preserved)
 const baseServices79 = readJsonSafe('client/src/data/services_79.json');
 const allRatesMap = new Map();
@@ -319,6 +339,8 @@ git push origin main
 
 Write-Host "[5/5] Packaging Local Backup ZIP (Downloads)..." -ForegroundColor Cyan
 tar -C "$PSScriptRoot\client\dist" -a -cf "$PSScriptRoot\public_html.zip" .
+Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$PSScriptRoot\clean_public_html.zip" -Force
+Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$PSScriptRoot\cybercafe-portal-dist.zip" -Force
 Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$HOME\Downloads\public_html.zip" -Force
 if (Test-Path "$HOME\Desktop") {
     Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$HOME\Desktop\public_html.zip" -Force

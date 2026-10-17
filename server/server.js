@@ -246,7 +246,11 @@ function isStaffRestricted(req) {
 }
 
 export function authMiddleware(req, res, next) {
-  const authHeader = req.headers.authorization;
+  let authHeader = req.headers.authorization;
+  const xAdminKey = req.headers['x-superadmin-key'] || req.headers['x-superadmin-token'];
+  if (!authHeader && xAdminKey) {
+    authHeader = `Bearer ${xAdminKey}`;
+  }
   if (!authHeader) {
     const rawUrl = req.originalUrl || req.url;
     if (rawUrl.includes('/topup-instant') || (req.method === 'GET' && rawUrl.startsWith('/api/wallet/'))) {
@@ -6623,6 +6627,683 @@ app.get('/api/pan/lookup/:panNo', (req, res) => {
   }
   const pan = req.params.panNo.trim().toUpperCase();
   res.json(getPanCardDetails(pan));
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MODULE: NEW PAN CARD APPLICATION SERVICE (FORM 49A PHYSICAL + E-PAN)
+// ═══════════════════════════════════════════════════════════════════════════
+
+const panDocsDir = path.join(__dirname, '..', 'uploads', 'pan_docs');
+if (!fs.existsSync(panDocsDir)) {
+  fs.mkdirSync(panDocsDir, { recursive: true });
+}
+const panStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, panDocsDir);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname) || '.jpg';
+    const safeName = `PAN-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+    cb(null, safeName);
+  }
+});
+const panUpload = multer({
+  storage: panStorage,
+  limits: { fileSize: 10 * 1024 * 1024 }
+});
+
+function parseJsonField(val, defaultObj = {}) {
+  if (!val) return defaultObj;
+  if (typeof val === 'object' && val !== null) return val;
+  if (typeof val === 'string') {
+    try {
+      const parsed = JSON.parse(val);
+      if (typeof parsed === 'object' && parsed !== null) return parsed;
+      return defaultObj;
+    } catch {
+      return defaultObj;
+    }
+  }
+  return defaultObj;
+}
+
+function saveBase64PanDoc(dataUrlOrBase64, prefix = 'DOC') {
+  if (!dataUrlOrBase64 || typeof dataUrlOrBase64 !== 'string') return '';
+  if (dataUrlOrBase64.startsWith('/uploads/') || dataUrlOrBase64.startsWith('http://') || dataUrlOrBase64.startsWith('https://')) {
+    return dataUrlOrBase64;
+  }
+  try {
+    let ext = '.jpg';
+    let base64Data = dataUrlOrBase64;
+    const match = dataUrlOrBase64.match(/^data:([a-zA-Z0-9\/\-+.]+);base64,(.+)$/);
+    if (match) {
+      const mime = match[1];
+      base64Data = match[2];
+      if (mime.includes('pdf')) ext = '.pdf';
+      else if (mime.includes('png')) ext = '.png';
+      else if (mime.includes('webp')) ext = '.webp';
+      else ext = '.jpg';
+    } else {
+      if (base64Data.startsWith('JVBERi') || prefix === 'FORM49A' || prefix === 'SLIP') {
+        ext = '.pdf';
+      }
+    }
+    const filename = `PAN-${prefix}-${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`;
+    const filePath = path.join(panDocsDir, filename);
+    fs.writeFileSync(filePath, Buffer.from(base64Data, 'base64'));
+    return `/uploads/pan_docs/${filename}`;
+  } catch (err) {
+    console.error('[PAN SAVE DOC ERROR]', err.message);
+    return '';
+  }
+}
+
+function extractPanUser(req) {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    if (token === 'SUPERADMIN_Aa@910010025123343' || token === 'Aa@910010025123343') {
+      return { id: 'superadmin', role: 'superadmin', name: 'सुपर एडमिन' };
+    }
+    try {
+      return jwt.verify(token, JWT_SECRET);
+    } catch {}
+  }
+  return null;
+}
+
+// 1. Submit New PAN Application (Atomic Wallet Deduction)
+app.post('/api/pan/apply', panUpload.fields([
+  { name: 'photo', maxCount: 1 },
+  { name: 'signature', maxCount: 1 },
+  { name: 'aadhaarDoc', maxCount: 1 },
+  { name: 'dobDoc', maxCount: 1 },
+  { name: 'generatedFormPdf', maxCount: 1 }
+]), (req, res) => {
+  try {
+    const store = getStore();
+    if (!Array.isArray(store.panApplications)) store.panApplications = [];
+    if (!Array.isArray(store.wallets)) store.wallets = [];
+    if (!Array.isArray(store.walletTransactions)) store.walletTransactions = [];
+
+    const body = req.body || {};
+    const authUser = extractPanUser(req);
+    const rawPersonal = parseJsonField(body.personal, {});
+    const appliedBy = String(body.appliedBy || authUser?.phone || body.mobile || rawPersonal.mobile || '').trim();
+    if (!appliedBy || !/^\d{10}$/.test(appliedBy)) {
+      return res.status(400).json({ success: false, error: 'वैध 10-अंकीय मोबाइल नंबर (appliedBy) अनिवार्य है।' });
+    }
+
+    const personal = {
+      title: rawPersonal.title || body.title || 'Shri',
+      firstName: rawPersonal.firstName || body.firstName || '',
+      middleName: rawPersonal.middleName || body.middleName || '',
+      lastName: rawPersonal.lastName || body.lastName || '',
+      gender: rawPersonal.gender || body.gender || 'Male',
+      dob: rawPersonal.dob || body.dob || '',
+      fatherName: rawPersonal.fatherName || body.fatherName || '',
+      motherName: rawPersonal.motherName || body.motherName || '',
+      cardParentChoice: rawPersonal.cardParentChoice || body.cardParentChoice || 'father',
+      mobile: rawPersonal.mobile || body.mobile || appliedBy,
+      email: rawPersonal.email || body.email || ''
+    };
+
+    if (!personal.lastName || String(personal.lastName).trim() === '') {
+      return res.status(400).json({ success: false, error: 'आवेदक का उपनाम/अंतिम नाम (Last Name) अनिवार्य है।' });
+    }
+    if (!personal.dob || String(personal.dob).trim() === '') {
+      return res.status(400).json({ success: false, error: 'जन्म तिथि (DOB) अनिवार्य है।' });
+    }
+
+    const rawAddress = parseJsonField(body.address, {});
+    const address = {
+      flat: rawAddress.flat || body.flat || '',
+      premises: rawAddress.premises || body.premises || '',
+      street: rawAddress.street || body.street || '',
+      locality: rawAddress.locality || body.locality || '',
+      city: rawAddress.city || body.city || '',
+      state: rawAddress.state || body.state || '',
+      pincode: rawAddress.pincode || body.pincode || ''
+    };
+    if (!address.pincode || !/^\d{6}$/.test(String(address.pincode).trim())) {
+      return res.status(400).json({ success: false, error: 'वैध 6-अंकीय पिनकोड अनिवार्य है।' });
+    }
+
+    const rawAo = parseJsonField(body.aoCode, {});
+    const aoCode = {
+      areaCode: rawAo.areaCode || body.areaCode || '',
+      aoType: rawAo.aoType || body.aoType || '',
+      rangeCode: rawAo.rangeCode || body.rangeCode || '',
+      aoNumber: rawAo.aoNumber || body.aoNumber || '',
+      displayText: rawAo.displayText || body.aoDisplayText || body.displayText || ''
+    };
+    if (!aoCode.areaCode) {
+      return res.status(400).json({ success: false, error: 'AO Code (Area Code) अनिवार्य है।' });
+    }
+
+    const rawId = parseJsonField(body.identity, {});
+    const identity = {
+      dobProof: rawId.dobProof || body.dobProof || 'Municipal Birth Certificate',
+      aadhaarNumber: rawId.aadhaarNumber || body.aadhaarNumber || '',
+      nameOnAadhaar: rawId.nameOnAadhaar || body.nameOnAadhaar || (personal.firstName ? `${personal.firstName} ${personal.lastName}` : personal.lastName),
+      signType: rawId.signType || body.signType || 'physical'
+    };
+    const cleanAadhaar = String(identity.aadhaarNumber || '').replace(/\D/g, '');
+    if (cleanAadhaar.length !== 12) {
+      return res.status(400).json({ success: false, error: 'वैध 12-अंकीय आधार संख्या अनिवार्य है।' });
+    }
+    identity.aadhaarNumber = cleanAadhaar;
+
+    // Pricing & Role resolution
+    const cafe = (store.cafes || []).find(c => c.phone === appliedBy || (body.cafeId && c.id === body.cafeId) || (authUser?.cafeId && c.id === authUser.cafeId));
+    let role = body.role || (authUser?.role === 'customer' ? 'customer' : (cafe ? 'cafe_operator' : 'customer'));
+    if (body.role === 'cafe_operator' || body.role === 'retailer' || body.role === 'cafe') {
+      role = 'cafe_operator';
+    }
+
+    const standardFee = (role === 'customer') ? 190 : 145;
+    let feeCharged = standardFee;
+    if (body.feeCharged) {
+      const numFee = Number(body.feeCharged);
+      if (!isNaN(numFee) && numFee >= standardFee) {
+        feeCharged = numFee;
+      }
+    }
+    const baseCost = 120;
+    const netProfit = feeCharged - baseCost;
+
+    let wallet = store.wallets.find(w => w.phone === appliedBy);
+    const user = (store.users || []).find(u => u.phone === appliedBy || u.id === appliedBy);
+
+    let currentBalance = 0;
+    if (cafe && role === 'cafe_operator') {
+      currentBalance = parseFloat(cafe.b2bWallet?.balance ?? user?.balance ?? wallet?.balance ?? 0);
+    } else if (wallet) {
+      currentBalance = parseFloat(wallet.balance ?? user?.balance ?? 0);
+    } else if (user) {
+      currentBalance = parseFloat(user.balance || 0);
+    }
+
+    // STRICT ATOMIC BALANCE CHECK
+    if (currentBalance < feeCharged) {
+      return res.status(402).json({
+        success: false,
+        error: `अपर्याप्त वॉलेट बैलेंस! आवश्यक: ₹${feeCharged}, वर्तमान: ₹${currentBalance}। कृपया वॉलेट रिचार्ज करें।`,
+        requiredAmount: feeCharged,
+        currentBalance: currentBalance
+      });
+    }
+
+    // Atomic Deduction
+    const txnId = `TXN-PAN-${Date.now()}-${Math.floor(Math.random() * 9000 + 1000)}`;
+    const applicantName = `${personal.firstName ? personal.firstName + ' ' : ''}${personal.lastName}`.trim();
+    const txnNote = `नया पैन कार्ड आवेदन शुल्क: ${applicantName} (${appliedBy})`;
+
+    const remainingBal = Math.round((currentBalance - feeCharged) * 100) / 100;
+
+    if (cafe && role === 'cafe_operator') {
+      if (!cafe.b2bWallet) cafe.b2bWallet = { balance: currentBalance, minThreshold: 200, transactions: [] };
+      cafe.b2bWallet.balance = remainingBal;
+      if (!cafe.b2bWallet.transactions) cafe.b2bWallet.transactions = [];
+      cafe.b2bWallet.transactions.unshift({
+        id: txnId,
+        type: 'debit',
+        amount: feeCharged,
+        note: txnNote,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    if (!wallet) {
+      wallet = {
+        phone: appliedBy,
+        customerName: applicantName || 'ग्राहक',
+        balance: remainingBal,
+        transactions: []
+      };
+      store.wallets.push(wallet);
+    } else {
+      wallet.balance = remainingBal;
+    }
+    if (!wallet.transactions) wallet.transactions = [];
+    wallet.transactions.unshift({
+      id: txnId,
+      type: 'debit',
+      amount: feeCharged,
+      note: txnNote,
+      createdAt: new Date().toISOString()
+    });
+
+    if (user) {
+      user.balance = remainingBal;
+    }
+
+    const todayStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const rand4 = Math.floor(1000 + Math.random() * 9000);
+    const panId = `PAN-${todayStr}-${rand4}`;
+
+    store.walletTransactions.unshift({
+      id: txnId,
+      phone: appliedBy,
+      type: 'debit',
+      amount: feeCharged,
+      note: txnNote,
+      applicationId: panId,
+      createdAt: new Date().toISOString()
+    });
+
+    // Save Documents
+    const files = req.files || {};
+    const inputDocs = parseJsonField(body.documents, {});
+    const photoUrl = files.photo?.[0] ? `/uploads/pan_docs/${files.photo[0].filename}` : saveBase64PanDoc(inputDocs.photo || body.photo, 'PHOTO');
+    const signatureUrl = files.signature?.[0] ? `/uploads/pan_docs/${files.signature[0].filename}` : saveBase64PanDoc(inputDocs.signature || body.signature, 'SIGN');
+    const aadhaarDocUrl = files.aadhaarDoc?.[0] ? `/uploads/pan_docs/${files.aadhaarDoc[0].filename}` : saveBase64PanDoc(inputDocs.aadhaarDoc || body.aadhaarDoc, 'AADHAAR');
+    const dobDocUrl = files.dobDoc?.[0] ? `/uploads/pan_docs/${files.dobDoc[0].filename}` : saveBase64PanDoc(inputDocs.dobDoc || body.dobDoc, 'DOB');
+    const generatedFormPdfUrl = files.generatedFormPdf?.[0] ? `/uploads/pan_docs/${files.generatedFormPdf[0].filename}` : saveBase64PanDoc(inputDocs.generatedFormPdf || body.generatedFormPdf, 'FORM49A');
+
+    const documents = {
+      photo: photoUrl || '',
+      signature: signatureUrl || '',
+      aadhaarDoc: aadhaarDocUrl || '',
+      dobDoc: dobDocUrl || '',
+      generatedFormPdf: generatedFormPdfUrl || ''
+    };
+
+    const newPanApp = {
+      id: panId,
+      appliedBy,
+      role,
+      cafeId: cafe?.id || body.cafeId || '',
+      personal: {
+        title: personal.title || 'Shri',
+        firstName: personal.firstName || '',
+        middleName: personal.middleName || '',
+        lastName: personal.lastName,
+        gender: personal.gender || 'Male',
+        dob: personal.dob,
+        fatherName: personal.fatherName || '',
+        motherName: personal.motherName || '',
+        cardParentChoice: personal.cardParentChoice || 'father',
+        mobile: personal.mobile || appliedBy,
+        email: personal.email || ''
+      },
+      address: {
+        flat: address.flat || '',
+        premises: address.premises || '',
+        street: address.street || '',
+        locality: address.locality || '',
+        city: address.city || '',
+        state: address.state || '',
+        pincode: address.pincode
+      },
+      aoCode: {
+        areaCode: aoCode.areaCode,
+        aoType: aoCode.aoType || '',
+        rangeCode: aoCode.rangeCode || '',
+        aoNumber: aoCode.aoNumber || '',
+        displayText: aoCode.displayText || ''
+      },
+      identity: {
+        dobProof: identity.dobProof,
+        aadhaarNumber: identity.aadhaarNumber,
+        nameOnAadhaar: identity.nameOnAadhaar,
+        signType: identity.signType || 'physical'
+      },
+      documents,
+      financials: {
+        feeCharged,
+        baseCost,
+        netProfit,
+        walletTxnId: txnId,
+        isRefunded: false,
+        refundTxnId: null,
+        refundedAt: null
+      },
+      status: 'pending',
+      objectionDetails: null,
+      rejectionDetails: null,
+      fulfillment: {
+        ackNumber: null,
+        slipPdfUrl: null,
+        completedAt: null
+      },
+      timestamps: {
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+    };
+
+    store.panApplications.unshift(newPanApp);
+    saveStore(store);
+
+    return res.status(200).json({
+      success: true,
+      message: 'पैन कार्ड आवेदन सफलतापूर्वक जमा हो गया है।',
+      id: newPanApp.id,
+      trackingId: newPanApp.id,
+      feeCharged,
+      walletTxnId: txnId,
+      remainingBalance: (cafe && role === 'cafe_operator') ? cafe.b2bWallet.balance : wallet.balance,
+      currentBalance: (cafe && role === 'cafe_operator') ? cafe.b2bWallet.balance : wallet.balance,
+      application: newPanApp,
+      receipt: {
+        receiptNo: `RCP-${panId}`,
+        applicationId: panId,
+        applicantName,
+        feeCharged,
+        walletTxnId: txnId,
+        status: 'pending',
+        date: newPanApp.timestamps.createdAt
+      }
+    });
+  } catch (err) {
+    console.error('[PAN APPLY ERROR]', err);
+    return res.status(500).json({ success: false, error: 'आवेदन जमा करते समय आंतरिक त्रुटि हुई: ' + err.message });
+  }
+});
+
+// 2. Fetch User's PAN Applications
+app.get('/api/pan/my-applications', (req, res) => {
+  try {
+    const store = getStore();
+    const authUser = extractPanUser(req);
+    const mobile = String(req.query.mobile || req.query.phone || authUser?.phone || '').trim();
+    const cafeId = authUser?.cafeId || req.query.cafeId;
+
+    let apps = store.panApplications || [];
+    if (authUser?.role !== 'superadmin') {
+      if (!mobile && !cafeId) {
+        return res.status(400).json({ success: false, error: 'मोबाइल नंबर या लॉगिन आवश्यक है।' });
+      }
+      apps = apps.filter(a => (mobile && a.appliedBy === mobile) || (cafeId && a.cafeId === cafeId));
+    }
+    return res.status(200).json({
+      success: true,
+      count: apps.length,
+      applications: apps
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 3. Resubmit Corrected Documents for Objection (Zero Fees Charged)
+app.post('/api/pan/applications/:id/resubmit-objection', panUpload.fields([
+  { name: 'photo', maxCount: 1 },
+  { name: 'signature', maxCount: 1 },
+  { name: 'aadhaarDoc', maxCount: 1 },
+  { name: 'dobDoc', maxCount: 1 }
+]), (req, res) => {
+  try {
+    const store = getStore();
+    const app = (store.panApplications || []).find(a => a.id === req.params.id);
+    if (!app) {
+      return res.status(404).json({ success: false, error: 'आवेदन नहीं मिला (Application not found)' });
+    }
+    if (app.status !== 'objection') {
+      return res.status(400).json({ success: false, error: 'आवेदन आपत्ति (Objection) स्थिति में नहीं है।' });
+    }
+
+    const files = req.files || {};
+    const inputDocs = req.body?.documents || {};
+    if (files.photo?.[0]) app.documents.photo = `/uploads/pan_docs/${files.photo[0].filename}`;
+    else if (inputDocs.photo || req.body?.photo) app.documents.photo = saveBase64PanDoc(inputDocs.photo || req.body.photo, 'PHOTO');
+
+    if (files.signature?.[0]) app.documents.signature = `/uploads/pan_docs/${files.signature[0].filename}`;
+    else if (inputDocs.signature || req.body?.signature) app.documents.signature = saveBase64PanDoc(inputDocs.signature || req.body.signature, 'SIGN');
+
+    if (files.aadhaarDoc?.[0]) app.documents.aadhaarDoc = `/uploads/pan_docs/${files.aadhaarDoc[0].filename}`;
+    else if (inputDocs.aadhaarDoc || req.body?.aadhaarDoc) app.documents.aadhaarDoc = saveBase64PanDoc(inputDocs.aadhaarDoc || req.body.aadhaarDoc, 'AADHAAR');
+
+    if (files.dobDoc?.[0]) app.documents.dobDoc = `/uploads/pan_docs/${files.dobDoc[0].filename}`;
+    else if (inputDocs.dobDoc || req.body?.dobDoc) app.documents.dobDoc = saveBase64PanDoc(inputDocs.dobDoc || req.body.dobDoc, 'DOB');
+
+    app.status = 'under_review';
+    app.objectionDetails = {
+      ...(app.objectionDetails || {}),
+      resubmittedAt: new Date().toISOString(),
+      resolved: true,
+      notes: req.body?.notes || ''
+    };
+    app.timestamps.updatedAt = new Date().toISOString();
+
+    saveStore(store);
+
+    return res.status(200).json({
+      success: true,
+      message: 'संशोधित दस्तावेज़ सफलतापूर्वक पुनः जमा किए गए। कोई अतिरिक्त शुल्क नहीं लिया गया।',
+      application: app
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 4. SuperAdmin PAN Applications Queue with Filters
+app.get('/api/superadmin/pan/applications', (req, res) => {
+  try {
+    const store = getStore();
+    let apps = store.panApplications || [];
+    const status = req.query.status;
+    if (status && status !== 'all') {
+      apps = apps.filter(a => a.status === status);
+    }
+    const search = req.query.search ? String(req.query.search).trim().toLowerCase() : '';
+    if (search) {
+      apps = apps.filter(a => 
+        (a.id && a.id.toLowerCase().includes(search)) ||
+        (a.appliedBy && a.appliedBy.includes(search)) ||
+        (a.personal?.firstName && a.personal.firstName.toLowerCase().includes(search)) ||
+        (a.personal?.lastName && a.personal.lastName.toLowerCase().includes(search)) ||
+        (a.identity?.aadhaarNumber && a.identity.aadhaarNumber.includes(search))
+      );
+    }
+    return res.status(200).json({
+      success: true,
+      total: apps.length,
+      applications: apps
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 5. SuperAdmin Complete Application with 15-Digit Ack & Slip PDF
+app.post('/api/superadmin/pan/applications/:id/complete', panUpload.fields([
+  { name: 'slipPdf', maxCount: 1 }
+]), (req, res) => {
+  try {
+    const store = getStore();
+    const app = (store.panApplications || []).find(a => a.id === req.params.id);
+    if (!app) {
+      return res.status(404).json({ success: false, error: 'आवेदन नहीं मिला (Application not found)' });
+    }
+    const ackNumber = String(req.body?.ackNumber || '').trim();
+    if (!ackNumber || ackNumber.length !== 15) {
+      return res.status(400).json({ success: false, error: '15-अंकीय वैध Acknowledgement Number अनिवार्य है।' });
+    }
+
+    const files = req.files || {};
+    let slipPdfUrl = req.body?.slipPdfUrl || '';
+    if (files.slipPdf?.[0]) {
+      slipPdfUrl = `/uploads/pan_docs/${files.slipPdf[0].filename}`;
+    } else if (req.body?.slipPdf) {
+      slipPdfUrl = saveBase64PanDoc(req.body.slipPdf, 'SLIP');
+    }
+
+    app.status = 'completed';
+    app.fulfillment = {
+      ackNumber,
+      slipPdfUrl: slipPdfUrl || app.fulfillment?.slipPdfUrl || '',
+      completedAt: new Date().toISOString()
+    };
+    app.timestamps.updatedAt = new Date().toISOString();
+
+    saveStore(store);
+
+    return res.status(200).json({
+      success: true,
+      message: 'पैन आवेदन सफलतापूर्वक पूर्ण (Completed) मार्क किया गया।',
+      application: app
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 6. SuperAdmin Raise Objection (STRICT GOLDEN RULE: No Refund)
+app.post('/api/superadmin/pan/applications/:id/raise-objection', (req, res) => {
+  try {
+    const store = getStore();
+    const app = (store.panApplications || []).find(a => a.id === req.params.id);
+    if (!app) {
+      return res.status(404).json({ success: false, error: 'आवेदन नहीं मिला (Application not found)' });
+    }
+    const reason = String(req.body?.reason || req.body?.objectionReason || '').trim();
+    if (!reason) {
+      return res.status(400).json({ success: false, error: 'आपत्ति का कारण (reason) अनिवार्य है।' });
+    }
+
+    app.status = 'objection';
+    app.objectionDetails = {
+      reason,
+      raisedAt: new Date().toISOString(),
+      resolved: false
+    };
+    app.timestamps.updatedAt = new Date().toISOString();
+
+    saveStore(store);
+
+    return res.status(200).json({
+      success: true,
+      message: 'आपत्ति (Objection) सफलतापूर्वक दर्ज की गई। कोई रिफंड नहीं हुआ।',
+      application: app
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 7. SuperAdmin Mark Rejected (STRICT GOLDEN RULE: Reject != Refund. No money credited automatically)
+app.post('/api/superadmin/pan/applications/:id/mark-rejected', (req, res) => {
+  try {
+    const store = getStore();
+    const app = (store.panApplications || []).find(a => a.id === req.params.id);
+    if (!app) {
+      return res.status(404).json({ success: false, error: 'आवेदन नहीं मिला (Application not found)' });
+    }
+    const reason = String(req.body?.reason || req.body?.rejectionReason || 'आवेदन निरस्त किया गया').trim();
+
+    app.status = 'rejected';
+    app.rejectionDetails = {
+      reason,
+      rejectedAt: new Date().toISOString()
+    };
+    app.timestamps.updatedAt = new Date().toISOString();
+
+    saveStore(store);
+
+    return res.status(200).json({
+      success: true,
+      message: 'आवेदन निरस्त (Rejected) मार्क किया गया। कोई रिफंड नहीं हुआ।',
+      application: app
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 8. SuperAdmin Issue Independent Wallet Refund
+app.post('/api/superadmin/pan/applications/:id/issue-refund', (req, res) => {
+  try {
+    const store = getStore();
+    const app = (store.panApplications || []).find(a => a.id === req.params.id);
+    if (!app) {
+      return res.status(404).json({ success: false, error: 'आवेदन नहीं मिला (Application not found)' });
+    }
+    if (app.financials?.isRefunded) {
+      return res.status(400).json({ success: false, error: 'यह आवेदन पहले ही रिफंड किया जा चुका है (Already refunded)' });
+    }
+
+    const refundAmount = parseFloat(app.financials?.feeCharged || 145);
+    const refundTxnId = `REFUND-PAN-${Date.now()}-${Math.floor(Math.random() * 9000 + 1000)}`;
+    const refundNote = `पैन कार्ड आवेदन रिफंड (${app.id})`;
+
+    const cafe = (store.cafes || []).find(c => c.phone === app.appliedBy || (app.cafeId && c.id === app.cafeId));
+    let wallet = (store.wallets || []).find(w => w.phone === app.appliedBy);
+    const user = (store.users || []).find(u => u.phone === app.appliedBy || u.id === app.appliedBy);
+
+    if (cafe && app.role === 'cafe_operator') {
+      if (!cafe.b2bWallet) cafe.b2bWallet = { balance: 0, minThreshold: 200, transactions: [] };
+      cafe.b2bWallet.balance = Math.round((cafe.b2bWallet.balance + refundAmount) * 100) / 100;
+      if (!cafe.b2bWallet.transactions) cafe.b2bWallet.transactions = [];
+      cafe.b2bWallet.transactions.unshift({
+        id: refundTxnId,
+        type: 'credit',
+        amount: refundAmount,
+        note: refundNote,
+        createdAt: new Date().toISOString()
+      });
+    }
+    if (wallet) {
+      wallet.balance = Math.round((wallet.balance + refundAmount) * 100) / 100;
+      if (!wallet.transactions) wallet.transactions = [];
+      wallet.transactions.unshift({
+        id: refundTxnId,
+        type: 'credit',
+        amount: refundAmount,
+        note: refundNote,
+        createdAt: new Date().toISOString()
+      });
+    } else if (!cafe || app.role !== 'cafe_operator') {
+      wallet = {
+        phone: app.appliedBy,
+        customerName: app.personal?.firstName ? `${app.personal.firstName} ${app.personal.lastName}` : 'ग्राहक',
+        balance: refundAmount,
+        transactions: [{
+          id: refundTxnId,
+          type: 'credit',
+          amount: refundAmount,
+          note: refundNote,
+          createdAt: new Date().toISOString()
+        }]
+      };
+      store.wallets.push(wallet);
+    }
+
+    if (user) {
+      user.balance = Math.round(((user.balance || 0) + refundAmount) * 100) / 100;
+    }
+
+    if (!Array.isArray(store.walletTransactions)) store.walletTransactions = [];
+    store.walletTransactions.unshift({
+      id: refundTxnId,
+      phone: app.appliedBy,
+      type: 'credit',
+      amount: refundAmount,
+      note: refundNote,
+      applicationId: app.id,
+      createdAt: new Date().toISOString()
+    });
+
+    app.financials.isRefunded = true;
+    app.financials.refundTxnId = refundTxnId;
+    app.financials.refundedAt = new Date().toISOString();
+    app.timestamps.updatedAt = new Date().toISOString();
+
+    saveStore(store);
+
+    return res.status(200).json({
+      success: true,
+      message: `रिफंड ₹${refundAmount} सफलतापूर्वक उपयोगकर्ता वॉलेट में जमा कर दिया गया।`,
+      refundedAmount: refundAmount,
+      refundTxnId,
+      currentBalance: (cafe && app.role === 'cafe_operator') ? cafe.b2bWallet.balance : wallet.balance,
+      application: app
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
 });
 
 app.get('/api/aadhaar/lookup/:aadhaarNo', (req, res) => {

@@ -11,6 +11,7 @@ import {
 import { authFetch, getServerBaseUrl } from '../utils/api';
 import Services79RatesManager from './superadmin/Services79RatesManager';
 import UsersDirectoryManager from './superadmin/UsersDirectoryManager';
+import AdminPanQueue from './admin/AdminPanQueue';
 
 export const MASTER_12_APIS = [
   { id: 'rc', serviceType: 'rcDownload', name: 'वाहन RC टू PDF / PVC', apiName: 'Parivahan MoRTH Gateway REST API v2.4', endpoint: '/api/rc/lookup/:regNo', defaultWholesale: 200, defaultRetail: 250, category: 'vehicle', latency: '180ms' },
@@ -1279,6 +1280,21 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
               {pendingManualOrdersCount}
             </span>
           )}
+        </button>
+
+        <button
+          onClick={() => setActiveTab('pan_queue')}
+          className={`px-4 py-2.5 rounded-xl transition flex items-center gap-2 ${
+            activeTab === 'pan_queue' 
+              ? 'bg-blue-600 text-white shadow-sm' 
+              : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+          }`}
+        >
+          <CreditCard className="w-4 h-4 text-blue-400" />
+          <span>पैन कार्ड कतार (PAN Desk)</span>
+          <span className="bg-blue-500 text-white px-2 py-0.5 rounded-full text-[10px] font-black">
+            UTI/NSDL
+          </span>
         </button>
 
         <button
@@ -2702,6 +2718,11 @@ export default function SuperAdminPanel({ theme = 'light', onToolStatusUpdated =
             </div>
           </form>
         </div>
+      )}
+
+      {/* TAB: PAN CARD QUEUE & MANAGEMENT DESK */}
+      {activeTab === 'pan_queue' && (
+        <AdminPanQueue theme={theme} />
       )}
 
       {/* TAB: MANUAL ORDERS DESK (REKHA PRINT RELAY DESK) */}

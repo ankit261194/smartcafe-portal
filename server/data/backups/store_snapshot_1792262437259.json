@@ -1,0 +1,5126 @@
+{
+  "settings": {
+    "portalName": "à¤¡à¤¿à¤œà¤¿à¤Ÿà¤² à¤¸à¤¾à¤‡à¤¬à¤° à¤•à¥ˆà¤«à¥‡ à¤ªà¥‹à¤°à¥à¤Ÿà¤²",
+    "shopName": "à¤¶à¥à¤°à¥€ à¤¡à¤¿à¤œà¤¿à¤Ÿà¤² à¤¸à¤¾à¤‡à¤¬à¤° à¤•à¥ˆà¤«à¥‡ à¤à¤µà¤‚ à¤œà¤¨ à¤¸à¥‡à¤µà¤¾ à¤•à¥‡à¤‚à¤¦à¥à¤°",
+    "tagline": "à¤¸à¤­à¥€ à¤‘à¤¨à¤²à¤¾à¤‡à¤¨ à¤«à¥‰à¤°à¥à¤®, à¤ªà¥à¤°à¤¿à¤‚à¤Ÿà¤¿à¤‚à¤— à¤µ à¤¸à¤°à¤•à¤¾à¤°à¥€ à¤¸à¥‡à¤µà¤¾à¤à¤‚",
+    "ownerName": "",
+    "phone": "",
+    "upiId": "",
+    "address": "",
+    "superAdminPin": "$2b$10$qT12YS7MMPbApBUJzkbpTOLxp2l6JrkW8RClJ5mcWlfE/jAAQPLsi",
+    "superAdminPassword": "$2b$10$B/o9iiC3lZ31DJw4tX6jfufEeYSogTPMcatDiuwRfW2xUFgUmqPq.",
+    "superAdminUpiId": "8006518960@pthdfc",
+    "superAdminPhone": "8533955333",
+    "rates": {
+      "bwPage": 3,
+      "colorPage": 10,
+      "xerox": 2,
+      "lamination": 20,
+      "photoCopyBothSide": 3,
+      "passportPhoto": 50,
+      "formFeeNormal": 70,
+      "formFeeComplex": 120
+    },
+    "superAdminWhatsapp": "8533955333",
+    "superAdminPayeeName": "Suman Devi",
+    "superAdminQrImage": "/images/superadmin_qr.jpg",
+    "rekhaPrint": {
+      "loginUrl": "https://rekhaprint.info/members/login",
+      "username": "8006518960",
+      "password": "012323",
+      "isActive": true
+    }
+  },
+  "prints": [],
+  "applications": [],
+  "cashbook": [],
+  "udhar": [],
+  "bulletins": [],
+  "customerVault": [],
+  "complaints": [],
+  "rcOrders": [],
+  "utrRequests": [
+    {
+      "id": "UTR-CUST-1792125257-861",
+      "tier": "customer_to_sanchalak",
+      "cafeId": "",
+      "cafeShopName": "डिजिटल साइबर कैफे",
+      "customerPhone": "8006518960",
+      "customerName": "ankit kumar",
+      "amount": 10,
+      "utr": "717839573483",
+      "screenshotUrl": "",
+      "upiTarget": "shop@upi",
+      "status": "approved",
+      "autoVerified": false,
+      "approvedAt": "2026-10-16T04:54:07+00:00",
+      "rejectReason": "",
+      "createdAt": "2026-10-16T04:34:17+00:00"
+    }
+  ],
+  "vleKycApplications": [],
+  "panApplications": [
+    {
+      "id": "PAN-20261017-9809",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262353202-1204",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262353268-4301",
+        "refundedAt": "2026-10-17T18:39:13.268Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:39:13.238Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:39:13.202Z",
+        "updatedAt": "2026-10-17T18:39:13.268Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-2704",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262353017-571066.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262353019-278718.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792262353109-69249.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792262353020-863662.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262353017-2561",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262353161-7329",
+        "refundedAt": "2026-10-17T18:39:13.161Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:39:13.076Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:39:13.109Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792262353143-966205.pdf",
+        "completedAt": "2026-10-17T18:39:13.143Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:39:13.020Z",
+        "updatedAt": "2026-10-17T18:39:13.161Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-2174",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262352980-2312",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792262353006-1981",
+        "refundedAt": "2026-10-17T18:39:13.006Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:39:12.980Z",
+        "updatedAt": "2026-10-17T18:39:13.006Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-4903",
+      "appliedBy": "8006517171",
+      "role": "customer",
+      "cafeId": "",
+      "personal": {
+        "title": "Kumari",
+        "firstName": "Pooja",
+        "middleName": "",
+        "lastName": "Sharma",
+        "gender": "Female",
+        "dob": "2001-08-20",
+        "fatherName": "Ramesh Sharma",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "Civil Lines",
+        "street": "",
+        "locality": "",
+        "city": "Meerut",
+        "state": "Uttar Pradesh",
+        "pincode": "250001"
+      },
+      "aoCode": {
+        "areaCode": "MRT",
+        "aoType": "W",
+        "rangeCode": "21",
+        "aoNumber": "88",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987456321458",
+        "nameOnAadhaar": "Pooja Sharma",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262194542-989310.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262194543-944094.png",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 190,
+        "baseCost": 120,
+        "netProfit": 70,
+        "walletTxnId": "TXN-PAN-1792262194542-9372",
+        "isRefunded": false,
+        "refundTxnId": null,
+        "refundedAt": null
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:36:34.543Z",
+        "updatedAt": "2026-10-17T18:36:34.543Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-7794",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "Main Bazar",
+        "street": "",
+        "locality": "",
+        "city": "Bulandshahar",
+        "state": "Uttar Pradesh",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th / Matriculation Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792262194517-79650.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792262194518-672390.png",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792262194517-3608",
+        "isRefunded": false,
+        "refundTxnId": null,
+        "refundedAt": null
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:36:34.519Z",
+        "updatedAt": "2026-10-17T18:36:34.519Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-1882",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260921413-6415",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260921473-6532",
+        "refundedAt": "2026-10-17T18:15:21.473Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:15:21.446Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:15:21.413Z",
+        "updatedAt": "2026-10-17T18:15:21.473Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5459",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792260921089-205786.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792260921093-27028.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792260921304-463396.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792260921097-602323.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260921089-5732",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260921358-9887",
+        "refundedAt": "2026-10-17T18:15:21.358Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:15:21.266Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:15:21.321Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792260921348-76304.pdf",
+        "completedAt": "2026-10-17T18:15:21.348Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:15:21.097Z",
+        "updatedAt": "2026-10-17T18:15:21.358Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-7110",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260921065-4605",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260921078-6761",
+        "refundedAt": "2026-10-17T18:15:21.078Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:15:21.065Z",
+        "updatedAt": "2026-10-17T18:15:21.079Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5252",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260740257-1645",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260740462-8522",
+        "refundedAt": "2026-10-17T18:12:20.462Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:12:20.277Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:12:20.258Z",
+        "updatedAt": "2026-10-17T18:12:20.462Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5790",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792260739814-786787.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792260739815-698696.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792260739958-663404.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792260739817-601424.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260739814-6469",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260739995-3526",
+        "refundedAt": "2026-10-17T18:12:19.995Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:12:19.928Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:12:19.959Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792260739986-376171.pdf",
+        "completedAt": "2026-10-17T18:12:19.987Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:12:19.817Z",
+        "updatedAt": "2026-10-17T18:12:19.995Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-9833",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260739791-4416",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260739804-2338",
+        "refundedAt": "2026-10-17T18:12:19.804Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:12:19.792Z",
+        "updatedAt": "2026-10-17T18:12:19.804Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-4529",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260660383-7489",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260660428-3964",
+        "refundedAt": "2026-10-17T18:11:00.428Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:11:00.405Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:11:00.383Z",
+        "updatedAt": "2026-10-17T18:11:00.428Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-7394",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792260660157-109934.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792260660158-534765.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792260660286-555402.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792260660160-903034.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260660157-7823",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260660330-5331",
+        "refundedAt": "2026-10-17T18:11:00.330Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:11:00.262Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:11:00.287Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792260660318-388605.pdf",
+        "completedAt": "2026-10-17T18:11:00.319Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:11:00.160Z",
+        "updatedAt": "2026-10-17T18:11:00.330Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5110",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260660131-6565",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260660142-3769",
+        "refundedAt": "2026-10-17T18:11:00.142Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:11:00.131Z",
+        "updatedAt": "2026-10-17T18:11:00.142Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-2306",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260633512-1402",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260633612-9340",
+        "refundedAt": "2026-10-17T18:10:33.612Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:10:33.537Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:10:33.512Z",
+        "updatedAt": "2026-10-17T18:10:33.612Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5633",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792260633329-904552.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792260633331-927193.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792260633424-274425.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792260633332-853864.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260633329-3721",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260633466-6078",
+        "refundedAt": "2026-10-17T18:10:33.466Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:10:33.389Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:10:33.426Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792260633456-812133.pdf",
+        "completedAt": "2026-10-17T18:10:33.456Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:10:33.333Z",
+        "updatedAt": "2026-10-17T18:10:33.466Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-9950",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260633293-7649",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260633305-4738",
+        "refundedAt": "2026-10-17T18:10:33.305Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:10:33.294Z",
+        "updatedAt": "2026-10-17T18:10:33.305Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-9226",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "RejectSeparationTest",
+        "gender": "Male",
+        "dob": "1990-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "112233445566",
+        "nameOnAadhaar": "RejectSeparationTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260558288-3993",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260558427-6151",
+        "refundedAt": "2026-10-17T18:09:18.427Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Documents illegible",
+        "rejectedAt": "2026-10-17T18:09:18.371Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:09:18.288Z",
+        "updatedAt": "2026-10-17T18:09:18.427Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-3921",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792260558137-52662.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792260558139-211316.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792260558216-554328.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792260558140-993913.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260558137-1005",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260558256-1910",
+        "refundedAt": "2026-10-17T18:09:18.256Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T18:09:18.190Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T18:09:18.217Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792260558239-471743.pdf",
+        "completedAt": "2026-10-17T18:09:18.240Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:09:18.141Z",
+        "updatedAt": "2026-10-17T18:09:18.256Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-1315",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "",
+        "middleName": "",
+        "lastName": "TamperTest",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "dobProof": "Municipal Birth Certificate",
+        "aadhaarNumber": "987654321098",
+        "nameOnAadhaar": "TamperTest",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792260558108-8070",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792260558126-1639",
+        "refundedAt": "2026-10-17T18:09:18.126Z"
+      },
+      "status": "pending",
+      "objectionDetails": null,
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T18:09:18.108Z",
+        "updatedAt": "2026-10-17T18:09:18.126Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-8025",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Test",
+        "middleName": "",
+        "lastName": "Reject",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "Uttar Pradesh",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "aadhaarNumber": "987654321098",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792259295487-3887",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792259295582-6307",
+        "refundedAt": "2026-10-17T17:48:15.582Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Invalid signature uploaded",
+        "rejectedAt": "2026-10-17T17:48:15.551Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T17:48:15.487Z",
+        "updatedAt": "2026-10-17T17:48:15.582Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-3409",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "Suman Devi",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": "ankit@smartcafe.sbs"
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "GT Road",
+        "locality": "Siana",
+        "city": "Bulandshahar",
+        "state": "Uttar Pradesh",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": "Uttar Pradesh (BULANDSHAHAR) (KNP W 17 95)"
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792259288460-317478.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792259288461-307412.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792259288544-662514.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792259288462-955985.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792259288459-7810",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792259288581-3412",
+        "refundedAt": "2026-10-17T17:48:08.581Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T17:48:08.512Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T17:48:08.545Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792259288569-457157.pdf",
+        "completedAt": "2026-10-17T17:48:08.570Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T17:48:08.462Z",
+        "updatedAt": "2026-10-17T17:48:08.581Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-6510",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "Suman Devi",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": "ankit@smartcafe.sbs"
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "GT Road",
+        "locality": "Siana",
+        "city": "Bulandshahar",
+        "state": "Uttar Pradesh",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": "Uttar Pradesh (BULANDSHAHAR) (KNP W 17 95)"
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792259096633-927308.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792259096634-905849.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792259096882-280042.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792259096638-293982.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792259096633-1112",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792259096925-2893",
+        "refundedAt": "2026-10-17T17:44:56.925Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T17:44:56.850Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T17:44:56.882Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792259096911-409948.pdf",
+        "completedAt": "2026-10-17T17:44:56.911Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T17:44:56.639Z",
+        "updatedAt": "2026-10-17T17:44:56.925Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-2566",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Test",
+        "middleName": "",
+        "lastName": "Reject",
+        "gender": "Male",
+        "dob": "1995-01-01",
+        "fatherName": "",
+        "motherName": "",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": ""
+      },
+      "address": {
+        "flat": "",
+        "premises": "",
+        "street": "",
+        "locality": "",
+        "city": "",
+        "state": "Uttar Pradesh",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "",
+        "rangeCode": "",
+        "aoNumber": "",
+        "displayText": ""
+      },
+      "identity": {
+        "aadhaarNumber": "987654321098",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "",
+        "signature": "",
+        "aadhaarDoc": "",
+        "dobDoc": "",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792258956223-5095",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792258956492-4053",
+        "refundedAt": "2026-10-17T17:42:36.493Z"
+      },
+      "status": "rejected",
+      "objectionDetails": null,
+      "rejectionDetails": {
+        "reason": "Invalid signature uploaded",
+        "rejectedAt": "2026-10-17T17:42:36.358Z"
+      },
+      "fulfillment": {
+        "ackNumber": null,
+        "slipPdfUrl": null,
+        "completedAt": null
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T17:42:36.223Z",
+        "updatedAt": "2026-10-17T17:42:36.493Z"
+      }
+    },
+    {
+      "id": "PAN-20261017-5974",
+      "appliedBy": "8006517171",
+      "role": "cafe_operator",
+      "cafeId": "",
+      "personal": {
+        "title": "Shri",
+        "firstName": "Ankit",
+        "middleName": "",
+        "lastName": "Chaudhary",
+        "gender": "Male",
+        "dob": "1998-05-15",
+        "fatherName": "Rajendra Singh",
+        "motherName": "Suman Devi",
+        "cardParentChoice": "father",
+        "mobile": "8006517171",
+        "email": "ankit@smartcafe.sbs"
+      },
+      "address": {
+        "flat": "Shop No 4",
+        "premises": "Main Market",
+        "street": "GT Road",
+        "locality": "Siana",
+        "city": "Bulandshahar",
+        "state": "Uttar Pradesh",
+        "pincode": "203001"
+      },
+      "aoCode": {
+        "areaCode": "KNP",
+        "aoType": "W",
+        "rangeCode": "17",
+        "aoNumber": "95",
+        "displayText": "Uttar Pradesh (BULANDSHAHAR) (KNP W 17 95)"
+      },
+      "identity": {
+        "dobProof": "10th Marksheet",
+        "aadhaarNumber": "548963217458",
+        "nameOnAadhaar": "Ankit Chaudhary",
+        "signType": "physical"
+      },
+      "documents": {
+        "photo": "/uploads/pan_docs/PAN-PHOTO-1792258928606-214913.jpg",
+        "signature": "/uploads/pan_docs/PAN-SIGN-1792258928607-435611.png",
+        "aadhaarDoc": "/uploads/pan_docs/PAN-AADHAAR-1792258928763-65548.pdf",
+        "dobDoc": "/uploads/pan_docs/PAN-DOB-1792258928608-645859.pdf",
+        "generatedFormPdf": ""
+      },
+      "financials": {
+        "feeCharged": 145,
+        "baseCost": 120,
+        "netProfit": 25,
+        "walletTxnId": "TXN-PAN-1792258928605-5598",
+        "isRefunded": true,
+        "refundTxnId": "REFUND-PAN-1792258928917-5737",
+        "refundedAt": "2026-10-17T17:42:08.917Z"
+      },
+      "status": "completed",
+      "objectionDetails": {
+        "reason": "Aadhaar copy is blurry / dim",
+        "raisedAt": "2026-10-17T17:42:08.726Z",
+        "resolved": true,
+        "resubmittedAt": "2026-10-17T17:42:08.822Z",
+        "notes": "Uploaded HD scanned Aadhaar document"
+      },
+      "rejectionDetails": null,
+      "fulfillment": {
+        "ackNumber": "123456789012345",
+        "slipPdfUrl": "/uploads/pan_docs/PAN-SLIP-1792258928903-245099.pdf",
+        "completedAt": "2026-10-17T17:42:08.904Z"
+      },
+      "timestamps": {
+        "createdAt": "2026-10-17T17:42:08.661Z",
+        "updatedAt": "2026-10-17T17:42:08.917Z"
+      }
+    }
+  ],
+  "walletTransactions": [
+    {
+      "id": "REFUND-PAN-1792262353268-4301",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9809)",
+      "applicationId": "PAN-20261017-9809",
+      "createdAt": "2026-10-17T18:39:13.268Z"
+    },
+    {
+      "id": "TXN-PAN-1792262353202-1204",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-9809",
+      "createdAt": "2026-10-17T18:39:13.202Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262353161-7329",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2704)",
+      "applicationId": "PAN-20261017-2704",
+      "createdAt": "2026-10-17T18:39:13.161Z"
+    },
+    {
+      "id": "TXN-PAN-1792262353017-2561",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-2704",
+      "createdAt": "2026-10-17T18:39:13.017Z"
+    },
+    {
+      "id": "REFUND-PAN-1792262353006-1981",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2174)",
+      "applicationId": "PAN-20261017-2174",
+      "createdAt": "2026-10-17T18:39:13.006Z"
+    },
+    {
+      "id": "TXN-PAN-1792262352980-2312",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-2174",
+      "createdAt": "2026-10-17T18:39:12.980Z"
+    },
+    {
+      "id": "TXN-PAN-1792262194542-9372",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 190,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Pooja Sharma (8006517171)",
+      "applicationId": "PAN-20261017-4903",
+      "createdAt": "2026-10-17T18:36:34.542Z"
+    },
+    {
+      "id": "TXN-PAN-1792262194517-3608",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-7794",
+      "createdAt": "2026-10-17T18:36:34.517Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260921473-6532",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-1882)",
+      "applicationId": "PAN-20261017-1882",
+      "createdAt": "2026-10-17T18:15:21.473Z"
+    },
+    {
+      "id": "TXN-PAN-1792260921413-6415",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-1882",
+      "createdAt": "2026-10-17T18:15:21.413Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260921358-9887",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5459)",
+      "applicationId": "PAN-20261017-5459",
+      "createdAt": "2026-10-17T18:15:21.358Z"
+    },
+    {
+      "id": "TXN-PAN-1792260921089-5732",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-5459",
+      "createdAt": "2026-10-17T18:15:21.089Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260921078-6761",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-7110)",
+      "applicationId": "PAN-20261017-7110",
+      "createdAt": "2026-10-17T18:15:21.078Z"
+    },
+    {
+      "id": "TXN-PAN-1792260921065-4605",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-7110",
+      "createdAt": "2026-10-17T18:15:21.065Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260740462-8522",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5252)",
+      "applicationId": "PAN-20261017-5252",
+      "createdAt": "2026-10-17T18:12:20.462Z"
+    },
+    {
+      "id": "TXN-PAN-1792260740257-1645",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-5252",
+      "createdAt": "2026-10-17T18:12:20.257Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260739995-3526",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5790)",
+      "applicationId": "PAN-20261017-5790",
+      "createdAt": "2026-10-17T18:12:19.995Z"
+    },
+    {
+      "id": "TXN-PAN-1792260739814-6469",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-5790",
+      "createdAt": "2026-10-17T18:12:19.814Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260739804-2338",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9833)",
+      "applicationId": "PAN-20261017-9833",
+      "createdAt": "2026-10-17T18:12:19.804Z"
+    },
+    {
+      "id": "TXN-PAN-1792260739791-4416",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-9833",
+      "createdAt": "2026-10-17T18:12:19.791Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260660428-3964",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-4529)",
+      "applicationId": "PAN-20261017-4529",
+      "createdAt": "2026-10-17T18:11:00.428Z"
+    },
+    {
+      "id": "TXN-PAN-1792260660383-7489",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-4529",
+      "createdAt": "2026-10-17T18:11:00.383Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260660330-5331",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-7394)",
+      "applicationId": "PAN-20261017-7394",
+      "createdAt": "2026-10-17T18:11:00.330Z"
+    },
+    {
+      "id": "TXN-PAN-1792260660157-7823",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-7394",
+      "createdAt": "2026-10-17T18:11:00.157Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260660142-3769",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5110)",
+      "applicationId": "PAN-20261017-5110",
+      "createdAt": "2026-10-17T18:11:00.142Z"
+    },
+    {
+      "id": "TXN-PAN-1792260660131-6565",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-5110",
+      "createdAt": "2026-10-17T18:11:00.131Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260633612-9340",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2306)",
+      "applicationId": "PAN-20261017-2306",
+      "createdAt": "2026-10-17T18:10:33.612Z"
+    },
+    {
+      "id": "TXN-PAN-1792260633512-1402",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-2306",
+      "createdAt": "2026-10-17T18:10:33.512Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260633466-6078",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5633)",
+      "applicationId": "PAN-20261017-5633",
+      "createdAt": "2026-10-17T18:10:33.466Z"
+    },
+    {
+      "id": "TXN-PAN-1792260633329-3721",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-5633",
+      "createdAt": "2026-10-17T18:10:33.329Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260633305-4738",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9950)",
+      "applicationId": "PAN-20261017-9950",
+      "createdAt": "2026-10-17T18:10:33.305Z"
+    },
+    {
+      "id": "TXN-PAN-1792260633293-7649",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-9950",
+      "createdAt": "2026-10-17T18:10:33.293Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260558427-6151",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9226)",
+      "applicationId": "PAN-20261017-9226",
+      "createdAt": "2026-10-17T18:09:18.427Z"
+    },
+    {
+      "id": "TXN-PAN-1792260558288-3993",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+      "applicationId": "PAN-20261017-9226",
+      "createdAt": "2026-10-17T18:09:18.288Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260558256-1910",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-3921)",
+      "applicationId": "PAN-20261017-3921",
+      "createdAt": "2026-10-17T18:09:18.256Z"
+    },
+    {
+      "id": "TXN-PAN-1792260558137-1005",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "applicationId": "PAN-20261017-3921",
+      "createdAt": "2026-10-17T18:09:18.137Z"
+    },
+    {
+      "id": "REFUND-PAN-1792260558126-1639",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-1315)",
+      "applicationId": "PAN-20261017-1315",
+      "createdAt": "2026-10-17T18:09:18.126Z"
+    },
+    {
+      "id": "TXN-PAN-1792260558108-8070",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+      "applicationId": "PAN-20261017-1315",
+      "createdAt": "2026-10-17T18:09:18.108Z"
+    },
+    {
+      "id": "REFUND-PAN-1792259295582-6307",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-8025)",
+      "applicationId": "PAN-20261017-8025",
+      "createdAt": "2026-10-17T17:48:15.582Z"
+    },
+    {
+      "id": "TXN-PAN-1792259295487-3887",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Test Reject (8006517171)",
+      "createdAt": "2026-10-17T17:48:15.487Z"
+    },
+    {
+      "id": "REFUND-PAN-1792259288581-3412",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-3409)",
+      "applicationId": "PAN-20261017-3409",
+      "createdAt": "2026-10-17T17:48:08.581Z"
+    },
+    {
+      "id": "TXN-PAN-1792259288459-7810",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "createdAt": "2026-10-17T17:48:08.459Z"
+    },
+    {
+      "id": "REFUND-PAN-1792259096925-2893",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-6510)",
+      "applicationId": "PAN-20261017-6510",
+      "createdAt": "2026-10-17T17:44:56.925Z"
+    },
+    {
+      "id": "TXN-PAN-1792259096633-1112",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "createdAt": "2026-10-17T17:44:56.633Z"
+    },
+    {
+      "id": "REFUND-PAN-1792258956492-4053",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2566)",
+      "applicationId": "PAN-20261017-2566",
+      "createdAt": "2026-10-17T17:42:36.493Z"
+    },
+    {
+      "id": "TXN-PAN-1792258956223-5095",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Test Reject (8006517171)",
+      "createdAt": "2026-10-17T17:42:36.223Z"
+    },
+    {
+      "id": "REFUND-PAN-1792258928917-5737",
+      "phone": "8006517171",
+      "type": "credit",
+      "amount": 145,
+      "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5974)",
+      "applicationId": "PAN-20261017-5974",
+      "createdAt": "2026-10-17T17:42:08.917Z"
+    },
+    {
+      "id": "TXN-PAN-1792258928605-5598",
+      "phone": "8006517171",
+      "type": "debit",
+      "amount": 145,
+      "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+      "createdAt": "2026-10-17T17:42:08.605Z"
+    }
+  ],
+  "wallets": [
+    {
+      "phone": "8006517171",
+      "customerName": "Ankit Chaudhary",
+      "balance": 1000,
+      "transactions": [
+        {
+          "id": "REFUND-PAN-1792262353268-4301",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9809)",
+          "createdAt": "2026-10-17T18:39:13.268Z"
+        },
+        {
+          "id": "TXN-PAN-1792262353202-1204",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+          "createdAt": "2026-10-17T18:39:13.202Z"
+        },
+        {
+          "id": "REFUND-PAN-1792262353161-7329",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2704)",
+          "createdAt": "2026-10-17T18:39:13.161Z"
+        },
+        {
+          "id": "TXN-PAN-1792262353017-2561",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T18:39:13.017Z"
+        },
+        {
+          "id": "REFUND-PAN-1792262353006-1981",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2174)",
+          "createdAt": "2026-10-17T18:39:13.006Z"
+        },
+        {
+          "id": "TXN-PAN-1792262352980-2312",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+          "createdAt": "2026-10-17T18:39:12.980Z"
+        },
+        {
+          "id": "TXN-PAN-1792262194542-9372",
+          "type": "debit",
+          "amount": 190,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Pooja Sharma (8006517171)",
+          "createdAt": "2026-10-17T18:36:34.542Z"
+        },
+        {
+          "id": "TXN-PAN-1792262194517-3608",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T18:36:34.517Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260921473-6532",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-1882)",
+          "createdAt": "2026-10-17T18:15:21.473Z"
+        },
+        {
+          "id": "TXN-PAN-1792260921413-6415",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+          "createdAt": "2026-10-17T18:15:21.413Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260921358-9887",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5459)",
+          "createdAt": "2026-10-17T18:15:21.358Z"
+        },
+        {
+          "id": "TXN-PAN-1792260921089-5732",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T18:15:21.089Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260921078-6761",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-7110)",
+          "createdAt": "2026-10-17T18:15:21.078Z"
+        },
+        {
+          "id": "TXN-PAN-1792260921065-4605",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+          "createdAt": "2026-10-17T18:15:21.065Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260740462-8522",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5252)",
+          "createdAt": "2026-10-17T18:12:20.462Z"
+        },
+        {
+          "id": "TXN-PAN-1792260740257-1645",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+          "createdAt": "2026-10-17T18:12:20.257Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260739995-3526",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5790)",
+          "createdAt": "2026-10-17T18:12:19.995Z"
+        },
+        {
+          "id": "TXN-PAN-1792260739814-6469",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T18:12:19.814Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260739804-2338",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9833)",
+          "createdAt": "2026-10-17T18:12:19.804Z"
+        },
+        {
+          "id": "TXN-PAN-1792260739791-4416",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+          "createdAt": "2026-10-17T18:12:19.791Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260660428-3964",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-4529)",
+          "createdAt": "2026-10-17T18:11:00.428Z"
+        },
+        {
+          "id": "TXN-PAN-1792260660383-7489",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+          "createdAt": "2026-10-17T18:11:00.383Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260660330-5331",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-7394)",
+          "createdAt": "2026-10-17T18:11:00.330Z"
+        },
+        {
+          "id": "TXN-PAN-1792260660157-7823",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T18:11:00.157Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260660142-3769",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5110)",
+          "createdAt": "2026-10-17T18:11:00.142Z"
+        },
+        {
+          "id": "TXN-PAN-1792260660131-6565",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+          "createdAt": "2026-10-17T18:11:00.131Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260633612-9340",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2306)",
+          "createdAt": "2026-10-17T18:10:33.612Z"
+        },
+        {
+          "id": "TXN-PAN-1792260633512-1402",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+          "createdAt": "2026-10-17T18:10:33.512Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260633466-6078",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5633)",
+          "createdAt": "2026-10-17T18:10:33.466Z"
+        },
+        {
+          "id": "TXN-PAN-1792260633329-3721",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T18:10:33.329Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260633305-4738",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9950)",
+          "createdAt": "2026-10-17T18:10:33.305Z"
+        },
+        {
+          "id": "TXN-PAN-1792260633293-7649",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+          "createdAt": "2026-10-17T18:10:33.293Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260558427-6151",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-9226)",
+          "createdAt": "2026-10-17T18:09:18.427Z"
+        },
+        {
+          "id": "TXN-PAN-1792260558288-3993",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: RejectSeparationTest (8006517171)",
+          "createdAt": "2026-10-17T18:09:18.288Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260558256-1910",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-3921)",
+          "createdAt": "2026-10-17T18:09:18.256Z"
+        },
+        {
+          "id": "TXN-PAN-1792260558137-1005",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T18:09:18.137Z"
+        },
+        {
+          "id": "REFUND-PAN-1792260558126-1639",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-1315)",
+          "createdAt": "2026-10-17T18:09:18.126Z"
+        },
+        {
+          "id": "TXN-PAN-1792260558108-8070",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: TamperTest (8006517171)",
+          "createdAt": "2026-10-17T18:09:18.108Z"
+        },
+        {
+          "id": "REFUND-PAN-1792259295582-6307",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-8025)",
+          "createdAt": "2026-10-17T17:48:15.582Z"
+        },
+        {
+          "id": "TXN-PAN-1792259295487-3887",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Test Reject (8006517171)",
+          "createdAt": "2026-10-17T17:48:15.487Z"
+        },
+        {
+          "id": "REFUND-PAN-1792259288581-3412",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-3409)",
+          "createdAt": "2026-10-17T17:48:08.581Z"
+        },
+        {
+          "id": "TXN-PAN-1792259288459-7810",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T17:48:08.459Z"
+        },
+        {
+          "id": "REFUND-PAN-1792259096925-2893",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-6510)",
+          "createdAt": "2026-10-17T17:44:56.925Z"
+        },
+        {
+          "id": "TXN-PAN-1792259096633-1112",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T17:44:56.633Z"
+        },
+        {
+          "id": "REFUND-PAN-1792258956492-4053",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-2566)",
+          "createdAt": "2026-10-17T17:42:36.492Z"
+        },
+        {
+          "id": "TXN-PAN-1792258956223-5095",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Test Reject (8006517171)",
+          "createdAt": "2026-10-17T17:42:36.223Z"
+        },
+        {
+          "id": "REFUND-PAN-1792258928917-5737",
+          "type": "credit",
+          "amount": 145,
+          "note": "पैन कार्ड आवेदन रिफंड (PAN-20261017-5974)",
+          "createdAt": "2026-10-17T17:42:08.917Z"
+        },
+        {
+          "id": "TXN-PAN-1792258928605-5598",
+          "type": "debit",
+          "amount": 145,
+          "note": "नया पैन कार्ड आवेदन शुल्क: Ankit Chaudhary (8006517171)",
+          "createdAt": "2026-10-17T17:42:08.605Z"
+        },
+        {
+          "id": "TXN-INIT-500",
+          "type": "credit",
+          "amount": 500,
+          "note": "प्रारंभिक वॉलेट बैलेंस (Initial Balance)",
+          "createdAt": "2026-10-17T00:00:00.000Z"
+        }
+      ]
+    },
+    {
+      "phone": "8006518960",
+      "customerName": "ankit kumar",
+      "balance": 10,
+      "transactions": [
+        {
+          "id": "TXN-UTR-CUST-1792125257-861",
+          "type": "credit",
+          "amount": 10,
+          "utr": "717839573483",
+          "note": "à¤¸à¥à¤ªà¤° à¤à¤¡à¤®à¤¿à¤¨ à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤ UTR (717839573483) à¤µà¥‰à¤²à¥‡à¤Ÿ à¤Ÿà¥‰à¤ª-à¤…à¤ª",
+          "createdAt": "2026-10-16T04:54:07+00:00"
+        }
+      ]
+    },
+    {
+      "phone": "9999999999",
+      "customerName": "ग्राहक",
+      "balance": 0,
+      "transactions": []
+    },
+    {
+      "phone": "0000000000",
+      "customerName": "ग्राहक",
+      "balance": 0,
+      "transactions": []
+    },
+    {
+      "phone": "9876543210",
+      "customerName": "राजेश कुमार",
+      "balance": 10000,
+      "transactions": []
+    },
+    {
+      "phone": "9999988888",
+      "customerName": "परीक्षण संचालक",
+      "balance": 10000,
+      "transactions": []
+    }
+  ],
+  "cafes": [],
+  "superAdminRates": {
+    "rcDownload": 200,
+    "panCard": 107,
+    "incomeCert": 50,
+    "casteCert": 50,
+    "niwasCert": 50,
+    "drivingLicence": 150,
+    "pvcCard": 40
+  },
+  "systemHealth": {
+    "fileShredder": {
+      "lastRun": "2026-10-17T17:41:32.429Z",
+      "lastRunFilesPurged": 0,
+      "lastRunBytesReclaimed": 0,
+      "totalPurged": 1,
+      "bytesReclaimed": 33,
+      "status": "active",
+      "nextRun": "2026-10-17T18:41:32.429Z"
+    }
+  },
+  "superAdminAuditLogs": [],
+  "disabledTools": [],
+  "toolStatus": {
+    "rc": true,
+    "rcDownload": true,
+    "tool-rc": true
+  },
+  "orderHistory": [],
+  "apiGateway": {
+    "liveMode": true,
+    "provider": "P4Points",
+    "apiKey": "f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5",
+    "endpoint": "https://authorized.p4points.co.in/api/v1/",
+    "secret": "",
+    "balance": "1979.00",
+    "lastCheckedAt": "2026-10-15T03:37:42.410Z",
+    "timeoutMs": 8000,
+    "services": {
+      "balance": {
+        "live": true,
+        "endpoint": "https://authorized.p4points.co.in/api/v1/Balance_info.php"
+      },
+      "panVerify": {
+        "live": true,
+        "endpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php"
+      },
+      "aadhaarToPan": {
+        "live": true,
+        "endpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber.php"
+      },
+      "ekyc": {
+        "live": true,
+        "endpoint": "https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php"
+      },
+      "rc": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/rc/rc-full"
+      },
+      "voter": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/voter-id/voter-id"
+      },
+      "dl": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/driving-license/driving-license"
+      },
+      "challan": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/rc/echallan"
+      },
+      "electricity": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/utility/electricity"
+      },
+      "edistrict": {
+        "live": false,
+        "endpoint": "https://kyc-api.surepass.io/api/v1/revenue/edistrict"
+      }
+    },
+    "updatedAt": "2026-10-14T10:19:09.955Z",
+    "rekhaPrint": {
+      "loginUrl": "https://rekhaprint.info/members/login",
+      "username": "8006518960",
+      "password": "012323",
+      "isActive": true
+    }
+  },
+  "services_79": [
+    {
+      "id": "aadhaar_advance",
+      "num": 1,
+      "name": "Aadhaar Advance",
+      "category": "aadhaar",
+      "providerCost": 9,
+      "wholesaleRate": 15,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uid/ekycVerification.php",
+      "method": "POST",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव सरकारी API",
+      "p4Key": "aadhaar_ekyc",
+      "parameters": [
+        "apiKey",
+        "aadhar",
+        "bioenc"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "fingerprint"
+      ]
+    },
+    {
+      "id": "aadhaar_original_pdf_otp",
+      "num": 2,
+      "name": "Aadhaar Original PDF Download OTP",
+      "category": "aadhaar",
+      "providerCost": 1,
+      "wholesaleRate": 5,
+      "retailRate": 15,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhaar_pdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव सरकारी API",
+      "p4Key": "aadhaar_pdf_otp",
+      "parameters": [
+        "apiKey",
+        "action",
+        "aadhaar",
+        "otp"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "otp"
+      ]
+    },
+    {
+      "id": "aadhaar_original_pdf_no_otp",
+      "num": 3,
+      "name": "Aadhaar Original PDF By Aadhar",
+      "category": "aadhaar",
+      "providerCost": 70,
+      "wholesaleRate": 90,
+      "retailRate": 120,
+      "isActive": true,
+      "serviceType": "coming_soon",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uidai_original.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "uid_to_pdf_original",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "aadhaar_otp_kyc",
+      "num": 4,
+      "name": "Aadhaar OTP KYC",
+      "category": "aadhaar",
+      "providerCost": 0.5,
+      "wholesaleRate": 3,
+      "retailRate": 10,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uid/request-otp.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "aadhaar_otp_kyc",
+      "parameters": [
+        "apiKey",
+        "aadhar",
+        "otp",
+        "txn_id"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "otp"
+      ]
+    },
+    {
+      "id": "aadhaar_pvc",
+      "num": 5,
+      "name": "Aadhaar PVC",
+      "category": "aadhaar",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "coming_soon",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/AadharPdfconvert.php",
+      "method": "POST",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "aadhaar_pvc_convert",
+      "parameters": [
+        "apiKey",
+        "mobile",
+        "type",
+        "password"
+      ],
+      "requiredInputs": [
+        "mobile",
+        "file"
+      ]
+    },
+    {
+      "id": "uid_seeding",
+      "num": 6,
+      "name": "UID Seeding",
+      "category": "aadhaar",
+      "providerCost": 15,
+      "wholesaleRate": 25,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "npci_link_status",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "abha_card",
+      "num": 7,
+      "name": "ABHA Card",
+      "category": "health",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "coming_soon",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v3/abha/abha_card_download.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "abha_card_download",
+      "parameters": [
+        "apiKey",
+        "uidNumber",
+        "dob"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "dob"
+      ]
+    },
+    {
+      "id": "abha_otp",
+      "num": 8,
+      "name": "ABHA OTP",
+      "category": "health",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "coming_soon",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v3/abha/send_otp.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "abha_send_otp",
+      "parameters": [
+        "apiKey",
+        "uidNumber",
+        "otp"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "otp"
+      ]
+    },
+    {
+      "id": "pvc_verify",
+      "num": 9,
+      "name": "PVC Verify",
+      "category": "aadhaar",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "coming_soon",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/uidai_original.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "uid_to_pdf_original",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "pan_details",
+      "num": 10,
+      "name": "PAN Details",
+      "category": "pan",
+      "providerCost": 3,
+      "wholesaleRate": 8,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव सरकारी API",
+      "p4Key": "pan_details_v3",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
+    },
+    {
+      "id": "pan_find",
+      "num": 11,
+      "name": "PAN Find",
+      "category": "pan",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "p4Key": "aadhaar_to_pan",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "pan_find_manual",
+      "num": 12,
+      "name": "PAN Find Manual",
+      "category": "pan",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "status": "live",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "pan_find_manual",
+      "upstreamFile": "pan_find_manual.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "p4Key": "pan_find_async",
+      "parameters": [
+        "apiKey",
+        "name",
+        "fatherName",
+        "dob",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "name",
+        "fatherName",
+        "dob",
+        "mobile"
+      ]
+    },
+    {
+      "id": "pan_find_manual_alt",
+      "num": 13,
+      "name": "PAN Find Manual Alt",
+      "category": "pan",
+      "providerCost": 4,
+      "wholesaleRate": 10,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "status": "live",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "pan_find_manual",
+      "upstreamFile": "pan_find_manual.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "p4Key": "pan_find_async",
+      "parameters": [
+        "apiKey",
+        "name",
+        "fatherName",
+        "dob",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "name",
+        "fatherName",
+        "dob",
+        "mobile"
+      ]
+    },
+    {
+      "id": "pan_to_aadhar_find",
+      "num": 14,
+      "name": "PAN To Aadhar Find",
+      "category": "pan",
+      "providerCost": 50,
+      "wholesaleRate": 70,
+      "retailRate": 100,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan_to_aadhar.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव सरकारी API",
+      "p4Key": "pan_to_aadhaar",
+      "parameters": [
+        "apiKey",
+        "panNo",
+        "dob"
+      ],
+      "requiredInputs": [
+        "panNo",
+        "dob"
+      ]
+    },
+    {
+      "id": "pan_to_gst",
+      "num": 15,
+      "name": "PAN To GST",
+      "category": "pan",
+      "providerCost": 2,
+      "wholesaleRate": 5,
+      "retailRate": 15,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan_to_gst.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव सरकारी API",
+      "p4Key": "pan_to_gst",
+      "parameters": [
+        "apiKey",
+        "panNo"
+      ],
+      "requiredInputs": [
+        "panNo"
+      ]
+    },
+    {
+      "id": "gst_to_pan",
+      "num": 16,
+      "name": "GST To PAN",
+      "category": "pan",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/gst_to_pan.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव सरकारी API",
+      "p4Key": "gst_to_pan",
+      "parameters": [
+        "apiKey",
+        "gstNo"
+      ],
+      "requiredInputs": [
+        "gstNo"
+      ]
+    },
+    {
+      "id": "mobile_name_to_pan_instant",
+      "num": 17,
+      "name": "Mobile Name To PAN Find Instant",
+      "category": "pan",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "pan_find_name_mobile",
+      "parameters": [
+        "apiKey",
+        "name",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile",
+        "name"
+      ]
+    },
+    {
+      "id": "pan_basic_pricing",
+      "num": 18,
+      "name": "PAN Basic Pricing",
+      "category": "pan",
+      "providerCost": 7,
+      "wholesaleRate": 15,
+      "retailRate": 30,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "pan_verification_premium",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
+    },
+    {
+      "id": "mask_pan",
+      "num": 19,
+      "name": "Mask PAN",
+      "category": "pan",
+      "providerCost": 3,
+      "wholesaleRate": 7,
+      "retailRate": 15,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/maskPanVerification.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mask_pan_verification",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
+    },
+    {
+      "id": "pan_aadhar_mask",
+      "num": 20,
+      "name": "Mask Aadhaar Verification (मास्क आधार सत्यापन)",
+      "category": "aadhaar",
+      "providerCost": 2,
+      "wholesaleRate": 5,
+      "retailRate": 15,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/maskAadharVerification.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव सरकारी API",
+      "p4Key": "mask_aadhaar_verification",
+      "parameters": [
+        "apiKey",
+        "aadhaarNo",
+        "uidNumber",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "pan_to_udyam_details",
+      "num": 21,
+      "name": "PAN To Udyam Details",
+      "category": "pan",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "pan_verification_premium",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
+    },
+    {
+      "id": "voter_verification",
+      "num": 22,
+      "name": "Voter Verification",
+      "category": "voter",
+      "providerCost": 2,
+      "wholesaleRate": 5,
+      "retailRate": 15,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voterVerification_new.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "voter_verification",
+      "parameters": [
+        "apiKey",
+        "epicNumber"
+      ],
+      "requiredInputs": [
+        "epicNumber"
+      ]
+    },
+    {
+      "id": "voter_mobile_link",
+      "num": 23,
+      "name": "Voter Mobile Link",
+      "category": "voter",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "instant_voter_mobile_no_otp",
+      "parameters": [
+        "apiKey",
+        "epic",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "epicNumber",
+        "mobile"
+      ]
+    },
+    {
+      "id": "voter_pdf",
+      "num": 24,
+      "name": "Voter PDF",
+      "category": "voter",
+      "providerCost": 2,
+      "wholesaleRate": 5,
+      "retailRate": 15,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "voter_pdf_download",
+      "parameters": [
+        "apiKey",
+        "voter_number"
+      ],
+      "requiredInputs": [
+        "epicNumber"
+      ]
+    },
+    {
+      "id": "voter_original_pdf_no_otp",
+      "num": 25,
+      "name": "Voter Original PDF Without OTP",
+      "category": "voter",
+      "providerCost": 25,
+      "wholesaleRate": 35,
+      "retailRate": 60,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter-api/request-pdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "voter_pdf_download",
+      "parameters": [
+        "apiKey",
+        "voter_number"
+      ],
+      "requiredInputs": [
+        "epicNumber"
+      ]
+    },
+    {
+      "id": "voter_mobile_link_no_otp",
+      "num": 26,
+      "name": "Voter Mobile Link Without OTP",
+      "category": "voter",
+      "providerCost": 25,
+      "wholesaleRate": 35,
+      "retailRate": 60,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v4/instant_voter_link.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "instant_voter_mobile_no_otp",
+      "parameters": [
+        "apiKey",
+        "epic",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "epicNumber",
+        "mobile"
+      ]
+    },
+    {
+      "id": "voter_mobile_link_instant_otp",
+      "num": 27,
+      "name": "Voter Mobile Link Instant With OTP",
+      "category": "voter",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/voter-link/mobile-link-api.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "voter_mobile_instant_form8",
+      "parameters": [
+        "apiKey",
+        "action",
+        "epic",
+        "phone",
+        "otp"
+      ],
+      "requiredInputs": [
+        "epicNumber",
+        "mobile",
+        "otp"
+      ]
+    },
+    {
+      "id": "ration_verification",
+      "num": 28,
+      "name": "Ration Verification",
+      "category": "ration",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API",
+      "p4Key": "ration_to_pdf",
+      "parameters": [
+        "apiKey",
+        "ration_no",
+        "rationtype"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
+    },
+    {
+      "id": "ration_pdf_by_ration",
+      "num": 29,
+      "name": "Ration PDF By Ration",
+      "category": "ration",
+      "providerCost": 6,
+      "wholesaleRate": 12,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rationPdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API",
+      "p4Key": "ration_to_pdf",
+      "parameters": [
+        "apiKey",
+        "ration_no",
+        "rationtype"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
+    },
+    {
+      "id": "ration_pdf_by_aadhar",
+      "num": 30,
+      "name": "Ration PDF By Aadhar",
+      "category": "ration",
+      "providerCost": 8,
+      "wholesaleRate": 15,
+      "retailRate": 30,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/aadhar_to_Rationpdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API",
+      "p4Key": "aadhaar_to_ration_pdf",
+      "parameters": [
+        "apiKey",
+        "aadhar",
+        "rationtype"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "up_ration_to_aadhaar",
+      "num": 31,
+      "name": "UP Ration To Aadhaar",
+      "category": "ration",
+      "providerCost": 30,
+      "wholesaleRate": 45,
+      "retailRate": 70,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Ration2Uid-up",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API",
+      "p4Key": "ration_to_aadhaar_up",
+      "parameters": [
+        "apiKey",
+        "rationNumber"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
+    },
+    {
+      "id": "all_state_ration_to_aadhar",
+      "num": 32,
+      "name": "All State Ration To Aadhar",
+      "category": "ration",
+      "providerCost": 150,
+      "wholesaleRate": 180,
+      "retailRate": 220,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Ration2Uid-All_state",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API",
+      "p4Key": "ration_to_aadhaar_all",
+      "parameters": [
+        "apiKey",
+        "rationNumber"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
+    },
+    {
+      "id": "assam_ration_to_aadhaar",
+      "num": 33,
+      "name": "Assam Ration To Aadhaar",
+      "category": "ration",
+      "providerCost": 30,
+      "wholesaleRate": 45,
+      "retailRate": 70,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/aasham_ration2uid.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API",
+      "p4Key": "ration_to_aadhaar_assam",
+      "parameters": [
+        "apiKey",
+        "rationNumber"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
+    },
+    {
+      "id": "up_ration_info",
+      "num": 34,
+      "name": "UP Ration Info",
+      "category": "ration",
+      "providerCost": 50,
+      "wholesaleRate": 70,
+      "retailRate": 100,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ration_full_info_up.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API",
+      "p4Key": "up_ration_full_info",
+      "parameters": [
+        "apiKey",
+        "rationNumber"
+      ],
+      "requiredInputs": [
+        "rationNumber"
+      ]
+    },
+    {
+      "id": "driving_licence_pdf",
+      "num": 35,
+      "name": "Driving Licence PDF",
+      "category": "dl",
+      "providerCost": 3,
+      "wholesaleRate": 10,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "dl_pdf_secure",
+      "parameters": [
+        "apiKey",
+        "dlNo",
+        "dob",
+        "dltype"
+      ],
+      "requiredInputs": [
+        "dlNumber",
+        "dob"
+      ]
+    },
+    {
+      "id": "dl_details",
+      "num": 36,
+      "name": "DL Details",
+      "category": "dl",
+      "providerCost": 3,
+      "wholesaleRate": 8,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v3/dl/dl_details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "dl_details_v3",
+      "parameters": [
+        "apikey",
+        "dl",
+        "dob"
+      ],
+      "requiredInputs": [
+        "dlNumber",
+        "dob"
+      ]
+    },
+    {
+      "id": "dl_to_mobile_find",
+      "num": 37,
+      "name": "DL Mobile Number Link / Find (DL मोबाइल लिंक)",
+      "category": "dl",
+      "providerCost": 3,
+      "wholesaleRate": 10,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "status": "live",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "DL Mobile Link",
+      "upstreamFile": "dl_link.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/dlMobileFind.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "dl_to_mobile",
+      "parameters": [
+        "apikey",
+        "dl",
+        "dob"
+      ],
+      "requiredInputs": [
+        "dlNumber",
+        "dob"
+      ]
+    },
+    {
+      "id": "ll_find",
+      "num": 38,
+      "name": "LL Find",
+      "category": "dl",
+      "providerCost": 7,
+      "wholesaleRate": 15,
+      "retailRate": 30,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/LL_application_find",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "ll_application_find",
+      "parameters": [
+        "apiKey",
+        "mobileNumber"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "ll_pdf",
+      "num": 39,
+      "name": "LL PDF",
+      "category": "dl",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/LL_application_pdf",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "ll_pdf_download",
+      "parameters": [
+        "apiKey",
+        "idNumber"
+      ],
+      "requiredInputs": [
+        "idNumber"
+      ]
+    },
+    {
+      "id": "ll_exam_pass_auto",
+      "num": 40,
+      "name": "LL Exam Pass / Request (सारथी टेस्ट आवेदन)",
+      "category": "dl",
+      "providerCost": 50,
+      "wholesaleRate": 75,
+      "retailRate": 120,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "status": "live",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "LL_Request",
+      "upstreamFile": "ll_exam_Request.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/ll/ll_apply.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "ll_exam_apply",
+      "parameters": [
+        "apiKey",
+        "application_number",
+        "date_of_birth",
+        "password",
+        "exam_pin",
+        "state_name"
+      ],
+      "requiredInputs": [
+        "applicationNumber",
+        "dob",
+        "password",
+        "exam_pin",
+        "state"
+      ]
+    },
+    {
+      "id": "rc_to_details",
+      "num": 41,
+      "name": "RC To Details",
+      "category": "rc",
+      "providerCost": 7,
+      "wholesaleRate": 15,
+      "retailRate": 30,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc-api/rc-details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "rc_details_v1",
+      "parameters": [
+        "apiKey",
+        "vehicleNumber"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
+    },
+    {
+      "id": "rc_to_mobile_find",
+      "num": 42,
+      "name": "RC To Mobile Number Find",
+      "category": "rc",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "rc_to_mobile",
+      "parameters": [
+        "apiKey",
+        "vehicalNumber"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
+    },
+    {
+      "id": "rc_father_name_find",
+      "num": 43,
+      "name": "RC Father Name Find",
+      "category": "rc",
+      "providerCost": 3,
+      "wholesaleRate": 8,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/RcToFatherName.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "rc_to_father_name",
+      "parameters": [
+        "apiKey",
+        "vehicalNumber"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
+    },
+    {
+      "id": "rc_mobile_fetch",
+      "num": 44,
+      "name": "RC Mobile Fetch",
+      "category": "rc",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Rc_to_mobaile.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "rc_to_mobile",
+      "parameters": [
+        "apiKey",
+        "vehicalNumber"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
+    },
+    {
+      "id": "chassis_to_rc_find",
+      "num": 45,
+      "name": "Chassis To RC Find",
+      "category": "rc",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "chassis_to_rc",
+      "parameters": [
+        "apiKey",
+        "chassisNumber"
+      ],
+      "requiredInputs": [
+        "chassisNumber"
+      ]
+    },
+    {
+      "id": "chassis_to_rc_alt",
+      "num": 46,
+      "name": "Chassis To RC Alt",
+      "category": "rc",
+      "providerCost": 5,
+      "wholesaleRate": 12,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Rc",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "chassis_to_rc",
+      "parameters": [
+        "apiKey",
+        "chassisNumber"
+      ],
+      "requiredInputs": [
+        "chassisNumber"
+      ]
+    },
+    {
+      "id": "engine_to_rc",
+      "num": 47,
+      "name": "Engine To RC",
+      "category": "rc",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/engine_to_rc.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "engine_to_rc",
+      "parameters": [
+        "apiKey",
+        "engine_number"
+      ],
+      "requiredInputs": [
+        "engineNumber"
+      ]
+    },
+    {
+      "id": "chassis_to_mobile_find",
+      "num": 48,
+      "name": "Chassis To Mobile Number Find",
+      "category": "rc",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/chassis_to_Number_find",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "chassis_to_mobile",
+      "parameters": [
+        "apiKey",
+        "chassisNumber"
+      ],
+      "requiredInputs": [
+        "chassisNumber"
+      ]
+    },
+    {
+      "id": "rc_pdf_download",
+      "num": 49,
+      "name": "RC PDF Download",
+      "category": "rc",
+      "providerCost": 7,
+      "wholesaleRate": 15,
+      "retailRate": 30,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "rc_fast_pdf",
+      "parameters": [
+        "apiKey",
+        "rcno",
+        "type",
+        "tpe"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
+    },
+    {
+      "id": "chalan_find",
+      "num": 50,
+      "name": "Chalan Find",
+      "category": "rc",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/challanVerification.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "challan_verification",
+      "parameters": [
+        "apiKey",
+        "vehicalNo"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
+    },
+    {
+      "id": "chalan_find_mobile",
+      "num": 51,
+      "name": "Chalan Find Mobile",
+      "category": "rc",
+      "providerCost": 10,
+      "wholesaleRate": 18,
+      "retailRate": 35,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/MobileNumberToChallanDetails.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "challan_by_mobile",
+      "parameters": [
+        "apiKey",
+        "mobileNumber"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "vahan_check",
+      "num": 52,
+      "name": "Vahan Check",
+      "category": "rc",
+      "providerCost": 7,
+      "wholesaleRate": 15,
+      "retailRate": 30,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "rc_details",
+      "parameters": [
+        "apiKey",
+        "rcno"
+      ],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
+    },
+    {
+      "id": "mobile_to_details",
+      "num": 53,
+      "name": "Mobile Number To Details",
+      "category": "lookup",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_lookup",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "mobile_lookup",
+      "num": 54,
+      "name": "Mobile Lookup",
+      "category": "lookup",
+      "providerCost": 50,
+      "wholesaleRate": 70,
+      "retailRate": 100,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_lookup",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "mobile_to_upi_find",
+      "num": 55,
+      "name": "Mobile To UPI Find",
+      "category": "banking",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobiletoupi.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_to_upi",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "mobile_to_multi_upi_find",
+      "num": 56,
+      "name": "Mobile To Multi UPI Find",
+      "category": "banking",
+      "providerCost": 7,
+      "wholesaleRate": 15,
+      "retailRate": 30,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobiletoMultiupi_Find.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_to_multi_upi",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "mobile_to_account_find",
+      "num": 57,
+      "name": "Mobile To Account Number Find",
+      "category": "banking",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobaile_to_account.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_to_account",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "mobile_to_multi_account",
+      "num": 58,
+      "name": "Mobile To Multi Account",
+      "category": "banking",
+      "providerCost": 20,
+      "wholesaleRate": 30,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobaile_to_multi_bank.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_to_multi_bank",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "upi_to_details",
+      "num": 59,
+      "name": "UPI To Details",
+      "category": "banking",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/upi_verify.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "vpa_verify",
+      "parameters": [
+        "apiKey",
+        "vpa"
+      ],
+      "requiredInputs": [
+        "upi"
+      ]
+    },
+    {
+      "id": "telegram_to_number_lookup",
+      "num": 60,
+      "name": "Telegram To Number Lookup",
+      "category": "lookup",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_lookup",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "telegram"
+      ]
+    },
+    {
+      "id": "vi_sim_to_photo_details",
+      "num": 61,
+      "name": "VI SIM To Photo And Details",
+      "category": "telecom",
+      "providerCost": 20,
+      "wholesaleRate": 35,
+      "retailRate": 60,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/vi_sim_details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "vi_sim_photo",
+      "parameters": [
+        "apiKey",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "nsdl_bank",
+      "num": 62,
+      "name": "NSDL Bank",
+      "category": "banking",
+      "providerCost": 200,
+      "wholesaleRate": 240,
+      "retailRate": 300,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "npci_link_status",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "npci_verify",
+      "num": 63,
+      "name": "NPCI Verify",
+      "category": "banking",
+      "providerCost": 7,
+      "wholesaleRate": 15,
+      "retailRate": 30,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/npci/npci_link_status.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "npci_link_status",
+      "parameters": [
+        "apiKey",
+        "aadhar"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "ayushman_image_jpg",
+      "num": 64,
+      "name": "Ayushman PM-JAY Golden Card (आयुष्मान कार्ड)",
+      "category": "health",
+      "providerCost": 2,
+      "wholesaleRate": 5,
+      "retailRate": 15,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "upstreamService": "Ayushman Download",
+      "upstreamFile": "Pmjay_Verify.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/PmjayVerification",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API",
+      "p4Key": "pmjay_verification",
+      "parameters": [
+        "apiKey",
+        "pmjayId"
+      ],
+      "requiredInputs": [
+        "pmjayId"
+      ]
+    },
+    {
+      "id": "e_shram",
+      "num": 65,
+      "name": "E-Shram",
+      "category": "welfare",
+      "providerCost": 85,
+      "wholesaleRate": 110,
+      "retailRate": 150,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API",
+      "p4Key": "eshram_verification",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "e_shram_update",
+      "num": 66,
+      "name": "e-Shram / Aadhaar Mobile Number Link (मोबाइल लिंक)",
+      "category": "welfare",
+      "providerCost": 60,
+      "wholesaleRate": 80,
+      "retailRate": 120,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "status": "live",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Mobile_Update",
+      "upstreamFile": "e-shram_number_link.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/eshram_mobile_update.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "p4Key": "eshram_mobile_update",
+      "parameters": [
+        "apiKey",
+        "uidNumber",
+        "dob",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "dob",
+        "mobile"
+      ]
+    },
+    {
+      "id": "agristack_pdf",
+      "num": 67,
+      "name": "AgriStack Farmer Card / Land Seeding (भूलेख / किसान कार्ड)",
+      "category": "agriculture",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "status": "live",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Land Seeding",
+      "upstreamFile": "AgrifarmerCardstate.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/approvedFarmersPdf.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "agristack_print_pdf",
+      "parameters": [
+        "apiKey",
+        "uidNumber",
+        "state"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "state"
+      ]
+    },
+    {
+      "id": "agristack_verify",
+      "num": 68,
+      "name": "AgriStack Verify",
+      "category": "agriculture",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 20,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/farmer-details.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "agristack_farmer_details",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "agristack_dbt",
+      "num": 69,
+      "name": "AgriStack DBT",
+      "category": "agriculture",
+      "providerCost": 6.5,
+      "wholesaleRate": 12,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/AgriStak/checkStatus.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "agristack_check_status",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "rtps_bihar_pdf",
+      "num": 70,
+      "name": "RTPS Bihar PDF",
+      "category": "edistrict",
+      "providerCost": 2,
+      "wholesaleRate": 5,
+      "retailRate": 15,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/RtpsCertificate-Br.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "rtps_certificate_bihar",
+      "parameters": [
+        "apiKey",
+        "applicationNumber",
+        "name"
+      ],
+      "requiredInputs": [
+        "applicationNumber",
+        "name"
+      ]
+    },
+    {
+      "id": "electric_bill_pdf_bihar",
+      "num": 71,
+      "name": "Electric Bill PDF Bihar",
+      "category": "utility",
+      "providerCost": 2,
+      "wholesaleRate": 5,
+      "retailRate": 15,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/elctricBillPDF",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "electric_bill_pdf",
+      "parameters": [
+        "apiKey",
+        "caNumber"
+      ],
+      "requiredInputs": [
+        "caNumber"
+      ]
+    },
+    {
+      "id": "gmail_to_details",
+      "num": 72,
+      "name": "Gmail To Details",
+      "category": "lookup",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_lookup",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "email"
+      ]
+    },
+    {
+      "id": "aadhar_number_to_details",
+      "num": 73,
+      "name": "Aadhar Number To Details",
+      "category": "aadhaar",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "coming_soon",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/eshramVerification",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "uid_to_details",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "samagra_service",
+      "num": 74,
+      "name": "Samagra Social Security ID (समग्र आईडी पर्ची)",
+      "category": "welfare",
+      "providerCost": 10,
+      "wholesaleRate": 20,
+      "retailRate": 40,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "status": "live",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Samagra Print",
+      "upstreamFile": "familyID_Service.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/Hr_Services/familyVerification",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "p4Key": "family_verification",
+      "parameters": [
+        "apiKey",
+        "familyId"
+      ],
+      "requiredInputs": [
+        "familyId"
+      ]
+    },
+    {
+      "id": "sambal_pdf",
+      "num": 75,
+      "name": "Sambal Card PDF (संबल कार्ड डाउनलोड)",
+      "category": "welfare",
+      "providerCost": 15,
+      "wholesaleRate": 25,
+      "retailRate": 45,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "status": "live",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Samagra Print",
+      "upstreamFile": "familyID_Service.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v2/sharmadhan_card_details",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "p4Key": "sharmadhan_card_details",
+      "parameters": [
+        "apiKey",
+        "uidNumber"
+      ],
+      "requiredInputs": [
+        "aadhaar"
+      ]
+    },
+    {
+      "id": "udyam_pdf",
+      "num": 76,
+      "name": "Udyam PDF",
+      "category": "utility",
+      "providerCost": 40,
+      "wholesaleRate": 60,
+      "retailRate": 90,
+      "isActive": true,
+      "serviceType": "coming_soon",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "pan_verification_premium",
+      "parameters": [
+        "apiKey",
+        "panNumber"
+      ],
+      "requiredInputs": [
+        "panNumber"
+      ]
+    },
+    {
+      "id": "qr_generator",
+      "num": 82,
+      "name": "इंस्टेंट पेमेंट व टोकन QR कोड मेकर (Instant QR)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 1,
+      "retailRate": 5,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://api.qrserver.com/v1/create-qr-code/",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 100% निःशुल्क यूटिलिटी",
+      "parameters": [],
+      "requiredInputs": [
+        "text"
+      ]
+    },
+    {
+      "id": "check_operator",
+      "num": 78,
+      "name": "Check Operator",
+      "category": "telecom",
+      "providerCost": 0.1,
+      "wholesaleRate": 1,
+      "retailRate": 5,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobile_operator_verify",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_operator_verify",
+      "parameters": [
+        "apiKey",
+        "mobileNumber"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "check_plan",
+      "num": 79,
+      "name": "Check Plan",
+      "category": "telecom",
+      "providerCost": 0.1,
+      "wholesaleRate": 1,
+      "retailRate": 5,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/mobileLookup.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "mobile_lookup",
+      "parameters": [
+        "apiKey",
+        "type",
+        "value"
+      ],
+      "requiredInputs": [
+        "mobile"
+      ]
+    },
+    {
+      "id": "bank_ifsc_lookup",
+      "num": 80,
+      "name": "बैंक IFSC सर्च व शाखा विवरण (Bank IFSC)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://ifsc.razorpay.com/",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 100% निःशुल्क यूटिलिटी",
+      "parameters": [],
+      "requiredInputs": [
+        "ifsc"
+      ]
+    },
+    {
+      "id": "pincode_lookup",
+      "num": 81,
+      "name": "डाकघर पिनकोड सर्च व एड्रेस लोकेटर (India Post)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://api.postalpincode.in/pincode/",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 100% निःशुल्क यूटिलिटी",
+      "parameters": [],
+      "requiredInputs": [
+        "pincode"
+      ]
+    },
+    {
+      "id": "sarkari_job_feed",
+      "num": 83,
+      "name": "लाइव सरकारी नौकरी, एडमिट कार्ड व योजनाएं (Sarkari Jobs)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "/api/sarkari-jobs/feed",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 100% लाइव सरकारी अपडेट",
+      "parameters": [],
+      "requiredInputs": []
+    },
+    {
+      "id": "pvc_auto_cropper",
+      "num": 84,
+      "name": "A4 to PVC कार्ड ऑटो-क्रॉपर (CR-80 85.6mm×54mm)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "badge": "🟢 1-क्लिक CR-80 PVC क्रॉपर",
+      "parameters": [],
+      "requiredInputs": [
+        "file"
+      ]
+    },
+    {
+      "id": "passport_photo_maker",
+      "num": 85,
+      "name": "1-क्लिक पासपोर्ट साइज फोटो मेकर (4x6 शीट / 8 फोटो)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "badge": "🟢 1-क्लिक 8-पासपोर्ट फोटो शीट",
+      "parameters": [],
+      "requiredInputs": [
+        "file"
+      ]
+    },
+    {
+      "id": "govt_form_resizer",
+      "num": 86,
+      "name": "सरकारी फॉर्म फोटो व साइन रिसाइज़र (20KB - 50KB Exact)",
+      "category": "other",
+      "providerCost": 0,
+      "wholesaleRate": 0,
+      "retailRate": 0,
+      "isActive": true,
+      "serviceType": "generator",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "badge": "🟢 20KB-50KB फोटो-साइन रिसाइज़र",
+      "parameters": [],
+      "requiredInputs": [
+        "file"
+      ]
+    },
+    {
+      "id": "voter_original_pdf_otp",
+      "num": 86,
+      "name": "Voter Original PDF With OTP",
+      "category": "voter",
+      "providerCost": 5,
+      "wholesaleRate": 10,
+      "retailRate": 25,
+      "isActive": true,
+      "serviceType": "live_api",
+      "status": "live",
+      "fulfillmentType": "instant_api",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/v-Addition/Pdf-Download/api/send-otp.php",
+      "method": "GET",
+      "isComingSoon": false,
+      "badge": "🟢 लाइव P4 API (Verified)",
+      "p4Key": "voter_pdf_otp",
+      "parameters": [
+        "apiKey",
+        "epic_number",
+        "otp"
+      ],
+      "requiredInputs": [
+        "epicNumber",
+        "otp"
+      ]
+    },
+    {
+      "id": "puc_certificate_download",
+      "num": 87,
+      "name": "PUC Pollution Certificate (वाहन प्रदूषण प्रमाण पत्र)",
+      "category": "rc",
+      "wholesaleRate": 25,
+      "retailRate": 50,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "puc_services",
+      "upstreamFile": "puc_services.php",
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "parameters": [],
+      "requiredInputs": [
+        "vehicleNumber"
+      ]
+    },
+    {
+      "id": "pan_aadhaar_link_manual",
+      "num": 88,
+      "name": "PAN Aadhaar Link Service (पैन-आधार लिंक अनुरोध)",
+      "category": "pan",
+      "wholesaleRate": 50,
+      "retailRate": 100,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Pan_Number_Link",
+      "upstreamFile": "panAadharNumber_Link.php",
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "parameters": [
+        "panNo",
+        "aadhaar",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "panNo",
+        "aadhaar",
+        "mobile"
+      ]
+    },
+    {
+      "id": "dob_update_service",
+      "num": 89,
+      "name": "DOB Update / Correction (जन्मतिथि सुधार आवेदन)",
+      "category": "aadhaar",
+      "wholesaleRate": 80,
+      "retailRate": 150,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Dob_Update",
+      "upstreamFile": "dob_update.php",
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "parameters": [],
+      "requiredInputs": [
+        "aadhaarNumber",
+        "dob"
+      ]
+    },
+    {
+      "id": "mobile_update_service",
+      "num": 90,
+      "name": "Aadhaar Mobile Link / Update (आधार मोबाइल लिंक अनुरोध)",
+      "category": "aadhaar",
+      "wholesaleRate": 50,
+      "retailRate": 100,
+      "isActive": true,
+      "serviceType": "manual_relay",
+      "fulfillmentType": "manual_relay",
+      "upstreamService": "Mobile_Update",
+      "upstreamFile": "Mobile_Update.php",
+      "apiEndpoint": "/api/services/execute-automated",
+      "method": "POST",
+      "isComingSoon": false,
+      "status": "live",
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
+      "parameters": [
+        "aadhaarNo",
+        "dob",
+        "mobile"
+      ],
+      "requiredInputs": [
+        "aadhaar",
+        "dob",
+        "mobile"
+      ]
+    }
+  ],
+  "users": [
+    {
+      "id": "USR-8006518960",
+      "name": "ankit kumar",
+      "shopName": "स्मार्ट डिजिटल सेवा केंद्र",
+      "phone": "8006518960",
+      "password": "Aa@910010025",
+      "role": "citizen",
+      "balance": 10,
+      "isBlocked": false,
+      "createdAt": "2026-10-15T00:00:00.000Z"
+    },
+    {
+      "id": "USR-8006517171",
+      "name": "Ankit Chaudhary",
+      "shopName": "स्मार्ट डिजिटल सेवा केंद्र",
+      "phone": "8006517171",
+      "password": "Aa@910010025",
+      "role": "cafe",
+      "balance": 1000,
+      "isBlocked": false,
+      "createdAt": "2026-10-17T00:00:00.000Z"
+    },
+    {
+      "id": "CAFE-999",
+      "name": "परीक्षण संचालक",
+      "shopName": "परीक्षण जन सेवा केंद्र",
+      "phone": "9999988888",
+      "password": "1234",
+      "role": "cafe",
+      "balance": 10000,
+      "isBlocked": false,
+      "createdAt": "2026-10-17T17:43:12.040Z"
+    }
+  ],
+  "verifiedBankReceipts": [],
+  "orders": []
+}

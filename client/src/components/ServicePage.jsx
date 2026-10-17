@@ -4387,6 +4387,32 @@ function ServicePageContent({
               </div>
             )}
 
+            {/* New Form 49A PAN Card Application CTA Banner */}
+            {(toolKind === 'pan' || currentTool?.category === 'pan') && (
+              <div className="m-4 mb-0 p-3 bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 border border-blue-400/40 rounded-xl text-white text-xs flex items-center justify-between gap-3 shadow-md">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xl">💳</span>
+                  <div>
+                    <span className="font-black text-xs text-white block">
+                      {language === 'hi' ? 'नया पैन कार्ड (Form 49A) बनवाना है?' : 'Need a New PAN Card (Form 49A)?'}
+                    </span>
+                    <span className="text-[10px] text-blue-200">
+                      {language === 'hi' ? '100% डिजिटल स्टैम्प्ड फॉर्म 49A • आधार व जन्मतिथि प्रमाण' : '100% Digital Auto-Stamped Form 49A'}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => onSelectTool('pan_new_apply')}
+                  className="bg-blue-600 hover:bg-blue-500 text-white font-black px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1 shadow-sm transition cursor-pointer shrink-0"
+                >
+                  <span>{language === 'hi' ? 'आवेदन खोलें' : 'Apply 49A'}</span>
+                  <span>➔</span>
+                </button>
+              </div>
+            )}
+
             {/* Card Body: EXACT Form Inputs matching Screenshots */}
             <form onSubmit={handleInstantGenerate} className="p-5 sm:p-6 space-y-4">
               {renderScreenshotFormInputs()}
@@ -4754,37 +4780,37 @@ function ServicePageContent({
                       aadhaarNo: activeData.aadhaarNo || activeData.uidNumber || (primaryInput && primaryInput.length === 12 ? primaryInput : '') || 'XXXX-XXXX-XXXX',
                       maskedAadhaar: activeData.maskedAadhaar || (activeData.aadhaarNo && activeData.aadhaarNo.length === 12 ? `XXXX-XXXX-${activeData.aadhaarNo.slice(8)}` : (primaryInput && primaryInput.length === 12 ? `XXXX-XXXX-${primaryInput.slice(8)}` : 'XXXX-XXXX-XXXX')),
                       // RC Specific Fields
-                      regNo: activeData.regNo || activeData.rc_number || activeData.vehicleNumber || activeData.vehicleNo || (toolKind === 'rc' ? primaryInput : '') || 'UP80AB1234',
-                      chassisNo: activeData.chassisNo || activeData.chassis || 'MBHXXXXXXXXXXXX12',
-                      engineNo: activeData.engineNo || activeData.engine || 'ENGXXXXXXXX98',
-                      makerModel: activeData.makerModel || activeData.makerDescription || activeData.model || 'MARUTI SUZUKI SWIFT',
-                      vehicleClass: activeData.vehicleClass || activeData.vchCatg || 'MOTOR CAR (LMV)',
-                      fuelType: activeData.fuelType || activeData.fuelDescription || 'PETROL',
-                      normsType: activeData.normsType || activeData.emissionNorms || 'BHARAT STAGE VI (BS-VI)',
-                      seatCapacity: activeData.seatCapacity || activeData.seatingCapacity || '5 (INCL DRIVER)',
-                      bodyType: activeData.bodyType || 'SALOON / SEDAN',
-                      unladenWeight: activeData.unladenWeight || '1080 KG',
-                      grossWeight: activeData.grossWeight || '1490 KG',
-                      cubicCapacity: activeData.cubicCapacity || '1197 CC',
-                      cylinders: activeData.cylinders || '4',
-                      wheelbase: activeData.wheelbase || '2450 MM',
-                      color: activeData.color || 'WHITE / METALLIC',
-                      regDate: activeData.regDate || activeData.regnDate || '15/08/2021',
-                      fitnessUpto: activeData.fitnessUpto || activeData.fitDate || '14/08/2036',
-                      insuranceCompany: activeData.insuranceCompany || activeData.insuranceName || 'ICICI LOMBARD GIC LTD',
-                      insurancePolicyNo: activeData.insurancePolicyNo || 'POL-78210928',
-                      insuranceUpto: activeData.insuranceUpto || activeData.insuranceValidity || '14/08/2025',
-                      puccUpto: activeData.puccUpto || activeData.puccValidity || '12/11/2024',
-                      mvTaxUpto: activeData.mvTaxUpto || activeData.taxUpto || 'L.T. (Life Time)',
+                      regNo: activeData.regNo || activeData.rc_number || activeData.vehicleNumber || activeData.vehicleNo || (toolKind === 'rc' ? primaryInput : '') || '-',
+                      chassisNo: activeData.chassisNo || activeData.chassis || '-',
+                      engineNo: activeData.engineNo || activeData.engine || '-',
+                      makerModel: activeData.makerModel || activeData.makerDescription || activeData.model || '-',
+                      vehicleClass: activeData.vehicleClass || activeData.vchCatg || '-',
+                      fuelType: activeData.fuelType || activeData.fuelDescription || '-',
+                      normsType: activeData.normsType || activeData.emissionNorms || '-',
+                      seatCapacity: activeData.seatCapacity || activeData.seatingCapacity || '-',
+                      bodyType: activeData.bodyType || '-',
+                      unladenWeight: activeData.unladenWeight || '-',
+                      grossWeight: activeData.grossWeight || '-',
+                      cubicCapacity: activeData.cubicCapacity || '-',
+                      cylinders: activeData.cylinders || '-',
+                      wheelbase: activeData.wheelbase || '-',
+                      color: activeData.color || '-',
+                      regDate: activeData.regDate || activeData.regnDate || '-',
+                      fitnessUpto: activeData.fitnessUpto || activeData.fitDate || '-',
+                      insuranceCompany: activeData.insuranceCompany || activeData.insuranceName || '-',
+                      insurancePolicyNo: activeData.insurancePolicyNo || '-',
+                      insuranceUpto: activeData.insuranceUpto || activeData.insuranceValidity || '-',
+                      puccUpto: activeData.puccUpto || activeData.puccValidity || '-',
+                      mvTaxUpto: activeData.mvTaxUpto || activeData.taxUpto || '-',
                       financer: activeData.financer || activeData.financier || '',
-                      rtoOffice: activeData.rtoOffice || activeData.registeringAuthority || 'RTO AGRA, UTTAR PRADESH',
+                      rtoOffice: activeData.rtoOffice || activeData.registeringAuthority || '-',
                       // RTPS Specific Fields
-                      appNo: activeData.appNo || activeData.applicationNumber || (toolKind === 'edistrict' ? primaryInput : '') || 'BR-RTPS-2024-89021',
-                      certNo: activeData.certNo || activeData.certificateNo || (toolKind === 'edistrict' ? secondaryInput : '') || `BR-RTPS-CERT-${Date.now().toString().slice(-6)}`,
+                      appNo: activeData.appNo || activeData.applicationNumber || (toolKind === 'edistrict' ? primaryInput : '') || '-',
+                      certNo: activeData.certNo || activeData.certificateNo || (toolKind === 'edistrict' ? secondaryInput : '') || '-',
                       issueDate: activeData.issueDate || activeData.date || new Date().toLocaleDateString('en-GB'),
                       village: activeData.village || activeData.address || '-',
-                      district: activeData.district || selectState || 'पटना',
-                      fee: activeData.fee || currentTool?.fee || requiredFee || 30
+                      district: activeData.district || selectState || '-',
+                      fee: activeData.fee || currentTool?.fee || requiredFee || 0
                     };
 
                     return (
@@ -4819,8 +4845,17 @@ function ServicePageContent({
 
                               {/* Middle: Photo + Info + Signature */}
                               <div className="flex items-center gap-3 py-1">
-                                <div className="w-[68px] h-[84px] bg-slate-200 border border-slate-400 rounded overflow-hidden shrink-0 shadow-2xs">
-                                  <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
+                                <div className="w-[68px] h-[84px] bg-slate-100 border border-slate-400 rounded overflow-hidden shrink-0 shadow-2xs flex items-center justify-center">
+                                  {photoData ? (
+                                    <img src={photoData} alt="Photo" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center p-1 text-center">
+                                      <span className="text-xl">👤</span>
+                                      <span className="text-[6.5px] font-bold text-slate-500 uppercase mt-0.5 leading-tight">
+                                        {language === 'hi' ? 'फोटो अनुपलब्ध' : 'Photo N/A'}
+                                      </span>
+                                    </div>
+                                  )}
                                 </div>
 
                                 <div className="flex-1 space-y-1 text-xs">
@@ -4839,8 +4874,14 @@ function ServicePageContent({
 
                                   {/* Signature Strip */}
                                   <div className="pt-0.5">
-                                    <div className="w-24 h-5 border-b border-slate-400 overflow-hidden flex items-center">
-                                      <img src={signData} alt="Sign" className="max-h-full max-w-full object-contain" />
+                                    <div className="w-24 h-5 border-b border-slate-400 overflow-hidden flex items-center justify-center bg-white/50">
+                                      {signData ? (
+                                        <img src={signData} alt="Sign" className="max-h-full max-w-full object-contain" />
+                                      ) : (
+                                        <span className="text-[6.5px] font-mono text-slate-400 italic">
+                                          {language === 'hi' ? 'हस्ताक्षर अनुपलब्ध' : 'Signature N/A'}
+                                        </span>
+                                      )}
                                     </div>
                                     <span className="text-[6.5px] text-slate-400 font-bold block">{language === 'hi' ? 'हस्ताक्षर' : 'Signature'}</span>
                                   </div>
@@ -4871,7 +4912,10 @@ function ServicePageContent({
                                 <div className="space-y-1 text-[9px] text-slate-700 leading-tight">
                                   <p className="font-bold">National Securities Depository Limited</p>
                                   <p>UTI Infrastructure Technology And Services Ltd.</p>
-                                  <p className="font-mono text-[8px] text-slate-500">{language === 'hi' ? 'जारी दिनांक: 14/03/2020' : 'Issue Date: 14/03/2020'}</p>
+                                  <p className="font-mono text-[8px] text-slate-500">
+                                    {language === 'hi' ? 'जारी दिनांक: ' : 'Issue Date: '}
+                                    {cardData.issueDate && cardData.issueDate !== '-' ? cardData.issueDate : (cardData.date && cardData.date !== '-' ? cardData.date : '-')}
+                                  </p>
                                 </div>
                                 <div className="p-1 bg-white border border-slate-300 rounded shadow-xs shrink-0">
                                   <QRCodeSVG value={`ITD:PAN:${cardData.panNo}|NAME:${cardData.name}|DOB:${cardData.dob}`} size={64} />
@@ -5164,8 +5208,8 @@ function ServicePageContent({
 
                               <div className="flex items-start justify-between gap-3 py-1 text-[9px]">
                                 <div className="space-y-1 text-slate-700 max-w-[200px]">
-                                  <div>{language === 'hi' ? 'मतदान केंद्र:' : 'Polling Station:'} <strong>{cardData.partName || cardData.pollingStation || (language === 'hi' ? 'प्राथमिक विद्यालय, कक्ष सं. 1' : 'Primary School, Room 1')}</strong></div>
-                                  <div>{language === 'hi' ? 'भाग संख्या:' : 'Part No:'} <strong>{cardData.partNo || cardData.part_no || '142'}</strong> | {language === 'hi' ? 'क्रम संख्या:' : 'Serial No:'} <strong>{cardData.serialNo || cardData.serial_no || '81'}</strong></div>
+                                  <div>{language === 'hi' ? 'मतदान केंद्र:' : 'Polling Station:'} <strong>{cardData.partName || cardData.pollingStation || '-'}</strong></div>
+                                  <div>{language === 'hi' ? 'भाग संख्या:' : 'Part No:'} <strong>{cardData.partNo || cardData.part_no || '-'}</strong> | {language === 'hi' ? 'क्रम संख्या:' : 'Serial No:'} <strong>{cardData.serialNo || cardData.serial_no || '-'}</strong></div>
                                   <div className="text-[8px] text-slate-500 mt-1">{language === 'hi' ? 'पहचान पत्र को सुरक्षित रखें। मतदान दिवस पर अवश्य लाएं।' : 'Keep card secure. Bring on polling day.'}</div>
                                 </div>
                                 <div className="p-1 bg-white border border-slate-300 rounded shadow-xs shrink-0">

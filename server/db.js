@@ -93,6 +93,8 @@ const defaultStore = {
   rcOrders: [],
   utrRequests: [],
   vleKycApplications: [],
+  panApplications: [],
+  walletTransactions: [],
   wallets: [],
   cafes: [],
   superAdminRates: {
@@ -448,6 +450,8 @@ export function getStore() {
     if (!loadedStore.complaints) loadedStore.complaints = [];
     if (!loadedStore.vleKycApplications) loadedStore.vleKycApplications = [];
     if (!loadedStore.prints) loadedStore.prints = [];
+    if (!loadedStore.panApplications) loadedStore.panApplications = [];
+    if (!loadedStore.walletTransactions) loadedStore.walletTransactions = [];
     if (!loadedStore.applications) loadedStore.applications = [];
     if (!loadedStore.cashbook) loadedStore.cashbook = [];
     if (!loadedStore.udhar) loadedStore.udhar = [];
@@ -532,6 +536,20 @@ export function getStore() {
       }
     });
 
+    (loadedStore.users || []).forEach(u => {
+      if (u && u.phone && u.balance > 0) {
+        if (!loadedStore.wallets.some(w => w.phone === u.phone)) {
+          loadedStore.wallets.push({
+            phone: u.phone,
+            customerName: u.name || 'ग्राहक',
+            balance: u.balance,
+            transactions: []
+          });
+          mutated = true;
+        }
+      }
+    });
+
     // Secure Super Admin credentials with bcrypt
     if (!loadedStore.settings.superAdminPin || !isBcryptHash(loadedStore.settings.superAdminPin) || !verifyCredential('9999', loadedStore.settings.superAdminPin)) {
       loadedStore.settings.superAdminPin = DEFAULT_SUPERADMIN_PIN_HASH;
@@ -605,20 +623,22 @@ export function saveStore(store) {
   memoryStore = store;
   let tempFile = null;
   try {
-    // 1. Persist to SQLite & Postgres
+    // 1. BACKUP FIRST: Create store.json.bak before making any modification
+    if (fs.existsSync(DATA_FILE)) {
+      try {
+        fs.copyFileSync(DATA_FILE, path.join(dataDir, 'store.json.bak'));
+      } catch {}
+    }
+
+    // 2. Persist to SQLite & Postgres
     persistToSqliteAndPg(store);
 
-    // 2. Atomically write to store.json
+    // 3. Atomically write to store.json
     const jsonString = JSON.stringify(store, null, 2);
     fs.writeFileSync(DATA_FILE, jsonString, 'utf-8');
 
     try {
       lastLoadedMtime = fs.statSync(DATA_FILE).mtimeMs;
-    } catch {}
-
-    // 3. Keep immediate rollback copy (.bak)
-    try {
-      fs.copyFileSync(DATA_FILE, path.join(dataDir, 'store.json.bak'));
     } catch {}
 
     // 4. Immune Vault: Sync persistent users & passwords to users_master.json

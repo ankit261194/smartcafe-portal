@@ -9,5 +9,27 @@
     "balance": 10,
     "isBlocked": false,
     "createdAt": "2026-10-15T00:00:00.000Z"
+  },
+  {
+    "id": "USR-8006517171",
+    "name": "Ankit Chaudhary",
+    "shopName": "स्मार्ट डिजिटल सेवा केंद्र",
+    "phone": "8006517171",
+    "password": "Aa@910010025",
+    "role": "cafe",
+    "balance": 0,
+    "isBlocked": false,
+    "createdAt": "2026-10-17T00:00:00.000Z"
+  },
+  {
+    "id": "CAFE-999",
+    "name": "परीक्षण संचालक",
+    "shopName": "परीक्षण जन सेवा केंद्र",
+    "phone": "9999988888",
+    "password": "1234",
+    "role": "cafe",
+    "balance": 0,
+    "isBlocked": false,
+    "createdAt": "2026-10-17T17:43:12.040Z"
   }
 ]

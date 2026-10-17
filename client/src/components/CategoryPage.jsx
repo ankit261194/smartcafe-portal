@@ -323,6 +323,44 @@ export default function CategoryPage({
       ) : (
         <div className="space-y-8">
           
+          {/* Featured Form 49A Application Banner for PAN Category */}
+          {category.id === 'pan' && (
+            <div className="p-4 sm:p-5 rounded-3xl bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 text-white border-2 border-blue-400/50 shadow-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-blue-300 shadow-inner shrink-0">
+                  <CreditCard className="w-6 h-6" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                      100% Digital Auto-Stamping
+                    </span>
+                    <span className="text-[10px] font-bold text-amber-300">
+                      Form 49A
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-black text-white mt-0.5">
+                    {language === 'hi' ? 'नया पैन कार्ड आवेदन (Form 49A Physical + e-PAN)' : 'New PAN Card Application (Form 49A)'}
+                  </h3>
+                  <p className="text-xs text-slate-300">
+                    {language === 'hi' 
+                      ? 'डाक द्वारा घर पर प्लास्टिक PVC कार्ड + ईमेल पर e-PAN • 708 शहरों के AO कोड व 16 जन्मतिथि प्रमाण' 
+                      : 'Physical PVC Card by Post + e-PAN by Email • 708 AO Codes & 16 DOB Proofs'}
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => onSelectService('pan_new_apply')}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-95 text-white font-black px-6 py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 transition cursor-pointer shrink-0"
+              >
+                <span>{language === 'hi' ? 'नया आवेदन भरें' : 'Apply New PAN'}</span>
+                <span>➔</span>
+              </button>
+            </div>
+          )}
+
           {/* =================================================================== */}
           {/* SECTION 1: 🟢 चालू और सक्रिय लाइव सेवाएं (LIVE ACTIVE SERVICES) */}
           {/* =================================================================== */}

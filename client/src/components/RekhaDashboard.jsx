@@ -234,6 +234,14 @@ export default function RekhaDashboard({
             </button>
             <button
               type="button"
+              onClick={() => onSelectTool && onSelectTool('pan_new_apply')}
+              className="bg-blue-500/30 hover:bg-blue-600 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition border border-blue-400/30"
+            >
+              <CreditCard className="w-3 h-3 text-blue-300" />
+              <span>{language === 'hi' ? 'नया पैन (49A)' : 'New PAN (49A)'}</span>
+            </button>
+            <button
+              type="button"
               onClick={() => onNavigateTab('cashbook')}
               className="bg-white/15 hover:bg-white/25 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition"
             >
