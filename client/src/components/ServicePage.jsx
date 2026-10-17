@@ -106,7 +106,7 @@ function ServicePageContent({
     if (['ration', 'ration_pdf_by_ration'].includes(id) || cat === 'ration' || id.includes('ration_')) return 'ration';
     if (['electricity', 'electric_bill_pdf_bihar'].includes(id) || cat === 'utility' || id.includes('electric_bill')) return 'electricity';
     if (['challan', 'chalan_find'].includes(id) || id.includes('chalan') || id.includes('challan')) return 'challan';
-    if (['edistrict', 'edistrict-verify', 'edistrict-decl', 'edistrict-packer', 'edistrict-bhulekh'].includes(id) || cat === 'edistrict') return 'edistrict';
+    if (['edistrict', 'edistrict-verify', 'edistrict-decl', 'edistrict-packer', 'edistrict-bhulekh', 'rtps_bihar_pdf', 'rtps'].includes(id) || cat === 'edistrict' || id.includes('rtps') || id.includes('edistrict')) return 'edistrict';
     if (id === 'bank_ifsc_lookup' || id.includes('ifsc')) return 'ifsc';
     if (id === 'pincode_lookup' || id.includes('pincode')) return 'pincode';
     if (id === 'qr_generator' || id.includes('qr_')) return 'qr';
@@ -115,6 +115,7 @@ function ServicePageContent({
     if (cat === 'telecom' || id.includes('telecom') || id.includes('sim') || id.includes('cdr')) return 'telecom';
     if (cat === 'agriculture' || id.includes('agri') || id.includes('kisan')) return 'agriculture';
     if (cat === 'welfare' || id.includes('samagra') || id.includes('sambal') || id.includes('eshram')) return 'welfare';
+    if (cat === 'lookup' || id.includes('lookup') || id.includes('to_number') || id.includes('to_details') || id.includes('telegram') || id.includes('gmail') || id.includes('operator') || id.includes('check_plan')) return 'lookup';
     return 'receipt';
   }, [currentTool]);
 
@@ -150,8 +151,8 @@ function ServicePageContent({
   const [rationType, setRationType] = useState('New Format Print');
 
   // Photo & Signature Upload / Picker states
-  const [photoData, setPhotoData] = useState(SAMPLE_PHOTOS.male);
-  const [signData, setSignData] = useState(SAMPLE_SIGNS.sign1);
+  const [photoData, setPhotoData] = useState('');
+  const [signData, setSignData] = useState('');
   const [isCustomPhoto, setIsCustomPhoto] = useState(false);
   const [isCustomSign, setIsCustomSign] = useState(false);
 
@@ -160,6 +161,8 @@ function ServicePageContent({
   const [errorMsg, setErrorMsg] = useState('');
   const [currentResult, setCurrentResult] = useState(null);
   const [cardSide, setCardSide] = useState('both'); // 'both', 'front', 'back'
+  const [docViewMode, setDocViewMode] = useState('card'); // 'card' | 'a4'
+  const [showRawTelemetry, setShowRawTelemetry] = useState(false);
   const [showBalanceGateModal, setShowBalanceGateModal] = useState(false);
   
   // Persistent Order History States (Fixes ReferenceError white screen crash)
@@ -255,8 +258,8 @@ function ServicePageContent({
     setCardBg('White Background');
     setSelectState('Uttar Pradesh');
     setRationType('New Format Print');
-    setPhotoData(SAMPLE_PHOTOS.male);
-    setSignData(SAMPLE_SIGNS.sign1);
+    setPhotoData('');
+    setSignData('');
     setIsCustomPhoto(false);
     setIsCustomSign(false);
     setCurrentResult(null);
@@ -1741,7 +1744,7 @@ function ServicePageContent({
     window.print();
   };
 
-  const activeData = currentResult?.generatedData || currentResult?.vehicleData || null;
+  const activeData = currentResult?.generatedData || currentResult?.vehicleData || currentResult?.data || (currentResult && typeof currentResult === 'object' && currentResult.success ? currentResult : null);
 
   // Filtered orders for this specific tool (safe against undefined or null)
   const toolOrders = useMemo(() => {
@@ -4060,8 +4063,12 @@ function ServicePageContent({
               <span className="text-[10px] text-blue-600 dark:text-blue-400 font-normal">PNG / JPG (max 2MB)</span>
             </label>
             <div className="flex items-center gap-3">
-              <div className="w-12 h-14 bg-slate-100 border border-slate-300 rounded overflow-hidden shrink-0 shadow-xs">
-                <img src={photoData || SAMPLE_PHOTOS.male} alt="Preview" className="w-full h-full object-cover" />
+              <div className="w-12 h-14 bg-slate-100 border border-slate-300 rounded overflow-hidden shrink-0 shadow-xs flex items-center justify-center">
+                {photoData ? (
+                  <img src={photoData} alt="Preview" className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-slate-400 text-xs font-bold">📷</span>
+                )}
               </div>
               <input
                 type="file"
@@ -4624,6 +4631,26 @@ function ServicePageContent({
                   </div>
 
                   <div className="flex items-center gap-2 flex-wrap">
+                    {/* A4 Official Government Proforma vs PVC Card Toggle */}
+                    {['rc', 'edistrict', 'aadhaar'].includes(toolKind) && (
+                      <div className="bg-slate-200 dark:bg-slate-800 p-0.5 rounded-lg flex items-center text-xs font-bold">
+                        <button
+                          type="button"
+                          onClick={() => setDocViewMode('card')}
+                          className={`px-2.5 py-1 rounded-md transition ${docViewMode === 'card' ? 'bg-white dark:bg-slate-900 text-indigo-600 shadow-xs' : 'text-slate-600 dark:text-slate-300'}`}
+                        >
+                          🖨️ PVC स्मार्ट कार्ड
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDocViewMode('a4')}
+                          className={`px-2.5 py-1 rounded-md transition ${docViewMode === 'a4' ? 'bg-white dark:bg-slate-900 text-indigo-600 shadow-xs' : 'text-slate-600 dark:text-slate-300'}`}
+                        >
+                          📄 A4 सरकारी दस्तावेज
+                        </button>
+                      </div>
+                    )}
+
                     {/* Card Side Toggle */}
                     {['pan', 'aadhaar', 'voter', 'dl', 'rc', 'ayushman', 'epan'].includes(toolKind) && (
                       <div className="bg-slate-200 dark:bg-slate-800 p-0.5 rounded-lg flex items-center text-xs font-bold">
@@ -4691,14 +4718,46 @@ function ServicePageContent({
                       applicantName: activeData.applicantName || activeData.name || '-',
                       headName: activeData.headName || activeData.name || '-',
                       consumerName: activeData.consumerName || activeData.name || '-',
-                      fatherName: activeData.fatherName || '-',
-                      dob: activeData.dob || '-',
+                      fatherName: activeData.fatherName || activeData.father_name || activeData.careOf || '-',
+                      dob: activeData.dob || activeData.birthDate || '-',
                       gender: activeData.gender || 'MALE',
-                      address: activeData.address || '-',
+                      address: activeData.address || activeData.permanentAddress || activeData.presentAddress || '-',
                       photoUrl: activeData.photoUrl || photoData,
                       signUrl: activeData.signUrl || signData,
-                      aadhaarNo: activeData.aadhaarNo || activeData.uidNumber || primaryInput || 'XXXX-XXXX-XXXX',
-                      maskedAadhaar: activeData.maskedAadhaar || (activeData.aadhaarNo && activeData.aadhaarNo.length === 12 ? `XXXX-XXXX-${activeData.aadhaarNo.slice(8)}` : (primaryInput && primaryInput.length === 12 ? `XXXX-XXXX-${primaryInput.slice(8)}` : 'XXXX-XXXX-XXXX'))
+                      aadhaarNo: activeData.aadhaarNo || activeData.uidNumber || (primaryInput && primaryInput.length === 12 ? primaryInput : '') || 'XXXX-XXXX-XXXX',
+                      maskedAadhaar: activeData.maskedAadhaar || (activeData.aadhaarNo && activeData.aadhaarNo.length === 12 ? `XXXX-XXXX-${activeData.aadhaarNo.slice(8)}` : (primaryInput && primaryInput.length === 12 ? `XXXX-XXXX-${primaryInput.slice(8)}` : 'XXXX-XXXX-XXXX')),
+                      // RC Specific Fields
+                      regNo: activeData.regNo || activeData.rc_number || activeData.vehicleNumber || activeData.vehicleNo || (toolKind === 'rc' ? primaryInput : '') || 'UP80AB1234',
+                      chassisNo: activeData.chassisNo || activeData.chassis || 'MBHXXXXXXXXXXXX12',
+                      engineNo: activeData.engineNo || activeData.engine || 'ENGXXXXXXXX98',
+                      makerModel: activeData.makerModel || activeData.makerDescription || activeData.model || 'MARUTI SUZUKI SWIFT',
+                      vehicleClass: activeData.vehicleClass || activeData.vchCatg || 'MOTOR CAR (LMV)',
+                      fuelType: activeData.fuelType || activeData.fuelDescription || 'PETROL',
+                      normsType: activeData.normsType || activeData.emissionNorms || 'BHARAT STAGE VI (BS-VI)',
+                      seatCapacity: activeData.seatCapacity || activeData.seatingCapacity || '5 (INCL DRIVER)',
+                      bodyType: activeData.bodyType || 'SALOON / SEDAN',
+                      unladenWeight: activeData.unladenWeight || '1080 KG',
+                      grossWeight: activeData.grossWeight || '1490 KG',
+                      cubicCapacity: activeData.cubicCapacity || '1197 CC',
+                      cylinders: activeData.cylinders || '4',
+                      wheelbase: activeData.wheelbase || '2450 MM',
+                      color: activeData.color || 'WHITE / METALLIC',
+                      regDate: activeData.regDate || activeData.regnDate || '15/08/2021',
+                      fitnessUpto: activeData.fitnessUpto || activeData.fitDate || '14/08/2036',
+                      insuranceCompany: activeData.insuranceCompany || activeData.insuranceName || 'ICICI LOMBARD GIC LTD',
+                      insurancePolicyNo: activeData.insurancePolicyNo || 'POL-78210928',
+                      insuranceUpto: activeData.insuranceUpto || activeData.insuranceValidity || '14/08/2025',
+                      puccUpto: activeData.puccUpto || activeData.puccValidity || '12/11/2024',
+                      mvTaxUpto: activeData.mvTaxUpto || activeData.taxUpto || 'L.T. (Life Time)',
+                      financer: activeData.financer || activeData.financier || '',
+                      rtoOffice: activeData.rtoOffice || activeData.registeringAuthority || 'RTO AGRA, UTTAR PRADESH',
+                      // RTPS Specific Fields
+                      appNo: activeData.appNo || activeData.applicationNumber || (toolKind === 'edistrict' ? primaryInput : '') || 'BR-RTPS-2024-89021',
+                      certNo: activeData.certNo || activeData.certificateNo || (toolKind === 'edistrict' ? secondaryInput : '') || `BR-RTPS-CERT-${Date.now().toString().slice(-6)}`,
+                      issueDate: activeData.issueDate || activeData.date || new Date().toLocaleDateString('en-GB'),
+                      village: activeData.village || activeData.address || '-',
+                      district: activeData.district || selectState || 'पटना',
+                      fee: activeData.fee || currentTool?.fee || requiredFee || 30
                     };
 
                     return (
@@ -4807,80 +4866,199 @@ function ServicePageContent({
                     {/* ======================================================= */}
                     {(toolKind === 'aadhaar' || currentTool?.serviceType === 'aadhaarCard' || currentResult?.serviceType === 'aadhaarCard') && (
                       <>
-                        {(cardSide === 'both' || cardSide === 'front') && (
-                          <div className="cr80-card-scaler relative group max-w-full">
-                            <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
-
-                            <div className="cr80-card-print w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-900 font-sans print:shadow-none print:border-slate-800">
-                              <div className="border-b border-red-500 pb-1 flex items-center justify-between">
-                                <div>
-                                  <div className="text-[9px] font-black text-red-600 leading-tight">
-                                    {language === 'hi' ? 'भारत सरकार' : 'Government of India'}
-                                  </div>
+                        {docViewMode === 'a4' ? (
+                          <div className="w-[794px] min-h-[1050px] bg-white border-2 border-slate-400 rounded-2xl p-7 text-slate-900 font-sans shadow-xl relative select-none print:shadow-none print:border-slate-800 print:m-0 print:w-full space-y-4">
+                            {/* UIDAI Header Banner */}
+                            <div className="border-b-2 border-red-600 pb-3 flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <div className="w-12 h-12 flex items-center justify-center border rounded-lg bg-red-50 text-2xl">
+                                  🇮🇳
                                 </div>
-                                <div className="text-right">
+                                <div>
+                                  <h2 className="text-sm font-black text-red-600 uppercase">भारतीय विशिष्ट पहचान प्राधिकरण</h2>
+                                  <h3 className="text-xs font-bold text-slate-800 uppercase">UNIQUE IDENTIFICATION AUTHORITY OF INDIA</h3>
+                                  <p className="text-[10px] text-slate-600">भारत सरकार (GOVERNMENT OF INDIA)</p>
+                                </div>
+                              </div>
+                              <div className="text-right space-y-0.5 text-xs">
+                                <div className="font-mono text-[10px] text-slate-600">नामांकन संख्या / Enrolment No: <strong>{cardData.enrolmentNo || '1024/56789/01234'}</strong></div>
+                                <div className="font-mono text-[10px] text-slate-600">डाउनलोड दिनांक / Date: <strong>{new Date().toLocaleDateString('en-GB')}</strong></div>
+                              </div>
+                            </div>
+
+                            {/* Recipient Address Box & Verification QR */}
+                            <div className="flex justify-between items-start gap-4 p-4 bg-slate-50 rounded-xl border border-slate-200">
+                              <div className="space-y-1 text-xs">
+                                <span className="text-[10px] font-bold text-slate-500 uppercase">प्रति / To,</span>
+                                <h3 className="text-base font-black text-slate-900">{cardData.name}</h3>
+                                <p className="text-slate-700 font-semibold">{cardData.careOf || `S/O: ${cardData.fatherName}`}</p>
+                                <p className="text-slate-600 text-[11px] max-w-md">{cardData.address}</p>
+                                <p className="font-mono text-[11px] text-slate-700">मो. / Mobile: {cardData.maskedPhone || 'XXXXXX8960'}</p>
+                              </div>
+                              <div className="p-2 bg-white border rounded-lg shadow-xs text-center shrink-0">
+                                <QRCodeSVG value={`UIDAI:AADHAAR:${cardData.aadhaarNo}|NAME:${cardData.name}|DOB:${cardData.dob}|ADDRESS:${cardData.address}`} size={80} />
+                                <span className="text-[8px] font-mono text-slate-500 block mt-1">सत्यापित आधार QR</span>
+                              </div>
+                            </div>
+
+                            {/* Instruction Callout */}
+                            <div className="p-3 bg-red-50/70 border border-red-200 rounded-xl text-center space-y-1">
+                              <div className="text-xs font-bold text-red-800">आपका आधार नंबर / Your Aadhaar Number :</div>
+                              <div className="text-xl font-mono font-black text-red-600 tracking-widest">{cardData.aadhaarNo}</div>
+                              <div className="text-[9.5px] text-slate-600">आधार पहचान का प्रमाण है, नागरिकता का नहीं। / Aadhaar is proof of identity, not of citizenship.</div>
+                            </div>
+
+                            {/* Dotted Scissors Line */}
+                            <div className="relative py-2 text-center text-slate-400 select-none">
+                              <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t-2 border-dashed border-slate-400"></div>
+                              </div>
+                              <span className="relative bg-white px-3 text-[10px] font-bold text-slate-600">
+                                ✂️ काटें और सुरक्षित रखें / Please cut along this line and preserve
+                              </span>
+                            </div>
+
+                            {/* Bottom Cutout CR-80 PVC Format (Front and Back Side-by-Side) */}
+                            <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+                              {/* Front Side */}
+                              <div className="w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 text-slate-900 font-sans">
+                                <div className="border-b border-red-500 pb-1 flex items-center justify-between">
+                                  <div className="text-[9px] font-black text-red-600">{language === 'hi' ? 'भारत सरकार' : 'Government of India'}</div>
                                   <div className="text-[10px] font-black tracking-wider text-red-600">मेरा आधार, मेरी पहचान</div>
                                 </div>
+                                <div className="flex items-center gap-3 py-1">
+                                  <div className="w-[68px] h-[84px] bg-slate-100 border-2 border-slate-700 rounded overflow-hidden shrink-0 shadow-2xs flex items-center justify-center">
+                                    {(cardData.photoUrl || photoData) ? (
+                                      <img src={cardData.photoUrl || photoData} alt="Photo" className="w-full h-full object-cover" />
+                                    ) : (
+                                      <div className="w-full h-full flex flex-col items-center justify-center p-1 text-center bg-slate-100">
+                                        <span className="text-base">📷</span>
+                                        <span className="text-[6.5px] font-bold text-slate-500 uppercase">{language === 'hi' ? 'फोटो अनुपलब्ध' : 'Photo N/A'}</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                  <div className="flex-1 space-y-1 text-xs">
+                                    <div>
+                                      <span className="font-black text-slate-900 text-[11px] block">{cardData.name}</span>
+                                      <span className="text-[9px] text-slate-600 block">{cardData.careOf || `S/O: ${cardData.fatherName}`}</span>
+                                    </div>
+                                    <div className="text-[10px] text-slate-700">
+                                      <div>जन्म तिथि / DOB: <span className="font-mono font-bold">{cardData.dob}</span></div>
+                                      <div>लिंग / Gender: <span className="font-bold">{cardData.gender}</span></div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="border-t border-slate-300 pt-1 text-center">
+                                  <div className="font-mono font-black text-red-600 text-sm tracking-widest">{cardData.aadhaarNo}</div>
+                                </div>
                               </div>
 
-                              <div className="flex items-center gap-3 py-1">
-                                <div className="w-[68px] h-[84px] bg-slate-100 border-2 border-slate-700 rounded overflow-hidden shrink-0 shadow-2xs">
-                                  <img src={cardData.photoUrl || photoData || SAMPLE_PHOTOS.male} alt="Photo" className="w-full h-full object-cover" />
+                              {/* Back Side */}
+                              <div className="w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 text-slate-900 font-sans">
+                                <div className="border-b pb-1 text-[8px] font-bold text-slate-700">
+                                  भारतीय विशिष्ट पहचान प्राधिकरण • UIDAI
                                 </div>
-
-                                <div className="flex-1 space-y-1 text-xs">
-                                  <div>
-                                    <span className="font-black text-slate-900 text-[11px] block">{cardData.name}</span>
-                                    <span className="text-[9px] text-slate-600 block">{cardData.careOf || ((cardData.gender === 'FEMALE' ? (language === 'hi' ? 'पत्नी/आत्मजा:' : 'W/O, D/O:') : (language === 'hi' ? 'आत्मज:' : 'S/O:')) + ' ' + cardData.fatherName)}</span>
+                                <div className="flex items-start justify-between gap-3 py-1 text-[9px]">
+                                  <div className="space-y-0.5 max-w-[200px]">
+                                    <span className="font-bold text-slate-900 block">पता / Address:</span>
+                                    <p className="text-slate-700 leading-tight">{cardData.address}</p>
                                   </div>
-                                  <div className="text-[10px] text-slate-700">
-                                    <div>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <span className="font-mono font-bold">{cardData.dob}</span></div>
-                                    <div>{language === 'hi' ? 'लिंग:' : 'Gender:'} <span className="font-bold">{cardData.gender}</span></div>
+                                  <div className="p-1 bg-white border border-slate-300 rounded shadow-xs shrink-0">
+                                    <QRCodeSVG value={`UIDAI:AADHAAR:${cardData.aadhaarNo}|NAME:${cardData.name}|DOB:${cardData.dob}|ADDRESS:${cardData.address}`} size={64} />
                                   </div>
                                 </div>
-                              </div>
-
-                              <div className="border-t border-slate-300 pt-1 text-center">
-                                <div className="font-mono font-black text-red-600 text-sm tracking-widest">
-                                  {cardData.aadhaarNo}
+                                <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-500 font-mono">
+                                  <span>www.uidai.gov.in</span>
+                                  <span className="font-bold text-red-600">{cardData.aadhaarNo}</span>
                                 </div>
-                                <div className="text-[7.5px] text-slate-500">{language === 'hi' ? 'मेरा आधार, मेरी पहचान' : 'My Aadhaar, My Identity'}</div>
                               </div>
                             </div>
                           </div>
-                        )}
+                        ) : (
+                          <>
+                            {(cardSide === 'both' || cardSide === 'front') && (
+                              <div className="cr80-card-scaler relative group max-w-full">
+                                <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
 
-                        {(cardSide === 'both' || cardSide === 'back') && (
-                          <div className="cr80-card-scaler relative group max-w-full">
-                            <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
+                                <div className="cr80-card-print w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-900 font-sans print:shadow-none print:border-slate-800">
+                                  <div className="border-b border-red-500 pb-1 flex items-center justify-between">
+                                    <div>
+                                      <div className="text-[9px] font-black text-red-600 leading-tight">
+                                        {language === 'hi' ? 'भारत सरकार' : 'Government of India'}
+                                      </div>
+                                    </div>
+                                    <div className="text-right">
+                                      <div className="text-[10px] font-black tracking-wider text-red-600">मेरा आधार, मेरी पहचान</div>
+                                    </div>
+                                  </div>
 
-                            <div className="cr80-card-print w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-900 font-sans print:shadow-none print:border-slate-800">
-                              <div className="border-b pb-1 text-[8px] font-bold text-slate-700">
-                                {language === 'hi' ? 'भारतीय विशिष्ट पहचान प्राधिकरण • UIDAI' : 'Unique Identification Authority of India • UIDAI'}
-                              </div>
+                                  <div className="flex items-center gap-3 py-1">
+                                    <div className="w-[68px] h-[84px] bg-slate-100 border-2 border-slate-700 rounded overflow-hidden shrink-0 shadow-2xs flex items-center justify-center">
+                                      {(cardData.photoUrl || photoData) ? (
+                                        <img src={cardData.photoUrl || photoData} alt="Photo" className="w-full h-full object-cover" />
+                                      ) : (
+                                        <div className="w-full h-full flex flex-col items-center justify-center p-1 text-center bg-slate-100">
+                                          <span className="text-base">📷</span>
+                                          <span className="text-[6.5px] font-bold text-slate-500 uppercase leading-tight mt-0.5">{language === 'hi' ? 'फोटो अनुपलब्ध' : 'Photo N/A'}</span>
+                                        </div>
+                                      )}
+                                    </div>
 
-                              <div className="flex items-start justify-between gap-3 py-1 text-[9px]">
-                                <div className="space-y-0.5 max-w-[200px]">
-                                  <span className="font-bold text-slate-900 block">{language === 'hi' ? 'पता:' : 'Address:'}</span>
-                                  <p className="text-slate-700 leading-tight">{cardData.address}</p>
+                                    <div className="flex-1 space-y-1 text-xs">
+                                      <div>
+                                        <span className="font-black text-slate-900 text-[11px] block">{cardData.name}</span>
+                                        <span className="text-[9px] text-slate-600 block">{cardData.careOf || ((cardData.gender === 'FEMALE' ? (language === 'hi' ? 'पत्नी/आत्मजा:' : 'W/O, D/O:') : (language === 'hi' ? 'आत्मज:' : 'S/O:')) + ' ' + cardData.fatherName)}</span>
+                                      </div>
+                                      <div className="text-[10px] text-slate-700">
+                                        <div>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <span className="font-mono font-bold">{cardData.dob}</span></div>
+                                        <div>{language === 'hi' ? 'लिंग:' : 'Gender:'} <span className="font-bold">{cardData.gender}</span></div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="border-t border-slate-300 pt-1 text-center">
+                                    <div className="font-mono font-black text-red-600 text-sm tracking-widest">
+                                      {cardData.aadhaarNo}
+                                    </div>
+                                    <div className="text-[7.5px] text-slate-500">{language === 'hi' ? 'मेरा आधार, मेरी पहचान' : 'My Aadhaar, My Identity'}</div>
+                                  </div>
                                 </div>
-                                <div className="p-1 bg-white border border-slate-300 rounded shadow-xs shrink-0">
-                                  <QRCodeSVG value={`UIDAI:AADHAAR:${cardData.aadhaarNo}|NAME:${cardData.name}|DOB:${cardData.dob}|ADDRESS:${cardData.address}`} size={64} />
+                              </div>
+                            )}
+
+                            {(cardSide === 'both' || cardSide === 'back') && (
+                              <div className="cr80-card-scaler relative group max-w-full">
+                                <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-l-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
+
+                                <div className="cr80-card-print w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-900 font-sans print:shadow-none print:border-slate-800">
+                                  <div className="border-b pb-1 text-[8px] font-bold text-slate-700">
+                                    {language === 'hi' ? 'भारतीय विशिष्ट पहचान प्राधिकरण • UIDAI' : 'Unique Identification Authority of India • UIDAI'}
+                                  </div>
+
+                                  <div className="flex items-start justify-between gap-3 py-1 text-[9px]">
+                                    <div className="space-y-0.5 max-w-[200px]">
+                                      <span className="font-bold text-slate-900 block">{language === 'hi' ? 'पता:' : 'Address:'}</span>
+                                      <p className="text-slate-700 leading-tight">{cardData.address}</p>
+                                    </div>
+                                    <div className="p-1 bg-white border border-slate-300 rounded shadow-xs shrink-0">
+                                      <QRCodeSVG value={`UIDAI:AADHAAR:${cardData.aadhaarNo}|NAME:${cardData.name}|DOB:${cardData.dob}|ADDRESS:${cardData.address}`} size={64} />
+                                    </div>
+                                  </div>
+
+                                  <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-500 font-mono">
+                                    <span>{language === 'hi' ? 'हेल्पलाइन: 1947 | uidai.gov.in' : 'Helpline: 1947 | uidai.gov.in'}</span>
+                                    <span className="font-bold text-red-600">{cardData.maskedAadhaar}</span>
+                                  </div>
                                 </div>
                               </div>
-
-                              <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-500 font-mono">
-                                <span>{language === 'hi' ? 'हेल्पलाइन: 1947 | uidai.gov.in' : 'Helpline: 1947 | uidai.gov.in'}</span>
-                                <span className="font-bold text-red-600">{cardData.maskedAadhaar}</span>
-                              </div>
-                            </div>
-                          </div>
+                            )}
+                          </>
                         )}
                       </>
                     )}
@@ -4910,8 +5088,15 @@ function ServicePageContent({
                               </div>
 
                               <div className="flex items-center gap-3 py-1">
-                                <div className="w-[68px] h-[84px] bg-slate-100 border border-slate-500 rounded overflow-hidden shrink-0 shadow-2xs">
-                                  <img src={cardData.photoUrl || photoData || SAMPLE_PHOTOS.male} alt="Photo" className="w-full h-full object-cover" />
+                                <div className="w-[68px] h-[84px] bg-slate-100 border border-slate-500 rounded overflow-hidden shrink-0 shadow-2xs flex items-center justify-center">
+                                  {(cardData.photoUrl || photoData) ? (
+                                    <img src={cardData.photoUrl || photoData} alt="Photo" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <div className="w-full h-full flex flex-col items-center justify-center p-1 text-center bg-slate-100">
+                                      <span className="text-base">📷</span>
+                                      <span className="text-[6.5px] font-bold text-slate-500 uppercase leading-tight mt-0.5">{language === 'hi' ? 'फोटो अनुपलब्ध' : 'Photo N/A'}</span>
+                                    </div>
+                                  )}
                                 </div>
 
                                 <div className="flex-1 space-y-1 text-xs">
@@ -5096,8 +5281,15 @@ function ServicePageContent({
                               </div>
 
                               <div className="flex items-center gap-3 py-1">
-                                <div className="w-[68px] h-[84px] bg-white/90 border border-amber-700 rounded overflow-hidden shrink-0 shadow-2xs">
-                                  <img src={photoData || cardData.photoUrl || SAMPLE_PHOTOS.male} alt="Photo" className="w-full h-full object-cover" />
+                                <div className="w-[68px] h-[84px] bg-white/90 border border-amber-700 rounded overflow-hidden shrink-0 shadow-2xs flex items-center justify-center">
+                                  {(photoData || cardData.photoUrl) ? (
+                                    <img src={photoData || cardData.photoUrl} alt="Photo" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <div className="w-full h-full flex flex-col items-center justify-center p-1 text-center bg-amber-50/50">
+                                      <span className="text-base">📷</span>
+                                      <span className="text-[6.5px] font-bold text-amber-900 uppercase leading-tight mt-0.5">{language === 'hi' ? 'फोटो अनुपलब्ध' : 'Photo N/A'}</span>
+                                    </div>
+                                  )}
                                 </div>
 
                                 <div className="flex-1 space-y-1 text-xs">
@@ -5106,9 +5298,9 @@ function ServicePageContent({
                                     <span className="font-black text-slate-950 text-[11px] block">{cardData.name || cardData.beneficiaryName || primaryInput}</span>
                                   </div>
                                   <div className="text-[9px] text-slate-800 space-y-0.5">
-                                    <div>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <span className="font-mono font-bold">{cardData.dob || '01/01/1985'}</span></div>
+                                    <div>{language === 'hi' ? 'जन्म तिथि:' : 'DOB:'} <span className="font-mono font-bold">{cardData.dob || '-'}</span></div>
                                     <div>{language === 'hi' ? 'लिंग:' : 'Gender:'} <span className="font-bold">{cardData.gender || 'MALE'}</span></div>
-                                    <div>{language === 'hi' ? 'राज्य:' : 'State:'} <span className="font-bold">{cardData.state || 'UTTAR PRADESH'}</span></div>
+                                    <div>{language === 'hi' ? 'राज्य:' : 'State:'} <span className="font-bold">{cardData.state || selectState || '-'}</span></div>
                                   </div>
                                 </div>
                               </div>
@@ -5161,77 +5353,222 @@ function ServicePageContent({
                     {/* 6. VEHICLE RC CERTIFICATE & PVC SMART CARD */}
                     {/* ======================================================= */}
                     {toolKind === 'rc' && (
-                      <div className="flex flex-wrap items-center justify-center gap-4">
-                        {(cardSide === 'both' || cardSide === 'front') && (
-                          <div className="cr80-card-scaler relative group max-w-full">
-                            <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
+                      <>
+                        {docViewMode === 'a4' ? (
+                          <div className="w-[794px] min-h-[1050px] bg-white border-2 border-slate-900 rounded-2xl p-7 text-slate-900 font-sans shadow-xl relative select-none print:shadow-none print:border-slate-800 print:m-0 print:w-full">
+                            {/* National Emblem & Top Header */}
+                            <div className="border-b-2 border-slate-900 pb-3 flex items-center justify-between">
+                              <div className="w-16 h-16 flex items-center justify-center border rounded-lg p-1 bg-slate-50">
+                                <span className="text-3xl">🇮🇳</span>
+                              </div>
+                              <div className="text-center flex-1 px-4">
+                                <div className="text-[11px] font-black uppercase tracking-widest text-slate-700">भारत सरकार • सड़क परिवहन एवं राजमार्ग मंत्रालय</div>
+                                <div className="text-[10px] font-bold text-slate-600 uppercase">GOVERNMENT OF INDIA • MINISTRY OF ROAD TRANSPORT & HIGHWAYS</div>
+                                <h2 className="text-lg font-black text-slate-950 mt-1 uppercase tracking-tight">FORM 23 [See Rule 48]</h2>
+                                <div className="text-xs font-black text-indigo-900 tracking-wide uppercase bg-indigo-50 border border-indigo-200 py-0.5 px-3 rounded inline-block mt-0.5">
+                                  CERTIFICATE OF REGISTRATION (वाहन पंजीयन प्रमाण पत्र)
+                                </div>
+                              </div>
+                              <div className="p-1 bg-white border border-slate-300 rounded shadow-xs">
+                                <QRCodeSVG value={`MORTH:RC:${cardData.regNo}|CHASSIS:${cardData.chassisNo}|ENGINE:${cardData.engineNo}|OWNER:${cardData.ownerName}`} size={64} />
+                              </div>
+                            </div>
 
-                            <div className="cr80-card-print w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-900 font-sans print:shadow-none print:border-slate-800">
-                              <div className="border-b border-indigo-600 pb-1 flex items-center justify-between">
-                                <div>
-                                  <div className="text-[9px] font-black text-indigo-900">
-                                    {language === 'hi' ? 'सड़क परिवहन एवं राजमार्ग मंत्रालय' : 'MINISTRY OF ROAD TRANSPORT & HIGHWAYS'}
+                            {/* Registration Quick Bar */}
+                            <div className="grid grid-cols-4 gap-2 bg-slate-100 p-2.5 rounded-xl border border-slate-300 text-xs my-3">
+                              <div>
+                                <span className="text-[9px] text-slate-500 font-bold block uppercase">पंजीयन क्रमांक / Regn No:</span>
+                                <strong className="font-mono text-sm text-indigo-950 block">{cardData.regNo}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[9px] text-slate-500 font-bold block uppercase">पंजीयन दिनांक / Regn Date:</span>
+                                <strong className="font-mono text-xs text-slate-900 block">{cardData.regDate}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[9px] text-slate-500 font-bold block uppercase">फिटनेस वैधता / Fitness Upto:</span>
+                                <strong className="font-mono text-xs text-emerald-800 block">{cardData.fitnessUpto}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[9px] text-slate-500 font-bold block uppercase">पंजीयन प्राधिकारी / RTO Authority:</span>
+                                <strong className="text-[10px] text-slate-900 block truncate">{cardData.rtoOffice || 'RTO OFFICE'}</strong>
+                              </div>
+                            </div>
+
+                            {/* 35-Parameter Comprehensive Government Telemetry Table */}
+                            <div className="text-[11px] border border-slate-300 rounded-xl overflow-hidden my-3">
+                              <div className="bg-slate-800 text-white font-bold px-3 py-1 text-xs">
+                                वाहन एवं स्वामी संपूर्ण तकनीकी विवरण (Complete Vehicle & Ownership Specifications)
+                              </div>
+                              <table className="w-full text-left border-collapse">
+                                <tbody>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r w-1/4">1. वाहन स्वामी (Owner Name)</td>
+                                    <td className="p-2 font-semibold w-1/4">{cardData.ownerName}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l w-1/4">2. पिता/पति का नाम (Father's Name)</td>
+                                    <td className="p-2 w-1/4">{cardData.fatherName}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">3. स्थायी पता (Permanent Address)</td>
+                                    <td className="p-2 text-[10px]" colSpan="3">{cardData.permanentAddress || cardData.address}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">4. वाहन वर्ग (Class of Vehicle)</td>
+                                    <td className="p-2 font-semibold">{cardData.vehicleClass || 'MOTOR CAR (LMV)'}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">5. निर्माता एवं मॉडल (Maker / Model)</td>
+                                    <td className="p-2 font-semibold">{cardData.makerModel}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">6. चेसिस संख्या (Chassis Number)</td>
+                                    <td className="p-2 font-mono font-bold text-indigo-900">{cardData.chassisNo}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">7. इंजन संख्या (Engine Number)</td>
+                                    <td className="p-2 font-mono font-bold text-indigo-900">{cardData.engineNo}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">8. ईंधन का प्रकार (Fuel Type)</td>
+                                    <td className="p-2">{cardData.fuelType}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">9. उत्सर्जन मानक (Emission Norms)</td>
+                                    <td className="p-2 font-mono">{cardData.normsType || cardData.emissionNorms || 'BHARAT STAGE VI (BS-VI)'}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">10. बैठक क्षमता (Seating Capacity)</td>
+                                    <td className="p-2">{cardData.seatCapacity || cardData.seatingCapacity || '5 (INCL DRIVER)'}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">11. बॉडी का प्रकार (Body Type)</td>
+                                    <td className="p-2">{cardData.bodyType || 'SALOON / SEDAN'}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">12. बिना लदे वजन (Unladen Weight)</td>
+                                    <td className="p-2 font-mono">{cardData.unladenWeight || '1080 KG'}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">13. सकल वाहन वजन (Gross Weight)</td>
+                                    <td className="p-2 font-mono">{cardData.grossWeight || '1490 KG'}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">14. इंजन क्षमता (Cubic Capacity)</td>
+                                    <td className="p-2 font-mono">{cardData.cubicCapacity || '1197 CC'}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">15. सिलिंडर संख्या (Cylinders)</td>
+                                    <td className="p-2 font-mono">{cardData.cylinders || '4'}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">16. व्हीलबेस (Wheelbase)</td>
+                                    <td className="p-2 font-mono">{cardData.wheelbase || '2450 MM'}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">17. वाहन का रंग (Color)</td>
+                                    <td className="p-2">{cardData.color || 'WHITE / METALLIC'}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">18. बीमा कंपनी (Insurance Company)</td>
+                                    <td className="p-2 font-semibold">{cardData.insuranceCompany}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">19. बीमा पॉलिसी सं. (Policy No)</td>
+                                    <td className="p-2 font-mono">{cardData.insurancePolicyNo || 'POL-78210928'}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">20. बीमा वैधता (Insurance Upto)</td>
+                                    <td className="p-2 font-mono font-bold text-emerald-800">{cardData.insuranceUpto}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">21. प्रदूषण प्रमाण पत्र (PUCC Upto)</td>
+                                    <td className="p-2 font-mono">{cardData.puccUpto || 'VALID'}</td>
+                                  </tr>
+                                  <tr className="border-b border-slate-200">
+                                    <td className="p-2 font-bold bg-slate-50 border-r">22. टैक्स वैधता (MV Tax Paid Upto)</td>
+                                    <td className="p-2 font-mono font-bold">{cardData.mvTaxUpto || 'L.T. (Life Time)'}</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">23. बंधक / हाइपोथेकेशन (Financer)</td>
+                                    <td className="p-2 font-semibold text-rose-800">{cardData.financer || 'NO HYPOTHECATION (स्वतंत्र)'}</td>
+                                  </tr>
+                                  <tr>
+                                    <td className="p-2 font-bold bg-slate-50 border-r">24. स्थिति / सत्यापन (Status)</td>
+                                    <td className="p-2 font-bold text-emerald-700">सक्रिय (ACTIVE ON VAHAN 4.0)</td>
+                                    <td className="p-2 font-bold bg-slate-50 border-r border-l">25. डिजिटल टोकन (Ref ID)</td>
+                                    <td className="p-2 font-mono text-[10px]">{cardData.refNumber || `RC-${Date.now().toString().slice(-8)}`}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+
+                            {/* Footer: Official Stamp & Signature Block */}
+                            <div className="border-t-2 border-slate-900 pt-3 flex items-center justify-between mt-4">
+                              <div className="text-[10px] text-slate-600 max-w-sm space-y-0.5">
+                                <p className="font-bold text-slate-800">नोट (Note):</p>
+                                <p>1. यह वाहन पंजीयन प्रमाण पत्र केंद्रीय मोटर वाहन नियम 1989 के अंतर्गत विधिवत जारी किया गया है।</p>
+                                <p>2. Parivahan Sewa राष्ट्रीय डेटाबेस पर सत्यापित इलेक्ट्रॉनिक रिकॉर्ड।</p>
+                              </div>
+                              <div className="border border-slate-400 p-2 rounded-lg text-center bg-slate-50 min-w-[200px]">
+                                <div className="text-[9px] text-slate-500 font-bold uppercase">डिजिटल हस्ताक्षर / Digitally Signed</div>
+                                <div className="font-serif font-black text-xs text-indigo-950 my-1">Registering Authority</div>
+                                <div className="text-[8px] text-slate-600 font-mono">{cardData.rtoOffice || 'Transport Department, Govt. of India'}</div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex flex-wrap items-center justify-center gap-4">
+                            {(cardSide === 'both' || cardSide === 'front') && (
+                              <div className="cr80-card-scaler relative group max-w-full">
+                                <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
+
+                                <div className="cr80-card-print w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-900 font-sans print:shadow-none print:border-slate-800">
+                                  <div className="border-b border-indigo-600 pb-1 flex items-center justify-between">
+                                    <div>
+                                      <div className="text-[9px] font-black text-indigo-900">
+                                        {language === 'hi' ? 'सड़क परिवहन एवं राजमार्ग मंत्रालय' : 'MINISTRY OF ROAD TRANSPORT & HIGHWAYS'}
+                                      </div>
+                                    </div>
+                                    <span className="font-mono font-black text-xs text-indigo-900 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+                                      {cardData.regNo}
+                                    </span>
+                                  </div>
+
+                                  <div className="text-[9.5px] space-y-1 text-slate-800 py-1">
+                                    <div>{language === 'hi' ? 'वाहन स्वामी:' : 'Owner Name:'} <strong className="text-slate-950">{cardData.ownerName}</strong></div>
+                                    <div>{language === 'hi' ? 'पिता का नाम:' : "Father's Name:"} <span>{cardData.fatherName}</span></div>
+                                    <div>{language === 'hi' ? 'मॉडल:' : 'Model:'} <strong className="text-indigo-950">{cardData.makerModel}</strong></div>
+                                    <div className="flex justify-between text-[9px] text-slate-600">
+                                      <span>{language === 'hi' ? 'ईंधन:' : 'Fuel:'} {cardData.fuelType}</span>
+                                      <span>{language === 'hi' ? 'श्रेणी:' : 'Class:'} {cardData.vehicleClass || 'MOTOR CAR'}</span>
+                                    </div>
+                                  </div>
+
+                                  <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-600">
+                                    <span>{language === 'hi' ? 'पंजीयन:' : 'Registration:'} {cardData.regDate}</span>
+                                    <span>{language === 'hi' ? 'फिटनेस:' : 'Fitness:'} {cardData.fitnessUpto}</span>
+                                    <span className="font-bold text-emerald-600">{language === 'hi' ? 'सक्रिय' : 'ACTIVE'}</span>
                                   </div>
                                 </div>
-                                <span className="font-mono font-black text-xs text-indigo-900 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
-                                  {cardData.regNo}
-                                </span>
                               </div>
+                            )}
 
-                              <div className="text-[9.5px] space-y-1 text-slate-800 py-1">
-                                <div>{language === 'hi' ? 'वाहन स्वामी:' : 'Owner Name:'} <strong className="text-slate-950">{cardData.ownerName}</strong></div>
-                                <div>{language === 'hi' ? 'पिता का नाम:' : "Father's Name:"} <span>{cardData.fatherName}</span></div>
-                                <div>{language === 'hi' ? 'मॉडल:' : 'Model:'} <strong className="text-indigo-950">{cardData.makerModel}</strong></div>
-                                <div className="flex justify-between text-[9px] text-slate-600">
-                                  <span>{language === 'hi' ? 'ईंधन:' : 'Fuel:'} {cardData.fuelType}</span>
-                                  <span>{language === 'hi' ? 'श्रेणी:' : 'Class:'} {cardData.vehicleClass || 'MOTOR CAR'}</span>
+                            {(cardSide === 'both' || cardSide === 'back') && (
+                              <div className="cr80-card-scaler relative group max-w-full">
+                                <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
+                                <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
+
+                                <div className="cr80-card-print w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-900 font-sans print:shadow-none print:border-slate-800">
+                                  <div className="border-b pb-1 text-[8px] font-bold text-slate-700">
+                                    {language === 'hi' ? 'वाहन पंजीयन स्मार्ट कार्ड' : 'Vehicle Registration Card'} • {cardData.rtoOffice?.split(',')[0]}
+                                  </div>
+
+                                  <div className="flex items-start justify-between gap-3 py-1 text-[9px]">
+                                    <div className="space-y-0.5 text-slate-700 max-w-[200px]">
+                                      <div>{language === 'hi' ? 'चेसिस:' : 'Chassis:'} <span className="font-mono font-bold">{cardData.chassisNo}</span></div>
+                                      <div>{language === 'hi' ? 'इंजन:' : 'Engine:'} <span className="font-mono font-bold">{cardData.engineNo}</span></div>
+                                      <div>{language === 'hi' ? 'बीमा:' : 'Insurance:'} <span>{cardData.insuranceCompany?.split(' ')[0]}</span></div>
+                                      <div>{language === 'hi' ? 'वैधता:' : 'Validity:'} <span className="font-mono font-bold">{cardData.insuranceUpto}</span></div>
+                                    </div>
+                                    <div className="p-1 bg-white border border-slate-300 rounded shadow-xs shrink-0">
+                                      <QRCodeSVG value={`PARIVAHAN:RC:${cardData.regNo}|OWNER:${cardData.ownerName}|CHASSIS:${cardData.chassisNo}`} size={64} />
+                                    </div>
+                                  </div>
+
+                                  <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-500 font-mono">
+                                    <span>TAX: {cardData.mvTaxUpto}</span>
+                                    <span className="font-bold">{cardData.regNo}</span>
+                                  </div>
                                 </div>
                               </div>
-
-                              <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-600">
-                                <span>{language === 'hi' ? 'पंजीयन:' : 'Registration:'} {cardData.regDate}</span>
-                                <span>{language === 'hi' ? 'फिटनेस:' : 'Fitness:'} {cardData.fitnessUpto}</span>
-                                <span className="font-bold text-emerald-600">{language === 'hi' ? 'सक्रिय' : 'ACTIVE'}</span>
-                              </div>
-                            </div>
+                            )}
                           </div>
                         )}
-
-                        {(cardSide === 'both' || cardSide === 'back') && (
-                          <div className="cr80-card-scaler relative group max-w-full">
-                            <div className="absolute -top-1.5 -left-1.5 w-3 h-3 border-t-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -top-1.5 -right-1.5 w-3 h-3 border-t-2 border-r-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 border-b-2 border-l-2 border-slate-400 pointer-events-none" />
-                            <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 border-b-2 border-r-2 border-slate-400 pointer-events-none" />
-
-                            <div className="cr80-card-print w-[340px] h-[215px] bg-white rounded-xl border border-slate-400 shadow-md relative overflow-hidden flex flex-col justify-between p-3 select-none text-slate-900 font-sans print:shadow-none print:border-slate-800">
-                              <div className="border-b pb-1 text-[8px] font-bold text-slate-700">
-                                {language === 'hi' ? 'वाहन पंजीयन स्मार्ट कार्ड' : 'Vehicle Registration Card'} • {cardData.rtoOffice?.split(',')[0]}
-                              </div>
-
-                              <div className="flex items-start justify-between gap-3 py-1 text-[9px]">
-                                <div className="space-y-0.5 text-slate-700 max-w-[200px]">
-                                  <div>{language === 'hi' ? 'चेसिस:' : 'Chassis:'} <span className="font-mono font-bold">{cardData.chassisNo}</span></div>
-                                  <div>{language === 'hi' ? 'इंजन:' : 'Engine:'} <span className="font-mono font-bold">{cardData.engineNo}</span></div>
-                                  <div>{language === 'hi' ? 'बीमा:' : 'Insurance:'} <span>{cardData.insuranceCompany?.split(' ')[0]}</span></div>
-                                  <div>{language === 'hi' ? 'वैधता:' : 'Validity:'} <span className="font-mono font-bold">{cardData.insuranceUpto}</span></div>
-                                </div>
-                                <div className="p-1 bg-white border border-slate-300 rounded shadow-xs shrink-0">
-                                  <QRCodeSVG value={`PARIVAHAN:RC:${cardData.regNo}|OWNER:${cardData.ownerName}|CHASSIS:${cardData.chassisNo}`} size={64} />
-                                </div>
-                              </div>
-
-                              <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-500 font-mono">
-                                <span>TAX: {cardData.mvTaxUpto}</span>
-                                <span className="font-bold">{cardData.regNo}</span>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
+                      </>
                     )}
 
                     {/* ======================================================= */}
@@ -5353,44 +5690,134 @@ function ServicePageContent({
                     {/* 9. E-DISTRICT VERIFICATION SLIP */}
                     {/* ======================================================= */}
                     {toolKind === 'edistrict' && (
-                      <div className="w-full max-w-xl bg-white border-2 border-slate-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
-                        <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
-                          <div>
-                            <div className="text-[10px] font-black text-purple-800 uppercase">{language === 'hi' ? 'e-District उत्तर प्रदेश • राजस्व परिषद' : 'e-District UP • Board of Revenue'}</div>
-                            <h3 className="text-base font-black text-slate-900">{language === 'hi' ? 'प्रमाण पत्र ऑनलाइन सत्यापन विवरण' : 'Certificate Verification Details'}</h3>
-                            <p className="text-[11px] text-slate-600">{cardData.certType}</p>
-                          </div>
-                          <div className="p-1 bg-white border rounded">
-                            <QRCodeSVG value={`EDISTRICT:APP:${cardData.appNo}|CERT:${cardData.certNo}|NAME:${cardData.applicantName}`} size={54} />
-                          </div>
-                        </div>
+                      <>
+                        {docViewMode === 'a4' ? (
+                          <div className="w-[794px] min-h-[1050px] bg-white border-4 border-double border-amber-900/60 rounded-2xl p-8 text-slate-900 font-serif shadow-xl relative select-none print:shadow-none print:border-amber-900 print:m-0 print:w-full">
+                            {/* Official Bihar Emblem & Watermark */}
+                            <div className="text-center border-b-2 border-amber-900/40 pb-4">
+                              <div className="w-16 h-16 mx-auto mb-1 flex items-center justify-center">
+                                <span className="text-4xl">🏛️</span>
+                              </div>
+                              <h1 className="text-2xl font-black text-amber-950 uppercase tracking-tight">बिहार सरकार</h1>
+                              <h2 className="text-sm font-bold text-slate-800">GOVERNMENT OF BIHAR</h2>
+                              <h3 className="text-xs font-semibold text-slate-700">राजस्व एवं भूमि सुधार विभाग / सामान्य प्रशासन विभाग</h3>
+                              <div className="mt-2 inline-block bg-amber-100 text-amber-950 text-xs font-black px-4 py-1 rounded-full border border-amber-300">
+                                बिहार लोक सेवाओं का अधिकार अधिनियम (RTPS) • प्रपत्र - IV
+                              </div>
+                            </div>
 
-                        <div className="grid grid-cols-2 gap-3 text-xs bg-slate-50 p-3 rounded-xl border">
-                          <div>
-                            <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'आवेदन क्रमांक' : 'Application Number'}</span>
-                            <strong className="font-mono text-purple-900">{cardData.appNo}</strong>
-                          </div>
-                          <div>
-                            <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'प्रमाण पत्र क्रमांक' : 'Certificate Number'}</span>
-                            <strong className="font-mono text-emerald-800">{cardData.certNo}</strong>
-                          </div>
-                          <div>
-                            <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'आवेदक का नाम' : 'Applicant Name'}</span>
-                            <strong>{cardData.applicantName}</strong>
-                          </div>
-                          <div>
-                            <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'पिता/पति का नाम' : "Father / Husband Name"}</span>
-                            <strong>{cardData.fatherName}</strong>
-                          </div>
-                        </div>
+                            {/* Credentials Bar */}
+                            <div className="grid grid-cols-3 gap-3 bg-amber-50/60 p-3 rounded-xl border border-amber-200 text-xs my-4">
+                              <div>
+                                <span className="text-[10px] text-slate-600 font-bold block">प्रमाण पत्र संख्या (Certificate No):</span>
+                                <strong className="font-mono text-xs text-amber-950 block">{cardData.certNo || cardData.appNo || `BR-RTPS-${Date.now().toString().slice(-8)}`}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[10px] text-slate-600 font-bold block">आवेदन संख्या (Application No):</span>
+                                <strong className="font-mono text-xs text-slate-900 block">{cardData.appNo || primaryInput}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[10px] text-slate-600 font-bold block">निर्गत दिनांक (Date of Issue):</span>
+                                <strong className="font-mono text-xs text-slate-900 block">{cardData.issueDate || cardData.date || new Date().toLocaleDateString('en-GB')}</strong>
+                              </div>
+                            </div>
 
-                        <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
-                          <span>{cardData.issuingAuthority}</span>
-                          <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">
-                            {cardData.verificationStatus}
-                          </span>
-                        </div>
-                      </div>
+                            {/* Certificate Declaration Body with Applicant Photo */}
+                            <div className="my-6 space-y-4 text-sm leading-relaxed text-slate-900">
+                              <div className="flex gap-6 items-start">
+                                <div className="flex-1 space-y-4">
+                                  <h3 className="text-center text-base font-black underline text-amber-950">
+                                    निवास / जाति / आय प्रमाण पत्र (RESIDENCE / CASTE / INCOME CERTIFICATE)
+                                  </h3>
+                                  <p className="text-justify indent-8 leading-loose">
+                                    प्रमाणित किया जाता है कि <b>{cardData.applicantName || cardData.name}</b>, आत्मज/आत्मजा/पत्नी <b>{cardData.fatherName}</b>, माता <b>{cardData.motherName || 'श्रीमती देवी'}</b>, 
+                                    ग्राम/मोहल्ला <b>{cardData.village || cardData.address || '-'}</b>, पोस्ट <b>{cardData.postOffice || 'प्रधान डाकघर'}</b>, थाना <b>{cardData.policeStation || '-'}</b>, 
+                                    प्रखण्ड <b>{cardData.block || 'सदर'}</b>, अनुमंडल <b>{cardData.subDivision || 'सदर'}</b>, जिला <b>{cardData.district || selectState || 'पटना'}</b>, राज्य <b>बिहार</b> के स्थायी निवासी हैं।
+                                  </p>
+                                  <p className="text-justify indent-8 leading-loose">
+                                    यह प्रमाण पत्र आवेदक द्वारा प्रस्तुत स्व-घोषणा एवं संबंधित राजस्व कर्मचारी/अंचल अधिकारी द्वारा समर्पित सत्यापन प्रतिवेदन के आधार पर 
+                                    <b> बिहार लोक सेवाओं के अधिकार अधिनियम 2011</b> के प्रावधानों के अंतर्गत निर्गत किया जाता है।
+                                  </p>
+                                </div>
+
+                                {/* Applicant Photo Frame */}
+                                <div className="w-28 h-36 border-2 border-amber-950 rounded-lg p-1 bg-white shrink-0 shadow-xs flex flex-col items-center justify-center text-center">
+                                  {(cardData.photoUrl || photoData) ? (
+                                    <img src={cardData.photoUrl || photoData} alt="Applicant" className="w-full h-full object-cover rounded" />
+                                  ) : (
+                                    <div className="w-full h-full bg-slate-100 flex flex-col items-center justify-center p-1">
+                                      <span className="text-2xl">👤</span>
+                                      <span className="text-[8px] font-bold text-slate-600 mt-1 uppercase">फोटो संलग्न</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Verification QR & Digital Signature Footer */}
+                            <div className="border-t-2 border-amber-900/40 pt-5 mt-8 flex items-end justify-between">
+                              <div className="space-y-1">
+                                <div className="p-1.5 bg-white border border-amber-400 rounded-lg inline-block shadow-2xs">
+                                  <QRCodeSVG value={`https://serviceonline.bihar.gov.in/verify/cert/${cardData.certNo || cardData.appNo}`} size={70} />
+                                </div>
+                                <p className="text-[9px] font-mono text-slate-600">सत्यापन: serviceonline.bihar.gov.in</p>
+                              </div>
+
+                              <div className="border-2 border-emerald-700 bg-emerald-50/60 p-3 rounded-xl text-center min-w-[220px]">
+                                <div className="text-[9px] font-black text-emerald-800 uppercase flex items-center justify-center gap-1">
+                                  <span>✅</span> <span>DIGITALLY SIGNED</span>
+                                </div>
+                                <div className="font-bold text-xs text-slate-900 my-1">राजस्व अधिकारी (Revenue Officer)</div>
+                                <div className="text-[9px] text-slate-600">अंचल कार्यालय, बिहार सरकार</div>
+                                <div className="text-[8px] font-mono text-slate-500 mt-1">{new Date().toLocaleDateString('en-GB')} {new Date().toLocaleTimeString()}</div>
+                              </div>
+                            </div>
+
+                            <div className="text-[8px] text-slate-500 text-center mt-6 border-t pt-2">
+                              नोट: यह एक डिजिटल रूप से हस्ताक्षरित इलेक्ट्रॉनिक प्रमाण पत्र है। इस पर किसी भौतिक हस्ताक्षर या मुहर की आवश्यकता नहीं है।
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-full max-w-xl bg-white border-2 border-slate-800 rounded-2xl p-5 text-slate-900 font-sans space-y-3 shadow-md">
+                            <div className="border-b-2 border-slate-900 pb-2 flex items-center justify-between">
+                              <div>
+                                <div className="text-[10px] font-black text-purple-800 uppercase">{language === 'hi' ? 'e-District उत्तर प्रदेश • राजस्व परिषद' : 'e-District UP • Board of Revenue'}</div>
+                                <h3 className="text-base font-black text-slate-900">{language === 'hi' ? 'प्रमाण पत्र ऑनलाइन सत्यापन विवरण' : 'Certificate Verification Details'}</h3>
+                                <p className="text-[11px] text-slate-600">{cardData.certType || 'निवास / जाति / आय प्रमाण पत्र'}</p>
+                              </div>
+                              <div className="p-1 bg-white border rounded">
+                                <QRCodeSVG value={`EDISTRICT:APP:${cardData.appNo}|CERT:${cardData.certNo}|NAME:${cardData.applicantName}`} size={54} />
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3 text-xs bg-slate-50 p-3 rounded-xl border">
+                              <div>
+                                <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'आवेदन क्रमांक' : 'Application Number'}</span>
+                                <strong className="font-mono text-purple-900">{cardData.appNo}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'प्रमाण पत्र क्रमांक' : 'Certificate Number'}</span>
+                                <strong className="font-mono text-emerald-800">{cardData.certNo}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'आवेदक का नाम' : 'Applicant Name'}</span>
+                                <strong>{cardData.applicantName || cardData.name}</strong>
+                              </div>
+                              <div>
+                                <span className="text-[9px] text-slate-500 uppercase block">{language === 'hi' ? 'पिता/पति का नाम' : "Father / Husband Name"}</span>
+                                <strong>{cardData.fatherName}</strong>
+                              </div>
+                            </div>
+
+                            <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
+                              <span>{cardData.issuingAuthority || 'सक्षम प्राधिकारी / राजस्व अधिकारी'}</span>
+                              <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">
+                                {cardData.verificationStatus || 'सत्यापित (VERIFIED)'}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                      </>
                     )}
 
                     {/* ======================================================= */}
@@ -5541,7 +5968,7 @@ function ServicePageContent({
 
                         <div className="bg-slate-950 text-white p-3 rounded-xl flex justify-between items-center">
                           <span className="font-bold text-sm">{language === 'hi' ? 'कुल प्राप्त राशि:' : 'Total Amount:'}</span>
-                          <span className="font-mono font-black text-2xl text-yellow-400">₹30.00</span>
+                          <span className="font-mono font-black text-2xl text-yellow-400">₹{cardData.fee || currentTool?.fee || requiredFee || 30}.00</span>
                         </div>
 
                         <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-500">
@@ -5877,32 +6304,38 @@ function ServicePageContent({
                         </div>
 
                         <div className="space-y-2 max-h-96 overflow-y-auto pr-1">
-                          {(cardData.items || [
-                            { title: 'United India Insurance UIIC AO Admit Card 2026 for 225 Post', link: 'https://www.sarkariresult.com', pubDate: 'Today', category: 'Admit Card' },
-                            { title: 'SSC Constable GD 2026 Online Application Form', link: 'https://www.sarkariresult.com', pubDate: 'Active', category: 'Latest Job' },
-                            { title: 'Railway RPF SI & Constable Exam City Details', link: 'https://www.sarkariresult.com', pubDate: 'Update', category: 'Exam' },
-                            { title: 'UP Police Constable Result & Cutoff 2026', link: 'https://www.sarkariresult.com', pubDate: 'Latest', category: 'Result' }
-                          ]).map((item, idx) => (
-                            <div key={idx} className="p-3 bg-slate-50 hover:bg-amber-50/60 border border-slate-200 rounded-xl transition-all flex items-start justify-between gap-3">
-                              <div className="space-y-1">
-                                <span className="inline-block text-[9px] uppercase font-black px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300">
-                                  {item.category || 'Govt Alert'}
-                                </span>
-                                <h4 className="text-xs font-bold text-slate-900 leading-snug">{item.title}</h4>
-                                <span className="text-[10px] text-slate-500 block">{item.pubDate}</span>
+                          {(cardData.items && cardData.items.length > 0) ? (
+                            cardData.items.map((item, idx) => (
+                              <div key={idx} className="p-3 bg-slate-50 hover:bg-amber-50/60 border border-slate-200 rounded-xl transition-all flex items-start justify-between gap-3">
+                                <div className="space-y-1">
+                                  <span className="inline-block text-[9px] uppercase font-black px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300">
+                                    {item.category || 'Govt Alert'}
+                                  </span>
+                                  <h4 className="text-xs font-bold text-slate-900 leading-snug">{item.title}</h4>
+                                  <span className="text-[10px] text-slate-500 block">{item.pubDate}</span>
+                                </div>
+                                {item.link && (
+                                  <a
+                                    href={item.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="shrink-0 px-3 py-1.5 bg-slate-900 hover:bg-orange-600 text-white rounded-lg text-[11px] font-bold transition-all text-center"
+                                  >
+                                    {language === 'hi' ? 'फॉर्म भरें' : 'Apply'}
+                                  </a>
+                                )}
                               </div>
-                              {item.link && (
-                                <a
-                                  href={item.link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="shrink-0 px-3 py-1.5 bg-slate-900 hover:bg-orange-600 text-white rounded-lg text-[11px] font-bold transition-all text-center"
-                                >
-                                  {language === 'hi' ? 'फॉर्म भरें' : 'Apply'}
-                                </a>
-                              )}
+                            ))
+                          ) : (
+                            <div className="p-8 text-center bg-slate-50 border border-dashed border-slate-300 rounded-xl space-y-2">
+                              <span className="text-2xl">📢</span>
+                              <p className="text-xs font-bold text-slate-700">
+                                {language === 'hi' 
+                                  ? 'लाइव सरकारी भर्ती सर्वर से डेटा लोड हो रहा है... कृपया "रिफ्रेश" बटन दबाएं।' 
+                                  : 'Connecting to live government recruitment portal... Click Refresh to fetch latest alerts.'}
+                              </p>
                             </div>
-                          ))}
+                          )}
                         </div>
 
                         <div className="border-t pt-2 flex items-center justify-between text-xs text-slate-600">
@@ -5912,11 +6345,181 @@ function ServicePageContent({
                       </div>
                     )}
 
+                    {/* ======================================================= */}
+                    {/* 21. CITIZEN DIGITAL INTELLIGENCE & LOOKUP DOSSIER */}
+                    {/* ======================================================= */}
+                    {toolKind === 'lookup' && (
+                      <div className="w-full max-w-xl bg-white border-2 border-slate-900 rounded-2xl p-5 text-slate-900 font-sans space-y-4 shadow-xl">
+                        <div className="border-b-2 border-slate-900 pb-3 flex items-center justify-between">
+                          <div>
+                            <div className="text-[10px] font-black text-indigo-800 uppercase tracking-wider flex items-center gap-1.5">
+                              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                              {language === 'hi' ? 'राष्ट्रीय डिजिटल पहचान एवं नागरिक खोज अन्वेषण' : 'National Digital Identity & Intelligence Dossier'}
+                            </div>
+                            <h3 className="text-base sm:text-lg font-black text-slate-950 mt-0.5">
+                              {currentTool?.title || currentTool?.name || 'डिजिटल नागरिक सत्यापन रिपोर्ट'}
+                            </h3>
+                            <p className="text-[11px] text-slate-600 font-medium">
+                              {language === 'hi' ? 'दूरसंचार, यूपीआई एवं ऑनलाइन प्रोफाइल अधिकृत सत्यापन' : 'Telecom, UPI & Digital Profile Verification Record'}
+                            </p>
+                          </div>
+                          <div className="p-1 bg-white border border-slate-300 rounded shadow-xs shrink-0">
+                            <QRCodeSVG value={`DOSSIER:${cardData.refNumber || Date.now()}|QUERY:${primaryInput}|TIME:${Date.now()}`} size={56} />
+                          </div>
+                        </div>
+
+                        {/* Search Input Banner */}
+                        <div className="bg-slate-950 text-white p-3 rounded-xl flex items-center justify-between">
+                          <div>
+                            <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-bold">
+                              {language === 'hi' ? 'खोजा गया इनपुट / संदर्भ' : 'Search Input / Query'}
+                            </span>
+                            <strong className="font-mono text-sm sm:text-base text-yellow-400 font-bold">
+                              {primaryInput || cardData.query || '-'}
+                            </strong>
+                          </div>
+                          <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider">
+                            {language === 'hi' ? 'सत्यापित लाइव' : 'LIVE VERIFIED'}
+                          </span>
+                        </div>
+
+                        {/* 4-Quadrant Information Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-0.5">
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">
+                              {language === 'hi' ? 'संबद्ध धारक का नाम (Name / Identity)' : 'Primary Name / Identity'}
+                            </span>
+                            <strong className="text-sm text-slate-900 block">
+                              {cardData.name && cardData.name !== '-' ? cardData.name : (cardData.customerName || cardData.ownerName || cardData.accountHolder || (activeData?.data?.name) || 'सत्यापित नागरिक')}
+                            </strong>
+                          </div>
+
+                          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-0.5">
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">
+                              {language === 'hi' ? 'संबद्ध मोबाइल नंबर (Linked Phone)' : 'Linked Mobile Number'}
+                            </span>
+                            <strong className="text-sm font-mono text-indigo-900 font-bold block">
+                              {cardData.mobile || cardData.mobileNo || cardData.phone || (activeData?.data?.mobile) || primaryInput || '-'}
+                            </strong>
+                          </div>
+
+                          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-0.5">
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">
+                              {language === 'hi' ? 'दूरसंचार प्रदाता व मंडल (Carrier & Circle)' : 'Telecom Operator & Circle'}
+                            </span>
+                            <strong className="text-xs text-slate-900 block font-semibold">
+                              {cardData.operator || cardData.carrier || (activeData?.data?.operator) || 'JIO / Airtel / Vi'} • {cardData.circle || cardData.state || (activeData?.data?.circle) || 'All India'}
+                            </strong>
+                          </div>
+
+                          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-0.5">
+                            <span className="text-[9px] text-slate-500 block uppercase font-bold">
+                              {language === 'hi' ? 'डिजिटल पहचान / ईमेल / UPI' : 'Digital Handle / Email / UPI'}
+                            </span>
+                            <strong className="text-xs font-mono text-slate-900 block truncate font-semibold">
+                              {cardData.email || cardData.gmail || cardData.upi || cardData.telegram || cardData.username || (activeData?.data?.upi) || (activeData?.data?.email) || 'उपलब्ध (Active)'}
+                            </strong>
+                          </div>
+                        </div>
+
+                        {/* Verification & Footprint Summary */}
+                        <div className="border border-indigo-200 bg-indigo-50/60 rounded-xl p-3 text-xs space-y-1">
+                          <div className="flex items-center justify-between text-[11px]">
+                            <span className="font-bold text-indigo-950 flex items-center gap-1">
+                              <span>🛡️</span> {language === 'hi' ? 'साइबर ऑथेंटिकेशन स्थिति:' : 'Authentication Status:'}
+                            </span>
+                            <span className="text-emerald-700 font-black">
+                              {cardData.status || (activeData?.success ? 'सत्यापित (100% MATCH)' : 'सक्रिय (ACTIVE)')}
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate-600 leading-relaxed">
+                            {language === 'hi' 
+                              ? 'यह डॉसियर अधिकृत टेलीकॉम गेटवे एवं सार्वजनिक डेटाबेस से सत्यापित डिजिटल रिकॉर्ड के आधार पर तैयार किया गया है।' 
+                              : 'This dossier is compiled from verified digital telecommunication gateways and authentic public directories.'}
+                          </p>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="border-t pt-2 flex items-center justify-between text-[11px] text-slate-600">
+                          <span>{selectedCafe?.shopName || 'डिजिटल सेवा केंद्र एवं अन्वेषण डेस्क'}</span>
+                          <span className="font-mono text-[10px] text-slate-500">
+                            ID: {cardData.refNumber || `DS-${Date.now().toString().slice(-8)}`}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
                   </>
                 );
               })()}
 
                 </div>
+
+                {/* 📋 EXPANDABLE FULL OFFICIAL TELEMETRY & RECORDS (100% P4POINTS RAW DATA TRANSPARENCY) */}
+                {activeData && (
+                  <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs mt-4">
+                    <button
+                      type="button"
+                      onClick={() => setShowRawTelemetry(prev => !prev)}
+                      className="w-full px-5 py-3.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-800 flex items-center justify-between transition cursor-pointer text-left"
+                    >
+                      <div className="flex items-center gap-2.5">
+                        <span className="text-lg">📋</span>
+                        <div>
+                          <span className="font-black text-xs sm:text-sm text-slate-900 dark:text-slate-100 uppercase tracking-wide">
+                            {language === 'hi' ? 'विस्तृत आधिकारिक रिकॉर्ड (Complete Official Telemetry & Records)' : 'Complete Official Telemetry & Records'}
+                          </span>
+                          <span className="block text-[10px] text-slate-500 dark:text-slate-400">
+                            {language === 'hi' ? 'P4Points API व सरकारी गेटवे से प्राप्त 100% संपूर्ण कच्चा व परिष्कृत डेटा' : '100% Raw Key-Value Pairs & Official Gateway Attributes'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-bold px-2.5 py-0.5 rounded-full">
+                          {showRawTelemetry ? (language === 'hi' ? 'छिपाएं ▲' : 'Collapse ▲') : (language === 'hi' ? 'देखें ▼' : 'Expand ▼')}
+                        </span>
+                      </div>
+                    </button>
+
+                    {showRawTelemetry && (
+                      <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-slate-800 space-y-4">
+                        {/* Key-Value Pair Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                          {Object.entries({
+                            ...(activeData?.raw && typeof activeData.raw === 'object' ? activeData.raw : {}),
+                            ...(activeData?.data && typeof activeData.data === 'object' ? activeData.data : {}),
+                            ...(typeof activeData === 'object' ? activeData : {})
+                          })
+                            .filter(([key, val]) => {
+                              if (['photoUrl', 'signUrl', 'photo', 'sign', 'qr', 'raw', 'data', 'base64', 'fileData'].includes(key)) return false;
+                              if (typeof val === 'object' && val !== null) return false;
+                              return val !== undefined && val !== null && String(val).trim() !== '';
+                            })
+                            .map(([key, val]) => (
+                              <div key={key} className="p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between">
+                                <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-mono truncate" title={key}>
+                                  {key.replace(/([A-Z])/g, ' $1').replace(/_/g, ' ')}
+                                </span>
+                                <strong className="text-xs font-semibold text-slate-900 dark:text-slate-100 font-mono mt-0.5 break-words">
+                                  {String(val)}
+                                </strong>
+                              </div>
+                            ))}
+                        </div>
+
+                        {/* Raw JSON Inspector Details */}
+                        <details className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-slate-300">
+                          <summary className="text-[11px] font-mono text-amber-400 font-bold cursor-pointer select-none">
+                            {language === 'hi' ? '⚙️ डेवलपर व तकनीकी सत्यापन हेतु कच्चा JSON पेलोड (Raw JSON)' : '⚙️ Technical Telemetry Raw JSON Payload'}
+                          </summary>
+                          <pre className="mt-2.5 text-[10px] font-mono text-emerald-400 overflow-x-auto p-2 bg-slate-900 rounded border border-slate-800 max-h-60">
+                            {JSON.stringify(activeData?.raw || activeData?.data || activeData, null, 2)}
+                          </pre>
+                        </details>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 

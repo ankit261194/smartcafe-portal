@@ -105,8 +105,7 @@ export class RDServiceBridge {
     const {
       timeout = 10000,
       env = 'P', // 'P' = Production, 'S' = Staging
-      wadh = '',
-      allowSimulated = false
+      wadh = ''
     } = options;
 
     const probe = await this.probeDevice(1000);
@@ -172,22 +171,6 @@ export class RDServiceBridge {
       }
     } catch (err) {
       console.warn('[RD Service Hardware Capture Notice]:', err.message);
-    }
-
-    // Graceful Developer & Demo Simulation Mode if physical USB scanner not connected
-    if (allowSimulated) {
-      await new Promise(r => setTimeout(r, 1200)); // Realistic scanner latency
-      const mockQScore = Math.floor(75 + Math.random() * 20); // 75% - 95% quality score
-      const mockPidToken = 'MIIB+wYJKoZIhvcNAQcCoIIB7DCCAegCAQExCzAJBgUrDgMCGgUAMAsGCSqGSIb3DQEHAaCCAaAwgg' + Date.now();
-      return {
-        success: true,
-        simulated: true,
-        qScore: mockQScore,
-        errInfo: 'बायोमेट्रिक स्कैन सफल (डेमो मोड / सिमुलेटेड टोकन)',
-        deviceModel: 'Mantra MFS100 (सिमुलेटेड मोड)',
-        pidData: `<PidData><Resp errCode="0" errInfo="Success" qScore="${mockQScore}" /><DeviceInfo mi="MFS100" /><Data type="X">${mockPidToken}</Data></PidData>`,
-        timestamp: new Date().toISOString()
-      };
     }
 
     return {

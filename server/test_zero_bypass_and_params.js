@@ -579,4 +579,37 @@ const deployContent = fs.readFileSync('deploy.ps1', 'utf8');
 assert(deployContent.includes("w.balance = (w.phone === '8006518960') ? 10.0 : Math.max(0, realBal);"), 'deploy.ps1 must enforce 10.0 balance for 8006518960');
 console.log('✅ PASS: deploy.ps1 strict wallet protection verified');
 
+console.log('\n--- TEST 7: Inspect 5-Phase Master Quality & Proforma Refactor ---');
+const rdBridgeContent = fs.readFileSync('client/src/utils/RDServiceBridge.js', 'utf8');
+
+// Phase 1: Lookup Dossier Proforma
+assert(servicePageContent.includes("toolKind === 'lookup'"), 'Phase 1: toolKind === lookup must exist in ServicePage.jsx');
+assert(servicePageContent.includes('cat === \'lookup\' || id.includes(\'lookup\')'), 'Phase 1: lookup categorization must map to lookup');
+assert(servicePageContent.includes('National Digital Identity & Intelligence Dossier'), 'Phase 1: Dedicated Digital Intelligence Dossier rendered');
+console.log('✅ PASS: Phase 1 Lookup Dossier Proforma verified');
+
+// Phase 2: Zero Mock Artifacts & Real Hardware
+assert(!rdBridgeContent.includes('allowSimulated'), 'Phase 2: allowSimulated must be removed from RDServiceBridge.js');
+assert(!servicePageContent.includes("const [photoData, setPhotoData] = useState(SAMPLE_PHOTOS.male);"), 'Phase 2: Default photoData must not be SAMPLE_PHOTOS.male');
+assert(!servicePageContent.includes("const [signData, setSignData] = useState(SAMPLE_SIGNS.sign1);"), 'Phase 2: Default signData must not be SAMPLE_SIGNS.sign1');
+assert(!servicePageContent.includes("SSC CGL 2024 Tier-1 Admit Card Live"), 'Phase 2: Hardcoded fake jobs fallback array must be removed');
+assert(!servicePageContent.includes("cardData.dob || '01/01/1985'"), 'Phase 2: Mock DOB 01/01/1985 must be removed from Ayushman card');
+console.log('✅ PASS: Phase 2 Zero Mock Artifacts & Authentic Hardware verified');
+
+// Phase 3: Dynamic Fee & 100% Raw Telemetry
+assert(!servicePageContent.includes('<span className="font-mono font-black text-2xl text-yellow-400">₹30.00</span>'), 'Phase 3: Hardcoded ₹30.00 receipt fee must be removed');
+assert(servicePageContent.includes('cardData.fee || currentTool?.fee || requiredFee || 30'), 'Phase 3: Receipt fee must be bound dynamically');
+assert(servicePageContent.includes('Complete Official Telemetry & Records'), 'Phase 3: Expandable official telemetry & records section must exist');
+console.log('✅ PASS: Phase 3 Dynamic Fee & Full Raw Telemetry verified');
+
+// Phase 4: Official A4 Government Certificates & Dual View Mode
+assert(servicePageContent.includes("const [docViewMode, setDocViewMode] = useState('card');"), 'Phase 4: docViewMode state must exist');
+assert(servicePageContent.includes("🖨️ PVC स्मार्ट कार्ड"), 'Phase 4: PVC toggle button must exist');
+assert(servicePageContent.includes("📄 A4 सरकारी दस्तावेज"), 'Phase 4: A4 toggle button must exist');
+assert(servicePageContent.includes("FORM 23 [See Rule 48]"), 'Phase 4: MoRTH Form 23 A4 RC Certificate must exist');
+assert(servicePageContent.includes("CERTIFICATE OF REGISTRATION (वाहन पंजीयन प्रमाण पत्र)"), 'Phase 4: Form 23 Hindi title must exist');
+assert(servicePageContent.includes("बिहार लोक सेवाओं का अधिकार अधिनियम (RTPS) • प्रपत्र - IV"), 'Phase 4: Bihar RTPS Form 4 A4 Certificate must exist');
+assert(servicePageContent.includes("भारतीय विशिष्ट पहचान प्राधिकरण"), 'Phase 4: UIDAI official e-Aadhaar A4 layout must exist');
+console.log('✅ PASS: Phase 4 Official A4 Government Certificates & Dual View Mode verified');
+
 console.log('\n🎉 ALL LOCAL STATIC & INTEGRATION CHECKS PASSED PERFECTLY!');
