@@ -4265,7 +4265,26 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             'epan' => 'pan_find', 'findpan' => 'pan_find', 'challansearch' => 'chalan_find',
             'searchepic' => 'voter_verification',
             'chassis_to_rc' => 'chassis_to_rc_find',
-            'chassis-to-rc' => 'chassis_to_rc_find'
+            'chassis-to-rc' => 'chassis_to_rc_find',
+            'aadhaar_pdf_otp' => 'aadhaar_original_pdf_otp',
+            'aadhaar_pdf' => 'aadhaar_original_pdf_otp',
+            'uid_ekyc' => 'aadhaar_advance',
+            'aadhaar_ekyc' => 'aadhaar_advance',
+            'aadhaar_advance_one' => 'aadhaar_advance',
+            'aadhaar_advance_two' => 'aadhaar_advance',
+            'aadhaar_advance_three' => 'aadhaar_advance',
+            'aadhaar_advance_four' => 'aadhaar_advance',
+            'aadhaar_advance_five' => 'aadhaar_advance',
+            'aadhaar_fingerprint' => 'aadhaar_advance',
+            'mobile_update_service' => 'mobile_update_service',
+            'aadhaar_to_mobile_find' => 'mobile_update_service',
+            'aadhaar_mobile_link' => 'mobile_update_service',
+            'dob_update_service' => 'dob_update_service',
+            'aadhaar_dob_update' => 'dob_update_service',
+            'mask_aadhaar' => 'pan_aadhar_mask',
+            'aadhaar_mask_verification' => 'pan_aadhar_mask',
+            'aadhaar_mask' => 'pan_aadhar_mask',
+            'aadhaar_manual' => 'aadhaar_advance'
         ];
         $mappedId = $legacyMap[$norm] ?? null;
         if ($mappedId && isset($s79Map[$mappedId])) {
@@ -4371,10 +4390,22 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             if (!empty($cleanAadhaar)) {
                 $p4Params['aadhar'] = $cleanAadhaar;
                 $p4Params['aadhaar'] = $cleanAadhaar;
+                $p4Params['aadhaarNo'] = $cleanAadhaar;
                 $p4Params['uidNumber'] = $cleanAadhaar;
                 $p4Params['uid_number'] = $cleanAadhaar;
+                $p4Params['number'] = $cleanAadhaar;
             }
             if (!empty($params['bioenc'])) $p4Params['bioenc'] = $params['bioenc'];
+            if (!empty($params['pidData'])) $p4Params['pidData'] = $params['pidData'];
+            if (!empty($params['fingerprintData'])) $p4Params['fingerprintData'] = $params['fingerprintData'];
+            if (!empty($params['device'])) $p4Params['device'] = $params['device'];
+            if (!empty($params['rdDeviceType'])) $p4Params['rdDeviceType'] = $params['rdDeviceType'];
+            if (!empty($params['server'])) $p4Params['server'] = $params['server'];
+            if (!empty($params['advanceServer'])) $p4Params['advanceServer'] = $params['advanceServer'];
+            if (!empty($params['dob'])) $p4Params['dob'] = $params['dob'];
+            if (!empty($params['name'])) $p4Params['name'] = $params['name'];
+            if (!empty($params['customerName'])) $p4Params['customerName'] = $params['customerName'];
+            if (!empty($params['mobile'])) $p4Params['mobile'] = $params['mobile'];
             if (!empty($params['otp'])) {
                 $p4Params['otp'] = trim($params['otp']);
                 $p4Params['action'] = 'verify_otp';
@@ -5667,6 +5698,10 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
             $upstreamFile = 'panAadharNumber_Link.php';
         } elseif ($uService === 'pan_find_manual' || ($service79['id'] ?? '') === 'pan_find_manual' || ($service79['id'] ?? '') === 'pan_find_manual_alt') {
             $upstreamFile = 'pan_find_manual.php';
+        } elseif ($uService === 'Mobile_Update' || in_array($service79['id'] ?? '', ['mobile_update_service', 'aadhaar_to_mobile_find'])) {
+            $upstreamFile = 'Mobile_Update.php';
+        } elseif ($uService === 'Dob_Update' || ($service79['id'] ?? '') === 'dob_update_service') {
+            $upstreamFile = 'dob_update.php';
         } else {
             $upstreamFile = 'll_exam_Request.php';
         }
@@ -5694,8 +5729,9 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
     } elseif ($uService === 'Ayushman Download') {
         $postData['uidNumber'] = trim($params['uidNumber'] ?? ($params['pmjayId'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? ''))));
         $postData['state_code'] = trim($params['stateCode'] ?? ($params['state'] ?? 'UP'));
-    } elseif ($uService === 'Mobile_Update') {
+    } elseif ($uService === 'Mobile_Update' || in_array($service79['id'] ?? '', ['mobile_update_service', 'aadhaar_to_mobile_find'])) {
         $postData['uidNumber'] = trim($params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? '')));
+        $postData['aadhaarNo'] = trim($params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['query'] ?? '')));
         $postData['dob'] = trim($params['dob'] ?? '');
         $postData['mobile'] = trim($params['mobile'] ?? ($params['phone'] ?? ''));
     } elseif ($uService === 'puc_services' || ($service79['id'] ?? '') === 'puc_certificate_download') {
@@ -5717,10 +5753,12 @@ function dispatchRekhaManualRelay($service79, $params, $orderId, &$store) {
         $postData['fatherName'] = trim($params['fatherName'] ?? '');
         $postData['dob'] = trim($params['dob'] ?? '');
         $postData['mobile'] = trim($params['mobile'] ?? ($params['phone'] ?? ''));
-    } elseif ($uService === 'Dob_Update') {
-        $postData['aadhaarNo'] = trim($params['aadhaarNo'] ?? ($params['aadhaar'] ?? ($params['query'] ?? '')));
+    } elseif ($uService === 'Dob_Update' || ($service79['id'] ?? '') === 'dob_update_service') {
+        $postData['uidNumber'] = trim($params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['query'] ?? '')));
+        $postData['aadhaarNo'] = trim($params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['query'] ?? '')));
         $postData['dob'] = trim($params['dob'] ?? '');
-        $postData['mobile'] = trim($params['mobile'] ?? '');
+        $postData['mobile'] = trim($params['mobile'] ?? ($params['phone'] ?? ''));
+        $postData['docProof'] = trim($params['docProof'] ?? ($params['thirdInput'] ?? ''));
     } else {
         foreach ($params as $k => $v) {
             if (is_scalar($v)) $postData[$k] = (string)$v;
@@ -6270,6 +6308,13 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             $bankName = $liveP4['bankName'] ?? ($p4Data['bankName'] ?? 'बैंक');
             $docTitle = "NPCI डीबीटी लिंक स्थिति ({$bankName})";
             $refNumber = $aid ?: 'NPCI';
+        } elseif ($p4Service === 'aadhaar' || strpos($normServiceType, 'aadhaar') !== false || strpos($normServiceType, 'aadhar') !== false || strpos($normServiceType, 'uid') !== false) {
+            $aid = preg_replace('/[^0-9]/', '', $liveP4['aadhaarNo'] ?? ($liveP4['uidNumber'] ?? ($p4Data['aadhaarNo'] ?? ($p4Data['uidNumber'] ?? ($p4Data['uid_number'] ?? ($userVal ?: ''))))));
+            $generatedData['aadhaarNo'] = $aid;
+            $generatedData['uidNumber'] = $aid;
+            $aName = $p4Data['name'] ?? ($p4Data['customerName'] ?? ($params['customerName'] ?? 'आधार धारक'));
+            $docTitle = $aid ? "आधार कार्ड ({$aid}) - {$aName}" : ($service79['name'] ?? ($serviceTitles[$normServiceType] ?? 'आधार सेवा'));
+            $refNumber = $aid ?: ($userVal ?: 'UID');
         } else {
             $docTitle = ($service79['name'] ?? ($serviceTitles[$normServiceType] ?? $normServiceType));
             $refNumber = $userVal ?: 'DOC';
@@ -6443,6 +6488,35 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                 ];
                 $docTitle = "पैन कार्ड CR-80 PVC ({$panNo}) - {$panName}";
                 $refNumber = $panNo;
+            }
+        } elseif ($normServiceType === 'aadhaarcard' || $normServiceType === 'aadhaarCard' || $normServiceType === 'aadhaar_manual' || $normServiceType === 'aadhaar_pvc' || (isset($params['serviceId']) && in_array($params['serviceId'], ['aadhaarCard', 'aadhaar_manual', 'aadhaar_pvc']))) {
+            $aid = preg_replace('/\D/', '', $params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['aadhar'] ?? $userVal)));
+            $aName = trim($params['customerName'] ?? ($params['name'] ?? ''));
+            $fName = trim($params['fatherName'] ?? ($params['careOf'] ?? ''));
+            $dob = trim($params['dob'] ?? '');
+            $gender = trim($params['gender'] ?? 'MALE');
+            $address = trim($params['address'] ?? '');
+            if (!empty($aid) && strlen($aid) === 12 && !empty($aName)) {
+                $generatedData = [
+                    'aadhaarNo' => $aid,
+                    'uidNumber' => $aid,
+                    'name' => $aName,
+                    'customerName' => $aName,
+                    'name_hi' => $params['name_hi'] ?? $aName,
+                    'fatherName' => $fName,
+                    'careOf' => $fName ? ("C/O: " . $fName) : '',
+                    'dob' => $dob,
+                    'gender' => $gender,
+                    'address' => $address,
+                    'address_hi' => $params['address_hi'] ?? $address,
+                    'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
+                    'refNumber' => $aid,
+                    'serviceType' => 'aadhaarCard',
+                    'cardType' => 'ISO CR-80 PVC Smart Card',
+                    'isInstantPvc' => true
+                ];
+                $docTitle = "आधार कार्ड CR-80 PVC ({$aid}) - {$aName}";
+                $refNumber = $aid;
             }
         }
     }
