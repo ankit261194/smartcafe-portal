@@ -429,10 +429,10 @@
       "serviceType": "live_api",
       "status": "live",
       "fulfillmentType": "instant_api",
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v3/pan-details/pan-details.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
       "method": "GET",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "🟢 लाइव सरकारी API",
       "p4Key": "pan_details_v3",
       "parameters": [
         "apiKey",
@@ -451,13 +451,13 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "serviceType": "live_api",
+      "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "instant_api",
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber",
+      "fulfillmentType": "manual_relay",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/getPanNumber.php",
       "method": "GET",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
       "p4Key": "aadhaar_to_pan",
       "parameters": [
         "apiKey",
@@ -476,22 +476,28 @@
       "wholesaleRate": 20,
       "retailRate": 40,
       "isActive": true,
-      "serviceType": "live_api",
+      "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "instant_api",
+      "fulfillmentType": "manual_relay",
       "upstreamService": "pan_find_manual",
       "upstreamFile": "pan_find_manual.php",
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panfind.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
       "method": "GET",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
       "p4Key": "pan_find_async",
       "parameters": [
         "apiKey",
-        "uidNumber"
+        "name",
+        "fatherName",
+        "dob",
+        "mobile"
       ],
       "requiredInputs": [
-        "aadhaar"
+        "name",
+        "fatherName",
+        "dob",
+        "mobile"
       ]
     },
     {
@@ -503,22 +509,28 @@
       "wholesaleRate": 10,
       "retailRate": 25,
       "isActive": true,
-      "serviceType": "live_api",
+      "serviceType": "manual_relay",
       "status": "live",
-      "fulfillmentType": "instant_api",
+      "fulfillmentType": "manual_relay",
       "upstreamService": "pan_find_manual",
       "upstreamFile": "pan_find_manual.php",
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panfind.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panFind_name_and_number.php",
       "method": "GET",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
       "p4Key": "pan_find_async",
       "parameters": [
         "apiKey",
-        "uidNumber"
+        "name",
+        "fatherName",
+        "dob",
+        "mobile"
       ],
       "requiredInputs": [
-        "aadhaar"
+        "name",
+        "fatherName",
+        "dob",
+        "mobile"
       ]
     },
     {
@@ -533,17 +545,19 @@
       "serviceType": "live_api",
       "status": "live",
       "fulfillmentType": "instant_api",
-      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panAadhar.php",
+      "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan_to_aadhar.php",
       "method": "GET",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "🟢 लाइव सरकारी API",
       "p4Key": "pan_to_aadhaar",
       "parameters": [
         "apiKey",
-        "panNumber"
+        "panNo",
+        "dob"
       ],
       "requiredInputs": [
-        "panNumber"
+        "panNo",
+        "dob"
       ]
     },
     {
@@ -561,14 +575,14 @@
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/pan_to_gst.php",
       "method": "GET",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "🟢 लाइव सरकारी API",
       "p4Key": "pan_to_gst",
       "parameters": [
         "apiKey",
-        "pan"
+        "panNo"
       ],
       "requiredInputs": [
-        "panNumber"
+        "panNo"
       ]
     },
     {
@@ -586,14 +600,14 @@
       "apiEndpoint": "https://authorized.p4points.co.in/api/v1/gst_to_pan.php",
       "method": "GET",
       "isComingSoon": false,
-      "badge": "🟢 लाइव P4 API (Verified)",
+      "badge": "🟢 लाइव सरकारी API",
       "p4Key": "gst_to_pan",
       "parameters": [
         "apiKey",
-        "gst"
+        "gstNo"
       ],
       "requiredInputs": [
-        "gst"
+        "gstNo"
       ]
     },
     {
@@ -2415,10 +2429,15 @@
       "isComingSoon": false,
       "status": "live",
       "badge": "⏱️ मैन्युअल रिले (1-2 घंटे)",
-      "parameters": [],
+      "parameters": [
+        "panNo",
+        "aadhaar",
+        "mobile"
+      ],
       "requiredInputs": [
-        "panNumber",
-        "aadhaarNumber"
+        "panNo",
+        "aadhaar",
+        "mobile"
       ]
     },
     {
