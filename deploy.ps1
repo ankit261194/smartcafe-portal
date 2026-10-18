@@ -7,12 +7,7 @@
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "[1/5] Building Frontend Production Bundle..." -ForegroundColor Cyan
-Set-Location -Path "$PSScriptRoot\client"
-npm run build
-Set-Location -Path "$PSScriptRoot"
-
-Write-Host "[2/5] Synchronizing Production Assets, Live Database & PHP API (Preserving User Accounts)..." -ForegroundColor Cyan
+Write-Host "[1/6] Synchronizing Production Assets, Live Database & PHP API (Preserving User Accounts)..." -ForegroundColor Cyan
 try {
   $liveStats = Invoke-RestMethod -Uri "https://smartcafe.sbs/api/index.php?endpoint=superadmin/live-vault" -Headers @{"Authorization"="Bearer Aa@910010025123343"} -TimeoutSec 15 -ErrorAction SilentlyContinue
   if (-not $liveStats) {
@@ -294,6 +289,11 @@ if (mergedServices79.length > 0) {
 }
 console.log('Account Protection: Merged and preserved ' + mergedUsers.length + ' accounts, ' + mergedCafes.length + ' cafes, ' + mergedWallets.length + ' wallets, & ' + mergedUtrs.length + ' UTRs.');
 "
+
+Write-Host "[2/6] Building Frontend Production Bundle (with Synced Rates & Accounts)..." -ForegroundColor Cyan
+Set-Location -Path "$PSScriptRoot\client"
+npm run build
+Set-Location -Path "$PSScriptRoot"
 Copy-Item -Path "$PSScriptRoot\client\public\.htaccess" -Destination "$PSScriptRoot\client\dist\.htaccess" -Force
 if (-not (Test-Path "$PSScriptRoot\client\dist\api")) {
     New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\api" -Force
@@ -336,7 +336,7 @@ if (Test-Path "$PSScriptRoot\uploads\pan_docs\.htaccess") {
 
 $nowStr = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
-Write-Host "[3/5] Pushing Live Build to GitHub (branch: deploy)..." -ForegroundColor Cyan
+Write-Host "[3/6] Pushing Live Build to GitHub (branch: deploy)..." -ForegroundColor Cyan
 git -C "$PSScriptRoot\client\dist" add -A
 $distStatus = git -C "$PSScriptRoot\client\dist" status --porcelain
 if ($distStatus) {
@@ -344,7 +344,7 @@ if ($distStatus) {
 }
 git -C "$PSScriptRoot\client\dist" push origin deploy
 
-Write-Host "[4/5] Pushing Source Code to GitHub (branch: main)..." -ForegroundColor Cyan
+Write-Host "[4/6] Pushing Source Code to GitHub (branch: main)..." -ForegroundColor Cyan
 git add .
 $srcStatus = git status --porcelain
 if ($srcStatus) {
@@ -352,7 +352,7 @@ if ($srcStatus) {
 }
 git push origin main
 
-Write-Host "[5/5] Packaging Local Backup ZIP (Downloads)..." -ForegroundColor Cyan
+Write-Host "[5/6] Packaging Local Backup ZIP (Downloads)..." -ForegroundColor Cyan
 tar -C "$PSScriptRoot\client\dist" -a -cf "$PSScriptRoot\public_html.zip" .
 Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$PSScriptRoot\clean_public_html.zip" -Force
 Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$PSScriptRoot\cybercafe-portal-dist.zip" -Force
@@ -361,7 +361,15 @@ if (Test-Path "$HOME\Desktop") {
     Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$HOME\Desktop\public_html.zip" -Force
 }
 
-Write-Host "[6/6] Triggering Autonomous Search Engine Indexing (IndexNow, Bing, Google)..." -ForegroundColor Cyan
+Write-Host "[6/6] Triggering Live Database Migration & Autonomous Search Engine Indexing..." -ForegroundColor Cyan
+try {
+    $dbSync = Invoke-RestMethod -Uri "https://smartcafe.sbs/api/index.php?endpoint=system/migrate-db&key=Aa@910010025123343" -TimeoutSec 15 -ErrorAction SilentlyContinue
+    if ($dbSync -and $dbSync.success) {
+        Write-Host "  -> Live Hostinger SQLite database migration triggered successfully!" -ForegroundColor Green
+    }
+} catch {
+    Write-Host "  -> Live DB migration notice: $($_.Exception.Message)" -ForegroundColor DarkGray
+}
 try {
     node "$PSScriptRoot\server\auto_seo_indexer.cjs"
 } catch {

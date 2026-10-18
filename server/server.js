@@ -2396,7 +2396,7 @@ app.get('/api/wallet/:phone', (req, res) => {
     if (t.type === 'credit') realBal += Number(t.amount || 0);
     if (t.type === 'debit') realBal -= Number(t.amount || 0);
   });
-  wallet.balance = (phone === '8006518960') ? Math.max(10, realBal) : Math.max(0, realBal);
+  wallet.balance = (phone === '8006518960') ? Math.max(30, realBal) : Math.max(0, realBal);
   if (phone === '8006518960') {
     wallet.customerName = 'ankit kumar';
     const u = (store.users || []).find(u => u.phone === '8006518960');

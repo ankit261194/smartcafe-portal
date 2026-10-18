@@ -412,7 +412,7 @@ function migrateJsonStoreToSql(PDO $pdo, array $store) {
                     if (($tx['type'] ?? '') === 'credit') $realBal += floatval($tx['amount'] ?? 0);
                     if (($tx['type'] ?? '') === 'debit') $realBal -= floatval($tx['amount'] ?? 0);
                 }
-                $finalBal = ($phone === '8006518960') ? max(0, $realBal) : floatval($w['balance'] ?? 0);
+                $finalBal = ($phone === '8006518960') ? max(30.0, $realBal) : floatval($w['balance'] ?? 0);
 
                 $wParams = [
                     ':phone' => $phone,
