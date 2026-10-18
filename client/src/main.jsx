@@ -32,6 +32,16 @@ class RootErrorBoundary extends React.Component {
     try {
       localStorage.removeItem('selected_tab');
       localStorage.removeItem('active_tool_id');
+      sessionStorage.removeItem('active_mode');
+      window.location.href = '/';
+    } catch(e) {
+      window.location.reload();
+    }
+  };
+  handleFullReset = () => {
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
       window.location.href = '/';
     } catch(e) {
       window.location.reload();
@@ -65,9 +75,14 @@ class RootErrorBoundary extends React.Component {
             <h2 style={{ fontSize: '20px', fontWeight: 900, marginBottom: '8px' }}>
               Smart Cafe डिजिटल सेवा केंद्र
             </h2>
-            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '24px', lineHeight: 1.5 }}>
+            <p style={{ fontSize: '13px', color: '#94a3b8', marginBottom: '16px', lineHeight: 1.5 }}>
               पोर्टल को सुरक्षित रूप से पुनः लोड करने के लिए नीचे दिए गए बटन पर क्लिक करें।
             </p>
+            {this.state.error && (
+              <pre id="root-error-text" style={{ fontSize: '11px', color: '#f87171', background: 'rgba(0,0,0,0.6)', padding: '12px', borderRadius: '8px', textAlign: 'left', overflow: 'auto', maxHeight: '200px', marginBottom: '16px', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>
+                {this.state.error.stack || this.state.error.message || String(this.state.error)}
+              </pre>
+            )}
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
               <button
                 onClick={this.handleReset}
@@ -84,6 +99,21 @@ class RootErrorBoundary extends React.Component {
                 }}
               >
                 🔄 पोर्टल लोड करें (Reload)
+              </button>
+              <button
+                onClick={this.handleFullReset}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '12px',
+                  padding: '12px 18px',
+                  fontWeight: 700,
+                  fontSize: '13px',
+                  cursor: 'pointer'
+                }}
+              >
+                🧹 कैश साफ़ कर रीसेट करें
               </button>
             </div>
           </div>

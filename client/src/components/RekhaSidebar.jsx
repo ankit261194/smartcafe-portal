@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Printer, Search, Wallet, User, 
   HelpCircle, LogOut, X, ShieldCheck, Sparkles,
   FileText, BookOpen, Layers, Settings, QrCode,
-  Users, Puzzle
+  Users, Puzzle, CreditCard
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
