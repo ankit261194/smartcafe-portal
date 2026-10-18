@@ -312,6 +312,9 @@ if (Test-Path "$PSScriptRoot\client\public\SmartCafe_eDistrict_Extension.zip") {
 }
 Copy-Item -Path "$PSScriptRoot\client\public\robots.txt" -Destination "$PSScriptRoot\client\dist\robots.txt" -Force
 Copy-Item -Path "$PSScriptRoot\client\public\sitemap.xml" -Destination "$PSScriptRoot\client\dist\sitemap.xml" -Force
+Get-ChildItem -Path "$PSScriptRoot\client\public\*.txt" | ForEach-Object {
+    Copy-Item -Path $_.FullName -Destination "$PSScriptRoot\client\dist\$($_.Name)" -Force
+}
 if (Test-Path "$PSScriptRoot\client\public\services") {
     if (-not (Test-Path "$PSScriptRoot\client\dist\services")) {
         New-Item -ItemType Directory -Path "$PSScriptRoot\client\dist\services" -Force
@@ -350,6 +353,13 @@ Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$PSScriptRoot\cybe
 Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$HOME\Downloads\public_html.zip" -Force
 if (Test-Path "$HOME\Desktop") {
     Copy-Item -Path "$PSScriptRoot\public_html.zip" -Destination "$HOME\Desktop\public_html.zip" -Force
+}
+
+Write-Host "[6/6] Triggering Autonomous Search Engine Indexing (IndexNow, Bing, Google)..." -ForegroundColor Cyan
+try {
+    node "$PSScriptRoot\server\auto_seo_indexer.cjs"
+} catch {
+    Write-Host "  -> SEO Indexer notice: $($_.Exception.Message)" -ForegroundColor DarkGray
 }
 
 Write-Host "================================================================" -ForegroundColor Green

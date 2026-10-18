@@ -12,6 +12,18 @@
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+// Universal Google Search Console HTML File Verification Auto-Responder
+$reqUri = $_SERVER['REQUEST_URI'] ?? '';
+$endpointParam = $_GET['endpoint'] ?? '';
+if ($endpointParam === 'google-verify' || preg_match('/\/google([a-zA-Z0-9_-]+)\.html/i', $reqUri, $gMatch)) {
+    $token = preg_replace('/[^a-zA-Z0-9_-]/', '', $_GET['token'] ?? ($gMatch[1] ?? ''));
+    if ($token !== '') {
+        header('Content-Type: text/html; charset=utf-8');
+        echo "google-site-verification: google" . $token . ".html";
+        exit;
+    }
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
 header('Pragma: no-cache');

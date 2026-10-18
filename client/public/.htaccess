@@ -12,6 +12,10 @@
   # 1. Direct download for Android APK
   RewriteRule ^(download-apk|CyberCafe_Portal\.apk|app\.apk)$ CyberCafe_Portal.apk [L]
 
+  # Universal Google Search Console Verification Auto-Handler
+  RewriteCond %{REQUEST_URI} ^/google([a-zA-Z0-9_-]+)\.html$ [NC]
+  RewriteRule ^google([a-zA-Z0-9_-]+)\.html$ api/index.php?endpoint=google-verify&token=%1 [L]
+
   # 2. Route API calls to PHP API router
   RewriteCond %{REQUEST_URI} ^/api/ [NC]
   RewriteRule ^api/(.*)$ api/index.php?endpoint=$1 [QSA,L]
