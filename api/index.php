@@ -409,6 +409,62 @@ function saveStore($dataFile, $store) {
     return $res;
 }
 
+function persistOrderRecord($order) {
+    global $store, $dataFile;
+    if (empty($order) || !is_array($order)) return;
+    $orderId = $order['id'] ?? ($order['orderId'] ?? null);
+    if (!$orderId) return;
+
+    // 1. In-memory / store.json
+    if (!isset($store['orderHistory'])) $store['orderHistory'] = [];
+    $found = false;
+    foreach ($store['orderHistory'] as &$o) {
+        if (($o['id'] ?? '') === $orderId || ($o['orderId'] ?? '') === $orderId) {
+            $o = array_merge($o, $order);
+            $found = true;
+            break;
+        }
+    }
+    unset($o);
+    if (!$found) {
+        array_unshift($store['orderHistory'], $order);
+    }
+
+    // 2. Relational SQL Database (portal.sqlite / MySQL)
+    try {
+        if (function_exists('getPdoConnection')) {
+            $pdo = getPdoConnection();
+            if ($pdo) {
+                initDbSchema($pdo);
+                $driver = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+                $sql = ($driver === 'sqlite')
+                    ? "INSERT OR REPLACE INTO orders (id, cafe_id, customer_phone, customer_name, service_type, doc_title, ref_number, retail_fee, wholesale_cost, margin, status, payload_json, created_at) VALUES (:id, :cafe_id, :customer_phone, :customer_name, :service_type, :doc_title, :ref_number, :retail_fee, :wholesale_cost, :margin, :status, :payload_json, :created_at)"
+                    : "INSERT INTO orders (id, cafe_id, customer_phone, customer_name, service_type, doc_title, ref_number, retail_fee, wholesale_cost, margin, status, payload_json, created_at) VALUES (:id, :cafe_id, :customer_phone, :customer_name, :service_type, :doc_title, :ref_number, :retail_fee, :wholesale_cost, :margin, :status, :payload_json, :created_at) ON DUPLICATE KEY UPDATE status = VALUES(status), payload_json = VALUES(payload_json)";
+
+                $createdAt = !empty($order['createdAt']) ? date('Y-m-d H:i:s', strtotime($order['createdAt'])) : date('Y-m-d H:i:s');
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([
+                    ':id' => $orderId,
+                    ':cafe_id' => $order['cafeId'] ?? 'SMARTCAFE-HQ',
+                    ':customer_phone' => $order['customerPhone'] ?? '',
+                    ':customer_name' => $order['customerName'] ?? 'ग्राहक',
+                    ':service_type' => $order['serviceType'] ?? 'general',
+                    ':doc_title' => $order['docTitle'] ?? ($order['serviceTitle'] ?? 'सरकारी सेवा'),
+                    ':ref_number' => (string)($order['refNumber'] ?? ($order['vehicleNumber'] ?? ($order['panNo'] ?? ($order['aadhaarNo'] ?? '-')))),
+                    ':retail_fee' => floatval($order['retailFee'] ?? 0),
+                    ':wholesale_cost' => floatval($order['wholesaleCost'] ?? 0),
+                    ':margin' => floatval($order['margin'] ?? 0),
+                    ':status' => $order['status'] ?? 'completed',
+                    ':payload_json' => json_encode($order, JSON_UNESCAPED_UNICODE),
+                    ':created_at' => $createdAt
+                ]);
+            }
+        }
+    } catch (Throwable $e) {
+        error_log("persistOrderRecord SQL Error: " . $e->getMessage());
+    }
+}
+
 // 4. Request Parsing
 $method = $_SERVER['REQUEST_METHOD'];
 $endpoint = isset($_GET['endpoint']) ? trim($_GET['endpoint'], '/') : '';
@@ -3647,6 +3703,39 @@ if ($endpoint === 'superadmin/live-vault' && $method === 'GET') {
     }
     unset($u);
 
+    // Ensure all SQL orders are included in orderHistory export
+    $vaultOrdersMap = [];
+    try {
+        $pdo = getPdoConnection();
+        if ($pdo) {
+            $rows = $pdo->query("SELECT * FROM orders ORDER BY created_at DESC LIMIT 500")->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($rows as $r) {
+                $payload = !empty($r['payload_json']) ? json_decode($r['payload_json'], true) : [];
+                $orderObj = is_array($payload) ? $payload : [];
+                $orderObj['id'] = $r['id'];
+                $orderObj['orderId'] = $r['id'];
+                $orderObj['cafeId'] = $r['cafe_id'];
+                $orderObj['customerPhone'] = $r['customer_phone'];
+                $orderObj['customerName'] = $r['customer_name'];
+                $orderObj['serviceType'] = $r['service_type'];
+                $orderObj['docTitle'] = $r['doc_title'];
+                $orderObj['refNumber'] = $r['ref_number'];
+                $orderObj['retailFee'] = floatval($r['retail_fee']);
+                $orderObj['wholesaleCost'] = floatval($r['wholesale_cost']);
+                $orderObj['margin'] = floatval($r['margin']);
+                $orderObj['status'] = $r['status'];
+                $orderObj['createdAt'] = $r['created_at'];
+                $vaultOrdersMap[$r['id']] = $orderObj;
+            }
+        }
+    } catch (Throwable $e) {}
+    foreach ($store['orderHistory'] ?? [] as $o) {
+        if ($o && ($o['id'] ?? ($o['orderId'] ?? null))) {
+            $k = $o['id'] ?? $o['orderId'];
+            if (!isset($vaultOrdersMap[$k])) $vaultOrdersMap[$k] = $o;
+        }
+    }
+
     echo json_encode([
         'success' => true,
         'timestamp' => date('c'),
@@ -3654,6 +3743,7 @@ if ($endpoint === 'superadmin/live-vault' && $method === 'GET') {
         'wallets' => $store['wallets'] ?? [],
         'cafes' => $store['cafes'] ?? [],
         'utrRequests' => $store['utrRequests'] ?? [],
+        'orderHistory' => array_values($vaultOrdersMap),
         'vleKycApplications' => $store['vleKycApplications'] ?? [],
         'complaints' => $store['complaints'] ?? [],
         'rcOrders' => $store['rcOrders'] ?? [],
@@ -3810,100 +3900,51 @@ function getDeterministicHash($str) {
 
 function getVehicleDetails($regNo, $custom = []) {
     $cleanNo = strtoupper(preg_replace('/[\s-]+/', '', $regNo ?? ''));
-    $posHash = getDeterministicHash($cleanNo ?: 'VEH');
-    $sampleOwners = [
-        ["owner" => "VIKRAM PRASAD", "father" => "HARI PRASAD"],
-        ["owner" => "ANIL GUPTA", "father" => "DINESH GUPTA"],
-        ["owner" => "PRADEEP MISHRA", "father" => "RADHEY SHYAM MISHRA"],
-        ["owner" => "SUNIL TIWARI", "father" => "OM PRAKASH TIWARI"],
-        ["owner" => "RAVI KANT DUBEY", "father" => "BHAGWAN DAS DUBEY"],
-        ["owner" => "AMIT KASHYAP", "father" => "SURESH KASHYAP"]
-    ];
-    $chosenOwner = $sampleOwners[$posHash % count($sampleOwners)];
-    $owner = !empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['ownerName']) ? $custom['ownerName'] : (!empty($custom['name']) ? $custom['name'] : $chosenOwner['owner']));
-    $father = !empty($custom['fatherName']) ? $custom['fatherName'] : $chosenOwner['father'];
-
-    $vehicles = [
-        ["model" => "HERO SPLENDOR PLUS BS6", "class" => "M-CYCLE/SCOOTER(2WN)", "fuel" => "PETROL", "cc" => "97.2 CC", "seats" => 2, "color" => "BLACK WITH SILVER"],
-        ["model" => "HONDA ACTIVA 6G H-SMART", "class" => "M-CYCLE/SCOOTER(2WN)", "fuel" => "PETROL", "cc" => "109.5 CC", "seats" => 2, "color" => "PEARL PRECIOUS WHITE"],
-        ["model" => "MARUTI SUZUKI SWIFT VXI", "class" => "MOTOR CAR(LMV)", "fuel" => "PETROL", "cc" => "1197 CC", "seats" => 5, "color" => "SOLID FIRE RED"],
-        ["model" => "HYUNDAI CRETA SX(O) DIESEL", "class" => "MOTOR CAR(LMV)", "fuel" => "DIESEL", "cc" => "1493 CC", "seats" => 5, "color" => "ABYSS BLACK"],
-        ["model" => "TATA PUNCH ADVENTURE RHYTHM", "class" => "MOTOR CAR(LMV)", "fuel" => "PETROL/CNG", "cc" => "1199 CC", "seats" => 5, "color" => "DAYTONA GREY"],
-        ["model" => "MAHINDRA BOLERO B6 OPT", "class" => "PASSENGER CAR(LMV)", "fuel" => "DIESEL", "cc" => "1493 CC", "seats" => 7, "color" => "DIAMOND WHITE"],
-        ["model" => "BAJAJ PULSAR 150 TWIN DISC", "class" => "M-CYCLE/SCOOTER(2WN)", "fuel" => "PETROL", "cc" => "149.5 CC", "seats" => 2, "color" => "SPARKLE BLACK RED"]
-    ];
-    $chosenVehicle = $vehicles[$posHash % count($vehicles)];
-
-    $regYear = 2018 + ($posHash % 6);
-    $regMonth = str_pad(1 + (($posHash >> 2) % 12), 2, '0', STR_PAD_LEFT);
-    $regDay = str_pad(1 + (($posHash >> 4) % 28), 2, '0', STR_PAD_LEFT);
-    $regDate = "$regDay/$regMonth/$regYear";
-
-    $fitYear = $regYear + 15;
-    $fitnessUpto = "$regDay/$regMonth/$fitYear";
-
-    $insYear = 2026 + (($posHash >> 3) % 2);
-    $insMonth = str_pad(1 + (($posHash >> 1) % 12), 2, '0', STR_PAD_LEFT);
-    $insuranceUpto = "$regDay/$insMonth/$insYear";
-
-    $pucYear = 2026;
-    $pucMonth = str_pad(6 + (($posHash >> 2) % 6), 2, '0', STR_PAD_LEFT);
-    $puccUpto = "$regDay/$pucMonth/$pucYear";
-
-    $rtoMap = [
-        "UP32" => "LUCKNOW RTO (UP-32), UTTAR PRADESH",
-        "UP14" => "GHAZIABAD RTO (UP-14), UTTAR PRADESH",
-        "UP16" => "NOIDA RTO (UP-16), GAUTAM BUDDHA NAGAR",
-        "UP78" => "KANPUR NAGAR RTO (UP-78), UTTAR PRADESH",
-        "UP65" => "VARANASI RTO (UP-65), UTTAR PRADESH",
-        "UP70" => "PRAYAGRAJ RTO (UP-70), ALLAHABAD, UTTAR PRADESH",
-        "DL01" => "NORTH DELHI RTO (DL-01), MALL ROAD, DELHI",
-        "BR01" => "PATNA RTO (BR-01), BIHAR",
-        "MP04" => "BHOPAL RTO (MP-04), MADHYA PRADESH",
-        "RJ14" => "JAIPUR RTO (RJ-14), RAJASTHAN"
-    ];
-    $prefix = substr($cleanNo, 0, 4);
-    $rtoOffice = $rtoMap[$prefix] ?? "ARTO TRANSPORT OFFICE, REGION $prefix";
-
-    $insurers = [
-        "UNITED INDIA INSURANCE CO. LTD.",
-        "THE NEW INDIA ASSURANCE CO. LTD.",
-        "NATIONAL INSURANCE CO. LTD.",
-        "ICICI LOMBARD GENERAL INSURANCE",
-        "TATA AIG GENERAL INSURANCE CO."
-    ];
-
-    $financiers = [
-        "HDFC BANK LTD. (HYPOTHECATED)",
-        "STATE BANK OF INDIA (HYPOTHECATED)",
-        "BAJAJ FINANCE LTD. (HYPOTHECATED)",
-        "ICICI BANK LTD. (HYPOTHECATED)",
-        "NO (UNHYPOTHECATED / OWN CASH)"
-    ];
+    $owner = trim(!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['ownerName']) ? $custom['ownerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
+    $father = trim(!empty($custom['fatherName']) ? $custom['fatherName'] : '-');
+    $makerModel = trim(!empty($custom['makerModel']) ? $custom['makerModel'] : (!empty($custom['model']) ? $custom['model'] : (!empty($custom['maker_model']) ? $custom['maker_model'] : '-')));
+    $vehicleClass = trim(!empty($custom['vehicleClass']) ? $custom['vehicleClass'] : (!empty($custom['class']) ? $custom['class'] : '-'));
+    $fuelType = trim(!empty($custom['fuelType']) ? $custom['fuelType'] : (!empty($custom['fuel']) ? $custom['fuel'] : '-'));
+    $engineCapacity = trim(!empty($custom['engineCapacity']) ? $custom['engineCapacity'] : (!empty($custom['cc']) ? $custom['cc'] : '-'));
+    $seatingCapacity = !empty($custom['seatingCapacity']) ? $custom['seatingCapacity'] : (!empty($custom['seats']) ? $custom['seats'] : '-');
+    $color = trim(!empty($custom['color']) ? $custom['color'] : '-');
+    $regDate = trim(!empty($custom['regDate']) ? $custom['regDate'] : (!empty($custom['registration_date']) ? $custom['registration_date'] : '-'));
+    $fitnessUpto = trim(!empty($custom['fitnessUpto']) ? $custom['fitnessUpto'] : (!empty($custom['fitness']) ? $custom['fitness'] : '-'));
+    $insuranceUpto = trim(!empty($custom['insuranceUpto']) ? $custom['insuranceUpto'] : (!empty($custom['insurance_upto']) ? $custom['insurance_upto'] : '-'));
+    $insuranceCompany = trim(!empty($custom['insuranceCompany']) ? $custom['insuranceCompany'] : (!empty($custom['insurance_company']) ? $custom['insurance_company'] : '-'));
+    $policyNo = trim(!empty($custom['policyNo']) ? $custom['policyNo'] : (!empty($custom['policy_number']) ? $custom['policy_number'] : '-'));
+    $puccUpto = trim(!empty($custom['puccUpto']) ? $custom['puccUpto'] : '-');
+    $puccNo = trim(!empty($custom['puccNo']) ? $custom['puccNo'] : '-');
+    $engineNo = trim(!empty($custom['engineNo']) ? $custom['engineNo'] : (!empty($custom['engine_number']) ? $custom['engine_number'] : '-'));
+    $chassisNo = trim(!empty($custom['chassisNo']) ? $custom['chassisNo'] : (!empty($custom['chassis_number']) ? $custom['chassis_number'] : '-'));
+    $rtoOffice = trim(!empty($custom['rtoOffice']) ? $custom['rtoOffice'] : (!empty($custom['rto']) ? $custom['rto'] : '-'));
+    $financedBy = trim(!empty($custom['financedBy']) ? $custom['financedBy'] : '-');
+    $status = trim(!empty($custom['status']) ? $custom['status'] : 'ACTIVE (VALID / NON-BLACKLISTED)');
 
     return [
         'regNo' => $cleanNo ?: '-',
         'ownerName' => $owner,
         'fatherName' => $father,
-        'makerModel' => $chosenVehicle['model'],
-        'vehicleClass' => $chosenVehicle['class'],
-        'fuelType' => $chosenVehicle['fuel'],
-        'engineCapacity' => $chosenVehicle['cc'],
-        'seatingCapacity' => $chosenVehicle['seats'],
-        'color' => $chosenVehicle['color'],
+        'makerModel' => $makerModel,
+        'vehicleClass' => $vehicleClass,
+        'fuelType' => $fuelType,
+        'engineCapacity' => $engineCapacity,
+        'seatingCapacity' => $seatingCapacity,
+        'color' => $color,
         'regDate' => $regDate,
         'fitnessUpto' => $fitnessUpto,
         'insuranceUpto' => $insuranceUpto,
-        'insuranceCompany' => $insurers[$posHash % count($insurers)],
-        'policyNo' => 'POL-' . substr(str_pad((string)$posHash, 9, '0', STR_PAD_LEFT), 0, 9),
+        'insuranceCompany' => $insuranceCompany,
+        'policyNo' => $policyNo,
         'puccUpto' => $puccUpto,
-        'puccNo' => 'PUC' . substr($cleanNo, 0, 4) . substr((string)$posHash, 0, 6),
-        'engineNo' => 'ENG' . substr($cleanNo, -4) . substr((string)$posHash, 0, 6),
-        'chassisNo' => 'MAT' . substr($cleanNo, 0, 2) . 'B' . substr(str_pad((string)$posHash, 10, '0', STR_PAD_LEFT), 0, 10),
+        'puccNo' => $puccNo,
+        'engineNo' => $engineNo,
+        'chassisNo' => $chassisNo,
         'rtoOffice' => $rtoOffice,
-        'mvTaxUpto' => 'LTT (LIFE TIME TAX PAID)',
-        'financedBy' => $financiers[$posHash % count($financiers)],
-        'status' => 'ACTIVE (VALID / NON-BLACKLISTED)'
+        'mvTaxUpto' => !empty($custom['mvTaxUpto']) ? $custom['mvTaxUpto'] : 'LTT (LIFE TIME TAX PAID)',
+        'financedBy' => $financedBy,
+        'status' => $status,
+        'cardType' => 'rc'
     ];
 }
 
@@ -4066,39 +4107,32 @@ function getRationDetails($rationNo, $custom = []) {
 
 function getElectricityBillDetails($consumerNo, $custom = []) {
     $cleanNo = preg_replace('/[\s-]+/', '', $consumerNo ?? '');
-    $posHash = getDeterministicHash($cleanNo ?: 'ELEC');
-    $sampleConsumers = ["VINOD CHANDRA", "ASHOK PATEL", "DEEPAK AGRAWAL", "SUDHIR PANDEY", "MANOJ AWASTHI"];
-    $chosenConsumer = $sampleConsumers[$posHash % count($sampleConsumers)];
-    $consumerName = trim(!empty($custom['consumerName']) ? $custom['consumerName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : $chosenConsumer)));
-    $discom = !empty($custom['discom']) ? $custom['discom'] : "मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)";
-    $billedUnits = 120;
-    $energyCharges = 660;
-    $fixedCharges = 110;
-    $duty = 33;
-    $totalAmount = 803;
-    $meterNo = "UP-MET-" . substr($cleanNo, -6);
-    $txnId = "UPPCL" . substr((string)time(), -6);
+    $consumerName = trim(!empty($custom['consumerName']) ? $custom['consumerName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
+    $discom = !empty($custom['discom']) ? $custom['discom'] : "विद्युत वितरण निगम (Electricity Department)";
+    $totalAmount = !empty($custom['netPayable']) ? floatval($custom['netPayable']) : (!empty($custom['amount']) ? floatval($custom['amount']) : 0);
+    $meterNo = !empty($custom['meterNo']) ? $custom['meterNo'] : "-";
+    $txnId = !empty($custom['txnId']) ? $custom['txnId'] : ("UPPCL" . substr((string)time(), -6));
 
     return [
         'consumerNo' => $cleanNo ?: '-',
         'consumerName' => $consumerName,
         'discom' => $discom,
         'meterNo' => $meterNo,
-        'tariff' => "LMV-1 डोमेस्टिक",
-        'sanctionedLoad' => "1.00 KW",
-        'billMonth' => date('F Y'),
-        'previousReading' => 1200,
-        'currentReading' => 1320,
-        'billedUnits' => $billedUnits,
-        'energyCharges' => $energyCharges,
-        'fixedCharges' => $fixedCharges,
-        'electricityDuty' => $duty,
+        'tariff' => !empty($custom['tariff']) ? $custom['tariff'] : "डोमेस्टिक",
+        'sanctionedLoad' => !empty($custom['sanctionedLoad']) ? $custom['sanctionedLoad'] : "-",
+        'billMonth' => !empty($custom['billMonth']) ? $custom['billMonth'] : date('F Y'),
+        'previousReading' => $custom['previousReading'] ?? '-',
+        'currentReading' => $custom['currentReading'] ?? '-',
+        'billedUnits' => $custom['billedUnits'] ?? '-',
+        'energyCharges' => $custom['energyCharges'] ?? '-',
+        'fixedCharges' => $custom['fixedCharges'] ?? '-',
+        'electricityDuty' => $custom['electricityDuty'] ?? '-',
         'netPayable' => $totalAmount,
-        'dueDate' => date('d/m/Y', strtotime('+15 days')),
-        'paymentStatus' => "PAID / सफल ऑनलाइन भुगतान",
+        'dueDate' => $custom['dueDate'] ?? date('d/m/Y', strtotime('+15 days')),
+        'paymentStatus' => !empty($custom['paymentStatus']) ? $custom['paymentStatus'] : "PAID / सफल ऑनलाइन भुगतान",
         'paidAmount' => $totalAmount,
         'txnId' => $txnId,
-        'paymentDate' => date('d/m/Y'),
+        'paymentDate' => $custom['paymentDate'] ?? date('d/m/Y'),
         'qrCodeData' => "UPPCL:CA=$cleanNo:NAME=$consumerName:AMT=$totalAmount:STATUS=PAID:TXN=$txnId",
         'cardType' => 'electricity'
     ];
@@ -4107,20 +4141,12 @@ function getElectricityBillDetails($consumerNo, $custom = []) {
 function getEdistrictDetails($appNo, $certNo, $custom = []) {
     $cleanApp = preg_replace('/[\s-]+/', '', $appNo ?? '');
     $cleanCert = preg_replace('/[\s-]+/', '', $certNo ?? '');
-    $posHash = getDeterministicHash(($cleanApp . $cleanCert) ?: 'EDIST');
-    $sampleApps = [
-        ["name" => "ROHIT TRIPATHI", "father" => "BRAHMADUTT TRIPATHI"],
-        ["name" => "NEERAJ DIWAKAR", "father" => "RAM SWAROOP DIWAKAR"],
-        ["name" => "PANKAJ JAISWAL", "father" => "DAYA RAM JAISWAL"],
-        ["name" => "ALOK CHATURVEDI", "father" => "KRISHNA MOHAN CHATURVEDI"]
-    ];
-    $chosenApp = $sampleApps[$posHash % count($sampleApps)];
     $certType = !empty($custom['certType']) ? $custom['certType'] : "आय / जाति / निवास प्रमाण पत्र";
-    $applicantName = trim(!empty($custom['applicantName']) ? $custom['applicantName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : $chosenApp['name'])));
-    $fatherName = trim(!empty($custom['fatherName']) ? $custom['fatherName'] : $chosenApp['father']);
-    $issueDate = date('d/m/Y');
-    $tehsil = "सदर";
-    $district = "राजस्व विभाग उ.प्र.";
+    $applicantName = trim(!empty($custom['applicantName']) ? $custom['applicantName'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['name']) ? $custom['name'] : '-')));
+    $fatherName = trim(!empty($custom['fatherName']) ? $custom['fatherName'] : '-');
+    $issueDate = !empty($custom['issueDate']) ? $custom['issueDate'] : date('d/m/Y');
+    $tehsil = !empty($custom['tehsil']) ? $custom['tehsil'] : "सदर";
+    $district = !empty($custom['district']) ? $custom['district'] : "राजस्व विभाग";
 
     return [
         'appNo' => $cleanApp ?: '-',
@@ -4130,11 +4156,11 @@ function getEdistrictDetails($appNo, $certNo, $custom = []) {
         'fatherName' => $fatherName,
         'tehsil' => $tehsil,
         'district' => $district,
-        'address' => !empty($custom['address']) ? $custom['address'] : "तहसील $tehsil, $district",
+        'address' => !empty($custom['address']) ? $custom['address'] : "-",
         'issueDate' => $issueDate,
-        'annualIncome' => strpos($certType, 'आय') !== false ? (!empty($custom['annualIncome']) ? $custom['annualIncome'] : "₹48,000/- वार्षिक") : null,
-        'casteCategory' => strpos($certType, 'जाति') !== false ? (!empty($custom['casteCategory']) ? $custom['casteCategory'] : "अन्य पिछड़ा वर्ग (OBC)") : null,
-        'issuingAuthority' => "तहसीलदार / सक्षम प्राधिकारी (ई-डिस्ट्रिक्ट राजस्व विभाग)",
+        'annualIncome' => strpos($certType, 'आय') !== false ? (!empty($custom['annualIncome']) ? $custom['annualIncome'] : null) : null,
+        'casteCategory' => strpos($certType, 'जाति') !== false ? (!empty($custom['casteCategory']) ? $custom['casteCategory'] : null) : null,
+        'issuingAuthority' => "सक्षम प्राधिकारी (ई-डिस्ट्रिक्ट राजस्व विभाग)",
         'verificationStatus' => "सत्यापित (Digitally Signed & Validated)",
         'qrCodeData' => "EDISTRICT:APP=$cleanApp:CERT=$cleanCert:NAME=$applicantName:TYPE=$certType:VALID=TRUE",
         'cardType' => 'edistrict'
@@ -6827,8 +6853,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             'createdAt' => date('c')
         ];
 
-        if (!isset($store['orderHistory'])) $store['orderHistory'] = [];
-        array_unshift($store['orderHistory'], $newOrder);
+        persistOrderRecord($newOrder);
 
         if (!empty($customerPhone)) {
             $shopName = $cafe['shopName'] ?? ($store['settings']['shopName'] ?? 'डिजिटल साइबर कैफे');
@@ -7444,8 +7469,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         'createdAt' => date('c')
     ];
 
-    if (!isset($store['orderHistory'])) $store['orderHistory'] = [];
-    array_unshift($store['orderHistory'], $newOrder);
+    persistOrderRecord($newOrder);
 
     // Automated WhatsApp / SMS notification for generated document/card
     if (!empty($newOrder['customerPhone'])) {
@@ -7478,14 +7502,84 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
 }
 
 // ---------------------------------------------------------------------------
-// ROUTE: /api/orders & /api/orders/:id (Free Permanent Reprint)
+// ROUTE: /api/orders & /api/orders/:id (Free Permanent Reprint - 30-Day Durability)
 // ---------------------------------------------------------------------------
 if ($endpoint === 'orders' && $method === 'GET') {
     $cafeId = $_GET['cafeId'] ?? '';
     $phone = $_GET['phone'] ?? '';
     $serviceType = $_GET['serviceType'] ?? '';
 
-    $list = $store['orderHistory'] ?? [];
+    $ordersMap = [];
+
+    // 1. Fetch from SQL orders table (30-day+ permanent durability guarantee)
+    try {
+        if (function_exists('getPdoConnection')) {
+            $pdo = getPdoConnection();
+            if ($pdo) {
+                initDbSchema($pdo);
+                $sql = "SELECT * FROM orders";
+                $where = [];
+                $params = [];
+                if ($phone) {
+                    $where[] = "customer_phone = :phone";
+                    $params[':phone'] = $phone;
+                }
+                if ($cafeId) {
+                    $where[] = "cafe_id = :cafeId";
+                    $params[':cafeId'] = $cafeId;
+                }
+                if ($serviceType) {
+                    $where[] = "service_type = :st";
+                    $params[':st'] = $serviceType;
+                }
+                if (!empty($where)) {
+                    $sql .= " WHERE " . implode(' AND ', $where);
+                }
+                $sql .= " ORDER BY created_at DESC LIMIT 500";
+
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute($params);
+                $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                foreach ($rows as $r) {
+                    $key = $r['id'];
+                    $payload = !empty($r['payload_json']) ? json_decode($r['payload_json'], true) : [];
+                    $orderObj = is_array($payload) ? $payload : [];
+                    $orderObj['id'] = $r['id'];
+                    $orderObj['orderId'] = $r['id'];
+                    $orderObj['cafeId'] = $r['cafe_id'];
+                    $orderObj['customerPhone'] = $r['customer_phone'];
+                    $orderObj['customerName'] = $r['customer_name'];
+                    $orderObj['serviceType'] = $r['service_type'];
+                    $orderObj['docTitle'] = $r['doc_title'];
+                    $orderObj['refNumber'] = $r['ref_number'];
+                    $orderObj['retailFee'] = floatval($r['retail_fee']);
+                    $orderObj['wholesaleCost'] = floatval($r['wholesale_cost']);
+                    $orderObj['margin'] = floatval($r['margin']);
+                    $orderObj['status'] = $r['status'];
+                    $orderObj['createdAt'] = $r['created_at'];
+                    $ordersMap[$key] = $orderObj;
+                }
+            }
+        }
+    } catch (Throwable $e) {
+        error_log("Error reading SQL orders: " . $e->getMessage());
+    }
+
+    // 2. Overlay / merge with store.json orderHistory
+    foreach ($store['orderHistory'] ?? [] as $o) {
+        if (!empty($o) && is_array($o)) {
+            $key = $o['id'] ?? ($o['orderId'] ?? null);
+            if ($key) {
+                if (isset($ordersMap[$key])) {
+                    $ordersMap[$key] = array_merge($ordersMap[$key], $o);
+                } else {
+                    $ordersMap[$key] = $o;
+                }
+            }
+        }
+    }
+
+    $list = array_values($ordersMap);
     if ($cafeId) {
         $list = array_values(array_filter($list, fn($o) => ($o['cafeId'] ?? '') === $cafeId));
     }
@@ -7495,7 +7589,14 @@ if ($endpoint === 'orders' && $method === 'GET') {
     if ($serviceType) {
         $list = array_values(array_filter($list, fn($o) => ($o['serviceType'] ?? '') === $serviceType));
     }
-    echo json_encode($list);
+
+    usort($list, function($a, $b) {
+        $ta = strtotime($a['createdAt'] ?? '1970-01-01');
+        $tb = strtotime($b['createdAt'] ?? '1970-01-01');
+        return $tb <=> $ta;
+    });
+
+    echo json_encode($list, JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -8039,15 +8140,39 @@ if (preg_match('#^cafes/([^/]+)/complaints/([^/]+)/reply$#', $endpoint, $m) && $
 }
 
 // ---------------------------------------------------------------------------
-// ROUTE: Instant Tool Lookups
+// ROUTE: Instant Tool Lookups (Zero-Mock Policy: Authentic or Honest 404)
 // ---------------------------------------------------------------------------
 if (preg_match('#^pan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getPanCardDetails(strtoupper(trim($m[1]))));
+    $pan = strtoupper(trim($m[1]));
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('pan_details', ['panNo' => $pan, 'pan' => $pan], $p4ApiKey);
+            if ($live && (!empty($live['name']) || !empty($live['fullName']) || !empty($live['data']['name']))) {
+                echo json_encode(getPanCardDetails($pan, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'सरकारी रिकॉर्ड में यह पैन कार्ड विवरण उपलब्ध नहीं है अथवा सेवा प्रदाता सर्वर मेंटेनेंस पर है।']);
     exit;
 }
 
 if (preg_match('#^aadhaar/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getAadhaarDetails(trim($m[1])));
+    $aid = trim($m[1]);
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('mask_aadhaar', ['aadhaarNo' => $aid, 'uidNumber' => $aid], $p4ApiKey);
+            if ($live && (!empty($live['name']) || !empty($live['maskedAadhaar']) || !empty($live['data']['name']))) {
+                echo json_encode(getAadhaarDetails($aid, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'सरकारी रिकॉर्ड में यह आधार विवरण उपलब्ध नहीं है अथवा सेवा प्रदाता सर्वर मेंटेनेंस पर है।']);
     exit;
 }
 
@@ -8063,7 +8188,8 @@ if (preg_match('#^voter/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') 
             }
         } catch (Throwable $e) {}
     }
-    echo json_encode(getVoterDetails($epic));
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'मतदाता पहचान पत्र (EPIC) का रिकॉर्ड उपलब्ध नहीं है अथवा निर्वाचन आयोग सर्वर मेंटेनेंस पर है।']);
     exit;
 }
 
@@ -8079,7 +8205,8 @@ if (preg_match('#^ayushman/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET
             }
         } catch (Throwable $e) {}
     }
-    echo json_encode(getAyushmanDetails(strtoupper($id)));
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'आयुष्मान भारत PM-JAY रिकॉर्ड उपलब्ध नहीं है अथवा स्वास्थ्य पोर्टल मेंटेनेंस पर है।']);
     exit;
 }
 
@@ -8089,48 +8216,134 @@ if (preg_match('#^ration/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET')
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('ration_pdf_by_ration', ['ration_no' => $rationNo, 'rationNo' => $rationNo], $p4ApiKey);
-            if ($live && (!empty($live['name']) || !empty($live['rationNo']))) {
+            if ($live && (!empty($live['name']) || !empty($live['headName']) || !empty($live['rationNo']))) {
                 echo json_encode(getRationDetails($rationNo, $live));
                 exit;
             }
         } catch (Throwable $e) {}
     }
-    echo json_encode(getRationDetails($rationNo));
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'राशन कार्ड रिकॉर्ड उपलब्ध नहीं है अथवा खाद्य एवं रसद विभाग सर्वर मेंटेनेंस पर है।']);
     exit;
 }
 
 if (preg_match('#^electricity/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getElectricityBillDetails(trim($m[1])));
+    $cleanNo = trim($m[1]);
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('electric_bill_pdf_bihar', ['consumerNo' => $cleanNo, 'caNumber' => $cleanNo], $p4ApiKey);
+            if ($live && (!empty($live['consumerName']) || !empty($live['name']) || !empty($live['netPayable']))) {
+                echo json_encode(getElectricityBillDetails($cleanNo, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'विद्युत उपभोक्ता संख्या का रिकॉर्ड नहीं मिला अथवा बिजली विभाग सर्वर अस्थायी रूप से अनुपलब्ध है।']);
     exit;
 }
 
 if (preg_match('#^edistrict/lookup/([^/]+)/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getEdistrictDetails(trim($m[1]), trim($m[2])));
+    $appNo = trim($m[1]);
+    $certNo = trim($m[2]);
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('rtps_bihar_pdf', ['appNo' => $appNo, 'certNo' => $certNo], $p4ApiKey);
+            if ($live && (!empty($live['applicantName']) || !empty($live['name']))) {
+                echo json_encode(getEdistrictDetails($appNo, $certNo, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'ई-डिस्ट्रिक्ट राजस्व विभाग रिकॉर्ड में यह आवेदन/प्रमाण पत्र संख्या उपलब्ध नहीं है।']);
     exit;
 }
 
 if (preg_match('#^dl/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getDrivingLicenceDetails(strtoupper(trim($m[1]))));
+    $dlNo = strtoupper(trim($m[1]));
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('dl_details', ['dlNo' => $dlNo, 'dl' => $dlNo], $p4ApiKey);
+            if ($live && (!empty($live['name']) || !empty($live['dlNo']))) {
+                echo json_encode(getDrivingLicenceDetails($dlNo, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'ड्राइविंग लाइसेंस का रिकॉर्ड उपलब्ध नहीं है अथवा सारथी पोर्टल मेंटेनेंस पर है।']);
     exit;
 }
 
 if (preg_match('#^challan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getChallanDetails(strtoupper(trim($m[1]))));
+    $refNo = strtoupper(trim($m[1]));
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('chalan_find', ['vehicleNumber' => $refNo, 'challanNo' => $refNo], $p4ApiKey);
+            if ($live && (!empty($live['challanNo']) || !empty($live['data']['challanNo']))) {
+                echo json_encode(getChallanDetails($refNo, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'दिए गए संदर्भ या वाहन संख्या पर कोई चालान लंबित नहीं मिला।']);
     exit;
 }
 
 if (preg_match('#^epan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getEpanDetails(strtoupper(trim($m[1]))));
+    $pan = strtoupper(trim($m[1]));
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('pan_details', ['panNo' => $pan], $p4ApiKey);
+            if ($live && (!empty($live['name']) || !empty($live['panNo']))) {
+                echo json_encode(getEpanDetails($pan, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'e-PAN रिकॉर्ड उपलब्ध नहीं है अथवा आयकर विभाग सर्वर मेंटेनेंस पर है।']);
     exit;
 }
 
 if (preg_match('#^findpan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getFindPanDetails(trim($m[1])));
+    $in = trim($m[1]);
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('pan_find', ['aadhaarNo' => $in], $p4ApiKey);
+            if ($live && (!empty($live['panNo']) || !empty($live['pan']))) {
+                echo json_encode(getFindPanDetails($in, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'पैन नंबर सर्च रिकॉर्ड उपलब्ध नहीं है।']);
     exit;
 }
 
 if (preg_match('#^searchepic/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getSearchEpicDetails(strtoupper(trim($m[1]))));
+    $in = strtoupper(trim($m[1]));
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('voter_verification', ['epicNo' => $in], $p4ApiKey);
+            if ($live && (!empty($live['name']) || !empty($live['epicNo']))) {
+                echo json_encode(getSearchEpicDetails($in, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'मतदाता पर्ची रिकॉर्ड उपलब्ध नहीं है।']);
     exit;
 }
 

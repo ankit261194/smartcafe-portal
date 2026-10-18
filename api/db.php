@@ -483,23 +483,24 @@ function migrateJsonStoreToSql(PDO $pdo, array $store) {
             } else {
                 $oStmt = $pdo->prepare("INSERT INTO orders (id, cafe_id, customer_phone, customer_name, service_type, doc_title, ref_number, retail_fee, wholesale_cost, margin, status, payload_json, created_at)
                     VALUES (:id, :cafe_id, :customer_phone, :customer_name, :service_type, :doc_title, :ref_number, :retail_fee, :wholesale_cost, :margin, :status, :payload_json, :created_at)
-                    ON DUPLICATE KEY UPDATE status = VALUES(status)");
+                    ON DUPLICATE KEY UPDATE status = VALUES(status), payload_json = VALUES(payload_json)");
             }
             foreach ($allOrders as $o) {
-                if (empty($o['id'])) continue;
+                $oId = $o['id'] ?? ($o['orderId'] ?? null);
+                if (empty($oId)) continue;
                 $oStmt->execute([
-                    ':id' => $o['id'],
+                    ':id' => $oId,
                     ':cafe_id' => $o['cafeId'] ?? 'CAFE-101',
                     ':customer_phone' => $o['customerPhone'] ?? ($o['phone'] ?? ''),
                     ':customer_name' => $o['customerName'] ?? ($o['name'] ?? 'ग्राहक'),
                     ':service_type' => $o['serviceType'] ?? ($o['type'] ?? 'general'),
                     ':doc_title' => $o['docTitle'] ?? ($o['title'] ?? 'सेवा दस्तावेज'),
-                    ':ref_number' => $o['refNumber'] ?? ($o['appNo'] ?? ($o['regNo'] ?? '')),
+                    ':ref_number' => $o['refNumber'] ?? ($o['vehicleNumber'] ?? ($o['panNo'] ?? ($o['aadhaarNo'] ?? ($o['appNo'] ?? ($o['regNo'] ?? ''))))),
                     ':retail_fee' => floatval($o['retailFee'] ?? ($o['fee'] ?? 0)),
                     ':wholesale_cost' => floatval($o['wholesaleCost'] ?? 0),
                     ':margin' => floatval($o['margin'] ?? 0),
                     ':status' => $o['status'] ?? 'completed',
-                    ':payload_json' => json_encode($o['payload'] ?? ($o['data'] ?? []), JSON_UNESCAPED_UNICODE),
+                    ':payload_json' => json_encode($o, JSON_UNESCAPED_UNICODE),
                     ':created_at' => !empty($o['createdAt']) ? date('Y-m-d H:i:s', strtotime($o['createdAt'])) : date('Y-m-d H:i:s')
                 ]);
                 $counts['orders']++;
