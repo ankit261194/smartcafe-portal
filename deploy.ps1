@@ -136,8 +136,8 @@ const refundTx = {
 };
 const user800Wallet = allWalletsMap.get('8006518960');
 if (user800Wallet) {
-  if (typeof user800Wallet.balance !== 'number' || user800Wallet.balance < 30) {
-    user800Wallet.balance = 30;
+  if (typeof user800Wallet.balance !== 'number' || user800Wallet.balance < 45) {
+    user800Wallet.balance = 45;
   }
   if (!Array.isArray(user800Wallet.transactions)) user800Wallet.transactions = [];
   if (!user800Wallet.transactions.some(t => t.id === refundTx.id)) {
@@ -176,6 +176,19 @@ const mergedWalletTxns = Array.from(allWalletTxnsMap.values());
 s1.walletTransactions = mergedWalletTxns;
 s2.walletTransactions = mergedWalletTxns;
 s3.walletTransactions = mergedWalletTxns;
+
+// Protect and merge orderHistory across deployments (30-Day Durability Guarantee)
+const allOrdersMap = new Map();
+[...(s1.orderHistory||[]), ...(s2.orderHistory||[]), ...(s3.orderHistory||[]), ...(liveSync.orderHistory||[])].forEach(o => {
+  if (o && (o.id || o.orderId)) {
+    const key = o.id || o.orderId;
+    allOrdersMap.set(key, o);
+  }
+});
+const mergedOrders = Array.from(allOrdersMap.values());
+s1.orderHistory = mergedOrders;
+s2.orderHistory = mergedOrders;
+s3.orderHistory = mergedOrders;
 
 // Protect and merge services_79 custom rates (live rates take highest priority, but API integration schema is strictly preserved)
 const baseServices79 = readJsonSafe('client/src/data/services_79.json');

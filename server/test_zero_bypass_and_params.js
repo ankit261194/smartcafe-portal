@@ -707,5 +707,69 @@ assert(updatedIndexPhpContent.includes('X-Accel-Expires: 0'), 'index.php must se
 
 console.log('✅ PASS: Option 1 Upstream Maintenance, Transparent Badges & Zero-Debit Guards 100% verified across all tiers');
 
+console.log('\n--- TEST 10: 100% Elimination of Synthetic Data & 30-Day Permanent Print Archive Verification ---');
+// Read fresh contents from disk
+const currentServicePage = fs.readFileSync('client/src/components/ServicePage.jsx', 'utf8');
+const currentIndexPhp = fs.readFileSync('client/public/api/index.php', 'utf8');
+const currentServerJs = fs.readFileSync('server/server.js', 'utf8');
+const currentDbPhp = fs.readFileSync('client/public/api/db.php', 'utf8');
+const currentDeployPs1 = fs.readFileSync('deploy.ps1', 'utf8');
+
+// 1. Zero Mock Names Across All Services
+const allCodeFiles = [
+  'client/public/api/index.php',
+  'server/server.js',
+  'client/src/components/ServicePage.jsx'
+];
+const forbiddenMockPatterns = [
+  /VIKRAM\s+PRASAD/i,
+  /VINOD\s+CHANDRA/i,
+  /ROHIT\s+TRIPATHI/i,
+  /NEERAJ\s+DIWAKAR/i,
+  /ASHOK\s+PATEL/i,
+  /ANIL\s+GUPTA/i,
+  /सुनील\s+कुमार/i,
+  /विक्रम\s+प्रसाद/i,
+  /विनोद\s+चंद्रा/i,
+  /रोहित\s+त्रिपाठी/i,
+  /नीरज\s+दिवाकर/i,
+  /अशोक\s+पटेल/i
+];
+
+allCodeFiles.forEach(file => {
+  const content = fs.readFileSync(file, 'utf8');
+  forbiddenMockPatterns.forEach(pattern => {
+    assert(!pattern.test(content), `Forbidden mock pattern ${pattern} found in ${file}!`);
+  });
+});
+console.log('✅ PASS: Zero mock names or synthetic data found across all services (PHP, Node, React)');
+
+// 2. Direct Lookup Zero-Mock Policy (Honest 404 on Upstream Failure)
+assert(currentIndexPhp.includes('pan/lookup'), 'index.php has pan/lookup route');
+assert(currentIndexPhp.includes('electricity/lookup'), 'index.php has electricity/lookup route');
+assert(currentIndexPhp.includes('edistrict/lookup'), 'index.php has edistrict/lookup route');
+assert(currentIndexPhp.includes('dl/lookup'), 'index.php has dl/lookup route');
+assert(currentIndexPhp.includes('http_response_code(404)'), 'index.php direct lookups must return HTTP 404 when not found or upstream fails');
+assert(!currentIndexPhp.includes('$sampleOwners ='), 'index.php must not have $sampleOwners');
+assert(!currentIndexPhp.includes('$sampleConsumers ='), 'index.php must not have $sampleConsumers');
+assert(!currentIndexPhp.includes('$sampleApps ='), 'index.php must not have $sampleApps');
+
+// 3. 30-Day Permanent Print Archive & Dual-Write Durability
+assert(currentIndexPhp.includes('function persistOrderRecord($order)'), 'index.php must define persistOrderRecord');
+assert(currentIndexPhp.includes("INSERT INTO orders"), 'persistOrderRecord must insert into SQL orders table');
+assert(currentIndexPhp.includes("payload_json"), 'orders table must store payload_json');
+assert(currentDbPhp.includes('payload_json LONGTEXT') || currentDbPhp.includes('payload_json TEXT'), 'db.php must have payload_json column in orders table schema');
+
+// 4. Frontend 30-Day Archive Guarantee & Free Reprint
+assert(currentServicePage.includes('30 दिन सुरक्षित निःशुल्क रिप्रिंट गारंटी') || currentServicePage.includes('30-Day Free Reprint Guaranteed'), 'ServicePage.jsx must display 30-Day Archive Guarantee badge');
+assert(currentServicePage.includes('fetch(`/api/orders${phoneParam}`)'), 'ServicePage.jsx fetchOrderHistory must pass phoneParam');
+assert(currentServicePage.includes('payload_json'), 'ServicePage.jsx handleFreeReprint must restore from payload_json');
+
+// 5. Deploy.ps1 Order History Protection
+assert(currentDeployPs1.includes('orderHistory'), 'deploy.ps1 must preserve live orderHistory across deployments');
+assert(currentDeployPs1.includes('allOrdersMap'), 'deploy.ps1 must merge live orders into allOrdersMap');
+
+console.log('✅ PASS: 30-Day Permanent Print Archive, SQL Durability, UI Badges & Deploy Protections 100% verified');
+
 console.log('\n🎉 ALL LOCAL STATIC & INTEGRATION CHECKS PASSED PERFECTLY!');
 

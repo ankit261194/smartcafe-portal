@@ -2977,93 +2977,53 @@ app.post('/api/backup/restore', authMiddleware, upload.single('backupFile'), (re
 // Deterministic Realistic Parivahan Vehicle RC Generator
 function getVehicleDetails(regNo, custom = {}) {
   const cleanNo = (regNo || '').replace(/[\s-]+/g, '').toUpperCase();
-  const hash = getDeterministicHash(cleanNo || 'VEH');
-
-  const vehicleModels = [
-    { model: "MARUTI SUZUKI SWIFT VXI (BS-VI)", class: "LMV (Motor Car)", fuel: "PETROL", cc: "1197 CC", seats: 5, color: "ARCTIC WHITE" },
-    { model: "HYUNDAI CRETA 1.5 SX OPTIONAL", class: "LMV (Motor Car / SUV)", fuel: "DIESEL", cc: "1493 CC", seats: 5, color: "TITAN GREY" },
-    { model: "HERO SPLENDOR PLUS I3S", class: "MCWG (Two Wheeler / Motor Cycle)", fuel: "PETROL", cc: "97.2 CC", seats: 2, color: "BLACK WITH SILVER" },
-    { model: "HONDA ACTIVA 6G H-SMART", class: "MCWG (Two Wheeler / Scooter)", fuel: "PETROL", cc: "109.5 CC", seats: 2, color: "REBEL RED METALLIC" },
-    { model: "TATA NEXON EV FEARLESS+", class: "LMV (Electric Vehicle)", fuel: "ELECTRIC (BATTERY)", cc: "ELECTRIC MOTOR", seats: 5, color: "PRISTINE WHITE" },
-    { model: "MAHINDRA SCORPIO-N Z8L 4WD", class: "LMV (Motor Car / SUV)", fuel: "DIESEL", cc: "2184 CC", seats: 7, color: "DEEP FOREST" },
-    { model: "BAJAJ PULSAR 150 DUAL DISC", class: "MCWG (Two Wheeler)", fuel: "PETROL", cc: "149.5 CC", seats: 2, color: "SPARKLE BLACK" }
-  ];
-  const chosenVehicle = vehicleModels[hash % vehicleModels.length];
-  const sampleOwners = [
-    { owner: "VIKRAM PRASAD", father: "HARI PRASAD" },
-    { owner: "ANIL GUPTA", father: "DINESH GUPTA" },
-    { owner: "PRADEEP MISHRA", father: "RADHEY SHYAM MISHRA" },
-    { owner: "SUNIL TIWARI", father: "OM PRAKASH TIWARI" },
-    { owner: "RAVI KANT DUBEY", father: "BHAGWAN DAS DUBEY" },
-    { owner: "AMIT KASHYAP", father: "SURESH KASHYAP" }
-  ];
-  const chosenOwner = sampleOwners[hash % sampleOwners.length];
-  const owner = custom.customerName || custom.ownerName || custom.name || chosenOwner.owner;
-  const father = custom.fatherName || chosenOwner.father;
-
-  const rtoCodes = {
-    'UP32': 'RTO LUCKNOW (UP-32), UTTAR PRADESH',
-    'UP30': 'ARTO HARDOI (UP-30), UTTAR PRADESH',
-    'UP14': 'RTO GHAZIABAD (UP-14), UTTAR PRADESH',
-    'UP16': 'ARTO NOIDA (UP-16), UTTAR PRADESH',
-    'UP78': 'RTO KANPUR NAGAR (UP-78), UTTAR PRADESH',
-    'DL01': 'MLO MALL ROAD, NORTH DELHI (DL-01)',
-    'DL04': 'MLO JANAKPURI, WEST DELHI (DL-04)',
-    'HR26': 'RTA GURUGRAM (HR-26), HARYANA',
-    'BR01': 'DTO PATNA (BR-01), BIHAR',
-    'RJ14': 'RTO JAIPUR (RJ-14), RAJASTHAN',
-    'MH02': 'RTO ANDHERI, MUMBAI (MH-02), MAHARASHTRA'
-  };
-
-  const prefix4 = cleanNo.slice(0, 4);
-  const rtoOffice = rtoCodes[prefix4] || `DISTRICT TRANSPORT OFFICE (${cleanNo.slice(0, 4) || 'RTO'}), PARIVAHAN SEWA`;
-
-  const regYear = 2018 + (hash % 6);
-  const regMonth = String(1 + (hash % 12)).padStart(2, '0');
-  const regDay = String(1 + (hash % 28)).padStart(2, '0');
-  const regDate = `${regDay}/${regMonth}/${regYear}`;
-  const fitnessUpto = `${regDay}/${regMonth}/${regYear + 15}`;
-  const insuranceUpto = `15/12/2026`;
-  const puccUpto = `28/08/2026`;
-
-  const insurers = [
-    "ICICI LOMBARD GENERAL INSURANCE CO. LTD.",
-    "THE NEW INDIA ASSURANCE CO. LTD.",
-    "HDFC ERGO GENERAL INSURANCE COMPANY",
-    "BAJAJ ALLIANZ GENERAL INSURANCE CO. LTD.",
-    "TATA AIG GENERAL INSURANCE CO. LTD."
-  ];
-
-  const financiers = [
-    "STATE BANK OF INDIA (HYPOTHECATED)",
-    "HDFC BANK LTD. (HYPOTHECATED)",
-    "ICICI BANK LTD. (HYPOTHECATED)",
-    "NO (UNHYPOTHECATED / OWN CASH)"
-  ];
+function getVehicleDetails(regNo, custom = {}) {
+  const cleanNo = (regNo || '').replace(/[\s-]+/g, '').toUpperCase();
+  const owner = (custom.customerName || custom.ownerName || custom.name || '-').trim();
+  const father = (custom.fatherName || '-').trim();
+  const makerModel = (custom.makerModel || custom.model || custom.maker_model || '-').trim();
+  const vehicleClass = (custom.vehicleClass || custom.class || '-').trim();
+  const fuelType = (custom.fuelType || custom.fuel || '-').trim();
+  const engineCapacity = (custom.engineCapacity || custom.cc || '-').trim();
+  const seatingCapacity = custom.seatingCapacity || custom.seats || '-';
+  const color = (custom.color || '-').trim();
+  const regDate = (custom.regDate || custom.registration_date || '-').trim();
+  const fitnessUpto = (custom.fitnessUpto || custom.fitness || '-').trim();
+  const insuranceUpto = (custom.insuranceUpto || custom.insurance_upto || '-').trim();
+  const insuranceCompany = (custom.insuranceCompany || custom.insurance_company || '-').trim();
+  const policyNo = (custom.policyNo || custom.policy_number || '-').trim();
+  const puccUpto = (custom.puccUpto || '-').trim();
+  const puccNo = (custom.puccNo || '-').trim();
+  const engineNo = (custom.engineNo || custom.engine_number || '-').trim();
+  const chassisNo = (custom.chassisNo || custom.chassis_number || '-').trim();
+  const rtoOffice = (custom.rtoOffice || custom.rto || '-').trim();
+  const financedBy = (custom.financedBy || '-').trim();
+  const status = (custom.status || 'ACTIVE (VALID / NON-BLACKLISTED)').trim();
 
   return {
     regNo: cleanNo || '-',
     ownerName: owner,
     fatherName: father,
-    makerModel: chosenVehicle.model,
-    vehicleClass: chosenVehicle.class,
-    fuelType: chosenVehicle.fuel,
-    engineCapacity: chosenVehicle.cc,
-    seatingCapacity: chosenVehicle.seats,
-    color: chosenVehicle.color,
+    makerModel,
+    vehicleClass,
+    fuelType,
+    engineCapacity,
+    seatingCapacity,
+    color,
     regDate,
     fitnessUpto,
     insuranceUpto,
-    insuranceCompany: insurers[hash % insurers.length],
-    policyNo: `POL-${hash.toString().padStart(9, '0').slice(0, 9)}`,
+    insuranceCompany,
+    policyNo,
     puccUpto,
-    puccNo: `PUC${cleanNo.slice(0,4)}${hash.toString().slice(0, 6)}`,
-    engineNo: `ENG${cleanNo.slice(-4)}${hash.toString().slice(0, 6)}`,
-    chassisNo: `MAT${cleanNo.slice(0, 2)}B${hash.toString().padStart(10, '0').slice(0, 10)}`,
+    puccNo,
+    engineNo,
+    chassisNo,
     rtoOffice,
-    mvTaxUpto: "LTT (LIFE TIME TAX PAID)",
-    financedBy: financiers[hash % financiers.length],
-    status: "ACTIVE (VALID / NON-BLACKLISTED)"
+    mvTaxUpto: custom.mvTaxUpto || "LTT (LIFE TIME TAX PAID)",
+    financedBy,
+    status,
+    cardType: 'rc'
   };
 }
 
@@ -3232,39 +3192,32 @@ function getRationDetails(rationNo, custom = {}) {
 // 6. Electricity Bill Slip Generator (Discom Layout)
 function getElectricityBillDetails(consumerNo, custom = {}) {
   const cleanNo = (consumerNo || '').replace(/[\s-]+/g, '');
-  const hash = getDeterministicHash(cleanNo || 'ELEC');
-  const sampleConsumers = ["VINOD CHANDRA", "ASHOK PATEL", "DEEPAK AGRAWAL", "SUDHIR PANDEY", "MANOJ AWASTHI"];
-  const chosenConsumer = sampleConsumers[hash % sampleConsumers.length];
-  const consumerName = custom.consumerName || custom.customerName || custom.name || chosenConsumer;
-  const discom = custom.discom || "मध्यांचल विद्युत वितरण निगम लिमिटेड (MVVNL)";
-  const billedUnits = 120;
-  const energyCharges = 660;
-  const fixedCharges = 110;
-  const duty = 33;
-  const totalAmount = 803;
-  const meterNo = `UP-MET-${cleanNo.slice(-6)}`;
-  const txnId = `UPPCL${Date.now().toString().slice(-6)}`;
+  const consumerName = (custom.consumerName || custom.customerName || custom.name || '-').trim();
+  const discom = custom.discom || "विद्युत वितरण निगम (Electricity Department)";
+  const totalAmount = custom.netPayable ? parseFloat(custom.netPayable) : (custom.amount ? parseFloat(custom.amount) : 0);
+  const meterNo = custom.meterNo || "-";
+  const txnId = custom.txnId || `UPPCL${Date.now().toString().slice(-6)}`;
 
   return {
     consumerNo: cleanNo || '-',
     consumerName,
     discom,
     meterNo,
-    tariff: "LMV-1 डोमेस्टिक रूरल/अर्बन",
-    sanctionedLoad: "1.00 KW",
-    billMonth: new Date().toLocaleDateString('hi-IN', { month: 'long', year: 'numeric' }),
-    previousReading: 1420,
-    currentReading: 1540,
-    billedUnits,
-    energyCharges,
-    fixedCharges,
-    electricityDuty: duty,
+    tariff: custom.tariff || "डोमेस्टिक",
+    sanctionedLoad: custom.sanctionedLoad || "-",
+    billMonth: custom.billMonth || new Date().toLocaleDateString('hi-IN', { month: 'long', year: 'numeric' }),
+    previousReading: custom.previousReading || '-',
+    currentReading: custom.currentReading || '-',
+    billedUnits: custom.billedUnits || '-',
+    energyCharges: custom.energyCharges || '-',
+    fixedCharges: custom.fixedCharges || '-',
+    electricityDuty: custom.electricityDuty || '-',
     netPayable: totalAmount,
-    dueDate: "28/03/2026",
-    paymentStatus: "PAID / सफल ऑनलाइन भुगतान",
+    dueDate: custom.dueDate || "28/03/2026",
+    paymentStatus: custom.paymentStatus || "PAID / सफल ऑनलाइन भुगतान",
     paidAmount: totalAmount,
     txnId,
-    paymentDate: new Date().toLocaleDateString('en-GB'),
+    paymentDate: custom.paymentDate || new Date().toLocaleDateString('en-GB'),
     qrCodeData: `UPPCL:CA=${cleanNo}:NAME=${consumerName}:AMT=${totalAmount}:STATUS=PAID:TXN=${txnId}`,
     cardType: 'electricity'
   };
@@ -3274,20 +3227,12 @@ function getElectricityBillDetails(consumerNo, custom = {}) {
 function getEdistrictDetails(appNo, certNo, custom = {}) {
   const cleanApp = (appNo || '').replace(/[\s-]+/g, '');
   const cleanCert = (certNo || '').replace(/[\s-]+/g, '');
-  const hash = getDeterministicHash((cleanApp + cleanCert) || 'EDIST');
-  const sampleApplicants = [
-    { name: "ROHIT TRIPATHI", father: "BRAHMADUTT TRIPATHI" },
-    { name: "NEERAJ DIWAKAR", father: "RAM SWAROOP DIWAKAR" },
-    { name: "PANKAJ JAISWAL", father: "DAYA RAM JAISWAL" },
-    { name: "ALOK CHATURVEDI", father: "KRISHNA MOHAN CHATURVEDI" }
-  ];
-  const chosenApp = sampleApplicants[hash % sampleApplicants.length];
   const certType = custom.certType || "आय / जाति / निवास प्रमाण पत्र";
-  const applicantName = custom.applicantName || custom.customerName || custom.name || chosenApp.name;
-  const fatherName = custom.fatherName || chosenApp.father;
-  const issueDate = new Date().toLocaleDateString('en-GB');
-  const tehsil = "सदर";
-  const district = "राजस्व विभाग उ.प्र.";
+  const applicantName = (custom.applicantName || custom.customerName || custom.name || '-').trim();
+  const fatherName = (custom.fatherName || '-').trim();
+  const issueDate = custom.issueDate || new Date().toLocaleDateString('en-GB');
+  const tehsil = custom.tehsil || "सदर";
+  const district = custom.district || "राजस्व विभाग";
 
   return {
     appNo: cleanApp || '-',
@@ -3297,7 +3242,7 @@ function getEdistrictDetails(appNo, certNo, custom = {}) {
     fatherName,
     tehsil,
     district,
-    address: custom.address || `तहसील ${tehsil}, जिला ${district}`,
+    address: custom.address || "-",
     issueDate,
     annualIncome: certType.includes("आय") ? (custom.annualIncome || "₹48,000/- वार्षिक") : undefined,
     casteCategory: certType.includes("जाति") ? (custom.casteCategory || "अन्य पिछड़ा वर्ग (OBC)") : undefined,

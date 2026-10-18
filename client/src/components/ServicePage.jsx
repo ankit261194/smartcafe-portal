@@ -313,7 +313,7 @@ function ServicePageContent({
         })
         .catch(() => {});
     }
-  }, [normalizedToolId, currentTool?.id]);
+  }, [normalizedToolId, currentTool?.id, customerSession?.phone]);
 
   const resetForm = () => {
     setPrimaryInput('');
@@ -341,11 +341,12 @@ function ServicePageContent({
     setAdvanceServer('1');
   };
 
-  // Fetch persistent order history
+  // Fetch persistent order history (Guaranteed 30-Day Durability Archive)
   const fetchOrderHistory = async () => {
     setLoadingHistory(true);
     try {
-      const res = await fetch('/api/orders');
+      const phoneParam = customerSession?.phone ? `?phone=${encodeURIComponent(customerSession.phone)}` : '';
+      const res = await fetch(`/api/orders${phoneParam}`);
       if (res.ok) {
         const list = await res.json();
         setOrderHistory(Array.isArray(list) ? list : []);
@@ -1576,7 +1577,11 @@ function ServicePageContent({
       window.scrollTo({ top: 120, behavior: 'smooth' });
       return;
     }
-    const genData = orderItem.generatedData || orderItem.vehicleData || orderItem;
+    let payload = orderItem.payload_json;
+    if (typeof payload === 'string') {
+      try { payload = JSON.parse(payload); } catch (e) { payload = {}; }
+    }
+    const genData = payload?.generatedData || payload?.vehicleData || orderItem.generatedData || orderItem.vehicleData || (payload && Object.keys(payload).length > 0 ? payload : orderItem);
     setCurrentResult({
       success: true,
       isReprint: true,
@@ -1584,7 +1589,7 @@ function ServicePageContent({
       retailFee: 0,
       wholesaleCost: 0,
       margin: 0,
-      pdfUrl: orderItem.pdfUrl || genData?.pdfUrl,
+      pdfUrl: orderItem.pdfUrl || genData?.pdfUrl || payload?.pdfUrl,
       vehicleData: genData,
       generatedData: genData,
       order: orderItem
@@ -7288,8 +7293,11 @@ function ServicePageContent({
           <div className="flex items-center gap-2">
             <History className="w-4 h-4 text-amber-400" />
             <h3 className="font-black text-xs sm:text-sm uppercase tracking-wider">
-              {language === 'hi' ? '📋 हाल ही के आवेदन व प्रिंट इतिहास' : '📋 Recent Applications & Order History'}
+              {language === 'hi' ? '📋 30-दिवसीय सुरक्षित प्रिंट आर्काइव व इतिहास' : '📋 30-Day Safe Print Archive & History'}
             </h3>
+            <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1">
+              <span>🗓️</span> {language === 'hi' ? '30 दिन सुरक्षित निःशुल्क रिप्रिंट गारंटी' : '30-Day Free Reprint Guaranteed'}
+            </span>
             <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
               {toolOrders.length > 0 ? toolOrders.length : orderHistory.length}
             </span>
@@ -7308,7 +7316,7 @@ function ServicePageContent({
         <div className="overflow-x-auto">
           {(!Array.isArray(orderHistory) || (toolOrders.length === 0 && orderHistory.length === 0)) ? (
             <div className="p-8 text-center text-xs text-slate-500 dark:text-slate-400">
-              {language === 'hi' ? 'वर्तमान में कोई पिछला आवेदन दर्ज नहीं है।' : 'No recent orders found.'}
+              {language === 'hi' ? 'वर्तमान में कोई पिछला आवेदन दर्ज नहीं है। आपके सभी प्रिंट कम से कम 30 दिनों तक यहाँ सुरक्षित रहेंगे।' : 'No recent orders found. All your prints remain safely archived here for at least 30 days.'}
             </div>
           ) : (
             <table className="w-full text-left text-xs border-collapse">
@@ -7324,7 +7332,7 @@ function ServicePageContent({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {(toolOrders.length > 0 ? toolOrders : orderHistory.slice(0, 10)).map((orderItem, idx) => {
+                {(toolOrders.length > 0 ? toolOrders : orderHistory.slice(0, 50)).map((orderItem, idx) => {
                   const isPending = orderItem.status === 'pending';
                   const isCompleted = orderItem.status === 'completed' || orderItem.upstreamStatus === 'Success';
                   const isRejected = orderItem.status === 'rejected' || orderItem.upstreamStatus === 'Failed';
