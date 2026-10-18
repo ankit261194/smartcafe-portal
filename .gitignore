@@ -30,3 +30,7 @@ Thumbs.db
 
 # Zip packages
 *.zip
+
+tmp_chrome_*/
+verify_site.mjs
+check_live_site.*
