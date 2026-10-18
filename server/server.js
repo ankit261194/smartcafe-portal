@@ -3131,18 +3131,19 @@ function getAadhaarDetails(aadhaarNo, custom = {}) {
 // 3. Digital Voter Smart Card Generator (EPIC Layout)
 function getVoterDetails(epicNo, custom = {}) {
   const cleanEpic = (epicNo || '').replace(/[\s-]+/g, '').toUpperCase();
-  const name = custom.name || custom.fullName || custom.customerName || '-';
-  const relationName = custom.relationName || custom.fatherName || '-';
-  const age = custom.age || custom.dob || '-';
-  const gender = custom.gender || "पुरुष (Male)";
-  const acNumber = custom.acNumber || custom.ac_no || custom.acId || '';
-  const acName = custom.acName || custom.assembly || custom.asmblyName || '';
-  const partNo = custom.partNumber || custom.partNo || custom.part_no || '';
-  const serialNo = custom.serialNumber || custom.serialNo || custom.serial_no || custom.partSerialNumber || '';
-  const pollingStation = custom.pollingStation || custom.partName || custom.part_name || custom.psbuildingName || (partNo ? `मतदान केंद्र भाग सं. ${partNo}` : 'मतदान केंद्र');
-  const pcName = custom.pcName || custom.prlmntName || "संसदीय निर्वाचन क्षेत्र";
-  const district = custom.district || custom.districtValue || '';
-  const state = custom.state || custom.stateName || '';
+  const c = (custom.data && typeof custom.data === 'object') ? { ...custom.data, ...custom } : custom;
+  const name = c.fullName || c.name || c.customerName || (c.applicantFirstName ? `${c.applicantFirstName} ${c.applicantLastName || ''}`.trim() : '-');
+  const relationName = c.relationName || c.relativeFullName || c.fatherName || '-';
+  const age = c.age || c.dob || '-';
+  const gender = c.gender === 'M' ? 'पुरुष (Male)' : (c.gender === 'F' ? 'महिला (Female)' : (c.gender || "पुरुष (Male)"));
+  const acNumber = c.acNumber || c.ac_no || c.acId || '';
+  const acName = c.asmblyName || c.acName || c.assembly || '';
+  const partNo = c.partNumber || c.partNo || c.part_no || '';
+  const serialNo = c.partSerialNumber || c.serialNumber || c.serialNo || c.serial_no || '';
+  const pollingStation = c.partName || c.pollingStation || c.part_name || c.psbuildingName || (partNo ? `मतदान केंद्र भाग सं. ${partNo}` : 'मतदान केंद्र');
+  const pcName = c.prlmntName || c.pcName || "संसदीय निर्वाचन क्षेत्र";
+  const district = c.districtValue || c.district || '';
+  const state = c.stateName || c.state || '';
 
   return {
     epicNo: cleanEpic || '-',
@@ -7494,7 +7495,7 @@ app.get('/api/voter/lookup/:epicNo', async (req, res) => {
   if (p4ApiKey && (store.apiGateway?.liveMode !== false)) {
     try {
       const live = await dispatchLiveP4Points('voter_verification', { epicNo: epic, epicNumber: epic }, p4ApiKey);
-      if (live && (live.name || live.fullName || live.epicNo)) {
+      if (live && (live.name || live.fullName || live.epicNo || (live.data && (live.data.fullName || live.data.name || live.data.epicNumber)))) {
         return res.json(getVoterDetails(epic, live));
       }
     } catch(e) {}

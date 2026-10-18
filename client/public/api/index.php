@@ -3957,19 +3957,22 @@ function getAadhaarDetails($aadhaarNo, $custom = []) {
 
 function getVoterDetails($epicNo, $custom = []) {
     $cleanEpic = strtoupper(preg_replace('/[\s-]+/', '', $epicNo ?? ''));
-    $name = trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['fullName']) ? $custom['fullName'] : (!empty($custom['customerName']) ? $custom['customerName'] : '-')));
-    $relationName = trim(!empty($custom['relationName']) ? $custom['relationName'] : (!empty($custom['fatherName']) ? $custom['fatherName'] : '-'));
+    if (!empty($custom['data']) && is_array($custom['data'])) {
+        $custom = array_merge($custom['data'], $custom);
+    }
+    $name = trim(!empty($custom['fullName']) ? $custom['fullName'] : (!empty($custom['name']) ? $custom['name'] : (!empty($custom['customerName']) ? $custom['customerName'] : (!empty($custom['applicantFirstName']) ? trim(($custom['applicantFirstName'] ?? '') . ' ' . ($custom['applicantLastName'] ?? '')) : '-'))));
+    $relationName = trim(!empty($custom['relationName']) ? $custom['relationName'] : (!empty($custom['relativeFullName']) ? $custom['relativeFullName'] : (!empty($custom['fatherName']) ? $custom['fatherName'] : '-')));
     $age = trim(!empty($custom['age']) ? $custom['age'] : (!empty($custom['dob']) ? $custom['dob'] : '-'));
-    $gender = trim(!empty($custom['gender']) ? $custom['gender'] : 'पुरुष (Male)');
+    $gender = trim(!empty($custom['gender']) ? ($custom['gender'] === 'M' ? 'पुरुष (Male)' : ($custom['gender'] === 'F' ? 'महिला (Female)' : $custom['gender'])) : 'पुरुष (Male)');
     
     $acNumber = $custom['acNumber'] ?? ($custom['ac_no'] ?? ($custom['acId'] ?? ''));
-    $acName = $custom['acName'] ?? ($custom['assembly'] ?? ($custom['asmblyName'] ?? ''));
+    $acName = $custom['asmblyName'] ?? ($custom['acName'] ?? ($custom['assembly'] ?? ''));
     $partNo = $custom['partNumber'] ?? ($custom['partNo'] ?? ($custom['part_no'] ?? ''));
-    $serialNo = $custom['serialNumber'] ?? ($custom['serialNo'] ?? ($custom['serial_no'] ?? ($custom['partSerialNumber'] ?? '')));
-    $pollingStation = $custom['pollingStation'] ?? ($custom['partName'] ?? ($custom['part_name'] ?? ($custom['psbuildingName'] ?? '')));
-    $pcName = $custom['pcName'] ?? ($custom['prlmntName'] ?? 'संसदीय निर्वाचन क्षेत्र');
-    $district = $custom['district'] ?? ($custom['districtValue'] ?? '');
-    $state = $custom['state'] ?? ($custom['stateName'] ?? '');
+    $serialNo = $custom['partSerialNumber'] ?? ($custom['serialNumber'] ?? ($custom['serialNo'] ?? ($custom['serial_no'] ?? '')));
+    $pollingStation = $custom['partName'] ?? ($custom['pollingStation'] ?? ($custom['part_name'] ?? ($custom['psbuildingName'] ?? '')));
+    $pcName = $custom['prlmntName'] ?? ($custom['pcName'] ?? 'संसदीय निर्वाचन क्षेत्र');
+    $district = $custom['districtValue'] ?? ($custom['district'] ?? '');
+    $state = $custom['stateName'] ?? ($custom['state'] ?? '');
 
     if (empty($acName)) {
         $acNumber = !empty($custom['acNumber']) ? $custom['acNumber'] : '67';
@@ -8054,7 +8057,7 @@ if (preg_match('#^voter/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') 
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('voter_verification', ['epicNo' => $epic, 'epicNumber' => $epic], $p4ApiKey);
-            if ($live && (!empty($live['name']) || !empty($live['fullName']) || !empty($live['epicNo']))) {
+            if ($live && (!empty($live['name']) || !empty($live['fullName']) || !empty($live['epicNo']) || !empty($live['data']['fullName']) || !empty($live['data']['name']) || !empty($live['data']['epicNumber']))) {
                 echo json_encode(getVoterDetails($epic, $live));
                 exit;
             }
