@@ -3131,22 +3131,18 @@ function getAadhaarDetails(aadhaarNo, custom = {}) {
 // 3. Digital Voter Smart Card Generator (EPIC Layout)
 function getVoterDetails(epicNo, custom = {}) {
   const cleanEpic = (epicNo || '').replace(/[\s-]+/g, '').toUpperCase();
-  const hash = getDeterministicHash(cleanEpic || 'EPIC');
-  const name = custom.name || custom.customerName || '-';
+  const name = custom.name || custom.fullName || custom.customerName || '-';
   const relationName = custom.relationName || custom.fatherName || '-';
   const age = custom.age || custom.dob || '-';
   const gender = custom.gender || "पुरुष (Male)";
-  const acList = [
-    { no: "154", name: "सदर (Sadar)" },
-    { no: "173", name: "लखनऊ कैंट (Lucknow Cantt)" },
-    { no: "84", name: "हसनगंज (Hasanganj)" },
-    { no: "212", name: "वाराणसी उत्तरी (Varanasi North)" },
-    { no: "119", name: "मेरठ शहर (Meerut City)" }
-  ];
-  const ac = acList[hash % acList.length];
-  const partNo = 45 + (hash % 240);
-  const serialNo = 1 + (hash % 790);
-  const pollingStation = `मतदान केंद्र भाग सं. ${partNo}`;
+  const acNumber = custom.acNumber || custom.ac_no || custom.acId || '';
+  const acName = custom.acName || custom.assembly || custom.asmblyName || '';
+  const partNo = custom.partNumber || custom.partNo || custom.part_no || '';
+  const serialNo = custom.serialNumber || custom.serialNo || custom.serial_no || custom.partSerialNumber || '';
+  const pollingStation = custom.pollingStation || custom.partName || custom.part_name || custom.psbuildingName || (partNo ? `मतदान केंद्र भाग सं. ${partNo}` : 'मतदान केंद्र');
+  const pcName = custom.pcName || custom.prlmntName || "संसदीय निर्वाचन क्षेत्र";
+  const district = custom.district || custom.districtValue || '';
+  const state = custom.state || custom.stateName || '';
 
   return {
     epicNo: cleanEpic || '-',
@@ -3155,14 +3151,16 @@ function getVoterDetails(epicNo, custom = {}) {
     relationType: "पिता / पति",
     gender,
     age,
-    acNumber: ac.no,
-    acName: ac.name,
-    pcName: "संसदीय निर्वाचन क्षेत्र",
-    partNumber: partNo,
-    serialNumber: serialNo,
+    acNumber: String(acNumber || '67'),
+    acName: acName || 'अनूपशहर (Anupshahr)',
+    pcName,
+    partNumber: partNo || '-',
+    serialNumber: serialNo || '-',
     pollingStation,
+    district,
+    state,
     status: "सक्रिय मतदाता सूची में सम्मिलित (Active Electoral Roll)",
-    qrCodeData: `ECI:EPIC=${cleanEpic}:NAME=${name}:AC=${ac.no}-${ac.name}:PART=${partNo}:SL=${serialNo}`,
+    qrCodeData: `ECI:EPIC=${cleanEpic}:NAME=${name}:AC=${acNumber}-${acName}:PART=${partNo}:SL=${serialNo}`,
     cardType: 'voter'
   };
 }
@@ -7486,12 +7484,22 @@ app.get('/api/aadhaar/lookup/:aadhaarNo', (req, res) => {
   res.json(getAadhaarDetails(req.params.aadhaarNo));
 });
 
-app.get('/api/voter/lookup/:epicNo', (req, res) => {
+app.get('/api/voter/lookup/:epicNo', async (req, res) => {
   const store = getStore();
   if (isToolDisabled(store, 'voter', 'voterCard')) {
     return res.status(403).json({ error: 'यह टूल वर्तमान में सुपर एडमिन द्वारा अक्षम (Disabled) है।' });
   }
-  res.json(getVoterDetails(req.params.epicNo));
+  const epic = req.params.epicNo.trim().toUpperCase();
+  const p4ApiKey = store.apiGateway?.apiKey;
+  if (p4ApiKey && (store.apiGateway?.liveMode !== false)) {
+    try {
+      const live = await dispatchLiveP4Points('voter_verification', { epicNo: epic, epicNumber: epic }, p4ApiKey);
+      if (live && (live.name || live.fullName || live.epicNo)) {
+        return res.json(getVoterDetails(epic, live));
+      }
+    } catch(e) {}
+  }
+  res.json(getVoterDetails(epic));
 });
 
 app.get('/api/ayushman/lookup/:id', async (req, res) => {

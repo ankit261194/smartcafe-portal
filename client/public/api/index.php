@@ -3957,22 +3957,27 @@ function getAadhaarDetails($aadhaarNo, $custom = []) {
 
 function getVoterDetails($epicNo, $custom = []) {
     $cleanEpic = strtoupper(preg_replace('/[\s-]+/', '', $epicNo ?? ''));
-    $name = trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['customerName']) ? $custom['customerName'] : '-'));
+    $name = trim(!empty($custom['name']) ? $custom['name'] : (!empty($custom['fullName']) ? $custom['fullName'] : (!empty($custom['customerName']) ? $custom['customerName'] : '-')));
     $relationName = trim(!empty($custom['relationName']) ? $custom['relationName'] : (!empty($custom['fatherName']) ? $custom['fatherName'] : '-'));
     $age = trim(!empty($custom['age']) ? $custom['age'] : (!empty($custom['dob']) ? $custom['dob'] : '-'));
     $gender = trim(!empty($custom['gender']) ? $custom['gender'] : 'पुरुष (Male)');
-    $acList = [
-        ["no" => "154", "name" => "सदर (Sadar)"],
-        ["no" => "173", "name" => "लखनऊ कैंट (Lucknow Cantt)"],
-        ["no" => "84", "name" => "हसनगंज (Hasanganj)"],
-        ["no" => "212", "name" => "वाराणसी उत्तरी (Varanasi North)"],
-        ["no" => "119", "name" => "मेरठ शहर (Meerut City)"]
-    ];
-    $hash = getDeterministicHash($cleanEpic ?: 'EPIC');
-    $ac = $acList[$hash % count($acList)];
-    $partNo = 45 + ($hash % 240);
-    $serialNo = 1 + ($hash % 790);
-    $pollingStation = "मतदान केंद्र भाग सं. $partNo";
+    
+    $acNumber = $custom['acNumber'] ?? ($custom['ac_no'] ?? ($custom['acId'] ?? ''));
+    $acName = $custom['acName'] ?? ($custom['assembly'] ?? ($custom['asmblyName'] ?? ''));
+    $partNo = $custom['partNumber'] ?? ($custom['partNo'] ?? ($custom['part_no'] ?? ''));
+    $serialNo = $custom['serialNumber'] ?? ($custom['serialNo'] ?? ($custom['serial_no'] ?? ($custom['partSerialNumber'] ?? '')));
+    $pollingStation = $custom['pollingStation'] ?? ($custom['partName'] ?? ($custom['part_name'] ?? ($custom['psbuildingName'] ?? '')));
+    $pcName = $custom['pcName'] ?? ($custom['prlmntName'] ?? 'संसदीय निर्वाचन क्षेत्र');
+    $district = $custom['district'] ?? ($custom['districtValue'] ?? '');
+    $state = $custom['state'] ?? ($custom['stateName'] ?? '');
+
+    if (empty($acName)) {
+        $acNumber = !empty($custom['acNumber']) ? $custom['acNumber'] : '67';
+        $acName = !empty($custom['acName']) ? $custom['acName'] : 'अनूपशहर (Anupshahr)';
+    }
+    if (empty($pollingStation)) {
+        $pollingStation = $partNo ? "मतदान केंद्र भाग सं. $partNo" : "मतदान केंद्र";
+    }
 
     return [
         'epicNo' => $cleanEpic ?: '-',
@@ -3981,14 +3986,16 @@ function getVoterDetails($epicNo, $custom = []) {
         'relationType' => "पिता / पति",
         'gender' => $gender,
         'age' => $age,
-        'acNumber' => $ac['no'],
-        'acName' => $ac['name'],
-        'pcName' => "संसदीय निर्वाचन क्षेत्र",
-        'partNumber' => $partNo,
-        'serialNumber' => $serialNo,
+        'acNumber' => (string)$acNumber,
+        'acName' => $acName,
+        'pcName' => $pcName,
+        'partNumber' => $partNo ?: '-',
+        'serialNumber' => $serialNo ?: '-',
         'pollingStation' => $pollingStation,
+        'district' => $district,
+        'state' => $state,
         'status' => "सक्रिय मतदाता सूची में सम्मिलित (Active Electoral Roll)",
-        'qrCodeData' => "ECI:EPIC=$cleanEpic:NAME=$name:AC={$ac['no']}-{$ac['name']}:PART=$partNo:SL=$serialNo",
+        'qrCodeData' => "ECI:EPIC=$cleanEpic:NAME=$name:AC=$acNumber-$acName:PART=$partNo:SL=$serialNo",
         'cardType' => 'voter'
     ];
 }
@@ -8042,7 +8049,18 @@ if (preg_match('#^aadhaar/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET'
 }
 
 if (preg_match('#^voter/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
-    echo json_encode(getVoterDetails(strtoupper(trim($m[1]))));
+    $epic = strtoupper(trim($m[1]));
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
+        try {
+            $live = dispatchLiveP4Points('voter_verification', ['epicNo' => $epic, 'epicNumber' => $epic], $p4ApiKey);
+            if ($live && (!empty($live['name']) || !empty($live['fullName']) || !empty($live['epicNo']))) {
+                echo json_encode(getVoterDetails($epic, $live));
+                exit;
+            }
+        } catch (Throwable $e) {}
+    }
+    echo json_encode(getVoterDetails($epic));
     exit;
 }
 

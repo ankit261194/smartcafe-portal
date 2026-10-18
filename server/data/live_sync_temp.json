@@ -1,6 +1,6 @@
 ﻿{
     "success":  true,
-    "timestamp":  "2026-10-18T11:01:28+00:00",
+    "timestamp":  "2026-10-18T11:09:51+00:00",
     "users":  [
                   {
                       "id":  "USR-8006518960",
@@ -9,7 +9,7 @@
                       "phone":  "8006518960",
                       "password":  "Aa@910010025",
                       "role":  "citizen",
-                      "balance":  30,
+                      "balance":  45,
                       "isBlocked":  false,
                       "createdAt":  "2026-10-15T00:00:00.000Z"
                   },
@@ -75,30 +75,15 @@
                     {
                         "phone":  "8006518960",
                         "customerName":  "ankit kumar",
-                        "balance":  30,
+                        "balance":  45,
                         "transactions":  [
                                              {
-                                                 "id":  "TXN-1792317027-599",
-                                                 "type":  "credit",
-                                                 "amount":  30,
-                                                 "utr":  "987534149144",
-                                                 "note":  "सुपर एडमिन द्वारा स्वीकृत UTR (987534149144) वॉलेट टॉप-अप",
-                                                 "createdAt":  "2026-10-18T09:50:27+00:00"
-                                             },
-                                             {
-                                                 "id":  "TXN-1792317015",
-                                                 "type":  "debit",
-                                                 "amount":  30,
-                                                 "note":  "ऑनलाइन सेवा शुल्क: डिजिटल वोटर स्मार्ट कार्ड (EPIC)",
-                                                 "createdAt":  "2026-10-18T09:50:15+00:00"
-                                             },
-                                             {
-                                                 "id":  "TXN-1792316981-503",
+                                                 "id":  "TXN-REFUND-VOTER-1792298246",
                                                  "type":  "credit",
                                                  "amount":  15,
-                                                 "utr":  "987136412827",
-                                                 "note":  "सुपर एडमिन द्वारा स्वीकृत UTR (987136412827) वॉलेट टॉप-अप",
-                                                 "createdAt":  "2026-10-18T09:49:41+00:00"
+                                                 "utr":  "REFUND-VOTER-SERVICE",
+                                                 "note":  "à¤µà¤¿à¤«à¤² à¤µà¥‹à¤Ÿà¤° à¤•à¤¾à¤°à¥à¤¡ à¤¸à¥‡à¤µà¤¾ à¤¶à¥à¤²à¥à¤• à¤ªà¥‚à¤°à¥à¤£ à¤µà¤¾à¤ªà¤¸à¥€ (Refund)",
+                                                 "createdAt":  "2026-10-18T09:40:00+00:00"
                                              },
                                              {
                                                  "id":  "TXN-1792298246",
@@ -122,6 +107,29 @@
                                                  "utr":  "717839573483",
                                                  "note":  "à¤¸à¥à¤ªà¤° à¤à¤¡à¤®à¤¿à¤¨ à¤¸à¥à¤µà¥€à¤•à¥ƒà¤¤ UTR (717839573483) à¤µà¥‰à¤²à¥‡à¤Ÿ à¤Ÿà¥‰à¤ª-à¤…à¤ª",
                                                  "createdAt":  "2026-10-16T04:54:07+00:00"
+                                             },
+                                             {
+                                                 "id":  "TXN-1792317027-599",
+                                                 "type":  "credit",
+                                                 "amount":  30,
+                                                 "utr":  "987534149144",
+                                                 "note":  "सुपर एडमिन द्वारा स्वीकृत UTR (987534149144) वॉलेट टॉप-अप",
+                                                 "createdAt":  "2026-10-18T09:50:27+00:00"
+                                             },
+                                             {
+                                                 "id":  "TXN-1792317015",
+                                                 "type":  "debit",
+                                                 "amount":  30,
+                                                 "note":  "ऑनलाइन सेवा शुल्क: डिजिटल वोटर स्मार्ट कार्ड (EPIC)",
+                                                 "createdAt":  "2026-10-18T09:50:15+00:00"
+                                             },
+                                             {
+                                                 "id":  "TXN-1792316981-503",
+                                                 "type":  "credit",
+                                                 "amount":  15,
+                                                 "utr":  "987136412827",
+                                                 "note":  "सुपर एडमिन द्वारा स्वीकृत UTR (987136412827) वॉलेट टॉप-अप",
+                                                 "createdAt":  "2026-10-18T09:49:41+00:00"
                                              }
                                          ]
                     },
@@ -221,40 +229,6 @@
               ],
     "utrRequests":  [
                         {
-                            "id":  "UTR-CUST-1792317027-645",
-                            "tier":  "customer_to_sanchalak",
-                            "cafeId":  "CAFE-999",
-                            "cafeShopName":  "परीक्षण जन सेवा केंद्र",
-                            "customerPhone":  "8006518960",
-                            "customerName":  "ankit kumar",
-                            "amount":  30,
-                            "utr":  "987534149144",
-                            "screenshotUrl":  "",
-                            "upiTarget":  "shop@upi",
-                            "status":  "approved",
-                            "autoVerified":  false,
-                            "approvedAt":  "2026-10-18T09:50:27+00:00",
-                            "rejectReason":  "",
-                            "createdAt":  "2026-10-18T09:50:27+00:00"
-                        },
-                        {
-                            "id":  "UTR-CUST-1792316973-496",
-                            "tier":  "customer_to_sanchalak",
-                            "cafeId":  "CAFE-999",
-                            "cafeShopName":  "परीक्षण जन सेवा केंद्र",
-                            "customerPhone":  "8006518960",
-                            "customerName":  "ankit kumar",
-                            "amount":  15,
-                            "utr":  "987136412827",
-                            "screenshotUrl":  "",
-                            "upiTarget":  "shop@upi",
-                            "status":  "approved",
-                            "autoVerified":  false,
-                            "approvedAt":  "2026-10-18T09:49:41+00:00",
-                            "rejectReason":  "",
-                            "createdAt":  "2026-10-18T09:49:33+00:00"
-                        },
-                        {
                             "id":  "UTR-CUST-1792125257-861",
                             "tier":  "customer_to_sanchalak",
                             "cafeId":  "",
@@ -287,6 +261,40 @@
                             "approvedAt":  "2026-10-18T04:34:16+00:00",
                             "rejectReason":  "",
                             "createdAt":  "2026-10-18T04:33:35+00:00"
+                        },
+                        {
+                            "id":  "UTR-CUST-1792317027-645",
+                            "tier":  "customer_to_sanchalak",
+                            "cafeId":  "CAFE-999",
+                            "cafeShopName":  "परीक्षण जन सेवा केंद्र",
+                            "customerPhone":  "8006518960",
+                            "customerName":  "ankit kumar",
+                            "amount":  30,
+                            "utr":  "987534149144",
+                            "screenshotUrl":  "",
+                            "upiTarget":  "shop@upi",
+                            "status":  "approved",
+                            "autoVerified":  false,
+                            "approvedAt":  "2026-10-18T09:50:27+00:00",
+                            "rejectReason":  "",
+                            "createdAt":  "2026-10-18T09:50:27+00:00"
+                        },
+                        {
+                            "id":  "UTR-CUST-1792316973-496",
+                            "tier":  "customer_to_sanchalak",
+                            "cafeId":  "CAFE-999",
+                            "cafeShopName":  "परीक्षण जन सेवा केंद्र",
+                            "customerPhone":  "8006518960",
+                            "customerName":  "ankit kumar",
+                            "amount":  15,
+                            "utr":  "987136412827",
+                            "screenshotUrl":  "",
+                            "upiTarget":  "shop@upi",
+                            "status":  "approved",
+                            "autoVerified":  false,
+                            "approvedAt":  "2026-10-18T09:49:41+00:00",
+                            "rejectReason":  "",
+                            "createdAt":  "2026-10-18T09:49:33+00:00"
                         }
                     ],
     "vleKycApplications":  [
@@ -564,12 +572,12 @@
                             "retailRate":  20,
                             "isActive":  true,
                             "serviceType":  "live_api",
-                            "status":  "live",
+                            "status":  "maintenance",
                             "fulfillmentType":  "instant_api",
                             "apiEndpoint":  "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
                             "method":  "GET",
                             "isComingSoon":  false,
-                            "badge":  "🟢 लाइव सरकारी API",
+                            "badge":  "🔴 अपस्ट्रीम मेंटेनेंस",
                             "p4Key":  "pan_details_v3",
                             "parameters":  [
                                                "apiKey",
@@ -577,7 +585,9 @@
                                            ],
                             "requiredInputs":  [
                                                    "panNumber"
-                                               ]
+                                               ],
+                            "isUpstreamMaintenance":  true,
+                            "maintenanceNote":  "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
                         },
                         {
                             "id":  "pan_find",
@@ -784,12 +794,12 @@
                             "retailRate":  30,
                             "isActive":  true,
                             "serviceType":  "generator",
-                            "status":  "live",
+                            "status":  "maintenance",
                             "fulfillmentType":  "instant_api",
                             "apiEndpoint":  "https://authorized.p4points.co.in/api/v1/panVerificationPremium",
                             "method":  "GET",
                             "isComingSoon":  false,
-                            "badge":  "🟢 लाइव P4 API (Verified)",
+                            "badge":  "🔴 अपस्ट्रीम मेंटेनेंस",
                             "p4Key":  "pan_verification_premium",
                             "parameters":  [
                                                "apiKey",
@@ -797,7 +807,9 @@
                                            ],
                             "requiredInputs":  [
                                                    "panNumber"
-                                               ]
+                                               ],
+                            "isUpstreamMaintenance":  true,
+                            "maintenanceNote":  "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
                         },
                         {
                             "id":  "mask_pan",
@@ -1223,12 +1235,12 @@
                             "retailRate":  25,
                             "isActive":  true,
                             "serviceType":  "live_api",
-                            "status":  "live",
+                            "status":  "maintenance",
                             "fulfillmentType":  "instant_api",
                             "apiEndpoint":  "https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php",
                             "method":  "GET",
                             "isComingSoon":  false,
-                            "badge":  "🟢 लाइव P4 API (Verified)",
+                            "badge":  "🔴 अपस्ट्रीम मेंटेनेंस",
                             "p4Key":  "dl_pdf_secure",
                             "parameters":  [
                                                "apiKey",
@@ -1239,7 +1251,9 @@
                             "requiredInputs":  [
                                                    "dlNumber",
                                                    "dob"
-                                               ]
+                                               ],
+                            "isUpstreamMaintenance":  true,
+                            "maintenanceNote":  "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
                         },
                         {
                             "id":  "dl_details",
@@ -1251,12 +1265,12 @@
                             "retailRate":  20,
                             "isActive":  true,
                             "serviceType":  "live_api",
-                            "status":  "live",
+                            "status":  "maintenance",
                             "fulfillmentType":  "instant_api",
                             "apiEndpoint":  "https://authorized.p4points.co.in/api/v3/dl/dl_details.php",
                             "method":  "GET",
                             "isComingSoon":  false,
-                            "badge":  "🟢 लाइव P4 API (Verified)",
+                            "badge":  "🔴 अपस्ट्रीम मेंटेनेंस",
                             "p4Key":  "dl_details_v3",
                             "parameters":  [
                                                "apikey",
@@ -1266,7 +1280,9 @@
                             "requiredInputs":  [
                                                    "dlNumber",
                                                    "dob"
-                                               ]
+                                               ],
+                            "isUpstreamMaintenance":  true,
+                            "maintenanceNote":  "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
                         },
                         {
                             "id":  "dl_to_mobile_find",
@@ -1392,12 +1408,12 @@
                             "retailRate":  30,
                             "isActive":  true,
                             "serviceType":  "live_api",
-                            "status":  "live",
+                            "status":  "maintenance",
                             "fulfillmentType":  "instant_api",
                             "apiEndpoint":  "https://authorized.p4points.co.in/api/v1/rc-api/rc-details.php",
                             "method":  "GET",
                             "isComingSoon":  false,
-                            "badge":  "🟢 लाइव P4 API (Verified)",
+                            "badge":  "🔴 अपस्ट्रीम मेंटेनेंस",
                             "p4Key":  "rc_details_v1",
                             "parameters":  [
                                                "apiKey",
@@ -1405,7 +1421,9 @@
                                            ],
                             "requiredInputs":  [
                                                    "vehicleNumber"
-                                               ]
+                                               ],
+                            "isUpstreamMaintenance":  true,
+                            "maintenanceNote":  "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
                         },
                         {
                             "id":  "rc_to_mobile_find",
@@ -1592,12 +1610,12 @@
                             "retailRate":  30,
                             "isActive":  true,
                             "serviceType":  "live_api",
-                            "status":  "live",
+                            "status":  "maintenance",
                             "fulfillmentType":  "instant_api",
                             "apiEndpoint":  "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php",
                             "method":  "GET",
                             "isComingSoon":  false,
-                            "badge":  "🟢 लाइव P4 API (Verified)",
+                            "badge":  "🔴 अपस्ट्रीम मेंटेनेंस",
                             "p4Key":  "rc_fast_pdf",
                             "parameters":  [
                                                "apiKey",
@@ -1607,7 +1625,9 @@
                                            ],
                             "requiredInputs":  [
                                                    "vehicleNumber"
-                                               ]
+                                               ],
+                            "isUpstreamMaintenance":  true,
+                            "maintenanceNote":  "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
                         },
                         {
                             "id":  "chalan_find",
