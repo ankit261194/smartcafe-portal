@@ -3656,7 +3656,8 @@ if ($endpoint === 'superadmin/live-vault' && $method === 'GET') {
         'rcOrders' => $store['rcOrders'] ?? [],
         'applications' => $store['applications'] ?? [],
         'prints' => $store['prints'] ?? [],
-        'superAdminRates' => $store['superAdminRates'] ?? []
+        'superAdminRates' => $store['superAdminRates'] ?? [],
+        'services_79' => (file_exists($dataDir . '/services_79.json') ? (json_decode(file_get_contents($dataDir . '/services_79.json'), true) ?: ($store['services_79'] ?? [])) : ($store['services_79'] ?? []))
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
@@ -5082,38 +5083,60 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
     }
 
     // 6. Voter Verification
-    if (((strpos($norm, 'voter') !== false || strpos($norm, 'epic') !== false) && strpos($norm, 'link') === false && strpos($norm, 'mobile') === false && strpos($norm, 'otp') === false && strpos($norm, 'pdf') === false && strpos($norm, 'card') === false && strpos($norm, 'manual') === false) || $norm === 'voter' || $norm === 'epic' || strpos($norm, 'voter_verification') !== false || strpos($norm, 'voter_details') !== false) {
+    if (((strpos($norm, 'voter') !== false || strpos($norm, 'epic') !== false) && strpos($norm, 'link') === false && strpos($norm, 'mobile') === false && strpos($norm, 'otp') === false && strpos($norm, 'pdf') === false && strpos($norm, 'manual') === false) || $norm === 'voter' || $norm === 'epic' || strpos($norm, 'voter_verification') !== false || strpos($norm, 'voter_details') !== false || $norm === 'votercard') {
         $epicNo = strtoupper(trim($params['epicNumber'] ?? ($params['epicNo'] ?? ($params['epic'] ?? ($params['query'] ?? '')))));
         if (strlen($epicNo) >= 5) {
             $url = 'https://authorized.p4points.co.in/api/v1/voterVerification_new.php?apiKey=' . urlencode($p4ApiKey) . '&epicNumber=' . urlencode($epicNo);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 12);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             $resp = curl_exec($ch);
             curl_close($ch);
             if ($resp) {
                 $json = json_decode($resp, true);
                 $doc = $json['data'] ?? ($json['response']['docs'][0] ?? null);
                 if ($doc) {
-                    return [
-                        'source' => 'p4points',
-                        'service' => 'voter',
-                        'epicNo' => $doc['epicNumber'] ?? ($doc['epic_no'] ?? $epicNo),
-                        'epicNumber' => $doc['epicNumber'] ?? ($doc['epic_no'] ?? $epicNo),
-                        'name' => trim(($doc['FirstName'] ?? '') . ' ' . ($doc['LastName'] ?? '')) ?: ($doc['name_v1'] ?? ($doc['name'] ?? 'मतदाता')),
-                        'fatherName' => $doc['rln_name'] ?? ($doc['relativeName'] ?? ''),
-                        'gender' => $doc['gender'] ?? 'M',
-                        'dob' => $doc['dob'] ?? '',
-                        'age' => $doc['age'] ?? '30',
-                        'district' => $doc['district'] ?? '',
-                        'state' => $doc['state'] ?? '',
-                        'assembly' => $doc['ac_name'] ?? ($doc['assemblyName'] ?? ''),
-                        'partName' => $doc['part_name'] ?? '',
-                        'partNo' => $doc['part_no'] ?? '',
-                        'serialNo' => $doc['serial_no'] ?? '',
-                        'photoUrl' => $doc['photo'] ?? ($doc['photoUrl'] ?? ($doc['image'] ?? null)),
-                        'isLiveFromP4Points' => true
-                    ];
+                    $vName = trim($doc['fullName'] ?? trim(($doc['applicantFirstName'] ?? '') . ' ' . ($doc['applicantLastName'] ?? '')));
+                    if (empty($vName)) {
+                        $vName = trim(($doc['FirstName'] ?? '') . ' ' . ($doc['LastName'] ?? '')) ?: ($doc['name_v1'] ?? ($doc['name'] ?? ''));
+                    }
+                    if (!empty($vName) && !in_array(strtolower($vName), ['मतदाता', 'voter', '-'])) {
+                        $fName = $doc['relationName'] ?? ($doc['relativeFullName'] ?? ($doc['rln_name'] ?? ($doc['relativeName'] ?? ($doc['fatherName'] ?? ''))));
+                        $ac = $doc['asmblyName'] ?? ($doc['ac_name'] ?? ($doc['assemblyName'] ?? ''));
+                        $acNum = (string)($doc['acNumber'] ?? ($doc['ac_no'] ?? ''));
+                        $pName = $doc['partName'] ?? ($doc['part_name'] ?? ($doc['psbuildingName'] ?? ''));
+                        $pNo = (string)($doc['partNumber'] ?? ($doc['part_no'] ?? ''));
+                        $sNo = (string)($doc['partSerialNumber'] ?? ($doc['serial_no'] ?? ''));
+                        $dist = $doc['districtValue'] ?? ($doc['district'] ?? '');
+                        $st = $doc['stateName'] ?? ($doc['state'] ?? '');
+                        return [
+                            'source' => 'p4points',
+                            'service' => 'voter',
+                            'epicNo' => $doc['epicNumber'] ?? ($doc['epic_no'] ?? $epicNo),
+                            'epicNumber' => $doc['epicNumber'] ?? ($doc['epic_no'] ?? $epicNo),
+                            'name' => $vName,
+                            'fullName' => $vName,
+                            'customerName' => $vName,
+                            'fatherName' => $fName,
+                            'relationName' => $fName,
+                            'gender' => $doc['gender'] ?? 'M',
+                            'dob' => $doc['dob'] ?? '',
+                            'age' => (string)($doc['age'] ?? '30'),
+                            'district' => $dist,
+                            'state' => $st,
+                            'assembly' => $ac,
+                            'acName' => $ac,
+                            'acNumber' => $acNum,
+                            'partName' => $pName,
+                            'pollingStation' => $pName,
+                            'partNo' => $pNo,
+                            'serialNo' => $sNo,
+                            'photoUrl' => $doc['photo'] ?? ($doc['photoUrl'] ?? ($doc['image'] ?? null)),
+                            'isLiveFromP4Points' => true,
+                            'data' => $doc
+                        ];
+                    }
                 }
             }
         }
@@ -6697,43 +6720,45 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         'engine_to_rc' => 'इंजन नंबर से RC खोज विवरण'
     ];
 
-    if (!$isOtherCategory) {
-        if (!$isOperatorB2bDirect && $custWalletIdx !== -1) {
-            $store['wallets'][$custWalletIdx]['balance'] -= $retailFee;
-            array_unshift($store['wallets'][$custWalletIdx]['transactions'], [
-                'id' => 'TXN-' . time(),
+    $orderId = 'ORD-' . time() . '-' . rand(1000, 9999);
+
+    // ASYNCHRONOUS MANUAL RELAY FULFILLMENT GATEWAY (Rekha Print Engine)
+    if ($service79 && ($service79['fulfillmentType'] ?? '') === 'manual_relay') {
+        if (!$isOtherCategory) {
+            if (!$isOperatorB2bDirect && $custWalletIdx !== -1) {
+                $store['wallets'][$custWalletIdx]['balance'] -= $retailFee;
+                array_unshift($store['wallets'][$custWalletIdx]['transactions'], [
+                    'id' => 'TXN-' . time(),
+                    'type' => 'debit',
+                    'amount' => $retailFee,
+                    'note' => 'ऑनलाइन सेवा अनुरोध शुल्क: ' . ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)),
+                    'createdAt' => date('c')
+                ]);
+            }
+
+            $cafe['b2bWallet']['balance'] -= $wholesaleCost;
+            array_unshift($cafe['b2bWallet']['transactions'], [
+                'id' => 'B2B-TXN-' . time(),
                 'type' => 'debit',
-                'amount' => $retailFee,
-                'note' => 'ऑनलाइन सेवा शुल्क: ' . ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)),
+                'amount' => $wholesaleCost,
+                'note' => 'थोक एडमिन सेवा कटौती: ' . ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)),
+                'createdAt' => date('c')
+            ]);
+
+            if (!isset($store['cashbook'])) $store['cashbook'] = [];
+            array_unshift($store['cashbook'], [
+                'id' => 'CB-' . time(),
+                'cafeId' => $cafe['id'],
+                'title' => ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)) . " नेट मार्जिन (+₹{$margin})",
+                'category' => 'Manual Relay Service',
+                'amount' => $margin,
+                'paymentMode' => $isOperatorB2bDirect ? 'cash' : 'wallet',
+                'type' => 'income',
+                'customer' => $params['customerName'] ?? $customerPhone,
                 'createdAt' => date('c')
             ]);
         }
 
-        $cafe['b2bWallet']['balance'] -= $wholesaleCost;
-        array_unshift($cafe['b2bWallet']['transactions'], [
-            'id' => 'B2B-TXN-' . time(),
-            'type' => 'debit',
-            'amount' => $wholesaleCost,
-            'note' => 'थोक एडमिन सेवा कटौती: ' . ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)),
-            'createdAt' => date('c')
-        ]);
-
-        if (!isset($store['cashbook'])) $store['cashbook'] = [];
-        array_unshift($store['cashbook'], [
-            'id' => 'CB-' . time(),
-            'cafeId' => $cafe['id'],
-            'title' => ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)) . " नेट मार्जिन (+₹{$margin})",
-            'category' => 'Automated Service',
-            'amount' => $margin,
-            'paymentMode' => $isOperatorB2bDirect ? 'cash' : 'wallet',
-            'type' => 'income',
-            'customer' => $params['customerName'] ?? $customerPhone,
-            'createdAt' => date('c')
-        ]);
-    }
-
-    // ASYNCHRONOUS MANUAL RELAY FULFILLMENT GATEWAY (Rekha Print Engine)
-    if ($service79 && ($service79['fulfillmentType'] ?? '') === 'manual_relay') {
         $userRef = $params['applicationNumber'] ?? ($params['appNo'] ?? ($params['uidNumber'] ?? ($params['aadhaarNo'] ?? ($params['farmerId'] ?? ($params['samagraId'] ?? ($params['dlNo'] ?? ($params['dl'] ?? ($params['vehicle_number'] ?? ($params['vehicleNumber'] ?? ($params['regNo'] ?? ($params['panNo'] ?? '')))))))))));
 
         // Dispatch to Rekha Print backend
@@ -6840,64 +6865,100 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
             if (!isset($store['rcOrders'])) $store['rcOrders'] = [];
             array_unshift($store['rcOrders'], $newRcOrder);
         } elseif ($p4Service === 'panCard' || $p4Service === 'aadhaarToPan' || strpos($normServiceType, 'pan') !== false) {
-            $extractedPan = $liveP4['panNo'] ?? ($p4Data['panNumber'] ?? ($p4Data['panNo'] ?? ($p4Data['pan'] ?? ($liveP4['raw']['panNumber'] ?? ($liveP4['raw']['pan_number'] ?? ($liveP4['raw']['pan'] ?? ($liveP4['raw']['full_pan_number'] ?? '')))))));
-            if (!empty($extractedPan) && preg_match('/^[A-Z]{5}[0-9]{4}[A-Z]$/i', trim($extractedPan))) {
-                $panNo = strtoupper(trim($extractedPan));
+            $extractedPan = strtoupper(trim($p4Data['panNumber'] ?? ($p4Data['panNo'] ?? ($p4Data['pan'] ?? ($p4Data['pancard'] ?? ($liveP4['panNo'] ?? ($userVal ?: '')))))));
+            $panName = trim($p4Data['name'] ?? ($p4Data['fullName'] ?? ($p4Data['full_name'] ?? ($p4Data['holder_name'] ?? ($liveP4['name'] ?? '')))));
+            if (empty($extractedPan) || empty($panName) || in_array(strtolower($panName), ['pan धारक', 'pan holder', '-'])) {
+                $generatedData = null;
             } else {
-                $panNo = (in_array($normServiceType, ['pan_details', 'pan_verification_premium', 'pan', 'pan_to_gst', 'pan_to_aadhar_find'])) ? strtoupper(trim($userVal)) : '';
+                $generatedData['panNo'] = $extractedPan;
+                $generatedData['name'] = $panName;
+                $generatedData['customerName'] = $panName;
+                $generatedData['fatherName'] = trim($p4Data['fatherName'] ?? ($p4Data['father_name'] ?? ($p4Data['careOf'] ?? ($liveP4['fatherName'] ?? ''))));
+                $generatedData['dob'] = trim($p4Data['dob'] ?? ($p4Data['dateOfBirth'] ?? ($liveP4['dob'] ?? '')));
+                $generatedData['isLiveFromP4Points'] = true;
+                $docTitle = "पैन कार्ड ({$extractedPan}) - {$panName}";
+                $refNumber = $extractedPan;
             }
-            $generatedData['panNo'] = $panNo;
-            $panName = $p4Data['name'] ?? ($p4Data['full_name'] ?? ($p4Data['holder_name'] ?? ($params['customerName'] ?? 'PAN धारक')));
-            $docTitle = $panNo ? "पैन कार्ड ({$panNo}) - {$panName}" : ($serviceTitles[$normServiceType] ?? 'पैन कार्ड सेवा');
-            $refNumber = $panNo ?: ($userVal ?: 'PAN');
         } elseif ($p4Service === 'voter' || strpos($normServiceType, 'voter') !== false || strpos($normServiceType, 'epic') !== false) {
-            $epic = strtoupper(trim($liveP4['epicNo'] ?? ($liveP4['epicNumber'] ?? ($p4Data['epicNumber'] ?? ($p4Data['epicNo'] ?? ($p4Data['epic_number'] ?? ($userVal ?: '')))))));
-            $generatedData['epicNo'] = $epic;
-            $generatedData['epicNumber'] = $epic;
-            $voterName = $liveP4['name'] ?? ($p4Data['name'] ?? ($p4Data['applicant_name'] ?? ($params['customerName'] ?? 'मतदाता')));
-            $generatedData['name'] = $voterName;
-            $generatedData['customerName'] = $voterName;
-            if (!empty($liveP4['fatherName'])) $generatedData['fatherName'] = $liveP4['fatherName'];
-            if (!empty($liveP4['gender'])) $generatedData['gender'] = $liveP4['gender'];
-            if (!empty($liveP4['dob'])) $generatedData['dob'] = $liveP4['dob'];
-            if (!empty($liveP4['age'])) $generatedData['age'] = $liveP4['age'];
-            if (!empty($liveP4['assembly'])) $generatedData['acName'] = $liveP4['assembly'];
-            if (!empty($liveP4['partName'])) $generatedData['partName'] = $liveP4['partName'];
-            if (!empty($liveP4['partNo'])) $generatedData['partNo'] = $liveP4['partNo'];
-            if (!empty($liveP4['serialNo'])) $generatedData['serialNo'] = $liveP4['serialNo'];
-            if (!empty($liveP4['district'])) $generatedData['district'] = $liveP4['district'];
-            if (!empty($liveP4['state'])) $generatedData['state'] = $liveP4['state'];
-            if (!empty($liveP4['photoUrl'])) $generatedData['photoUrl'] = $liveP4['photoUrl'];
-            if (!empty($liveP4['mobileNumber'])) $generatedData['mobileNumber'] = $liveP4['mobileNumber'];
-            $docTitle = "वोटर स्मार्ट कार्ड ({$epic}) - {$voterName}";
-            $refNumber = $epic;
+            $epic = strtoupper(trim($p4Data['epicNumber'] ?? ($p4Data['epicNo'] ?? ($p4Data['epic_number'] ?? ($liveP4['epicNo'] ?? ($liveP4['epicNumber'] ?? ($userVal ?: '')))))));
+            $voterName = trim($p4Data['fullName'] ?? trim(($p4Data['applicantFirstName'] ?? '') . ' ' . ($p4Data['applicantLastName'] ?? '')));
+            if (empty($voterName)) {
+                $voterName = trim($p4Data['name'] ?? ($p4Data['applicant_name'] ?? ($liveP4['name'] ?? '')));
+            }
+            if (empty($epic) || empty($voterName) || in_array(strtolower($voterName), ['मतदाता', 'voter', '-'])) {
+                $generatedData = null;
+            } else {
+                $fatherName = trim($p4Data['relationName'] ?? ($p4Data['relativeFullName'] ?? ($p4Data['fatherName'] ?? ($p4Data['father_name'] ?? ($p4Data['rln_name'] ?? ($liveP4['fatherName'] ?? ''))))));
+                $acName = trim($p4Data['asmblyName'] ?? ($p4Data['assembly'] ?? ($p4Data['ac_name'] ?? ($liveP4['assembly'] ?? ''))));
+                $acNumber = trim((string)($p4Data['acNumber'] ?? ($p4Data['ac_no'] ?? ($p4Data['acId'] ?? ''))));
+                $prlmntName = trim($p4Data['prlmntName'] ?? ($p4Data['parliament'] ?? ''));
+                $partName = trim($p4Data['partName'] ?? ($p4Data['part_name'] ?? ($p4Data['psbuildingName'] ?? ($liveP4['partName'] ?? ''))));
+                $partNo = trim((string)($p4Data['partNumber'] ?? ($p4Data['part_no'] ?? ($liveP4['partNo'] ?? ''))));
+                $serialNo = trim((string)($p4Data['partSerialNumber'] ?? ($p4Data['serial_no'] ?? ($p4Data['serialNumber'] ?? ($liveP4['serialNo'] ?? '')))));
+                $district = trim($p4Data['districtValue'] ?? ($p4Data['district'] ?? ($liveP4['district'] ?? '')));
+                $state = trim($p4Data['stateName'] ?? ($p4Data['state'] ?? ($liveP4['state'] ?? '')));
+                $dob = trim($p4Data['dob'] ?? ($liveP4['dob'] ?? ''));
+                $age = trim((string)($p4Data['age'] ?? ($liveP4['age'] ?? '')));
+                $gender = trim($p4Data['gender'] ?? ($liveP4['gender'] ?? 'M'));
+                $photo = $p4Data['photo'] ?? ($p4Data['photoUrl'] ?? ($p4Data['image'] ?? ($liveP4['photoUrl'] ?? null)));
+                $generatedData = [
+                    'source' => 'p4points',
+                    'service' => 'voter',
+                    'epicNo' => $epic,
+                    'epicNumber' => $epic,
+                    'name' => $voterName,
+                    'fullName' => $voterName,
+                    'customerName' => $voterName,
+                    'fatherName' => $fatherName,
+                    'relationName' => $fatherName,
+                    'acName' => $acName,
+                    'assembly' => $acName,
+                    'acNumber' => $acNumber,
+                    'prlmntName' => $prlmntName,
+                    'partName' => $partName,
+                    'pollingStation' => $partName,
+                    'partNo' => $partNo,
+                    'serialNo' => $serialNo,
+                    'district' => $district,
+                    'state' => $state,
+                    'dob' => $dob,
+                    'age' => $age,
+                    'gender' => $gender,
+                    'photoUrl' => $photo,
+                    'isLiveFromP4Points' => true,
+                    'cardType' => 'voter'
+                ];
+                $docTitle = "मतदाता पहचान पत्र ({$epic}) - {$voterName}";
+                $refNumber = $epic;
+            }
         } elseif ($p4Service === 'ration' || strpos($normServiceType, 'ration') !== false || $normServiceType === 'rationCard') {
-            $rat = trim($liveP4['rationNo'] ?? ($p4Data['ration_no'] ?? ($p4Data['rationNo'] ?? ($params['rationNo'] ?? ($params['rationNumber'] ?? ($params['query'] ?? ''))))));
-            $generatedData['rationNo'] = $rat;
-            $headName = $p4Data['headName'] ?? ($p4Data['head_name'] ?? ($p4Data['name'] ?? ($liveP4['headName'] ?? ($liveP4['name'] ?? ($params['customerName'] ?? 'राशन कार्ड धारक')))));
-            $generatedData['name'] = $headName;
-            $generatedData['headName'] = $headName;
-            $generatedData['customerName'] = $headName;
-            if (!empty($p4Data['dealerName']) || !empty($p4Data['fps_name']) || !empty($liveP4['dealerName'])) {
-                $generatedData['dealerName'] = $p4Data['dealerName'] ?? ($p4Data['fps_name'] ?? $liveP4['dealerName']);
+            $rat = trim($p4Data['rationNo'] ?? ($p4Data['ration_no'] ?? ($p4Data['rationNumber'] ?? ($liveP4['rationNo'] ?? ($userVal ?: '')))));
+            $headName = trim($p4Data['headName'] ?? ($p4Data['head_name'] ?? ($p4Data['owner_name'] ?? ($p4Data['name'] ?? ($liveP4['headName'] ?? '')))));
+            if (empty($rat) || empty($headName) || in_array(strtolower($headName), ['राशन कार्ड धारक', 'ration card holder', '-'])) {
+                $generatedData = null;
+            } else {
+                $dealerName = trim($p4Data['dealerName'] ?? ($p4Data['fps_name'] ?? ($p4Data['dealer_name'] ?? ($liveP4['dealerName'] ?? ''))));
+                $totalMembers = trim((string)($p4Data['totalMembers'] ?? ($p4Data['member_count'] ?? count($p4Data['members'] ?? []))));
+                $generatedData = [
+                    'source' => 'p4points',
+                    'service' => 'ration',
+                    'rationNo' => $rat,
+                    'name' => $headName,
+                    'headName' => $headName,
+                    'customerName' => $headName,
+                    'dealerName' => $dealerName,
+                    'totalMembers' => $totalMembers,
+                    'members' => $p4Data['members'] ?? ($liveP4['members'] ?? []),
+                    'address' => $p4Data['address'] ?? ($liveP4['address'] ?? ''),
+                    'district' => $p4Data['district'] ?? ($liveP4['district'] ?? ''),
+                    'state' => $p4Data['state'] ?? ($liveP4['state'] ?? ''),
+                    'isLiveFromP4Points' => true,
+                    'cardType' => 'ration'
+                ];
+                if ($pdfUrl) $generatedData['pdfUrl'] = $pdfUrl;
+                $docTitle = "राशन पर्ची ({$rat}) - {$headName}";
+                $refNumber = $rat ?: 'RATION';
             }
-            if (!empty($p4Data['totalMembers']) || !empty($p4Data['member_count']) || !empty($liveP4['totalMembers'])) {
-                $generatedData['totalMembers'] = $p4Data['totalMembers'] ?? ($p4Data['member_count'] ?? $liveP4['totalMembers']);
-            }
-            if (!empty($p4Data['members']) || !empty($liveP4['members'])) {
-                $generatedData['members'] = $p4Data['members'] ?? $liveP4['members'];
-            }
-            if (!empty($p4Data['address']) || !empty($liveP4['address'])) {
-                $generatedData['address'] = $p4Data['address'] ?? $liveP4['address'];
-            }
-            if (!empty($p4Data['state']) || !empty($liveP4['state'])) {
-                $generatedData['state'] = $p4Data['state'] ?? $liveP4['state'];
-            }
-            if (!empty($p4Data['district']) || !empty($liveP4['district'])) {
-                $generatedData['district'] = $p4Data['district'] ?? $liveP4['district'];
-            }
-            $docTitle = "राशन पर्ची ({$rat}) - {$headName}";
-            $refNumber = $rat ?: 'RATION';
         } elseif ($p4Service === 'ayushman' || strpos($normServiceType, 'ayushman') !== false || $normServiceType === 'ayushmanCard') {
             $pmjayId = trim($liveP4['pmjayId'] ?? ($p4Data['pmjay_id'] ?? ($p4Data['pmjayId'] ?? ($params['pmjayId'] ?? ($params['query'] ?? '')))));
             $generatedData['pmjayId'] = $pmjayId;
@@ -7280,30 +7341,48 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
 
     // 3. Zero-Fake Policy: If no authentic government data was returned by live API/gateway
     if (!$generatedData) {
-        // Revert wallet debits so customer & cafe are not charged for a failed lookup
-        if (!$isOtherCategory) {
-            if (!$isOperatorB2bDirect && $custWalletIdx !== -1) {
-                $store['wallets'][$custWalletIdx]['balance'] += $retailFee;
-                if (!empty($store['wallets'][$custWalletIdx]['transactions'])) {
-                    array_shift($store['wallets'][$custWalletIdx]['transactions']);
-                }
-            }
-            $cafe['b2bWallet']['balance'] += $wholesaleCost;
-            if (!empty($cafe['b2bWallet']['transactions'])) {
-                array_shift($cafe['b2bWallet']['transactions']);
-            }
-            if (!empty($store['cashbook'])) {
-                array_shift($store['cashbook']);
-            }
-            saveStore($dataFile, $store);
-        }
-
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'error' => 'सरकारी रिकॉर्ड में यह विवरण उपलब्ध नहीं है अथवा सेवा प्रदाता सर्वर अस्थायी रूप से डाउन है।'
+            'error' => 'सरकारी रिकॉर्ड में यह विवरण उपलब्ध नहीं है अथवा सेवा प्रदाता सर्वर अस्थायी रूप से डाउन है। आपके वॉलेट से कोई राशि नहीं काटी गई है।'
         ]);
         exit;
+    }
+
+    // Double-Entry Ledger: Debit wallet ONLY after authentic government data is validated & confirmed
+    if (!$isOtherCategory) {
+        if (!$isOperatorB2bDirect && $custWalletIdx !== -1) {
+            $store['wallets'][$custWalletIdx]['balance'] -= $retailFee;
+            array_unshift($store['wallets'][$custWalletIdx]['transactions'], [
+                'id' => 'TXN-' . time(),
+                'type' => 'debit',
+                'amount' => $retailFee,
+                'note' => 'ऑनलाइन सेवा शुल्क: ' . ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)),
+                'createdAt' => date('c')
+            ]);
+        }
+
+        $cafe['b2bWallet']['balance'] -= $wholesaleCost;
+        array_unshift($cafe['b2bWallet']['transactions'], [
+            'id' => 'B2B-TXN-' . time(),
+            'type' => 'debit',
+            'amount' => $wholesaleCost,
+            'note' => 'थोक एडमिन सेवा कटौती: ' . ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)),
+            'createdAt' => date('c')
+        ]);
+
+        if (!isset($store['cashbook'])) $store['cashbook'] = [];
+        array_unshift($store['cashbook'], [
+            'id' => 'CB-' . time(),
+            'cafeId' => $cafe['id'],
+            'title' => ($serviceTitles[$normServiceType] ?? ($service79['name'] ?? $normServiceType)) . " नेट मार्जिन (+₹{$margin})",
+            'category' => 'Automated Service',
+            'amount' => $margin,
+            'paymentMode' => $isOperatorB2bDirect ? 'cash' : 'wallet',
+            'type' => 'income',
+            'customer' => $params['customerName'] ?? $customerPhone,
+            'createdAt' => date('c')
+        ]);
     }
 
     $orderId = 'ORD-' . time() . '-' . rand(1000, 9999);
