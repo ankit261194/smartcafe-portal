@@ -6,7 +6,7 @@
   <!-- 1. Home / Main B2B Portal -->
   <url>
     <loc>https://smartcafe.sbs/</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="hi" href="https://smartcafe.sbs/?lang=hi" />
@@ -23,137 +23,285 @@
     </image:image>
   </url>
 
-  <!-- 2. Dedicated SEO Landing Pages (High Keyword Authority) -->
+  <!-- 2. Dedicated High-Authority SEO Landing Pages -->
   <url>
     <loc>https://smartcafe.sbs/services/rc-download.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/services/pan-card-pvc.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/services/aadhaar-advance.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/services/voter-id-print.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/services/ayushman-golden-card.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/services/ration-card-pdf.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/services/electricity-bill-slip.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/services/edistrict-verification.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/services/cybercafe-software.html</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
 
-  <!-- 3. Web App Service Deep Links -->
+  <url>
+    <loc>https://smartcafe.sbs/services/driving-licence-download.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/eshram-card-download.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/samagra-id-portal.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/lost-pan-find.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/vehicle-challan-check.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/services/pvc-card-cropper.html</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+
+  <!-- 3. Web App Service Deep Links (Instant Route Indexing) -->
   <url>
     <loc>https://smartcafe.sbs/?service=rc</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/?service=pan</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/?service=aadhaar</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/?service=voter</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/?service=ayushman</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/?service=ration</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/?service=electricity</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/?service=edistrict</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?service=dl</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?service=eshram</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?service=samagra</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?service=panfind</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?service=challan</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?service=cropper</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/?portal=operator</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
 
   <url>
     <loc>https://smartcafe.sbs/?portal=vle-reg</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <!-- 4. Category Hub Links -->
+  <url>
+    <loc>https://smartcafe.sbs/?category=parivahan</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?category=pan</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?category=aadhaar</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?category=voter</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?category=welfare</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?category=state_up</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?category=state_bihar</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?category=state_mp</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
+  <url>
+    <loc>https://smartcafe.sbs/?category=utility</loc>
+    <lastmod>2026-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
