@@ -249,12 +249,12 @@
     "retailRate": 20,
     "isActive": true,
     "serviceType": "live_api",
-    "status": "live",
+    "status": "maintenance",
     "fulfillmentType": "instant_api",
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium.php",
     "method": "GET",
     "isComingSoon": false,
-    "badge": "🟢 लाइव सरकारी API",
+    "badge": "🔴 अपस्ट्रीम मेंटेनेंस",
     "p4Key": "pan_details_v3",
     "parameters": [
       "apiKey",
@@ -262,7 +262,9 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "isUpstreamMaintenance": true,
+    "maintenanceNote": "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
   },
   {
     "id": "pan_find",
@@ -469,12 +471,12 @@
     "retailRate": 30,
     "isActive": true,
     "serviceType": "generator",
-    "status": "live",
+    "status": "maintenance",
     "fulfillmentType": "instant_api",
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/panVerificationPremium",
     "method": "GET",
     "isComingSoon": false,
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "badge": "🔴 अपस्ट्रीम मेंटेनेंस",
     "p4Key": "pan_verification_premium",
     "parameters": [
       "apiKey",
@@ -482,7 +484,9 @@
     ],
     "requiredInputs": [
       "panNumber"
-    ]
+    ],
+    "isUpstreamMaintenance": true,
+    "maintenanceNote": "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
   },
   {
     "id": "mask_pan",
@@ -908,12 +912,12 @@
     "retailRate": 25,
     "isActive": true,
     "serviceType": "live_api",
-    "status": "live",
+    "status": "maintenance",
     "fulfillmentType": "instant_api",
     "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php",
     "method": "GET",
     "isComingSoon": false,
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "badge": "🔴 अपस्ट्रीम मेंटेनेंस",
     "p4Key": "dl_pdf_secure",
     "parameters": [
       "apiKey",
@@ -924,7 +928,9 @@
     "requiredInputs": [
       "dlNumber",
       "dob"
-    ]
+    ],
+    "isUpstreamMaintenance": true,
+    "maintenanceNote": "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
   },
   {
     "id": "dl_details",
@@ -936,12 +942,12 @@
     "retailRate": 20,
     "isActive": true,
     "serviceType": "live_api",
-    "status": "live",
+    "status": "maintenance",
     "fulfillmentType": "instant_api",
     "apiEndpoint": "https://authorized.p4points.co.in/api/v3/dl/dl_details.php",
     "method": "GET",
     "isComingSoon": false,
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "badge": "🔴 अपस्ट्रीम मेंटेनेंस",
     "p4Key": "dl_details_v3",
     "parameters": [
       "apikey",
@@ -951,7 +957,9 @@
     "requiredInputs": [
       "dlNumber",
       "dob"
-    ]
+    ],
+    "isUpstreamMaintenance": true,
+    "maintenanceNote": "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
   },
   {
     "id": "dl_to_mobile_find",
@@ -1077,12 +1085,12 @@
     "retailRate": 30,
     "isActive": true,
     "serviceType": "live_api",
-    "status": "live",
+    "status": "maintenance",
     "fulfillmentType": "instant_api",
     "apiEndpoint": "https://authorized.p4points.co.in/api/v1/rc-api/rc-details.php",
     "method": "GET",
     "isComingSoon": false,
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "badge": "🔴 अपस्ट्रीम मेंटेनेंस",
     "p4Key": "rc_details_v1",
     "parameters": [
       "apiKey",
@@ -1090,7 +1098,9 @@
     ],
     "requiredInputs": [
       "vehicleNumber"
-    ]
+    ],
+    "isUpstreamMaintenance": true,
+    "maintenanceNote": "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
   },
   {
     "id": "rc_to_mobile_find",
@@ -1277,12 +1287,12 @@
     "retailRate": 30,
     "isActive": true,
     "serviceType": "live_api",
-    "status": "live",
+    "status": "maintenance",
     "fulfillmentType": "instant_api",
     "apiEndpoint": "https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php",
     "method": "GET",
     "isComingSoon": false,
-    "badge": "🟢 लाइव P4 API (Verified)",
+    "badge": "🔴 अपस्ट्रीम मेंटेनेंस",
     "p4Key": "rc_fast_pdf",
     "parameters": [
       "apiKey",
@@ -1292,7 +1302,9 @@
     ],
     "requiredInputs": [
       "vehicleNumber"
-    ]
+    ],
+    "isUpstreamMaintenance": true,
+    "maintenanceNote": "सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं कटेगा।"
   },
   {
     "id": "chalan_find",

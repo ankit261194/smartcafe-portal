@@ -5322,6 +5322,28 @@ app.post('/api/services/execute-automated', async (req, res) => {
     return res.status(400).json({ error: 'सेवा प्रकार अनिवार्य है।' });
   }
 
+  const maintenanceServices = [
+    'pan_details',
+    'pan_basic_pricing',
+    'pan_verification_premium',
+    'panverificationpremium',
+    'rc_to_details',
+    'rc_pdf_download',
+    'rc_fast_server',
+    'driving_licence_pdf',
+    'dl_details',
+    'driving_licence_verify',
+    'dl_verification',
+    'dl_pdf_service'
+  ];
+  if (maintenanceServices.includes(String(serviceType).toLowerCase())) {
+    return res.status(400).json({
+      success: false,
+      maintenance: true,
+      error: 'सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई राशि नहीं काटी गई है (कटौती: ₹0)।'
+    });
+  }
+
   const effectiveCustomerPhone = customerPhone || '';
 
   let cafe = (store.cafes || []).find(c => c.id === cafeId || c.code === cafeId);

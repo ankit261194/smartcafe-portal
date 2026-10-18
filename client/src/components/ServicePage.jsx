@@ -65,6 +65,21 @@ export const MANUAL_RELAY_12_SERVICES = [
   'agristack_pdf'
 ];
 
+export const UPSTREAM_MAINTENANCE_SERVICES = [
+  'pan_details',
+  'pan_basic_pricing',
+  'pan_verification_premium',
+  'panverificationpremium',
+  'rc_to_details',
+  'rc_pdf_download',
+  'rc_fast_server',
+  'driving_licence_pdf',
+  'dl_details',
+  'driving_licence_verify',
+  'dl_verification',
+  'dl_pdf_service'
+];
+
 function ServicePageContent({
   activeToolId = 'aadhaar_advance',
   onSelectTool,
@@ -97,6 +112,14 @@ function ServicePageContent({
       allServices[0] || 
       INSTANT_TOOLS[0];
   }, [allServices, normalizedToolId]);
+
+  const isUpstreamMaintenance = useMemo(() => {
+    const id = (currentTool?.id || '').toLowerCase();
+    return UPSTREAM_MAINTENANCE_SERVICES.includes(id) || 
+      currentTool?.status === 'maintenance' || 
+      currentTool?.isUpstreamMaintenance === true ||
+      (currentTool?.source === 'p4points' && (id === 'pan_details' || id === 'rc_to_details' || id === 'dl_verification' || id === 'pan_basic_pricing'));
+  }, [currentTool]);
 
   const isManualRelay12 = useMemo(() => {
     const id = (currentTool?.id || '').toLowerCase();
@@ -474,6 +497,13 @@ function ServicePageContent({
     if (e) e.preventDefault();
     let val = primaryInput.trim();
     const tid = (currentTool?.id || '').toLowerCase();
+
+    if (isUpstreamMaintenance) {
+      setErrorMsg(language === 'hi' 
+        ? '⚠️ सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई शुल्क नहीं काटा गया है (कटौती: ₹0)।' 
+        : '⚠️ This service is temporarily under upstream maintenance. Your wallet balance is 100% safe (₹0 deducted).');
+      return;
+    }
 
     if (['pan_find_manual', 'pan_find_manual_alt'].includes(tid)) {
       val = customerName.trim();
@@ -4353,13 +4383,17 @@ function ServicePageContent({
           <div className="bg-white dark:bg-[#0c162c] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md overflow-hidden">
             
             {/* Header Banner with Title on left & Status Badge & [← Back] on right */}
-            <div className={`${currentTool?.isComingSoon ? 'bg-slate-800' : 'bg-[#1d4ed8] dark:bg-[#1e40af]'} text-white px-4 py-3.5 flex items-center justify-between shadow-xs gap-2`}>
+            <div className={`${isUpstreamMaintenance ? 'bg-rose-900 dark:bg-rose-950' : currentTool?.isComingSoon ? 'bg-slate-800' : 'bg-[#1d4ed8] dark:bg-[#1e40af]'} text-white px-4 py-3.5 flex items-center justify-between shadow-xs gap-2`}>
               <span className="font-black text-xs sm:text-sm uppercase tracking-wide flex items-center gap-2 truncate pr-2">
                 <ServiceIconComponent className="w-4 h-4 text-white shrink-0" />
                 <span className="truncate">{currentTool?.name || currentTool?.title?.en || currentTool?.id?.toUpperCase()}</span>
               </span>
               <div className="flex items-center gap-2 shrink-0">
-                {currentTool?.isComingSoon ? (
+                {isUpstreamMaintenance ? (
+                  <span className="px-2 py-0.5 bg-rose-500 text-white font-black text-[10px] rounded-full uppercase tracking-wider">
+                    🔴 अपस्ट्रीम मेंटेनेंस
+                  </span>
+                ) : currentTool?.isComingSoon ? (
                   <span className="px-2 py-0.5 bg-amber-400 text-slate-950 font-black text-[10px] rounded-full uppercase tracking-wider">
                     ⏳ Coming Soon
                   </span>
@@ -4394,6 +4428,23 @@ function ServicePageContent({
                 </button>
               </div>
             </div>
+
+            {/* Upstream Maintenance Notice Banner */}
+            {isUpstreamMaintenance && (
+              <div className="m-4 mb-0 p-3.5 bg-rose-500/15 border-2 border-rose-500/40 rounded-xl text-rose-950 dark:text-rose-200 text-xs shadow-sm space-y-1">
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
+                  <span className="font-black text-xs sm:text-sm text-rose-900 dark:text-rose-300">
+                    🔴 सेवा प्रदाता सर्वर मेंटेनेंस पर है (Upstream API Maintenance)
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-700 dark:text-slate-300 font-medium leading-relaxed pl-6">
+                  {language === 'hi'
+                    ? 'सरकारी सेवा प्रदाता (P4Points) के सर्वर पर मेंटेनेंस होने के कारण यह सेवा अस्थायी रूप से स्थगित है। आपके वॉलेट से कोई शुल्क नहीं काटा जाएगा (कटौती: ₹0)। जैसे ही अपस्ट्रीम सर्वर ठीक होगा, सेवा तुरंत सक्रिय हो जाएगी।'
+                    : 'This service is temporarily paused due to maintenance at the upstream provider. No fee will be deducted from your wallet (Deduction: ₹0).'}
+                </p>
+              </div>
+            )}
 
             {/* Manual Relay 12 Services Explicit Form Banner */}
             {isManualRelay12 && (
@@ -4506,7 +4557,17 @@ function ServicePageContent({
 
               {/* Bottom Action Row: Live Fee Badge on Left + Action Buttons on Right */}
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-3">
-                {isFreeService || requiredFee === 0 ? (
+                {isUpstreamMaintenance ? (
+                  <div className="bg-rose-50 dark:bg-rose-950/60 px-3 py-1.5 rounded-xl border border-rose-300 dark:border-rose-700/60 flex items-center gap-1.5 shadow-2xs">
+                    <span className="text-[11px] font-bold text-rose-800 dark:text-rose-300">
+                      {language === 'hi' ? 'स्थिति:' : 'Status:'}
+                    </span>
+                    <span className="font-black text-rose-700 dark:text-rose-400 text-xs flex items-center gap-1">
+                      <span>🔴</span>
+                      <span>{language === 'hi' ? 'अस्थायी स्थगित (₹0)' : 'Paused (₹0)'}</span>
+                    </span>
+                  </div>
+                ) : isFreeService || requiredFee === 0 ? (
                   <div className="bg-emerald-50 dark:bg-emerald-950/60 px-3 py-1.5 rounded-xl border border-emerald-300 dark:border-emerald-700/60 flex items-center gap-1.5 shadow-2xs">
                     <span className="text-[11px] font-bold text-emerald-800 dark:text-emerald-300">
                       {language === 'hi' ? 'शुल्क:' : 'Fee:'}
@@ -4540,14 +4601,16 @@ function ServicePageContent({
 
                   <button
                     type="submit"
-                    disabled={loading || currentTool?.isComingSoon}
-                    className={`${currentTool?.isComingSoon ? 'bg-slate-400 dark:bg-slate-700 cursor-not-allowed opacity-75' : 'bg-blue-600 hover:bg-blue-700 active:scale-95 shadow-md shadow-blue-600/25 cursor-pointer'} text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition`}
+                    disabled={loading || currentTool?.isComingSoon || isUpstreamMaintenance}
+                    className={`${currentTool?.isComingSoon || isUpstreamMaintenance ? 'bg-slate-400 dark:bg-slate-700 cursor-not-allowed opacity-75' : 'bg-blue-600 hover:bg-blue-700 active:scale-95 shadow-md shadow-blue-600/25 cursor-pointer'} text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-2 transition`}
                   >
                     {loading ? (
                       <>
                         <RefreshCw className="w-4 h-4 animate-spin" />
                         <span>{language === 'hi' ? 'खोज रहे हैं...' : 'Processing...'}</span>
                       </>
+                    ) : isUpstreamMaintenance ? (
+                      <span>{language === 'hi' ? '🔴 अपस्ट्रीम मेंटेनेंस (शुल्क: ₹0)' : '🔴 Upstream Maintenance (₹0)'}</span>
                     ) : currentTool?.isComingSoon ? (
                       <span>{language === 'hi' ? '⏳ सेवा जल्द उपलब्ध होगी' : '⏳ Coming Soon'}</span>
                     ) : (
@@ -4581,7 +4644,9 @@ function ServicePageContent({
                 </span>
               </span>
               <span className="text-[11px] bg-white/20 text-white font-mono font-bold px-2.5 py-0.5 rounded-full">
-                {currentResult?.status === 'pending' || currentResult?.isPendingRelay || isManualRelay12 || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'e_shram_update', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service', 'puc_certificate_download', 'agristack_pdf'].includes(currentTool?.id)
+                {isUpstreamMaintenance
+                  ? '🔴 मेंटेनेंस'
+                  : currentResult?.status === 'pending' || currentResult?.isPendingRelay || isManualRelay12 || currentTool?.fulfillmentType === 'manual_relay' || currentTool?.source === 'rekhaprint' || ['ll_exam_pass_auto', 'pan_find', 'pan_find_manual', 'pan_find_manual_alt', 'pan_aadhaar_link_manual', 'e_shram_update', 'samagra_service', 'sambal_pdf', 'dl_to_mobile_find', 'mobile_update_service', 'aadhaar_to_mobile_find', 'dob_update_service', 'puc_certificate_download', 'agristack_pdf'].includes(currentTool?.id)
                   ? '⏱️ 1-2 घंटे रिले'
                   : (toolKind === 'card' || ['panCard', 'aadhaarCard', 'aadhaar_manual', 'aadhaar_pvc', 'drivingLicence', 'voterCard', 'ayushmanCard', 'rationCard'].includes(currentTool?.id))
                   ? '🖨️ त्वरित कार्ड प्रिंट'
@@ -4813,6 +4878,28 @@ function ServicePageContent({
                 >
                   {language === 'hi' ? 'पुनः प्रयास करें' : 'Try Again'}
                 </button>
+              </div>
+            ) : isUpstreamMaintenance ? (
+              <div className="p-8 sm:p-14 flex flex-col items-center justify-center text-center space-y-4">
+                <div className="w-16 h-16 rounded-2xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center text-3xl">
+                  ⚠️
+                </div>
+                <div className="space-y-2 max-w-md">
+                  <span className="px-3 py-1 bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-300 font-black text-xs rounded-full uppercase tracking-wider inline-block">
+                    🔴 सेवा प्रदाता सर्वर मेंटेनेंस (Upstream API Maintenance)
+                  </span>
+                  <h4 className="text-base font-black text-slate-900 dark:text-white">
+                    {language === 'hi' ? 'यह सेवा अस्थायी रूप से स्थगित है' : 'Service Temporarily Paused'}
+                  </h4>
+                  <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {language === 'hi'
+                      ? 'सरकारी सेवा प्रदाता (P4Points) की तरफ से सर्वर / कुकीज़ मेंटेनेंस चल रहा है। इस दौरान पोर्टल पर कोई गलत या नकली डेटा नहीं दिखाया जा रहा है और आपके वॉलेट से ₹0 कटेगा।'
+                      : 'The upstream government service provider is currently performing maintenance. Zero fake data is generated and no balance will be deducted.'}
+                  </p>
+                  <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+                    🛡️ <strong>100% शून्य कटौती गारंटी:</strong> जैसे ही अपस्ट्रीम सर्वर बहाल होगा, यह सेवा स्वतः पुनः चालू हो जाएगी।
+                  </div>
+                </div>
               </div>
             ) : !activeData ? (
               <div className="p-8 sm:p-14 flex flex-col items-center justify-center text-center space-y-4">

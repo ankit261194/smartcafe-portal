@@ -26,6 +26,9 @@ if ($endpointParam === 'google-verify' || preg_match('/\/google([a-zA-Z0-9_-]+)\
 
 header('Content-Type: application/json; charset=utf-8');
 header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, post-check=0, pre-check=0');
+header('CDN-Cache-Control: no-store');
+header('Surrogate-Control: no-store');
+header('X-Accel-Expires: 0');
 header('Pragma: no-cache');
 header('Expires: 0');
 
@@ -6545,6 +6548,30 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     if (!$serviceType) {
         http_response_code(400);
         echo json_encode(['error' => 'सेवा प्रकार अनिवार्य है।']);
+        exit;
+    }
+
+    $maintenanceServices = [
+        'pan_details',
+        'pan_basic_pricing',
+        'pan_verification_premium',
+        'panverificationpremium',
+        'rc_to_details',
+        'rc_pdf_download',
+        'rc_fast_server',
+        'driving_licence_pdf',
+        'dl_details',
+        'driving_licence_verify',
+        'dl_verification',
+        'dl_pdf_service'
+    ];
+    if (in_array(strtolower($serviceType), $maintenanceServices, true)) {
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'maintenance' => true,
+            'error' => 'सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई राशि नहीं काटी गई है (कटौती: ₹0)।'
+        ], JSON_UNESCAPED_UNICODE);
         exit;
     }
 

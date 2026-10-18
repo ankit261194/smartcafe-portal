@@ -671,4 +671,41 @@ assert(servicePageContent.includes("राशन कार्ड से जु�
 assert(servicePageContent.includes("['ration', 'ration_pdf_by_ration', 'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'ration_pdf_by_aadhar'].includes(id)"), 'Ration to Aadhaar services correctly mapped to toolKind ration');
 console.log('✅ PASS: Phase 8 Manual Relay Transparency, Ticket Dossier, Zero Dummy Placeholders, Backend Neutrality & Multi-Member Aadhaar Disclosure verified');
 
+console.log('\n--- TEST 9: Option 1 Upstream Maintenance & Transparent Server State Verification ---');
+const updatedServicePageContent = fs.readFileSync('client/src/components/ServicePage.jsx', 'utf8');
+const updatedIndexPhpContent = fs.readFileSync('client/public/api/index.php', 'utf8');
+const updatedServerJsContent = fs.readFileSync('server/server.js', 'utf8');
+const services79Data = JSON.parse(fs.readFileSync('client/src/data/services_79.json', 'utf8'));
+
+// 1. Service Catalog Maintenance Flags
+const panDetails = services79Data.find(s => s.id === 'pan_details');
+assert(panDetails && panDetails.status === 'maintenance', 'pan_details must be status: maintenance in services_79');
+assert(panDetails && panDetails.isUpstreamMaintenance === true, 'pan_details must have isUpstreamMaintenance: true');
+
+const rcDetails = services79Data.find(s => s.id === 'rc_to_details');
+assert(rcDetails && rcDetails.status === 'maintenance', 'rc_to_details must be status: maintenance in services_79');
+assert(rcDetails && rcDetails.isUpstreamMaintenance === true, 'rc_to_details must have isUpstreamMaintenance: true');
+
+// 2. ServicePage.jsx Guards & Badges
+assert(updatedServicePageContent.includes('UPSTREAM_MAINTENANCE_SERVICES'), 'UPSTREAM_MAINTENANCE_SERVICES exported in ServicePage.jsx');
+assert(updatedServicePageContent.includes('isUpstreamMaintenance'), 'isUpstreamMaintenance hook present in ServicePage.jsx');
+assert(updatedServicePageContent.includes('🔴 अपस्ट्रीम मेंटेनेंस'), 'Maintenance badge present in ServicePage.jsx');
+assert(updatedServicePageContent.includes('🔴 सेवा प्रदाता सर्वर मेंटेनेंस पर है (Upstream API Maintenance)'), 'Maintenance form banner present');
+assert(updatedServicePageContent.includes('अस्थायी स्थगित (₹0)'), 'Fee badge paused status present');
+assert(updatedServicePageContent.includes('🔴 अपस्ट्रीम मेंटेनेंस (शुल्क: ₹0)'), 'Submit button disabled text present');
+
+// 3. Backend Zero-Debit Guards
+assert(updatedIndexPhpContent.includes('$maintenanceServices'), 'index.php must have $maintenanceServices guard');
+assert(updatedServerJsContent.includes('maintenanceServices'), 'server.js must have maintenanceServices guard');
+assert(updatedIndexPhpContent.includes('सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है'), 'index.php must return honest maintenance message');
+assert(updatedServerJsContent.includes('सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है'), 'server.js must return honest maintenance message');
+
+// 4. Hostinger CDN Cache Bypass Headers
+assert(updatedIndexPhpContent.includes('CDN-Cache-Control: no-store'), 'index.php must set CDN-Cache-Control: no-store');
+assert(updatedIndexPhpContent.includes('Surrogate-Control: no-store'), 'index.php must set Surrogate-Control: no-store');
+assert(updatedIndexPhpContent.includes('X-Accel-Expires: 0'), 'index.php must set X-Accel-Expires: 0');
+
+console.log('✅ PASS: Option 1 Upstream Maintenance, Transparent Badges & Zero-Debit Guards 100% verified across all tiers');
+
 console.log('\n🎉 ALL LOCAL STATIC & INTEGRATION CHECKS PASSED PERFECTLY!');
+

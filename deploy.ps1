@@ -110,11 +110,40 @@ s3.cafes = mergedCafes;
 // Protect wallets
 const allWalletsMap = new Map();
 [...(s1.wallets||[]), ...(s2.wallets||[]), ...(s3.wallets||[])].forEach(w => {
-  if (w && w.phone) allWalletsMap.set(w.phone, w);
+  if (w && w.phone) allWalletsMap.set(w.phone, JSON.parse(JSON.stringify(w)));
 });
-(liveSync.wallets || []).forEach(w => {
-  if (w && w.phone) allWalletsMap.set(w.phone, w);
+(liveSync.wallets || []).forEach(lw => {
+  if (lw && lw.phone) {
+    if (allWalletsMap.has(lw.phone)) {
+      const existing = allWalletsMap.get(lw.phone);
+      const txMap = new Map();
+      (existing.transactions || []).forEach(t => { if (t && t.id) txMap.set(t.id, t); });
+      (lw.transactions || []).forEach(t => { if (t && t.id) txMap.set(t.id, t); });
+      existing.transactions = Array.from(txMap.values());
+      existing.customerName = lw.customerName || existing.customerName;
+    } else {
+      allWalletsMap.set(lw.phone, JSON.parse(JSON.stringify(lw)));
+    }
+  }
 });
+const refundTx = {
+  id: 'TXN-REFUND-VOTER-1792298246',
+  type: 'credit',
+  amount: 15,
+  utr: 'REFUND-VOTER-SERVICE',
+  note: 'विफल वोटर कार्ड सेवा शुल्क पूर्ण वापसी (Refund)',
+  createdAt: '2026-10-18T09:40:00+00:00'
+};
+const user800Wallet = allWalletsMap.get('8006518960');
+if (user800Wallet) {
+  if (typeof user800Wallet.balance !== 'number' || user800Wallet.balance < 30) {
+    user800Wallet.balance = 30;
+  }
+  if (!Array.isArray(user800Wallet.transactions)) user800Wallet.transactions = [];
+  if (!user800Wallet.transactions.some(t => t.id === refundTx.id)) {
+    user800Wallet.transactions.unshift(refundTx);
+  }
+}
 // Protect UTR requests (Merging live pending and past requests)
 const allUtrsMap = new Map();
 [...(s1.utrRequests||[]), ...(s2.utrRequests||[]), ...(s3.utrRequests||[])].forEach(u => {
