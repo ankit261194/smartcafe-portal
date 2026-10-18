@@ -1,6 +1,6 @@
 ﻿{
     "success":  true,
-    "timestamp":  "2026-10-18T03:54:28+00:00",
+    "timestamp":  "2026-10-18T06:45:57+00:00",
     "users":  [
                   {
                       "id":  "USR-8006518960",
@@ -9,7 +9,7 @@
                       "phone":  "8006518960",
                       "password":  "Aa@910010025",
                       "role":  "citizen",
-                      "balance":  10,
+                      "balance":  15,
                       "isBlocked":  false,
                       "createdAt":  "2026-10-15T00:00:00.000Z"
                   },
@@ -75,8 +75,23 @@
                     {
                         "phone":  "8006518960",
                         "customerName":  "ankit kumar",
-                        "balance":  10,
+                        "balance":  15,
                         "transactions":  [
+                                             {
+                                                 "id":  "TXN-1792298246",
+                                                 "type":  "debit",
+                                                 "amount":  15,
+                                                 "note":  "ऑनलाइन सेवा शुल्क: Voter PDF",
+                                                 "createdAt":  "2026-10-18T04:37:26+00:00"
+                                             },
+                                             {
+                                                 "id":  "TXN-1792298056-228",
+                                                 "type":  "credit",
+                                                 "amount":  20,
+                                                 "utr":  "854780651808",
+                                                 "note":  "सुपर एडमिन द्वारा स्वीकृत UTR (854780651808) वॉलेट टॉप-अप",
+                                                 "createdAt":  "2026-10-18T04:34:16+00:00"
+                                             },
                                              {
                                                  "id":  "TXN-UTR-CUST-1792125257-861",
                                                  "type":  "credit",
@@ -182,6 +197,23 @@
                   }
               ],
     "utrRequests":  [
+                        {
+                            "id":  "UTR-CUST-1792298015-570",
+                            "tier":  "customer_to_sanchalak",
+                            "cafeId":  "CAFE-999",
+                            "cafeShopName":  "परीक्षण जन सेवा केंद्र",
+                            "customerPhone":  "8006518960",
+                            "customerName":  "ग्राहक",
+                            "amount":  20,
+                            "utr":  "854780651808",
+                            "screenshotUrl":  "",
+                            "upiTarget":  "shop@upi",
+                            "status":  "approved",
+                            "autoVerified":  false,
+                            "approvedAt":  "2026-10-18T04:34:16+00:00",
+                            "rejectReason":  "",
+                            "createdAt":  "2026-10-18T04:33:35+00:00"
+                        },
                         {
                             "id":  "UTR-CUST-1792125257-861",
                             "tier":  "customer_to_sanchalak",

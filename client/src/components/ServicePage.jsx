@@ -5351,7 +5351,7 @@ function ServicePageContent({
                               </div>
 
                               <div className="border-t pt-1 flex items-center justify-between text-[8px] text-slate-600">
-                                <span>{language === 'hi' ? 'विधानसभा:' : 'Assembly:'} {cardData.acName ? `${cardData.acNumber ? cardData.acNumber + ' - ' : ''}${cardData.acName}` : (selectedCafe?.city || '-')}</span>
+                                <span>{language === 'hi' ? 'विधानसभा:' : 'Assembly:'} {cardData.acName ? `${cardData.acNumber ? cardData.acNumber + ' - ' : ''}${cardData.acName}` : '-'}</span>
                                 <span className="font-mono font-bold text-amber-800">{cardData.epicNo || cardData.epicNumber || primaryInput}</span>
                               </div>
                             </div>

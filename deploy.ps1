@@ -256,20 +256,26 @@ mergedWallets.forEach(w => {
     if (t.type === 'credit') realBal += parseFloat(t.amount || 0);
     if (t.type === 'debit') realBal -= parseFloat(t.amount || 0);
   });
-  w.balance = (w.phone === '8006518960') ? 10.0 : Math.max(0, realBal);
+  w.balance = (w.phone === '8006518960') ? Math.max(30.0, realBal) : Math.max(0, realBal);
 });
 
 // Sync users balance to match reconciled wallet balance
 mergedUsers.forEach(u => {
   const w = allWalletsMap.get(u.phone);
   if (w) {
-    u.balance = (u.phone === '8006518960') ? 10.0 : w.balance;
+    u.balance = (u.phone === '8006518960') ? Math.max(30.0, w.balance) : w.balance;
   }
 });
 
 s1.wallets = mergedWallets;
 s2.wallets = mergedWallets;
 s3.wallets = mergedWallets;
+
+if (liveSync.superAdminRates && typeof liveSync.superAdminRates === 'object') {
+  s1.superAdminRates = Object.assign({}, s1.superAdminRates || {}, liveSync.superAdminRates);
+  s2.superAdminRates = Object.assign({}, s2.superAdminRates || {}, liveSync.superAdminRates);
+  s3.superAdminRates = Object.assign({}, s3.superAdminRates || {}, liveSync.superAdminRates);
+}
 
 fs.mkdirSync('client/dist/api/data', { recursive: true });
 fs.writeFileSync(p1, JSON.stringify(s1, null, 2));

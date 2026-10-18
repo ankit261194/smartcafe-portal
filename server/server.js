@@ -4381,34 +4381,55 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
   }
 
   // 6. Voter Verification
-  if (((norm.includes('voter') || norm.includes('epic')) && !norm.includes('link') && !norm.includes('mobile') && !norm.includes('otp') && !norm.includes('pdf') && !norm.includes('card') && !norm.includes('manual')) || norm === 'voter' || norm === 'epic' || norm.includes('voter_verification') || norm.includes('voter_details')) {
+  if (((norm.includes('voter') || norm.includes('epic')) && !norm.includes('link') && !norm.includes('mobile') && !norm.includes('otp') && !norm.includes('pdf') && !norm.includes('manual')) || norm === 'voter' || norm === 'epic' || norm.includes('voter_verification') || norm.includes('voter_details') || norm === 'votercard') {
     const epicNo = String(params?.epicNumber || params?.epicNo || params?.epic || params?.query || '').trim().toUpperCase();
     if (epicNo && epicNo.length >= 5) {
       try {
         const voterUrl = `https://authorized.p4points.co.in/api/v1/voterVerification_new.php?apiKey=${encodeURIComponent(p4ApiKey)}&epicNumber=${encodeURIComponent(epicNo)}`;
-        const res = await fetch(voterUrl, { signal: AbortSignal.timeout(10000) });
+        const res = await fetch(voterUrl, { signal: AbortSignal.timeout(12000) });
         const json = await res.json().catch(() => null);
         const doc = json?.data || json?.response?.docs?.[0];
         if (doc) {
-          return {
-            source: 'p4points',
-            service: 'voter',
-            epicNo: doc.epicNumber || doc.epic_no || epicNo,
-            epicNumber: doc.epicNumber || doc.epic_no || epicNo,
-            name: `${doc.FirstName || ''} ${doc.LastName || ''}`.trim() || doc.name_v1 || doc.name || 'मतदाता',
-            fatherName: doc.rln_name || doc.relativeName || '',
-            gender: doc.gender || 'M',
-            dob: doc.dob || '',
-            age: doc.age || '30',
-            district: doc.district || '',
-            state: doc.state || '',
-            assembly: doc.ac_name || doc.assemblyName || '',
-            partName: doc.part_name || '',
-            partNo: doc.part_no || '',
-            serialNo: doc.serial_no || '',
-            photoUrl: doc.photo || doc.photoUrl || doc.image || null,
-            isLiveFromP4Points: true
-          };
+          let vName = String(doc.fullName || `${doc.applicantFirstName || ''} ${doc.applicantLastName || ''}`).trim();
+          if (!vName) {
+            vName = String(`${doc.FirstName || ''} ${doc.LastName || ''}`.trim() || doc.name_v1 || doc.name || '').trim();
+          }
+          if (vName && !['मतदाता', 'voter', '-'].includes(vName.toLowerCase())) {
+            const fName = doc.relationName || doc.relativeFullName || doc.rln_name || doc.relativeName || doc.fatherName || '';
+            const ac = doc.asmblyName || doc.ac_name || doc.assemblyName || '';
+            const acNum = String(doc.acNumber || doc.ac_no || '');
+            const pName = doc.partName || doc.part_name || doc.psbuildingName || '';
+            const pNo = String(doc.partNumber || doc.part_no || '');
+            const sNo = String(doc.partSerialNumber || doc.serial_no || '');
+            const dist = doc.districtValue || doc.district || '';
+            const st = doc.stateName || doc.state || '';
+            return {
+              source: 'p4points',
+              service: 'voter',
+              epicNo: doc.epicNumber || doc.epic_no || epicNo,
+              epicNumber: doc.epicNumber || doc.epic_no || epicNo,
+              name: vName,
+              fullName: vName,
+              customerName: vName,
+              fatherName: fName,
+              relationName: fName,
+              gender: doc.gender || 'M',
+              dob: doc.dob || '',
+              age: String(doc.age || '30'),
+              district: dist,
+              state: st,
+              assembly: ac,
+              acName: ac,
+              acNumber: acNum,
+              partName: pName,
+              pollingStation: pName,
+              partNo: pNo,
+              serialNo: sNo,
+              photoUrl: doc.photo || doc.photoUrl || doc.image || null,
+              isLiveFromP4Points: true,
+              data: doc
+            };
+          }
         }
       } catch (err) {
         console.error('Live P4Points Voter fetch failed:', err.message);
@@ -5514,46 +5535,45 @@ app.post('/api/services/execute-automated', async (req, res) => {
     }
   }
 
-  // If funded, execute double-entry ledger deduction
-  if (!isOtherCategory) {
-    // 1. Debit Customer Wallet (if citizen flow)
-    if (!isOperatorB2bDirect && customerWallet) {
-      customerWallet.balance -= retailFee;
-      customerWallet.transactions.unshift({
-        id: `TXN-${Date.now()}`,
+  // ASYNCHRONOUS MANUAL RELAY FULFILLMENT GATEWAY (Rekha Print Engine)
+  if (service79 && service79.fulfillmentType === 'manual_relay') {
+    if (!isOtherCategory) {
+      // 1. Debit Customer Wallet (if citizen flow)
+      if (!isOperatorB2bDirect && customerWallet) {
+        customerWallet.balance -= retailFee;
+        customerWallet.transactions.unshift({
+          id: `TXN-${Date.now()}`,
+          type: 'debit',
+          amount: retailFee,
+          note: `ऑनलाइन सेवा अनुरोध शुल्क: ${serviceDisplayName}`,
+          createdAt: new Date().toISOString()
+        });
+      }
+
+      // 2. Debit Sanchalak B2B Wallet
+      cafe.b2bWallet.balance -= wholesaleCost;
+      cafe.b2bWallet.transactions.unshift({
+        id: `B2B-TXN-${Date.now()}`,
         type: 'debit',
-        amount: retailFee,
-        note: `ऑनलाइन सेवा शुल्क: ${serviceDisplayName}`,
+        amount: wholesaleCost,
+        note: `थोक एडमिन सेवा कटौती: ${serviceDisplayName}`,
+        createdAt: new Date().toISOString()
+      });
+
+      // 3. Log Sanchalak Net Profit to Cashbook
+      store.cashbook.unshift({
+        id: `CB-${Date.now()}`,
+        cafeId: cafe.id,
+        title: `${serviceDisplayName} नेट मार्जिन (+₹${margin})`,
+        category: 'Manual Relay Service',
+        amount: margin,
+        paymentMode: isOperatorB2bDirect ? 'cash' : 'wallet',
+        type: 'income',
+        customer: customerWallet?.customerName || params?.customerName || effectiveCustomerPhone,
         createdAt: new Date().toISOString()
       });
     }
 
-    // 2. Debit Sanchalak B2B Wallet
-    cafe.b2bWallet.balance -= wholesaleCost;
-    cafe.b2bWallet.transactions.unshift({
-      id: `B2B-TXN-${Date.now()}`,
-      type: 'debit',
-      amount: wholesaleCost,
-      note: `थोक एडमिन सेवा कटौती: ${serviceDisplayName}`,
-      createdAt: new Date().toISOString()
-    });
-
-    // 3. Log Sanchalak Net Profit to Cashbook
-    store.cashbook.unshift({
-      id: `CB-${Date.now()}`,
-      cafeId: cafe.id,
-      title: `${serviceDisplayName} नेट मार्जिन (+₹${margin})`,
-      category: 'Automated Service',
-      amount: margin,
-      paymentMode: isOperatorB2bDirect ? 'cash' : 'wallet',
-      type: 'income',
-      customer: customerWallet?.customerName || params?.customerName || effectiveCustomerPhone,
-      createdAt: new Date().toISOString()
-    });
-  }
-
-  // ASYNCHRONOUS MANUAL RELAY FULFILLMENT GATEWAY (Rekha Print Engine)
-  if (service79 && service79.fulfillmentType === 'manual_relay') {
     const orderId = `ORD-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
     const userRef = params?.applicationNumber || params?.appNo || params?.uidNumber || params?.aadhaarNo || params?.farmerId || params?.samagraId || params?.dlNo || params?.dl || params?.vehicle_number || params?.vehicleNumber || params?.regNo || params?.panNo || '';
 
@@ -5700,69 +5720,150 @@ app.post('/api/services/execute-automated', async (req, res) => {
       } else {
         panNo = ['pan_details', 'pan_verification_premium', 'pan', 'pan_to_gst', 'pan_to_aadhar_find'].includes(normServiceType) ? String(params?.panNo || params?.pan || params?.query || '').toUpperCase().trim() : '';
       }
-      generatedData.panNo = panNo;
-      const panName = rawData.name || rawData.full_name || rawData.holder_name || params?.customerName || 'PAN धारक';
-      docTitle = panNo ? `पैन कार्ड (${panNo}) - ${panName}` : (serviceTitles[normServiceType] || 'पैन कार्ड सेवा');
-      refNumber = panNo || (params?.query || 'PAN');
-    } else if (liveP4.service === 'voter' || normServiceType.includes('voter') || normServiceType.includes('epic')) {
+      const panName = String(rawData.name || rawData.full_name || rawData.holder_name || liveP4.name || '').trim();
+      if (!panNo || !panName || ['pan धारक', 'pan holder', '-'].includes(panName.toLowerCase())) {
+        generatedData = null;
+      } else {
+        generatedData = {
+          source: 'p4points',
+          service: 'panCard',
+          panNo,
+          panNumber: panNo,
+          name: panName,
+          customerName: panName,
+          fatherName: rawData.fathername || rawData.fatherName || rawData.father_name || '',
+          dob: rawData.dob || '',
+          gender: rawData.gender || '',
+          aadhaar: rawData.aadhaar || rawData.aadhar || '',
+          address: rawData.address || '',
+          aadhaarLinked: rawData.aadhaarLinked || '',
+          isLiveFromP4Points: true,
+          cardType: 'pan'
+        };
+        docTitle = `पैन कार्ड (${panNo}) - ${panName}`;
+        refNumber = panNo;
+      }
+    } else if (liveP4.service === 'voter' || normServiceType.includes('voter') || normServiceType.includes('epic') || normServiceType === 'voterCard') {
       const epic = String(liveP4.epicNo || liveP4.epicNumber || rawData.epicNumber || rawData.epicNo || rawData.epic_number || params?.epicNo || params?.epicNumber || params?.epic || '').toUpperCase().trim();
-      generatedData.epicNo = epic;
-      generatedData.epicNumber = epic;
-      const voterName = liveP4.name || rawData.name || rawData.applicant_name || params?.customerName || 'मतदाता';
-      generatedData.name = voterName;
-      generatedData.customerName = voterName;
-      if (liveP4.fatherName || rawData.fatherName || rawData.rln_name) generatedData.fatherName = liveP4.fatherName || rawData.fatherName || rawData.rln_name;
-      if (liveP4.gender || rawData.gender) generatedData.gender = liveP4.gender || rawData.gender;
-      if (liveP4.dob || rawData.dob) generatedData.dob = liveP4.dob || rawData.dob;
-      if (liveP4.age || rawData.age) generatedData.age = liveP4.age || rawData.age;
-      if (liveP4.assembly || rawData.ac_name) generatedData.acName = liveP4.assembly || rawData.ac_name;
-      if (liveP4.partName || rawData.part_name) generatedData.partName = liveP4.partName || rawData.part_name;
-      if (liveP4.partNo || rawData.part_no) generatedData.partNo = liveP4.partNo || rawData.part_no;
-      if (liveP4.serialNo || rawData.serial_no) generatedData.serialNo = liveP4.serialNo || rawData.serial_no;
-      if (liveP4.district || rawData.district) generatedData.district = liveP4.district || rawData.district;
-      if (liveP4.state || rawData.state) generatedData.state = liveP4.state || rawData.state;
-      if (liveP4.photoUrl || rawData.photo || rawData.photoUrl) generatedData.photoUrl = liveP4.photoUrl || rawData.photo || rawData.photoUrl;
-      if (liveP4.mobileNumber) generatedData.mobileNumber = liveP4.mobileNumber;
-      docTitle = `वोटर स्मार्ट कार्ड (${epic}) - ${voterName}`;
-      refNumber = epic;
-    } else if (liveP4.service === 'ration' || normServiceType.includes('ration')) {
-      const rat = String(liveP4.rationNo || rawData.ration_no || rawData.rationNo || params?.rationNo || params?.rationNumber || '').trim();
-      generatedData.rationNo = rat;
-      const headName = liveP4.name || rawData.headName || rawData.head_name || rawData.owner_name || rawData.name || params?.customerName || 'राशन कार्ड धारक';
-      generatedData.name = headName;
-      generatedData.headName = headName;
-      generatedData.customerName = headName;
-      if (rawData.dealerName || rawData.fps_name || liveP4.dealerName) generatedData.dealerName = rawData.dealerName || rawData.fps_name || liveP4.dealerName;
-      if (rawData.totalMembers || rawData.member_count || liveP4.totalMembers) generatedData.totalMembers = rawData.totalMembers || rawData.member_count || liveP4.totalMembers;
-      if (rawData.members || liveP4.members) generatedData.members = rawData.members || liveP4.members;
-      if (rawData.address || liveP4.address) generatedData.address = rawData.address || liveP4.address;
-      if (rawData.state || liveP4.state) generatedData.state = rawData.state || liveP4.state;
-      if (rawData.district || liveP4.district) generatedData.district = rawData.district || liveP4.district;
-      docTitle = `राशन पर्ची (${rat}) - ${headName}`;
-      refNumber = rat || 'RATION';
+      let voterName = String(liveP4.fullName || liveP4.name || rawData.fullName || rawData.applicant_name || rawData.name || '').trim();
+      if (!epic || !voterName || ['मतदाता', 'voter', '-'].includes(voterName.toLowerCase())) {
+        generatedData = null;
+      } else {
+        const fatherName = String(liveP4.relationName || liveP4.fatherName || rawData.relationName || rawData.relativeFullName || rawData.fatherName || rawData.rln_name || '').trim();
+        const acName = String(liveP4.acName || liveP4.assembly || rawData.asmblyName || rawData.ac_name || '').trim();
+        const acNumber = String(liveP4.acNumber || rawData.acNumber || rawData.ac_no || '').trim();
+        const partName = String(liveP4.partName || liveP4.pollingStation || rawData.partName || rawData.part_name || rawData.psbuildingName || '').trim();
+        const partNo = String(liveP4.partNo || rawData.partNumber || rawData.part_no || '').trim();
+        const serialNo = String(liveP4.serialNo || rawData.partSerialNumber || rawData.serial_no || '').trim();
+        const district = String(liveP4.district || rawData.districtValue || rawData.district || '').trim();
+        const state = String(liveP4.state || rawData.stateName || rawData.state || '').trim();
+        const dob = String(liveP4.dob || rawData.dob || '').trim();
+        const age = String(liveP4.age || rawData.age || '30').trim();
+        const gender = String(liveP4.gender || rawData.gender || 'M').trim();
+        const photo = liveP4.photoUrl || rawData.photo || rawData.photoUrl || rawData.image || null;
+
+        generatedData = {
+          source: 'p4points',
+          service: 'voter',
+          epicNo: epic,
+          epicNumber: epic,
+          name: voterName,
+          fullName: voterName,
+          customerName: voterName,
+          fatherName,
+          relationName: fatherName,
+          acName,
+          assembly: acName,
+          acNumber,
+          partName,
+          pollingStation: partName,
+          partNo,
+          serialNo,
+          district,
+          state,
+          dob,
+          age,
+          gender,
+          photoUrl: photo,
+          isLiveFromP4Points: true,
+          cardType: 'voter'
+        };
+        docTitle = `मतदाता पहचान पत्र (${epic}) - ${voterName}`;
+        refNumber = epic;
+      }
+    } else if (liveP4.service === 'ration' || normServiceType.includes('ration') || normServiceType === 'rationCard') {
+      const rat = String(liveP4.rationNo || rawData.ration_no || rawData.rationNo || rawData.rationNumber || params?.rationNo || params?.rationNumber || '').trim();
+      const headName = String(liveP4.name || rawData.headName || rawData.head_name || rawData.owner_name || rawData.name || '').trim();
+      if (!rat || !headName || ['राशन कार्ड धारक', 'ration card holder', '-'].includes(headName.toLowerCase())) {
+        generatedData = null;
+      } else {
+        const dealerName = String(rawData.dealerName || rawData.fps_name || liveP4.dealerName || '').trim();
+        const totalMembers = String(rawData.totalMembers || rawData.member_count || (rawData.members ? rawData.members.length : '1')).trim();
+        generatedData = {
+          source: 'p4points',
+          service: 'ration',
+          rationNo: rat,
+          name: headName,
+          headName,
+          customerName: headName,
+          dealerName,
+          totalMembers,
+          members: rawData.members || liveP4.members || [],
+          address: rawData.address || liveP4.address || '',
+          state: rawData.state || liveP4.state || '',
+          district: rawData.district || liveP4.district || '',
+          isLiveFromP4Points: true,
+          cardType: 'ration'
+        };
+        docTitle = `राशन पर्ची (${rat}) - ${headName}`;
+        refNumber = rat;
+      }
     } else if (liveP4.service === 'ayushman' || normServiceType.includes('ayushman') || normServiceType === 'ayushmanCard') {
       const pmjayId = String(liveP4.pmjayId || rawData.pmjay_id || rawData.pmjayId || params?.pmjayId || params?.query || '').trim();
-      generatedData.pmjayId = pmjayId;
-      const benName = rawData.name || rawData.beneficiaryName || liveP4.name || params?.customerName || 'आयुष्मान लाभार्थी';
-      generatedData.name = benName;
-      generatedData.customerName = benName;
-      if (rawData.dob || liveP4.dob) generatedData.dob = rawData.dob || liveP4.dob;
-      if (rawData.gender || liveP4.gender) generatedData.gender = rawData.gender || liveP4.gender;
-      if (rawData.state || liveP4.state) generatedData.state = rawData.state || liveP4.state;
-      if (rawData.photoUrl || liveP4.photoUrl) generatedData.photoUrl = rawData.photoUrl || liveP4.photoUrl;
-      generatedData.coverageAmount = '₹5,00,000 / वर्ष';
-      docTitle = `आयुष्मान कार्ड (${pmjayId}) - ${benName}`;
-      refNumber = pmjayId || 'PMJAY';
+      const benName = String(rawData.name || rawData.beneficiaryName || liveP4.name || '').trim();
+      if (!pmjayId || !benName || ['आयुष्मान लाभार्थी', 'ayushman beneficiary', '-'].includes(benName.toLowerCase())) {
+        generatedData = null;
+      } else {
+        generatedData = {
+          source: 'p4points',
+          service: 'ayushman',
+          pmjayId,
+          name: benName,
+          customerName: benName,
+          dob: rawData.dob || liveP4.dob || '',
+          gender: rawData.gender || liveP4.gender || 'MALE',
+          state: rawData.state || liveP4.state || '',
+          photoUrl: rawData.photoUrl || liveP4.photoUrl || null,
+          coverageAmount: '₹5,00,000 / वर्ष',
+          isLiveFromP4Points: true,
+          cardType: 'ayushman'
+        };
+        docTitle = `आयुष्मान कार्ड (${pmjayId}) - ${benName}`;
+        refNumber = pmjayId;
+      }
     } else if (liveP4.service === 'eshram' || normServiceType.includes('eshram') || normServiceType.includes('e_shram')) {
       const uan = String(liveP4.uanNo || rawData.uan_no || rawData.uan || rawData.uanNo || '').trim();
       const uid = String(liveP4.aadhaarNo || rawData.aadhaarNo || rawData.uidNumber || params?.aadhaarNo || params?.uidNumber || '').replace(/\D/g, '');
-      generatedData.uanNo = uan;
-      generatedData.aadhaarNo = uid;
-      const shramName = rawData.name || liveP4.name || params?.customerName || 'श्रमिक';
-      generatedData.name = shramName;
-      generatedData.customerName = shramName;
-      docTitle = uan ? `ई-श्रम कार्ड (${uan}) - ${shramName}` : `ई-श्रम कार्ड - ${shramName}`;
-      refNumber = uan || uid || 'ESHRAM';
+      const shramName = String(rawData.name || liveP4.name || '').trim();
+      if ((!uan && !uid) || !shramName || ['श्रमिक', 'shramik', 'worker', '-'].includes(shramName.toLowerCase())) {
+        generatedData = null;
+      } else {
+        generatedData = {
+          source: 'p4points',
+          service: 'eshram',
+          uanNo: uan,
+          aadhaarNo: uid,
+          name: shramName,
+          customerName: shramName,
+          dob: rawData.dob || liveP4.dob || '',
+          gender: rawData.gender || liveP4.gender || 'MALE',
+          state: rawData.state || liveP4.state || '',
+          isLiveFromP4Points: true,
+          cardType: 'eshram'
+        };
+        docTitle = uan ? `ई-श्रम कार्ड (${uan}) - ${shramName}` : `ई-श्रम कार्ड - ${shramName}`;
+        refNumber = uan || uid;
+      }
     } else if (liveP4.service === 'electricity' || normServiceType.includes('electric') || normServiceType.includes('bill')) {
       const ca = String(liveP4.consumerNo || rawData.consumer_no || rawData.caNumber || params?.consumerNo || '').trim();
       generatedData.consumerNo = ca;
@@ -5789,15 +5890,38 @@ app.post('/api/services/execute-automated', async (req, res) => {
       refNumber = aid || 'NPCI';
     } else if (liveP4.service === 'aadhaar' || normServiceType.includes('aadhaar') || normServiceType.includes('aadhar') || normServiceType.includes('uid') || ['mask_aadhaar', 'aadhaar_mask_verification', 'pan_aadhar_mask'].includes(normServiceType)) {
       const aid = String(liveP4.aadhaarNo || liveP4.uidNumber || rawData.aadhaarNo || rawData.uidNumber || rawData.uid_number || params?.aadhaarNo || params?.uidNumber || '').replace(/\D/g, '');
-      generatedData.aadhaarNo = aid;
-      generatedData.uidNumber = aid;
-      const aName = rawData.name || rawData.customerName || rawData.full_name || liveP4.name || params?.customerName || 'आधार धारक';
-      const fName = rawData.fatherName || rawData.father_name || rawData.careOf || rawData.co || rawData.relation_name || liveP4.fatherName || '';
-      const dob = rawData.dob || rawData.dateOfBirth || rawData.date_of_birth || liveP4.dob || '';
-      const gender = rawData.gender || rawData.sex || liveP4.gender || 'MALE';
-      const address = rawData.address || rawData.full_address || rawData.presentAddress || rawData.permanentAddress || liveP4.address || '';
-      const photo = rawData.photo || rawData.photoUrl || rawData.image || rawData.base64photo || rawData.photo_base64 || liveP4.photoUrl || null;
-      const masked = rawData.maskedAadhaar || rawData.masked_aadhaar || rawData.maskedUid || rawData.mask_aadhar || (aid && aid.length === 12 ? 'XXXX-XXXX-' + aid.slice(8) : '');
+      const aName = String(rawData.name || rawData.customerName || rawData.full_name || liveP4.name || '').trim();
+      if (!aid || aid.length < 12 || !aName || ['आधार धारक', 'aadhaar holder', '-'].includes(aName.toLowerCase())) {
+        generatedData = null;
+      } else {
+        const fName = String(rawData.fatherName || rawData.father_name || rawData.careOf || rawData.co || rawData.relation_name || liveP4.fatherName || '').trim();
+        const dob = String(rawData.dob || rawData.dateOfBirth || rawData.date_of_birth || liveP4.dob || '').trim();
+        const gender = String(rawData.gender || rawData.sex || liveP4.gender || 'MALE').trim();
+        const address = String(rawData.address || rawData.full_address || rawData.presentAddress || rawData.permanentAddress || liveP4.address || '').trim();
+        const photo = rawData.photo || rawData.photoUrl || rawData.image || rawData.base64photo || rawData.photo_base64 || liveP4.photoUrl || null;
+        const masked = rawData.maskedAadhaar || rawData.masked_aadhaar || rawData.maskedUid || rawData.mask_aadhar || (aid && aid.length === 12 ? 'XXXX-XXXX-' + aid.slice(8) : '');
+
+        generatedData = {
+          source: 'p4points',
+          service: 'aadhaar',
+          aadhaarNo: aid,
+          uidNumber: aid,
+          name: aName,
+          customerName: aName,
+          fatherName: fName,
+          careOf: fName ? `C/O: ${fName}` : '',
+          dob,
+          gender,
+          address,
+          photoUrl: photo,
+          maskedAadhaar: masked,
+          status: rawData.status || rawData.verificationStatus || 'Active / Verified',
+          isAadhaarVerified: true,
+          cardType: 'aadhaar'
+        };
+        docTitle = aid ? (normServiceType.includes('mask') ? `मास्क आधार सत्यापन (${masked || aid})` : `आधार कार्ड (${aid}) - ${aName}`) : (service79?.name || serviceDisplayName);
+        refNumber = aid;
+      }
 
       generatedData.name = aName;
       generatedData.customerName = aName;
@@ -6174,21 +6298,47 @@ app.post('/api/services/execute-automated', async (req, res) => {
 
   // Zero-Fake Policy: If no authentic government data was returned by live API/gateway
   if (!generatedData) {
-    if (!isOtherCategory) {
-      if (!isOperatorB2bDirect && customerWallet) {
-        customerWallet.balance += retailFee;
-        if (customerWallet.transactions) customerWallet.transactions.shift();
-      }
-      if (cafe.b2bWallet) {
-        cafe.b2bWallet.balance += wholesaleCost;
-        if (cafe.b2bWallet.transactions) cafe.b2bWallet.transactions.shift();
-      }
-      if (store.cashbook) store.cashbook.shift();
-      saveStore(store);
-    }
     return res.status(400).json({
       success: false,
-      error: 'सरकारी रिकॉर्ड में यह विवरण उपलब्ध नहीं है अथवा सेवा प्रदाता सर्वर अस्थायी रूप से डाउन है।'
+      error: 'सरकारी रिकॉर्ड में यह विवरण उपलब्ध नहीं है अथवा सेवा प्रदाता सर्वर अस्थायी रूप से डाउन है। आपके वॉलेट से कोई राशि नहीं काटी गई है।'
+    });
+  }
+
+  // Double-Entry Ledger: Debit wallet ONLY after authentic government data is validated & confirmed
+  if (!isOtherCategory) {
+    // 1. Debit Customer Wallet (if citizen flow)
+    if (!isOperatorB2bDirect && customerWallet) {
+      customerWallet.balance -= retailFee;
+      customerWallet.transactions.unshift({
+        id: `TXN-${Date.now()}`,
+        type: 'debit',
+        amount: retailFee,
+        note: `ऑनलाइन सेवा शुल्क: ${serviceDisplayName}`,
+        createdAt: new Date().toISOString()
+      });
+    }
+
+    // 2. Debit Sanchalak B2B Wallet
+    cafe.b2bWallet.balance -= wholesaleCost;
+    cafe.b2bWallet.transactions.unshift({
+      id: `B2B-TXN-${Date.now()}`,
+      type: 'debit',
+      amount: wholesaleCost,
+      note: `थोक एडमिन सेवा कटौती: ${serviceDisplayName}`,
+      createdAt: new Date().toISOString()
+    });
+
+    // 3. Log Sanchalak Net Profit to Cashbook
+    store.cashbook.unshift({
+      id: `CB-${Date.now()}`,
+      cafeId: cafe.id,
+      title: `${serviceDisplayName} नेट मार्जिन (+₹${margin})`,
+      category: 'Automated Service',
+      amount: margin,
+      paymentMode: isOperatorB2bDirect ? 'cash' : 'wallet',
+      type: 'income',
+      customer: customerWallet?.customerName || params?.customerName || effectiveCustomerPhone,
+      createdAt: new Date().toISOString()
     });
   }
 
