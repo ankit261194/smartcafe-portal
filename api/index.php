@@ -4058,7 +4058,7 @@ function getAyushmanDetails($id, $custom = []) {
         'beneficiaryName' => $name,
         'gender' => $gender,
         'yob' => $yob,
-        'dob' => $custom['dob'] ?? '01/01/1985',
+        'dob' => $custom['dob'] ?? '-',
         'state' => $custom['state'] ?? "UTTAR PRADESH",
         'district' => $custom['district'] ?? "LUCKNOW",
         'familyId' => $familyId,
@@ -6587,29 +6587,6 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         exit;
     }
 
-    $maintenanceServices = [
-        'pan_details',
-        'pan_basic_pricing',
-        'pan_verification_premium',
-        'panverificationpremium',
-        'rc_to_details',
-        'rc_pdf_download',
-        'rc_fast_server',
-        'driving_licence_pdf',
-        'dl_details',
-        'driving_licence_verify',
-        'dl_verification',
-        'dl_pdf_service'
-    ];
-    if (in_array(strtolower($serviceType), $maintenanceServices, true)) {
-        http_response_code(400);
-        echo json_encode([
-            'success' => false,
-            'maintenance' => true,
-            'error' => 'सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई राशि नहीं काटी गई है (कटौती: ₹0)।'
-        ], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
 
     $cafeIndex = -1;
     if (!empty($store['cafes'])) {
@@ -7247,140 +7224,153 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
                 'name' => $params['customerName'] ?? 'सरकारी फॉर्म फोटो/हस्ताक्षर'
             ];
         } elseif ($normServiceType === 'pancard' || (isset($params['serviceId']) && $params['serviceId'] === 'panCard')) {
-            $panNo = strtoupper(trim($params['panNo'] ?? ($params['panNumber'] ?? ($params['pan'] ?? $userVal))));
-            $panName = strtoupper(trim($params['customerName'] ?? ($params['name'] ?? '')));
-            $fName = strtoupper(trim($params['fatherName'] ?? ''));
-            $dob = trim($params['dob'] ?? '');
-            if (!empty($panNo) && !empty($panName)) {
-                $generatedData = [
-                    'panNo' => $panNo,
-                    'name' => $panName,
-                    'customerName' => $panName,
-                    'fatherName' => $fName,
-                    'dob' => $dob,
-                    'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
-                    'signUrl' => $params['signature'] ?? ($params['signData'] ?? null),
-                    'refNumber' => $panNo,
-                    'serviceType' => 'panCard',
-                    'cardType' => 'ISO CR-80 PVC Smart Card',
-                    'isInstantPvc' => true
-                ];
-                $docTitle = "पैन कार्ड CR-80 PVC ({$panNo}) - {$panName}";
-                $refNumber = $panNo;
+            $hasManualUpload = !empty($params['photo']) || !empty($params['photoData']) || !empty($params['signature']) || !empty($params['isManualForm']);
+            if ($hasManualUpload) {
+                $panNo = strtoupper(trim($params['panNo'] ?? ($params['panNumber'] ?? ($params['pan'] ?? $userVal))));
+                $panName = strtoupper(trim($params['customerName'] ?? ($params['name'] ?? '')));
+                $fName = strtoupper(trim($params['fatherName'] ?? ''));
+                $dob = trim($params['dob'] ?? '');
+                if (!empty($panNo) && !empty($panName)) {
+                    $generatedData = [
+                        'panNo' => $panNo,
+                        'name' => $panName,
+                        'customerName' => $panName,
+                        'fatherName' => $fName,
+                        'dob' => $dob ?: '-',
+                        'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
+                        'signUrl' => $params['signature'] ?? ($params['signData'] ?? null),
+                        'refNumber' => $panNo,
+                        'serviceType' => 'panCard',
+                        'cardType' => 'ISO CR-80 PVC Smart Card',
+                        'isManualPvc' => true
+                    ];
+                    $docTitle = "पैन कार्ड CR-80 PVC ({$panNo}) - {$panName}";
+                    $refNumber = $panNo;
+                }
             }
-        } elseif ($normServiceType === 'aadhaarcard' || $normServiceType === 'aadhaarCard' || $normServiceType === 'aadhaar_manual' || $normServiceType === 'aadhaar_pvc' || (isset($params['serviceId']) && in_array($params['serviceId'], ['aadhaarCard', 'aadhaar_manual', 'aadhaar_pvc']))) {
-            $aid = preg_replace('/\D/', '', $params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['aadhar'] ?? $userVal)));
-            $aName = trim($params['customerName'] ?? ($params['name'] ?? ''));
-            $fName = trim($params['fatherName'] ?? ($params['careOf'] ?? ''));
-            $dob = trim($params['dob'] ?? '');
-            $gender = trim($params['gender'] ?? 'MALE');
-            $address = trim($params['address'] ?? '');
-            if (!empty($aid) && strlen($aid) === 12 && !empty($aName)) {
-                $generatedData = [
-                    'aadhaarNo' => $aid,
-                    'uidNumber' => $aid,
-                    'name' => $aName,
-                    'customerName' => $aName,
-                    'name_hi' => $params['name_hi'] ?? $aName,
-                    'fatherName' => $fName,
-                    'careOf' => $fName ? ("C/O: " . $fName) : '',
-                    'dob' => $dob,
-                    'gender' => $gender,
-                    'address' => $address,
-                    'address_hi' => $params['address_hi'] ?? $address,
-                    'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
-                    'refNumber' => $aid,
-                    'serviceType' => 'aadhaarCard',
-                    'cardType' => 'ISO CR-80 PVC Smart Card',
-                    'isInstantPvc' => true
-                ];
-                $docTitle = "आधार कार्ड CR-80 PVC ({$aid}) - {$aName}";
-                $refNumber = $aid;
+        } elseif ($normServiceType === 'aadhaarcard' || $normServiceType === 'aadhaarCard' || $normServiceType === 'aadhaar_manual') {
+            $hasManualUpload = !empty($params['photo']) || !empty($params['photoData']) || !empty($params['isManualForm']);
+            if ($hasManualUpload) {
+                $aid = preg_replace('/\D/', '', $params['aadhaarNo'] ?? ($params['uidNumber'] ?? ($params['aadhar'] ?? $userVal)));
+                $aName = trim($params['customerName'] ?? ($params['name'] ?? ''));
+                $fName = trim($params['fatherName'] ?? ($params['careOf'] ?? ''));
+                $dob = trim($params['dob'] ?? '');
+                $gender = trim($params['gender'] ?? 'MALE');
+                $address = trim($params['address'] ?? '');
+                if (!empty($aid) && strlen($aid) === 12 && !empty($aName)) {
+                    $generatedData = [
+                        'aadhaarNo' => $aid,
+                        'uidNumber' => $aid,
+                        'name' => $aName,
+                        'customerName' => $aName,
+                        'name_hi' => $params['name_hi'] ?? $aName,
+                        'fatherName' => $fName,
+                        'careOf' => $fName ? ("C/O: " . $fName) : '',
+                        'dob' => $dob ?: '-',
+                        'gender' => $gender,
+                        'address' => $address,
+                        'address_hi' => $params['address_hi'] ?? $address,
+                        'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
+                        'refNumber' => $aid,
+                        'serviceType' => 'aadhaarCard',
+                        'cardType' => 'ISO CR-80 PVC Smart Card',
+                        'isManualPvc' => true
+                    ];
+                    $docTitle = "आधार कार्ड CR-80 PVC ({$aid}) - {$aName}";
+                    $refNumber = $aid;
+                }
             }
-        } elseif ($normServiceType === 'votercard' || $normServiceType === 'voterCard' || $normServiceType === 'voter_manual' || $normServiceType === 'voter_card_pvc' || (isset($params['serviceId']) && in_array($params['serviceId'], ['voterCard', 'voter_manual', 'voter_card_pvc']))) {
-            $epic = strtoupper(trim($params['epicNo'] ?? ($params['epicNumber'] ?? ($params['epic'] ?? $userVal))));
-            $vName = trim($params['customerName'] ?? ($params['name'] ?? ''));
-            $fName = trim($params['fatherName'] ?? ($params['relativeName'] ?? ''));
-            $dob = trim($params['dob'] ?? ($params['age'] ?? ''));
-            $gender = trim($params['gender'] ?? 'MALE');
-            $acName = trim($params['acName'] ?? ($params['assembly'] ?? ''));
-            $partName = trim($params['partName'] ?? ($params['pollingStation'] ?? ''));
-            $partNo = trim($params['partNo'] ?? '');
-            $serialNo = trim($params['serialNo'] ?? '');
-            if (!empty($epic) && !empty($vName)) {
-                $generatedData = [
-                    'epicNo' => $epic,
-                    'epicNumber' => $epic,
-                    'name' => $vName,
-                    'customerName' => $vName,
-                    'name_hi' => $params['name_hi'] ?? $vName,
-                    'fatherName' => $fName,
-                    'dob' => $dob,
-                    'gender' => $gender,
-                    'acName' => $acName,
-                    'partName' => $partName,
-                    'partNo' => $partNo,
-                    'serialNo' => $serialNo,
-                    'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
-                    'refNumber' => $epic,
-                    'serviceType' => 'voterCard',
-                    'cardType' => 'ISO CR-80 PVC Smart Card',
-                    'isInstantPvc' => true
-                ];
-                $docTitle = "वोटर कार्ड CR-80 PVC ({$epic}) - {$vName}";
-                $refNumber = $epic;
+        } elseif ($normServiceType === 'votercard' || $normServiceType === 'voterCard' || $normServiceType === 'voter_manual') {
+            $hasManualUpload = !empty($params['photo']) || !empty($params['photoData']) || !empty($params['isManualForm']);
+            if ($hasManualUpload) {
+                $epic = strtoupper(trim($params['epicNo'] ?? ($params['epicNumber'] ?? ($params['epic'] ?? $userVal))));
+                $vName = trim($params['customerName'] ?? ($params['name'] ?? ''));
+                $fName = trim($params['fatherName'] ?? ($params['relativeName'] ?? ''));
+                $dob = trim($params['dob'] ?? ($params['age'] ?? ''));
+                $gender = trim($params['gender'] ?? 'MALE');
+                $acName = trim($params['acName'] ?? ($params['assembly'] ?? ''));
+                $partName = trim($params['partName'] ?? ($params['pollingStation'] ?? ''));
+                $partNo = trim($params['partNo'] ?? '');
+                $serialNo = trim($params['serialNo'] ?? '');
+                if (!empty($epic) && !empty($vName)) {
+                    $generatedData = [
+                        'epicNo' => $epic,
+                        'epicNumber' => $epic,
+                        'name' => $vName,
+                        'customerName' => $vName,
+                        'name_hi' => $params['name_hi'] ?? $vName,
+                        'fatherName' => $fName,
+                        'dob' => $dob ?: '-',
+                        'gender' => $gender,
+                        'acName' => $acName,
+                        'partName' => $partName,
+                        'partNo' => $partNo,
+                        'serialNo' => $serialNo,
+                        'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
+                        'refNumber' => $epic,
+                        'serviceType' => 'voterCard',
+                        'cardType' => 'ISO CR-80 PVC Smart Card',
+                        'isManualPvc' => true
+                    ];
+                    $docTitle = "वोटर कार्ड CR-80 PVC ({$epic}) - {$vName}";
+                    $refNumber = $epic;
+                }
             }
-        } elseif ($normServiceType === 'ayushmancard' || $normServiceType === 'ayushmanCard' || $normServiceType === 'ayushman_image_jpg' || (isset($params['serviceId']) && in_array($params['serviceId'], ['ayushmanCard', 'ayushman_image_jpg']))) {
-            $pmjayId = trim($params['pmjayId'] ?? ($params['pmjay_id'] ?? ($params['query'] ?? '')));
-            $aName = trim($params['customerName'] ?? ($params['name'] ?? ''));
-            $dob = trim($params['dob'] ?? '');
-            $gender = trim($params['gender'] ?? 'MALE');
-            $state = trim($params['state'] ?? 'UTTAR PRADESH');
-            if (!empty($pmjayId) && !empty($aName)) {
-                $generatedData = [
-                    'pmjayId' => $pmjayId,
-                    'name' => $aName,
-                    'customerName' => $aName,
-                    'beneficiaryName' => $aName,
-                    'dob' => $dob ?: '01/01/1985',
-                    'gender' => $gender,
-                    'state' => $state,
-                    'coverageAmount' => '₹5,00,000 / वर्ष',
-                    'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
-                    'refNumber' => $pmjayId,
-                    'serviceType' => 'ayushmanCard',
-                    'cardType' => 'ISO CR-80 PVC Smart Card',
-                    'isInstantPvc' => true
-                ];
-                $docTitle = "आयुष्मान कार्ड CR-80 PVC ({$pmjayId}) - {$aName}";
-                $refNumber = $pmjayId;
+        } elseif ($normServiceType === 'ayushmancard' || $normServiceType === 'ayushmanCard' || $normServiceType === 'ayushman_image_jpg') {
+            if (!empty($params['photo']) || !empty($params['photoData']) || !empty($params['isManualForm'])) {
+                $pmjayId = trim($params['pmjayId'] ?? ($params['pmjay_id'] ?? ($params['query'] ?? '')));
+                $aName = trim($params['customerName'] ?? ($params['name'] ?? ''));
+                $dob = trim($params['dob'] ?? '');
+                $gender = trim($params['gender'] ?? 'MALE');
+                $state = trim($params['state'] ?? 'UTTAR PRADESH');
+                if (!empty($pmjayId) && !empty($aName)) {
+                    $generatedData = [
+                        'pmjayId' => $pmjayId,
+                        'name' => $aName,
+                        'customerName' => $aName,
+                        'beneficiaryName' => $aName,
+                        'dob' => $dob ?: '-',
+                        'gender' => $gender,
+                        'state' => $state,
+                        'coverageAmount' => '₹5,00,000 / वर्ष',
+                        'photoUrl' => $params['photo'] ?? ($params['photoData'] ?? null),
+                        'refNumber' => $pmjayId,
+                        'serviceType' => 'ayushmanCard',
+                        'cardType' => 'ISO CR-80 PVC Smart Card',
+                        'isManualPvc' => true
+                    ];
+                    $docTitle = "आयुष्मान कार्ड CR-80 PVC ({$pmjayId}) - {$aName}";
+                    $refNumber = $pmjayId;
+                }
             }
-        } elseif ($normServiceType === 'rationcard' || $normServiceType === 'rationCard' || $normServiceType === 'ration_pdf_by_ration' || (isset($params['serviceId']) && in_array($params['serviceId'], ['rationCard', 'ration_pdf_by_ration']))) {
-            $ratNo = trim($params['rationNo'] ?? ($params['rationNumber'] ?? ($params['query'] ?? '')));
-            $hName = trim($params['customerName'] ?? ($params['name'] ?? ($params['headName'] ?? '')));
-            $dName = trim($params['dealerName'] ?? ($params['fpsName'] ?? ''));
-            $tot = trim($params['totalMembers'] ?? ($params['memberCount'] ?? '4'));
-            $addr = trim($params['address'] ?? '');
-            $state = trim($params['state'] ?? 'UP');
-            $dist = trim($params['district'] ?? '');
-            if (!empty($ratNo) && !empty($hName)) {
-                $generatedData = [
-                    'rationNo' => $ratNo,
-                    'name' => $hName,
-                    'headName' => $hName,
-                    'customerName' => $hName,
-                    'dealerName' => $dName ?: 'उचित दर विक्रेता',
-                    'totalMembers' => $tot,
-                    'address' => $addr,
-                    'state' => $state,
-                    'district' => $dist,
-                    'refNumber' => $ratNo,
-                    'serviceType' => 'rationCard',
-                    'cardType' => 'NFSA Ration Slip',
-                    'isInstantPvc' => true
-                ];
-                $docTitle = "राशन पर्ची ({$ratNo}) - {$hName}";
-                $refNumber = $ratNo;
+        } elseif ($normServiceType === 'rationcard' || $normServiceType === 'rationCard' || $normServiceType === 'ration_pdf_by_ration') {
+            if (!empty($params['isManualForm']) && !empty($params['headName'])) {
+                $ratNo = trim($params['rationNo'] ?? ($params['rationNumber'] ?? ($params['query'] ?? '')));
+                $hName = trim($params['customerName'] ?? ($params['name'] ?? ($params['headName'] ?? '')));
+                $dName = trim($params['dealerName'] ?? ($params['fpsName'] ?? ''));
+                $tot = trim($params['totalMembers'] ?? ($params['memberCount'] ?? '4'));
+                $addr = trim($params['address'] ?? '');
+                $state = trim($params['state'] ?? 'UP');
+                $dist = trim($params['district'] ?? '');
+                if (!empty($ratNo) && !empty($hName)) {
+                    $generatedData = [
+                        'rationNo' => $ratNo,
+                        'name' => $hName,
+                        'headName' => $hName,
+                        'customerName' => $hName,
+                        'dealerName' => $dName ?: '-',
+                        'totalMembers' => $tot,
+                        'address' => $addr,
+                        'state' => $state,
+                        'district' => $dist,
+                        'refNumber' => $ratNo,
+                        'serviceType' => 'rationCard',
+                        'cardType' => 'NFSA Ration Slip',
+                        'isManualPvc' => true
+                    ];
+                    $docTitle = "राशन पर्ची ({$ratNo}) - {$hName}";
+                    $refNumber = $ratNo;
+                }
             }
         }
     }
@@ -7466,6 +7456,7 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
         'data' => $generatedData,
         'generatedData' => $generatedData,
         'vehicleData' => ($normServiceType === 'rcDownload') ? $vehicleData : null,
+        'pdfUrl' => $generatedData['pdfUrl'] ?? ($generatedData['pdf'] ?? ($generatedData['Rc_Pdf'] ?? ($generatedData['pdf_base64'] ?? null))),
         'createdAt' => date('c')
     ];
 
@@ -7521,8 +7512,9 @@ if ($endpoint === 'orders' && $method === 'GET') {
                 $where = [];
                 $params = [];
                 if ($phone) {
-                    $where[] = "customer_phone = :phone";
+                    $where[] = "(customer_phone = :phone OR cafe_id = :phoneCafe OR customer_phone = '' OR customer_phone IS NULL)";
                     $params[':phone'] = $phone;
+                    $params[':phoneCafe'] = $phone;
                 }
                 if ($cafeId) {
                     $where[] = "cafe_id = :cafeId";
@@ -7557,6 +7549,9 @@ if ($endpoint === 'orders' && $method === 'GET') {
                     $orderObj['margin'] = floatval($r['margin']);
                     $orderObj['status'] = $r['status'];
                     $orderObj['createdAt'] = $r['created_at'];
+                    if (!empty($orderObj['generatedData']['pdfUrl']) && empty($orderObj['pdfUrl'])) {
+                        $orderObj['pdfUrl'] = $orderObj['generatedData']['pdfUrl'];
+                    }
                     $ordersMap[$key] = $orderObj;
                 }
             }
@@ -7584,7 +7579,11 @@ if ($endpoint === 'orders' && $method === 'GET') {
         $list = array_values(array_filter($list, fn($o) => ($o['cafeId'] ?? '') === $cafeId));
     }
     if ($phone) {
-        $list = array_values(array_filter($list, fn($o) => ($o['customerPhone'] ?? '') === $phone));
+        $list = array_values(array_filter($list, function($o) use ($phone) {
+            $cp = $o['customerPhone'] ?? '';
+            $cid = $o['cafeId'] ?? '';
+            return ($cp === $phone || $cid === $phone || empty($cp) || $cid === 'SMARTCAFE-HQ' || $cid === 'cafe-main');
+        }));
     }
     if ($serviceType) {
         $list = array_values(array_filter($list, fn($o) => ($o['serviceType'] ?? '') === $serviceType));
