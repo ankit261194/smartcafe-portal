@@ -65,20 +65,7 @@ export const MANUAL_RELAY_12_SERVICES = [
   'agristack_pdf'
 ];
 
-export const UPSTREAM_MAINTENANCE_SERVICES = [
-  'pan_details',
-  'pan_basic_pricing',
-  'pan_verification_premium',
-  'panverificationpremium',
-  'rc_to_details',
-  'rc_pdf_download',
-  'rc_fast_server',
-  'driving_licence_pdf',
-  'dl_details',
-  'driving_licence_verify',
-  'dl_verification',
-  'dl_pdf_service'
-];
+export const UPSTREAM_MAINTENANCE_SERVICES = [];
 
 function ServicePageContent({
   activeToolId = 'aadhaar_advance',
@@ -114,12 +101,8 @@ function ServicePageContent({
   }, [allServices, normalizedToolId]);
 
   const isUpstreamMaintenance = useMemo(() => {
-    const id = (currentTool?.id || '').toLowerCase();
-    return UPSTREAM_MAINTENANCE_SERVICES.includes(id) || 
-      currentTool?.status === 'maintenance' || 
-      currentTool?.isUpstreamMaintenance === true ||
-      (currentTool?.source === 'p4points' && (id === 'pan_details' || id === 'rc_to_details' || id === 'dl_verification' || id === 'pan_basic_pricing'));
-  }, [currentTool]);
+    return false; // 100% Zero artificial maintenance block. All services run live upstream.
+  }, []);
 
   const isManualRelay12 = useMemo(() => {
     const id = (currentTool?.id || '').toLowerCase();
@@ -224,6 +207,7 @@ function ServicePageContent({
   const [orderHistory, setOrderHistory] = useState([]);
   const [loadingHistory, setLoadingHistory] = useState(false);
   const [historySearch, setHistorySearch] = useState('');
+  const [historyScope, setHistoryScope] = useState('current'); // 'current' or 'all'
 
   // Biometric RD Service, OTP Bridge, and A4 5-in-1 Tray States
   const [rdDeviceStatus, setRdDeviceStatus] = useState({ connected: false, name: '', checking: false });
@@ -345,7 +329,8 @@ function ServicePageContent({
   const fetchOrderHistory = async () => {
     setLoadingHistory(true);
     try {
-      const phoneParam = customerSession?.phone ? `?phone=${encodeURIComponent(customerSession.phone)}` : '';
+      const activePhone = customerSession?.phone || (isOperator ? '' : (localStorage.getItem('customer_phone') || ''));
+      const phoneParam = activePhone ? `?phone=${encodeURIComponent(activePhone)}` : '';
       const res = await fetch(`/api/orders${phoneParam}`);
       if (res.ok) {
         const list = await res.json();
@@ -1417,34 +1402,34 @@ function ServicePageContent({
           return;
         }
 
-        // Overlay user real inputs strictly
+        // Authentic Government Data takes 100% priority
         const rawGen = data.generatedData || data.vehicleData || data.data || {};
         const officialPdf = rawGen.pdfUrl || rawGen.pdf || rawGen.pdf_base64 || rawGen.pdfBase64 || rawGen.Rc_Pdf || data.pdfUrl || null;
         const mergedData = {
           ...rawGen,
-          regNo: val,
-          panNo: val,
-          aadhaarNo: ['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar'].includes(tid) ? (rawGen.aadhaarNo || rawGen.uidNumber || rawGen.aadhar || '-') : val,
-          maskedAadhaar: val.length >= 4 ? `XXXX XXXX ${val.replace(/\s/g, '').slice(-4)}` : val,
-          epicNo: val,
-          pmjayId: val,
-          rationNo: tid === 'ration_pdf_by_aadhar' ? (rawGen.rationNo || rawGen.ration_no || rawGen.rcNo || rawGen.rationCardNo || '-') : val,
-          consumerNo: val,
-          appNo: val,
-          certNo: secondaryInput.trim() || rawGen.certNo || '-',
-          dlNo: val,
-          challanNo: val,
-          name: customerName.trim() || rawGen.name || rawGen.ownerName || '-',
-          ownerName: customerName.trim() || rawGen.ownerName || rawGen.name || '-',
-          applicantName: customerName.trim() || rawGen.applicantName || rawGen.name || '-',
-          headName: customerName.trim() || rawGen.headName || rawGen.name || '-',
-          consumerName: customerName.trim() || rawGen.consumerName || rawGen.name || '-',
-          fatherName: fatherName.trim() || rawGen.fatherName || '-',
-          dob: dobDate ? formatDobDisplay(dobDate) : (rawGen.dob || '-'),
-          gender: gender,
-          address: addressInput.trim() || rawGen.address || '-',
-          photoUrl: photoData,
-          signUrl: signData,
+          regNo: rawGen.regNo || rawGen.vehicle_number || rawGen.vehicleNumber || val,
+          panNo: rawGen.panNo || rawGen.panNumber || val,
+          aadhaarNo: ['up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar'].includes(tid) ? (rawGen.aadhaarNo || rawGen.uidNumber || rawGen.aadhar || '-') : (rawGen.aadhaarNo || rawGen.uidNumber || val),
+          maskedAadhaar: rawGen.maskedAadhaar || (val.length >= 4 ? `XXXX XXXX ${val.replace(/\s/g, '').slice(-4)}` : val),
+          epicNo: rawGen.epicNo || rawGen.epicNumber || val,
+          pmjayId: rawGen.pmjayId || val,
+          rationNo: tid === 'ration_pdf_by_aadhar' ? (rawGen.rationNo || rawGen.ration_no || rawGen.rcNo || rawGen.rationCardNo || '-') : (rawGen.rationNo || val),
+          consumerNo: rawGen.consumerNo || rawGen.caNumber || val,
+          appNo: rawGen.appNo || rawGen.applicationNumber || val,
+          certNo: rawGen.certNo || secondaryInput.trim() || '-',
+          dlNo: rawGen.dlNo || rawGen.dl_number || val,
+          challanNo: rawGen.challanNo || val,
+          name: rawGen.name || rawGen.ownerName || rawGen.applicantName || rawGen.headName || customerName.trim() || '-',
+          ownerName: rawGen.ownerName || rawGen.name || customerName.trim() || '-',
+          applicantName: rawGen.applicantName || rawGen.name || customerName.trim() || '-',
+          headName: rawGen.headName || rawGen.name || customerName.trim() || '-',
+          consumerName: rawGen.consumerName || rawGen.name || customerName.trim() || '-',
+          fatherName: rawGen.fatherName || rawGen.relationName || fatherName.trim() || '-',
+          dob: rawGen.dob || (dobDate ? formatDobDisplay(dobDate) : '-'),
+          gender: rawGen.gender || gender,
+          address: rawGen.address || addressInput.trim() || '-',
+          photoUrl: rawGen.photoUrl || photoData,
+          signUrl: rawGen.signUrl || signData,
           pdfUrl: officialPdf,
           isLiveFromP4Points: Boolean(data.isLiveFromP4Points || rawGen.isLiveFromP4Points || data.source === 'p4points' || rawGen.source === 'p4points')
         };
@@ -1463,101 +1448,13 @@ function ServicePageContent({
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }, 100);
       } else {
-        if (isFreeService) {
-          await executeDirectLookupFallback(val);
-        } else {
-          setErrorMsg(data.error || 'सेवा निष्पादन में त्रुटि हुई। कृपया पुनः प्रयास करें।');
-        }
+        setErrorMsg(data.error || 'सरकारी रिकॉर्ड में यह विवरण उपलब्ध नहीं है अथवा सेवा प्रदाता सर्वर से डेटा प्राप्त नहीं हो सका। आपके वॉलेट से कोई कटौती नहीं हुई है (₹0)।');
       }
     } catch (err) {
       console.warn('execute-automated error:', err);
-      if (isFreeService) {
-        await executeDirectLookupFallback(val);
-      } else {
-        setErrorMsg('सर्वर से संपर्क करने में असमर्थ। कृपया बाद में प्रयास करें।');
-      }
+      setErrorMsg('सर्वर से संपर्क करने में असमर्थ। कृपया बाद में पुनः प्रयास करें। आपके वॉलेट से कोई कटौती नहीं हुई है (₹0)।');
     } finally {
       setLoading(false);
-    }
-  };
-
-  // Direct Lookup Fallback
-  const executeDirectLookupFallback = async (val) => {
-    try {
-      const fallbackUrlMap = {
-        rc: `/api/rc/lookup/${encodeURIComponent(val)}`,
-        pan: `/api/pan/lookup/${encodeURIComponent(val)}`,
-        aadhaar: `/api/aadhaar/lookup/${encodeURIComponent(val)}`,
-        voter: `/api/voter/lookup/${encodeURIComponent(val)}`,
-        ayushman: `/api/ayushman/lookup/${encodeURIComponent(val)}`,
-        ration: `/api/ration/lookup/${encodeURIComponent(val)}`,
-        electricity: `/api/electricity/lookup/${encodeURIComponent(val)}`,
-        edistrict: `/api/edistrict/lookup/${encodeURIComponent(val)}/${encodeURIComponent(secondaryInput.trim() || '-')}`,
-        dl: `/api/dl/lookup/${encodeURIComponent(val)}`,
-        challan: `/api/challan/lookup/${encodeURIComponent(val)}`,
-        epan: `/api/epan/lookup/${encodeURIComponent(val)}`,
-        receipt: `/api/receipt/lookup/${encodeURIComponent(val)}`
-      };
-
-      const targetUrl = fallbackUrlMap[currentTool.id] || fallbackUrlMap[toolKind];
-      if (!targetUrl) {
-        setErrorMsg('सेवा निष्पादन में त्रुटि हुई। कृपया पुनः प्रयास करें।');
-        return;
-      }
-      const fRes = await fetch(targetUrl);
-      if (fRes.ok) {
-        const lookupData = await fRes.json();
-        const mergedData = {
-          ...lookupData,
-          regNo: val,
-          panNo: val,
-          aadhaarNo: val,
-          maskedAadhaar: val.length >= 4 ? `XXXX XXXX ${val.replace(/\s/g, '').slice(-4)}` : val,
-          epicNo: val,
-          pmjayId: val,
-          rationNo: val,
-          consumerNo: val,
-          appNo: val,
-          certNo: secondaryInput.trim() || lookupData.certNo || '-',
-          dlNo: val,
-          challanNo: val,
-          name: customerName.trim() || lookupData.name || lookupData.ownerName || '-',
-          ownerName: customerName.trim() || lookupData.ownerName || lookupData.name || '-',
-          applicantName: customerName.trim() || lookupData.applicantName || lookupData.name || '-',
-          headName: customerName.trim() || lookupData.headName || lookupData.name || '-',
-          consumerName: customerName.trim() || lookupData.consumerName || lookupData.name || '-',
-          fatherName: fatherName.trim() || lookupData.fatherName || '-',
-          dob: dobDate ? formatDobDisplay(dobDate) : (lookupData.dob || '-'),
-          gender: gender,
-          address: addressInput.trim() || lookupData.address || '-',
-          photoUrl: photoData,
-          signUrl: signData
-        };
-
-        setCurrentResult({
-          success: true,
-          isInstantPreview: true,
-          message: '✅ 1-क्लिक इंस्टेंट जनरेशन सफल! आधिकारिक प्रति तैयार है।',
-          retailFee: 0,
-          wholesaleCost: 0,
-          margin: 0,
-          vehicleData: mergedData,
-          generatedData: mergedData,
-          data: mergedData
-        });
-        setErrorMsg('');
-        confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
-        setTimeout(() => {
-          const el = document.getElementById('cr80-preview-anchor');
-          if (el) el.scrollIntoView({ behavior: 'smooth' });
-        }, 100);
-      } else {
-        const errJson = await fRes.json().catch(() => ({}));
-        setErrorMsg(errJson.error || 'जनरेशन पूरा नहीं हो सका। कृपया विवरण जांचें।');
-      }
-    } catch (fallbackErr) {
-      console.error(fallbackErr);
-      setErrorMsg('सर्वर से संपर्क करने में असमर्थ। कृपया पुनः प्रयास करें।');
     }
   };
 
@@ -1830,26 +1727,48 @@ function ServicePageContent({
 
   const activeData = currentResult?.generatedData || currentResult?.vehicleData || currentResult?.data || (currentResult && typeof currentResult === 'object' && currentResult.success ? currentResult : null);
 
-  // Filtered orders for this specific tool (safe against undefined or null)
+  // Filtered orders for this specific tool or all 30-day archive
   const toolOrders = useMemo(() => {
     if (!Array.isArray(orderHistory)) return [];
     return orderHistory.filter(o => {
       if (!o) return false;
+      if (historyScope === 'all') {
+        if (!historySearch) return true;
+        const s = String(historySearch).toLowerCase();
+        return (
+          (o.refNumber && String(o.refNumber).toLowerCase().includes(s)) ||
+          (o.docTitle && String(o.docTitle).toLowerCase().includes(s)) ||
+          (o.customerName && String(o.customerName).toLowerCase().includes(s)) ||
+          (o.customerPhone && String(o.customerPhone).includes(s))
+        );
+      }
+      const st = String(o.serviceType || '').toLowerCase();
+      const tid = String(currentTool?.id || '').toLowerCase();
       const matchesTool = o.serviceType === currentTool?.serviceType || 
         o.serviceType === currentTool?.id ||
-        (toolKind === 'rc' && (o.serviceType === 'rcDownload' || o.vehicleNumber)) ||
-        (toolKind === 'pan' && (o.serviceType === 'panCard' || o.panNo)) ||
-        (toolKind === 'aadhaar' && (o.serviceType === 'aadhaarCard' || o.aadhaarNo));
+        st.includes(tid) ||
+        tid.includes(st) ||
+        (toolKind === 'rc' && (st.includes('rc') || st.includes('vahan') || o.vehicleNumber || o.regNo)) ||
+        (toolKind === 'pan' && (st.includes('pan') || o.panNo)) ||
+        (toolKind === 'aadhaar' && (st.includes('aadhaar') || st.includes('aadhar') || o.aadhaarNo || o.uidNumber)) ||
+        (toolKind === 'voter' && (st.includes('voter') || st.includes('epic') || o.epicNo)) ||
+        (toolKind === 'ration' && (st.includes('ration') || o.rationNo)) ||
+        (toolKind === 'ayushman' && (st.includes('ayushman') || st.includes('pmjay') || o.pmjayId)) ||
+        (toolKind === 'dl' && (st.includes('dl') || st.includes('licence') || st.includes('license') || o.dlNo)) ||
+        (toolKind === 'e_shram' && st.includes('shram')) ||
+        (toolKind === 'electricity' && (st.includes('electric') || st.includes('bill') || o.consumerNo)) ||
+        (toolKind === 'challan' && (st.includes('chalan') || st.includes('challan') || o.challanNo));
       if (!matchesTool) return false;
       if (!historySearch) return true;
       const s = String(historySearch).toLowerCase();
       return (
         (o.refNumber && String(o.refNumber).toLowerCase().includes(s)) ||
         (o.docTitle && String(o.docTitle).toLowerCase().includes(s)) ||
-        (o.customerName && String(o.customerName).toLowerCase().includes(s))
+        (o.customerName && String(o.customerName).toLowerCase().includes(s)) ||
+        (o.customerPhone && String(o.customerPhone).includes(s))
       );
     });
-  }, [orderHistory, currentTool, toolKind, historySearch]);
+  }, [orderHistory, currentTool, toolKind, historySearch, historyScope]);
 
 
   // Screenshot-Exact Action Button Label Helper
@@ -7289,28 +7208,46 @@ function ServicePageContent({
       {/* RECENT APPLICATIONS & ORDER HISTORY (EXACT REKHA PRINT ORDER DESK) */}
       {/* ================================================================= */}
       <div className="bg-white dark:bg-[#0c162c] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md overflow-hidden mt-6">
-        <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <History className="w-4 h-4 text-amber-400" />
+        <div className="bg-slate-900 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <History className="w-4 h-4 text-amber-400 shrink-0" />
             <h3 className="font-black text-xs sm:text-sm uppercase tracking-wider">
               {language === 'hi' ? '📋 30-दिवसीय सुरक्षित प्रिंट आर्काइव व इतिहास' : '📋 30-Day Safe Print Archive & History'}
             </h3>
             <span className="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/30 flex items-center gap-1">
               <span>🗓️</span> {language === 'hi' ? '30 दिन सुरक्षित निःशुल्क रिप्रिंट गारंटी' : '30-Day Free Reprint Guaranteed'}
             </span>
-            <span className="bg-white/20 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-              {toolOrders.length > 0 ? toolOrders.length : orderHistory.length}
-            </span>
           </div>
-          <button
-            type="button"
-            onClick={fetchOrderHistory}
-            disabled={loadingHistory}
-            className="text-xs text-slate-300 hover:text-white flex items-center gap-1.5 transition cursor-pointer"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${loadingHistory ? 'animate-spin' : ''}`} />
-            <span>{language === 'hi' ? 'रिफ्रेश' : 'Refresh'}</span>
-          </button>
+
+          <div className="flex items-center gap-2">
+            {/* View Scope Toggle */}
+            <div className="bg-slate-800 p-0.5 rounded-xl border border-slate-700 flex items-center text-[11px] font-bold">
+              <button
+                type="button"
+                onClick={() => setHistoryScope('current')}
+                className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${historyScope === 'current' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
+              >
+                {language === 'hi' ? '🎯 इस सेवा के प्रिंट' : '🎯 This Service'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setHistoryScope('all')}
+                className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${historyScope === 'all' ? 'bg-emerald-600 text-white shadow-xs' : 'text-slate-400 hover:text-white'}`}
+              >
+                {language === 'hi' ? `📋 सभी 30+ दिन इतिहास (${orderHistory.length})` : `📋 All History (${orderHistory.length})`}
+              </button>
+            </div>
+
+            <button
+              type="button"
+              onClick={fetchOrderHistory}
+              disabled={loadingHistory}
+              className="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-700 px-2.5 py-1 rounded-xl text-slate-300 hover:text-white flex items-center gap-1.5 transition cursor-pointer"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${loadingHistory ? 'animate-spin' : ''}`} />
+              <span>{language === 'hi' ? 'रिफ्रेश' : 'Refresh'}</span>
+            </button>
+          </div>
         </div>
 
         <div className="overflow-x-auto">

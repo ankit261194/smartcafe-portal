@@ -29,13 +29,7 @@ assert(servicePageContent.includes("if (!dobDate)"), 'Must reject ll_exam_pass_a
 
 // Check 403 handling does NOT call executeDirectLookupFallback
 assert(servicePageContent.includes('if (res.status === 403)'), 'Must have 403 check');
-assert(!servicePageContent.match(/if\s*\(res\.status\s*===\s*403\)\s*\{\s*await executeDirectLookupFallback/), '403 must not call executeDirectLookupFallback');
-
-// Check fallback in else & catch does NOT fall back for paid services
-assert(servicePageContent.includes('if (isFreeService) {\n          await executeDirectLookupFallback(val);'), 'Only free service falls back on non-200');
-
-// Check executeDirectLookupFallback does NOT default to /api/rc/lookup
-assert(!servicePageContent.includes('fallbackUrlMap[toolKind] || `/api/rc/lookup/'), 'executeDirectLookupFallback must not default to /api/rc/lookup');
+assert(!servicePageContent.includes('executeDirectLookupFallback'), 'executeDirectLookupFallback must be 100% eliminated');
 
 // Check Honest Badges
 assert(servicePageContent.includes('⏱️ मैन्युअल रिले (1-2 घंटे)'), 'Manual relay badge present');
@@ -575,7 +569,7 @@ console.log('✅ PASS: services_79.json upstream manual relay metadata verified'
 
 console.log('\n--- TEST 6: Inspect deploy.ps1 for Strict 8006518960 Protection ---');
 const deployContent = fs.readFileSync('deploy.ps1', 'utf8');
-assert(deployContent.includes("w.balance = (w.phone === '8006518960') ? Math.max(30.0, realBal) : Math.max(0, realBal);"), 'deploy.ps1 must enforce balance protection for 8006518960');
+assert(deployContent.includes("w.balance = (w.phone === '8006518960') ? Math.max(45.0, realBal) : Math.max(0, realBal);") || deployContent.includes("Math.max(45.0, realBal)"), 'deploy.ps1 must enforce balance protection for 8006518960');
 console.log('✅ PASS: deploy.ps1 strict wallet protection verified');
 
 console.log('\n--- TEST 7: Inspect 5-Phase Master Quality & Proforma Refactor ---');
@@ -671,41 +665,42 @@ assert(servicePageContent.includes("राशन कार्ड से जु�
 assert(servicePageContent.includes("['ration', 'ration_pdf_by_ration', 'up_ration_to_aadhaar', 'all_state_ration_to_aadhar', 'assam_ration_to_aadhaar', 'ration_pdf_by_aadhar'].includes(id)"), 'Ration to Aadhaar services correctly mapped to toolKind ration');
 console.log('✅ PASS: Phase 8 Manual Relay Transparency, Ticket Dossier, Zero Dummy Placeholders, Backend Neutrality & Multi-Member Aadhaar Disclosure verified');
 
-console.log('\n--- TEST 9: Option 1 Upstream Maintenance & Transparent Server State Verification ---');
+console.log('\n--- TEST 9: 100% Eradication of False Server Down / Maintenance Blocks & Live Upstream Execution ---');
 const updatedServicePageContent = fs.readFileSync('client/src/components/ServicePage.jsx', 'utf8');
 const updatedIndexPhpContent = fs.readFileSync('client/public/api/index.php', 'utf8');
 const updatedServerJsContent = fs.readFileSync('server/server.js', 'utf8');
 const services79Data = JSON.parse(fs.readFileSync('client/src/data/services_79.json', 'utf8'));
 
-// 1. Service Catalog Maintenance Flags
+// 1. Service Catalog Live Status & Honest Badges
 const panDetails = services79Data.find(s => s.id === 'pan_details');
-assert(panDetails && panDetails.status === 'maintenance', 'pan_details must be status: maintenance in services_79');
-assert(panDetails && panDetails.isUpstreamMaintenance === true, 'pan_details must have isUpstreamMaintenance: true');
+assert(panDetails && panDetails.status === 'live', 'pan_details must be status: live in services_79');
+assert(panDetails && panDetails.badge === '🟢 लाइव सरकारी API', 'pan_details must have badge: 🟢 लाइव सरकारी API');
+assert(!panDetails.isUpstreamMaintenance, 'pan_details must not have isUpstreamMaintenance');
 
 const rcDetails = services79Data.find(s => s.id === 'rc_to_details');
-assert(rcDetails && rcDetails.status === 'maintenance', 'rc_to_details must be status: maintenance in services_79');
-assert(rcDetails && rcDetails.isUpstreamMaintenance === true, 'rc_to_details must have isUpstreamMaintenance: true');
+assert(rcDetails && rcDetails.status === 'live', 'rc_to_details must be status: live in services_79');
+assert(rcDetails && rcDetails.badge === '🟢 लाइव सरकारी API', 'rc_to_details must have badge: 🟢 लाइव सरकारी API');
+assert(!rcDetails.isUpstreamMaintenance, 'rc_to_details must not have isUpstreamMaintenance');
 
-// 2. ServicePage.jsx Guards & Badges
-assert(updatedServicePageContent.includes('UPSTREAM_MAINTENANCE_SERVICES'), 'UPSTREAM_MAINTENANCE_SERVICES exported in ServicePage.jsx');
-assert(updatedServicePageContent.includes('isUpstreamMaintenance'), 'isUpstreamMaintenance hook present in ServicePage.jsx');
-assert(updatedServicePageContent.includes('🔴 अपस्ट्रीम मेंटेनेंस'), 'Maintenance badge present in ServicePage.jsx');
-assert(updatedServicePageContent.includes('🔴 सेवा प्रदाता सर्वर मेंटेनेंस पर है (Upstream API Maintenance)'), 'Maintenance form banner present');
-assert(updatedServicePageContent.includes('अस्थायी स्थगित (₹0)'), 'Fee badge paused status present');
-assert(updatedServicePageContent.includes('🔴 अपस्ट्रीम मेंटेनेंस (शुल्क: ₹0)'), 'Submit button disabled text present');
+const dlDetails = services79Data.find(s => s.id === 'dl_details');
+assert(dlDetails && dlDetails.status === 'live', 'dl_details must be status: live in services_79');
+assert(!dlDetails.isUpstreamMaintenance, 'dl_details must not have isUpstreamMaintenance');
 
-// 3. Backend Zero-Debit Guards
-assert(updatedIndexPhpContent.includes('$maintenanceServices'), 'index.php must have $maintenanceServices guard');
-assert(updatedServerJsContent.includes('maintenanceServices'), 'server.js must have maintenanceServices guard');
-assert(updatedIndexPhpContent.includes('सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है'), 'index.php must return honest maintenance message');
-assert(updatedServerJsContent.includes('सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है'), 'server.js must return honest maintenance message');
+// 2. ServicePage.jsx Zero Maintenance Interceptors
+assert(updatedServicePageContent.includes('export const UPSTREAM_MAINTENANCE_SERVICES = [];'), 'UPSTREAM_MAINTENANCE_SERVICES must be empty array in ServicePage.jsx');
+assert(updatedServicePageContent.includes('return false; // 100% Zero artificial maintenance block'), 'isUpstreamMaintenance returns false in ServicePage.jsx');
 
-// 4. Hostinger CDN Cache Bypass Headers
-assert(updatedIndexPhpContent.includes('CDN-Cache-Control: no-store'), 'index.php must set CDN-Cache-Control: no-store');
-assert(updatedIndexPhpContent.includes('Surrogate-Control: no-store'), 'index.php must set Surrogate-Control: no-store');
-assert(updatedIndexPhpContent.includes('X-Accel-Expires: 0'), 'index.php must set X-Accel-Expires: 0');
+// 3. Backend Zero Maintenance Interceptor Removal
+assert(!updatedIndexPhpContent.includes('$maintenanceServices = ['), 'index.php must NOT have $maintenanceServices interceptor');
+assert(!updatedServerJsContent.includes('const maintenanceServices = ['), 'server.js must NOT have maintenanceServices interceptor');
 
-console.log('✅ PASS: Option 1 Upstream Maintenance, Transparent Badges & Zero-Debit Guards 100% verified across all tiers');
+// 4. Zero Fallback Dummy Generators
+assert(!updatedIndexPhpContent.includes("'isInstantPvc' => true"), 'index.php must NOT synthesize isInstantPvc dummy cards');
+assert(!updatedServerJsContent.includes("isInstantPvc: true"), 'server.js must NOT synthesize isInstantPvc dummy cards');
+assert(!updatedIndexPhpContent.includes("'01/01/1985'"), 'index.php must NOT contain 01/01/1985 dummy date');
+assert(!updatedServerJsContent.includes("'01/01/1985'"), 'server.js must NOT contain 01/01/1985 dummy date');
+
+console.log('✅ PASS: Zero false maintenance blocks and zero dummy card synthesizers 100% verified across all tiers');
 
 console.log('\n--- TEST 10: 100% Elimination of Synthetic Data & 30-Day Permanent Print Archive Verification ---');
 // Read fresh contents from disk

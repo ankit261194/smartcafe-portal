@@ -3141,7 +3141,7 @@ function getAyushmanDetails(id, custom = {}) {
     beneficiaryName: name,
     gender,
     yob,
-    dob: custom.dob || '01/01/1985',
+    dob: custom.dob || '-',
     state: custom.state || "UTTAR PRADESH",
     district: custom.district || "LUCKNOW",
     familyId,
@@ -5266,27 +5266,6 @@ app.post('/api/services/execute-automated', async (req, res) => {
     return res.status(400).json({ error: 'सेवा प्रकार अनिवार्य है।' });
   }
 
-  const maintenanceServices = [
-    'pan_details',
-    'pan_basic_pricing',
-    'pan_verification_premium',
-    'panverificationpremium',
-    'rc_to_details',
-    'rc_pdf_download',
-    'rc_fast_server',
-    'driving_licence_pdf',
-    'dl_details',
-    'driving_licence_verify',
-    'dl_verification',
-    'dl_pdf_service'
-  ];
-  if (maintenanceServices.includes(String(serviceType).toLowerCase())) {
-    return res.status(400).json({
-      success: false,
-      maintenance: true,
-      error: 'सरकारी सेवा प्रदाता सर्वर (P4Points) की तरफ से यह API अस्थायी रूप से मेंटेनेंस पर है। आपके वॉलेट से कोई राशि नहीं काटी गई है (कटौती: ₹0)।'
-    });
-  }
 
   const effectiveCustomerPhone = customerPhone || '';
 
@@ -6122,142 +6101,154 @@ app.post('/api/services/execute-automated', async (req, res) => {
         amount: retailFee
       });
       docTitle = `${serviceDisplayName} रसीद (${generatedData.receiptNo}) - ₹${generatedData.amount}`;
-      refNumber = generatedData.receiptNo;
     } else if (normServiceType === 'pancard' || normServiceType === 'panCard' || params?.serviceId === 'panCard') {
-      const panNo = String(params?.panNo || params?.panNumber || params?.pan || params?.query || '').toUpperCase().trim();
-      const panName = String(params?.customerName || params?.name || '').toUpperCase().trim();
-      const fName = String(params?.fatherName || '').toUpperCase().trim();
-      const dob = String(params?.dob || '').trim();
-      if (panNo && panName) {
-        generatedData = {
-          panNo,
-          name: panName,
-          customerName: panName,
-          fatherName: fName,
-          dob,
-          photoUrl: params?.photo || params?.photoData || null,
-          signUrl: params?.signature || params?.signData || null,
-          refNumber: panNo,
-          serviceType: 'panCard',
-          cardType: 'ISO CR-80 PVC Smart Card',
-          isInstantPvc: true
-        };
-        docTitle = `पैन कार्ड CR-80 PVC (${panNo}) - ${panName}`;
-        refNumber = panNo;
+      const hasManualUpload = Boolean(params?.photo || params?.photoData || params?.signature || params?.isManualForm);
+      if (hasManualUpload) {
+        const panNo = String(params?.panNo || params?.panNumber || params?.pan || params?.query || '').toUpperCase().trim();
+        const panName = String(params?.customerName || params?.name || '').toUpperCase().trim();
+        const fName = String(params?.fatherName || '').toUpperCase().trim();
+        const dob = String(params?.dob || '').trim();
+        if (panNo && panName) {
+          generatedData = {
+            panNo,
+            name: panName,
+            customerName: panName,
+            fatherName: fName,
+            dob: dob || '-',
+            photoUrl: params?.photo || params?.photoData || null,
+            signUrl: params?.signature || params?.signData || null,
+            refNumber: panNo,
+            serviceType: 'panCard',
+            cardType: 'ISO CR-80 PVC Smart Card',
+            isManualPvc: true
+          };
+          docTitle = `पैन कार्ड CR-80 PVC (${panNo}) - ${panName}`;
+          refNumber = panNo;
+        }
       }
-    } else if (normServiceType === 'aadhaarcard' || normServiceType === 'aadhaarCard' || normServiceType === 'aadhaar_manual' || normServiceType === 'aadhaar_pvc' || ['aadhaarCard', 'aadhaar_manual', 'aadhaar_pvc'].includes(params?.serviceId)) {
-      const aid = String(params?.aadhaarNo || params?.uidNumber || params?.aadhar || params?.query || '').replace(/\D/g, '').trim();
-      const aName = String(params?.customerName || params?.name || '').trim();
-      const fName = String(params?.fatherName || params?.careOf || '').trim();
-      const dob = String(params?.dob || '').trim();
-      const gender = String(params?.gender || 'MALE').trim();
-      const address = String(params?.address || '').trim();
-      if (aid && aid.length === 12 && aName) {
-        generatedData = {
-          aadhaarNo: aid,
-          uidNumber: aid,
-          name: aName,
-          customerName: aName,
-          name_hi: params?.name_hi || aName,
-          fatherName: fName,
-          careOf: fName ? `C/O: ${fName}` : '',
-          dob,
-          gender,
-          address,
-          address_hi: params?.address_hi || address,
-          photoUrl: params?.photo || params?.photoData || null,
-          refNumber: aid,
-          serviceType: 'aadhaarCard',
-          cardType: 'ISO CR-80 PVC Smart Card',
-          isInstantPvc: true
-        };
-        docTitle = `आधार कार्ड CR-80 PVC (${aid}) - ${aName}`;
-        refNumber = aid;
+    } else if (normServiceType === 'aadhaarcard' || normServiceType === 'aadhaarCard' || normServiceType === 'aadhaar_manual') {
+      const hasManualUpload = Boolean(params?.photo || params?.photoData || params?.isManualForm);
+      if (hasManualUpload) {
+        const aid = String(params?.aadhaarNo || params?.uidNumber || params?.aadhar || params?.query || '').replace(/\D/g, '').trim();
+        const aName = String(params?.customerName || params?.name || '').trim();
+        const fName = String(params?.fatherName || params?.careOf || '').trim();
+        const dob = String(params?.dob || '').trim();
+        const gender = String(params?.gender || 'MALE').trim();
+        const address = String(params?.address || '').trim();
+        if (aid && aid.length === 12 && aName) {
+          generatedData = {
+            aadhaarNo: aid,
+            uidNumber: aid,
+            name: aName,
+            customerName: aName,
+            name_hi: params?.name_hi || aName,
+            fatherName: fName,
+            careOf: fName ? `C/O: ${fName}` : '',
+            dob: dob || '-',
+            gender,
+            address,
+            address_hi: params?.address_hi || address,
+            photoUrl: params?.photo || params?.photoData || null,
+            refNumber: aid,
+            serviceType: 'aadhaarCard',
+            cardType: 'ISO CR-80 PVC Smart Card',
+            isManualPvc: true
+          };
+          docTitle = `आधार कार्ड CR-80 PVC (${aid}) - ${aName}`;
+          refNumber = aid;
+        }
       }
-    } else if (normServiceType === 'votercard' || normServiceType === 'voterCard' || normServiceType === 'voter_manual' || normServiceType === 'voter_card_pvc' || ['voterCard', 'voter_manual', 'voter_card_pvc'].includes(params?.serviceId)) {
-      const epic = String(params?.epicNo || params?.epicNumber || params?.epic || params?.query || '').trim().toUpperCase();
-      const vName = String(params?.customerName || params?.name || '').trim();
-      const fName = String(params?.fatherName || params?.relativeName || '').trim();
-      const dob = String(params?.dob || params?.age || '').trim();
-      const gender = String(params?.gender || 'MALE').trim();
-      const acName = String(params?.acName || params?.assembly || '').trim();
-      const partName = String(params?.partName || params?.pollingStation || '').trim();
-      const partNo = String(params?.partNo || '').trim();
-      const serialNo = String(params?.serialNo || '').trim();
-      if (epic && vName) {
-        generatedData = {
-          epicNo: epic,
-          epicNumber: epic,
-          name: vName,
-          customerName: vName,
-          name_hi: params?.name_hi || vName,
-          fatherName: fName,
-          dob,
-          gender,
-          acName,
-          partName,
-          partNo,
-          serialNo,
-          photoUrl: params?.photo || params?.photoData || null,
-          refNumber: epic,
-          serviceType: 'voterCard',
-          cardType: 'ISO CR-80 PVC Smart Card',
-          isInstantPvc: true
-        };
-        docTitle = `वोटर कार्ड CR-80 PVC (${epic}) - ${vName}`;
-        refNumber = epic;
+    } else if (normServiceType === 'votercard' || normServiceType === 'voterCard' || normServiceType === 'voter_manual') {
+      const hasManualUpload = Boolean(params?.photo || params?.photoData || params?.isManualForm);
+      if (hasManualUpload) {
+        const epic = String(params?.epicNo || params?.epicNumber || params?.epic || params?.query || '').trim().toUpperCase();
+        const vName = String(params?.customerName || params?.name || '').trim();
+        const fName = String(params?.fatherName || params?.relativeName || '').trim();
+        const dob = String(params?.dob || params?.age || '').trim();
+        const gender = String(params?.gender || 'MALE').trim();
+        const acName = String(params?.acName || params?.assembly || '').trim();
+        const partName = String(params?.partName || params?.pollingStation || '').trim();
+        const partNo = String(params?.partNo || '').trim();
+        const serialNo = String(params?.serialNo || '').trim();
+        if (epic && vName) {
+          generatedData = {
+            epicNo: epic,
+            epicNumber: epic,
+            name: vName,
+            customerName: vName,
+            name_hi: params?.name_hi || vName,
+            fatherName: fName,
+            dob: dob || '-',
+            gender,
+            acName,
+            partName,
+            partNo,
+            serialNo,
+            photoUrl: params?.photo || params?.photoData || null,
+            refNumber: epic,
+            serviceType: 'voterCard',
+            cardType: 'ISO CR-80 PVC Smart Card',
+            isManualPvc: true
+          };
+          docTitle = `वोटर कार्ड CR-80 PVC (${epic}) - ${vName}`;
+          refNumber = epic;
+        }
       }
-    } else if (normServiceType === 'ayushmancard' || normServiceType === 'ayushmanCard' || normServiceType === 'ayushman_image_jpg' || ['ayushmanCard', 'ayushman_image_jpg'].includes(params?.serviceId)) {
-      const pmjayId = String(params?.pmjayId || params?.pmjay_id || params?.query || '').trim();
-      const aName = String(params?.customerName || params?.name || '').trim();
-      const dob = String(params?.dob || '').trim();
-      const gender = String(params?.gender || 'MALE').trim();
-      const state = String(params?.state || 'UTTAR PRADESH').trim();
-      if (pmjayId && aName) {
-        generatedData = {
-          pmjayId,
-          name: aName,
-          customerName: aName,
-          beneficiaryName: aName,
-          dob: dob || '01/01/1985',
-          gender,
-          state,
-          coverageAmount: '₹5,00,000 / वर्ष',
-          photoUrl: params?.photo || params?.photoData || null,
-          refNumber: pmjayId,
-          serviceType: 'ayushmanCard',
-          cardType: 'ISO CR-80 PVC Smart Card',
-          isInstantPvc: true
-        };
-        docTitle = `आयुष्मान कार्ड CR-80 PVC (${pmjayId}) - ${aName}`;
-        refNumber = pmjayId;
+    } else if (normServiceType === 'ayushmancard' || normServiceType === 'ayushmanCard' || normServiceType === 'ayushman_image_jpg') {
+      if (params?.photo || params?.photoData || params?.isManualForm) {
+        const pmjayId = String(params?.pmjayId || params?.pmjay_id || params?.query || '').trim();
+        const aName = String(params?.customerName || params?.name || '').trim();
+        const dob = String(params?.dob || '').trim();
+        const gender = String(params?.gender || 'MALE').trim();
+        const state = String(params?.state || 'UTTAR PRADESH').trim();
+        if (pmjayId && aName) {
+          generatedData = {
+            pmjayId,
+            name: aName,
+            customerName: aName,
+            beneficiaryName: aName,
+            dob: dob || '-',
+            gender,
+            state,
+            coverageAmount: '₹5,00,000 / वर्ष',
+            photoUrl: params?.photo || params?.photoData || null,
+            refNumber: pmjayId,
+            serviceType: 'ayushmanCard',
+            cardType: 'ISO CR-80 PVC Smart Card',
+            isManualPvc: true
+          };
+          docTitle = `आयुष्मान कार्ड CR-80 PVC (${pmjayId}) - ${aName}`;
+          refNumber = pmjayId;
+        }
       }
-    } else if (normServiceType === 'rationcard' || normServiceType === 'rationCard' || normServiceType === 'ration_pdf_by_ration' || ['rationCard', 'ration_pdf_by_ration'].includes(params?.serviceId)) {
-      const ratNo = String(params?.rationNo || params?.rationNumber || params?.query || '').trim();
-      const hName = String(params?.customerName || params?.name || params?.headName || '').trim();
-      const dName = String(params?.dealerName || params?.fpsName || '').trim();
-      const tot = String(params?.totalMembers || params?.memberCount || '4').trim();
-      const addr = String(params?.address || '').trim();
-      const state = String(params?.state || 'UP').trim();
-      const dist = String(params?.district || '').trim();
-      if (ratNo && hName) {
-        generatedData = {
-          rationNo: ratNo,
-          name: hName,
-          headName: hName,
-          customerName: hName,
-          dealerName: dName || 'उचित दर विक्रेता',
-          totalMembers: tot,
-          address: addr,
-          state,
-          district: dist,
-          refNumber: ratNo,
-          serviceType: 'rationCard',
-          cardType: 'NFSA Ration Slip',
-          isInstantPvc: true
-        };
-        docTitle = `राशन पर्ची (${ratNo}) - ${hName}`;
-        refNumber = ratNo;
+    } else if (normServiceType === 'rationcard' || normServiceType === 'rationCard' || normServiceType === 'ration_pdf_by_ration') {
+      if (params?.isManualForm && params?.headName) {
+        const ratNo = String(params?.rationNo || params?.rationNumber || params?.query || '').trim();
+        const hName = String(params?.customerName || params?.name || params?.headName || '').trim();
+        const dName = String(params?.dealerName || params?.fpsName || '').trim();
+        const tot = String(params?.totalMembers || params?.memberCount || '4').trim();
+        const addr = String(params?.address || '').trim();
+        const state = String(params?.state || 'UP').trim();
+        const dist = String(params?.district || '').trim();
+        if (ratNo && hName) {
+          generatedData = {
+            rationNo: ratNo,
+            name: hName,
+            headName: hName,
+            customerName: hName,
+            dealerName: dName || '-',
+            totalMembers: tot,
+            address: addr,
+            state,
+            district: dist,
+            refNumber: ratNo,
+            serviceType: 'rationCard',
+            cardType: 'NFSA Ration Slip',
+            isManualPvc: true
+          };
+          docTitle = `राशन पर्ची (${ratNo}) - ${hName}`;
+          refNumber = ratNo;
+        }
       }
     }
   }

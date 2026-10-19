@@ -284,41 +284,108 @@ export default function RekhaOrders({ onSelectTool, onBack }) {
               </button>
             </div>
 
-            {/* Print canvas */}
-            <div className="p-4 bg-slate-50 dark:bg-[#070e1b] rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center gap-4">
-              <div className="text-xs text-slate-600 dark:text-slate-300 text-center">
-                {language === 'hi' ? 'संदर्भ संख्या:' : 'Reference Number:'}{' '}
-                <strong className="font-mono text-emerald-800 dark:text-amber-400">{activeReprintOrder.refNumber || activeReprintOrder.vehicleNumber}</strong>
-              </div>
+            {/* Print canvas & authentic details */}
+            {(() => {
+              const payload = typeof activeReprintOrder.payload_json === 'string' 
+                ? (JSON.parse(activeReprintOrder.payload_json || '{}')) 
+                : (activeReprintOrder.payload_json || {});
+              const genData = activeReprintOrder.generatedData || activeReprintOrder.data || payload.generatedData || payload.data || {};
+              const officialPdf = activeReprintOrder.pdfUrl || genData.pdfUrl || genData.pdf || genData.pdf_base64 || payload.pdfUrl;
+              const refVal = activeReprintOrder.refNumber || activeReprintOrder.vehicleNumber || genData.regNo || genData.panNo || genData.aadhaarNo || '-';
 
-              <div className="p-3 bg-white rounded-xl border border-slate-300 shadow-sm">
-                <QRCodeSVG value={`ORDER:${activeReprintOrder.id}|REF:${activeReprintOrder.refNumber || activeReprintOrder.vehicleNumber}`} size={120} />
-              </div>
+              const handleDownloadPdf = () => {
+                if (!officialPdf) return;
+                let pdfUri = officialPdf;
+                if (!pdfUri.startsWith('data:') && !pdfUri.startsWith('http')) {
+                  pdfUri = `data:application/pdf;base64,${officialPdf}`;
+                }
+                const link = document.createElement('a');
+                link.href = pdfUri;
+                link.download = `${activeReprintOrder.serviceType || 'document'}_${refVal}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              };
 
-              <div className="text-center text-xs text-slate-500 dark:text-slate-400 font-mono">
-                {language === 'hi' ? 'मूल जनरेशन दिनांक:' : 'Original Generation Date:'}{' '}
-                {new Date(activeReprintOrder.createdAt).toLocaleString(language === 'hi' ? 'hi-IN' : 'en-IN')}
-              </div>
-            </div>
+              return (
+                <div className="space-y-4">
+                  <div className="p-4 bg-slate-50 dark:bg-[#070e1b] rounded-2xl border border-slate-200 dark:border-slate-800 space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">{language === 'hi' ? 'सेवा का नाम' : 'Service Name'}</span>
+                        <strong className="text-slate-900 dark:text-white font-bold">{activeReprintOrder.docTitle || activeReprintOrder.serviceTitle}</strong>
+                      </div>
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">{language === 'hi' ? 'संदर्भ सं. / इनपुट' : 'Reference Number'}</span>
+                        <strong className="font-mono text-emerald-700 dark:text-amber-400">{refVal}</strong>
+                      </div>
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">{language === 'hi' ? 'नागरिक / ग्राहक' : 'Citizen / Customer'}</span>
+                        <strong className="text-slate-800 dark:text-slate-200">{activeReprintOrder.customerName || '-'} ({activeReprintOrder.customerPhone || '-'})</strong>
+                      </div>
+                      <div>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 block">{language === 'hi' ? 'जनरेशन दिनांक' : 'Generation Date'}</span>
+                        <strong className="font-mono text-slate-600 dark:text-slate-300">
+                          {new Date(activeReprintOrder.createdAt).toLocaleString(language === 'hi' ? 'hi-IN' : 'en-IN')}
+                        </strong>
+                      </div>
+                    </div>
 
-            {/* Actions */}
-            <div className="no-print flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
-              <button
-                type="button"
-                onClick={() => setActiveReprintOrder(null)}
-                className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl cursor-pointer"
-              >
-                {language === 'hi' ? 'बंद करें' : 'Close'}
-              </button>
-              <button
-                type="button"
-                onClick={handlePrintModal}
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs flex items-center gap-1.5 shadow-md cursor-pointer"
-              >
-                <Printer className="w-4 h-4" />
-                <span>{language === 'hi' ? '🖨️ अभी प्रिंट निकालें' : '🖨️ Print Now'}</span>
-              </button>
-            </div>
+                    <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center">
+                      <div className="p-2.5 bg-white rounded-xl border border-slate-300 shadow-xs">
+                        <QRCodeSVG value={`ORDER:${activeReprintOrder.id}|REF:${refVal}`} size={110} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="no-print flex flex-wrap items-center justify-end gap-2.5 pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <button
+                      type="button"
+                      onClick={() => setActiveReprintOrder(null)}
+                      className="px-4 py-2 text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl cursor-pointer"
+                    >
+                      {language === 'hi' ? 'बंद करें' : 'Close'}
+                    </button>
+
+                    {officialPdf && (
+                      <button
+                        type="button"
+                        onClick={handleDownloadPdf}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-sm cursor-pointer"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>{language === 'hi' ? '📥 आधिकारिक PDF' : '📥 Official PDF'}</span>
+                      </button>
+                    )}
+
+                    {onSelectTool && activeReprintOrder.serviceType && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const sType = activeReprintOrder.serviceType;
+                          setActiveReprintOrder(null);
+                          onSelectTool(sType);
+                        }}
+                        className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-sm cursor-pointer"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>{language === 'hi' ? '🖥️ टूल में खोलें' : '🖥️ Open Tool'}</span>
+                      </button>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={handlePrintModal}
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5 shadow-md cursor-pointer"
+                    >
+                      <Printer className="w-3.5 h-3.5" />
+                      <span>{language === 'hi' ? '🖨️ अभी प्रिंट निकालें' : '🖨️ Print Now'}</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
 
           </div>
         </div>
