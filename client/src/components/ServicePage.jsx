@@ -329,7 +329,7 @@ function ServicePageContent({
   const fetchOrderHistory = async () => {
     setLoadingHistory(true);
     try {
-      const activePhone = customerSession?.phone || (isOperator ? '' : (localStorage.getItem('customer_phone') || ''));
+      const activePhone = isOperator ? '' : (customerSession?.phone || localStorage.getItem('customer_phone') || '');
       const phoneParam = activePhone ? `?phone=${encodeURIComponent(activePhone)}` : '';
       const res = await fetch(`/api/orders${phoneParam}`);
       if (res.ok) {

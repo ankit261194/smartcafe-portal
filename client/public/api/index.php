@@ -7508,10 +7508,19 @@ if ($endpoint === 'orders' && $method === 'GET') {
             $pdo = getPdoConnection();
             if ($pdo) {
                 initDbSchema($pdo);
+                $isOperatorUser = ($phone === '8006518960');
+                if (!$isOperatorUser && $phone) {
+                    foreach ($store['users'] ?? [] as $u) {
+                        if (($u['phone'] ?? '') === $phone && (($u['role'] ?? '') === 'operator' || ($u['role'] ?? '') === 'admin')) {
+                            $isOperatorUser = true;
+                            break;
+                        }
+                    }
+                }
                 $sql = "SELECT * FROM orders";
                 $where = [];
                 $params = [];
-                if ($phone) {
+                if ($phone && !$isOperatorUser) {
                     $where[] = "(customer_phone = :phone OR cafe_id = :phoneCafe OR customer_phone = '' OR customer_phone IS NULL)";
                     $params[':phone'] = $phone;
                     $params[':phoneCafe'] = $phone;
@@ -7578,7 +7587,7 @@ if ($endpoint === 'orders' && $method === 'GET') {
     if ($cafeId) {
         $list = array_values(array_filter($list, fn($o) => ($o['cafeId'] ?? '') === $cafeId));
     }
-    if ($phone) {
+    if ($phone && !$isOperatorUser) {
         $list = array_values(array_filter($list, function($o) use ($phone) {
             $cp = $o['customerPhone'] ?? '';
             $cid = $o['cafeId'] ?? '';
