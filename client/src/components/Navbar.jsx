@@ -202,6 +202,29 @@ export default function Navbar({
             </div>
           )}
 
+          {/* Direct 30-Day Permanent Print & Order History (1-Month Guaranteed Archive) */}
+          <button
+            type="button"
+            onClick={() => {
+              if (mode === 'admin') onAdminTabChange('orders');
+              else onCustomerTabChange('orders');
+            }}
+            className={`font-black px-2 sm:px-2.5 py-1 rounded-xl text-xs flex items-center gap-1.5 shadow-sm transition shrink-0 border cursor-pointer active:scale-95 ${
+              (activeCustomerTab === 'orders' || activeAdminTab === 'orders')
+                ? 'bg-amber-400 text-slate-950 border-amber-300 shadow-amber-400/30'
+                : 'bg-white/15 hover:bg-white/25 text-white border-white/25'
+            }`}
+            title={language === 'hi' ? '30-दिन प्रिंट एवं ऑर्डर इतिहास (निःशुल्क रिप्रिंट)' : '30-Day Print & Order History (Free Reprint)'}
+          >
+            <Printer className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+            <span className="hidden sm:inline font-bold">
+              {language === 'hi' ? 'प्रिंट इतिहास' : 'Print History'}
+            </span>
+            <span className="sm:hidden font-bold">
+              {language === 'hi' ? 'इतिहास' : 'History'}
+            </span>
+          </button>
+
           {/* Pending prints count alert (Operator mode) */}
           {isOperator && pendingPrintsCount > 0 && (
             <button

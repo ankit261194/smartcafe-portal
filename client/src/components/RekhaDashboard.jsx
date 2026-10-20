@@ -259,10 +259,11 @@ export default function RekhaDashboard({
             <button
               type="button"
               onClick={() => onNavigateTab('orders')}
-              className="bg-white/15 hover:bg-white/25 text-white font-bold px-2.5 py-1 rounded-xl text-xs flex items-center gap-1 shrink-0 transition"
+              className="bg-amber-400/25 hover:bg-amber-400/35 border border-amber-300/40 text-amber-200 font-extrabold px-3 py-1 rounded-xl text-xs flex items-center gap-1.5 shrink-0 transition shadow-xs"
+              title={language === 'hi' ? '30-दिवसीय प्रिंट एवं ऑर्डर इतिहास' : '30-Day Print & Order History'}
             >
-              <History className="w-3 h-3 text-blue-300" />
-              <span>{language === 'hi' ? 'ऑर्डर लिस्ट' : 'Orders'}</span>
+              <History className="w-3.5 h-3.5 text-amber-300" />
+              <span>{language === 'hi' ? '🖨️ प्रिंट इतिहास (30-दिन)' : '🖨️ Print History (30D)'}</span>
             </button>
             <button
               type="button"
@@ -345,17 +346,22 @@ export default function RekhaDashboard({
             {/* Orders & Reprint Tile */}
             <div 
               onClick={() => onNavigateTab('orders')}
-              className="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex items-center justify-between cursor-pointer hover:bg-white/15 transition group"
+              className="bg-gradient-to-r from-amber-500/20 to-emerald-500/20 backdrop-blur-md rounded-2xl p-3 border border-amber-400/40 flex items-center justify-between cursor-pointer hover:bg-amber-500/30 transition group shadow-xs"
             >
               <div>
-                <span className="text-[11px] font-extrabold text-amber-300 block">
-                  {language === 'hi' ? '🖨️ मेरे ऑर्डर्स व रिप्रिंट' : '🖨️ My Orders & Reprint'}
-                </span>
-                <span className="text-xs font-bold text-white/80 group-hover:text-white">
-                  {language === 'hi' ? 'कार्ड्स 1-क्लिक डाउनलोड' : 'Instant Card Download'}
+                <div className="flex items-center gap-1.5 mb-0.5">
+                  <span className="text-xs font-black text-amber-300 block">
+                    {language === 'hi' ? '🖨️ प्रिंट एवं ऑर्डर इतिहास' : '🖨️ Print & Order History'}
+                  </span>
+                  <span className="bg-emerald-400 text-slate-950 font-black text-[9px] px-1.5 py-0.2 rounded-full">
+                    30 दिन सुरक्षित
+                  </span>
+                </div>
+                <span className="text-[11px] font-bold text-white/90 group-hover:text-white">
+                  {language === 'hi' ? 'सभी जनरेटेड कार्ड्स व PDF का 1-महीने का रिकॉर्ड' : '1-Month archive of all generated cards & PDFs'}
                 </span>
               </div>
-              <ChevronRight className="w-4 h-4 text-white/60 group-hover:translate-x-1 transition" />
+              <ChevronRight className="w-4 h-4 text-amber-300 group-hover:translate-x-1 transition" />
             </div>
 
             {/* Help & Support Tile */}

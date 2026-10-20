@@ -4848,6 +4848,29 @@ function ServicePageContent({
               </div>
             ) : (
               <div className="p-4 sm:p-6 space-y-4">
+                {/* 30-Day Permanent Archive Guarantee Pill */}
+                <div className="no-print bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-2 text-xs shadow-xs">
+                  <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-bold">
+                    <span className="text-base shrink-0">📁</span>
+                    <span>
+                      {language === 'hi' 
+                        ? 'यह प्रिंट आपके "प्रिंट इतिहास" में कम से कम 30 दिनों के लिए सुरक्षित कर दिया गया है। आप इसे 1 महीने तक कभी भी बिना किसी शुल्क के पुनः डाउनलोड या रिप्रिंट कर सकते हैं।'
+                        : 'This print is permanently archived in your "Print History" for 30+ days. Free 1-click reprint anytime.'}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      fetchOrderHistory();
+                      const el = document.getElementById('history-section-anchor');
+                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="shrink-0 font-black text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-700 px-2.5 py-1 rounded-lg text-[11px]"
+                  >
+                    <span>{language === 'hi' ? 'नीचे इतिहास देखें ↓' : 'View History Below ↓'}</span>
+                  </button>
+                </div>
+
                 {/* Action Bar (Print & Download Controls) */}
                 <div className="no-print p-3 bg-slate-50 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
@@ -7207,7 +7230,7 @@ function ServicePageContent({
       {/* ================================================================= */}
       {/* RECENT APPLICATIONS & ORDER HISTORY (EXACT REKHA PRINT ORDER DESK) */}
       {/* ================================================================= */}
-      <div className="bg-white dark:bg-[#0c162c] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md overflow-hidden mt-6">
+      <div id="history-section-anchor" className="bg-white dark:bg-[#0c162c] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-md overflow-hidden mt-6">
         <div className="bg-slate-900 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             <History className="w-4 h-4 text-amber-400 shrink-0" />

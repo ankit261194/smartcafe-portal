@@ -1,6 +1,6 @@
 ﻿{
     "success":  true,
-    "timestamp":  "2026-10-19T03:59:02+00:00",
+    "timestamp":  "2026-10-20T19:18:16+00:00",
     "users":  [
                   {
                       "id":  "USR-8006518960",
@@ -298,6 +298,61 @@
                         }
                     ],
     "orderHistory":  [
+                         {
+                             "id":  "ORD-1792507812-5778",
+                             "orderId":  "ORD-1792507812-5778",
+                             "cafeId":  "SMARTCAFE-HQ",
+                             "cafeShopName":  "Ã Â¤Â¶Ã Â¥ÂÃ Â¤Â°Ã Â¥â‚¬ Ã Â¤Â¡Ã Â¤Â¿Ã Â¤Å“Ã Â¤Â¿Ã Â¤Å¸Ã Â¤Â² Ã Â¤Â¸Ã Â¤Â¾Ã Â¤â€¡Ã Â¤Â¬Ã Â¤Â° Ã Â¤â€¢Ã Â¥Ë†Ã Â¤Â«Ã Â¥â€¡ Ã Â¤ÂÃ Â¤ÂµÃ Â¤â€š Ã Â¤Å“Ã Â¤Â¨ Ã Â¤Â¸Ã Â¥â€¡Ã Â¤ÂµÃ Â¤Â¾ Ã Â¤â€¢Ã Â¥â€¡Ã Â¤â€šÃ Â¤Â¦Ã Â¥ÂÃ Â¤Â°",
+                             "customerPhone":  "",
+                             "customerName":  "ग्राहक",
+                             "serviceType":  "bank_ifsc_lookup",
+                             "serviceTitle":  "bank_ifsc_lookup",
+                             "docTitle":  "बैंक IFSC विवरण (PUNB0456800) - Punjab National Bank",
+                             "refNumber":  "PUNB0456800",
+                             "retailFee":  0,
+                             "wholesaleCost":  0,
+                             "margin":  0,
+                             "status":  "completed",
+                             "data":  {
+                                          "bank":  "Punjab National Bank",
+                                          "bankName":  "Punjab National Bank",
+                                          "branch":  "YAMUNA PURAM",
+                                          "address":  "PNB HOUSE, YAMUNA PURAM, NEAR RTO",
+                                          "city":  "BULANDSHAHAR",
+                                          "district":  "BULANDSHAHAR",
+                                          "state":  "UTTAR PRADESH",
+                                          "ifsc":  "PUNB0456800",
+                                          "micr":  "203024006",
+                                          "rtgs":  true,
+                                          "neft":  true,
+                                          "imps":  true,
+                                          "upi":  true,
+                                          "contact":  "",
+                                          "refNumber":  "PUNB0456800",
+                                          "name":  "खाताधारक"
+                                      },
+                             "generatedData":  {
+                                                   "bank":  "Punjab National Bank",
+                                                   "bankName":  "Punjab National Bank",
+                                                   "branch":  "YAMUNA PURAM",
+                                                   "address":  "PNB HOUSE, YAMUNA PURAM, NEAR RTO",
+                                                   "city":  "BULANDSHAHAR",
+                                                   "district":  "BULANDSHAHAR",
+                                                   "state":  "UTTAR PRADESH",
+                                                   "ifsc":  "PUNB0456800",
+                                                   "micr":  "203024006",
+                                                   "rtgs":  true,
+                                                   "neft":  true,
+                                                   "imps":  true,
+                                                   "upi":  true,
+                                                   "contact":  "",
+                                                   "refNumber":  "PUNB0456800",
+                                                   "name":  "खाताधारक"
+                                               },
+                             "vehicleData":  null,
+                             "pdfUrl":  null,
+                             "createdAt":  "2026-10-20 14:50:12"
+                         },
                          {
                              "id":  "ORD-1792262568409-7316",
                              "orderId":  "ORD-1792262568409-7316",

@@ -3662,6 +3662,7 @@ async function dispatchLiveP4Points(serviceType, params, p4ApiKey) {
       p4Params.pan = panClean;
       p4Params.panNumber = panClean;
       p4Params.panNo = panClean;
+      p4Params.pancard = panClean;
       if (params?.dob) {
         p4Params.dob = params.dob;
       }
@@ -7428,7 +7429,7 @@ app.get('/api/voter/lookup/:epicNo', async (req, res) => {
     return res.status(403).json({ error: 'यह टूल वर्तमान में सुपर एडमिन द्वारा अक्षम (Disabled) है।' });
   }
   const epic = req.params.epicNo.trim().toUpperCase();
-  const p4ApiKey = store.apiGateway?.apiKey;
+  const p4ApiKey = store.apiGateway?.apiKey || 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
   if (p4ApiKey && (store.apiGateway?.liveMode !== false)) {
     try {
       const live = await dispatchLiveP4Points('voter_verification', { epicNo: epic, epicNumber: epic }, p4ApiKey);
@@ -7446,7 +7447,7 @@ app.get('/api/ayushman/lookup/:id', async (req, res) => {
     return res.status(403).json({ error: 'यह टूल वर्तमान में सुपर एडमिन द्वारा अक्षम (Disabled) है।' });
   }
   const id = req.params.id.trim();
-  const p4ApiKey = store.apiGateway?.apiKey;
+  const p4ApiKey = store.apiGateway?.apiKey || 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
   if (p4ApiKey && (store.apiGateway?.liveMode !== false)) {
     try {
       const live = await dispatchLiveP4Points('ayushman_image_jpg', { pmjayId: id }, p4ApiKey);
@@ -7464,7 +7465,7 @@ app.get('/api/ration/lookup/:rationNo', async (req, res) => {
     return res.status(403).json({ error: 'यह टूल वर्तमान में सुपर एडमिन द्वारा अक्षम (Disabled) है।' });
   }
   const rationNo = req.params.rationNo.trim();
-  const p4ApiKey = store.apiGateway?.apiKey;
+  const p4ApiKey = store.apiGateway?.apiKey || 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
   if (p4ApiKey && (store.apiGateway?.liveMode !== false)) {
     try {
       const live = await dispatchLiveP4Points('ration_pdf_by_ration', { ration_no: rationNo, rationNo }, p4ApiKey);

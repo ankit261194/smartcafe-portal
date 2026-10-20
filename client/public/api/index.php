@@ -4461,6 +4461,7 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
             $p4Params['pan'] = $panClean;
             $p4Params['panNumber'] = $panClean;
             $p4Params['panNo'] = $panClean;
+            $p4Params['pancard'] = $panClean;
             if (!empty($params['dob'])) {
                 $p4Params['dob'] = $params['dob'];
             }
@@ -8152,7 +8153,7 @@ if (preg_match('#^cafes/([^/]+)/complaints/([^/]+)/reply$#', $endpoint, $m) && $
 // ---------------------------------------------------------------------------
 if (preg_match('#^pan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $pan = strtoupper(trim($m[1]));
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('pan_details', ['panNo' => $pan, 'pan' => $pan], $p4ApiKey);
@@ -8169,7 +8170,7 @@ if (preg_match('#^pan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
 
 if (preg_match('#^aadhaar/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $aid = trim($m[1]);
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('mask_aadhaar', ['aadhaarNo' => $aid, 'uidNumber' => $aid], $p4ApiKey);
@@ -8186,7 +8187,7 @@ if (preg_match('#^aadhaar/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET'
 
 if (preg_match('#^voter/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $epic = strtoupper(trim($m[1]));
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('voter_verification', ['epicNo' => $epic, 'epicNumber' => $epic], $p4ApiKey);
@@ -8203,7 +8204,7 @@ if (preg_match('#^voter/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') 
 
 if (preg_match('#^ayushman/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $id = trim($m[1]);
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('ayushman_image_jpg', ['pmjayId' => $id], $p4ApiKey);
@@ -8220,7 +8221,7 @@ if (preg_match('#^ayushman/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET
 
 if (preg_match('#^ration/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $rationNo = trim($m[1]);
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('ration_pdf_by_ration', ['ration_no' => $rationNo, 'rationNo' => $rationNo], $p4ApiKey);
@@ -8237,7 +8238,7 @@ if (preg_match('#^ration/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET')
 
 if (preg_match('#^electricity/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $cleanNo = trim($m[1]);
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('electric_bill_pdf_bihar', ['consumerNo' => $cleanNo, 'caNumber' => $cleanNo], $p4ApiKey);
@@ -8255,7 +8256,7 @@ if (preg_match('#^electricity/lookup/([^/]+)$#', $endpoint, $m) && $method === '
 if (preg_match('#^edistrict/lookup/([^/]+)/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $appNo = trim($m[1]);
     $certNo = trim($m[2]);
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('rtps_bihar_pdf', ['appNo' => $appNo, 'certNo' => $certNo], $p4ApiKey);
@@ -8272,7 +8273,7 @@ if (preg_match('#^edistrict/lookup/([^/]+)/([^/]+)$#', $endpoint, $m) && $method
 
 if (preg_match('#^dl/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $dlNo = strtoupper(trim($m[1]));
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('dl_details', ['dlNo' => $dlNo, 'dl' => $dlNo], $p4ApiKey);
@@ -8289,7 +8290,7 @@ if (preg_match('#^dl/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
 
 if (preg_match('#^challan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $refNo = strtoupper(trim($m[1]));
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('chalan_find', ['vehicleNumber' => $refNo, 'challanNo' => $refNo], $p4ApiKey);
@@ -8306,7 +8307,7 @@ if (preg_match('#^challan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET'
 
 if (preg_match('#^epan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $pan = strtoupper(trim($m[1]));
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('pan_details', ['panNo' => $pan], $p4ApiKey);
@@ -8323,7 +8324,7 @@ if (preg_match('#^epan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
 
 if (preg_match('#^findpan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $in = trim($m[1]);
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('pan_find', ['aadhaarNo' => $in], $p4ApiKey);
@@ -8340,7 +8341,7 @@ if (preg_match('#^findpan/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET'
 
 if (preg_match('#^searchepic/lookup/([^/]+)$#', $endpoint, $m) && $method === 'GET') {
     $in = strtoupper(trim($m[1]));
-    $p4ApiKey = $store['apiGateway']['apiKey'] ?? null;
+    $p4ApiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
     if ($p4ApiKey && (!isset($store['apiGateway']['liveMode']) || $store['apiGateway']['liveMode'] !== false)) {
         try {
             $live = dispatchLiveP4Points('voter_verification', ['epicNo' => $in], $p4ApiKey);

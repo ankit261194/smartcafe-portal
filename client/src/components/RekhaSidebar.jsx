@@ -76,8 +76,9 @@ export default function RekhaSidebar({
     },
     {
       id: 'orders',
-      label: { hi: 'प्रिंट लिस्ट व ऑर्डर्स', en: 'Print List / Orders' },
-      icon: Printer
+      label: { hi: '🖨️ प्रिंट इतिहास (30-दिन)', en: 'Print History (30-Day)' },
+      icon: Printer,
+      badge: { hi: 'सुरक्षित', en: 'Saved' }
     },
     {
       id: 'panfind-list',
@@ -118,8 +119,9 @@ export default function RekhaSidebar({
     },
     {
       id: 'orders',
-      label: { hi: 'मेरे ऑर्डर्स व रिप्रिंट', en: 'My Orders & Reprint' },
-      icon: Printer
+      label: { hi: '🖨️ प्रिंट इतिहास (30-दिन)', en: 'Print History (30-Day)' },
+      icon: Printer,
+      badge: { hi: 'सुरक्षित', en: 'Saved' }
     },
     {
       id: 'wallet',
