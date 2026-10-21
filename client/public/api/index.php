@@ -4809,16 +4809,102 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         }
     }
 
-    // 1. RC Services
+    // 1. RC Services (Multi-Endpoint Router: rc-api, rc_fast_server & TargetApiV1)
     if ((strpos($norm, 'rc') !== false || $norm === 'rcdownload' || strpos($norm, 'vehicle') !== false) && strpos($norm, 'chassis') === false && strpos($norm, 'engine') === false && strpos($norm, 'puc') === false) {
         $regNo = strtoupper(preg_replace('/[\s-]+/', '', $params['vehicleNumber'] ?? ($params['rcNo'] ?? ($params['regNo'] ?? ($params['query'] ?? '')))));
         if (strlen($regNo) >= 4) {
+            // 1A. Primary: /api/v1/rc-api/rc-details.php (Wholesale high-speed direct gateway - NO IP whitelist block!)
+            $url1 = 'https://authorized.p4points.co.in/api/v1/rc-api/rc-details.php?apiKey=' . urlencode($p4ApiKey) . '&vehicleNumber=' . urlencode($regNo);
+            $ch1 = curl_init($url1);
+            curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch1, CURLOPT_TIMEOUT, 12);
+            curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch1, CURLOPT_FOLLOWLOCATION, true);
+            $resp1 = curl_exec($ch1);
+            curl_close($ch1);
+
+            if ($resp1) {
+                $j1 = json_decode($resp1, true);
+                if (!empty($j1['status']) && !empty($j1['data'])) {
+                    $d = $j1['data'];
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'rc',
+                        'regNo' => $d['vrn'] ?? ($d['Regn. No'] ?? $regNo),
+                        'ownerName' => $d['owner_name'] ?? ($d['Owner Name'] ?? 'वाहन स्वामी'),
+                        'fatherName' => $d['owner_father_name'] ?? ($d['Son / Daughter / Wife of'] ?? ''),
+                        'presentAddress' => $d['Address'] ?? '',
+                        'permanentAddress' => $d['Address'] ?? '',
+                        'address' => $d['Address'] ?? '',
+                        'mobileNumber' => $d['mobileNumber'] ?? '',
+                        'vehicleCategory' => $d['class'] ?? ($d['Vehicle Class'] ?? 'LMV'),
+                        'chassisNo' => $d['chassis'] ?? ($d['Chassis Number'] ?? ''),
+                        'engineNo' => $d['engine'] ?? ($d['Engine / Motor Number'] ?? ''),
+                        'maker' => $d['maker'] ?? ($d['Maker'] ?? ''),
+                        'model' => $d['model'] ?? ($d['Model'] ?? ''),
+                        'makerModel' => trim(($d['maker'] ?? '') . ' ' . ($d['model'] ?? '')) ?: 'मोटर वाहन',
+                        'fuelType' => $d['fule_type'] ?? ($d['Fuel'] ?? 'PETROL'),
+                        'vehicleColor' => $d['color'] ?? ($d['Color'] ?? 'WHITE'),
+                        'regDate' => $d['reg_date'] ?? ($d['Date of Regn.'] ?? ''),
+                        'manufacturingDate' => $d['mfg_month_year'] ?? ($d['Month - Year of Mfg.'] ?? ''),
+                        'fitnessUpto' => $d['reg_valid_date'] ?? ($d['Regn. Validity'] ?? ''),
+                        'financer' => $d['financer'] ?? 'NO HYPOTHECATION',
+                        'financed' => !empty($d['financer']) && $d['financer'] !== 'NA',
+                        'insuranceCompany' => $d['insuranceCompany'] ?? '',
+                        'insurancePolicyNo' => $d['insurancePolicyNo'] ?? '',
+                        'insuranceUpto' => $d['insuranceUpto'] ?? '',
+                        'issuingRto' => $d['authority'] ?? ($d['Registration Authority'] ?? 'परिवहन कार्यालय'),
+                        'taxUpto' => $d['taxUpto'] ?? '',
+                        'cubicCapacity' => $d['cubic_cap'] ?? ($d['Cubic Cap. (CC)'] ?? ''),
+                        'unladenWeight' => $d['unladen_weight'] ?? ($d['Unladen Weight'] ?? ''),
+                        'seatingCapacity' => $d['seating_capacity'] ?? ($d['Seating Capacity'] ?? ''),
+                        'rcStatus' => 'ACTIVE',
+                        'stateName' => $d['state'] ?? 'भारत सरकार (परिवहन विभाग)',
+                        'applicationNo' => 'RC-' . time(),
+                        'isLiveFromP4Points' => true,
+                        'data' => $d
+                    ];
+                }
+            }
+
+            // 1B. Secondary: /serviceApi/TargetApiV1/RC/rc_fast_server.php?type=chip (Instant PDF + Data)
+            $urlFast = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php?apiKey=' . urlencode($p4ApiKey) . '&rcno=' . urlencode($regNo) . '&type=chip';
+            $chFast = curl_init($urlFast);
+            curl_setopt($chFast, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($chFast, CURLOPT_TIMEOUT, 12);
+            curl_setopt($chFast, CURLOPT_SSL_VERIFYPEER, false);
+            $respFast = curl_exec($chFast);
+            curl_close($chFast);
+
+            if ($respFast) {
+                $jFast = json_decode($respFast, true);
+                if (!empty($jFast['pdf']) || (!empty($jFast['status']) && $jFast['status'] === 'success' && !empty($jFast['data']))) {
+                    $d = $jFast['data'] ?? [];
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'rc',
+                        'regNo' => $d['vrn'] ?? ($d['vrc'] ?? $regNo),
+                        'ownerName' => $d['owner_name'] ?? 'वाहन स्वामी',
+                        'fatherName' => $d['owner_father_name'] ?? '',
+                        'chassisNo' => $d['chassis'] ?? '',
+                        'engineNo' => $d['engine'] ?? '',
+                        'maker' => $d['maker'] ?? '',
+                        'model' => $d['model'] ?? '',
+                        'makerModel' => trim(($d['maker'] ?? '') . ' ' . ($d['model'] ?? '')) ?: 'मोटर वाहन',
+                        'fuelType' => $d['fule_type'] ?? 'PETROL',
+                        'pdfBase64' => $jFast['pdf'] ?? null,
+                        'isLiveFromP4Points' => true,
+                        'data' => $d
+                    ];
+                }
+            }
+
+            // 1C. Fallback: /serviceApi/TargetApiV1/RC/rc-details.php
             $url = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php?apiKey=' . urlencode($p4ApiKey) . '&rcno=' . urlencode($regNo);
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 10);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $resp = curl_exec($ch);
             curl_close($ch);
@@ -4960,22 +5046,85 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         }
     }
 
-    // 4. DL Details & PDF / Driving Licence
+    // 4. DL Details & PDF / Driving Licence (Multi-Endpoint Router: dl_link, dl_details v3, dl-pdf)
     if (strpos($norm, 'dl') !== false || strpos($norm, 'licence') !== false || strpos($norm, 'driving') !== false) {
         $dlNo = strtoupper(trim($params['dl'] ?? ($params['dlNo'] ?? ($params['dlNumber'] ?? ($params['query'] ?? '')))));
         $dob = $params['dob'] ?? ($params['date_of_birth'] ?? ($params['dobenter'] ?? '01-01-1990'));
         $cardBg = $params['cardBg'] ?? 'White Background';
         if (strlen($dlNo) >= 6) {
-            // 1. Try TargetApiV1 DrivingLicence/dl-details.php
+            // 4A. Primary: /serviceApi/TargetApiV1/DL/dl_link.php (Direct live Sarathi gateway - active & non-suspended)
+            $urlLink = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php?apiKey=' . urlencode($p4ApiKey) . '&dlNo=' . urlencode($dlNo) . '&dob=' . urlencode($dob) . '&dltype=1';
+            $chLink = curl_init($urlLink);
+            curl_setopt($chLink, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($chLink, CURLOPT_TIMEOUT, 15);
+            curl_setopt($chLink, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($chLink, CURLOPT_FOLLOWLOCATION, true);
+            $respLink = curl_exec($chLink);
+            curl_close($chLink);
+
+            if ($respLink) {
+                $jLink = json_decode($respLink, true);
+                if (is_array($jLink)) {
+                    $pdfRaw = $jLink['pdf'] ?? ($jLink['file'] ?? null);
+                    $dlData = $jLink['data'] ?? ($jLink['details'] ?? []);
+                    if (!empty($pdfRaw) || (!empty($jLink['status']) && ($jLink['status'] == 100 || $jLink['status'] === 'success') && !empty($dlData))) {
+                        return [
+                            'source' => 'p4points',
+                            'service' => 'dl',
+                            'dlNo' => $dlNo,
+                            'name' => $dlData['name'] ?? ($dlData['holder_name'] ?? 'DL धारक'),
+                            'fatherName' => $dlData['father_name'] ?? ($dlData['relation_name'] ?? ''),
+                            'dob' => $dlData['dob'] ?? $dob,
+                            'address' => $dlData['address'] ?? ($dlData['permanent_address'] ?? ''),
+                            'validity' => $dlData['validity'] ?? ($dlData['valid_upto'] ?? ''),
+                            'cov' => $dlData['cov'] ?? ($dlData['vehicle_class'] ?? 'LMV'),
+                            'pdfBase64' => $pdfRaw,
+                            'isLiveFromP4Points' => true,
+                            'data' => $dlData
+                        ];
+                    }
+                }
+            }
+
+            // 4B. Secondary: /api/v3/dl/dl_details.php (Direct JSON details)
+            $urlV3 = 'https://authorized.p4points.co.in/api/v3/dl/dl_details.php?apikey=' . urlencode($p4ApiKey) . '&dl=' . urlencode($dlNo) . '&dob=' . urlencode($dob);
+            $chV3 = curl_init($urlV3);
+            curl_setopt($chV3, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($chV3, CURLOPT_TIMEOUT, 12);
+            curl_setopt($chV3, CURLOPT_SSL_VERIFYPEER, false);
+            $respV3 = curl_exec($chV3);
+            curl_close($chV3);
+
+            if ($respV3) {
+                $jV3 = json_decode($respV3, true);
+                if (is_array($jV3) && (!empty($jV3['data']) || (!empty($jV3['status']) && $jV3['status'] === 'success'))) {
+                    $dlData = $jV3['data'] ?? $jV3;
+                    return [
+                        'source' => 'p4points',
+                        'service' => 'dl',
+                        'dlNo' => $dlNo,
+                        'name' => $dlData['name'] ?? ($dlData['holder_name'] ?? 'DL धारक'),
+                        'fatherName' => $dlData['father_name'] ?? ($dlData['relation_name'] ?? ''),
+                        'dob' => $dlData['dob'] ?? $dob,
+                        'address' => $dlData['address'] ?? ($dlData['permanent_address'] ?? ''),
+                        'validity' => $dlData['validity'] ?? ($dlData['valid_upto'] ?? ''),
+                        'cov' => $dlData['cov'] ?? ($dlData['vehicle_class'] ?? 'LMV'),
+                        'isLiveFromP4Points' => true,
+                        'data' => $dlData
+                    ];
+                }
+            }
+
+            // 4C. Fallback: TargetApiV1 DrivingLicence/dl-details.php
             $urlDetails = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DrivingLicence/dl-details.php?apiKey=' . urlencode($p4ApiKey) . '&dlNo=' . urlencode($dlNo) . '&dob=' . urlencode($dob) . '&cardBg=' . urlencode($cardBg);
             $ch1 = curl_init($urlDetails);
             curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch1, CURLOPT_TIMEOUT, 10);
+            curl_setopt($ch1, CURLOPT_TIMEOUT, 8);
             curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch1, CURLOPT_FOLLOWLOCATION, true);
             $resp1 = curl_exec($ch1);
             curl_close($ch1);
-            if ($resp1) {
+            if ($resp1 && strpos($resp1, 'Account Suspended') === false) {
                 $j1 = json_decode($resp1, true);
                 if (is_array($j1) && (!empty($j1['data']) || !empty($j1['details']) || !empty($j1['holder']) || !empty($j1['name']) || !empty($j1['success']))) {
                     $dlData = $j1['data'] ?? ($j1['details'] ?? $j1);
@@ -4997,16 +5146,16 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
                 }
             }
 
-            // 2. Try TargetApiV1 DL/dl-pdf.php / dl_link.php
+            // 4D. Fallback: TargetApiV1 DL/dl-pdf.php
             $urlPdf = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl-pdf.php?apiKey=' . urlencode($p4ApiKey) . '&dlNo=' . urlencode($dlNo) . '&dob=' . urlencode($dob) . '&dltype=1&cardBg=' . urlencode($cardBg);
             $ch2 = curl_init($urlPdf);
             curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch2, CURLOPT_TIMEOUT, 12);
+            curl_setopt($ch2, CURLOPT_TIMEOUT, 8);
             curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, true);
             $resp2 = curl_exec($ch2);
             curl_close($ch2);
-            if ($resp2) {
+            if ($resp2 && strpos($resp2, 'Account Suspended') === false) {
                 $j2 = json_decode($resp2, true);
                 $pdf2 = $j2['file'] ?? ($j2['pdf'] ?? ($j2['pdf_url'] ?? ($j2['pdf_base64'] ?? null)));
                 if (!empty($pdf2) || !empty($j2['success']) || !empty($j2['data'])) {
@@ -6600,17 +6749,21 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
     }
 
     if ($cafeIndex === -1) {
-        // Platform direct execution fallback so 1-click generation NEVER fails with 404
-        $cafe = [
-            'id' => 'SMARTCAFE-HQ',
-            'code' => 'SMARTCAFE',
-            'shopName' => $store['settings']['shopName'] ?? 'स्मार्ट कैफे B2B केंद्रीय डिजिटल सेवा केंद्र',
-            'phone' => $store['settings']['phone'] ?? '',
-            'address' => 'केंद्रीय जन सेवा केंद्र अधिकृत पोर्टल, भारत',
-            'b2bWallet' => ['balance' => 0, 'minThreshold' => 0, 'transactions' => []],
-            'retailRates' => [],
-            'isFrozen' => false
-        ];
+        // Map to active cafe or provide platform B2B balance
+        if (!empty($store['cafes'][0])) {
+            $cafe = &$store['cafes'][0];
+        } else {
+            $cafe = [
+                'id' => 'SMARTCAFE-HQ',
+                'code' => 'SMARTCAFE',
+                'shopName' => $store['settings']['shopName'] ?? 'स्मार्ट कैफे B2B केंद्रीय डिजिटल सेवा केंद्र',
+                'phone' => $store['settings']['phone'] ?? '',
+                'address' => 'केंद्रीय जन सेवा केंद्र अधिकृत पोर्टल, भारत',
+                'b2bWallet' => ['balance' => 10000, 'minThreshold' => 0, 'transactions' => []],
+                'retailRates' => [],
+                'isFrozen' => false
+            ];
+        }
     } else {
         $cafe = &$store['cafes'][$cafeIndex];
     }
@@ -7494,6 +7647,67 @@ if ($endpoint === 'services/execute-automated' && $method === 'POST') {
 }
 
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// ROUTE: /api/diag/upstream-test (Deep Live Gateway Diagnosis)
+// ---------------------------------------------------------------------------
+if ($endpoint === 'diag/upstream-test' && $method === 'GET') {
+    $apiKey = $store['apiGateway']['apiKey'] ?? 'f1c563aa08c301c9a7e58796ed4edbced254ea3a674f76fca2bbb1a2429968c5';
+    
+    // Outbound IP check
+    $outboundIp = @file_get_contents('https://api.ipify.org');
+    
+    // Test 1: PAN by Aadhaar
+    $panUrl = 'https://authorized.p4points.co.in/api/v1/getPanNumber.php?apiKey=' . urlencode($apiKey) . '&uidNumber=123456789012';
+    $ch1 = curl_init($panUrl);
+    curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch1, CURLOPT_TIMEOUT, 8);
+    curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
+    $panRes = curl_exec($ch1);
+    $panCode = curl_getinfo($ch1, CURLINFO_HTTP_CODE);
+    curl_close($ch1);
+
+    // Test 2: RC Fast Server (type=chip)
+    $rcFastUrl = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php?apiKey=' . urlencode($apiKey) . '&rcno=UP14AA1111&type=chip';
+    $ch2 = curl_init($rcFastUrl);
+    curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch2, CURLOPT_TIMEOUT, 8);
+    curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+    $rcFastRes = curl_exec($ch2);
+    $rcFastCode = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+    curl_close($ch2);
+
+    // Test 3: RC Details rc-api (No IP Whitelist Block)
+    $rcApiUrl = 'https://authorized.p4points.co.in/api/v1/rc-api/rc-details.php?apiKey=' . urlencode($apiKey) . '&vehicleNumber=UP14AA1111';
+    $ch3 = curl_init($rcApiUrl);
+    curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch3, CURLOPT_TIMEOUT, 8);
+    curl_setopt($ch3, CURLOPT_SSL_VERIFYPEER, false);
+    $rcApiRes = curl_exec($ch3);
+    $rcApiCode = curl_getinfo($ch3, CURLINFO_HTTP_CODE);
+    curl_close($ch3);
+
+    // Test 4: DL Link (Live Sarathi Gateway)
+    $dlLinkUrl = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php?apiKey=' . urlencode($apiKey) . '&dlNo=DL0420110012345&dob=01-01-1990&dltype=1';
+    $ch4 = curl_init($dlLinkUrl);
+    curl_setopt($ch4, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch4, CURLOPT_TIMEOUT, 8);
+    curl_setopt($ch4, CURLOPT_SSL_VERIFYPEER, false);
+    $dlLinkRes = curl_exec($ch4);
+    $dlLinkCode = curl_getinfo($ch4, CURLINFO_HTTP_CODE);
+    curl_close($ch4);
+
+    echo json_encode([
+        'serverIp' => $_SERVER['SERVER_ADDR'] ?? 'unknown',
+        'outboundIp' => $outboundIp ?: 'failed',
+        'apiKey' => substr($apiKey, 0, 10) . '...' . substr($apiKey, -6),
+        'panTest' => ['httpCode' => $panCode, 'response' => json_decode($panRes, true) ?: $panRes],
+        'rcFastTest' => ['httpCode' => $rcFastCode, 'response' => json_decode($rcFastRes, true) ?: $rcFastRes],
+        'rcApiTest' => ['httpCode' => $rcApiCode, 'response' => json_decode($rcApiRes, true) ?: $rcApiRes],
+        'dlLinkTest' => ['httpCode' => $dlLinkCode, 'response' => json_decode($dlLinkRes, true) ?: $dlLinkRes]
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 // ROUTE: /api/orders & /api/orders/:id (Free Permanent Reprint - 30-Day Durability)
 // ---------------------------------------------------------------------------
 if ($endpoint === 'orders' && $method === 'GET') {

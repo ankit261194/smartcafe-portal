@@ -136,8 +136,8 @@ const refundTx = {
 };
 const user800Wallet = allWalletsMap.get('8006518960');
 if (user800Wallet) {
-  if (typeof user800Wallet.balance !== 'number' || user800Wallet.balance < 45) {
-    user800Wallet.balance = 45;
+  if (typeof user800Wallet.balance !== 'number' || user800Wallet.balance < 2000) {
+    user800Wallet.balance = 2000;
   }
   if (!Array.isArray(user800Wallet.transactions)) user800Wallet.transactions = [];
   if (!user800Wallet.transactions.some(t => t.id === refundTx.id)) {
@@ -299,14 +299,14 @@ mergedWallets.forEach(w => {
     if (t.type === 'credit') realBal += parseFloat(t.amount || 0);
     if (t.type === 'debit') realBal -= parseFloat(t.amount || 0);
   });
-  w.balance = (w.phone === '8006518960') ? Math.max(45.0, realBal) : Math.max(0, realBal);
+  w.balance = (w.phone === '8006518960') ? Math.max(2000.0, realBal) : Math.max(0, realBal);
 });
 
 // Sync users balance to match reconciled wallet balance
 mergedUsers.forEach(u => {
   const w = allWalletsMap.get(u.phone);
   if (w) {
-    u.balance = (u.phone === '8006518960') ? Math.max(45.0, w.balance) : w.balance;
+    u.balance = (u.phone === '8006518960') ? Math.max(2000.0, w.balance) : w.balance;
   }
 });
 
