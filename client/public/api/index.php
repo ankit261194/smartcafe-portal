@@ -289,27 +289,17 @@ function getStore($dataFile) {
                 }
             }
 
-            // Security Protection: Customer wallet for 8006518960 strictly ₹10 (Zero Data Loss)
-            $ankitBal = 10.0;
+            // Security Protection: Customer wallet for 8006518960 (Ensuring active ₹2,000 testing balance)
+            $ankitBal = 2000.0;
             foreach ($data['wallets'] as &$w) {
                 if (($w['phone'] ?? '') === '8006518960') {
-                    if (isset($w['transactions']) && is_array($w['transactions'])) {
-                        $beforeCount = count($w['transactions']);
-                        $w['transactions'] = array_values(array_filter($w['transactions'], function($tx) {
-                            return ($tx['id'] ?? '') !== 'TXN-INIT-500' 
-                                && ($tx['description'] ?? '') !== 'Opening Balance'
-                                && strpos($tx['note'] ?? '', 'Instant') === false 
-                                && strpos($tx['id'] ?? '', 'INSTANT') === false;
-                        }));
-                        if (count($w['transactions']) !== $beforeCount) $changed = true;
-                    }
                     $realBal = 0;
                     foreach ($w['transactions'] ?? [] as $tx) {
                         if (($tx['type'] ?? '') === 'credit') $realBal += floatval($tx['amount'] ?? 0);
                         if (($tx['type'] ?? '') === 'debit') $realBal -= floatval($tx['amount'] ?? 0);
                     }
-                    $targetBal = max(10.0, $realBal);
-                    if (($w['balance'] ?? 0) != $targetBal) {
+                    $targetBal = max(2000.0, $realBal);
+                    if (($w['balance'] ?? 0) < $targetBal) {
                         $w['balance'] = $targetBal;
                         $changed = true;
                     }
@@ -320,7 +310,7 @@ function getStore($dataFile) {
             unset($w);
             foreach ($data['users'] as &$u) {
                 if (($u['phone'] ?? '') === '8006518960') {
-                    if (($u['balance'] ?? 0) != $ankitBal) {
+                    if (($u['balance'] ?? 0) < $ankitBal) {
                         $u['balance'] = $ankitBal;
                         $changed = true;
                     }
