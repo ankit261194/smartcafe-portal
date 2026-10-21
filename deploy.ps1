@@ -6,6 +6,7 @@
 # ==============================================================================
 
 $ErrorActionPreference = "Stop"
+Set-Location -Path $PSScriptRoot
 
 Write-Host "[1/6] Synchronizing Production Assets, Live Database & PHP API (Preserving User Accounts)..." -ForegroundColor Cyan
 try {

@@ -4703,7 +4703,8 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'SmartCafe-B2B-Gateway/2.0');
+        curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
 
         if ($httpMethod === 'POST') {
             curl_setopt($ch, CURLOPT_URL, $targetUrl);
@@ -4765,9 +4766,12 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         } elseif ($norm === 'pan_to_aadhar_find') {
             $backupEndpoints[] = 'https://authorized.p4points.co.in/api/v1/panAadhar.php';
         } elseif (strpos($lowerUrl, 'dl') !== false || strpos($norm, 'dl') !== false) {
-            $backupEndpoints[] = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DrivingLicence/dl-details.php';
+            $backupEndpoints[] = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php';
+            $backupEndpoints[] = 'https://authorized.p4points.co.in/api/v3/dl/dl_details.php';
             $backupEndpoints[] = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl-pdf.php';
         } elseif (strpos($lowerUrl, 'rc') !== false || strpos($norm, 'rc') !== false) {
+            $backupEndpoints[] = 'https://authorized.p4points.co.in/api/v1/rc-api/rc-details.php';
+            $backupEndpoints[] = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php';
             $backupEndpoints[] = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc-details.php';
         } elseif (strpos($lowerUrl, 'pan') !== false || strpos($norm, 'pan') !== false) {
             $backupEndpoints[] = 'https://authorized.p4points.co.in/api/v1/panVerificationPremium.php';
@@ -4776,9 +4780,12 @@ function dispatchLiveP4Points($serviceType, $params, $p4ApiKey) {
         foreach ($backupEndpoints as $bkUrl) {
             $chBk = curl_init();
             curl_setopt($chBk, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($chBk, CURLOPT_TIMEOUT, 8);
+            curl_setopt($chBk, CURLOPT_TIMEOUT, 10);
             curl_setopt($chBk, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($chBk, CURLOPT_SSL_VERIFYHOST, 0);
             curl_setopt($chBk, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($chBk, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+            curl_setopt($chBk, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36');
             if ($httpMethod === 'POST') {
                 curl_setopt($chBk, CURLOPT_URL, $bkUrl);
                 curl_setopt($chBk, CURLOPT_POST, true);
@@ -7656,54 +7663,49 @@ if ($endpoint === 'diag/upstream-test' && $method === 'GET') {
     // Outbound IP check
     $outboundIp = @file_get_contents('https://api.ipify.org');
     
+    // Helper function for diagnosis
+    $runDiag = function($url) {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+            CURLOPT_USERAGENT => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        ]);
+        $res = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $err = curl_error($ch);
+        curl_close($ch);
+        return [
+            'httpCode' => $code,
+            'curlError' => $err ?: null,
+            'response' => json_decode($res, true) ?: (strlen($res) > 300 ? substr($res, 0, 300) : $res)
+        ];
+    };
+
     // Test 1: PAN by Aadhaar
-    $panUrl = 'https://authorized.p4points.co.in/api/v1/getPanNumber.php?apiKey=' . urlencode($apiKey) . '&uidNumber=123456789012';
-    $ch1 = curl_init($panUrl);
-    curl_setopt($ch1, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch1, CURLOPT_TIMEOUT, 8);
-    curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
-    $panRes = curl_exec($ch1);
-    $panCode = curl_getinfo($ch1, CURLINFO_HTTP_CODE);
-    curl_close($ch1);
+    $panTest = $runDiag('https://authorized.p4points.co.in/api/v1/getPanNumber.php?apiKey=' . urlencode($apiKey) . '&uidNumber=123456789012');
 
     // Test 2: RC Fast Server (type=chip)
-    $rcFastUrl = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php?apiKey=' . urlencode($apiKey) . '&rcno=UP14AA1111&type=chip';
-    $ch2 = curl_init($rcFastUrl);
-    curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch2, CURLOPT_TIMEOUT, 8);
-    curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
-    $rcFastRes = curl_exec($ch2);
-    $rcFastCode = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
-    curl_close($ch2);
+    $rcFastTest = $runDiag('https://authorized.p4points.co.in/serviceApi/TargetApiV1/RC/rc_fast_server.php?apiKey=' . urlencode($apiKey) . '&rcno=UP14AA1111&type=chip');
 
     // Test 3: RC Details rc-api (No IP Whitelist Block)
-    $rcApiUrl = 'https://authorized.p4points.co.in/api/v1/rc-api/rc-details.php?apiKey=' . urlencode($apiKey) . '&vehicleNumber=UP14AA1111';
-    $ch3 = curl_init($rcApiUrl);
-    curl_setopt($ch3, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch3, CURLOPT_TIMEOUT, 8);
-    curl_setopt($ch3, CURLOPT_SSL_VERIFYPEER, false);
-    $rcApiRes = curl_exec($ch3);
-    $rcApiCode = curl_getinfo($ch3, CURLINFO_HTTP_CODE);
-    curl_close($ch3);
+    $rcApiTest = $runDiag('https://authorized.p4points.co.in/api/v1/rc-api/rc-details.php?apiKey=' . urlencode($apiKey) . '&vehicleNumber=UP14AA1111');
 
     // Test 4: DL Link (Live Sarathi Gateway)
-    $dlLinkUrl = 'https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php?apiKey=' . urlencode($apiKey) . '&dlNo=DL0420110012345&dob=01-01-1990&dltype=1';
-    $ch4 = curl_init($dlLinkUrl);
-    curl_setopt($ch4, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch4, CURLOPT_TIMEOUT, 8);
-    curl_setopt($ch4, CURLOPT_SSL_VERIFYPEER, false);
-    $dlLinkRes = curl_exec($ch4);
-    $dlLinkCode = curl_getinfo($ch4, CURLINFO_HTTP_CODE);
-    curl_close($ch4);
+    $dlLinkTest = $runDiag('https://authorized.p4points.co.in/serviceApi/TargetApiV1/DL/dl_link.php?apiKey=' . urlencode($apiKey) . '&dlNo=DL0420110012345&dob=01-01-1990&dltype=1');
 
     echo json_encode([
         'serverIp' => $_SERVER['SERVER_ADDR'] ?? 'unknown',
         'outboundIp' => $outboundIp ?: 'failed',
         'apiKey' => substr($apiKey, 0, 10) . '...' . substr($apiKey, -6),
-        'panTest' => ['httpCode' => $panCode, 'response' => json_decode($panRes, true) ?: $panRes],
-        'rcFastTest' => ['httpCode' => $rcFastCode, 'response' => json_decode($rcFastRes, true) ?: $rcFastRes],
-        'rcApiTest' => ['httpCode' => $rcApiCode, 'response' => json_decode($rcApiRes, true) ?: $rcApiRes],
-        'dlLinkTest' => ['httpCode' => $dlLinkCode, 'response' => json_decode($dlLinkRes, true) ?: $dlLinkRes]
+        'panTest' => $panTest,
+        'rcFastTest' => $rcFastTest,
+        'rcApiTest' => $rcApiTest,
+        'dlLinkTest' => $dlLinkTest
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
